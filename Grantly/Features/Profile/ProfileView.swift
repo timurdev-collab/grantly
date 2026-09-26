@@ -57,6 +57,10 @@ struct ProfileView: View {
                 Text("Your GPA, IELTS and family income are never copied into your public community profile.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                NavigationLink("Blocked students") {
+                    BlockedUsersView()
+                }
             }
 
             if !status.isEmpty {
@@ -212,6 +216,106 @@ struct ProfileView: View {
             status = "Profile saved."
         } catch {
             status = error.localizedDescription
+        }
+    }
+}
+
+
+private struct BlockedStudentRow: Identifiable {
+    let id: UUID
+    let name: String
+}
+
+private struct BlockedUsersView: View {
+    @State private var rows: [BlockedStudentRow] = []
+    @State private var loading = true
+    @State private var errorMessage: String?
+
+    var body: some View {
+        Group {
+            if loading {
+                ProgressView()
+            } else if rows.isEmpty {
+                EmptyState(
+                    icon: "person.crop.circle.badge.checkmark",
+                    title: "No blocked students",
+                    text: "Students you block will appear here."
+                )
+            } else {
+                List {
+                    ForEach(rows) { row in
+                        HStack {
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(row.name)
+                                    .font(.headline)
+                                Text(row.id.uuidString.prefix(8))
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            Button("Unblock") {
+                                Task { await unblock(row) }
+                            }
+                            .buttonStyle(.bordered)
+                        }
+                    }
+                }
+                .listStyle(.plain)
+                .refreshable { await load() }
+            }
+        }
+        .navigationTitle("Blocked Students")
+        .navigationBarTitleDisplayMode(.inline)
+        .task { await load() }
+        .alert("Unable to update block", isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            async let blockedIDs = DataService.blockedUserIDs()
+            async let visibleProfiles = DataService.communityProfiles()
+
+            let ids = try await blockedIDs
+            let profiles = try await visibleProfiles
+            let names = Dictionary(
+                uniqueKeysWithValues: profiles.map {
+                    ($0.id, $0.displayName ?? "Student")
+                }
+            )
+
+            rows = ids
+                .map {
+                    BlockedStudentRow(
+                        id: $0,
+                        name: names[$0] ?? "Student"
+                    )
+                }
+                .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func unblock(_ row: BlockedStudentRow) async {
+        do {
+            try await DataService.unblockUser(row.id)
+            rows.removeAll { $0.id == row.id }
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 }
