@@ -96,20 +96,29 @@ struct ScholarshipDetailView: View {
                 sourceCard
 
                 VStack(spacing: 12) {
-                    Button {
-                        Task { await toggleSaved() }
-                    } label: {
-                        Label(
-                            saved ? "Saved to your shortlist" : "Save to shortlist",
-                            systemImage: saved ? "bookmark.fill" : "bookmark"
-                        )
+                    if saved {
+                        Button {
+                            Task { await toggleSaved() }
+                        } label: {
+                            Label(
+                                "Saved to your shortlist",
+                                systemImage: "bookmark.fill"
+                            )
+                        }
+                        .buttonStyle(SecondaryButtonStyle())
+                        .disabled(busy)
+                    } else {
+                        Button {
+                            Task { await toggleSaved() }
+                        } label: {
+                            Label(
+                                "Save to shortlist",
+                                systemImage: "bookmark"
+                            )
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .disabled(busy)
                     }
-                    .buttonStyle(
-                        saved
-                            ? AnyButtonStyle(SecondaryButtonStyle())
-                            : AnyButtonStyle(PrimaryButtonStyle())
-                    )
-                    .disabled(busy)
 
                     if let url = URL(string: scholarship.officialUrl) {
                         Link(destination: url) {
@@ -397,16 +406,3 @@ struct DetailLine: View {
     }
 }
 
-private struct AnyButtonStyle: ButtonStyle {
-    private let makeBodyClosure: (Configuration) -> AnyView
-
-    init<S: ButtonStyle>(_ style: S) {
-        makeBodyClosure = { configuration in
-            AnyView(style.makeBody(configuration: configuration))
-        }
-    }
-
-    func makeBody(configuration: Configuration) -> some View {
-        makeBodyClosure(configuration)
-    }
-}
