@@ -59,6 +59,12 @@ create table public.scholarships (
   official_url text not null,
   status text not null default 'draft' check (status in ('draft','published','archived')),
   verified_at timestamptz,
+  description text,
+  source_label text,
+  source_url text,
+  source_license text,
+  verification_status text not null default 'verified'
+    check (verification_status in ('verified','curated','needs_review')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );

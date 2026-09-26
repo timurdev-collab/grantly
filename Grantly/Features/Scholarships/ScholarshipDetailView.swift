@@ -28,6 +28,23 @@ struct ScholarshipDetailView: View {
                 Text("\(scholarship.provider) · \(scholarship.country)")
                     .foregroundStyle(.secondary)
 
+                if scholarship.verificationStatus == "verified" {
+                    Label("Verified by Grantly", systemImage: "checkmark.seal.fill")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.green)
+                } else if scholarship.verificationStatus == "curated" {
+                    Label("Curated listing — verify current details on the official source", systemImage: "checkmark.circle")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                if let description = scholarship.description,
+                   !description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    Text(description)
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                }
+
                 if let deadline = scholarship.deadline {
                     Label("Deadline: \(deadline)", systemImage: "calendar")
                         .font(.subheadline.weight(.semibold))
