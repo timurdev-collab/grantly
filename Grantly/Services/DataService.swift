@@ -250,6 +250,35 @@ enum DataService {
             .execute()
     }
 
+    static func safetyReports() async throws -> [SafetyReport] {
+        try await supabase
+            .from("safety_reports")
+            .select()
+            .order("created_at", ascending: false)
+            .execute()
+            .value
+    }
+
+    static func updateSafetyReportStatus(
+        reportId: UUID,
+        status: String
+    ) async throws {
+        struct Row: Encodable {
+            let status: String
+            let resolved_at: String?
+        }
+
+        let resolvedAt = ["resolved", "dismissed"].contains(status)
+            ? ISO8601DateFormatter().string(from: Date())
+            : nil
+
+        try await supabase
+            .from("safety_reports")
+            .update(Row(status: status, resolved_at: resolvedAt))
+            .eq("id", value: reportId.uuidString)
+            .execute()
+    }
+
     static func updateCommunityProfile(
         userId: UUID,
         displayName: String,
