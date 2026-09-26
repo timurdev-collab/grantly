@@ -20,6 +20,8 @@ struct ProfileView: View {
     @State private var visible = true
     @State private var status = ""
     @State private var saving = false
+    @State private var showingDeleteAccount = false
+    @State private var deletingAccount = false
 
     var body: some View {
         Form {
@@ -76,10 +78,20 @@ struct ProfileView: View {
                     Task { await save() }
                 }
                 .disabled(saving || fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
 
-                Button("Sign out", role: .destructive) {
+            Section("Account") {
+                Button("Sign out") {
                     Task { await auth.signOut() }
                 }
+
+                Button(
+                    deletingAccount ? "Deleting account…" : "Delete account",
+                    role: .destructive
+                ) {
+                    showingDeleteAccount = true
+                }
+                .disabled(deletingAccount)
             }
 
             if profile?.role == "admin" {
@@ -92,6 +104,14 @@ struct ProfileView: View {
         }
         .navigationTitle("Profile")
         .task { await populate() }
+        .alert("Delete your Grantly account?", isPresented: $showingDeleteAccount) {
+            Button("Delete Account", role: .destructive) {
+                Task { await deleteAccount() }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This permanently deletes your account, profile, saved scholarships and messages. This cannot be undone.")
+        }
     }
 
     private func csv(_ value: String) -> [String] {
@@ -127,6 +147,16 @@ struct ProfileView: View {
         if let community = try? await DataService.currentCommunityProfile(userId: userId) {
             bio = community.bio ?? ""
             visible = community.isVisible ?? true
+        }
+    }
+
+    @MainActor
+    private func deleteAccount() async {
+        deletingAccount = true
+        defer { deletingAccount = false }
+
+        if !(await auth.deleteAccount()) {
+            status = auth.errorMessage ?? "Your account could not be deleted."
         }
     }
 
