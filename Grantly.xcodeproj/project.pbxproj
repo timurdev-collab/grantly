@@ -1,0 +1,518 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0C85559ABE9B6503D5421022 /* GrantlyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9C3691CEE37F967931AACA /* GrantlyApp.swift */; };
+		105E8C5BF134090BD3B2C854 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE633CF6447197A677DE1B05 /* MessagesView.swift */; };
+		15F296E319530D8193A8CE8E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A39168AA961A3D24592CBD /* Theme.swift */; };
+		243D49486154B3CA8E2ABE97 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54067DB62C12B88BCB01BCDD /* MainTabView.swift */; };
+		2FE22B97A70272194305C644 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0C2BE1F3E6000ADDDEACB0E /* SignupView.swift */; };
+		30F1BF563BFFD330653F1BFC /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0722E0A71251796858C8AAD0 /* AdminView.swift */; };
+		37F27C688E76A04CD52688E3 /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBC72E805BAE479D0DBF229 /* CommunityView.swift */; };
+		3FB63EEE4CF7A3C9A2B5EA2A /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24970E0BCB544723728435DF /* Models.swift */; };
+		4C21840AD7D5FA3549A6F187 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B128743D9FEE314B78E8CAB /* AppConfig.swift */; };
+		5083464DDA46AA25EA5B4D6F /* AuthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53FCD05728DE6A6DAB3C52 /* AuthStore.swift */; };
+		52809D369CFE4D5610A41900 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = D284FD1027222CB758E07F30 /* Supabase */; };
+		5E6768250143C6C2E1F5AFF3 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074E3F865FF9D76E950BD608 /* WelcomeView.swift */; };
+		609FAD6EB9D77F8F7E0AF39A /* MatchingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF46B5C554E6344CAAA62F06 /* MatchingService.swift */; };
+		919DE2BAA55F2EDD41345555 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2EE9B1132BC2DECC0892FB /* ProfileView.swift */; };
+		93B3EB1A37E37E69688927BA /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B69CF2D270E09EE330E4AC7 /* DataService.swift */; };
+		A0318D2494095F8FCEBDA44B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAEA5F53174FDCEA35BBAF1F /* HomeView.swift */; };
+		A0F486E503A18834C9DAFCD8 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD134A5D44FEB5107D35871 /* Components.swift */; };
+		B4A4E48630678C3C00A853A0 /* SavedScholarshipItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A4E48530678C3000A853A0 /* SavedScholarshipItem.swift */; };
+		B4A4E48730678ED300A853A0 /* MyScholarshipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A4E48430678B3900A853A0 /* MyScholarshipsView.swift */; };
+		D021CC7A6BA2DAD6708E0EE6 /* ScholarshipDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7684B87252FD800469E5E30D /* ScholarshipDetailView.swift */; };
+		D0BDF0AF5C6A1D701772258D /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04886BF2D8D7D660040D8E9E /* RootView.swift */; };
+		D6D411471A22BB74BC31197A /* SupabaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6528ECB4508531B6B83E71E5 /* SupabaseClient.swift */; };
+		E7BEBB168DFC78FE3ECF0DF3 /* ScholarshipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318E5E91E70B22A42E3425B9 /* ScholarshipsView.swift */; };
+		F64175F42910546CFFAD8827 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE583E66304189CC2236D12 /* LoginView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		04886BF2D8D7D660040D8E9E /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		0722E0A71251796858C8AAD0 /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
+		074E3F865FF9D76E950BD608 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		24970E0BCB544723728435DF /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		318E5E91E70B22A42E3425B9 /* ScholarshipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScholarshipsView.swift; sourceTree = "<group>"; };
+		4B128743D9FEE314B78E8CAB /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		4C9C3691CEE37F967931AACA /* GrantlyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrantlyApp.swift; sourceTree = "<group>"; };
+		54067DB62C12B88BCB01BCDD /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		5FBC72E805BAE479D0DBF229 /* CommunityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
+		64A39168AA961A3D24592CBD /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		6528ECB4508531B6B83E71E5 /* SupabaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseClient.swift; sourceTree = "<group>"; };
+		7684B87252FD800469E5E30D /* ScholarshipDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScholarshipDetailView.swift; sourceTree = "<group>"; };
+		7C2EE9B1132BC2DECC0892FB /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		87C3CF85757DED715461B005 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9B69CF2D270E09EE330E4AC7 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		9DE583E66304189CC2236D12 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		AA53FCD05728DE6A6DAB3C52 /* AuthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStore.swift; sourceTree = "<group>"; };
+		B4A4E48430678B3900A853A0 /* MyScholarshipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyScholarshipsView.swift; sourceTree = "<group>"; };
+		B4A4E48530678C3000A853A0 /* SavedScholarshipItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScholarshipItem.swift; sourceTree = "<group>"; };
+		B5FBBA9D60D0AFBF09E84CC0 /* Grantly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Grantly.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF46B5C554E6344CAAA62F06 /* MatchingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchingService.swift; sourceTree = "<group>"; };
+		DAD134A5D44FEB5107D35871 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		DAEA5F53174FDCEA35BBAF1F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		EE633CF6447197A677DE1B05 /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
+		F0C2BE1F3E6000ADDDEACB0E /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1B8209F1FBE10C2482B37AD3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52809D369CFE4D5610A41900 /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4AE81EE3E56A99AD2917CD1E /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				DAEA5F53174FDCEA35BBAF1F /* HomeView.swift */,
+				54067DB62C12B88BCB01BCDD /* MainTabView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		500771BC664EE0E20E5295F4 /* Community */ = {
+			isa = PBXGroup;
+			children = (
+				5FBC72E805BAE479D0DBF229 /* CommunityView.swift */,
+			);
+			path = Community;
+			sourceTree = "<group>";
+		};
+		5CE3FB777ABD437FDB399AC9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				24970E0BCB544723728435DF /* Models.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		76047C3574132134F1940881 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B4A4E48530678C3000A853A0 /* SavedScholarshipItem.swift */,
+				AA53FCD05728DE6A6DAB3C52 /* AuthStore.swift */,
+				9B69CF2D270E09EE330E4AC7 /* DataService.swift */,
+				BF46B5C554E6344CAAA62F06 /* MatchingService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		80F3231E9D0B6BD4FE9C45BD /* Scholarships */ = {
+			isa = PBXGroup;
+			children = (
+				7684B87252FD800469E5E30D /* ScholarshipDetailView.swift */,
+				B4A4E48430678B3900A853A0 /* MyScholarshipsView.swift */,
+				318E5E91E70B22A42E3425B9 /* ScholarshipsView.swift */,
+			);
+			path = Scholarships;
+			sourceTree = "<group>";
+		};
+		887FD7967529F729681DF26A /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				DAD134A5D44FEB5107D35871 /* Components.swift */,
+				64A39168AA961A3D24592CBD /* Theme.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		90480EC23AD369514128C1E3 /* Grantly */ = {
+			isa = PBXGroup;
+			children = (
+				87C3CF85757DED715461B005 /* Info.plist */,
+				FC7F462273B299520ACA0A0A /* App */,
+				E93D7B605A675906BBEC4D3C /* Core */,
+				C22FC9D2ECC98844BA0C332B /* Features */,
+				5CE3FB777ABD437FDB399AC9 /* Models */,
+				76047C3574132134F1940881 /* Services */,
+				887FD7967529F729681DF26A /* Shared */,
+			);
+			path = Grantly;
+			sourceTree = "<group>";
+		};
+		99616C23B73FDC24B1B191FE /* Admin */ = {
+			isa = PBXGroup;
+			children = (
+				0722E0A71251796858C8AAD0 /* AdminView.swift */,
+			);
+			path = Admin;
+			sourceTree = "<group>";
+		};
+		AF3E640F6E8968F5CD35E8A8 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				EE633CF6447197A677DE1B05 /* MessagesView.swift */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
+		C22FC9D2ECC98844BA0C332B /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				99616C23B73FDC24B1B191FE /* Admin */,
+				D388F00ED76BA904BBC2A198 /* Auth */,
+				500771BC664EE0E20E5295F4 /* Community */,
+				4AE81EE3E56A99AD2917CD1E /* Home */,
+				AF3E640F6E8968F5CD35E8A8 /* Messages */,
+				DD6B8806DE09B24481CABE49 /* Profile */,
+				80F3231E9D0B6BD4FE9C45BD /* Scholarships */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		CAB27DDFC3A6D7426C1319C3 = {
+			isa = PBXGroup;
+			children = (
+				90480EC23AD369514128C1E3 /* Grantly */,
+				FA395B9E12BE6C2FBA68C018 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D388F00ED76BA904BBC2A198 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				9DE583E66304189CC2236D12 /* LoginView.swift */,
+				F0C2BE1F3E6000ADDDEACB0E /* SignupView.swift */,
+				074E3F865FF9D76E950BD608 /* WelcomeView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		DD6B8806DE09B24481CABE49 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				7C2EE9B1132BC2DECC0892FB /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		E93D7B605A675906BBEC4D3C /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				4B128743D9FEE314B78E8CAB /* AppConfig.swift */,
+				6528ECB4508531B6B83E71E5 /* SupabaseClient.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		FA395B9E12BE6C2FBA68C018 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B5FBBA9D60D0AFBF09E84CC0 /* Grantly.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FC7F462273B299520ACA0A0A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				4C9C3691CEE37F967931AACA /* GrantlyApp.swift */,
+				04886BF2D8D7D660040D8E9E /* RootView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D485990995559FBA49BD5DB2 /* Grantly */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 612051B7CC0A0190C54777B0 /* Build configuration list for PBXNativeTarget "Grantly" */;
+			buildPhases = (
+				B1136B2A31A6594AD8807103 /* Sources */,
+				1B8209F1FBE10C2482B37AD3 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Grantly;
+			packageProductDependencies = (
+				D284FD1027222CB758E07F30 /* Supabase */,
+			);
+			productName = Grantly;
+			productReference = B5FBBA9D60D0AFBF09E84CC0 /* Grantly.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		907046B49AB0E52DCD8094C1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2700;
+			};
+			buildConfigurationList = 921E9F55ECE75496857480D3 /* Build configuration list for PBXProject "Grantly" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CAB27DDFC3A6D7426C1319C3;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				FC7FB39224FDDC3A2D122DE7 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = FA395B9E12BE6C2FBA68C018 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D485990995559FBA49BD5DB2 /* Grantly */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B1136B2A31A6594AD8807103 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30F1BF563BFFD330653F1BFC /* AdminView.swift in Sources */,
+				4C21840AD7D5FA3549A6F187 /* AppConfig.swift in Sources */,
+				5083464DDA46AA25EA5B4D6F /* AuthStore.swift in Sources */,
+				37F27C688E76A04CD52688E3 /* CommunityView.swift in Sources */,
+				A0F486E503A18834C9DAFCD8 /* Components.swift in Sources */,
+				93B3EB1A37E37E69688927BA /* DataService.swift in Sources */,
+				0C85559ABE9B6503D5421022 /* GrantlyApp.swift in Sources */,
+				A0318D2494095F8FCEBDA44B /* HomeView.swift in Sources */,
+				F64175F42910546CFFAD8827 /* LoginView.swift in Sources */,
+				243D49486154B3CA8E2ABE97 /* MainTabView.swift in Sources */,
+				609FAD6EB9D77F8F7E0AF39A /* MatchingService.swift in Sources */,
+				105E8C5BF134090BD3B2C854 /* MessagesView.swift in Sources */,
+				3FB63EEE4CF7A3C9A2B5EA2A /* Models.swift in Sources */,
+				919DE2BAA55F2EDD41345555 /* ProfileView.swift in Sources */,
+				D0BDF0AF5C6A1D701772258D /* RootView.swift in Sources */,
+				D021CC7A6BA2DAD6708E0EE6 /* ScholarshipDetailView.swift in Sources */,
+				E7BEBB168DFC78FE3ECF0DF3 /* ScholarshipsView.swift in Sources */,
+				2FE22B97A70272194305C644 /* SignupView.swift in Sources */,
+				B4A4E48630678C3C00A853A0 /* SavedScholarshipItem.swift in Sources */,
+				B4A4E48730678ED300A853A0 /* MyScholarshipsView.swift in Sources */,
+				D6D411471A22BB74BC31197A /* SupabaseClient.swift in Sources */,
+				15F296E319530D8193A8CE8E /* Theme.swift in Sources */,
+				5E6768250143C6C2E1F5AFF3 /* WelcomeView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1A618DD3888E0D82D80D8335 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Grantly/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.grantly.app;
+				PRODUCT_NAME = Grantly;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A13645D84A760DC93B1D1779 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = M9L42LN3CG;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A769D0BFC539346EB757DF45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = M9L42LN3CG;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		D56F253358E1BC174D359395 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Grantly/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.grantly.app;
+				PRODUCT_NAME = Grantly;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		612051B7CC0A0190C54777B0 /* Build configuration list for PBXNativeTarget "Grantly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A618DD3888E0D82D80D8335 /* Debug */,
+				D56F253358E1BC174D359395 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		921E9F55ECE75496857480D3 /* Build configuration list for PBXProject "Grantly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A13645D84A760DC93B1D1779 /* Debug */,
+				A769D0BFC539346EB757DF45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FC7FB39224FDDC3A2D122DE7 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D284FD1027222CB758E07F30 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC7FB39224FDDC3A2D122DE7 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 907046B49AB0E52DCD8094C1 /* Project object */;
+}
