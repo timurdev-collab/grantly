@@ -4,10 +4,133 @@ struct AdminView: View {
     @State private var scholarships: [Scholarship] = []
     @State private var reports: [SafetyReport] = []
     @State private var showingAdd = false
+    @State private var auditing = false
+    @State private var auditMessage: String?
     @State private var errorMessage: String?
+
+    private var published: [Scholarship] {
+        scholarships.filter { $0.status == "published" }
+    }
+
+    private var verifiedCount: Int {
+        published.filter { $0.verificationStatus == "verified" }.count
+    }
+
+    private var curatedCount: Int {
+        published.filter { $0.verificationStatus == "curated" }.count
+    }
+
+    private var reviewCount: Int {
+        scholarships.filter {
+            $0.status == "published" &&
+            $0.verificationStatus == "needs_review"
+        }.count
+    }
+
+    private var archivedCount: Int {
+        scholarships.filter { $0.status == "archived" }.count
+    }
+
+    private var needsReview: [Scholarship] {
+        scholarships
+            .filter {
+                $0.status == "published" &&
+                $0.verificationStatus == "needs_review"
+            }
+            .prefix(30)
+            .map { $0 }
+    }
 
     var body: some View {
         List {
+            Section("Catalog health") {
+                HStack(spacing: 12) {
+                    AdminMetric(
+                        value: "\(verifiedCount)",
+                        label: "Verified"
+                    )
+                    AdminMetric(
+                        value: "\(curatedCount)",
+                        label: "Curated"
+                    )
+                    AdminMetric(
+                        value: "\(reviewCount)",
+                        label: "Review"
+                    )
+                    AdminMetric(
+                        value: "\(archivedCount)",
+                        label: "Archived"
+                    )
+                }
+                .listRowInsets(
+                    EdgeInsets(
+                        top: 14,
+                        leading: 16,
+                        bottom: 14,
+                        trailing: 16
+                    )
+                )
+
+                Button {
+                    Task { await auditNextBatch() }
+                } label: {
+                    Label(
+                        auditing ? "Auditing links…" : "Audit next 20 listings",
+                        systemImage: "checkmark.shield"
+                    )
+                }
+                .disabled(auditing)
+
+                if let auditMessage {
+                    Text(auditMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Text("The automatic audit checks source availability, page specificity and possible deadline text. It never promotes a record to Verified without review.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            if !needsReview.isEmpty {
+                Section("Needs source review") {
+                    ForEach(needsReview) { scholarship in
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(scholarship.title)
+                                .font(.headline)
+
+                            Text("\(scholarship.provider) · \(scholarship.country)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            HStack {
+                                Text(
+                                    scholarship.linkStatus?
+                                        .replacingOccurrences(
+                                            of: "_",
+                                            with: " "
+                                        )
+                                        .capitalized
+                                    ?? "Unchecked"
+                                )
+                                .font(.caption2.weight(.semibold))
+
+                                Spacer()
+
+                                if let candidate = scholarship.deadlineCandidate {
+                                    Label(
+                                        candidate,
+                                        systemImage: "calendar.badge.exclamationmark"
+                                    )
+                                    .font(.caption2)
+                                }
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+            }
+
             Section("Safety reports") {
                 if reports.isEmpty {
                     Text("No reports")
@@ -18,7 +141,9 @@ struct AdminView: View {
                             HStack {
                                 Text(report.reason)
                                     .font(.headline)
+
                                 Spacer()
+
                                 Text(report.status.capitalized)
                                     .font(.caption.bold())
                                     .foregroundStyle(.secondary)
@@ -30,16 +155,33 @@ struct AdminView: View {
                             }
 
                             HStack {
-                                Text(report.messageId == nil ? "Student report" : "Message report")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+                                Text(
+                                    report.messageId == nil
+                                        ? "Student report"
+                                        : "Message report"
+                                )
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
 
                                 Spacer()
 
                                 Menu("Update status") {
-                                    ForEach(["open", "reviewing", "resolved", "dismissed"], id: \.self) { status in
+                                    ForEach(
+                                        [
+                                            "open",
+                                            "reviewing",
+                                            "resolved",
+                                            "dismissed"
+                                        ],
+                                        id: \.self
+                                    ) { status in
                                         Button(status.capitalized) {
-                                            Task { await update(report: report, status: status) }
+                                            Task {
+                                                await update(
+                                                    report: report,
+                                                    status: status
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -51,15 +193,25 @@ struct AdminView: View {
                 }
             }
 
-            Section("Scholarships") {
-                ForEach(scholarships) { scholarship in
+            Section("Published catalog") {
+                ForEach(published.prefix(50)) { scholarship in
                     VStack(alignment: .leading, spacing: 4) {
                         Text(scholarship.title)
                             .font(.headline)
-                        Text("\(scholarship.country) · \(scholarship.fundingType)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+
+                        Text(
+                            "\(scholarship.country) · " +
+                            "\(scholarship.fundingType)"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                     }
+                }
+
+                if published.count > 50 {
+                    Text("Showing the 50 most recently updated records.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
             }
 
@@ -80,7 +232,9 @@ struct AdminView: View {
             }
         }
         .sheet(isPresented: $showingAdd) {
-            AddScholarshipView { Task { await load() } }
+            AddScholarshipView {
+                Task { await load() }
+            }
         }
         .refreshable { await load() }
         .task { await load() }
@@ -89,8 +243,10 @@ struct AdminView: View {
     @MainActor
     private func load() async {
         do {
-            async let scholarshipRows = DataService.scholarships()
-            async let reportRows = DataService.safetyReports()
+            async let scholarshipRows =
+                DataService.allScholarshipsForAdmin()
+            async let reportRows =
+                DataService.safetyReports()
 
             scholarships = try await scholarshipRows
             reports = try await reportRows
@@ -101,7 +257,33 @@ struct AdminView: View {
     }
 
     @MainActor
-    private func update(report: SafetyReport, status: String) async {
+    private func auditNextBatch() async {
+        auditing = true
+        auditMessage = nil
+        defer { auditing = false }
+
+        do {
+            let result = try await DataService.auditScholarships(limit: 20)
+
+            auditMessage =
+                "Audited \(result.audited): " +
+                "\(result.exact) exact, " +
+                "\(result.reachable) reachable, " +
+                "\(result.generic) generic, " +
+                "\(result.dead) unavailable. " +
+                "\(result.deadlineCandidates) deadline candidates found."
+
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func update(
+        report: SafetyReport,
+        status: String
+    ) async {
         do {
             try await DataService.updateSafetyReportStatus(
                 reportId: report.id,
@@ -114,8 +296,26 @@ struct AdminView: View {
     }
 }
 
+private struct AdminMetric: View {
+    let value: String
+    let label: String
+
+    var body: some View {
+        VStack(spacing: 3) {
+            Text(value)
+                .font(.headline)
+
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
 struct AddScholarshipView: View {
     @Environment(\.dismiss) private var dismiss
+
     let onCreated: () -> Void
 
     @State private var title = ""
@@ -138,19 +338,47 @@ struct AddScholarshipView: View {
                 TextField("Country", text: $country)
 
                 Picker("Region", selection: $region) {
-                    ForEach(["Europe", "Asia", "North America", "Middle East", "Oceania"], id: \.self) {
+                    ForEach(
+                        [
+                            "Africa",
+                            "Asia",
+                            "Europe",
+                            "Global",
+                            "Latin America",
+                            "Middle East",
+                            "North America",
+                            "Oceania"
+                        ],
+                        id: \.self
+                    ) {
                         Text($0)
                     }
                 }
 
                 Picker("Funding", selection: $funding) {
-                    ForEach(["Fully funded", "Full tuition", "Partial"], id: \.self) {
+                    ForEach(
+                        [
+                            "Fully funded",
+                            "Full tuition",
+                            "Partial",
+                            "Varies"
+                        ],
+                        id: \.self
+                    ) {
                         Text($0)
                     }
                 }
 
-                TextField("Degree levels, comma separated", text: $degreeLevels)
-                TextField("Fields, comma separated", text: $fields)
+                TextField(
+                    "Degree levels, comma separated",
+                    text: $degreeLevels
+                )
+
+                TextField(
+                    "Fields, comma separated",
+                    text: $fields
+                )
+
                 TextField("Official URL", text: $url)
                     .textInputAutocapitalization(.never)
                     .keyboardType(.URL)
@@ -164,10 +392,15 @@ struct AddScholarshipView: View {
             .navigationTitle("Add scholarship")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button("Cancel") {
+                        dismiss()
+                    }
                 }
+
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Publish") { Task { await publish() } }
+                    Button("Publish") {
+                        Task { await publish() }
+                    }
                 }
             }
         }
@@ -188,7 +421,12 @@ struct AddScholarshipView: View {
             let fields: [String]
             let eligible_nationalities: [String]
             let verified_at: String
+            let verification_status: String
+            let link_status: String
+            let last_checked_at: String
         }
+
+        let now = ISO8601DateFormatter().string(from: Date())
 
         let row = Row(
             slug: slug,
@@ -201,12 +439,23 @@ struct AddScholarshipView: View {
             status: "published",
             degree_levels: degreeLevels
                 .split(separator: ",")
-                .map { $0.trimmingCharacters(in: .whitespaces) },
+                .map {
+                    $0.trimmingCharacters(
+                        in: .whitespaces
+                    )
+                },
             fields: fields
                 .split(separator: ",")
-                .map { $0.trimmingCharacters(in: .whitespaces) },
+                .map {
+                    $0.trimmingCharacters(
+                        in: .whitespaces
+                    )
+                },
             eligible_nationalities: ["ALL"],
-            verified_at: ISO8601DateFormatter().string(from: Date())
+            verified_at: now,
+            verification_status: "verified",
+            link_status: "exact",
+            last_checked_at: now
         )
 
         do {
@@ -214,6 +463,7 @@ struct AddScholarshipView: View {
                 .from("scholarships")
                 .insert(row)
                 .execute()
+
             onCreated()
             dismiss()
         } catch let err {
