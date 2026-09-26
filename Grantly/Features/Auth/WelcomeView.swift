@@ -6,85 +6,158 @@ struct WelcomeView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: [.white, Theme.violet.opacity(0.12)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            ).ignoresSafeArea()
+            Theme.ivory.ignoresSafeArea()
+
+            Circle()
+                .fill(Theme.brass.opacity(0.10))
+                .frame(width: 360, height: 360)
+                .blur(radius: 2)
+                .offset(x: 180, y: -330)
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 26) {
-                    HStack(spacing: 10) {
-                        Text("G")
-                            .font(.headline.bold())
-                            .frame(width: 38, height: 38)
-                            .background(Theme.violet)
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                        Text("Grantly").font(.title3.bold())
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack {
+                        GrantlyMonogram(size: 46)
+
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text("GRANTLY")
+                                .font(.caption.weight(.bold))
+                                .tracking(2.4)
+                                .foregroundStyle(Theme.navy)
+
+                            Text("Scholarship intelligence")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Spacer()
                     }
+                    .padding(.bottom, 54)
 
-                    Spacer(minLength: 40)
+                    SectionEyebrow(text: "Your education, funded")
 
-                    Text("SCHOLARSHIPS WITHOUT BORDERS")
-                        .font(.caption2.bold())
-                        .tracking(1.5)
-                        .foregroundStyle(Theme.violet)
+                    Text("A clearer path\nto the world's\nbest opportunities.")
+                        .font(Theme.serifTitle(47, weight: .medium))
+                        .tracking(-1.3)
+                        .foregroundStyle(Theme.ink)
+                        .padding(.top, 18)
 
-                    Text("Find funding.\nBuild your future.")
-                        .font(.system(size: 46, weight: .heavy, design: .rounded))
-                        .tracking(-1.5)
-
-                    Text("Discover global scholarships, get profile-based eligibility matches and connect with students applying on the same path.")
+                    Text("Discover scholarships with source quality, match them to your academic profile and organize every application in one place.")
                         .font(.body)
                         .foregroundStyle(.secondary)
                         .lineSpacing(5)
+                        .padding(.top, 22)
+                        .padding(.trailing, 14)
+
+                    HStack(spacing: 0) {
+                        WelcomeMetric(value: "500+", label: "opportunities")
+                        Divider().frame(height: 42)
+                        WelcomeMetric(value: "60+", label: "destinations")
+                        Divider().frame(height: 42)
+                        WelcomeMetric(value: "1", label: "application hub")
+                    }
+                    .padding(.vertical, 22)
+                    .padding(.horizontal, 14)
+                    .background(.white.opacity(0.75))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Theme.brass.opacity(0.20))
+                    )
+                    .padding(.top, 28)
 
                     VStack(spacing: 12) {
-                        Button("Create free account") { showingSignup = true }
-                            .buttonStyle(PrimaryButtonStyle())
-                        Button("Sign in") { showingLogin = true }
-                            .buttonStyle(SecondaryButtonStyle())
-                    }
+                        Button("Begin your search") {
+                            showingSignup = true
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
 
-                    HStack(spacing: 16) {
-                        Label("Official links", systemImage: "checkmark.shield")
-                        Label("Smart matching", systemImage: "sparkles")
+                        Button("I already have an account") {
+                            showingLogin = true
+                        }
+                        .buttonStyle(SecondaryButtonStyle())
+                    }
+                    .padding(.top, 28)
+
+                    HStack(spacing: 18) {
+                        Label("Official sources", systemImage: "checkmark.seal")
+                        Label("Private profile", systemImage: "lock")
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
-
-                    Spacer(minLength: 30)
+                    .padding(.top, 18)
                 }
-                .padding(24)
+                .padding(.horizontal, 24)
+                .padding(.top, 22)
+                .padding(.bottom, 30)
             }
         }
-        .sheet(isPresented: $showingLogin) { LoginView() }
-        .sheet(isPresented: $showingSignup) { SignupView() }
+        .sheet(isPresented: $showingLogin) {
+            LoginView()
+        }
+        .sheet(isPresented: $showingSignup) {
+            SignupView()
+        }
+    }
+}
+
+private struct WelcomeMetric: View {
+    let value: String
+    let label: String
+
+    var body: some View {
+        VStack(spacing: 3) {
+            Text(value)
+                .font(Theme.serifTitle(21, weight: .semibold))
+                .foregroundStyle(Theme.navy)
+
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 
 struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.headline)
+            .font(.headline.weight(.semibold))
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 15)
-            .background(Theme.violet.opacity(configuration.isPressed ? 0.8 : 1))
-            .foregroundStyle(.white)
+            .padding(.vertical, 16)
+            .background(
+                configuration.isPressed
+                    ? Theme.navy.opacity(0.88)
+                    : Theme.navy
+            )
+            .foregroundStyle(Theme.parchment)
             .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay(alignment: .trailing) {
+                Image(systemName: "arrow.right")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.brass)
+                    .padding(.trailing, 17)
+            }
     }
 }
 
 struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.headline)
+            .font(.headline.weight(.semibold))
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 15)
-            .background(.white)
-            .foregroundStyle(Theme.ink)
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.black.opacity(0.08)))
+            .padding(.vertical, 16)
+            .background(
+                configuration.isPressed
+                    ? Theme.parchment.opacity(0.7)
+                    : .white
+            )
+            .foregroundStyle(Theme.navy)
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Theme.navy.opacity(0.12), lineWidth: 1)
+            )
             .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 }
