@@ -79,9 +79,9 @@ For this starter, email/password authentication is enabled.
 
 Recommended for production:
 - Keep email confirmation enabled
-- Add password reset
+- Keep `grantly://login-callback` in the allowed redirect URLs for signup confirmation and password recovery
 - Optionally add native Sign in with Apple
-- Configure app deep links for email verification/reset flows if you want them to return directly to the app
+- Consider moving from a custom URL scheme to Universal Links before a large public launch
 
 ## 5. Run
 
@@ -105,29 +105,31 @@ Sign out and back in. The Admin Dashboard appears inside Profile.
 
 The app uses the same secured conversations/messages tables as the web platform.
 
-This starter loads messages from the database and refreshes:
+The app loads messages from the database and refreshes:
 - when a chat opens
 - after sending
 - on pull-to-refresh
+- every few seconds while the chat is open
 
-The backend is already compatible with Supabase Realtime, so live subscription delivery can be added without changing the database.
+The backend is already compatible with Supabase Realtime, so the polling refresh can later be replaced with native realtime subscriptions without changing the database.
 
 ## App Store production checklist
 
 Before submitting publicly:
 
-1. Add a proper App Icon and screenshots.
-2. Add password reset and account deletion.
-3. Add Privacy Policy and Terms.
-4. Add reporting, blocking and moderation.
-5. Add abuse/rate-limit controls around messaging.
-6. Decide on an under-18 safety model before allowing high-school students to message freely.
-7. Add notification permissions only when push notifications are implemented.
-8. Add crash/error monitoring.
-9. Test Row Level Security policies against unauthorized access.
-10. Add accessibility labels and Dynamic Type QA.
-11. Configure an Apple Developer Team and production bundle ID.
-12. Archive in Xcode and upload to App Store Connect / TestFlight.
+1. Add a proper App Icon and App Store screenshots.
+2. Publish Privacy Policy and Terms pages and add their public URLs to App Store Connect.
+3. Decide on an under-18 safety model before allowing high-school students to message freely.
+4. Add abuse/rate-limit controls around messaging.
+5. Add notification permissions only when push notifications are implemented.
+6. Add crash/error monitoring.
+7. Test Row Level Security policies against unauthorized access.
+8. Add accessibility labels and Dynamic Type QA.
+9. Configure an Apple Developer Team and production bundle ID.
+10. Complete App Privacy answers in App Store Connect based on the data actually collected.
+11. Archive in Xcode and distribute through TestFlight before App Store submission.
+
+Already implemented in the app/backend: email confirmation, password recovery, in-app account deletion, reporting, blocking, moderation queue and privacy/safety guidance.
 
 ## Important privacy design choice
 
