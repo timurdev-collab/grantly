@@ -59,9 +59,15 @@ struct ProfileView: View {
 
             if !status.isEmpty {
                 Section {
-                    Text(status)
-                        .font(.caption)
-                        .foregroundStyle(status == "Profile saved." ? .secondary : .red)
+                    if status == "Profile saved." {
+                        Text(status)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text(status)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
                 }
             }
 
