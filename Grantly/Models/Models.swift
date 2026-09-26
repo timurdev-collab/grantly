@@ -83,6 +83,13 @@ struct Scholarship: Codable, Identifiable, Hashable {
     var sourceUrl: String?
     var sourceLicense: String?
     var verificationStatus: String?
+    var applicationCycle: String?
+    var deadlineNotes: String?
+    var linkStatus: String?
+    var lastCheckedAt: String?
+    var finalUrl: String?
+    var deadlineCandidate: String?
+    var deadlineConfidence: Int?
 
     enum CodingKeys: String, CodingKey {
         case id, slug, title, provider, country, region, fields, stipend, airfare, accommodation, status, deadline
@@ -101,6 +108,13 @@ struct Scholarship: Codable, Identifiable, Hashable {
         case sourceUrl = "source_url"
         case sourceLicense = "source_license"
         case verificationStatus = "verification_status"
+        case applicationCycle = "application_cycle"
+        case deadlineNotes = "deadline_notes"
+        case linkStatus = "link_status"
+        case lastCheckedAt = "last_checked_at"
+        case finalUrl = "final_url"
+        case deadlineCandidate = "deadline_candidate"
+        case deadlineConfidence = "deadline_confidence"
     }
 }
 
@@ -161,4 +175,14 @@ struct ScholarshipMatch: Identifiable {
     let eligible: Bool
     let reasons: [String]
     let blockers: [String]
+}
+
+
+struct ScholarshipAuditResult: Decodable {
+    let audited: Int
+    let exact: Int
+    let generic: Int
+    let dead: Int
+    let reachable: Int
+    let deadlineCandidates: Int
 }
