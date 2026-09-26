@@ -20,10 +20,13 @@ struct CommunityView: View {
                 return true
             }
 
-            return "\(profile.displayName ?? "") " +
+            let searchableText =
+                "\(profile.displayName ?? "") " +
                 "\(profile.nationality ?? "") " +
                 "\(profile.major ?? "") " +
                 "\(profile.targetCountries?.joined(separator: " ") ?? "")"
+
+            return searchableText
                 .lowercased()
                 .contains(q)
         }
