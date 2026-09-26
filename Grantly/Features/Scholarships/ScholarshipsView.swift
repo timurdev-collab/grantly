@@ -7,13 +7,28 @@ struct ScholarshipsView: View {
     @State private var region = "All"
     @State private var degree = "All"
     @State private var funding = "All"
+    @State private var source = "All"
 
     @State private var loading = true
+    @State private var errorMessage: String?
+
+    private var regionOptions: [String] {
+        ["All"] + Array(Set(scholarships.map(\.region))).sorted()
+    }
+
+    private var degreeOptions: [String] {
+        ["All"] + Array(Set(scholarships.flatMap(\.degreeLevels))).sorted()
+    }
+
+    private var fundingOptions: [String] {
+        ["All"] + Array(Set(scholarships.map(\.fundingType))).sorted()
+    }
 
     private var filtered: [Scholarship] {
         scholarships.filter { scholarship in
-
-            let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            let q = query
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased()
 
             let queryMatches =
                 q.isEmpty ||
@@ -34,18 +49,23 @@ struct ScholarshipsView: View {
                 funding == "All" ||
                 scholarship.fundingType == funding
 
+            let verification = scholarship.verificationStatus ?? "verified"
+            let sourceMatches =
+                source == "All" ||
+                (source == "Verified" && verification == "verified") ||
+                (source == "Curated" && verification == "curated")
+
             return queryMatches &&
-                   regionMatches &&
-                   degreeMatches &&
-                   fundingMatches
+                regionMatches &&
+                degreeMatches &&
+                fundingMatches &&
+                sourceMatches
         }
     }
 
     var body: some View {
         VStack(spacing: 0) {
-
             VStack(alignment: .leading, spacing: 14) {
-
                 HStack {
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Explore")
@@ -61,14 +81,10 @@ struct ScholarshipsView: View {
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
-
                         Menu {
-                            Button("All") { region = "All" }
-                            Button("Europe") { region = "Europe" }
-                            Button("Asia") { region = "Asia" }
-                            Button("North America") { region = "North America" }
-                            Button("Middle East") { region = "Middle East" }
-                            Button("Oceania") { region = "Oceania" }
+                            ForEach(regionOptions, id: \.self) { value in
+                                Button(value) { region = value }
+                            }
                         } label: {
                             FilterChip(
                                 icon: "globe",
@@ -77,10 +93,9 @@ struct ScholarshipsView: View {
                         }
 
                         Menu {
-                            Button("All") { degree = "All" }
-                            Button("Bachelor") { degree = "Bachelor" }
-                            Button("Master") { degree = "Master" }
-                            Button("PhD") { degree = "PhD" }
+                            ForEach(degreeOptions, id: \.self) { value in
+                                Button(value) { degree = value }
+                            }
                         } label: {
                             FilterChip(
                                 icon: "graduationcap",
@@ -89,10 +104,9 @@ struct ScholarshipsView: View {
                         }
 
                         Menu {
-                            Button("All") { funding = "All" }
-                            Button("Fully funded") { funding = "Fully funded" }
-                            Button("Full tuition") { funding = "Full tuition" }
-                            Button("Partial") { funding = "Partial" }
+                            ForEach(fundingOptions, id: \.self) { value in
+                                Button(value) { funding = value }
+                            }
                         } label: {
                             FilterChip(
                                 icon: "banknote",
@@ -100,14 +114,26 @@ struct ScholarshipsView: View {
                             )
                         }
 
-                        if region != "All" ||
-                           degree != "All" ||
-                           funding != "All" {
+                        Menu {
+                            Button("All") { source = "All" }
+                            Button("Verified") { source = "Verified" }
+                            Button("Curated") { source = "Curated" }
+                        } label: {
+                            FilterChip(
+                                icon: "checkmark.shield",
+                                title: source == "All" ? "Source" : source
+                            )
+                        }
 
+                        if region != "All" ||
+                            degree != "All" ||
+                            funding != "All" ||
+                            source != "All" {
                             Button {
                                 region = "All"
                                 degree = "All"
                                 funding = "All"
+                                source = "All"
                             } label: {
                                 Label("Clear", systemImage: "xmark.circle.fill")
                                     .font(.subheadline.weight(.semibold))
@@ -127,14 +153,12 @@ struct ScholarshipsView: View {
                 Spacer()
                 ProgressView("Loading scholarships…")
                 Spacer()
-
             } else if filtered.isEmpty {
                 EmptyState(
                     icon: "magnifyingglass",
                     title: "No scholarships found",
                     text: "Try changing your search or filters."
                 )
-
             } else {
                 List(filtered) { scholarship in
                     NavigationLink {
@@ -162,6 +186,14 @@ struct ScholarshipsView: View {
         .task {
             await load()
         }
+        .alert("Unable to load scholarships", isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
     }
 
     @MainActor
@@ -169,8 +201,12 @@ struct ScholarshipsView: View {
         loading = true
         defer { loading = false }
 
-        scholarships =
-            (try? await DataService.scholarships()) ?? []
+        do {
+            scholarships = try await DataService.scholarships()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 
@@ -194,9 +230,7 @@ struct ScholarshipRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
-
             HStack(alignment: .top) {
-
                 VStack(alignment: .leading, spacing: 5) {
                     Text(scholarship.title)
                         .font(.headline)
@@ -214,13 +248,24 @@ struct ScholarshipRow: View {
             }
 
             HStack(spacing: 10) {
-
                 ForEach(
                     scholarship.degreeLevels.prefix(3),
                     id: \.self
                 ) { level in
                     Label(level, systemImage: "graduationcap")
                         .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                if scholarship.verificationStatus == "verified" {
+                    Label("Verified", systemImage: "checkmark.seal.fill")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.green)
+                } else if scholarship.verificationStatus == "curated" {
+                    Label("Curated", systemImage: "checkmark.circle")
+                        .font(.caption2.weight(.semibold))
                         .foregroundStyle(.secondary)
                 }
             }
