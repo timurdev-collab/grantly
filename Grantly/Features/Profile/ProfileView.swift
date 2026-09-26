@@ -38,16 +38,16 @@ struct ProfileView: View {
                                 : fullName
                         )
                         .font(Theme.serifTitle(22))
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(.white)
 
                         Text("Your private profile powers scholarship matching.")
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.white.opacity(0.62))
                     }
                 }
                 .padding(.vertical, 6)
             }
-            .listRowBackground(Theme.parchment.opacity(0.45))
+            .listRowBackground(Color.white.opacity(0.45))
 
             Section("Student profile") {
                 TextField("Full name", text: $fullName)
@@ -80,7 +80,7 @@ struct ProfileView: View {
                 Toggle("Show my community profile", isOn: $visible)
                 Text("Your GPA, IELTS and family income are never copied into your public community profile.")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.62))
 
                 NavigationLink("Blocked students") {
                     BlockedUsersView()
@@ -92,7 +92,7 @@ struct ProfileView: View {
                     if status == "Profile saved." {
                         Text(status)
                             .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.white.opacity(0.62))
                     } else {
                         Text(status)
                             .font(.caption)
@@ -138,7 +138,7 @@ struct ProfileView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Theme.pageBackground)
-        .tint(Theme.brass)
+        .tint(Theme.orange)
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
         .task { await populate() }
@@ -284,7 +284,7 @@ private struct BlockedUsersView: View {
                                     .font(.headline)
                                 Text(row.id.uuidString.prefix(8))
                                     .font(.caption2)
-                                    .foregroundStyle(.secondary)
+                                    .foregroundStyle(.white.opacity(0.62))
                             }
 
                             Spacer()
@@ -394,12 +394,12 @@ private struct PrivacyAndSafetyView: View {
 
             Section("Scholarship information") {
                 Text("Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying.")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.62))
             }
 
             Section("Account control") {
                 Text("You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships.")
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.62))
             }
         }
         .navigationTitle("Privacy & Safety")
