@@ -28,6 +28,7 @@ struct MessagesView: View {
                     NavigationLink {
                         ChatView(
                             conversationId: conversation.id,
+                            otherUserId: conversation.otherUserId,
                             title: conversation.displayName
                         )
                     } label: {
@@ -123,6 +124,7 @@ struct ChatView: View {
     @Environment(AuthStore.self) private var auth
 
     let conversationId: UUID
+    let otherUserId: UUID?
     let title: String
 
     @State private var messages: [Message] = []
@@ -130,6 +132,7 @@ struct ChatView: View {
     @State private var sending = false
     @State private var reportingMessage: Message?
     @State private var errorMessage: String?
+    @State private var blockedByMe = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -180,7 +183,11 @@ struct ChatView: View {
             }
 
             HStack(spacing: 10) {
-                TextField("Write a message…", text: $draft, axis: .vertical)
+                TextField(
+                    blockedByMe ? "Unblock this student to send messages" : "Write a message…",
+                    text: $draft,
+                    axis: .vertical
+                )
                     .lineLimit(1...4)
                     .padding(11)
                     .background(Color(.secondarySystemBackground))
@@ -198,7 +205,8 @@ struct ChatView: View {
                 }
                 .disabled(
                     draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-                    sending
+                    sending ||
+                    blockedByMe
                 )
             }
             .padding()
@@ -206,7 +214,16 @@ struct ChatView: View {
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
-        .task { await load() }
+        .task {
+            await loadBlockState()
+            await load()
+
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(5))
+                guard !Task.isCancelled else { break }
+                await load(silently: true)
+            }
+        }
         .sheet(item: $reportingMessage) { message in
             ReportSheet(subject: "message") { reason, details in
                 try await DataService.submitSafetyReport(
@@ -228,14 +245,23 @@ struct ChatView: View {
     }
 
     @MainActor
-    private func load() async {
+    private func load(silently: Bool = false) async {
         do {
             messages = try await DataService.messages(
                 conversationId: conversationId
             )
         } catch {
-            errorMessage = error.localizedDescription
+            if !silently {
+                errorMessage = error.localizedDescription
+            }
         }
+    }
+
+    @MainActor
+    private func loadBlockState() async {
+        guard let otherUserId else { return }
+        let blocked = (try? await DataService.blockedUserIDs()) ?? []
+        blockedByMe = blocked.contains(otherUserId)
     }
 
     @MainActor
@@ -267,6 +293,8 @@ struct ChatView: View {
     private func blockSender(_ userId: UUID) async {
         do {
             try await DataService.blockUser(userId)
+            blockedByMe = true
+            draft = ""
             errorMessage = "This student is now blocked. New messages between your accounts are disabled."
         } catch {
             errorMessage = error.localizedDescription
