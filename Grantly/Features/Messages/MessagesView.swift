@@ -2,34 +2,50 @@ import SwiftUI
 
 struct ConversationSummary: Identifiable {
     let id: UUID
+    let otherUserId: UUID?
+    let displayName: String
 }
 
 struct MessagesView: View {
     @Environment(AuthStore.self) private var auth
+
     @State private var conversations: [ConversationSummary] = []
     @State private var loading = true
+    @State private var errorMessage: String?
 
     var body: some View {
         Group {
             if loading {
                 ProgressView()
             } else if conversations.isEmpty {
-                EmptyState(icon: "bubble.left.and.bubble.right", title: "No messages yet", text: "Start a conversation from the Community tab.")
+                EmptyState(
+                    icon: "bubble.left.and.bubble.right",
+                    title: "No messages yet",
+                    text: "Start a conversation from the Community tab."
+                )
             } else {
                 List(conversations) { conversation in
                     NavigationLink {
-                        ChatView(conversationId: conversation.id)
+                        ChatView(
+                            conversationId: conversation.id,
+                            title: conversation.displayName
+                        )
                     } label: {
-                        HStack {
-                            Image(systemName: "bubble.left.fill")
+                        HStack(spacing: 12) {
+                            Text(conversation.displayName.prefix(2).uppercased())
+                                .font(.caption.bold())
                                 .frame(width: 42, height: 42)
                                 .background(Theme.violet.opacity(0.1))
                                 .foregroundStyle(Theme.violet)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                            VStack(alignment: .leading) {
-                                Text("Conversation").font(.headline)
-                                Text(conversation.id.uuidString.prefix(8))
-                                    .font(.caption).foregroundStyle(.secondary)
+
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(conversation.displayName)
+                                    .font(.headline)
+
+                                Text("Tap to open conversation")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
                             }
                         }
                     }
@@ -39,24 +55,81 @@ struct MessagesView: View {
         .navigationTitle("Messages")
         .refreshable { await load() }
         .task { await load() }
+        .alert("Unable to load messages", isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
     }
 
     @MainActor
     private func load() async {
+        loading = true
         defer { loading = false }
+
         guard let userId = auth.userId else { return }
-        let rows = (try? await DataService.conversationMemberships(userId: userId)) ?? []
-        conversations = rows.map { ConversationSummary(id: $0.conversationId) }
+
+        do {
+            let memberships = try await DataService.conversationMemberships(
+                userId: userId
+            )
+
+            var summaries: [ConversationSummary] = []
+
+            for membership in memberships {
+                let members = try await DataService.conversationMembers(
+                    conversationId: membership.conversationId
+                )
+
+                let otherUserId = members
+                    .map(\.userId)
+                    .first { $0 != userId }
+
+                var name = "Student"
+
+                if let otherUserId,
+                   let profile = try? await DataService.currentCommunityProfile(
+                    userId: otherUserId
+                   ) {
+                    let candidate = profile.displayName?
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+
+                    if let candidate, !candidate.isEmpty {
+                        name = candidate
+                    }
+                }
+
+                summaries.append(
+                    ConversationSummary(
+                        id: membership.conversationId,
+                        otherUserId: otherUserId,
+                        displayName: name
+                    )
+                )
+            }
+
+            conversations = summaries
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 
 struct ChatView: View {
     @Environment(AuthStore.self) private var auth
+
     let conversationId: UUID
+    let title: String
+
     @State private var messages: [Message] = []
     @State private var draft = ""
     @State private var sending = false
     @State private var reportingMessage: Message?
+    @State private var errorMessage: String?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -64,32 +137,45 @@ struct ChatView: View {
                 ScrollView {
                     LazyVStack(spacing: 8) {
                         ForEach(messages) { message in
-                            Bubble(message: message, mine: message.senderId == auth.userId)
-                                .id(message.id)
-                                .contextMenu {
-                                    if message.senderId != auth.userId {
-                                        Button(role: .destructive) {
-                                            Task {
-                                                try? await DataService.blockUser(message.senderId)
-                                            }
-                                        } label: {
-                                            Label("Block sender", systemImage: "person.crop.circle.badge.xmark")
+                            Bubble(
+                                message: message,
+                                mine: message.senderId == auth.userId
+                            )
+                            .id(message.id)
+                            .contextMenu {
+                                if message.senderId != auth.userId {
+                                    Button(role: .destructive) {
+                                        Task {
+                                            await blockSender(message.senderId)
                                         }
+                                    } label: {
+                                        Label(
+                                            "Block sender",
+                                            systemImage: "person.crop.circle.badge.xmark"
+                                        )
+                                    }
 
-                                        Button(role: .destructive) {
-                                            reportingMessage = message
-                                        } label: {
-                                            Label("Report message", systemImage: "exclamationmark.bubble")
-                                        }
+                                    Button(role: .destructive) {
+                                        reportingMessage = message
+                                    } label: {
+                                        Label(
+                                            "Report message",
+                                            systemImage: "exclamationmark.bubble"
+                                        )
                                     }
                                 }
+                            }
                         }
                     }
                     .padding()
                 }
                 .refreshable { await load() }
                 .onChange(of: messages.count) {
-                    if let last = messages.last { withAnimation { proxy.scrollTo(last.id, anchor: .bottom) } }
+                    if let last = messages.last {
+                        withAnimation {
+                            proxy.scrollTo(last.id, anchor: .bottom)
+                        }
+                    }
                 }
             }
 
@@ -110,12 +196,15 @@ struct ChatView: View {
                         .foregroundStyle(.white)
                         .clipShape(Circle())
                 }
-                .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || sending)
+                .disabled(
+                    draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+                    sending
+                )
             }
             .padding()
             .background(.ultraThinMaterial)
         }
-        .navigationTitle("Conversation")
+        .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }
         .sheet(item: $reportingMessage) { message in
@@ -128,25 +217,60 @@ struct ChatView: View {
                 )
             }
         }
+        .alert("Messaging error", isPresented: Binding(
+            get: { errorMessage != nil },
+            set: { if !$0 { errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
     }
 
     @MainActor
     private func load() async {
-        messages = (try? await DataService.messages(conversationId: conversationId)) ?? []
+        do {
+            messages = try await DataService.messages(
+                conversationId: conversationId
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     @MainActor
     private func send() async {
         guard let userId = auth.userId else { return }
-        let body = draft.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let body = draft.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
         guard !body.isEmpty else { return }
+
         sending = true
-        draft = ""
         defer { sending = false }
+
         do {
-            try await DataService.sendMessage(conversationId: conversationId, senderId: userId, body: body)
+            try await DataService.sendMessage(
+                conversationId: conversationId,
+                senderId: userId,
+                body: body
+            )
+            draft = ""
             await load()
-        } catch {}
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func blockSender(_ userId: UUID) async {
+        do {
+            try await DataService.blockUser(userId)
+            errorMessage = "This student is now blocked. New messages between your accounts are disabled."
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 
@@ -156,15 +280,25 @@ struct Bubble: View {
 
     var body: some View {
         HStack {
-            if mine { Spacer(minLength: 45) }
+            if mine {
+                Spacer(minLength: 45)
+            }
+
             Text(message.body)
                 .font(.body)
                 .padding(.horizontal, 13)
                 .padding(.vertical, 10)
-                .background(mine ? Theme.violet : Color(.secondarySystemBackground))
+                .background(
+                    mine
+                        ? Theme.violet
+                        : Color(.secondarySystemBackground)
+                )
                 .foregroundStyle(mine ? .white : .primary)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
-            if !mine { Spacer(minLength: 45) }
+
+            if !mine {
+                Spacer(minLength: 45)
+            }
         }
     }
 }
