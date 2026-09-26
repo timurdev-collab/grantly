@@ -216,8 +216,8 @@ struct AddScholarshipView: View {
                 .execute()
             onCreated()
             dismiss()
-        } catch {
-            error = error.localizedDescription
+        } catch let err {
+            error = err.localizedDescription
         }
     }
 }
