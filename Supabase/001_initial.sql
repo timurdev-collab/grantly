@@ -241,7 +241,7 @@ language sql
 stable
 security definer
 set search_path = public
-as $
+as $$
   select
     public.is_conversation_member(conversation_uuid)
     and not exists (
@@ -255,8 +255,14 @@ as $
         )
       where other_member.conversation_id = conversation_uuid
         and other_member.user_id <> (select auth.uid())
-    );
-$;
+    )
+    and (
+      select count(*)
+      from public.messages recent
+      where recent.sender_id = (select auth.uid())
+        and recent.created_at > now() - interval '60 seconds'
+    ) < 20;
+$$;
 
 revoke execute on function public.can_message_conversation(uuid) from public, anon;
 grant execute on function public.can_message_conversation(uuid) to authenticated;
