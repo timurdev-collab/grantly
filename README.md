@@ -147,3 +147,16 @@ Community-visible:
 - bio
 
 That separation should be preserved.
+
+
+## Application tracker migration
+
+Existing Supabase projects created before the application tracker was added should run:
+
+```text
+Supabase/003_saved_tracker.sql
+```
+
+Fresh projects can run `001_initial.sql` directly; it already contains the tracker columns, permissions and RLS policy.
+
+The iOS app uses the custom URL scheme `grantly://login-callback` for Supabase email verification. Add the same URL to Supabase Authentication → URL Configuration → Redirect URLs.
