@@ -27,7 +27,7 @@ enum DataService {
             .from("scholarships")
             .select()
             .eq("status", value: "published")
-            .order("verified_at", ascending: false)
+            .order("title", ascending: true)
             .execute()
             .value
     }
