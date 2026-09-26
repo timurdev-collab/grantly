@@ -103,7 +103,8 @@ struct PrimaryButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 15)
             .background(
-                Theme.orangeGradient
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Theme.orangeGradient)
                     .opacity(configuration.isPressed ? 0.82 : 1)
             )
             .foregroundStyle(.white)
