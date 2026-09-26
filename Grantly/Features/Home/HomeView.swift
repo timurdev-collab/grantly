@@ -176,7 +176,8 @@ struct UpcomingDeadlineCard: View {
             }
         }
         .padding(14)
-        .frame(width: 230, minHeight: 150, alignment: .leading)
+        .frame(width: 230, alignment: .leading)
+        .frame(minHeight: 150, alignment: .leading)
         .background(.white)
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(
