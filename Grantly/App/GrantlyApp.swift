@@ -10,7 +10,9 @@ struct GrantlyApp: App {
                 .environment(auth)
                 .tint(Theme.violet)
                 .onOpenURL { url in
-                    supabase.auth.handle(url)
+                    Task {
+                        await auth.handleDeepLink(url)
+                    }
                 }
         }
     }
