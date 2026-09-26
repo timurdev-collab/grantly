@@ -51,10 +51,7 @@ enum DataService {
 
             try await supabase
                 .from("saved_scholarships")
-                .upsert(
-                    SaveRow(user_id: userId, scholarship_id: scholarshipId),
-                    onConflict: "user_id,scholarship_id"
-                )
+                .insert(SaveRow(user_id: userId, scholarship_id: scholarshipId))
                 .execute()
         } else {
             try await supabase
