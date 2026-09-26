@@ -168,9 +168,6 @@ struct ScholarshipsView: View {
                         Spacer()
 
                         Menu {
-                        Spacer()
-
-                        Menu {
                             Button("Recommended") {
                                 sort = "Recommended"
                             }
