@@ -48,6 +48,8 @@ final class AuthStore {
 
         do {
             let session = try await supabase.auth.signIn(email: email, password: password)
+            UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
+            needsPasswordReset = false
             userId = session.user.id
             return true
         } catch {
