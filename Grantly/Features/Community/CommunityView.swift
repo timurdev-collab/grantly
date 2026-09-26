@@ -80,6 +80,7 @@ struct CommunityProfileView: View {
     let profile: CommunityProfile
     @State private var status = ""
     @State private var openingConversation = false
+    @State private var showingReport = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -130,6 +131,15 @@ struct CommunityProfileView: View {
             .buttonStyle(PrimaryButtonStyle())
             .disabled(profile.id == auth.userId || openingConversation)
 
+            if profile.id != auth.userId {
+                Button {
+                    showingReport = true
+                } label: {
+                    Label("Report student", systemImage: "exclamationmark.bubble")
+                }
+                .buttonStyle(SecondaryButtonStyle())
+            }
+
             if !status.isEmpty {
                 Text(status)
                     .font(.caption)
@@ -141,5 +151,14 @@ struct CommunityProfileView: View {
         .padding()
         .navigationTitle("Student")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingReport) {
+            ReportSheet(subject: profile.displayName ?? "student") { reason, details in
+                try await DataService.submitSafetyReport(
+                    reportedUserId: profile.id,
+                    reason: reason,
+                    details: details
+                )
+            }
+        }
     }
 }
