@@ -78,6 +78,11 @@ struct Scholarship: Codable, Identifiable, Hashable {
     var officialUrl: String
     var status: String
     var verifiedAt: String?
+    var description: String?
+    var sourceLabel: String?
+    var sourceUrl: String?
+    var sourceLicense: String?
+    var verificationStatus: String?
 
     enum CodingKeys: String, CodingKey {
         case id, slug, title, provider, country, region, fields, stipend, airfare, accommodation, status, deadline
@@ -91,6 +96,11 @@ struct Scholarship: Codable, Identifiable, Hashable {
         case eligibleNationalities = "eligible_nationalities"
         case officialUrl = "official_url"
         case verifiedAt = "verified_at"
+        case description
+        case sourceLabel = "source_label"
+        case sourceUrl = "source_url"
+        case sourceLicense = "source_license"
+        case verificationStatus = "verification_status"
     }
 }
 
