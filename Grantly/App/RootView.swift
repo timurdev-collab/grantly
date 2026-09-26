@@ -14,6 +14,70 @@ struct RootView: View {
             }
         }
         .animation(.easeInOut, value: auth.userId)
+        .sheet(isPresented: Binding(
+            get: { auth.needsPasswordReset },
+            set: { if !$0 { auth.cancelPasswordReset() } }
+        )) {
+            PasswordResetView()
+                .environment(auth)
+                .interactiveDismissDisabled()
+        }
     }
 }
 
+private struct PasswordResetView: View {
+    @Environment(AuthStore.self) private var auth
+
+    @State private var password = ""
+    @State private var confirmation = ""
+    @State private var busy = false
+
+    private var canSave: Bool {
+        password.count >= 8 &&
+        password == confirmation &&
+        !busy
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    Text("Choose a new password for your Grantly account.")
+                        .foregroundStyle(.secondary)
+                }
+
+                Section("New password") {
+                    SecureField("At least 8 characters", text: $password)
+                    SecureField("Confirm password", text: $confirmation)
+
+                    if !confirmation.isEmpty && password != confirmation {
+                        Text("Passwords do not match.")
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                }
+
+                if let error = auth.errorMessage {
+                    Section {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                }
+
+                Section {
+                    Button(busy ? "Updating…" : "Update password") {
+                        Task {
+                            busy = true
+                            _ = await auth.updateRecoveredPassword(password)
+                            busy = false
+                        }
+                    }
+                    .disabled(!canSave)
+                }
+            }
+            .navigationTitle("Reset Password")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+}
