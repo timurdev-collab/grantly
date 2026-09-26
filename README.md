@@ -160,3 +160,28 @@ Supabase/003_saved_tracker.sql
 Fresh projects can run `001_initial.sql` directly; it already contains the tracker columns, permissions and RLS policy.
 
 The iOS app uses the custom URL scheme `grantly://login-callback` for Supabase email verification. Add the same URL to Supabase Authentication → URL Configuration → Redirect URLs.
+
+
+## Password recovery
+
+The iOS app uses the same native deep link as signup confirmation:
+
+```text
+grantly://login-callback
+```
+
+Keep this URL in Supabase Authentication → URL Configuration → Redirect URLs.
+
+The app stores a local recovery-pending flag after a successful reset-email request. When the user opens the recovery link on the same iPhone, Grantly exchanges the PKCE code for a session and presents the new-password screen.
+
+## Community safety
+
+Grantly includes:
+- student and message reporting
+- user blocking and unblocking
+- server-enforced prevention of new messages between blocked accounts
+- an admin safety-report queue
+- in-app account deletion
+- in-app privacy and community-safety guidance
+
+The production database migrations for these features are in `Supabase/004_security_and_safety.sql` and `Supabase/005_user_blocking.sql`.
