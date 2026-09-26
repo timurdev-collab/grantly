@@ -220,6 +220,36 @@ enum DataService {
             .execute()
     }
 
+    static func submitSafetyReport(
+        reportedUserId: UUID,
+        messageId: UUID? = nil,
+        reason: String,
+        details: String
+    ) async throws {
+        let reporterId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let reporter_id: UUID
+            let reported_user_id: UUID
+            let message_id: UUID?
+            let reason: String
+            let details: String
+        }
+
+        let row = Row(
+            reporter_id: reporterId,
+            reported_user_id: reportedUserId,
+            message_id: messageId,
+            reason: reason,
+            details: details
+        )
+
+        try await supabase
+            .from("safety_reports")
+            .insert(row)
+            .execute()
+    }
+
     static func updateCommunityProfile(
         userId: UUID,
         displayName: String,
