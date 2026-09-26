@@ -8,6 +8,9 @@ final class AuthStore {
     var userId: UUID?
     var isLoading = true
     var errorMessage: String?
+    var needsPasswordReset = false
+
+    private let recoveryFlagKey = "grantly.awaitingPasswordRecovery"
 
     init() {
         Task { await restoreSession() }
@@ -22,6 +25,21 @@ final class AuthStore {
             userId = session.user.id
         } catch {
             userId = nil
+        }
+    }
+
+    func handleDeepLink(_ url: URL) async {
+        errorMessage = nil
+
+        do {
+            let session = try await supabase.auth.session(from: url)
+            userId = session.user.id
+
+            if UserDefaults.standard.bool(forKey: recoveryFlagKey) {
+                needsPasswordReset = true
+            }
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 
@@ -54,6 +72,43 @@ final class AuthStore {
         }
     }
 
+    func requestPasswordReset(email: String) async -> Bool {
+        errorMessage = nil
+
+        do {
+            try await supabase.auth.resetPasswordForEmail(
+                email,
+                redirectTo: URL(string: "grantly://login-callback")!
+            )
+            UserDefaults.standard.set(true, forKey: recoveryFlagKey)
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    func updateRecoveredPassword(_ password: String) async -> Bool {
+        errorMessage = nil
+
+        do {
+            try await supabase.auth.update(
+                user: UserAttributes(password: password)
+            )
+            UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
+            needsPasswordReset = false
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    func cancelPasswordReset() {
+        UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
+        needsPasswordReset = false
+    }
+
     func deleteAccount() async -> Bool {
         errorMessage = nil
 
@@ -71,6 +126,8 @@ final class AuthStore {
             }
 
             try? await supabase.auth.signOut()
+            UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
+            needsPasswordReset = false
             userId = nil
             return true
         } catch {
@@ -86,6 +143,8 @@ final class AuthStore {
             errorMessage = error.localizedDescription
         }
 
+        UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
+        needsPasswordReset = false
         userId = nil
     }
 }
