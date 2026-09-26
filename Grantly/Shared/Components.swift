@@ -4,16 +4,10 @@ struct SectionEyebrow: View {
     let text: String
 
     var body: some View {
-        HStack(spacing: 8) {
-            Rectangle()
-                .fill(Theme.brass)
-                .frame(width: 22, height: 1)
-
-            Text(text.uppercased())
-                .font(.caption2.weight(.bold))
-                .tracking(2)
-                .foregroundStyle(Theme.brass)
-        }
+        Text(text.uppercased())
+            .font(.system(size: 10, weight: .bold))
+            .tracking(1.5)
+            .foregroundStyle(Theme.orange)
     }
 }
 
@@ -147,17 +141,26 @@ struct GrantlyMonogram: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: size * 0.26)
-                .fill(dark ? Theme.navy : Theme.parchment)
+            RoundedRectangle(cornerRadius: size * 0.28)
+                .fill(dark ? Theme.surface : Theme.navyDeep)
 
-            RoundedRectangle(cornerRadius: size * 0.26)
-                .stroke(Theme.brass.opacity(0.65), lineWidth: 1)
-
-            Text("G")
-                .font(.system(size: size * 0.47, weight: .semibold, design: .serif))
-                .foregroundStyle(dark ? Theme.parchment : Theme.navy)
+            HStack(spacing: size * 0.04) {
+                Capsule()
+                    .fill(Theme.orangeGradient)
+                    .frame(width: size * 0.20, height: size * 0.47)
+                    .rotationEffect(.degrees(-28))
+                Capsule()
+                    .fill(Theme.orangeGradient)
+                    .frame(width: size * 0.20, height: size * 0.47)
+                    .rotationEffect(.degrees(28))
+            }
+            .offset(y: -size * 0.02)
         }
         .frame(width: size, height: size)
+        .overlay(
+            RoundedRectangle(cornerRadius: size * 0.28)
+                .stroke(Color.white.opacity(0.07), lineWidth: 1)
+        )
     }
 }
 
@@ -172,16 +175,10 @@ struct PremiumCard<Content: View>: View {
         content
             .padding(18)
             .background(Theme.cardBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .clipShape(RoundedRectangle(cornerRadius: 18))
             .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Theme.navy.opacity(0.07), lineWidth: 1)
-            )
-            .shadow(
-                color: Theme.ink.opacity(0.045),
-                radius: 18,
-                x: 0,
-                y: 8
+                RoundedRectangle(cornerRadius: 18)
+                    .stroke(Color.white.opacity(0.06), lineWidth: 1)
             )
     }
 }
@@ -197,7 +194,7 @@ struct AcademicSectionHeader: View {
                 SectionEyebrow(text: eyebrow)
                 Text(title)
                     .font(Theme.serifTitle(25))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(.white)
             }
 
             Spacer()
@@ -223,8 +220,8 @@ struct TrustSeal: View {
         .tracking(0.35)
         .padding(.horizontal, 9)
         .padding(.vertical, 6)
-        .background(verified ? Theme.sage : Theme.parchment)
-        .foregroundStyle(verified ? Theme.forest : Theme.oxblood)
+        .background(verified ? Theme.green.opacity(0.15) : Theme.orange.opacity(0.14))
+        .foregroundStyle(verified ? Theme.green : Theme.orange)
         .clipShape(Capsule())
     }
 }
