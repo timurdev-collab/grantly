@@ -205,3 +205,33 @@ For an existing database, run:
 - `Supabase/010_expand_scholarship_catalog.sql`
 
 The live Grantly Supabase project already contains these changes.
+
+
+## Scholarship quality pipeline
+
+Grantly treats catalog size and catalog trust as separate metrics.
+
+Public Explore intentionally hides records that are marked `needs_review`, have a generic homepage-only link, or have an unavailable source. A smaller trusted catalog is preferable to showing hundreds of synthetic or stale listings.
+
+Scholarship records now carry:
+- `verification_status`: verified, curated, needs_review
+- `link_status`: exact, reachable, generic, dead
+- `last_checked_at` and `final_url`
+- `deadline_candidate` and `deadline_confidence`
+- `application_cycle` and `deadline_notes`
+
+The `audit-scholarships` Edge Function can be run from the Admin dashboard in batches. It checks whether the source is reachable, flags generic/dead links and extracts possible deadline dates for review. It never promotes a record to `verified` automatically.
+
+Current cleanup policy:
+1. archive obviously synthetic or unsupported institutional variants
+2. replace them with named scholarship or official financial-aid programmes
+3. use exact official pages whenever possible
+4. publish current deadlines only when supported by the official source
+5. keep future-cycle or varying deadlines as explanatory notes instead of guessing a date
+
+Database changes are tracked in:
+- `Supabase/011_scholarship_quality_audit.sql`
+- `Supabase/012_verified_catalog_batch1.sql`
+
+The source auditor is tracked at:
+- `Supabase/functions/audit-scholarships/index.ts`
