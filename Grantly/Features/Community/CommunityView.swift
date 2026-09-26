@@ -2,15 +2,23 @@ import SwiftUI
 
 struct CommunityView: View {
     @State private var profiles: [CommunityProfile] = []
+    @State private var blockedUserIDs: Set<UUID> = []
     @State private var query = ""
     @State private var loading = true
 
     private var filtered: [CommunityProfile] {
-        guard !query.isEmpty else { return profiles }
-        let q = query.lowercased()
-        return profiles.filter {
-            "\($0.displayName ?? "") \($0.nationality ?? "") \($0.major ?? "") \($0.targetCountries?.joined(separator: " ") ?? "")"
-                .lowercased().contains(q)
+        profiles.filter { profile in
+            guard !blockedUserIDs.contains(profile.id) else { return false }
+
+            let q = query
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased()
+
+            guard !q.isEmpty else { return true }
+
+            return "\(profile.displayName ?? "") \(profile.nationality ?? "") \(profile.major ?? "") \(profile.targetCountries?.joined(separator: " ") ?? "")"
+                .lowercased()
+                .contains(q)
         }
     }
 
@@ -19,7 +27,11 @@ struct CommunityView: View {
             if loading {
                 ProgressView()
             } else if filtered.isEmpty {
-                EmptyState(icon: "person.3", title: "No students found", text: "Try a different search.")
+                EmptyState(
+                    icon: "person.3",
+                    title: "No students found",
+                    text: "Try a different search."
+                )
             } else {
                 List(filtered) { profile in
                     NavigationLink(value: profile) {
@@ -27,6 +39,7 @@ struct CommunityView: View {
                     }
                 }
                 .listStyle(.plain)
+                .refreshable { await load() }
             }
         }
         .searchable(text: $query, prompt: "Name, country, major")
@@ -44,30 +57,19 @@ struct CommunityView: View {
         .navigationDestination(for: CommunityProfile.self) { profile in
             CommunityProfileView(profile: profile)
         }
-        .task {
-            defer { loading = false }
-            profiles = (try? await DataService.communityProfiles()) ?? []
-        }
+        .task { await load() }
     }
 
     @MainActor
-    private func toggleBlock() async {
-        changingBlock = true
-        defer { changingBlock = false }
+    private func load() async {
+        loading = true
+        defer { loading = false }
 
-        do {
-            if isBlocked {
-                try await DataService.unblockUser(profile.id)
-                isBlocked = false
-                status = "Student unblocked."
-            } else {
-                try await DataService.blockUser(profile.id)
-                isBlocked = true
-                status = "Student blocked. They can no longer message you."
-            }
-        } catch {
-            status = error.localizedDescription
-        }
+        async let profileRows = DataService.communityProfiles()
+        async let blockedRows = DataService.blockedUserIDs()
+
+        profiles = (try? await profileRows) ?? []
+        blockedUserIDs = (try? await blockedRows) ?? []
     }
 }
 
@@ -97,7 +99,9 @@ struct CommunityRow: View {
 
 struct CommunityProfileView: View {
     @Environment(AuthStore.self) private var auth
+
     let profile: CommunityProfile
+
     @State private var status = ""
     @State private var openingConversation = false
     @State private var showingReport = false
@@ -129,37 +133,38 @@ struct CommunityProfileView: View {
                     Text("Target countries")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+
                     Text(countries.joined(separator: " · "))
                         .font(.subheadline.bold())
                 }
             }
 
             Button {
-                Task {
-                    guard profile.id != auth.userId else { return }
-                    openingConversation = true
-                    defer { openingConversation = false }
-
-                    do {
-                        _ = try await DataService.startDirectConversation(otherUser: profile.id)
-                        status = "Conversation created. Tap the messages icon in Community."
-                    } catch {
-                        status = error.localizedDescription
-                    }
-                }
+                Task { await startConversation() }
             } label: {
-                Label(openingConversation ? "Opening…" : "Start conversation", systemImage: "message.fill")
+                Label(
+                    openingConversation ? "Opening…" : "Start conversation",
+                    systemImage: "message.fill"
+                )
             }
             .buttonStyle(PrimaryButtonStyle())
-            .disabled(profile.id == auth.userId || openingConversation || isBlocked)
+            .disabled(
+                profile.id == auth.userId ||
+                openingConversation ||
+                isBlocked
+            )
 
             if profile.id != auth.userId {
                 Button {
                     Task { await toggleBlock() }
                 } label: {
                     Label(
-                        changingBlock ? "Updating…" : (isBlocked ? "Unblock student" : "Block student"),
-                        systemImage: isBlocked ? "person.crop.circle.badge.checkmark" : "person.crop.circle.badge.xmark"
+                        changingBlock
+                            ? "Updating…"
+                            : (isBlocked ? "Unblock student" : "Block student"),
+                        systemImage: isBlocked
+                            ? "person.crop.circle.badge.checkmark"
+                            : "person.crop.circle.badge.xmark"
                     )
                 }
                 .buttonStyle(SecondaryButtonStyle())
@@ -168,7 +173,10 @@ struct CommunityProfileView: View {
                 Button {
                     showingReport = true
                 } label: {
-                    Label("Report student", systemImage: "exclamationmark.bubble")
+                    Label(
+                        "Report student",
+                        systemImage: "exclamationmark.bubble"
+                    )
                 }
                 .buttonStyle(SecondaryButtonStyle())
             }
@@ -184,19 +192,61 @@ struct CommunityProfileView: View {
         .padding()
         .navigationTitle("Student")
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            guard profile.id != auth.userId else { return }
-            let blocked = (try? await DataService.blockedUserIDs()) ?? []
-            isBlocked = blocked.contains(profile.id)
-        }
+        .task { await loadBlockState() }
         .sheet(isPresented: $showingReport) {
-            ReportSheet(subject: profile.displayName ?? "student") { reason, details in
+            ReportSheet(
+                subject: profile.displayName ?? "student"
+            ) { reason, details in
                 try await DataService.submitSafetyReport(
                     reportedUserId: profile.id,
                     reason: reason,
                     details: details
                 )
             }
+        }
+    }
+
+    @MainActor
+    private func loadBlockState() async {
+        guard profile.id != auth.userId else { return }
+        let blocked = (try? await DataService.blockedUserIDs()) ?? []
+        isBlocked = blocked.contains(profile.id)
+    }
+
+    @MainActor
+    private func startConversation() async {
+        guard profile.id != auth.userId, !isBlocked else { return }
+
+        openingConversation = true
+        defer { openingConversation = false }
+
+        do {
+            _ = try await DataService.startDirectConversation(
+                otherUser: profile.id
+            )
+            status = "Conversation created. Tap the messages icon in Community."
+        } catch {
+            status = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func toggleBlock() async {
+        changingBlock = true
+        defer { changingBlock = false }
+
+        do {
+            if isBlocked {
+                try await DataService.unblockUser(profile.id)
+                isBlocked = false
+                status = "Student unblocked."
+            } else {
+                try await DataService.blockUser(profile.id)
+                isBlocked = true
+                status = "Student blocked. Messaging is disabled between your accounts."
+            }
+        } catch {
+            status = error.localizedDescription
         }
     }
 }
