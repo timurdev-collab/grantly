@@ -9,7 +9,7 @@ A native iPhone app version of Grantly built with SwiftUI and the official Supab
 - Student profile
 - Private academic/financial fields
 - Public-safe community profile
-- Scholarship directory
+- Scholarship directory with 500+ published opportunities
 - Profile-based scholarship matching
 - Match explanations and blockers
 - Saved scholarships
@@ -187,3 +187,21 @@ Grantly includes:
 - in-app privacy and community-safety guidance
 
 The production database migrations for these features are in `Supabase/004_security_and_safety.sql` and `Supabase/005_user_blocking.sql`.
+
+
+## Expanded scholarship catalog
+
+The production catalog currently contains 532 published scholarship records across 60 countries / destination labels and 8 regions.
+
+Catalog records have a source-quality status:
+- `verified`: reviewed directly by Grantly against the linked source
+- `curated`: imported from a curated dataset and shown with a reminder to verify current details
+- `needs_review`: reserved for records that should not be treated as current until reviewed
+
+The 468 catalog expansion records were transformed from the MIT-licensed ScholarFinder Bot scholarship dataset. See `THIRD_PARTY_NOTICES.md`.
+
+For an existing database, run:
+- `Supabase/009_catalog_source_metadata.sql`
+- `Supabase/010_expand_scholarship_catalog.sql`
+
+The live Grantly Supabase project already contains these changes.
