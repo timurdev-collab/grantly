@@ -327,7 +327,13 @@ using ((select auth.uid()) = id or public.is_admin());
 -- Public can read only published scholarships; admins can read every status.
 create policy "public reads published scholarships"
 on public.scholarships for select
-using (status = 'published' or public.is_admin());
+to public
+using (status = 'published');
+
+create policy "admins read all scholarships"
+on public.scholarships for select
+to authenticated
+using (public.is_admin());
 
 create policy "admins insert scholarships"
 on public.scholarships for insert to authenticated
