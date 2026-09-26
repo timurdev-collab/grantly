@@ -84,7 +84,7 @@ struct MyScholarshipsView: View {
             .padding()
         }
         .background(Theme.pageBackground)
-        .navigationTitle("Shortlist")
+        .navigationTitle("My Scholarships")
         .navigationBarTitleDisplayMode(.inline)
         .refreshable {
             await load()
@@ -157,14 +157,14 @@ struct MyScholarshipsView: View {
 
     private var shortlistHero: some View {
         VStack(alignment: .leading, spacing: 16) {
-            SectionEyebrow(text: "Application desk")
+            SectionEyebrow(text: "Your scholarships")
 
-            Text("Your shortlist,\nturned into a plan.")
+            Text("Track every\nopportunity.")
                 .font(Theme.serifTitle(31, weight: .medium))
                 .tracking(-0.5)
                 .foregroundStyle(Color.white)
 
-            Text("Move every scholarship from first idea to final result without losing the details in between.")
+            Text("Save scholarships, update application stages and keep deadlines in one place.")
                 .font(.subheadline)
                 .foregroundStyle(.white.opacity(0.68))
                 .lineSpacing(3)
