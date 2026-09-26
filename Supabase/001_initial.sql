@@ -325,15 +325,15 @@ on public.community_profiles for delete to authenticated
 using ((select auth.uid()) = id or public.is_admin());
 
 -- Public can read only published scholarships; admins can read every status.
-create policy "public reads published scholarships"
+create policy "anonymous reads published scholarships"
 on public.scholarships for select
-to public
+to anon
 using (status = 'published');
 
-create policy "admins read all scholarships"
+create policy "authenticated reads scholarships"
 on public.scholarships for select
 to authenticated
-using (public.is_admin());
+using (status = 'published' or public.is_admin());
 
 create policy "admins insert scholarships"
 on public.scholarships for insert to authenticated
