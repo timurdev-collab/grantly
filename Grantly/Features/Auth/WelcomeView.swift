@@ -4,67 +4,91 @@ struct WelcomeView: View {
     @State private var showingLogin = false
     @State private var showingSignup = false
 
+    private let earthURL = URL(string:
+        "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?auto=format&fit=crop&w=1200&q=88"
+    )
+
     var body: some View {
         ZStack {
             Theme.navyDeep.ignoresSafeArea()
 
-            RadialGradient(
-                colors: [Theme.orange.opacity(0.14), .clear],
-                center: .bottomLeading,
-                startRadius: 20,
-                endRadius: 360
+            LinearGradient(
+                colors: [Theme.navyDeep, Theme.navy, Theme.navyDeep],
+                startPoint: .top,
+                endPoint: .bottom
             )
             .ignoresSafeArea()
 
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
-                    Spacer(minLength: 42)
+                    Spacer(minLength: 34)
 
-                    GrantlyMonogram(size: 72)
+                    GrantlyMonogram(size: 64)
 
                     Text("Grantly")
-                        .font(.system(size: 38, weight: .bold))
+                        .font(.system(size: 36, weight: .bold))
                         .foregroundStyle(.white)
-                        .padding(.top, 16)
-
-                    Text("Global opportunities\nfor brighter futures")
-                        .font(.system(size: 25, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.white)
-                        .padding(.top, 32)
-
-                    Text("Discover scholarships, connect with a global community and take the next step in your journey.")
-                        .font(.body)
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.white.opacity(0.67))
-                        .lineSpacing(4)
-                        .padding(.horizontal, 28)
                         .padding(.top, 14)
 
-                    ZStack(alignment: .bottom) {
-                        Circle()
-                            .fill(
-                                RadialGradient(
-                                    colors: [Theme.sky.opacity(0.42), Theme.navyDeep],
-                                    center: .center,
-                                    startRadius: 20,
-                                    endRadius: 150
-                                )
-                            )
-                            .frame(width: 270, height: 270)
+                    Text("Global opportunities for\nbrighter futures")
+                        .font(.system(size: 24, weight: .bold))
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.white)
+                        .padding(.top, 30)
 
-                        Circle()
-                            .trim(from: 0.03, to: 0.46)
-                            .stroke(
-                                Theme.orangeGradient,
-                                style: StrokeStyle(lineWidth: 4, lineCap: .round)
-                            )
-                            .rotationEffect(.degrees(8))
-                            .frame(width: 250, height: 250)
-                            .shadow(color: Theme.orange.opacity(0.65), radius: 12)
+                    Text("Discover scholarships, connect with a global community and take the next step in your journey.")
+                        .font(.subheadline)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.white.opacity(0.68))
+                        .lineSpacing(4)
+                        .padding(.horizontal, 34)
+                        .padding(.top, 12)
+
+                    ZStack(alignment: .bottom) {
+                        AsyncImage(url: earthURL) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            case .failure:
+                                ZStack {
+                                    Circle()
+                                        .fill(
+                                            RadialGradient(
+                                                colors: [Theme.blue.opacity(0.48), Theme.navyDeep],
+                                                center: .center,
+                                                startRadius: 18,
+                                                endRadius: 150
+                                            )
+                                        )
+                                    Image(systemName: "globe.americas.fill")
+                                        .font(.system(size: 112))
+                                        .foregroundStyle(Theme.blue.opacity(0.36))
+                                }
+                            default:
+                                ProgressView().tint(Theme.blue)
+                            }
+                        }
+                        .frame(height: 250)
+                        .clipShape(RoundedRectangle(cornerRadius: 26))
+
+                        LinearGradient(
+                            colors: [.clear, Theme.navyDeep.opacity(0.86)],
+                            startPoint: .center,
+                            endPoint: .bottom
+                        )
+                        .frame(height: 110)
                     }
-                    .frame(height: 235)
-                    .padding(.top, 8)
+                    .padding(.horizontal, 18)
+                    .padding(.top, 22)
+
+                    HStack(spacing: 6) {
+                        Circle().fill(Theme.blue).frame(width: 7, height: 7)
+                        Circle().fill(.white.opacity(0.30)).frame(width: 6, height: 6)
+                        Circle().fill(.white.opacity(0.30)).frame(width: 6, height: 6)
+                    }
+                    .padding(.top, 10)
 
                     VStack(spacing: 12) {
                         Button("Get started") {
@@ -104,7 +128,7 @@ struct PrimaryButtonStyle: ButtonStyle {
             .padding(.vertical, 15)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(Theme.orangeGradient)
+                    .fill(Theme.blueGradient)
                     .opacity(configuration.isPressed ? 0.82 : 1)
             )
             .foregroundStyle(.white)
@@ -118,11 +142,11 @@ struct SecondaryButtonStyle: ButtonStyle {
             .font(.headline.weight(.semibold))
             .frame(maxWidth: .infinity)
             .padding(.vertical, 15)
-            .background(Theme.surface.opacity(configuration.isPressed ? 0.75 : 1))
+            .background(Theme.navyDeep.opacity(configuration.isPressed ? 0.75 : 1))
             .foregroundStyle(.white)
             .overlay(
                 RoundedRectangle(cornerRadius: 14)
-                    .stroke(Theme.orange.opacity(0.75), lineWidth: 1)
+                    .stroke(Theme.blue.opacity(0.75), lineWidth: 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: 14))
     }
