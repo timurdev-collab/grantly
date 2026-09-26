@@ -1,16 +1,29 @@
 import SwiftUI
 
+private enum MainTab: Hashable {
+    case home
+    case explore
+    case saved
+    case community
+    case profile
+}
+
 struct MainTabView: View {
     @State private var profile: StudentProfile?
+    @State private var selection: MainTab = .home
 
     var body: some View {
-        TabView {
+        TabView(selection: $selection) {
             NavigationStack {
-                HomeView(profile: $profile)
+                HomeView(
+                    profile: $profile,
+                    openProfile: { selection = .profile }
+                )
             }
             .tabItem {
                 Label("For You", systemImage: "sparkles")
             }
+            .tag(MainTab.home)
 
             NavigationStack {
                 ScholarshipsView()
@@ -18,6 +31,7 @@ struct MainTabView: View {
             .tabItem {
                 Label("Explore", systemImage: "globe")
             }
+            .tag(MainTab.explore)
 
             NavigationStack {
                 MyScholarshipsView()
@@ -25,6 +39,7 @@ struct MainTabView: View {
             .tabItem {
                 Label("Saved", systemImage: "bookmark.fill")
             }
+            .tag(MainTab.saved)
 
             NavigationStack {
                 CommunityView()
@@ -32,6 +47,7 @@ struct MainTabView: View {
             .tabItem {
                 Label("Community", systemImage: "person.3.fill")
             }
+            .tag(MainTab.community)
 
             NavigationStack {
                 ProfileView(profile: $profile)
@@ -39,6 +55,7 @@ struct MainTabView: View {
             .tabItem {
                 Label("Profile", systemImage: "person.crop.circle.fill")
             }
+            .tag(MainTab.profile)
         }
         .task {
             guard profile == nil,

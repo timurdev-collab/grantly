@@ -84,6 +84,12 @@ struct ProfileView: View {
                 .disabled(saving || fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
 
+            Section("Privacy & safety") {
+                NavigationLink("Privacy & Safety") {
+                    PrivacyAndSafetyView()
+                }
+            }
+
             Section("Account") {
                 Button("Sign out") {
                     Task { await auth.signOut() }
@@ -317,5 +323,58 @@ private struct BlockedUsersView: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+
+private struct PrivacyAndSafetyView: View {
+    var body: some View {
+        List {
+            Section("Your data") {
+                Label(
+                    "Your academic profile and family income are private to your account.",
+                    systemImage: "lock.shield"
+                )
+
+                Label(
+                    "Your Community profile is separate and can be hidden at any time from Profile.",
+                    systemImage: "person.3"
+                )
+
+                Label(
+                    "Saved scholarships, application statuses and notes are visible only to your account.",
+                    systemImage: "bookmark"
+                )
+            }
+
+            Section("Community safety") {
+                Label(
+                    "Avoid sharing passwords, financial account details, identity documents or other sensitive information in messages.",
+                    systemImage: "exclamationmark.shield"
+                )
+
+                Label(
+                    "You can report a student or message and block a student whenever needed.",
+                    systemImage: "hand.raised"
+                )
+
+                Label(
+                    "Blocking disables new direct messages between the two accounts.",
+                    systemImage: "person.crop.circle.badge.xmark"
+                )
+            }
+
+            Section("Scholarship information") {
+                Text("Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying.")
+                    .foregroundStyle(.secondary)
+            }
+
+            Section("Account control") {
+                Text("You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships.")
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle("Privacy & Safety")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

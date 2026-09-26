@@ -2,8 +2,25 @@ import SwiftUI
 
 struct HomeView: View {
     @Binding var profile: StudentProfile?
+    let openProfile: () -> Void
+
     @State private var matches: [ScholarshipMatch] = []
     @State private var loading = true
+
+    private var profileNeedsSetup: Bool {
+        guard let profile else { return true }
+
+        let requiredText = [
+            profile.fullName,
+            profile.nationality,
+            profile.intendedMajor,
+            profile.degreeLevel
+        ]
+
+        return requiredText.contains {
+            ($0 ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
+    }
 
     var body: some View {
         ScrollView {
@@ -12,24 +29,32 @@ struct HomeView: View {
                 Text("Welcome\(profile?.fullName.map { ", \($0)" } ?? "")")
                     .font(.largeTitle.bold())
 
-                if let profile {
+                if profileNeedsSetup {
+                    ProfileSetupCard(openProfile: openProfile)
+                } else if let profile {
                     ProfileSnapshot(profile: profile)
-                } else {
-                    Text("Complete your profile to receive personalized scholarship matches.")
-                        .foregroundStyle(.secondary)
                 }
 
                 HStack {
-                    Text("Best matches").font(.title2.bold())
+                    Text(profileNeedsSetup ? "Explore opportunities" : "Best matches")
+                        .font(.title2.bold())
                     Spacer()
                     NavigationLink("See all") { MatchListView(profile: profile) }
                         .font(.subheadline.weight(.semibold))
                 }
 
-                if loading {
+                if profileNeedsSetup {
+                    Text("Complete your profile to unlock personalized eligibility matching.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else if loading {
                     ProgressView().frame(maxWidth: .infinity)
                 } else if matches.isEmpty {
-                    EmptyState(icon: "sparkles", title: "No matches yet", text: "Complete your profile or check the scholarship directory.")
+                    EmptyState(
+                        icon: "sparkles",
+                        title: "No matches yet",
+                        text: "Check the scholarship directory or update your profile."
+                    )
                 } else {
                     ForEach(matches.prefix(4)) { match in
                         NavigationLink {
@@ -52,11 +77,36 @@ struct HomeView: View {
     @MainActor
     private func load() async {
         defer { loading = false }
-        guard let profile else { return }
+        guard let profile, !profileNeedsSetup else {
+            matches = []
+            return
+        }
+
         do {
             let scholarships = try await DataService.scholarships()
             matches = Array(MatchingService.rank(profile: profile, scholarships: scholarships).prefix(8))
         } catch {}
+    }
+}
+
+struct ProfileSetupCard: View {
+    let openProfile: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Label("Complete your profile", systemImage: "person.crop.circle.badge.plus")
+                .font(.headline)
+
+            Text("Tell Grantly your study goals and academic details so your scholarship matches are based on your profile.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+
+            Button("Set up profile", action: openProfile)
+                .buttonStyle(PrimaryButtonStyle())
+        }
+        .padding()
+        .background(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
     }
 }
 

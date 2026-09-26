@@ -133,6 +133,15 @@ enum DataService {
             .value
     }
 
+    static func conversationMembers(conversationId: UUID) async throws -> [ConversationMember] {
+        try await supabase
+            .from("conversation_members")
+            .select()
+            .eq("conversation_id", value: conversationId.uuidString)
+            .execute()
+            .value
+    }
+
     static func messages(conversationId: UUID) async throws -> [Message] {
         try await supabase
             .from("messages")

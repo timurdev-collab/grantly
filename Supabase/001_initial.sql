@@ -241,7 +241,7 @@ language sql
 stable
 security definer
 set search_path = public
-as $
+as $$
   select
     public.is_conversation_member(conversation_uuid)
     and not exists (
@@ -255,8 +255,14 @@ as $
         )
       where other_member.conversation_id = conversation_uuid
         and other_member.user_id <> (select auth.uid())
-    );
-$;
+    )
+    and (
+      select count(*)
+      from public.messages recent
+      where recent.sender_id = (select auth.uid())
+        and recent.created_at > now() - interval '60 seconds'
+    ) < 20;
+$$;
 
 revoke execute on function public.can_message_conversation(uuid) from public, anon;
 grant execute on function public.can_message_conversation(uuid) to authenticated;
@@ -319,8 +325,14 @@ on public.community_profiles for delete to authenticated
 using ((select auth.uid()) = id or public.is_admin());
 
 -- Public can read only published scholarships; admins can read every status.
-create policy "public reads published scholarships"
+create policy "anonymous reads published scholarships"
 on public.scholarships for select
+to anon
+using (status = 'published');
+
+create policy "authenticated reads scholarships"
+on public.scholarships for select
+to authenticated
 using (status = 'published' or public.is_admin());
 
 create policy "admins insert scholarships"
