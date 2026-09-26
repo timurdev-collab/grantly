@@ -264,13 +264,28 @@ struct ScholarshipsView: View {
 
     @MainActor
     private func load() async {
-        loading = true
-        defer { loading = false }
+        let isInitialLoad = scholarships.isEmpty
+
+        if isInitialLoad {
+            loading = true
+        }
+
+        defer {
+            if isInitialLoad {
+                loading = false
+            }
+        }
 
         do {
-            scholarships = try await DataService.scholarships()
+            let refreshed = try await DataService.scholarships()
+
+            // Keep the current catalog visible while pull-to-refresh runs,
+            // then replace it only after the new response has arrived.
+            scholarships = refreshed
             errorMessage = nil
         } catch {
+            // Never blank a previously loaded Explore screen because a
+            // refresh failed. The existing catalog remains on screen.
             errorMessage = error.localizedDescription
         }
     }
