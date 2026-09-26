@@ -21,7 +21,7 @@ struct MainTabView: View {
                 )
             }
             .tabItem {
-                Label("For You", systemImage: "sparkles")
+                Label("Home", systemImage: "house.fill")
             }
             .tag(MainTab.home)
 
@@ -29,7 +29,7 @@ struct MainTabView: View {
                 ScholarshipsView()
             }
             .tabItem {
-                Label("Explore", systemImage: "globe")
+                Label("Explore", systemImage: "books.vertical.fill")
             }
             .tag(MainTab.explore)
 
@@ -37,7 +37,7 @@ struct MainTabView: View {
                 MyScholarshipsView()
             }
             .tabItem {
-                Label("Saved", systemImage: "bookmark.fill")
+                Label("Shortlist", systemImage: "bookmark.fill")
             }
             .tag(MainTab.saved)
 
@@ -45,7 +45,7 @@ struct MainTabView: View {
                 CommunityView()
             }
             .tabItem {
-                Label("Community", systemImage: "person.3.fill")
+                Label("Community", systemImage: "person.2.fill")
             }
             .tag(MainTab.community)
 
@@ -57,6 +57,9 @@ struct MainTabView: View {
             }
             .tag(MainTab.profile)
         }
+        .tint(Theme.brass)
+        .toolbarBackground(Theme.ivory, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
         .task {
             guard profile == nil,
                   let userId = try? await supabase.auth.session.user.id else {
