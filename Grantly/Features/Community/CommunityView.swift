@@ -49,6 +49,26 @@ struct CommunityView: View {
             profiles = (try? await DataService.communityProfiles()) ?? []
         }
     }
+
+    @MainActor
+    private func toggleBlock() async {
+        changingBlock = true
+        defer { changingBlock = false }
+
+        do {
+            if isBlocked {
+                try await DataService.unblockUser(profile.id)
+                isBlocked = false
+                status = "Student unblocked."
+            } else {
+                try await DataService.blockUser(profile.id)
+                isBlocked = true
+                status = "Student blocked. They can no longer message you."
+            }
+        } catch {
+            status = error.localizedDescription
+        }
+    }
 }
 
 struct CommunityRow: View {
@@ -81,6 +101,8 @@ struct CommunityProfileView: View {
     @State private var status = ""
     @State private var openingConversation = false
     @State private var showingReport = false
+    @State private var isBlocked = false
+    @State private var changingBlock = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -129,9 +151,20 @@ struct CommunityProfileView: View {
                 Label(openingConversation ? "Opening…" : "Start conversation", systemImage: "message.fill")
             }
             .buttonStyle(PrimaryButtonStyle())
-            .disabled(profile.id == auth.userId || openingConversation)
+            .disabled(profile.id == auth.userId || openingConversation || isBlocked)
 
             if profile.id != auth.userId {
+                Button {
+                    Task { await toggleBlock() }
+                } label: {
+                    Label(
+                        changingBlock ? "Updating…" : (isBlocked ? "Unblock student" : "Block student"),
+                        systemImage: isBlocked ? "person.crop.circle.badge.checkmark" : "person.crop.circle.badge.xmark"
+                    )
+                }
+                .buttonStyle(SecondaryButtonStyle())
+                .disabled(changingBlock)
+
                 Button {
                     showingReport = true
                 } label: {
@@ -151,6 +184,11 @@ struct CommunityProfileView: View {
         .padding()
         .navigationTitle("Student")
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            guard profile.id != auth.userId else { return }
+            let blocked = (try? await DataService.blockedUserIDs()) ?? []
+            isBlocked = blocked.contains(profile.id)
+        }
         .sheet(isPresented: $showingReport) {
             ReportSheet(subject: profile.displayName ?? "student") { reason, details in
                 try await DataService.submitSafetyReport(
