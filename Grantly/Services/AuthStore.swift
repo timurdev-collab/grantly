@@ -27,6 +27,7 @@ final class AuthStore {
 
     func signIn(email: String, password: String) async -> Bool {
         errorMessage = nil
+
         do {
             let session = try await supabase.auth.signIn(email: email, password: password)
             userId = session.user.id
@@ -39,9 +40,13 @@ final class AuthStore {
 
     func signUp(email: String, password: String) async -> Bool {
         errorMessage = nil
+
         do {
-            _ = try await supabase.auth.signUp(email: email, password: password)
-            // With email confirmation enabled, the user verifies email before the first sign-in.
+            _ = try await supabase.auth.signUp(
+                email: email,
+                password: password,
+                redirectTo: URL(string: "grantly://login-callback")!
+            )
             return true
         } catch {
             errorMessage = error.localizedDescription
@@ -50,7 +55,12 @@ final class AuthStore {
     }
 
     func signOut() async {
-        do { try await supabase.auth.signOut() } catch {}
+        do {
+            try await supabase.auth.signOut()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+
         userId = nil
     }
 }
