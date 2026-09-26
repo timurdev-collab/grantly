@@ -69,6 +69,14 @@ struct ChatView: View {
                                 .contextMenu {
                                     if message.senderId != auth.userId {
                                         Button(role: .destructive) {
+                                            Task {
+                                                try? await DataService.blockUser(message.senderId)
+                                            }
+                                        } label: {
+                                            Label("Block sender", systemImage: "person.crop.circle.badge.xmark")
+                                        }
+
+                                        Button(role: .destructive) {
                                             reportingMessage = message
                                         } label: {
                                             Label("Report message", systemImage: "exclamationmark.bubble")
