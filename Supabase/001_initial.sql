@@ -96,6 +96,14 @@ create table public.messages (
   read_at timestamptz
 );
 
+create table public.user_blocks (
+  blocker_id uuid not null references auth.users(id) on delete cascade,
+  blocked_id uuid not null references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (blocker_id, blocked_id),
+  check (blocker_id <> blocked_id)
+);
+
 create table public.safety_reports (
   id uuid primary key default gen_random_uuid(),
   reporter_id uuid references auth.users(id) on delete set null,
@@ -119,6 +127,7 @@ create index messages_sender_idx on public.messages(sender_id);
 create index safety_reports_reporter_idx on public.safety_reports(reporter_id, created_at desc);
 create index safety_reports_status_idx on public.safety_reports(status, created_at desc);
 create index safety_reports_reported_user_idx on public.safety_reports(reported_user_id, created_at desc);
+create index user_blocks_blocked_idx on public.user_blocks(blocked_id);
 
 -- Create profile rows when Auth creates a user.
 create or replace function public.handle_new_user()
@@ -187,6 +196,15 @@ declare
 begin
   if me is null then raise exception 'Not authenticated'; end if;
   if other_user = me then raise exception 'Cannot message yourself'; end if;
+  if exists (
+    select 1
+    from public.user_blocks
+    where (blocker_id = me and blocked_id = other_user)
+       or (blocker_id = other_user and blocked_id = me)
+  ) then
+    raise exception 'Messaging is unavailable between these accounts';
+  end if;
+
   if not exists(select 1 from public.community_profiles where id=other_user and is_visible=true)
     then raise exception 'User is not available for community messaging';
   end if;
@@ -216,6 +234,32 @@ grant execute on function public.is_conversation_member(uuid) to authenticated;
 revoke execute on function public.start_direct_conversation(uuid) from public, anon;
 grant execute on function public.start_direct_conversation(uuid) to authenticated;
 
+create or replace function public.can_message_conversation(conversation_uuid uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $
+  select
+    public.is_conversation_member(conversation_uuid)
+    and not exists (
+      select 1
+      from public.conversation_members other_member
+      join public.user_blocks b
+        on (
+          (b.blocker_id = (select auth.uid()) and b.blocked_id = other_member.user_id)
+          or
+          (b.blocked_id = (select auth.uid()) and b.blocker_id = other_member.user_id)
+        )
+      where other_member.conversation_id = conversation_uuid
+        and other_member.user_id <> (select auth.uid())
+    );
+$;
+
+revoke execute on function public.can_message_conversation(uuid) from public, anon;
+grant execute on function public.can_message_conversation(uuid) to authenticated;
+
 -- RLS
 alter table public.student_profiles enable row level security;
 alter table public.community_profiles enable row level security;
@@ -225,11 +269,12 @@ alter table public.conversations enable row level security;
 alter table public.conversation_members enable row level security;
 alter table public.messages enable row level security;
 alter table public.safety_reports enable row level security;
+alter table public.user_blocks enable row level security;
 
 -- Least-privilege grants
 revoke all on public.student_profiles, public.community_profiles, public.scholarships,
   public.saved_scholarships, public.conversations, public.conversation_members, public.messages,
-  public.safety_reports
+  public.safety_reports, public.user_blocks
   from anon, authenticated;
 
 grant select on public.scholarships to anon, authenticated;
@@ -242,6 +287,7 @@ grant select on public.conversations to authenticated;
 grant select on public.conversation_members to authenticated;
 grant select, insert on public.messages to authenticated;
 grant select, insert, update on public.safety_reports to authenticated;
+grant select, insert, delete on public.user_blocks to authenticated;
 
 -- Private profile: self or admin only.
 create policy "student profile self select"
@@ -306,6 +352,19 @@ create policy "users delete own saves"
 on public.saved_scholarships for delete to authenticated
 using ((select auth.uid()) = user_id);
 
+-- User blocks belong to the current user.
+create policy "users view own blocks"
+on public.user_blocks for select to authenticated
+using (blocker_id = (select auth.uid()));
+
+create policy "users create own blocks"
+on public.user_blocks for insert to authenticated
+with check (blocker_id = (select auth.uid()));
+
+create policy "users delete own blocks"
+on public.user_blocks for delete to authenticated
+using (blocker_id = (select auth.uid()));
+
 -- Conversation access only for members.
 create policy "members read conversations"
 on public.conversations for select to authenticated
@@ -322,8 +381,8 @@ using (public.is_conversation_member(messages.conversation_id));
 create policy "members send messages"
 on public.messages for insert to authenticated
 with check (
-  sender_id=(select auth.uid())
-  and public.is_conversation_member(messages.conversation_id)
+  sender_id = (select auth.uid())
+  and public.can_message_conversation(messages.conversation_id)
 );
 
 -- Safety reports can be created by signed-in users and reviewed by admins.
