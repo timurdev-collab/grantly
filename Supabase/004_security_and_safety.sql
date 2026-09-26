@@ -61,3 +61,5 @@ create index if not exists safety_reports_status_idx
   on public.safety_reports(status, created_at desc);
 create index if not exists safety_reports_reported_user_idx
   on public.safety_reports(reported_user_id, created_at desc);
+create index if not exists safety_reports_message_idx
+  on public.safety_reports(message_id);
