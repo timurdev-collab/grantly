@@ -28,6 +28,7 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 26) {
+                brandHeader
                 homeHero
 
                 if profileNeedsSetup {
@@ -111,6 +112,24 @@ struct HomeView: View {
         }
     }
 
+    private var brandHeader: some View {
+        HStack(spacing: 10) {
+            GrantlyMonogram(size: 38)
+
+            Text("Grantly")
+                .font(.system(size: 23, weight: .bold))
+                .foregroundStyle(.white)
+
+            Spacer()
+
+            Image(systemName: "bell")
+                .foregroundStyle(.white.opacity(0.78))
+                .frame(width: 36, height: 36)
+                .background(Theme.surface)
+                .clipShape(Circle())
+        }
+    }
+
     private var homeHero: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
@@ -118,22 +137,22 @@ struct HomeView: View {
 
                 Spacer()
 
-                Text("YOUR ADMISSIONS DESK")
-                    .font(.system(size: 9, weight: .bold))
-                    .tracking(1.5)
-                    .foregroundStyle(.white.opacity(0.48))
+                Text("YOUR GLOBAL FUTURE")
+                    .font(.system(size: 10, weight: .bold))
+                    .tracking(1.3)
+                    .foregroundStyle(Theme.orange)
             }
 
             Text(greeting)
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.brassSoft)
+                .foregroundStyle(.white.opacity(0.66))
 
-            Text("Turn ambition\ninto an application.")
-                .font(Theme.serifTitle(35, weight: .medium))
-                .tracking(-0.7)
-                .foregroundStyle(Theme.parchment)
+            Text("Your global future\nstarts here.")
+                .font(.system(size: 34, weight: .bold))
+                .tracking(-0.6)
+                .foregroundStyle(.white)
 
-            Text("Your matches, deadlines and shortlist — organized around the education you want.")
+            Text("Discover scholarships, track deadlines and move every application forward.")
                 .font(.subheadline)
                 .foregroundStyle(.white.opacity(0.70))
                 .lineSpacing(4)
@@ -153,7 +172,13 @@ struct HomeView: View {
             }
         }
         .padding(20)
-        .background(Theme.heroGradient)
+        .background(
+            LinearGradient(
+                colors: [Theme.surfaceRaised, Theme.navy],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .overlay(
             RoundedRectangle(cornerRadius: 24)
@@ -270,7 +295,7 @@ struct UpcomingDeadlineCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(Theme.navy.opacity(0.07))
+                .stroke(Color.white.opacity(0.06))
         )
     }
 }
@@ -296,16 +321,16 @@ struct ProfileSetupCard: View {
             VStack(alignment: .leading, spacing: 15) {
                 HStack {
                     Image(systemName: "graduationcap.fill")
-                        .foregroundStyle(Theme.brass)
+                        .foregroundStyle(Theme.orange)
                         .frame(width: 38, height: 38)
-                        .background(Theme.parchment)
+                        .background(Theme.surfaceRaised)
                         .clipShape(Circle())
 
                     Spacer()
 
                     Text("01")
                         .font(Theme.serifTitle(19))
-                        .foregroundStyle(Theme.brass)
+                        .foregroundStyle(Theme.orange)
                 }
 
                 Text("Start with your academic profile.")
@@ -345,8 +370,8 @@ struct ProfileSnapshot: View {
                         .font(.caption.bold())
                         .padding(.horizontal, 10)
                         .padding(.vertical, 7)
-                        .background(Theme.parchment)
-                        .foregroundStyle(Theme.navy)
+                        .background(Theme.surfaceRaised)
+                        .foregroundStyle(.white)
                         .clipShape(Capsule())
                 }
 
@@ -454,7 +479,7 @@ struct MatchCard: View {
 
                 Image(systemName: "arrow.up.right")
                     .font(.caption.bold())
-                    .foregroundStyle(Theme.brass)
+                    .foregroundStyle(Theme.orange)
             }
         }
     }

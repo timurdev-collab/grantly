@@ -57,9 +57,10 @@ struct MainTabView: View {
             }
             .tag(MainTab.profile)
         }
-        .tint(Theme.brass)
-        .toolbarBackground(Theme.ivory, for: .tabBar)
+        .tint(Theme.orange)
+        .toolbarBackground(Theme.navy, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
+        .preferredColorScheme(.dark)
         .task {
             guard profile == nil,
                   let userId = try? await supabase.auth.session.user.id else {

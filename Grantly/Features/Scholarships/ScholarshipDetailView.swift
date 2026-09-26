@@ -30,7 +30,7 @@ struct ScholarshipDetailView: View {
                     ) {
                         Text(description)
                             .font(.body)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.white.opacity(0.62))
                             .lineSpacing(4)
                     }
                 }
@@ -166,7 +166,7 @@ struct ScholarshipDetailView: View {
             Text(scholarship.title)
                 .font(Theme.serifTitle(33, weight: .medium))
                 .tracking(-0.6)
-                .foregroundStyle(Theme.parchment)
+                .foregroundStyle(Color.white)
 
             Text(scholarship.provider)
                 .font(.headline)
@@ -190,7 +190,7 @@ struct ScholarshipDetailView: View {
             }
 
             Rectangle()
-                .fill(Theme.brass.opacity(0.45))
+                .fill(Theme.orange.opacity(0.45))
                 .frame(height: 1)
 
             HStack(alignment: .top, spacing: 18) {
@@ -228,7 +228,7 @@ struct ScholarshipDetailView: View {
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .overlay(
             RoundedRectangle(cornerRadius: 24)
-                .stroke(Theme.brass.opacity(0.18))
+                .stroke(Theme.orange.opacity(0.18))
         )
     }
 
@@ -252,7 +252,7 @@ struct ScholarshipDetailView: View {
                 ForEach(match.blockers, id: \.self) { blocker in
                     Label(blocker, systemImage: "exclamationmark.triangle.fill")
                         .font(.subheadline)
-                        .foregroundStyle(Theme.oxblood)
+                        .foregroundStyle(Theme.orange)
                 }
             }
         }
@@ -273,13 +273,13 @@ struct ScholarshipDetailView: View {
                         : "This record comes from a curated source. Confirm current details before applying."
                 )
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.62))
 
                 if let checked = scholarship.lastCheckedAt,
                    !checked.isEmpty {
                     Text("Last checked \(String(checked.prefix(10)))")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.62))
                 }
             }
         }
@@ -334,7 +334,7 @@ private struct DetailHeroMetric: View {
 
             Text(value)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.parchment)
+                .foregroundStyle(Color.white)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -367,16 +367,16 @@ private struct AcademicDetailCard<Content: View>: View {
 
                         Text(title)
                             .font(Theme.serifTitle(22))
-                            .foregroundStyle(Theme.ink)
+                            .foregroundStyle(.white)
                     }
 
                     Spacer()
 
                     Image(systemName: icon)
                         .font(.subheadline)
-                        .foregroundStyle(Theme.brass)
+                        .foregroundStyle(Theme.orange)
                         .frame(width: 36, height: 36)
-                        .background(Theme.parchment)
+                        .background(Color.white)
                         .clipShape(Circle())
                 }
 
@@ -394,13 +394,13 @@ struct DetailLine: View {
         HStack(alignment: .top, spacing: 18) {
             Text(label)
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.62))
 
             Spacer(minLength: 14)
 
             Text(value)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(.white)
                 .multilineTextAlignment(.trailing)
         }
     }

@@ -45,7 +45,7 @@ struct CommunityView: View {
 
                 if loading {
                     ProgressView()
-                        .tint(Theme.brass)
+                        .tint(Theme.orange)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 50)
                 } else if filtered.isEmpty {
@@ -81,7 +81,7 @@ struct CommunityView: View {
                     MessagesView()
                 } label: {
                     Image(systemName: "bubble.left.and.bubble.right.fill")
-                        .foregroundStyle(Theme.brass)
+                        .foregroundStyle(Theme.orange)
                 }
                 .accessibilityLabel("Messages")
             }
@@ -105,7 +105,7 @@ struct CommunityView: View {
 
             Text("Meet people\napplying beyond borders.")
                 .font(Theme.serifTitle(30, weight: .medium))
-                .foregroundStyle(Theme.parchment)
+                .foregroundStyle(Color.white)
 
             Text("Connect around universities, fields and destination goals — not follower counts.")
                 .font(.subheadline)
@@ -162,7 +162,7 @@ struct CommunityRow: View {
                 VStack(alignment: .leading, spacing: 5) {
                     Text(profile.displayName ?? "Student")
                         .font(Theme.serifTitle(18))
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(.white)
 
                     Text(
                         [profile.nationality, profile.major]
@@ -170,7 +170,7 @@ struct CommunityRow: View {
                             .joined(separator: " · ")
                     )
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.62))
 
                     if let countries = profile.targetCountries,
                        !countries.isEmpty {
@@ -179,7 +179,7 @@ struct CommunityRow: View {
                                 .joined(separator: " · ")
                         )
                         .font(.caption2)
-                        .foregroundStyle(Theme.brass)
+                        .foregroundStyle(Theme.orange)
                         .lineLimit(1)
                     }
                 }
@@ -188,7 +188,7 @@ struct CommunityRow: View {
 
                 Image(systemName: "arrow.up.right")
                     .font(.caption.bold())
-                    .foregroundStyle(Theme.brass)
+                    .foregroundStyle(Theme.orange)
             }
         }
     }
@@ -200,13 +200,13 @@ private struct CommunityMonogram: View {
     var body: some View {
         Text(String(name.prefix(2)).uppercased())
             .font(.system(size: 14, weight: .semibold, design: .serif))
-            .foregroundStyle(Theme.parchment)
+            .foregroundStyle(Color.white)
             .frame(width: 48, height: 48)
             .background(Theme.navy)
             .clipShape(RoundedRectangle(cornerRadius: 13))
             .overlay(
                 RoundedRectangle(cornerRadius: 13)
-                    .stroke(Theme.brass.opacity(0.35))
+                    .stroke(Theme.orange.opacity(0.35))
             )
     }
 }
@@ -234,7 +234,7 @@ struct CommunityProfileView: View {
 
                     Text(profile.displayName ?? "Student")
                         .font(Theme.serifTitle(28))
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(.white)
 
                     Text(
                         [profile.nationality, profile.major]
@@ -242,7 +242,7 @@ struct CommunityProfileView: View {
                             .joined(separator: " · ")
                     )
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.62))
                 }
 
                 if let bio = profile.bio,
@@ -252,7 +252,7 @@ struct CommunityProfileView: View {
                             SectionEyebrow(text: "About")
                             Text(bio)
                                 .font(.body)
-                                .foregroundStyle(Theme.ink)
+                                .foregroundStyle(.white)
                                 .lineSpacing(4)
                         }
                     }
@@ -268,7 +268,7 @@ struct CommunityProfileView: View {
                                 countries.joined(separator: " · ")
                             )
                             .font(Theme.serifTitle(19))
-                            .foregroundStyle(Theme.ink)
+                            .foregroundStyle(.white)
                         }
                     }
                 }
@@ -323,13 +323,13 @@ struct CommunityProfileView: View {
                         )
                     }
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.oxblood)
+                    .foregroundStyle(Theme.orange)
                 }
 
                 if !status.isEmpty {
                     Text(status)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.62))
                 }
             }
             .padding()
