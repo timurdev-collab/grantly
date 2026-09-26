@@ -23,13 +23,41 @@ enum DataService {
     }
 
     static func scholarships() async throws -> [Scholarship] {
-        try await supabase
+        let rows: [Scholarship] = try await supabase
             .from("scholarships")
             .select()
             .eq("status", value: "published")
             .order("title", ascending: true)
             .execute()
             .value
+
+        return rows.filter {
+            $0.verificationStatus != "needs_review" &&
+            $0.linkStatus != "dead" &&
+            $0.linkStatus != "generic"
+        }
+    }
+
+    static func allScholarshipsForAdmin() async throws -> [Scholarship] {
+        try await supabase
+            .from("scholarships")
+            .select()
+            .order("updated_at", ascending: false)
+            .execute()
+            .value
+    }
+
+    static func auditScholarships(limit: Int = 20) async throws -> ScholarshipAuditResult {
+        struct Body: Encodable {
+            let limit: Int
+        }
+
+        return try await supabase.functions.invoke(
+            "audit-scholarships",
+            options: FunctionInvokeOptions(
+                body: Body(limit: limit)
+            )
+        )
     }
 
     static func savedScholarshipIDs(userId: UUID) async throws -> Set<UUID> {

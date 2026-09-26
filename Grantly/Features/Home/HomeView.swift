@@ -5,6 +5,7 @@ struct HomeView: View {
     let openProfile: () -> Void
 
     @State private var matches: [ScholarshipMatch] = []
+    @State private var upcoming: [Scholarship] = []
     @State private var loading = true
 
     private var profileNeedsSetup: Bool {
@@ -65,6 +66,39 @@ struct HomeView: View {
                         .buttonStyle(.plain)
                     }
                 }
+
+                if !upcoming.isEmpty {
+                    HStack {
+                        Text("Deadlines coming up")
+                            .font(.title2.bold())
+
+                        Spacer()
+
+                        Text("Verified")
+                            .font(.caption.bold())
+                            .foregroundStyle(Theme.green)
+                    }
+                    .padding(.top, 4)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(upcoming.prefix(5)) { scholarship in
+                                NavigationLink {
+                                    ScholarshipDetailView(
+                                        scholarship: scholarship,
+                                        match: nil
+                                    )
+                                } label: {
+                                    UpcomingDeadlineCard(
+                                        scholarship: scholarship
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+                    .contentMargins(.horizontal, 0)
+                }
             }
             .padding()
         }
@@ -77,15 +111,79 @@ struct HomeView: View {
     @MainActor
     private func load() async {
         defer { loading = false }
-        guard let profile, !profileNeedsSetup else {
-            matches = []
-            return
-        }
 
         do {
             let scholarships = try await DataService.scholarships()
-            matches = Array(MatchingService.rank(profile: profile, scholarships: scholarships).prefix(8))
-        } catch {}
+
+            upcoming = scholarships
+                .filter {
+                    $0.verificationStatus == "verified" &&
+                    $0.deadline != nil
+                }
+                .sorted {
+                    ($0.deadline ?? "9999-12-31") <
+                    ($1.deadline ?? "9999-12-31")
+                }
+
+            guard let profile, !profileNeedsSetup else {
+                matches = []
+                return
+            }
+
+            matches = Array(
+                MatchingService
+                    .rank(
+                        profile: profile,
+                        scholarships: scholarships
+                    )
+                    .prefix(8)
+            )
+        } catch {
+            matches = []
+            upcoming = []
+        }
+    }
+}
+
+struct UpcomingDeadlineCard: View {
+    let scholarship: Scholarship
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Image(systemName: "calendar")
+                    .foregroundStyle(Theme.violet)
+
+                Spacer()
+
+                TrustBadge(verified: true)
+            }
+
+            Text(scholarship.title)
+                .font(.subheadline.bold())
+                .foregroundStyle(Theme.ink)
+                .lineLimit(2)
+
+            Text(scholarship.provider)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+
+            if let deadline = scholarship.deadline {
+                Text(deadline)
+                    .font(.headline)
+                    .foregroundStyle(Theme.violet)
+            }
+        }
+        .padding(14)
+        .frame(width: 230, alignment: .leading)
+        .frame(minHeight: 150, alignment: .leading)
+        .background(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(Color.black.opacity(0.04))
+        )
     }
 }
 

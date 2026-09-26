@@ -65,6 +65,15 @@ create table public.scholarships (
   source_license text,
   verification_status text not null default 'verified'
     check (verification_status in ('verified','curated','needs_review')),
+  application_cycle text,
+  deadline_notes text,
+  link_status text not null default 'unchecked'
+    check (link_status in ('unchecked','exact','reachable','generic','dead')),
+  last_checked_at timestamptz,
+  final_url text,
+  deadline_candidate date,
+  deadline_confidence integer
+    check (deadline_confidence is null or deadline_confidence between 0 and 100),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
