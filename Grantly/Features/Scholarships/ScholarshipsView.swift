@@ -116,13 +116,27 @@ struct ScholarshipsView: View {
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 18) {
-                ExploreHero(
-                    total: scholarships.count,
-                    verified: verifiedCount,
-                    countries: countryCount
-                )
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Explore")
+                            .font(.system(size: 30, weight: .bold))
+                            .foregroundStyle(.white)
+
+                        Text("\(scholarships.count) trusted scholarship opportunities")
+                            .font(.subheadline)
+                            .foregroundStyle(.white.opacity(0.58))
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "slider.horizontal.3")
+                        .foregroundStyle(Theme.orange)
+                        .frame(width: 38, height: 38)
+                        .background(Theme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
                 .padding(.horizontal)
-                .padding(.top, 8)
+                .padding(.top, 10)
 
                 filters
                     .padding(.horizontal)
@@ -146,14 +160,14 @@ struct ScholarshipsView: View {
                     )
                     .padding(.top, 38)
                 } else {
-                    AcademicSectionHeader(
-                        eyebrow: "The catalogue",
-                        title: "Opportunities",
-                        trailing: "\(filtered.count) results"
-                    )
-                    .padding(.horizontal)
-
                     HStack {
+                        Text("\(filtered.count) scholarships found")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.white.opacity(0.58))
+
+                        Spacer()
+
+                        Menu {
                         Spacer()
 
                         Menu {
@@ -169,7 +183,7 @@ struct ScholarshipsView: View {
                         } label: {
                             Label(sort, systemImage: "arrow.up.arrow.down")
                                 .font(.caption.weight(.semibold))
-                                .foregroundStyle(Theme.navy)
+                                .foregroundStyle(.white)
                         }
                     }
                     .padding(.horizontal)
@@ -305,12 +319,12 @@ struct ScholarshipsView: View {
                 .font(.caption.weight(.semibold))
                 .padding(.horizontal, 12)
                 .padding(.vertical, 10)
-                .foregroundStyle(Theme.navy)
-                .background(.white)
+                .foregroundStyle(.white)
+                .background(Theme.surfaceRaised)
                 .clipShape(Capsule())
                 .overlay(
                     Capsule()
-                        .stroke(Theme.navy.opacity(0.09))
+                        .stroke(Color.white.opacity(0.07))
                 )
         }
     }
@@ -484,7 +498,7 @@ struct PremiumScholarshipCard: View {
                         .font(.caption.weight(.bold))
                         .foregroundStyle(Theme.brass)
                         .frame(width: 30, height: 30)
-                        .background(Theme.parchment)
+                        .background(Theme.orange)
                         .clipShape(Circle())
                 }
             }
@@ -519,7 +533,7 @@ private struct InstitutionTile: View {
                 .frame(width: 14, height: 1)
         }
         .frame(width: 46, height: 46)
-        .background(Theme.navy)
+        .background(Theme.surfaceRaised)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .accessibilityLabel("\(name), \(country)")
     }
@@ -546,7 +560,7 @@ struct FilterChip: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
             .background(.white)
-            .foregroundStyle(Theme.navy)
+            .foregroundStyle(.white)
             .clipShape(Capsule())
             .overlay(
                 Capsule()
