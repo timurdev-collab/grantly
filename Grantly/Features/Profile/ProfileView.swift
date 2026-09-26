@@ -47,7 +47,7 @@ struct ProfileView: View {
                 }
                 .padding(.vertical, 6)
             }
-            .listRowBackground(Color.white.opacity(0.45))
+            .listRowBackground(Theme.surface)
 
             Section("Student profile") {
                 TextField("Full name", text: $fullName)
