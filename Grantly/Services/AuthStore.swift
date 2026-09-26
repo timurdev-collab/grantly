@@ -54,6 +54,31 @@ final class AuthStore {
         }
     }
 
+    func deleteAccount() async -> Bool {
+        errorMessage = nil
+
+        struct DeleteAccountResponse: Decodable {
+            let deleted: Bool
+        }
+
+        do {
+            let response: DeleteAccountResponse = try await supabase.functions
+                .invoke("delete-account")
+
+            guard response.deleted else {
+                errorMessage = "Your account could not be deleted."
+                return false
+            }
+
+            try? await supabase.auth.signOut()
+            userId = nil
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
     func signOut() async {
         do {
             try await supabase.auth.signOut()

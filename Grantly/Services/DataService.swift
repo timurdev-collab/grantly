@@ -220,6 +220,111 @@ enum DataService {
             .execute()
     }
 
+    static func submitSafetyReport(
+        reportedUserId: UUID,
+        messageId: UUID? = nil,
+        reason: String,
+        details: String
+    ) async throws {
+        let reporterId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let reporter_id: UUID
+            let reported_user_id: UUID
+            let message_id: UUID?
+            let reason: String
+            let details: String
+        }
+
+        let row = Row(
+            reporter_id: reporterId,
+            reported_user_id: reportedUserId,
+            message_id: messageId,
+            reason: reason,
+            details: details
+        )
+
+        try await supabase
+            .from("safety_reports")
+            .insert(row)
+            .execute()
+    }
+
+    static func blockedUserIDs() async throws -> Set<UUID> {
+        let userId = try await supabase.auth.session.user.id
+
+        struct BlockRow: Decodable {
+            let blockedId: UUID
+
+            enum CodingKeys: String, CodingKey {
+                case blockedId = "blocked_id"
+            }
+        }
+
+        let rows: [BlockRow] = try await supabase
+            .from("user_blocks")
+            .select("blocked_id")
+            .eq("blocker_id", value: userId.uuidString)
+            .execute()
+            .value
+
+        return Set(rows.map(\.blockedId))
+    }
+
+    static func blockUser(_ blockedUserId: UUID) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let blocker_id: UUID
+            let blocked_id: UUID
+        }
+
+        try await supabase
+            .from("user_blocks")
+            .insert(Row(blocker_id: userId, blocked_id: blockedUserId))
+            .execute()
+    }
+
+    static func unblockUser(_ blockedUserId: UUID) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        try await supabase
+            .from("user_blocks")
+            .delete()
+            .eq("blocker_id", value: userId.uuidString)
+            .eq("blocked_id", value: blockedUserId.uuidString)
+            .execute()
+    }
+
+    static func safetyReports() async throws -> [SafetyReport] {
+        try await supabase
+            .from("safety_reports")
+            .select()
+            .order("created_at", ascending: false)
+            .execute()
+            .value
+    }
+
+    static func updateSafetyReportStatus(
+        reportId: UUID,
+        status: String
+    ) async throws {
+        struct Row: Encodable {
+            let status: String
+            let resolved_at: String?
+        }
+
+        let resolvedAt = ["resolved", "dismissed"].contains(status)
+            ? ISO8601DateFormatter().string(from: Date())
+            : nil
+
+        try await supabase
+            .from("safety_reports")
+            .update(Row(status: status, resolved_at: resolvedAt))
+            .eq("id", value: reportId.uuidString)
+            .execute()
+    }
+
     static func updateCommunityProfile(
         userId: UUID,
         displayName: String,

@@ -123,6 +123,27 @@ struct Message: Codable, Identifiable {
     }
 }
 
+struct SafetyReport: Codable, Identifiable {
+    let id: UUID
+    let reporterId: UUID?
+    let reportedUserId: UUID?
+    let messageId: UUID?
+    let reason: String
+    let details: String
+    let status: String
+    let createdAt: String
+    let resolvedAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, reason, details, status
+        case reporterId = "reporter_id"
+        case reportedUserId = "reported_user_id"
+        case messageId = "message_id"
+        case createdAt = "created_at"
+        case resolvedAt = "resolved_at"
+    }
+}
+
 struct ScholarshipMatch: Identifiable {
     var id: UUID { scholarship.id }
     let scholarship: Scholarship

@@ -56,6 +56,7 @@ struct ChatView: View {
     @State private var messages: [Message] = []
     @State private var draft = ""
     @State private var sending = false
+    @State private var reportingMessage: Message?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -65,6 +66,23 @@ struct ChatView: View {
                         ForEach(messages) { message in
                             Bubble(message: message, mine: message.senderId == auth.userId)
                                 .id(message.id)
+                                .contextMenu {
+                                    if message.senderId != auth.userId {
+                                        Button(role: .destructive) {
+                                            Task {
+                                                try? await DataService.blockUser(message.senderId)
+                                            }
+                                        } label: {
+                                            Label("Block sender", systemImage: "person.crop.circle.badge.xmark")
+                                        }
+
+                                        Button(role: .destructive) {
+                                            reportingMessage = message
+                                        } label: {
+                                            Label("Report message", systemImage: "exclamationmark.bubble")
+                                        }
+                                    }
+                                }
                         }
                     }
                     .padding()
@@ -100,6 +118,16 @@ struct ChatView: View {
         .navigationTitle("Conversation")
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }
+        .sheet(item: $reportingMessage) { message in
+            ReportSheet(subject: "message") { reason, details in
+                try await DataService.submitSafetyReport(
+                    reportedUserId: message.senderId,
+                    messageId: message.id,
+                    reason: reason,
+                    details: details
+                )
+            }
+        }
     }
 
     @MainActor
