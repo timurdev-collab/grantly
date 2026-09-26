@@ -127,6 +127,7 @@ create index messages_sender_idx on public.messages(sender_id);
 create index safety_reports_reporter_idx on public.safety_reports(reporter_id, created_at desc);
 create index safety_reports_status_idx on public.safety_reports(status, created_at desc);
 create index safety_reports_reported_user_idx on public.safety_reports(reported_user_id, created_at desc);
+create index safety_reports_message_idx on public.safety_reports(message_id);
 create index user_blocks_blocked_idx on public.user_blocks(blocked_id);
 
 -- Create profile rows when Auth creates a user.
