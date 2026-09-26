@@ -73,16 +73,23 @@ struct ScholarshipDetailView: View {
                     .padding(.top, 4)
                 }
 
-                Button {
-                    Task { await toggleSaved() }
-                } label: {
-                    Label(
-                        saved ? "Saved to My Scholarships" : "Save scholarship",
-                        systemImage: saved ? "bookmark.fill" : "bookmark"
-                    )
+                if saved {
+                    Button {
+                        Task { await toggleSaved() }
+                    } label: {
+                        Label("Saved to My Scholarships", systemImage: "bookmark.fill")
+                    }
+                    .buttonStyle(SecondaryButtonStyle())
+                    .disabled(busy)
+                } else {
+                    Button {
+                        Task { await toggleSaved() }
+                    } label: {
+                        Label("Save scholarship", systemImage: "bookmark")
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(busy)
                 }
-                .buttonStyle(saved ? SecondaryButtonStyle() : PrimaryButtonStyle())
-                .disabled(busy)
 
                 if let url = URL(string: scholarship.officialUrl) {
                     Link(destination: url) {
