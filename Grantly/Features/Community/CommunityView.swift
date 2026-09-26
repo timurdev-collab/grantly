@@ -31,6 +31,16 @@ struct CommunityView: View {
         }
         .searchable(text: $query, prompt: "Name, country, major")
         .navigationTitle("Community")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    MessagesView()
+                } label: {
+                    Image(systemName: "bubble.left.and.bubble.right.fill")
+                }
+                .accessibilityLabel("Messages")
+            }
+        }
         .navigationDestination(for: CommunityProfile.self) { profile in
             CommunityProfileView(profile: profile)
         }
@@ -43,6 +53,7 @@ struct CommunityView: View {
 
 struct CommunityRow: View {
     let profile: CommunityProfile
+
     var body: some View {
         HStack(spacing: 12) {
             Text((profile.displayName ?? "?").prefix(2).uppercased())
@@ -51,10 +62,14 @@ struct CommunityRow: View {
                 .background(Theme.violet.opacity(0.12))
                 .foregroundStyle(Theme.violet)
                 .clipShape(RoundedRectangle(cornerRadius: 13))
+
             VStack(alignment: .leading, spacing: 4) {
-                Text(profile.displayName ?? "Student").font(.headline)
-                Text([profile.nationality, profile.major].compactMap{$0}.joined(separator: " · "))
-                    .font(.caption).foregroundStyle(.secondary)
+                Text(profile.displayName ?? "Student")
+                    .font(.headline)
+
+                Text([profile.nationality, profile.major].compactMap { $0 }.joined(separator: " · "))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -64,6 +79,7 @@ struct CommunityProfileView: View {
     @Environment(AuthStore.self) private var auth
     let profile: CommunityProfile
     @State private var status = ""
+    @State private var openingConversation = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -74,38 +90,52 @@ struct CommunityProfileView: View {
                 .foregroundStyle(Theme.violet)
                 .clipShape(RoundedRectangle(cornerRadius: 24))
 
-            Text(profile.displayName ?? "Student").font(.title2.bold())
-            Text([profile.nationality, profile.major].compactMap{$0}.joined(separator: " · "))
+            Text(profile.displayName ?? "Student")
+                .font(.title2.bold())
+
+            Text([profile.nationality, profile.major].compactMap { $0 }.joined(separator: " · "))
                 .foregroundStyle(.secondary)
 
             if let bio = profile.bio, !bio.isEmpty {
-                Text(bio).multilineTextAlignment(.center)
+                Text(bio)
+                    .multilineTextAlignment(.center)
             }
 
             if let countries = profile.targetCountries, !countries.isEmpty {
                 VStack {
-                    Text("Target countries").font(.caption).foregroundStyle(.secondary)
-                    Text(countries.joined(separator: " · ")).font(.subheadline.bold())
+                    Text("Target countries")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text(countries.joined(separator: " · "))
+                        .font(.subheadline.bold())
                 }
             }
 
             Button {
                 Task {
                     guard profile.id != auth.userId else { return }
+                    openingConversation = true
+                    defer { openingConversation = false }
+
                     do {
                         _ = try await DataService.startDirectConversation(otherUser: profile.id)
-                        status = "Conversation created. Open the Messages tab."
+                        status = "Conversation created. Tap the messages icon in Community."
                     } catch {
                         status = error.localizedDescription
                     }
                 }
             } label: {
-                Label("Start conversation", systemImage: "message.fill")
+                Label(openingConversation ? "Opening…" : "Start conversation", systemImage: "message.fill")
             }
             .buttonStyle(PrimaryButtonStyle())
-            .disabled(profile.id == auth.userId)
+            .disabled(profile.id == auth.userId || openingConversation)
 
-            if !status.isEmpty { Text(status).font(.caption).foregroundStyle(.secondary) }
+            if !status.isEmpty {
+                Text(status)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Spacer()
         }
         .padding()

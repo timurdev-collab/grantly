@@ -21,6 +21,10 @@ targets:
       path: Grantly/Info.plist
       properties:
         CFBundleDisplayName: Grantly
+        CFBundleURLTypes:
+          - CFBundleURLName: com.grantly.app
+            CFBundleURLSchemes:
+              - grantly
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait

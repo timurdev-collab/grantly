@@ -5,7 +5,6 @@ struct MainTabView: View {
 
     var body: some View {
         TabView {
-
             NavigationStack {
                 HomeView(profile: $profile)
             }
@@ -24,7 +23,7 @@ struct MainTabView: View {
                 MyScholarshipsView()
             }
             .tabItem {
-                Label("My Scholarships", systemImage: "bookmark.fill")
+                Label("Saved", systemImage: "bookmark.fill")
             }
 
             NavigationStack {
@@ -35,23 +34,10 @@ struct MainTabView: View {
             }
 
             NavigationStack {
-                MessagesView()
-            }
-            .tabItem {
-                Label(
-                    "Messages",
-                    systemImage: "bubble.left.and.bubble.right.fill"
-                )
-            }
-
-            NavigationStack {
                 ProfileView(profile: $profile)
             }
             .tabItem {
-                Label(
-                    "Profile",
-                    systemImage: "person.crop.circle.fill"
-                )
+                Label("Profile", systemImage: "person.crop.circle.fill")
             }
         }
         .task {
@@ -60,9 +46,7 @@ struct MainTabView: View {
                 return
             }
 
-            profile = try? await DataService.currentProfile(
-                userId: userId
-            )
+            profile = try? await DataService.currentProfile(userId: userId)
         }
     }
 }
