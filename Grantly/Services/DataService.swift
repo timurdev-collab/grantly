@@ -250,6 +250,52 @@ enum DataService {
             .execute()
     }
 
+    static func blockedUserIDs() async throws -> Set<UUID> {
+        let userId = try await supabase.auth.session.user.id
+
+        struct BlockRow: Decodable {
+            let blockedId: UUID
+
+            enum CodingKeys: String, CodingKey {
+                case blockedId = "blocked_id"
+            }
+        }
+
+        let rows: [BlockRow] = try await supabase
+            .from("user_blocks")
+            .select("blocked_id")
+            .eq("blocker_id", value: userId.uuidString)
+            .execute()
+            .value
+
+        return Set(rows.map(\.blockedId))
+    }
+
+    static func blockUser(_ blockedUserId: UUID) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let blocker_id: UUID
+            let blocked_id: UUID
+        }
+
+        try await supabase
+            .from("user_blocks")
+            .insert(Row(blocker_id: userId, blocked_id: blockedUserId))
+            .execute()
+    }
+
+    static func unblockUser(_ blockedUserId: UUID) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        try await supabase
+            .from("user_blocks")
+            .delete()
+            .eq("blocker_id", value: userId.uuidString)
+            .eq("blocked_id", value: blockedUserId.uuidString)
+            .execute()
+    }
+
     static func safetyReports() async throws -> [SafetyReport] {
         try await supabase
             .from("safety_reports")
