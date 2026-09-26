@@ -25,6 +25,30 @@ struct ProfileView: View {
 
     var body: some View {
         Form {
+            Section {
+                HStack(spacing: 14) {
+                    GrantlyMonogram(size: 48)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        SectionEyebrow(text: "Academic identity")
+
+                        Text(
+                            fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                ? "Build your Grantly profile"
+                                : fullName
+                        )
+                        .font(Theme.serifTitle(22))
+                        .foregroundStyle(Theme.ink)
+
+                        Text("Your private profile powers scholarship matching.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.vertical, 6)
+            }
+            .listRowBackground(Theme.parchment.opacity(0.45))
+
             Section("Student profile") {
                 TextField("Full name", text: $fullName)
                 TextField("Nationality", text: $nationality)
@@ -112,7 +136,11 @@ struct ProfileView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Theme.pageBackground)
+        .tint(Theme.brass)
         .navigationTitle("Profile")
+        .navigationBarTitleDisplayMode(.inline)
         .task { await populate() }
         .alert("Delete your Grantly account?", isPresented: $showingDeleteAccount) {
             Button("Delete Account", role: .destructive) {
