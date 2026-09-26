@@ -66,7 +66,11 @@ create table public.scholarships (
 create table public.saved_scholarships (
   user_id uuid not null references auth.users(id) on delete cascade,
   scholarship_id uuid not null references public.scholarships(id) on delete cascade,
+  application_status text not null default 'Planning'
+    check (application_status in ('Planning','Applied','Interview','Result')),
+  notes text,
   created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
   primary key(user_id, scholarship_id)
 );
 
@@ -95,6 +99,7 @@ create table public.messages (
 create index messages_conversation_created_idx on public.messages(conversation_id, created_at);
 create index scholarships_status_region_idx on public.scholarships(status, region);
 create index scholarships_deadline_idx on public.scholarships(deadline);
+create index saved_scholarships_user_updated_idx on public.saved_scholarships(user_id, updated_at desc);
 
 -- Create profile rows when Auth creates a user.
 create or replace function public.handle_new_user()
@@ -205,7 +210,7 @@ grant insert, update, delete on public.scholarships to authenticated;
 
 grant select, update on public.student_profiles to authenticated;
 grant select, insert, update, delete on public.community_profiles to authenticated;
-grant select, insert, delete on public.saved_scholarships to authenticated;
+grant select, insert, update, delete on public.saved_scholarships to authenticated;
 grant select on public.conversations to authenticated;
 grant select on public.conversation_members to authenticated;
 grant select, insert on public.messages to authenticated;
@@ -262,6 +267,11 @@ using ((select auth.uid()) = user_id);
 
 create policy "users create own saves"
 on public.saved_scholarships for insert to authenticated
+with check ((select auth.uid()) = user_id);
+
+create policy "users update own saves"
+on public.saved_scholarships for update to authenticated
+using ((select auth.uid()) = user_id)
 with check ((select auth.uid()) = user_id);
 
 create policy "users delete own saves"
