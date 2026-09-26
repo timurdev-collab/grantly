@@ -96,10 +96,14 @@ struct ScholarshipsView: View {
             return rows.sorted {
                 let left = $0.verificationStatus == "verified"
                 let right = $1.verificationStatus == "verified"
-                if left != right { return left && !right }
+
+                if left != right {
+                    return left && !right
+                }
 
                 let leftHasDeadline = $0.deadline != nil
                 let rightHasDeadline = $1.deadline != nil
+
                 if leftHasDeadline != rightHasDeadline {
                     return leftHasDeadline && !rightHasDeadline
                 }
@@ -111,8 +115,8 @@ struct ScholarshipsView: View {
 
     var body: some View {
         ScrollView {
-            LazyVStack(spacing: 14) {
-                CatalogHeroCard(
+            LazyVStack(spacing: 18) {
+                ExploreHero(
                     total: scholarships.count,
                     verified: verifiedCount,
                     countries: countryCount
@@ -120,35 +124,52 @@ struct ScholarshipsView: View {
                 .padding(.horizontal)
                 .padding(.top, 8)
 
-                filterBar
+                filters
                     .padding(.horizontal)
 
-                if loading {
-                    ProgressView("Loading trusted scholarships…")
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 50)
+                if loading && scholarships.isEmpty {
+                    VStack(spacing: 12) {
+                        ProgressView()
+                            .tint(Theme.brass)
+
+                        Text("Curating opportunities…")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 60)
                 } else if filtered.isEmpty {
                     EmptyState(
-                        icon: "magnifyingglass",
-                        title: "No scholarships found",
+                        icon: "books.vertical",
+                        title: "No opportunities found",
                         text: "Try another search or clear a filter."
                     )
-                    .padding(.top, 40)
+                    .padding(.top, 38)
                 } else {
-                    HStack {
-                        Text("\(filtered.count) opportunities")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.secondary)
+                    AcademicSectionHeader(
+                        eyebrow: "The catalogue",
+                        title: "Opportunities",
+                        trailing: "\(filtered.count) results"
+                    )
+                    .padding(.horizontal)
 
+                    HStack {
                         Spacer()
 
                         Menu {
-                            Button("Recommended") { sort = "Recommended" }
-                            Button("Verified first") { sort = "Verified first" }
-                            Button("Deadline") { sort = "Deadline" }
+                            Button("Recommended") {
+                                sort = "Recommended"
+                            }
+                            Button("Verified first") {
+                                sort = "Verified first"
+                            }
+                            Button("Deadline") {
+                                sort = "Deadline"
+                            }
                         } label: {
                             Label(sort, systemImage: "arrow.up.arrow.down")
-                                .font(.subheadline.weight(.semibold))
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Theme.navy)
                         }
                     }
                     .padding(.horizontal)
@@ -160,19 +181,21 @@ struct ScholarshipsView: View {
                                 match: nil
                             )
                         } label: {
-                            ScholarshipCard(scholarship: scholarship)
+                            PremiumScholarshipCard(
+                                scholarship: scholarship
+                            )
                         }
                         .buttonStyle(.plain)
                         .padding(.horizontal)
                     }
                 }
             }
-            .padding(.bottom, 28)
+            .padding(.bottom, 32)
         }
-        .background(Color(.systemGroupedBackground))
+        .background(Theme.pageBackground)
         .searchable(
             text: $query,
-            prompt: "Scholarship, university, country or field"
+            prompt: "Search university, country, field"
         )
         .navigationTitle("Explore")
         .navigationBarTitleDisplayMode(.inline)
@@ -182,67 +205,71 @@ struct ScholarshipsView: View {
         .task {
             await load()
         }
-        .alert("Unable to load scholarships", isPresented: Binding(
-            get: { errorMessage != nil },
-            set: { if !$0 { errorMessage = nil } }
-        )) {
+        .alert(
+            "Unable to refresh",
+            isPresented: Binding(
+                get: { errorMessage != nil },
+                set: { if !$0 { errorMessage = nil } }
+            )
+        ) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(errorMessage ?? "")
         }
     }
 
-    private var filterBar: some View {
+    private var filters: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 9) {
-                Menu {
+                filterMenu(
+                    title: region == "All" ? "Region" : region,
+                    icon: "globe.europe.africa"
+                ) {
                     ForEach(regionOptions, id: \.self) { value in
-                        Button(value) { region = value }
+                        Button(value) {
+                            region = value
+                        }
                     }
-                } label: {
-                    FilterChip(
-                        icon: "globe",
-                        title: region == "All" ? "Region" : region
-                    )
                 }
 
-                Menu {
+                filterMenu(
+                    title: degree == "All" ? "Degree" : degree,
+                    icon: "graduationcap"
+                ) {
                     ForEach(degreeOptions, id: \.self) { value in
-                        Button(value) { degree = value }
+                        Button(value) {
+                            degree = value
+                        }
                     }
-                } label: {
-                    FilterChip(
-                        icon: "graduationcap",
-                        title: degree == "All" ? "Degree" : degree
-                    )
                 }
 
-                Menu {
+                filterMenu(
+                    title: funding == "All" ? "Funding" : funding,
+                    icon: "banknote"
+                ) {
                     ForEach(fundingOptions, id: \.self) { value in
-                        Button(value) { funding = value }
+                        Button(value) {
+                            funding = value
+                        }
                     }
-                } label: {
-                    FilterChip(
-                        icon: "banknote",
-                        title: funding == "All" ? "Funding" : funding
-                    )
                 }
 
-                Menu {
-                    Button("All trusted") { source = "All" }
-                    Button("Verified") { source = "Verified" }
-                    Button("Curated") { source = "Curated" }
-                } label: {
-                    FilterChip(
-                        icon: "checkmark.shield",
-                        title: source == "All" ? "Trust" : source
-                    )
+                filterMenu(
+                    title: source == "All" ? "Trust" : source,
+                    icon: "seal"
+                ) {
+                    Button("All trusted") {
+                        source = "All"
+                    }
+                    Button("Verified") {
+                        source = "Verified"
+                    }
+                    Button("Curated") {
+                        source = "Curated"
+                    }
                 }
 
-                if region != "All" ||
-                    degree != "All" ||
-                    funding != "All" ||
-                    source != "All" {
+                if hasFilters {
                     Button {
                         region = "All"
                         degree = "All"
@@ -251,113 +278,261 @@ struct ScholarshipsView: View {
                     } label: {
                         Image(systemName: "xmark")
                             .font(.caption.bold())
-                            .frame(width: 34, height: 34)
-                            .background(.white)
-                            .foregroundStyle(.red)
+                            .frame(width: 36, height: 36)
+                            .background(Theme.oxblood.opacity(0.08))
+                            .foregroundStyle(Theme.oxblood)
                             .clipShape(Circle())
-                            .shadow(color: .black.opacity(0.05), radius: 8, y: 4)
                     }
                 }
             }
         }
     }
 
+    private var hasFilters: Bool {
+        region != "All" ||
+        degree != "All" ||
+        funding != "All" ||
+        source != "All"
+    }
+
+    private func filterMenu<Content: View>(
+        title: String,
+        icon: String,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        Menu(content: content) {
+            Label(title, systemImage: icon)
+                .font(.caption.weight(.semibold))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+                .foregroundStyle(Theme.navy)
+                .background(.white)
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(Theme.navy.opacity(0.09))
+                )
+        }
+    }
+
     @MainActor
     private func load() async {
-        let isInitialLoad = scholarships.isEmpty
+        let initial = scholarships.isEmpty
 
-        if isInitialLoad {
+        if initial {
             loading = true
         }
 
         defer {
-            if isInitialLoad {
+            if initial {
                 loading = false
             }
         }
 
         do {
             let refreshed = try await DataService.scholarships()
-
-            // Keep the current catalog visible while pull-to-refresh runs,
-            // then replace it only after the new response has arrived.
             scholarships = refreshed
             errorMessage = nil
         } catch {
-            // Never blank a previously loaded Explore screen because a
-            // refresh failed. The existing catalog remains on screen.
             errorMessage = error.localizedDescription
         }
     }
 }
 
-struct CatalogHeroCard: View {
+struct ExploreHero: View {
     let total: Int
     let verified: Int
     let countries: Int
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            HStack {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Scholarships you can trust")
-                        .font(.title2.bold())
+        VStack(alignment: .leading, spacing: 22) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 10) {
+                    SectionEyebrow(text: "The Grantly index")
 
-                    Text("Low-confidence listings are removed from Explore until their source is checked.")
+                    Text("Scholarships,\nwithout the noise.")
+                        .font(Theme.serifTitle(34, weight: .medium))
+                        .tracking(-0.7)
+                        .foregroundStyle(Theme.parchment)
+
+                    Text("A curated catalogue built around source quality, not volume alone.")
                         .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.72))
+                        .lineSpacing(3)
                 }
 
-                Spacer(minLength: 12)
+                Spacer()
 
-                Image(systemName: "checkmark.shield.fill")
-                    .font(.title)
-                    .foregroundStyle(Theme.green)
-                    .padding(12)
-                    .background(Theme.mint)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                GrantlyMonogram(size: 48, dark: false)
             }
 
-            HStack(spacing: 10) {
-                CatalogMetric(value: "\(total)", label: "trusted")
-                CatalogMetric(value: "\(verified)", label: "verified")
-                CatalogMetric(value: "\(countries)", label: "countries")
+            Rectangle()
+                .fill(Theme.brass.opacity(0.50))
+                .frame(height: 1)
+
+            HStack(spacing: 0) {
+                ExploreMetric(value: "\(total)", label: "trusted")
+                ExploreMetric(value: "\(verified)", label: "verified")
+                ExploreMetric(value: "\(countries)", label: "countries")
             }
         }
-        .padding(18)
-        .background(
-            LinearGradient(
-                colors: [
-                    .white,
-                    Theme.violet.opacity(0.07)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .padding(20)
+        .background(Theme.heroGradient)
+        .clipShape(RoundedRectangle(cornerRadius: 24))
         .overlay(
-            RoundedRectangle(cornerRadius: 22)
-                .stroke(Color.black.opacity(0.04))
+            RoundedRectangle(cornerRadius: 24)
+                .stroke(Theme.brass.opacity(0.18))
         )
     }
 }
 
-struct CatalogMetric: View {
+private struct ExploreMetric: View {
     let value: String
     let label: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 3) {
             Text(value)
-                .font(.title3.bold())
-                .foregroundStyle(Theme.ink)
+                .font(Theme.serifTitle(24, weight: .semibold))
+                .foregroundStyle(Theme.parchment)
 
-            Text(label)
-                .font(.caption2.weight(.medium))
-                .foregroundStyle(.secondary)
+            Text(label.uppercased())
+                .font(.system(size: 9, weight: .bold))
+                .tracking(1.1)
+                .foregroundStyle(.white.opacity(0.55))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+struct PremiumScholarshipCard: View {
+    let scholarship: Scholarship
+
+    private var verified: Bool {
+        scholarship.verificationStatus == "verified"
+    }
+
+    var body: some View {
+        PremiumCard {
+            VStack(alignment: .leading, spacing: 15) {
+                HStack(alignment: .top, spacing: 12) {
+                    InstitutionTile(
+                        name: scholarship.provider,
+                        country: scholarship.country
+                    )
+
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(scholarship.title)
+                            .font(Theme.serifTitle(20, weight: .semibold))
+                            .foregroundStyle(Theme.ink)
+                            .multilineTextAlignment(.leading)
+
+                        Text(scholarship.provider)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer(minLength: 0)
+                }
+
+                HStack(spacing: 8) {
+                    TrustSeal(verified: verified)
+                    FundingBadge(text: scholarship.fundingType)
+                }
+
+                HStack(spacing: 10) {
+                    Label(
+                        scholarship.country,
+                        systemImage: "mappin"
+                    )
+
+                    if let degree = scholarship.degreeLevels.first {
+                        Label(
+                            degree,
+                            systemImage: "graduationcap"
+                        )
+                    }
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+                Rectangle()
+                    .fill(Theme.navy.opacity(0.07))
+                    .frame(height: 1)
+
+                HStack {
+                    if let deadline = scholarship.deadline {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("NEXT DEADLINE")
+                                .font(.system(size: 9, weight: .bold))
+                                .tracking(1.1)
+                                .foregroundStyle(.secondary)
+
+                            Text(deadline)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.oxblood)
+                        }
+                    } else {
+                        Text("Deadline varies or to be announced")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "arrow.up.right")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(Theme.brass)
+                        .frame(width: 30, height: 30)
+                        .background(Theme.parchment)
+                        .clipShape(Circle())
+                }
+            }
+        }
+    }
+}
+
+private struct InstitutionTile: View {
+    let name: String
+    let country: String
+
+    private var initials: String {
+        let words = name
+            .split(separator: " ")
+            .filter { !$0.isEmpty }
+
+        if words.count >= 2 {
+            return String(words[0].prefix(1) + words[1].prefix(1)).uppercased()
+        }
+
+        return String(name.prefix(2)).uppercased()
+    }
+
+    var body: some View {
+        VStack(spacing: 3) {
+            Text(initials)
+                .font(.system(size: 13, weight: .bold, design: .serif))
+                .foregroundStyle(Theme.parchment)
+
+            Rectangle()
+                .fill(Theme.brass)
+                .frame(width: 14, height: 1)
+        }
+        .frame(width: 46, height: 46)
+        .background(Theme.navy)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .accessibilityLabel("\(name), \(country)")
+    }
+}
+
+// Kept for compatibility with views that already refer to these types.
+typealias ScholarshipCard = PremiumScholarshipCard
+
+struct TrustBadge: View {
+    let verified: Bool
+
+    var body: some View {
+        TrustSeal(verified: verified)
     }
 }
 
@@ -367,111 +542,15 @@ struct FilterChip: View {
 
     var body: some View {
         Label(title, systemImage: icon)
-            .font(.subheadline.weight(.semibold))
+            .font(.caption.weight(.semibold))
             .padding(.horizontal, 12)
-            .padding(.vertical, 9)
+            .padding(.vertical, 10)
             .background(.white)
-            .foregroundStyle(.primary)
+            .foregroundStyle(Theme.navy)
             .clipShape(Capsule())
             .overlay(
                 Capsule()
-                    .stroke(Color.black.opacity(0.06))
+                    .stroke(Theme.navy.opacity(0.09))
             )
-    }
-}
-
-struct ScholarshipCard: View {
-    let scholarship: Scholarship
-
-    private var isVerified: Bool {
-        scholarship.verificationStatus == "verified"
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .top, spacing: 12) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(scholarship.title)
-                        .font(.headline)
-                        .foregroundStyle(Theme.ink)
-
-                    Text(scholarship.provider)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-
-                    Label(
-                        "\(scholarship.country) · \(scholarship.region)",
-                        systemImage: "mappin.and.ellipse"
-                    )
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                }
-
-                Spacer()
-
-                FundingBadge(text: scholarship.fundingType)
-            }
-
-            HStack(spacing: 8) {
-                TrustBadge(verified: isVerified)
-
-                ForEach(
-                    scholarship.degreeLevels.prefix(2),
-                    id: \.self
-                ) { level in
-                    Text(level)
-                        .font(.caption2.weight(.semibold))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 5)
-                        .background(Theme.soft)
-                        .clipShape(Capsule())
-                }
-            }
-
-            Divider()
-
-            HStack {
-                if let deadline = scholarship.deadline {
-                    Label("Next deadline \(deadline)", systemImage: "calendar")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.ink)
-                } else {
-                    Label("Deadline varies / TBA", systemImage: "calendar.badge.clock")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-
-                Spacer()
-
-                Image(systemName: "chevron.right")
-                    .font(.caption.bold())
-                    .foregroundStyle(.tertiary)
-            }
-        }
-        .padding(16)
-        .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
-        .overlay(
-            RoundedRectangle(cornerRadius: 18)
-                .stroke(Color.black.opacity(0.04))
-        )
-        .shadow(color: .black.opacity(0.035), radius: 12, y: 6)
-    }
-}
-
-struct TrustBadge: View {
-    let verified: Bool
-
-    var body: some View {
-        Label(
-            verified ? "Verified" : "Curated",
-            systemImage: verified ? "checkmark.seal.fill" : "checkmark.circle"
-        )
-        .font(.caption2.weight(.bold))
-        .padding(.horizontal, 8)
-        .padding(.vertical, 5)
-        .background(verified ? Theme.mint : Theme.soft)
-        .foregroundStyle(verified ? Theme.green : .secondary)
-        .clipShape(Capsule())
     }
 }
