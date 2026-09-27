@@ -355,3 +355,11 @@ enum ScholarshipSearchService {
         )
     }
 }
+
+
+struct UniversityMediaEnrichmentResult: Decodable {
+    let enriched: Int
+    let ready: Int
+    let partial: Int
+    let failed: Int
+}
