@@ -25,7 +25,7 @@ enum DataService {
     static func scholarships() async throws -> [Scholarship] {
         let rows: [Scholarship] = try await supabase
             .from("scholarships")
-            .select()
+            .select("*, university:universities(*)")
             .eq("status", value: "published")
             .order("title", ascending: true)
             .execute()
