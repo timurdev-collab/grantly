@@ -38,6 +38,13 @@ enum DataService {
         }
     }
 
+    static func scholarshipFilterOptions() async throws -> ScholarshipFilterOptions {
+        try await supabase
+            .rpc("scholarship_filter_options")
+            .execute()
+            .value
+    }
+
     static func allScholarshipsForAdmin() async throws -> [Scholarship] {
         try await supabase
             .from("scholarships")
