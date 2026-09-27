@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ApplicationWorkspaceView: View {
     @Environment(\.dismiss) private var dismiss
@@ -7,13 +8,21 @@ struct ApplicationWorkspaceView: View {
 
     @State private var item: SavedScholarshipItem?
     @State private var tasks: [ApplicationTask] = []
+    @State private var documents: [ApplicationDocument] = []
     @State private var status = "Planning"
     @State private var reference = ""
     @State private var notes = ""
+    @State private var personalDeadline = Date()
+    @State private var hasPersonalDeadline = false
+    @State private var reminderEnabled = true
+    @State private var documentsComplete = false
     @State private var loading = true
     @State private var saving = false
+    @State private var uploadingDocument = false
     @State private var errorMessage: String?
+    @State private var successMessage: String?
     @State private var showingPortal = false
+    @State private var showingFileImporter = false
 
     private let statuses = [
         "Planning",
@@ -23,6 +32,14 @@ struct ApplicationWorkspaceView: View {
         "Offer",
         "Rejected",
         "Withdrawn"
+    ]
+
+    private let activeTimeline = [
+        "Planning",
+        "Preparing",
+        "Submitted",
+        "Interview",
+        "Offer"
     ]
 
     private var completedTasks: Int {
@@ -38,25 +55,28 @@ struct ApplicationWorkspaceView: View {
         URL(string: scholarship.officialUrl)
     }
 
+    private var isSubmittedOrLater: Bool {
+        ["Submitted", "Interview", "Offer", "Rejected"]
+            .contains(status)
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
                     summaryCard
-
                     statusCard
-
+                    deadlineCard
                     checklistCard
-
+                    documentVaultCard
                     applicationDetailsCard
-
                     officialPortalCard
                 }
                 .padding()
                 .padding(.bottom, 24)
             }
             .background(Theme.pageBackground)
-            .navigationTitle("Application")
+            .navigationTitle("Application Center")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -79,8 +99,21 @@ struct ApplicationWorkspaceView: View {
                         .ignoresSafeArea()
                 }
             }
+            .fileImporter(
+                isPresented: $showingFileImporter,
+                allowedContentTypes: [.pdf, .image],
+                allowsMultipleSelection: false
+            ) { result in
+                switch result {
+                case .success(let urls):
+                    guard let url = urls.first else { return }
+                    Task { await importDocument(from: url) }
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                }
+            }
             .alert(
-                "Application workspace",
+                "Application Center",
                 isPresented: Binding(
                     get: { errorMessage != nil },
                     set: { if !$0 { errorMessage = nil } }
@@ -132,6 +165,12 @@ struct ApplicationWorkspaceView: View {
             }
             .font(.caption.weight(.semibold))
             .foregroundStyle(Theme.blueSoft)
+
+            if let successMessage {
+                Label(successMessage, systemImage: "checkmark.circle.fill")
+                    .font(.caption)
+                    .foregroundStyle(Theme.green)
+            }
         }
         .padding(16)
         .background(Theme.surface)
@@ -146,7 +185,7 @@ struct ApplicationWorkspaceView: View {
                         .font(.headline.bold())
                         .foregroundStyle(.white)
 
-                    Text("Track your progress in Grantly")
+                    Text("Your progress inside Grantly")
                         .font(.caption)
                         .foregroundStyle(.white.opacity(0.48))
                 }
@@ -176,16 +215,139 @@ struct ApplicationWorkspaceView: View {
                 }
             }
 
+            statusTimeline
+
             ProgressView(value: progress)
                 .tint(Theme.blue)
 
-            Text("\(completedTasks) of \(tasks.count) preparation steps complete")
-                .font(.caption2)
-                .foregroundStyle(.white.opacity(0.46))
+            HStack {
+                Text("\(completedTasks) of \(tasks.count) preparation steps")
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.46))
 
-            Text("Status here is your Grantly tracker. The provider remains the official source for application decisions.")
+                Spacer()
+
+                Text("\(Int(progress * 100))%")
+                    .font(.caption2.bold())
+                    .foregroundStyle(Theme.blueSoft)
+            }
+
+            if !isSubmittedOrLater {
+                Button {
+                    Task { await changeStatus(to: "Submitted") }
+                } label: {
+                    Label(
+                        "I submitted my application",
+                        systemImage: "paperplane.fill"
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 44)
+                    .background(Theme.surfaceRaised)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 13))
+                }
+                .buttonStyle(.plain)
+            }
+
+            Text("Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status.")
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.56))
+                .foregroundStyle(.white.opacity(0.54))
+                .lineSpacing(3)
+        }
+        .padding(16)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+
+    private var statusTimeline: some View {
+        HStack(spacing: 4) {
+            ForEach(Array(activeTimeline.enumerated()), id: \.element) {
+                index,
+                value in
+
+                let currentIndex =
+                    activeTimeline.firstIndex(of: status) ?? 0
+                let complete = index <= currentIndex &&
+                    !["Rejected", "Withdrawn"].contains(status)
+
+                VStack(spacing: 5) {
+                    Circle()
+                        .fill(
+                            complete
+                                ? Theme.blue
+                                : .white.opacity(0.12)
+                        )
+                        .frame(width: 10, height: 10)
+
+                    Text(shortStatus(value))
+                        .font(.system(size: 8, weight: .semibold))
+                        .foregroundStyle(
+                            complete
+                                ? .white.opacity(0.82)
+                                : .white.opacity(0.30)
+                        )
+                        .lineLimit(1)
+                }
+                .frame(maxWidth: .infinity)
+
+                if index < activeTimeline.count - 1 {
+                    Rectangle()
+                        .fill(
+                            index < currentIndex &&
+                            !["Rejected", "Withdrawn"].contains(status)
+                                ? Theme.blue.opacity(0.65)
+                                : .white.opacity(0.08)
+                        )
+                        .frame(height: 2)
+                        .offset(y: -8)
+                }
+            }
+        }
+    }
+
+    private var deadlineCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("Plan your deadline")
+                    .font(.headline.bold())
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Toggle("", isOn: $hasPersonalDeadline)
+                    .labelsHidden()
+                    .tint(Theme.blue)
+            }
+
+            if hasPersonalDeadline {
+                DatePicker(
+                    "My target date",
+                    selection: $personalDeadline,
+                    displayedComponents: .date
+                )
+                .datePickerStyle(.compact)
+                .foregroundStyle(.white)
+            }
+
+            Toggle(
+                "Deadline reminders",
+                isOn: $reminderEnabled
+            )
+            .tint(Theme.blue)
+
+            if let official = scholarship.deadline {
+                Label(
+                    "Official deadline: \(official)",
+                    systemImage: "calendar.badge.exclamationmark"
+                )
+                .font(.caption)
+                .foregroundStyle(Theme.blueSoft)
+            }
+
+            Text("Set an earlier personal target so you have time to fix missing documents before the official deadline.")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.52))
                 .lineSpacing(3)
         }
         .padding(16)
@@ -195,9 +357,17 @@ struct ApplicationWorkspaceView: View {
 
     private var checklistCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Application checklist")
-                .font(.headline.bold())
-                .foregroundStyle(.white)
+            HStack {
+                Text("Application checklist")
+                    .font(.headline.bold())
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Toggle("", isOn: $documentsComplete)
+                    .labelsHidden()
+                    .tint(Theme.green)
+            }
 
             if loading {
                 ProgressView()
@@ -238,6 +408,100 @@ struct ApplicationWorkspaceView: View {
                     .buttonStyle(.plain)
                 }
             }
+
+            Text(
+                documentsComplete
+                    ? "You marked the document set as ready."
+                    : "Mark this ready after checking every required document against the official portal."
+            )
+            .font(.caption2)
+            .foregroundStyle(.white.opacity(0.42))
+        }
+        .padding(16)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+
+    private var documentVaultCard: some View {
+        VStack(alignment: .leading, spacing: 13) {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Document vault")
+                        .font(.headline.bold())
+                        .foregroundStyle(.white)
+
+                    Text("Private files for this application")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.48))
+                }
+
+                Spacer()
+
+                Button {
+                    showingFileImporter = true
+                } label: {
+                    Label(
+                        uploadingDocument ? "Uploading…" : "Add file",
+                        systemImage: "plus"
+                    )
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.blueSoft)
+                }
+                .disabled(uploadingDocument)
+            }
+
+            if documents.isEmpty {
+                VStack(spacing: 8) {
+                    Image(systemName: "lock.doc")
+                        .font(.title2)
+                        .foregroundStyle(.white.opacity(0.34))
+
+                    Text("Keep transcripts, letters and supporting files together.")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.48))
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+            } else {
+                ForEach(documents) { document in
+                    HStack(spacing: 11) {
+                        Image(systemName: documentIcon(document))
+                            .foregroundStyle(Theme.blueSoft)
+                            .frame(width: 32, height: 32)
+                            .background(Theme.surfaceRaised)
+                            .clipShape(RoundedRectangle(cornerRadius: 9))
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(document.fileName)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(.white)
+                                .lineLimit(1)
+
+                            Text(fileSize(document.byteSize))
+                                .font(.caption2)
+                                .foregroundStyle(.white.opacity(0.42))
+                        }
+
+                        Spacer()
+
+                        Button(role: .destructive) {
+                            Task { await delete(document) }
+                        } label: {
+                            Image(systemName: "trash")
+                                .font(.caption)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+
+            Label(
+                "Files are stored in a private user-scoped bucket. PDF and image files only, up to 6 MB each.",
+                systemImage: "lock.fill"
+            )
+            .font(.caption2)
+            .foregroundStyle(.white.opacity(0.42))
         }
         .padding(16)
         .background(Theme.surface)
@@ -277,6 +541,27 @@ struct ApplicationWorkspaceView: View {
                 .background(Theme.surfaceRaised)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+
+            if let submitted = item?.submittedAt {
+                DetailLine(
+                    label: "Submitted",
+                    value: displayDate(submitted)
+                )
+            }
+
+            if let interview = item?.interviewAt {
+                DetailLine(
+                    label: "Interview",
+                    value: displayDate(interview)
+                )
+            }
+
+            if let result = item?.resultAt {
+                DetailLine(
+                    label: "Decision",
+                    value: displayDate(result)
+                )
+            }
         }
         .padding(16)
         .background(Theme.surface)
@@ -303,7 +588,7 @@ struct ApplicationWorkspaceView: View {
             }
 
             if let checked = item?.portalLastCheckedAt {
-                Text("Last checked \(String(checked.prefix(10)))")
+                Text("Last checked \(displayDate(checked))")
                     .font(.caption2)
                     .foregroundStyle(.white.opacity(0.44))
             }
@@ -312,10 +597,7 @@ struct ApplicationWorkspaceView: View {
                 Task { await openPortal() }
             } label: {
                 Label(
-                    status == "Submitted" ||
-                    status == "Interview" ||
-                    status == "Offer" ||
-                    status == "Rejected"
+                    isSubmittedOrLater
                         ? "Check official status"
                         : "Open application form",
                     systemImage: "arrow.up.right.square"
@@ -330,7 +612,7 @@ struct ApplicationWorkspaceView: View {
             .buttonStyle(.plain)
             .disabled(portalURL == nil)
 
-            Text("Grantly does not submit the provider's form or read private portal status unless that provider offers an approved integration.")
+            Text("The official website handles the actual submission. Grantly keeps your preparation, files and progress organized around it.")
                 .font(.caption2)
                 .foregroundStyle(.white.opacity(0.42))
                 .lineSpacing(3)
@@ -366,7 +648,22 @@ struct ApplicationWorkspaceView: View {
             status = item?.applicationStatus ?? "Planning"
             reference = item?.applicationReference ?? ""
             notes = item?.notes ?? ""
+            reminderEnabled = item?.reminderEnabled ?? true
+            documentsComplete = item?.documentsComplete ?? false
+
+            if let date = parseDate(item?.personalDeadline) {
+                personalDeadline = date
+                hasPersonalDeadline = true
+            } else {
+                personalDeadline = Date()
+                hasPersonalDeadline = false
+            }
+
             tasks = try await DataService.applicationTasks(
+                scholarshipId: scholarship.id
+            )
+
+            documents = try await DataService.applicationDocuments(
                 scholarshipId: scholarship.id
             )
         } catch {
@@ -377,18 +674,26 @@ struct ApplicationWorkspaceView: View {
     @MainActor
     private func saveWorkspace() async {
         saving = true
+        successMessage = nil
         defer { saving = false }
 
         do {
             try await DataService.updateApplicationWorkspace(
                 scholarshipId: scholarship.id,
                 reference: reference,
-                notes: notes
+                notes: notes,
+                personalDeadline: hasPersonalDeadline
+                    ? databaseDate(personalDeadline)
+                    : nil,
+                documentsComplete: documentsComplete,
+                reminderEnabled: reminderEnabled
             )
 
             item = try await DataService.savedApplication(
                 scholarshipId: scholarship.id
             )
+
+            successMessage = "Application workspace saved."
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -398,6 +703,7 @@ struct ApplicationWorkspaceView: View {
     private func changeStatus(to newStatus: String) async {
         let oldStatus = status
         status = newStatus
+        successMessage = nil
 
         do {
             try await DataService.updateApplicationStatus(
@@ -408,6 +714,8 @@ struct ApplicationWorkspaceView: View {
             item = try await DataService.savedApplication(
                 scholarshipId: scholarship.id
             )
+
+            successMessage = "Status updated to \(newStatus)."
         } catch {
             status = oldStatus
             errorMessage = error.localizedDescription
@@ -431,6 +739,77 @@ struct ApplicationWorkspaceView: View {
     }
 
     @MainActor
+    private func importDocument(from url: URL) async {
+        uploadingDocument = true
+        successMessage = nil
+        defer { uploadingDocument = false }
+
+        let accessing = url.startAccessingSecurityScopedResource()
+        defer {
+            if accessing {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+
+            guard data.count <= 6 * 1024 * 1024 else {
+                errorMessage = "Please choose a file smaller than 6 MB."
+                return
+            }
+
+            let values = try? url.resourceValues(
+                forKeys: [.contentTypeKey]
+            )
+            let contentType =
+                values?.contentType?.preferredMIMEType ??
+                fallbackContentType(url)
+
+            guard [
+                "application/pdf",
+                "image/jpeg",
+                "image/png",
+                "image/heic",
+                "image/heif"
+            ].contains(contentType) else {
+                errorMessage = "Please choose a PDF or image file."
+                return
+            }
+
+            try await DataService.uploadApplicationDocument(
+                scholarshipId: scholarship.id,
+                fileName: url.lastPathComponent,
+                data: data,
+                contentType: contentType
+            )
+
+            documents = try await DataService.applicationDocuments(
+                scholarshipId: scholarship.id
+            )
+
+            successMessage = "Document added."
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func delete(_ document: ApplicationDocument) async {
+        do {
+            try await DataService.deleteApplicationDocument(document)
+
+            withAnimation(.easeInOut(duration: 0.18)) {
+                documents.removeAll { $0.id == document.id }
+            }
+
+            successMessage = "Document removed."
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
     private func openPortal() async {
         guard portalURL != nil else { return }
 
@@ -440,7 +819,7 @@ struct ApplicationWorkspaceView: View {
             )
 
             try? await DataService.trackProductEvent(
-                status == "Submitted"
+                isSubmittedOrLater
                     ? "application_status_check"
                     : "application_portal_open",
                 scholarshipId: scholarship.id,
@@ -454,9 +833,89 @@ struct ApplicationWorkspaceView: View {
                 scholarshipId: scholarship.id
             )
         } catch {
-            // The official portal should remain available even if tracking fails.
+            // Keep the official portal available if analytics fail.
         }
 
         showingPortal = true
     }
+
+    private func parseDate(_ value: String?) -> Date? {
+        guard let value else { return nil }
+        return Self.databaseDateFormatter.date(from: value)
+    }
+
+    private func databaseDate(_ date: Date) -> String {
+        Self.databaseDateFormatter.string(from: date)
+    }
+
+    private func displayDate(_ value: String) -> String {
+        if let date = ISO8601DateFormatter().date(from: value) {
+            return Self.displayDateFormatter.string(from: date)
+        }
+
+        if let date = Self.databaseDateFormatter.date(from: value) {
+            return Self.displayDateFormatter.string(from: date)
+        }
+
+        return String(value.prefix(10))
+    }
+
+    private func shortStatus(_ value: String) -> String {
+        switch value {
+        case "Preparing":
+            return "Prepare"
+        case "Submitted":
+            return "Submit"
+        case "Interview":
+            return "Interview"
+        default:
+            return value
+        }
+    }
+
+    private func documentIcon(
+        _ document: ApplicationDocument
+    ) -> String {
+        document.contentType == "application/pdf"
+            ? "doc.richtext"
+            : "photo"
+    }
+
+    private func fileSize(_ bytes: Int?) -> String {
+        guard let bytes else { return "Private file" }
+        return ByteCountFormatter.string(
+            fromByteCount: Int64(bytes),
+            countStyle: .file
+        )
+    }
+
+    private func fallbackContentType(_ url: URL) -> String {
+        switch url.pathExtension.lowercased() {
+        case "pdf":
+            return "application/pdf"
+        case "png":
+            return "image/png"
+        case "heic":
+            return "image/heic"
+        case "heif":
+            return "image/heif"
+        default:
+            return "image/jpeg"
+        }
+    }
+
+    private static let databaseDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+
+    private static let displayDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }()
 }
