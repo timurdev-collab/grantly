@@ -23,6 +23,8 @@ struct ApplicationWorkspaceView: View {
     @State private var successMessage: String?
     @State private var showingPortal = false
     @State private var showingFileImporter = false
+    @State private var showingNewTask = false
+    @State private var newTaskTitle = ""
 
     private let statuses = [
         "Planning",
@@ -111,6 +113,22 @@ struct ApplicationWorkspaceView: View {
                 case .failure(let error):
                     errorMessage = error.localizedDescription
                 }
+            }
+            .alert(
+                "Add checklist item",
+                isPresented: $showingNewTask
+            ) {
+                TextField("Task", text: $newTaskTitle)
+
+                Button("Add") {
+                    Task { await addCustomTask() }
+                }
+
+                Button("Cancel", role: .cancel) {
+                    newTaskTitle = ""
+                }
+            } message: {
+                Text("Add a requirement or preparation step for this application.")
             }
             .alert(
                 "Application Center",
@@ -364,6 +382,19 @@ struct ApplicationWorkspaceView: View {
 
                 Spacer()
 
+                Button {
+                    showingNewTask = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.caption.bold())
+                        .foregroundStyle(Theme.blueSoft)
+                        .frame(width: 30, height: 30)
+                        .background(Theme.surfaceRaised)
+                        .clipShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Add checklist item")
+
                 Toggle("", isOn: $documentsComplete)
                     .labelsHidden()
                     .tint(Theme.green)
@@ -402,6 +433,16 @@ struct ApplicationWorkspaceView: View {
                                 .multilineTextAlignment(.leading)
 
                             Spacer()
+
+                            if task.taskKey == nil {
+                                Button(role: .destructive) {
+                                    Task { await deleteCustomTask(task) }
+                                } label: {
+                                    Image(systemName: "trash")
+                                        .font(.caption)
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
                         .padding(.vertical, 4)
                     }
@@ -718,6 +759,54 @@ struct ApplicationWorkspaceView: View {
             successMessage = "Status updated to \(newStatus)."
         } catch {
             status = oldStatus
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func addCustomTask() async {
+        let cleaned = newTaskTitle.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+
+        guard !cleaned.isEmpty else {
+            return
+        }
+
+        do {
+            let nextPosition =
+                (tasks.map(\.position).max() ?? 0) + 10
+
+            try await DataService.addApplicationTask(
+                scholarshipId: scholarship.id,
+                title: cleaned,
+                position: nextPosition
+            )
+
+            newTaskTitle = ""
+            tasks = try await DataService.applicationTasks(
+                scholarshipId: scholarship.id
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func deleteCustomTask(
+        _ task: ApplicationTask
+    ) async {
+        guard task.taskKey == nil else { return }
+
+        do {
+            try await DataService.deleteApplicationTask(
+                taskId: task.id
+            )
+
+            withAnimation(.easeInOut(duration: 0.18)) {
+                tasks.removeAll { $0.id == task.id }
+            }
+        } catch {
             errorMessage = error.localizedDescription
         }
     }
