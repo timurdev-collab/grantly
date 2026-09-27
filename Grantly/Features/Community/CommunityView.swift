@@ -215,6 +215,7 @@ struct CommunityRow: View {
         HStack(spacing: 13) {
             CommunityAvatar(
                 name: profile.displayName ?? "Student",
+                imageURL: profile.avatarUrl,
                 size: 54
             )
 
@@ -257,6 +258,7 @@ struct CommunityRow: View {
 
 private struct CommunityAvatar: View {
     let name: String
+    var imageURL: String? = nil
     var size: CGFloat = 54
 
     private var initials: String {
@@ -279,9 +281,25 @@ private struct CommunityAvatar: View {
                 endPoint: .bottomTrailing
             )
 
-            Text(initials)
-                .font(.system(size: size * 0.27, weight: .bold))
-                .foregroundStyle(.white)
+            if let imageURL,
+               let url = URL(string: imageURL) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    default:
+                        Text(initials)
+                            .font(.system(size: size * 0.27, weight: .bold))
+                            .foregroundStyle(.white)
+                    }
+                }
+            } else {
+                Text(initials)
+                    .font(.system(size: size * 0.27, weight: .bold))
+                    .foregroundStyle(.white)
+            }
         }
         .frame(width: size, height: size)
         .clipShape(Circle())
@@ -374,6 +392,7 @@ struct CommunityProfileView: View {
         VStack(spacing: 12) {
             CommunityAvatar(
                 name: profile.displayName ?? "Student",
+                imageURL: profile.avatarUrl,
                 size: 86
             )
             .padding(.top, 8)
