@@ -59,7 +59,7 @@ struct UniversityCasesView: View {
 
                 if loading {
                     ProgressView()
-                        .tint(Theme.blue)
+                        .tint(Theme.orange)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 52)
                 } else if cases.isEmpty {
@@ -121,7 +121,7 @@ struct UniversityCasesView: View {
                     .font(.headline.bold())
                     .foregroundStyle(.white)
                     .frame(width: 42, height: 42)
-                    .background(Theme.blue)
+                    .background(Theme.orange)
                     .clipShape(RoundedRectangle(cornerRadius: 13))
             }
             .buttonStyle(.plain)
@@ -153,7 +153,7 @@ struct UniversityCasesView: View {
         VStack(spacing: 14) {
             Image(systemName: "folder.badge.plus")
                 .font(.system(size: 28, weight: .semibold))
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
                 .frame(width: 64, height: 64)
                 .background(Theme.surface)
                 .clipShape(Circle())
@@ -172,7 +172,7 @@ struct UniversityCasesView: View {
                 showingCreateCase = true
             }
             .buttonStyle(.borderedProminent)
-            .tint(Theme.blue)
+            .tint(Theme.orange)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 52)
@@ -200,7 +200,7 @@ private struct UniversityCaseMetric: View {
         VStack(alignment: .leading, spacing: 7) {
             Image(systemName: icon)
                 .font(.caption.bold())
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
 
             Text(value)
                 .font(.title3.bold())
@@ -263,7 +263,7 @@ private struct UniversityCaseCard: View {
                     }
                 }
                 .font(.caption2)
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
             }
         }
         .padding(13)
@@ -282,7 +282,7 @@ private struct UniversityCaseCard: View {
         case "Rejected":
             return .orange
         case "Submitted", "Interview":
-            return Theme.blueSoft
+            return Theme.orangeSoft
         default:
             return .white.opacity(0.62)
         }
@@ -392,7 +392,7 @@ struct CreateUniversityCaseView: View {
             if loading {
                 Spacer()
                 ProgressView()
-                    .tint(Theme.blue)
+                    .tint(Theme.orange)
                 Spacer()
             } else {
                 List(filteredUniversities) { university in
@@ -474,7 +474,7 @@ struct CreateUniversityCaseView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    .tint(Theme.blueSoft)
+                    .tint(Theme.orangeSoft)
 
                     TextField(
                         "Intake, e.g. Fall 2027",
@@ -521,7 +521,7 @@ struct CreateUniversityCaseView: View {
                     .font(.headline)
                     .frame(maxWidth: .infinity)
                     .frame(height: 52)
-                    .background(Theme.blueGradient)
+                    .background(Theme.orangeGradient)
                     .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                 }
@@ -639,7 +639,7 @@ struct UniversityCaseDetailView: View {
         ScrollView(showsIndicators: false) {
             if loading {
                 ProgressView()
-                    .tint(Theme.blue)
+                    .tint(Theme.orange)
                     .frame(maxWidth: .infinity)
                     .padding(.top, 80)
             } else if let item {
@@ -752,7 +752,7 @@ struct UniversityCaseDetailView: View {
                     .foregroundStyle(.white)
                     .padding(.horizontal, 11)
                     .frame(height: 36)
-                    .background(Theme.blue)
+                    .background(Theme.orange)
                     .clipShape(Capsule())
                 }
 
@@ -761,7 +761,7 @@ struct UniversityCaseDetailView: View {
                 if let deadline = item.deadline {
                     Label(deadline, systemImage: "calendar")
                         .font(.caption)
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                 }
             }
 
@@ -809,7 +809,7 @@ struct UniversityCaseDetailView: View {
                         missingRequirements.isEmpty &&
                         !requiredRequirements.isEmpty
                             ? Theme.green
-                            : Theme.blueSoft
+                            : Theme.orangeSoft
                     )
             }
 
@@ -818,7 +818,7 @@ struct UniversityCaseDetailView: View {
                     missingRequirements.isEmpty &&
                     !requiredRequirements.isEmpty
                         ? Theme.green
-                        : Theme.blue
+                        : Theme.orange
                 )
 
             HStack(spacing: 8) {
@@ -852,7 +852,7 @@ struct UniversityCaseDetailView: View {
         VStack(spacing: 5) {
             Image(systemName: icon)
                 .font(.caption)
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
 
             Text(count)
                 .font(.headline.bold())
@@ -888,7 +888,7 @@ struct UniversityCaseDetailView: View {
                 } label: {
                     Label("Add", systemImage: "plus")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                 }
                 .buttonStyle(.plain)
             }
@@ -963,7 +963,7 @@ struct UniversityCaseDetailView: View {
                         showingImporter = true
                     }
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
                     .buttonStyle(.plain)
                 }
             }
@@ -972,7 +972,7 @@ struct UniversityCaseDetailView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "doc.fill")
                         .font(.caption)
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
 
                     Text(attached.fileName)
                         .font(.caption)
@@ -1012,7 +1012,7 @@ struct UniversityCaseDetailView: View {
                 } label: {
                     Label("Add file", systemImage: "plus")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                 }
                 .buttonStyle(.plain)
             }
