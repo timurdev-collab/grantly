@@ -223,9 +223,11 @@ enum DataService {
             .execute()
             .value
 
-        let today = ISO8601DateFormatter()
-            .string(from: Date())
-            .prefix(10)
+        let today = String(
+            ISO8601DateFormatter()
+                .string(from: Date())
+                .prefix(10)
+        )
 
         return rows.filter {
             let cycleVisible = !["closed", "discontinued"]
