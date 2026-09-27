@@ -96,6 +96,71 @@ function cycleCandidate(text: string) {
   return { value: null, confidence: null };
 }
 
+function degreeSignals(text: string) {
+  const value: string[] = [];
+  if (/\bundergraduate\b|\bbachelor(?:'s)?\b/i.test(text)) {
+    value.push("Bachelor");
+  }
+  if (/\bgraduate\b|\bmaster(?:'s)?\b/i.test(text)) {
+    value.push("Master");
+  }
+  if (/\bph\.?d\.?\b|\bdoctoral\b|\bdoctorate\b/i.test(text)) {
+    value.push("PhD");
+  }
+
+  return {
+    value: [...new Set(value)],
+    confidence: value.length ? 85 : null
+  };
+}
+
+function fundingSignals(text: string) {
+  let fundingType: string | null = null;
+  let confidence: number | null = null;
+
+  if (/fully[- ]funded|full scholarship|all tuition (?:fees )?(?:are )?covered/i.test(text)) {
+    fundingType = "Fully funded";
+    confidence = 90;
+  } else if (/full tuition|100% tuition|tuition fee waiver/i.test(text)) {
+    fundingType = "Full tuition";
+    confidence = 86;
+  } else if (/partial scholarship|partial tuition|up to \d{1,3}%/i.test(text)) {
+    fundingType = "Partial";
+    confidence = 80;
+  }
+
+  const tuitionMatch = text.match(
+    /(?:tuition|tuition fee)[^.!?]{0,100}?(?:waiver|covered|coverage|remission|reduction)[^.!?]{0,120}/i
+  );
+  const stipendMatch = text.match(
+    /(?:stipend|living allowance|monthly allowance)[^.!?]{0,120}/i
+  );
+
+  return {
+    fundingType,
+    confidence,
+    tuitionCoverage: tuitionMatch?.[0]?.trim() ?? null,
+    stipend: stipendMatch?.[0]?.trim() ?? null,
+    airfare: /airfare|round[- ]trip (?:air )?ticket|flight allowance/i.test(text),
+    accommodation: /accommodation|housing allowance|dormitory|residence hall/i.test(text),
+    healthInsurance: /health insurance|medical insurance/i.test(text)
+  };
+}
+
+function nationalitySignals(text: string) {
+  if (
+    /open to all nationalities|all nationalities|international students from any country/i.test(text)
+  ) {
+    return { value: ["ALL"], confidence: 90 };
+  }
+
+  if (/international students|international applicants/i.test(text)) {
+    return { value: ["INTERNATIONAL"], confidence: 75 };
+  }
+
+  return { value: [], confidence: null };
+}
+
 function excerpt(text: string, regex: RegExp) {
   const match = regex.exec(text);
   if (!match || match.index == null) return null;
@@ -226,6 +291,9 @@ Deno.serve(async (req) => {
       const plain = normalizeText(html);
       const deadline = deadlineCandidate(plain);
       const cycle = cycleCandidate(plain);
+      const degree = degreeSignals(plain);
+      const funding = fundingSignals(plain);
+      const nationality = nationalitySignals(plain);
       const pageTitle = extractTag(
         html,
         /<title[^>]*>([\s\S]*?)<\/title>/i
@@ -252,9 +320,32 @@ Deno.serve(async (req) => {
           deadline_confidence: deadline.confidence,
           detected_cycle: cycle.value,
           cycle_confidence: cycle.confidence,
+          detected_degree_levels: degree.value,
+          degree_confidence: degree.confidence,
+          detected_funding_type: funding.fundingType,
+          funding_confidence: funding.confidence,
+          detected_tuition_coverage: funding.tuitionCoverage,
+          detected_stipend: funding.stipend,
+          detected_airfare: funding.airfare,
+          detected_accommodation: funding.accommodation,
+          detected_health_insurance: funding.healthInsurance,
+          detected_eligible_nationalities: nationality.value,
+          eligibility_confidence: nationality.confidence,
           funding_excerpt: excerpt(
             plain,
             /scholarship|funding|financial aid|bursary|fellowship/i
+          ),
+          benefits_excerpt: excerpt(
+            plain,
+            /tuition|stipend|living allowance|airfare|accommodation|health insurance/i
+          ),
+          eligibility_excerpt: excerpt(
+            plain,
+            /eligib|eligible|nationality|international students|requirements/i
+          ),
+          application_requirements_excerpt: excerpt(
+            plain,
+            /required documents|application documents|documents required|transcript|recommendation letter/i
           ),
           application_excerpt: excerpt(
             plain,
