@@ -382,42 +382,51 @@ Deno.serve(async (req) => {
   const anon = Deno.env.get("SUPABASE_ANON_KEY")!;
   const serviceRole = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const authorization = req.headers.get("Authorization");
-
-  if (!authorization) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" }
-    });
-  }
-
-  const userClient = createClient(url, anon, {
-    global: { headers: { Authorization: authorization } },
-    auth: { persistSession: false }
-  });
-
-  const { data: { user }, error: userError } =
-    await userClient.auth.getUser();
-
-  if (userError || !user) {
-    return new Response(JSON.stringify({ error: "Invalid session" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" }
-    });
-  }
+  const cronToken = req.headers.get("x-grantly-cron-token");
 
   const admin = createClient(url, serviceRole, {
     auth: { persistSession: false }
   });
 
-  const { data: profile } = await admin
-    .from("student_profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
+  let authorized = false;
 
-  if (profile?.role !== "admin") {
-    return new Response(JSON.stringify({ error: "Admin access required" }), {
-      status: 403,
+  if (cronToken) {
+    const { data: scheduler } = await admin
+      .from("scholarship_audit_scheduler_config")
+      .select("cron_token,enabled")
+      .eq("id", true)
+      .maybeSingle();
+
+    authorized = Boolean(
+      scheduler?.enabled &&
+      scheduler.cron_token &&
+      scheduler.cron_token === cronToken
+    );
+  }
+
+  if (!authorized && authorization) {
+    const userClient = createClient(url, anon, {
+      global: { headers: { Authorization: authorization } },
+      auth: { persistSession: false }
+    });
+
+    const { data: { user }, error: userError } =
+      await userClient.auth.getUser();
+
+    if (!userError && user) {
+      const { data: profile } = await admin
+        .from("student_profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+
+      authorized = profile?.role === "admin";
+    }
+  }
+
+  if (!authorized) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
       headers: { "Content-Type": "application/json" }
     });
   }
