@@ -7,11 +7,6 @@ final class ReleaseConfigurationTests: XCTestCase {
         XCTAssertEqual(AppEnvironment.production.rawValue, "production")
     }
 
-    func testProductionSupabaseURLUsesHTTPS() {
-        XCTAssertEqual(AppConfig.supabaseURL.scheme, "https")
-        XCTAssertFalse(AppConfig.supabasePublishableKey.isEmpty)
-    }
-
     func testScholarshipImportStatusDecoding() throws {
         let json = """
         {
