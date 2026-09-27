@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct ScholarshipDetailView: View {
+    @Environment(\.openURL) private var openURL
+
     let scholarship: Scholarship
     let match: ScholarshipMatch?
 
@@ -8,6 +10,7 @@ struct ScholarshipDetailView: View {
     @State private var busy = false
     @State private var errorMessage: String?
     @State private var selectedTab = "Overview"
+    @State private var trackedView = false
 
     private let tabs = ["Overview", "Eligibility", "Benefits", "Application"]
 
@@ -56,7 +59,21 @@ struct ScholarshipDetailView: View {
         .safeAreaInset(edge: .bottom) {
             bottomAction
         }
-        .task { await loadSaved() }
+        .task {
+            await loadSaved()
+
+            if !trackedView {
+                trackedView = true
+                try? await DataService.trackProductEvent(
+                    "scholarship_view",
+                    scholarshipId: scholarship.id,
+                    properties: [
+                        "provider": scholarship.provider,
+                        "country": scholarship.country
+                    ]
+                )
+            }
+        }
         .alert(
             "Unable to update scholarship",
             isPresented: Binding(
@@ -396,7 +413,21 @@ struct ScholarshipDetailView: View {
             .disabled(busy)
 
             if let url = URL(string: scholarship.officialUrl) {
-                Link(destination: url) {
+                Button {
+                    Task {
+                        try? await DataService.trackProductEvent(
+                            "official_site_click",
+                            scholarshipId: scholarship.id,
+                            properties: [
+                                "provider": scholarship.provider
+                            ]
+                        )
+
+                        await MainActor.run {
+                            openURL(url)
+                        }
+                    }
+                } label: {
                     HStack(spacing: 8) {
                         Text("Apply on official site")
                         Image(systemName: "arrow.up.right")
@@ -408,6 +439,7 @@ struct ScholarshipDetailView: View {
                     .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
                 }
+                .buttonStyle(.plain)
             }
         }
         .padding(.horizontal)
