@@ -49,8 +49,8 @@ targets:
         Debug:
           APS_ENVIRONMENT: development
           APP_ENVIRONMENT: staging
-          SUPABASE_URL: https://bvcabjwriszghmizbwji.supabase.co
-          SUPABASE_PUBLISHABLE_KEY: sb_publishable_8zllTlQ9y95acFTsw0uljg_XZ4nuli2
+          SUPABASE_URL: https://cbzriyarlvpmtfbjgede.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_7DtXndOsfZ5WmTZs0RWG8w_EIQ3xZSe
         Release:
           APS_ENVIRONMENT: production
           APP_ENVIRONMENT: production
