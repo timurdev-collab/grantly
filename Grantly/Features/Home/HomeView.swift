@@ -8,6 +8,7 @@ struct HomeView: View {
     @State private var upcoming: [Scholarship] = []
     @State private var loading = true
     @State private var query = ""
+    @State private var unreadNotifications = 0
 
     private var profileNeedsSetup: Bool {
         guard let profile else { return true }
@@ -74,15 +75,31 @@ struct HomeView: View {
 
             Spacer()
 
-            ZStack {
-                Circle()
-                    .fill(Theme.surface)
-                    .frame(width: 40, height: 40)
+            NavigationLink {
+                NotificationInboxView()
+            } label: {
+                ZStack(alignment: .topTrailing) {
+                    Circle()
+                        .fill(Theme.surface)
+                        .frame(width: 40, height: 40)
 
-                Image(systemName: "bell")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.84))
+                    Image(systemName: unreadNotifications > 0 ? "bell.fill" : "bell")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(.white.opacity(0.84))
+                        .frame(width: 40, height: 40)
+
+                    if unreadNotifications > 0 {
+                        Text(unreadNotifications > 9 ? "9+" : "\(unreadNotifications)")
+                            .font(.system(size: 8, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(minWidth: 16, minHeight: 16)
+                            .background(Theme.danger)
+                            .clipShape(Circle())
+                            .offset(x: 2, y: -2)
+                    }
+                }
             }
+            .buttonStyle(.plain)
         }
     }
 
@@ -297,6 +314,14 @@ struct HomeView: View {
     @MainActor
     private func load() async {
         defer { loading = false }
+
+        if let notifications = try? await DataService.appNotifications(
+            limit: 100
+        ) {
+            unreadNotifications = notifications.filter {
+                $0.readAt == nil
+            }.count
+        }
 
         do {
             let scholarships = try await DataService.scholarships()
@@ -710,5 +735,171 @@ struct MatchListView: View {
                 )
             }
         }
+    }
+}
+
+
+struct NotificationInboxView: View {
+    @State private var notifications: [AppNotification] = []
+    @State private var loading = true
+    @State private var errorMessage: String?
+
+    var body: some View {
+        Group {
+            if loading && notifications.isEmpty {
+                ProgressView()
+                    .tint(Theme.blue)
+            } else if notifications.isEmpty {
+                EmptyState(
+                    icon: "bell",
+                    title: "No notifications yet",
+                    text: "Deadline reminders, application tasks and message updates will appear here."
+                )
+                .padding()
+            } else {
+                List {
+                    ForEach(notifications) { notification in
+                        Button {
+                            Task {
+                                await markRead(notification)
+                            }
+                        } label: {
+                            HStack(alignment: .top, spacing: 12) {
+                                Image(systemName: icon(for: notification.kind))
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundStyle(
+                                        notification.readAt == nil
+                                            ? Theme.blueSoft
+                                            : .white.opacity(0.42)
+                                    )
+                                    .frame(width: 34, height: 34)
+                                    .background(Theme.surfaceRaised)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Text(notification.title)
+                                            .font(.subheadline.weight(.semibold))
+                                            .foregroundStyle(.white)
+
+                                        Spacer()
+
+                                        if notification.readAt == nil {
+                                            Circle()
+                                                .fill(Theme.blue)
+                                                .frame(width: 7, height: 7)
+                                        }
+                                    }
+
+                                    Text(notification.body)
+                                        .font(.caption)
+                                        .foregroundStyle(.white.opacity(0.58))
+                                        .multilineTextAlignment(.leading)
+                                        .lineLimit(3)
+
+                                    Text(relativeTime(notification.createdAt))
+                                        .font(.caption2)
+                                        .foregroundStyle(.white.opacity(0.36))
+                                }
+                            }
+                            .padding(.vertical, 5)
+                        }
+                        .buttonStyle(.plain)
+                        .listRowBackground(Theme.surface)
+                    }
+                }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .refreshable { await load() }
+            }
+        }
+        .background(Theme.pageBackground)
+        .navigationTitle("Notifications")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if notifications.contains(where: { $0.readAt == nil }) {
+                Button("Mark all read") {
+                    Task { await markAllRead() }
+                }
+                .font(.caption)
+            }
+        }
+        .task { await load() }
+        .alert(
+            "Unable to update notifications",
+            isPresented: Binding(
+                get: { errorMessage != nil },
+                set: { if !$0 { errorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            notifications = try await DataService.appNotifications()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func markRead(_ notification: AppNotification) async {
+        guard notification.readAt == nil else { return }
+
+        do {
+            try await DataService.markNotificationRead(
+                notificationId: notification.id
+            )
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func markAllRead() async {
+        do {
+            try await DataService.markAllNotificationsRead()
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func icon(for kind: String) -> String {
+        switch kind {
+        case "deadline":
+            return "calendar.badge.exclamationmark"
+        case "task":
+            return "checklist"
+        case "message":
+            return "message.fill"
+        case "new_match":
+            return "sparkles"
+        case "scholarship_update":
+            return "arrow.triangle.2.circlepath"
+        default:
+            return "bell.fill"
+        }
+    }
+
+    private func relativeTime(_ value: String) -> String {
+        guard let date = ISO8601DateFormatter().date(from: value) else {
+            return String(value.prefix(10))
+        }
+
+        return RelativeDateTimeFormatter()
+            .localizedString(
+                for: date,
+                relativeTo: Date()
+            )
     }
 }

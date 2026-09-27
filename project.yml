@@ -39,6 +39,12 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         DEVELOPMENT_TEAM: M9L42LN3CG
         CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_ENTITLEMENTS: Grantly/Grantly.entitlements
+      configs:
+        Debug:
+          APS_ENVIRONMENT: development
+        Release:
+          APS_ENVIRONMENT: production
     dependencies:
       - package: Supabase
         product: Supabase

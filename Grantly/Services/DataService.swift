@@ -245,6 +245,93 @@ enum DataService {
             .execute()
     }
 
+    static func appNotifications(
+        limit: Int = 100
+    ) async throws -> [AppNotification] {
+        let userId = try await supabase.auth.session.user.id
+
+        return try await supabase
+            .from("app_notifications")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .order("created_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+    }
+
+    static func markNotificationRead(
+        notificationId: UUID
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let read_at: String
+        }
+
+        try await supabase
+            .from("app_notifications")
+            .update(
+                Row(
+                    read_at: ISO8601DateFormatter()
+                        .string(from: Date())
+                )
+            )
+            .eq("id", value: notificationId.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+    }
+
+    static func markAllNotificationsRead() async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let read_at: String
+        }
+
+        try await supabase
+            .from("app_notifications")
+            .update(
+                Row(
+                    read_at: ISO8601DateFormatter()
+                        .string(from: Date())
+                )
+            )
+            .eq("user_id", value: userId.uuidString)
+            .is("read_at", value: nil)
+            .execute()
+    }
+
+    static func registerPushDevice(
+        token: String,
+        environment: String
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let user_id: UUID
+            let platform: String
+            let token: String
+            let environment: String
+            let updated_at: String
+        }
+
+        try await supabase
+            .from("push_devices")
+            .upsert(
+                Row(
+                    user_id: userId,
+                    platform: "ios",
+                    token: token,
+                    environment: environment,
+                    updated_at: ISO8601DateFormatter()
+                        .string(from: Date())
+                ),
+                onConflict: "token"
+            )
+            .execute()
+    }
+
     static func communityProfiles() async throws -> [CommunityProfile] {
         try await supabase
             .from("community_profiles")

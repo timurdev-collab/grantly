@@ -62,12 +62,15 @@ struct MainTabView: View {
         .toolbarBackground(.visible, for: .tabBar)
         .preferredColorScheme(.dark)
         .task {
-            guard profile == nil,
-                  let userId = try? await supabase.auth.session.user.id else {
-                return
+            if profile == nil,
+               let userId = try? await supabase.auth.session.user.id {
+                profile = try? await DataService.currentProfile(
+                    userId: userId
+                )
             }
 
-            profile = try? await DataService.currentProfile(userId: userId)
+            await NotificationRegistration
+                .requestAuthorizationAndRegister()
         }
     }
 }
