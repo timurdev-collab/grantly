@@ -832,6 +832,48 @@ enum DataService {
             .execute()
     }
 
+    static func uploadProfileAvatar(
+        userId: UUID,
+        imageData: Data
+    ) async throws -> String {
+        let path = "\(userId.uuidString.lowercased())/profile.jpg"
+
+        try await supabase.storage
+            .from("avatars")
+            .upload(
+                path: path,
+                file: imageData,
+                options: FileOptions(
+                    cacheControl: "3600",
+                    contentType: "image/jpeg",
+                    upsert: true
+                )
+            )
+
+        let publicURL = try supabase.storage
+            .from("avatars")
+            .getPublicURL(path: path)
+
+        struct Row: Encodable {
+            let avatar_url: String
+            let updated_at: String
+        }
+
+        try await supabase
+            .from("community_profiles")
+            .update(
+                Row(
+                    avatar_url: publicURL.absoluteString,
+                    updated_at: ISO8601DateFormatter()
+                        .string(from: Date())
+                )
+            )
+            .eq("id", value: userId.uuidString)
+            .execute()
+
+        return publicURL.absoluteString
+    }
+
     static func updateCommunityProfile(
         userId: UUID,
         displayName: String,
