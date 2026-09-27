@@ -255,6 +255,7 @@ struct TrustSeal: View {
 
 struct UniversityPhoto: View {
     let seed: String
+    var remoteURL: String? = nil
     var height: CGFloat = 170
 
     private static let urls = [
@@ -267,9 +268,16 @@ struct UniversityPhoto: View {
     ]
 
     private var url: URL? {
+        if let remoteURL,
+           let remote = URL(string: remoteURL),
+           !remoteURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return remote
+        }
+
         let value = seed.unicodeScalars.reduce(0) { partial, scalar in
             (partial &* 31 &+ Int(scalar.value)) & 0x7fffffff
         }
+
         return URL(string: Self.urls[value % Self.urls.count])
     }
 
@@ -349,5 +357,59 @@ struct CardPressButtonStyle: ButtonStyle {
                 .easeOut(duration: 0.14),
                 value: configuration.isPressed
             )
+    }
+}
+
+
+struct UniversityLogo: View {
+    let university: University?
+    let fallbackName: String
+    var size: CGFloat = 40
+
+    private var initials: String {
+        let source = university?.name ?? fallbackName
+        let words = source.split(separator: " ")
+
+        if words.count >= 2 {
+            return (
+                String(words[0].prefix(1)) +
+                String(words[1].prefix(1))
+            ).uppercased()
+        }
+
+        return String(source.prefix(2)).uppercased()
+    }
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: size * 0.28)
+                .fill(Theme.surfaceRaised)
+
+            if let logoURL = university?.logoUrl,
+               let url = URL(string: logoURL) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .padding(size * 0.12)
+                    default:
+                        Text(initials)
+                            .font(.system(size: size * 0.28, weight: .bold))
+                            .foregroundStyle(.white)
+                    }
+                }
+            } else {
+                Text(initials)
+                    .font(.system(size: size * 0.28, weight: .bold))
+                    .foregroundStyle(.white)
+            }
+        }
+        .frame(width: size, height: size)
+        .overlay(
+            RoundedRectangle(cornerRadius: size * 0.28)
+                .stroke(Theme.blue.opacity(0.22))
+        )
     }
 }
