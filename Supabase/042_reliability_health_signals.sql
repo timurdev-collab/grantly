@@ -43,7 +43,7 @@ begin
       '. Current confirmed deadline: ' ||
       coalesce(s.deadline::text, 'not set') || '.',
     now(),
-    null
+    null::timestamptz
   from public.scholarships s
   where s.status = 'published'
     and s.deadline_verification_status = 'changed'
@@ -64,7 +64,7 @@ begin
     'new_cycle_detected',
     'A possible new application cycle was detected and is waiting for review.',
     now(),
-    null
+    null::timestamptz
   from public.scholarship_detected_changes c
   join public.scholarships s on s.id = c.scholarship_id
   where c.status = 'pending'
@@ -91,7 +91,7 @@ begin
       else 'Current application cycle appears to be closed.'
     end,
     now(),
-    null
+    null::timestamptz
   from public.scholarships s
   where s.status = 'published'
     and s.cycle_status in ('closed', 'discontinued')
@@ -112,7 +112,7 @@ begin
     'source_changed',
     'The official source page content changed since the previous successful check.',
     now(),
-    null
+    null::timestamptz
   from public.scholarship_detected_changes c
   join public.scholarships s on s.id = c.scholarship_id
   where c.status = 'pending'
@@ -137,7 +137,7 @@ begin
       s.audit_failure_count::text ||
       ' consecutive times.',
     now(),
-    null
+    null::timestamptz
   from public.scholarships s
   where s.status = 'published'
     and s.audit_failure_count >= 2
