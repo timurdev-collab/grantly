@@ -22,134 +22,488 @@ struct ProfileView: View {
     @State private var saving = false
     @State private var showingDeleteAccount = false
     @State private var deletingAccount = false
+    @State private var showingEditProfile = false
+
+    private var displayName: String {
+        let value = fullName.trimmingCharacters(in: .whitespacesAndNewlines)
+        return value.isEmpty ? "Your Grantly profile" : value
+    }
+
+    private var profileCompletion: Int {
+        let fields = [
+            fullName,
+            nationality,
+            residenceCountry,
+            graduationYear,
+            gpaValue,
+            ielts,
+            intendedMajor,
+            targetCountries
+        ]
+
+        let complete = fields.filter {
+            !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }.count
+
+        return Int((Double(complete) / Double(fields.count)) * 100)
+    }
 
     var body: some View {
-        Form {
-            Section {
-                HStack(spacing: 14) {
-                    GrantlyMonogram(size: 48)
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 18) {
+                header
+                academicSnapshot
+                destinationCard
+                communityCard
+                settingsCard
 
-                    VStack(alignment: .leading, spacing: 4) {
-                        SectionEyebrow(text: "Academic identity")
-
-                        Text(
-                            fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                ? "Build your Grantly profile"
-                                : fullName
-                        )
-                        .font(Theme.serifTitle(22))
-                        .foregroundStyle(.white)
-
-                        Text("Your private profile powers scholarship matching.")
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.62))
-                    }
-                }
-                .padding(.vertical, 6)
-            }
-            .listRowBackground(Theme.surface)
-
-            Section("Student profile") {
-                TextField("Full name", text: $fullName)
-                TextField("Nationality", text: $nationality)
-                TextField("Country of residence", text: $residenceCountry)
-                TextField("Graduation year", text: $graduationYear)
-                    .keyboardType(.numberPad)
-                TextField("GPA", text: $gpaValue)
-                    .keyboardType(.decimalPad)
-                TextField("GPA scale", text: $gpaScale)
-                    .keyboardType(.decimalPad)
-                TextField("IELTS", text: $ielts)
-                    .keyboardType(.decimalPad)
-                TextField("Intended major", text: $intendedMajor)
-                Picker("Degree", selection: $degreeLevel) {
-                    ForEach(["Bachelor", "Master", "PhD"], id: \.self) { Text($0) }
-                }
-            }
-
-            Section("Preferences") {
-                TextField("Target regions, comma separated", text: $targetRegions)
-                TextField("Target countries, comma separated", text: $targetCountries)
-                TextField("Family annual income, USD", text: $familyIncome)
-                    .keyboardType(.decimalPad)
-            }
-
-            Section("Community") {
-                TextField("Short bio", text: $bio, axis: .vertical)
-                    .lineLimit(3...6)
-                Toggle("Show my community profile", isOn: $visible)
-                Text("Your GPA, IELTS and family income are never copied into your public community profile.")
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.62))
-
-                NavigationLink("Blocked students") {
-                    BlockedUsersView()
-                }
-            }
-
-            if !status.isEmpty {
-                Section {
-                    if status == "Profile saved." {
-                        Text(status)
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.62))
-                    } else {
-                        Text(status)
-                            .font(.caption)
-                            .foregroundStyle(.red)
-                    }
-                }
-            }
-
-            Section {
-                Button(saving ? "Saving…" : "Save profile") {
-                    Task { await save() }
-                }
-                .disabled(saving || fullName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            }
-
-            Section("Privacy & safety") {
-                NavigationLink("Privacy & Safety") {
-                    PrivacyAndSafetyView()
-                }
-            }
-
-            Section("Account") {
-                Button("Sign out") {
-                    Task { await auth.signOut() }
-                }
-
-                Button(
-                    deletingAccount ? "Deleting account…" : "Delete account",
-                    role: .destructive
-                ) {
-                    showingDeleteAccount = true
-                }
-                .disabled(deletingAccount)
-            }
-
-            if profile?.role == "admin" {
-                Section("Administration") {
-                    NavigationLink("Open admin dashboard") {
+                if profile?.role == "admin" {
+                    NavigationLink {
                         AdminView()
+                    } label: {
+                        ProfileMenuRow(
+                            icon: "shield.lefthalf.filled",
+                            title: "Admin dashboard",
+                            subtitle: "Scholarship and safety administration",
+                            tint: Theme.blueSoft
+                        )
                     }
+                    .buttonStyle(.plain)
                 }
+
+                if !status.isEmpty {
+                    Text(status)
+                        .font(.caption)
+                        .foregroundStyle(
+                            status == "Profile saved."
+                                ? Theme.green
+                                : Theme.danger
+                        )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+
+                accountCard
             }
+            .padding()
+            .padding(.bottom, 24)
         }
-        .scrollContentBackground(.hidden)
         .background(Theme.pageBackground)
-        .tint(Theme.orange)
-        .navigationTitle("Profile")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(true)
         .task { await populate() }
-        .alert("Delete your Grantly account?", isPresented: $showingDeleteAccount) {
+        .sheet(isPresented: $showingEditProfile) {
+            editProfileSheet
+        }
+        .alert(
+            "Delete your Grantly account?",
+            isPresented: $showingDeleteAccount
+        ) {
             Button("Delete Account", role: .destructive) {
                 Task { await deleteAccount() }
             }
+
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("This permanently deletes your account, profile, saved scholarships and messages. This cannot be undone.")
         }
+    }
+
+    private var header: some View {
+        VStack(spacing: 14) {
+            HStack {
+                Text("Profile")
+                    .font(.system(size: 30, weight: .bold))
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Button {
+                    showingEditProfile = true
+                } label: {
+                    Label("Edit", systemImage: "pencil")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.blueSoft)
+                        .padding(.horizontal, 12)
+                        .frame(height: 38)
+                        .background(Theme.surface)
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+            }
+
+            VStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Theme.blueSoft, Theme.blue],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 86, height: 86)
+
+                    Text(profileInitials)
+                        .font(.system(size: 26, weight: .bold))
+                        .foregroundStyle(.white)
+                }
+                .overlay(
+                    Circle()
+                        .stroke(.white.opacity(0.12), lineWidth: 1)
+                )
+
+                Text(displayName)
+                    .font(.system(size: 25, weight: .bold))
+                    .foregroundStyle(.white)
+
+                Text(
+                    [degreeLevel, intendedMajor, nationality]
+                        .filter {
+                            !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        }
+                        .joined(separator: " · ")
+                )
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.56))
+                .multilineTextAlignment(.center)
+
+                HStack(spacing: 8) {
+                    Label(
+                        visible ? "Community visible" : "Community hidden",
+                        systemImage: visible ? "eye.fill" : "eye.slash.fill"
+                    )
+
+                    Label(
+                        "Private academic data",
+                        systemImage: "lock.fill"
+                    )
+                }
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Theme.blueSoft)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+        }
+    }
+
+    private var profileInitials: String {
+        let words = fullName.split(separator: " ")
+
+        if words.count >= 2 {
+            return (
+                String(words[0].prefix(1)) +
+                String(words[1].prefix(1))
+            ).uppercased()
+        }
+
+        return fullName.isEmpty
+            ? "G"
+            : String(fullName.prefix(2)).uppercased()
+    }
+
+    private var academicSnapshot: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Academic profile")
+                        .font(.headline.bold())
+                        .foregroundStyle(.white)
+
+                    Text("Used privately for scholarship matching")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.48))
+                }
+
+                Spacer()
+
+                Text("\(profileCompletion)%")
+                    .font(.caption.bold())
+                    .foregroundStyle(Theme.blueSoft)
+            }
+
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(.white.opacity(0.07))
+                        .frame(height: 6)
+
+                    Capsule()
+                        .fill(Theme.blueGradient)
+                        .frame(
+                            width: geometry.size.width *
+                                CGFloat(profileCompletion) / 100,
+                            height: 6
+                        )
+                }
+            }
+            .frame(height: 6)
+
+            HStack(spacing: 8) {
+                ProfileMetric(
+                    value: gpaValue.isEmpty ? "—" : gpaValue,
+                    label: "GPA"
+                )
+
+                ProfileMetric(
+                    value: ielts.isEmpty ? "—" : ielts,
+                    label: "IELTS"
+                )
+
+                ProfileMetric(
+                    value: graduationYear.isEmpty ? "—" : graduationYear,
+                    label: "Graduation"
+                )
+            }
+        }
+        .padding(16)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(.white.opacity(0.05))
+        )
+    }
+
+    private var destinationCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Study goals")
+                    .font(.headline.bold())
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Image(systemName: "airplane")
+                    .foregroundStyle(Theme.blueSoft)
+            }
+
+            ProfileSummaryLine(
+                icon: "graduationcap.fill",
+                label: "Degree",
+                value: degreeLevel
+            )
+
+            ProfileSummaryLine(
+                icon: "books.vertical.fill",
+                label: "Major",
+                value: intendedMajor.isEmpty ? "Not set" : intendedMajor
+            )
+
+            ProfileSummaryLine(
+                icon: "globe",
+                label: "Countries",
+                value: targetCountries.isEmpty ? "Not set" : targetCountries
+            )
+        }
+        .padding(16)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(.white.opacity(0.05))
+        )
+    }
+
+    private var communityCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Community profile")
+                    .font(.headline.bold())
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Circle()
+                    .fill(visible ? Theme.green : .white.opacity(0.25))
+                    .frame(width: 8, height: 8)
+            }
+
+            Text(
+                bio.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    ? "Add a short bio so other students know your study interests."
+                    : bio
+            )
+            .font(.subheadline)
+            .foregroundStyle(.white.opacity(0.64))
+            .lineSpacing(3)
+
+            Text("GPA, IELTS, income and residence details are never copied into your public community profile.")
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.44))
+                .lineSpacing(3)
+        }
+        .padding(16)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(.white.opacity(0.05))
+        )
+    }
+
+    private var settingsCard: some View {
+        VStack(spacing: 0) {
+            NavigationLink {
+                PrivacyAndSafetyView()
+            } label: {
+                ProfileMenuRow(
+                    icon: "lock.shield.fill",
+                    title: "Privacy & Safety",
+                    subtitle: "Data, community and scholarship guidance",
+                    tint: Theme.blueSoft
+                )
+            }
+            .buttonStyle(.plain)
+
+            Divider()
+                .overlay(.white.opacity(0.06))
+
+            NavigationLink {
+                BlockedUsersView()
+            } label: {
+                ProfileMenuRow(
+                    icon: "person.crop.circle.badge.xmark",
+                    title: "Blocked students",
+                    subtitle: "Review and unblock community members",
+                    tint: Theme.blueSoft
+                )
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 14)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+
+    private var accountCard: some View {
+        VStack(spacing: 10) {
+            Button {
+                Task { await auth.signOut() }
+            } label: {
+                Label("Sign out", systemImage: "rectangle.portrait.and.arrow.right")
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .background(Theme.surface)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+            }
+            .buttonStyle(.plain)
+
+            Button(
+                role: .destructive
+            ) {
+                showingDeleteAccount = true
+            } label: {
+                Label(
+                    deletingAccount ? "Deleting account..." : "Delete account",
+                    systemImage: "trash"
+                )
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.danger)
+            }
+            .disabled(deletingAccount)
+        }
+    }
+
+    private var editProfileSheet: some View {
+        NavigationStack {
+            Form {
+                Section("Student profile") {
+                    TextField("Full name", text: $fullName)
+                    TextField("Nationality", text: $nationality)
+                    TextField("Country of residence", text: $residenceCountry)
+
+                    TextField("Graduation year", text: $graduationYear)
+                        .keyboardType(.numberPad)
+
+                    HStack {
+                        TextField("GPA", text: $gpaValue)
+                            .keyboardType(.decimalPad)
+
+                        TextField("Scale", text: $gpaScale)
+                            .keyboardType(.decimalPad)
+                    }
+
+                    TextField("IELTS", text: $ielts)
+                        .keyboardType(.decimalPad)
+
+                    TextField("Intended major", text: $intendedMajor)
+
+                    Picker("Degree", selection: $degreeLevel) {
+                        ForEach(["Bachelor", "Master", "PhD"], id: \.self) {
+                            Text($0)
+                        }
+                    }
+                }
+
+                Section("Preferences") {
+                    TextField(
+                        "Target regions, comma separated",
+                        text: $targetRegions
+                    )
+
+                    TextField(
+                        "Target countries, comma separated",
+                        text: $targetCountries
+                    )
+
+                    TextField(
+                        "Family annual income, USD",
+                        text: $familyIncome
+                    )
+                    .keyboardType(.decimalPad)
+                }
+
+                Section("Community") {
+                    TextField(
+                        "Short bio",
+                        text: $bio,
+                        axis: .vertical
+                    )
+                    .lineLimit(3...6)
+
+                    Toggle(
+                        "Show my community profile",
+                        isOn: $visible
+                    )
+
+                    Text("Your GPA, IELTS and family income remain private.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .background(Theme.pageBackground)
+            .tint(Theme.blue)
+            .navigationTitle("Edit Profile")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        showingEditProfile = false
+                    }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(saving ? "Saving..." : "Save") {
+                        Task {
+                            await save()
+
+                            if status == "Profile saved." {
+                                showingEditProfile = false
+                            }
+                        }
+                    }
+                    .disabled(
+                        saving ||
+                        fullName
+                            .trimmingCharacters(in: .whitespacesAndNewlines)
+                            .isEmpty
+                    )
+                }
+            }
+        }
+        .preferredColorScheme(.dark)
     }
 
     private func csv(_ value: String) -> [String] {
@@ -182,7 +536,9 @@ struct ProfileView: View {
         targetCountries = p.targetCountries?.joined(separator: ", ") ?? ""
         familyIncome = p.familyIncomeUSD.map { String($0) } ?? ""
 
-        if let community = try? await DataService.currentCommunityProfile(userId: userId) {
+        if let community = try? await DataService.currentCommunityProfile(
+            userId: userId
+        ) {
             bio = community.bio ?? ""
             visible = community.isVisible ?? true
         }
@@ -254,6 +610,91 @@ struct ProfileView: View {
     }
 }
 
+private struct ProfileMetric: View {
+    let value: String
+    let label: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(value)
+                .font(.headline.bold())
+                .foregroundStyle(.white)
+
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(0.44))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(11)
+        .background(Theme.surfaceRaised)
+        .clipShape(RoundedRectangle(cornerRadius: 13))
+    }
+}
+
+private struct ProfileSummaryLine: View {
+    let icon: String
+    let label: String
+    let value: String
+
+    var body: some View {
+        HStack(spacing: 11) {
+            Image(systemName: icon)
+                .font(.caption.bold())
+                .foregroundStyle(Theme.blueSoft)
+                .frame(width: 30, height: 30)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 9))
+
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.52))
+
+            Spacer()
+
+            Text(value)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.white)
+                .multilineTextAlignment(.trailing)
+                .lineLimit(2)
+        }
+    }
+}
+
+private struct ProfileMenuRow: View {
+    let icon: String
+    let title: String
+    let subtitle: String
+    let tint: Color
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(tint)
+                .frame(width: 36, height: 36)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 11))
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.white)
+
+                Text(subtitle)
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.46))
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(.caption.bold())
+                .foregroundStyle(.white.opacity(0.28))
+        }
+        .padding(.vertical, 12)
+    }
+}
 
 private struct BlockedStudentRow: Identifiable {
     let id: UUID
@@ -282,6 +723,7 @@ private struct BlockedUsersView: View {
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(row.name)
                                     .font(.headline)
+
                                 Text(row.id.uuidString.prefix(8))
                                     .font(.caption2)
                                     .foregroundStyle(.white.opacity(0.62))
@@ -300,13 +742,17 @@ private struct BlockedUsersView: View {
                 .refreshable { await load() }
             }
         }
+        .background(Theme.pageBackground)
         .navigationTitle("Blocked Students")
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }
-        .alert("Unable to update block", isPresented: Binding(
-            get: { errorMessage != nil },
-            set: { if !$0 { errorMessage = nil } }
-        )) {
+        .alert(
+            "Unable to update block",
+            isPresented: Binding(
+                get: { errorMessage != nil },
+                set: { if !$0 { errorMessage = nil } }
+            )
+        ) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(errorMessage ?? "")
@@ -337,7 +783,10 @@ private struct BlockedUsersView: View {
                         name: names[$0] ?? "Student"
                     )
                 }
-                .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+                .sorted {
+                    $0.name.localizedCaseInsensitiveCompare($1.name) ==
+                    .orderedAscending
+                }
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -353,7 +802,6 @@ private struct BlockedUsersView: View {
         }
     }
 }
-
 
 private struct PrivacyAndSafetyView: View {
     var body: some View {
@@ -402,6 +850,8 @@ private struct PrivacyAndSafetyView: View {
                     .foregroundStyle(.white.opacity(0.62))
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(Theme.pageBackground)
         .navigationTitle("Privacy & Safety")
         .navigationBarTitleDisplayMode(.inline)
     }
