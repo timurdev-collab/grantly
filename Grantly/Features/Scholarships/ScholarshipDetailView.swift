@@ -458,7 +458,6 @@ struct ScholarshipDetailView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 15))
             }
             .buttonStyle(.plain)
-            }
         }
         .padding(.horizontal)
         .padding(.vertical, 10)
