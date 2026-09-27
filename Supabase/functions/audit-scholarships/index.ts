@@ -456,6 +456,19 @@ Deno.serve(async (req) => {
 
   const limit = Math.min(Math.max(body.limit ?? 20, 1), 30);
   const now = new Date().toISOString();
+  const startedMs = Date.now();
+  const triggerType = cronToken ? "scheduled" : "manual";
+
+  const { data: auditRun } = await admin
+    .from("scholarship_audit_runs")
+    .insert({
+      trigger_type: triggerType,
+      requested_limit: limit,
+      status: "running",
+      started_at: now
+    })
+    .select("id")
+    .single();
 
   let query = admin
     .from("scholarships")
@@ -477,10 +490,29 @@ Deno.serve(async (req) => {
   const { data: rows, error } = await query;
 
   if (error) {
+    if (auditRun?.id) {
+      await admin
+        .from("scholarship_audit_runs")
+        .update({
+          status: "failed",
+          error_message: error.message,
+          completed_at: new Date().toISOString(),
+          duration_ms: Date.now() - startedMs
+        })
+        .eq("id", auditRun.id);
+    }
+
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { "Content-Type": "application/json" }
     });
+  }
+
+  if (auditRun?.id) {
+    await admin
+      .from("scholarship_audit_runs")
+      .update({ selected_count: (rows ?? []).length })
+      .eq("id", auditRun.id);
   }
 
   const results = [];
@@ -625,7 +657,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  return new Response(JSON.stringify({
+  const summary = {
     audited: results.length,
     exact: results.filter((x) => x.link_status === "exact").length,
     generic: results.filter((x) => x.link_status === "generic").length,
@@ -652,7 +684,29 @@ Deno.serve(async (req) => {
         (x) => x.cycle_status === "discontinued"
       ).length
     }
-  }), {
+  };
+
+  if (auditRun?.id) {
+    await admin
+      .from("scholarship_audit_runs")
+      .update({
+        status: "completed",
+        selected_count: results.length,
+        exact_count: summary.exact,
+        reachable_count: summary.reachable,
+        generic_count: summary.generic,
+        dead_count: summary.dead,
+        changed_source_count: summary.changedSources,
+        deadline_candidate_count: summary.deadlineCandidates,
+        deadline_change_count: summary.deadlineChanges,
+        detected_cycle_count: summary.detectedCycles,
+        completed_at: new Date().toISOString(),
+        duration_ms: Date.now() - startedMs
+      })
+      .eq("id", auditRun.id);
+  }
+
+  return new Response(JSON.stringify(summary), {
     headers: { "Content-Type": "application/json" }
   });
 });
