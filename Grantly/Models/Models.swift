@@ -186,3 +186,52 @@ struct ScholarshipAuditResult: Decodable {
     let reachable: Int
     let deadlineCandidates: Int
 }
+
+
+struct ScholarshipSearchRow: Decodable {
+    let scholarship: Scholarship
+    let totalCount: Int
+    let isSaved: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case scholarship
+        case totalCount = "total_count"
+        case isSaved = "is_saved"
+    }
+}
+
+struct ScholarshipSearchPage {
+    let scholarships: [Scholarship]
+    let totalCount: Int
+    let savedScholarshipIDs: Set<UUID>
+}
+
+struct ScholarshipMatchRow: Decodable {
+    let scholarship: Scholarship
+    let score: Int
+    let eligible: Bool
+    let reasons: [String]
+    let blockers: [String]
+    let totalCount: Int
+
+    enum CodingKeys: String, CodingKey {
+        case scholarship
+        case score
+        case eligible
+        case reasons
+        case blockers
+        case totalCount = "total_count"
+    }
+}
+
+struct ScholarshipMatchPage {
+    let matches: [ScholarshipMatch]
+    let totalCount: Int
+}
+
+struct ScholarshipFilterOptions: Decodable {
+    let countries: [String]
+    let degrees: [String]
+    let fields: [String]
+    let funding: [String]
+}
