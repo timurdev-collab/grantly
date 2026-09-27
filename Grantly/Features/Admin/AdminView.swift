@@ -6,6 +6,7 @@ struct AdminView: View {
     @State private var detectedChanges: [ScholarshipDetectedChange] = []
     @State private var healthIssues: [CatalogHealthIssue] = []
     @State private var sourceCandidates: [ScholarshipSourceCandidate] = []
+    @State private var auditObservations: [ScholarshipAuditObservation] = []
     @State private var analytics: AdminAnalyticsSummary?
     @State private var systemHealth: AdminSystemHealth?
     @State private var actionLogs: [AdminActionLog] = []
@@ -64,6 +65,18 @@ struct AdminView: View {
 
     private var staleIssueCount: Int {
         healthIssues.filter { $0.issueType == "stale_source_check" }.count
+    }
+
+    private var recentAuditFailures: Int {
+        auditObservations.filter { $0.outcome != "success" }.count
+    }
+
+    private var recentAmbiguousDeadlines: Int {
+        auditObservations.filter { $0.deadlineAmbiguous }.count
+    }
+
+    private var recentSourceChanges: Int {
+        auditObservations.filter { $0.sourceChanged }.count
     }
 
     private func scholarshipTitle(for id: UUID) -> String {
@@ -474,6 +487,104 @@ struct AdminView: View {
                 }
             }
 
+            Section("Recent source observations") {
+                HStack(spacing: 12) {
+                    AdminMetric(
+                        value: "\(auditObservations.count)",
+                        label: "Checks"
+                    )
+                    AdminMetric(
+                        value: "\(recentAuditFailures)",
+                        label: "Failures"
+                    )
+                    AdminMetric(
+                        value: "\(recentSourceChanges)",
+                        label: "Changes"
+                    )
+                    AdminMetric(
+                        value: "\(recentAmbiguousDeadlines)",
+                        label: "Ambiguous"
+                    )
+                }
+                .listRowInsets(
+                    EdgeInsets(
+                        top: 14,
+                        leading: 16,
+                        bottom: 14,
+                        trailing: 16
+                    )
+                )
+
+                if auditObservations.isEmpty {
+                    Text("No audit observations recorded yet.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(auditObservations.prefix(20)) { observation in
+                        VStack(alignment: .leading, spacing: 5) {
+                            HStack {
+                                Text(
+                                    scholarshipTitle(
+                                        for: observation.scholarshipId
+                                    )
+                                )
+                                .font(.caption.weight(.semibold))
+                                .lineLimit(2)
+
+                                Spacer()
+
+                                Text(
+                                    observation.outcome
+                                        .replacingOccurrences(
+                                            of: "_",
+                                            with: " "
+                                        )
+                                        .capitalized
+                                )
+                                .font(.caption2.weight(.semibold))
+                            }
+
+                            HStack(spacing: 10) {
+                                if let status = observation.httpStatus {
+                                    Text("HTTP \(status)")
+                                }
+
+                                if observation.sourceChanged {
+                                    Label(
+                                        "Source changed",
+                                        systemImage: "arrow.triangle.2.circlepath"
+                                    )
+                                }
+
+                                if observation.deadlineAmbiguous {
+                                    Label(
+                                        "Multiple deadlines",
+                                        systemImage: "calendar.badge.exclamationmark"
+                                    )
+                                }
+                            }
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+
+                            if let error = observation.auditError,
+                               !error.isEmpty {
+                                Text(error)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(2)
+                            }
+
+                            if let url = observation.finalUrl,
+                               let sourceURL = URL(string: url) {
+                                Link("Open checked source", destination: sourceURL)
+                                    .font(.caption2.weight(.semibold))
+                            }
+                        }
+                        .padding(.vertical, 3)
+                    }
+                }
+            }
+
             Section("Official source discoveries") {
                 if sourceCandidates.isEmpty {
                     Text("No new official-source links waiting for review.")
@@ -829,6 +940,8 @@ struct AdminView: View {
                 DataService.openCatalogHealthIssues(limit: 100)
             async let sourceDiscoveryRows =
                 DataService.pendingScholarshipSourceCandidates(limit: 50)
+            async let observationRows =
+                DataService.recentScholarshipAuditObservations(limit: 80)
 
             scholarships = try await scholarshipRows
             reports = try await reportRows
@@ -839,6 +952,7 @@ struct AdminView: View {
             detectedChanges = try await pendingChanges
             healthIssues = try await openHealth
             sourceCandidates = try await sourceDiscoveryRows
+            auditObservations = try await observationRows
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
