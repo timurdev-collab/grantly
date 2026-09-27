@@ -293,6 +293,7 @@ struct ScholarshipDetailView: View {
         }
     }
 
+    @ViewBuilder
     private var eligibilityContent: some View {
         DetailSection(title: "Eligibility", icon: "checkmark.seal") {
             VStack(spacing: 13) {
