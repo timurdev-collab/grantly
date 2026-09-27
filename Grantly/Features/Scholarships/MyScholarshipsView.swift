@@ -1,12 +1,23 @@
 import SwiftUI
 
 struct MyScholarshipsView: View {
-    private let statuses = ["Planning", "Applied", "Interview", "Result"]
+    private let statuses = [
+        "Planning",
+        "Preparing",
+        "Submitted",
+        "Applied",
+        "Interview",
+        "Offer",
+        "Rejected",
+        "Withdrawn",
+        "Result"
+    ]
 
     @State private var items: [SavedScholarshipItem] = []
     @State private var loading = true
     @State private var selectedStatus = "All"
     @State private var editingItem: SavedScholarshipItem?
+    @State private var taskItem: SavedScholarshipItem?
     @State private var noteText = ""
     @State private var errorMessage: String?
 
@@ -78,6 +89,9 @@ struct MyScholarshipsView: View {
                                         editingItem = item
                                         noteText = item.notes ?? ""
                                     },
+                                    onTasks: {
+                                        taskItem = item
+                                    },
                                     onRemove: {
                                         Task {
                                             await remove(item)
@@ -99,6 +113,9 @@ struct MyScholarshipsView: View {
         .task { await load() }
         .sheet(item: $editingItem) { item in
             noteSheet(item)
+        }
+        .sheet(item: $taskItem) { item in
+            ApplicationTasksSheet(item: item)
         }
         .alert(
             "Something went wrong",
@@ -412,6 +429,13 @@ struct MyScholarshipsView: View {
             scholarshipId: item.scholarshipId,
             applicationStatus: status,
             notes: notes,
+            applicationDeadline: item.applicationDeadline,
+            personalDeadline: item.personalDeadline,
+            submittedAt: item.submittedAt,
+            interviewAt: item.interviewAt,
+            resultAt: item.resultAt,
+            documentsComplete: item.documentsComplete,
+            reminderEnabled: item.reminderEnabled,
             scholarship: item.scholarship
         )
     }
@@ -448,6 +472,7 @@ private struct ApplicationCard: View {
     let statuses: [String]
     let onStatus: (String) -> Void
     let onNote: () -> Void
+    let onTasks: () -> Void
     let onRemove: () -> Void
 
     var body: some View {
@@ -502,6 +527,13 @@ private struct ApplicationCard: View {
                     }
 
                     Spacer()
+
+                    Button(action: onTasks) {
+                        Image(systemName: "checklist")
+                            .font(.caption)
+                            .foregroundStyle(Theme.blueSoft)
+                    }
+                    .buttonStyle(.plain)
 
                     Button(action: onNote) {
                         Image(systemName: "note.text")
@@ -579,6 +611,143 @@ private struct ApplicationStatusPill: View {
             return Theme.green
         default:
             return .white.opacity(0.62)
+        }
+    }
+}
+
+
+private struct ApplicationTasksSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let item: SavedScholarshipItem
+
+    @State private var tasks: [ApplicationTask] = []
+    @State private var loading = true
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(item.scholarship.title)
+                            .font(.headline)
+
+                        Text(item.scholarship.provider)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 4)
+                }
+
+                Section("Application checklist") {
+                    if loading {
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
+                    } else {
+                        ForEach(tasks) { task in
+                            Button {
+                                Task { await toggle(task) }
+                            } label: {
+                                HStack(spacing: 12) {
+                                    Image(
+                                        systemName: task.completedAt == nil
+                                            ? "circle"
+                                            : "checkmark.circle.fill"
+                                    )
+                                    .foregroundStyle(
+                                        task.completedAt == nil
+                                            ? .secondary
+                                            : Theme.green
+                                    )
+
+                                    Text(task.title)
+                                        .foregroundStyle(.primary)
+                                        .strikethrough(task.completedAt != nil)
+
+                                    Spacer()
+
+                                    if let dueAt = task.dueAt {
+                                        Text(String(dueAt.prefix(10)))
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+
+                Section("Reminder foundation") {
+                    Label(
+                        item.reminderEnabled
+                            ? "Deadline reminders enabled"
+                            : "Deadline reminders disabled",
+                        systemImage: item.reminderEnabled
+                            ? "bell.fill"
+                            : "bell.slash"
+                    )
+
+                    if let personalDeadline = item.personalDeadline {
+                        Label(
+                            personalDeadline,
+                            systemImage: "calendar.badge.clock"
+                        )
+                    } else if let deadline = item.scholarship.deadline {
+                        Label(
+                            deadline,
+                            systemImage: "calendar"
+                        )
+                    }
+                }
+
+                if let errorMessage {
+                    Section {
+                        Text(errorMessage)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                }
+            }
+            .navigationTitle("Application Tasks")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+            .task { await load() }
+        }
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            tasks = try await DataService.applicationTasks(
+                scholarshipId: item.scholarshipId
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func toggle(_ task: ApplicationTask) async {
+        do {
+            try await DataService.setApplicationTaskCompleted(
+                taskId: task.id,
+                completed: task.completedAt == nil
+            )
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 }
