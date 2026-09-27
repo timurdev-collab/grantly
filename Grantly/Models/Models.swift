@@ -685,6 +685,64 @@ struct ScholarshipDraftPatch: Encodable {
     }
 }
 
+struct ScholarshipDraftSourceEvidence: Decodable {
+    let scholarshipId: UUID
+    let available: Bool
+    let candidateUrl: String?
+    let pageTitle: String?
+    let metaDescription: String?
+    let checkedAt: String?
+    let detectedDeadline: String?
+    let deadlineConfidence: Int?
+    let detectedCycle: String?
+    let cycleConfidence: Int?
+    let detectedDegreeLevels: [String]?
+    let degreeConfidence: Int?
+    let detectedFundingType: String?
+    let fundingConfidence: Int?
+    let detectedTuitionCoverage: String?
+    let detectedStipend: String?
+    let detectedAirfare: Bool?
+    let detectedAccommodation: Bool?
+    let detectedHealthInsurance: Bool?
+    let detectedEligibleNationalities: [String]?
+    let eligibilityConfidence: Int?
+    let fundingExcerpt: String?
+    let benefitsExcerpt: String?
+    let eligibilityExcerpt: String?
+    let applicationExcerpt: String?
+    let applicationRequirementsExcerpt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case available
+        case scholarshipId = "scholarship_id"
+        case candidateUrl = "candidate_url"
+        case pageTitle = "page_title"
+        case metaDescription = "meta_description"
+        case checkedAt = "checked_at"
+        case detectedDeadline = "detected_deadline"
+        case deadlineConfidence = "deadline_confidence"
+        case detectedCycle = "detected_cycle"
+        case cycleConfidence = "cycle_confidence"
+        case detectedDegreeLevels = "detected_degree_levels"
+        case degreeConfidence = "degree_confidence"
+        case detectedFundingType = "detected_funding_type"
+        case fundingConfidence = "funding_confidence"
+        case detectedTuitionCoverage = "detected_tuition_coverage"
+        case detectedStipend = "detected_stipend"
+        case detectedAirfare = "detected_airfare"
+        case detectedAccommodation = "detected_accommodation"
+        case detectedHealthInsurance = "detected_health_insurance"
+        case detectedEligibleNationalities = "detected_eligible_nationalities"
+        case eligibilityConfidence = "eligibility_confidence"
+        case fundingExcerpt = "funding_excerpt"
+        case benefitsExcerpt = "benefits_excerpt"
+        case eligibilityExcerpt = "eligibility_excerpt"
+        case applicationExcerpt = "application_excerpt"
+        case applicationRequirementsExcerpt = "application_requirements_excerpt"
+    }
+}
+
 struct ScholarshipDraftReadiness: Decodable {
     let scholarshipId: UUID
     let ready: Bool
