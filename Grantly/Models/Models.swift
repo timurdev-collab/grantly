@@ -363,3 +363,43 @@ struct UniversityMediaEnrichmentResult: Decodable {
     let partial: Int
     let failed: Int
 }
+
+
+struct ApplicationTask: Codable, Identifiable, Hashable {
+    let id: UUID
+    let scholarshipId: UUID
+    let taskKey: String?
+    let title: String
+    let dueAt: String?
+    let completedAt: String?
+    let position: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, title, position
+        case scholarshipId = "scholarship_id"
+        case taskKey = "task_key"
+        case dueAt = "due_at"
+        case completedAt = "completed_at"
+    }
+}
+
+struct AppNotification: Codable, Identifiable {
+    let id: UUID
+    let kind: String
+    let title: String
+    let body: String
+    let scholarshipId: UUID?
+    let taskId: UUID?
+    let readAt: String?
+    let scheduledFor: String?
+    let createdAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, kind, title, body
+        case scholarshipId = "scholarship_id"
+        case taskId = "task_id"
+        case readAt = "read_at"
+        case scheduledFor = "scheduled_for"
+        case createdAt = "created_at"
+    }
+}

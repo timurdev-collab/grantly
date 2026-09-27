@@ -122,7 +122,14 @@ enum DataService {
                 scholarship_id,
                 application_status,
                 notes,
-                scholarships!saved_scholarships_scholarship_id_fkey (*)
+                application_deadline,
+                personal_deadline,
+                submitted_at,
+                interview_at,
+                result_at,
+                documents_complete,
+                reminder_enabled,
+                scholarships!saved_scholarships_scholarship_id_fkey (*, university:universities(*))
             """)
             .eq("user_id", value: userId.uuidString)
             .order("updated_at", ascending: false)
@@ -134,14 +141,88 @@ enum DataService {
         scholarshipId: UUID,
         status: String
     ) async throws {
+        struct Params: Encodable {
+            let p_scholarship_id: UUID
+            let p_status: String
+        }
+
+        try await supabase
+            .rpc(
+                "set_application_status",
+                params: Params(
+                    p_scholarship_id: scholarshipId,
+                    p_status: status
+                )
+            )
+            .execute()
+    }
+
+    static func applicationTasks(
+        scholarshipId: UUID
+    ) async throws -> [ApplicationTask] {
         let userId = try await supabase.auth.session.user.id
+
+        return try await supabase
+            .from("application_tasks")
+            .select("id,scholarship_id,task_key,title,due_at,completed_at,position")
+            .eq("user_id", value: userId.uuidString)
+            .eq("scholarship_id", value: scholarshipId.uuidString)
+            .order("position", ascending: true)
+            .execute()
+            .value
+    }
+
+    static func setApplicationTaskCompleted(
+        taskId: UUID,
+        completed: Bool
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let completed_at: String?
+            let updated_at: String
+        }
+
+        try await supabase
+            .from("application_tasks")
+            .update(
+                Row(
+                    completed_at: completed
+                        ? ISO8601DateFormatter().string(from: Date())
+                        : nil,
+                    updated_at: ISO8601DateFormatter().string(from: Date())
+                )
+            )
+            .eq("id", value: taskId.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+    }
+
+    static func updateApplicationTracker(
+        scholarshipId: UUID,
+        personalDeadline: String?,
+        documentsComplete: Bool,
+        reminderEnabled: Bool
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let personal_deadline: String?
+            let documents_complete: Bool
+            let reminder_enabled: Bool
+            let updated_at: String
+        }
 
         try await supabase
             .from("saved_scholarships")
-            .update([
-                "application_status": status,
-                "updated_at": ISO8601DateFormatter().string(from: Date())
-            ])
+            .update(
+                Row(
+                    personal_deadline: personalDeadline,
+                    documents_complete: documentsComplete,
+                    reminder_enabled: reminderEnabled,
+                    updated_at: ISO8601DateFormatter().string(from: Date())
+                )
+            )
             .eq("user_id", value: userId.uuidString)
             .eq("scholarship_id", value: scholarshipId.uuidString)
             .execute()
