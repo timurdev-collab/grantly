@@ -577,6 +577,52 @@ struct AdminAnalyticsSummary: Decodable {
     }
 }
 
+struct ScholarshipDetectedChange: Decodable, Identifiable {
+    let id: UUID
+    let scholarshipId: UUID
+    let fieldName: String
+    let oldValue: String?
+    let detectedValue: String?
+    let confidence: Int?
+    let sourceUrl: String
+    let status: String
+    let firstDetectedAt: String
+    let lastDetectedAt: String
+    let reviewedAt: String?
+    let reviewNote: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, status
+        case scholarshipId = "scholarship_id"
+        case fieldName = "field_name"
+        case oldValue = "old_value"
+        case detectedValue = "detected_value"
+        case confidence
+        case sourceUrl = "source_url"
+        case firstDetectedAt = "first_detected_at"
+        case lastDetectedAt = "last_detected_at"
+        case reviewedAt = "reviewed_at"
+        case reviewNote = "review_note"
+    }
+}
+
+struct CatalogHealthIssue: Decodable, Identifiable {
+    let id: UUID
+    let scholarshipId: UUID
+    let issueType: String
+    let detail: String
+    let detectedAt: String
+    let resolvedAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, detail
+        case scholarshipId = "scholarship_id"
+        case issueType = "issue_type"
+        case detectedAt = "detected_at"
+        case resolvedAt = "resolved_at"
+    }
+}
+
 struct ScholarshipDuplicateCandidate: Decodable, Identifiable {
     let id: UUID
     let title: String
