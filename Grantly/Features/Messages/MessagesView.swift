@@ -1,22 +1,16 @@
 import SwiftUI
-
-struct ConversationSummary: Identifiable {
-    let id: UUID
-    let otherUserId: UUID?
-    let displayName: String
-}
+import Supabase
 
 struct MessagesView: View {
-    @Environment(AuthStore.self) private var auth
-
-    @State private var conversations: [ConversationSummary] = []
+    @State private var conversations: [ConversationSummaryRow] = []
     @State private var loading = true
     @State private var errorMessage: String?
 
     var body: some View {
         Group {
-            if loading {
+            if loading && conversations.isEmpty {
                 ProgressView()
+                    .tint(Theme.blue)
             } else if conversations.isEmpty {
                 EmptyState(
                     icon: "bubble.left.and.bubble.right",
@@ -27,39 +21,33 @@ struct MessagesView: View {
                 List(conversations) { conversation in
                     NavigationLink {
                         ChatView(
-                            conversationId: conversation.id,
+                            conversationId: conversation.conversationId,
                             otherUserId: conversation.otherUserId,
                             title: conversation.displayName
                         )
                     } label: {
-                        HStack(spacing: 12) {
-                            Text(conversation.displayName.prefix(2).uppercased())
-                                .font(.caption.bold())
-                                .frame(width: 42, height: 42)
-                                .background(Theme.violet.opacity(0.1))
-                                .foregroundStyle(Theme.violet)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(conversation.displayName)
-                                    .font(.headline)
-
-                                Text("Tap to open conversation")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
+                        ConversationRow(conversation: conversation)
                     }
+                    .listRowBackground(Theme.surface)
                 }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
             }
         }
+        .background(Theme.pageBackground)
         .navigationTitle("Messages")
         .refreshable { await load() }
-        .task { await load() }
-        .alert("Unable to load messages", isPresented: Binding(
-            get: { errorMessage != nil },
-            set: { if !$0 { errorMessage = nil } }
-        )) {
+        .task {
+            await load()
+            await listenRealtime()
+        }
+        .alert(
+            "Unable to load messages",
+            isPresented: Binding(
+                get: { errorMessage != nil },
+                set: { if !$0 { errorMessage = nil } }
+            )
+        ) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(errorMessage ?? "")
@@ -67,61 +55,137 @@ struct MessagesView: View {
     }
 
     @MainActor
-    private func load() async {
-        loading = true
-        defer { loading = false }
+    private func load(silently: Bool = false) async {
+        if !silently {
+            loading = true
+        }
 
-        guard let userId = auth.userId else { return }
+        defer {
+            if !silently {
+                loading = false
+            }
+        }
 
         do {
-            let memberships = try await DataService.conversationMemberships(
-                userId: userId
-            )
+            conversations = try await DataService
+                .conversationSummaries()
+            errorMessage = nil
+        } catch {
+            if !silently {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
 
-            var summaries: [ConversationSummary] = []
+    private func listenRealtime() async {
+        let channel = await supabase.channel(
+            "messages-list-\(UUID().uuidString)"
+        )
 
-            for membership in memberships {
-                let members = try await DataService.conversationMembers(
-                    conversationId: membership.conversationId
-                )
+        let changes = await channel.postgresChange(
+            AnyAction.self,
+            schema: "public",
+            table: "messages"
+        )
 
-                let otherUserId = members
-                    .map(\.userId)
-                    .first { $0 != userId }
+        await channel.subscribe()
 
-                var name = "Student"
+        defer {
+            Task {
+                await supabase.removeChannel(channel)
+            }
+        }
 
-                if let otherUserId,
-                   let profile = try? await DataService.currentCommunityProfile(
-                    userId: otherUserId
-                   ) {
-                    let candidate = profile.displayName?
-                        .trimmingCharacters(in: .whitespacesAndNewlines)
+        for await _ in changes {
+            guard !Task.isCancelled else { break }
+            await load(silently: true)
+        }
+    }
+}
 
-                    if let candidate, !candidate.isEmpty {
-                        name = candidate
+private struct ConversationRow: View {
+    let conversation: ConversationSummaryRow
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Text(conversation.displayName.prefix(2).uppercased())
+                .font(.caption.bold())
+                .frame(width: 44, height: 44)
+                .background(Theme.blue.opacity(0.14))
+                .foregroundStyle(Theme.blueSoft)
+                .clipShape(RoundedRectangle(cornerRadius: 13))
+
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(conversation.displayName)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+
+                    Spacer()
+
+                    if let date = conversation.lastMessageAt {
+                        Text(relativeTime(date))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
                     }
                 }
 
-                summaries.append(
-                    ConversationSummary(
-                        id: membership.conversationId,
-                        otherUserId: otherUserId,
-                        displayName: name
+                HStack(spacing: 7) {
+                    Text(
+                        conversation.lastMessage ??
+                        "Start the conversation"
                     )
-                )
-            }
+                    .font(.caption)
+                    .foregroundStyle(
+                        conversation.unreadCount > 0
+                            ? .primary
+                            : .secondary
+                    )
+                    .fontWeight(
+                        conversation.unreadCount > 0
+                            ? .semibold
+                            : .regular
+                    )
+                    .lineLimit(1)
 
-            conversations = summaries
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
+                    Spacer()
+
+                    if conversation.unreadCount > 0 {
+                        Text(
+                            conversation.unreadCount > 99
+                                ? "99+"
+                                : "\(conversation.unreadCount)"
+                        )
+                        .font(.caption2.bold())
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 7)
+                        .frame(minHeight: 20)
+                        .background(Theme.blue)
+                        .clipShape(Capsule())
+                    }
+                }
+            }
         }
+        .padding(.vertical, 5)
+    }
+
+    private func relativeTime(_ value: String) -> String {
+        guard let date = ISO8601DateFormatter().date(from: value) else {
+            return String(value.prefix(10))
+        }
+
+        return RelativeDateTimeFormatter()
+            .localizedString(
+                for: date,
+                relativeTo: Date()
+            )
     }
 }
 
 struct ChatView: View {
     @Environment(AuthStore.self) private var auth
+
+    private let pageSize = 40
 
     let conversationId: UUID
     let otherUserId: UUID?
@@ -130,6 +194,9 @@ struct ChatView: View {
     @State private var messages: [Message] = []
     @State private var draft = ""
     @State private var sending = false
+    @State private var loading = true
+    @State private var loadingOlder = false
+    @State private var hasMore = true
     @State private var reportingMessage: Message?
     @State private var errorMessage: String?
     @State private var blockedByMe = false
@@ -139,22 +206,53 @@ struct ChatView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(spacing: 8) {
+                        if hasMore && !messages.isEmpty {
+                            Button {
+                                Task { await loadOlder() }
+                            } label: {
+                                if loadingOlder {
+                                    ProgressView()
+                                        .tint(Theme.blue)
+                                } else {
+                                    Label(
+                                        "Load earlier messages",
+                                        systemImage: "arrow.up"
+                                    )
+                                    .font(.caption.weight(.semibold))
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .padding(.vertical, 8)
+                        }
+
+                        if loading && messages.isEmpty {
+                            ProgressView()
+                                .tint(Theme.blue)
+                                .padding(.top, 24)
+                        }
+
                         ForEach(messages) { message in
                             Bubble(
                                 message: message,
-                                mine: message.senderId == auth.userId
+                                mine: message.senderId == auth.userId,
+                                showReadReceipt: shouldShowReadReceipt(
+                                    for: message
+                                )
                             )
                             .id(message.id)
                             .contextMenu {
                                 if message.senderId != auth.userId {
                                     Button(role: .destructive) {
                                         Task {
-                                            await blockSender(message.senderId)
+                                            await blockSender(
+                                                message.senderId
+                                            )
                                         }
                                     } label: {
                                         Label(
                                             "Block sender",
-                                            systemImage: "person.crop.circle.badge.xmark"
+                                            systemImage:
+                                                "person.crop.circle.badge.xmark"
                                         )
                                     }
 
@@ -163,7 +261,8 @@ struct ChatView: View {
                                     } label: {
                                         Label(
                                             "Report message",
-                                            systemImage: "exclamationmark.bubble"
+                                            systemImage:
+                                                "exclamationmark.bubble"
                                         )
                                     }
                                 }
@@ -172,57 +271,30 @@ struct ChatView: View {
                     }
                     .padding()
                 }
-                .refreshable { await load() }
+                .refreshable {
+                    await loadLatest()
+                }
                 .onChange(of: messages.count) {
                     if let last = messages.last {
                         withAnimation {
-                            proxy.scrollTo(last.id, anchor: .bottom)
+                            proxy.scrollTo(
+                                last.id,
+                                anchor: .bottom
+                            )
                         }
                     }
                 }
             }
 
-            HStack(spacing: 10) {
-                TextField(
-                    blockedByMe ? "Unblock this student to send messages" : "Write a message…",
-                    text: $draft,
-                    axis: .vertical
-                )
-                    .lineLimit(1...4)
-                    .padding(11)
-                    .background(Color(.secondarySystemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 13))
-
-                Button {
-                    Task { await send() }
-                } label: {
-                    Image(systemName: "arrow.up")
-                        .font(.headline.bold())
-                        .frame(width: 42, height: 42)
-                        .background(Theme.violet)
-                        .foregroundStyle(.white)
-                        .clipShape(Circle())
-                }
-                .disabled(
-                    draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-                    sending ||
-                    blockedByMe
-                )
-            }
-            .padding()
-            .background(.ultraThinMaterial)
+            composer
         }
+        .background(Theme.pageBackground)
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await loadBlockState()
-            await load()
-
-            while !Task.isCancelled {
-                try? await Task.sleep(for: .seconds(5))
-                guard !Task.isCancelled else { break }
-                await load(silently: true)
-            }
+            await loadLatest()
+            await listenRealtime()
         }
         .sheet(item: $reportingMessage) { message in
             ReportSheet(subject: "message") { reason, details in
@@ -234,22 +306,88 @@ struct ChatView: View {
                 )
             }
         }
-        .alert("Messaging error", isPresented: Binding(
-            get: { errorMessage != nil },
-            set: { if !$0 { errorMessage = nil } }
-        )) {
+        .alert(
+            "Messaging error",
+            isPresented: Binding(
+                get: { errorMessage != nil },
+                set: { if !$0 { errorMessage = nil } }
+            )
+        ) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(errorMessage ?? "")
         }
     }
 
+    private var composer: some View {
+        HStack(spacing: 10) {
+            TextField(
+                blockedByMe
+                    ? "Unblock this student to send messages"
+                    : "Write a message…",
+                text: $draft,
+                axis: .vertical
+            )
+            .lineLimit(1...4)
+            .padding(11)
+            .background(Theme.surfaceRaised)
+            .clipShape(RoundedRectangle(cornerRadius: 13))
+
+            Button {
+                Task { await send() }
+            } label: {
+                Image(systemName: "arrow.up")
+                    .font(.headline.bold())
+                    .frame(width: 42, height: 42)
+                    .background(Theme.blueGradient)
+                    .foregroundStyle(.white)
+                    .clipShape(Circle())
+            }
+            .disabled(
+                draft
+                    .trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    )
+                    .isEmpty ||
+                sending ||
+                blockedByMe
+            )
+        }
+        .padding()
+        .background(Theme.navyDeep.opacity(0.96))
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(.white.opacity(0.06))
+                .frame(height: 1)
+        }
+    }
+
     @MainActor
-    private func load(silently: Bool = false) async {
+    private func loadLatest(silently: Bool = false) async {
+        if !silently {
+            loading = true
+        }
+
+        defer {
+            if !silently {
+                loading = false
+            }
+        }
+
         do {
-            messages = try await DataService.messages(
+            let rows = try await DataService.messagesPage(
+                conversationId: conversationId,
+                limit: pageSize
+            )
+
+            messages = rows
+            hasMore = rows.count == pageSize
+
+            try? await DataService.markConversationRead(
                 conversationId: conversationId
             )
+
+            errorMessage = nil
         } catch {
             if !silently {
                 errorMessage = error.localizedDescription
@@ -258,9 +396,47 @@ struct ChatView: View {
     }
 
     @MainActor
+    private func loadOlder() async {
+        guard
+            !loadingOlder,
+            hasMore,
+            let oldest = messages.first
+        else {
+            return
+        }
+
+        loadingOlder = true
+        defer { loadingOlder = false }
+
+        do {
+            let page = try await DataService.messagesPage(
+                conversationId: conversationId,
+                before: oldest.createdAt,
+                limit: pageSize
+            )
+
+            let existing = Set(messages.map(\.id))
+            messages.insert(
+                contentsOf: page.filter {
+                    !existing.contains($0.id)
+                },
+                at: 0
+            )
+
+            hasMore = page.count == pageSize
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
     private func loadBlockState() async {
         guard let otherUserId else { return }
-        let blocked = (try? await DataService.blockedUserIDs()) ?? []
+
+        let blocked =
+            (try? await DataService.blockedUserIDs()) ??
+            []
+
         blockedByMe = blocked.contains(otherUserId)
     }
 
@@ -271,6 +447,7 @@ struct ChatView: View {
         let body = draft.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
+
         guard !body.isEmpty else { return }
 
         sending = true
@@ -282,8 +459,8 @@ struct ChatView: View {
                 senderId: userId,
                 body: body
             )
+
             draft = ""
-            await load()
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -295,9 +472,54 @@ struct ChatView: View {
             try await DataService.blockUser(userId)
             blockedByMe = true
             draft = ""
-            errorMessage = "This student is now blocked. New messages between your accounts are disabled."
+            errorMessage =
+                "This student is now blocked. New messages " +
+                "between your accounts are disabled."
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+
+    private func shouldShowReadReceipt(
+        for message: Message
+    ) -> Bool {
+        guard
+            message.senderId == auth.userId,
+            message.readAt != nil
+        else {
+            return false
+        }
+
+        return messages.last {
+            $0.senderId == auth.userId &&
+            $0.readAt != nil
+        }?.id == message.id
+    }
+
+    private func listenRealtime() async {
+        let channel = await supabase.channel(
+            "chat-\(conversationId.uuidString)-" +
+            UUID().uuidString
+        )
+
+        let changes = await channel.postgresChange(
+            AnyAction.self,
+            schema: "public",
+            table: "messages"
+        )
+
+        await channel.subscribe()
+
+        defer {
+            Task {
+                await supabase.removeChannel(channel)
+            }
+        }
+
+        for await _ in changes {
+            guard !Task.isCancelled else { break }
+
+            await loadLatest(silently: true)
         }
     }
 }
@@ -305,6 +527,7 @@ struct ChatView: View {
 struct Bubble: View {
     let message: Message
     let mine: Bool
+    let showReadReceipt: Bool
 
     var body: some View {
         HStack {
@@ -312,17 +535,31 @@ struct Bubble: View {
                 Spacer(minLength: 45)
             }
 
-            Text(message.body)
-                .font(.body)
-                .padding(.horizontal, 13)
-                .padding(.vertical, 10)
-                .background(
-                    mine
-                        ? Theme.violet
-                        : Color(.secondarySystemBackground)
-                )
-                .foregroundStyle(mine ? .white : .primary)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+            VStack(
+                alignment: mine ? .trailing : .leading,
+                spacing: 3
+            ) {
+                Text(message.body)
+                    .font(.body)
+                    .padding(.horizontal, 13)
+                    .padding(.vertical, 10)
+                    .background(
+                        mine
+                            ? Theme.blue
+                            : Theme.surfaceRaised
+                    )
+                    .foregroundStyle(.white)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 16)
+                    )
+
+                if showReadReceipt {
+                    Text("Read")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 4)
+                }
+            }
 
             if !mine {
                 Spacer(minLength: 45)
