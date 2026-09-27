@@ -18,6 +18,7 @@ struct MyScholarshipsView: View {
     @State private var selectedStatus = "All"
     @State private var editingItem: SavedScholarshipItem?
     @State private var taskItem: SavedScholarshipItem?
+    @State private var workspaceItem: SavedScholarshipItem?
     @State private var noteText = ""
     @State private var errorMessage: String?
 
@@ -32,7 +33,9 @@ struct MyScholarshipsView: View {
     }
 
     private var appliedCount: Int {
-        items.filter { $0.applicationStatus == "Applied" }.count
+        items.filter {
+            ["Applied", "Submitted"].contains($0.applicationStatus)
+        }.count
     }
 
     private var interviewCount: Int {
@@ -40,7 +43,9 @@ struct MyScholarshipsView: View {
     }
 
     private var resultCount: Int {
-        items.filter { $0.applicationStatus == "Result" }.count
+        items.filter {
+            ["Result", "Offer", "Rejected"].contains($0.applicationStatus)
+        }.count
     }
 
     var body: some View {
@@ -92,6 +97,9 @@ struct MyScholarshipsView: View {
                                     onTasks: {
                                         taskItem = item
                                     },
+                                    onWorkspace: {
+                                        workspaceItem = item
+                                    },
                                     onRemove: {
                                         Task {
                                             await remove(item)
@@ -116,6 +124,13 @@ struct MyScholarshipsView: View {
         }
         .sheet(item: $taskItem) { item in
             ApplicationTasksSheet(item: item)
+        }
+        .sheet(item: $workspaceItem, onDismiss: {
+            Task { await load() }
+        }) { item in
+            ApplicationWorkspaceView(
+                scholarship: item.scholarship
+            )
         }
         .alert(
             "Something went wrong",
@@ -475,6 +490,7 @@ private struct ApplicationCard: View {
     let onStatus: (String) -> Void
     let onNote: () -> Void
     let onTasks: () -> Void
+    let onWorkspace: () -> Void
     let onRemove: () -> Void
 
     var body: some View {
@@ -549,6 +565,14 @@ private struct ApplicationCard: View {
                             )
                     }
                     .buttonStyle(.plain)
+
+                    Button(action: onWorkspace) {
+                        Image(systemName: "rectangle.stack.badge.plus")
+                            .font(.caption)
+                            .foregroundStyle(Theme.blueSoft)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Open Application Center")
                 }
 
                 if let deadline = item.scholarship.deadline {
@@ -564,6 +588,17 @@ private struct ApplicationCard: View {
                         .font(.caption2)
                         .foregroundStyle(.white.opacity(0.52))
                         .lineLimit(1)
+                }
+
+                if let reference = item.applicationReference,
+                   !reference.isEmpty {
+                    Label(
+                        reference,
+                        systemImage: "number"
+                    )
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.46))
+                    .lineLimit(1)
                 }
             }
         }
@@ -592,10 +627,14 @@ private struct ApplicationStatusPill: View {
 
     private var icon: String {
         switch status {
-        case "Applied":
+        case "Applied", "Submitted":
             return "paperplane.fill"
         case "Interview":
             return "person.2.fill"
+        case "Offer":
+            return "checkmark.seal.fill"
+        case "Rejected":
+            return "xmark.seal.fill"
         case "Result":
             return "checkmark.seal.fill"
         default:
@@ -605,12 +644,14 @@ private struct ApplicationStatusPill: View {
 
     private var color: Color {
         switch status {
-        case "Applied":
+        case "Applied", "Submitted":
             return Theme.blueSoft
         case "Interview":
             return Color(red: 0.70, green: 0.55, blue: 1.0)
-        case "Result":
+        case "Offer", "Result":
             return Theme.green
+        case "Rejected":
+            return Theme.danger
         default:
             return .white.opacity(0.62)
         }
