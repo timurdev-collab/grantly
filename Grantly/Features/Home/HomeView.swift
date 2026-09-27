@@ -247,6 +247,29 @@ struct HomeView: View {
                                 HomeMatchCard(match: match)
                             }
                             .buttonStyle(.plain)
+                            .contextMenu {
+                                Button {
+                                    Task {
+                                        await markInterested(match)
+                                    }
+                                } label: {
+                                    Label(
+                                        "More like this",
+                                        systemImage: "hand.thumbsup"
+                                    )
+                                }
+
+                                Button(role: .destructive) {
+                                    Task {
+                                        await hideRecommendation(match)
+                                    }
+                                } label: {
+                                    Label(
+                                        "Not interested",
+                                        systemImage: "eye.slash"
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -308,6 +331,32 @@ struct HomeView: View {
                     }
                 }
             }
+        }
+    }
+
+    @MainActor
+    private func markInterested(_ match: ScholarshipMatch) async {
+        try? await DataService.setRecommendationFeedback(
+            scholarshipId: match.scholarship.id,
+            feedback: "interested"
+        )
+
+        await load()
+    }
+
+    @MainActor
+    private func hideRecommendation(_ match: ScholarshipMatch) async {
+        do {
+            try await DataService.setRecommendationFeedback(
+                scholarshipId: match.scholarship.id,
+                feedback: "not_interested"
+            )
+
+            matches.removeAll {
+                $0.scholarship.id == match.scholarship.id
+            }
+        } catch {
+            // Keep the current recommendations if the preference could not save.
         }
     }
 
@@ -728,11 +777,17 @@ struct MatchListView: View {
         .task {
             guard let profile else { return }
 
-            if let rows = try? await DataService.scholarships() {
-                matches = MatchingService.rank(
-                    profile: profile,
-                    scholarships: rows
-                )
+            do {
+                matches = try await ScholarshipSearchService
+                    .matches(limit: 50)
+                    .matches
+            } catch {
+                if let rows = try? await DataService.scholarships() {
+                    matches = MatchingService.rank(
+                        profile: profile,
+                        scholarships: rows
+                    )
+                }
             }
         }
     }
