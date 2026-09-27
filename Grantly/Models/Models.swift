@@ -403,3 +403,51 @@ struct AppNotification: Codable, Identifiable {
         case createdAt = "created_at"
     }
 }
+
+
+struct AdminTopScholarship: Decodable, Identifiable {
+    let id: UUID
+    let title: String
+    let provider: String
+    let views: Int
+    let saves: Int
+    let officialClicks: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, title, provider, views, saves
+        case officialClicks = "official_clicks"
+    }
+}
+
+struct AdminAnalyticsSummary: Decodable {
+    let days: Int
+    let views: Int
+    let saves: Int
+    let officialClicks: Int
+    let applications: Int
+    let searches: Int
+    let zeroResultSearches: Int
+    let openHealthIssues: Int
+    let topScholarships: [AdminTopScholarship]
+
+    enum CodingKeys: String, CodingKey {
+        case days, views, saves, applications, searches
+        case officialClicks = "official_clicks"
+        case zeroResultSearches = "zero_result_searches"
+        case openHealthIssues = "open_health_issues"
+        case topScholarships = "top_scholarships"
+    }
+}
+
+struct ScholarshipDuplicateCandidate: Decodable, Identifiable {
+    let id: UUID
+    let title: String
+    let provider: String
+    let country: String
+    let similarityScore: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, title, provider, country
+        case similarityScore = "similarity_score"
+    }
+}
