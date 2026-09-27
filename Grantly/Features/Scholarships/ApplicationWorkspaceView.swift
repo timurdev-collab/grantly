@@ -170,7 +170,7 @@ struct ApplicationWorkspaceView: View {
 
             HStack(spacing: 10) {
                 Label(
-                    scholarship.deadline ?? "Deadline varies",
+                    scholarship.deadline ?? "Deadline not yet confirmed",
                     systemImage: "calendar"
                 )
 
@@ -182,7 +182,7 @@ struct ApplicationWorkspaceView: View {
                 )
             }
             .font(.caption.weight(.semibold))
-            .foregroundStyle(Theme.blueSoft)
+            .foregroundStyle(Theme.orangeSoft)
 
             if let successMessage {
                 Label(successMessage, systemImage: "checkmark.circle.fill")
@@ -228,7 +228,7 @@ struct ApplicationWorkspaceView: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 12)
                         .frame(height: 36)
-                        .background(Theme.blue)
+                        .background(Theme.orange)
                         .clipShape(Capsule())
                 }
             }
@@ -236,7 +236,7 @@ struct ApplicationWorkspaceView: View {
             statusTimeline
 
             ProgressView(value: progress)
-                .tint(Theme.blue)
+                .tint(Theme.orange)
 
             HStack {
                 Text("\(completedTasks) of \(tasks.count) preparation steps")
@@ -247,7 +247,7 @@ struct ApplicationWorkspaceView: View {
 
                 Text("\(Int(progress * 100))%")
                     .font(.caption2.bold())
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
             }
 
             if !isSubmittedOrLater {
@@ -293,7 +293,7 @@ struct ApplicationWorkspaceView: View {
                     Circle()
                         .fill(
                             complete
-                                ? Theme.blue
+                                ? Theme.orange
                                 : .white.opacity(0.12)
                         )
                         .frame(width: 10, height: 10)
@@ -314,7 +314,7 @@ struct ApplicationWorkspaceView: View {
                         .fill(
                             index < currentIndex &&
                             !["Rejected", "Withdrawn"].contains(status)
-                                ? Theme.blue.opacity(0.65)
+                                ? Theme.orange.opacity(0.65)
                                 : .white.opacity(0.08)
                         )
                         .frame(height: 2)
@@ -335,7 +335,7 @@ struct ApplicationWorkspaceView: View {
 
                 Toggle("", isOn: $hasPersonalDeadline)
                     .labelsHidden()
-                    .tint(Theme.blue)
+                    .tint(Theme.orange)
             }
 
             if hasPersonalDeadline {
@@ -352,7 +352,7 @@ struct ApplicationWorkspaceView: View {
                 "Deadline reminders",
                 isOn: $reminderEnabled
             )
-            .tint(Theme.blue)
+            .tint(Theme.orange)
 
             if let official = scholarship.deadline {
                 Label(
@@ -360,7 +360,7 @@ struct ApplicationWorkspaceView: View {
                     systemImage: "calendar.badge.exclamationmark"
                 )
                 .font(.caption)
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
             }
 
             Text("Set an earlier personal target so you have time to fix missing documents before the official deadline.")
@@ -387,7 +387,7 @@ struct ApplicationWorkspaceView: View {
                 } label: {
                     Image(systemName: "plus")
                         .font(.caption.bold())
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                         .frame(width: 30, height: 30)
                         .background(Theme.surfaceRaised)
                         .clipShape(Circle())
@@ -402,7 +402,7 @@ struct ApplicationWorkspaceView: View {
 
             if loading {
                 ProgressView()
-                    .tint(Theme.blue)
+                    .tint(Theme.orange)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
             } else if tasks.isEmpty {
@@ -486,7 +486,7 @@ struct ApplicationWorkspaceView: View {
                         systemImage: "plus"
                     )
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
                 }
                 .disabled(uploadingDocument)
             }
@@ -508,7 +508,7 @@ struct ApplicationWorkspaceView: View {
                 ForEach(documents) { document in
                     HStack(spacing: 11) {
                         Image(systemName: documentIcon(document))
-                            .foregroundStyle(Theme.blueSoft)
+                            .foregroundStyle(Theme.orangeSoft)
                             .frame(width: 32, height: 32)
                             .background(Theme.surfaceRaised)
                             .clipShape(RoundedRectangle(cornerRadius: 9))
@@ -625,7 +625,7 @@ struct ApplicationWorkspaceView: View {
                 Spacer()
 
                 Image(systemName: "safari.fill")
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
             }
 
             if let checked = item?.portalLastCheckedAt {
@@ -646,7 +646,7 @@ struct ApplicationWorkspaceView: View {
                 .font(.subheadline.weight(.semibold))
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
-                .background(Theme.blueGradient)
+                .background(Theme.orangeGradient)
                 .foregroundStyle(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
             }
