@@ -649,6 +649,42 @@ struct ScholarshipSourceCandidate: Decodable, Identifiable {
     }
 }
 
+struct ScholarshipDraftPatch: Encodable {
+    let title: String?
+    let provider: String?
+    let country: String?
+    let region: String?
+    let degreeLevels: [String]?
+    let fields: [String]?
+    let fundingType: String?
+    let tuitionCoverage: String?
+    let stipend: String?
+    let airfare: Bool?
+    let accommodation: Bool?
+    let healthInsurance: Bool?
+    let satRequired: Bool?
+    let eligibleNationalities: [String]?
+    let description: String?
+    let applicationCycle: String?
+    let deadline: String?
+    let deadlineNotes: String?
+
+    enum CodingKeys: String, CodingKey {
+        case title, provider, country, region, fields
+        case degreeLevels = "degree_levels"
+        case fundingType = "funding_type"
+        case tuitionCoverage = "tuition_coverage"
+        case stipend, airfare, accommodation
+        case healthInsurance = "health_insurance"
+        case satRequired = "sat_required"
+        case eligibleNationalities = "eligible_nationalities"
+        case description
+        case applicationCycle = "application_cycle"
+        case deadline
+        case deadlineNotes = "deadline_notes"
+    }
+}
+
 struct ScholarshipDraftReadiness: Decodable {
     let scholarshipId: UUID
     let ready: Bool
