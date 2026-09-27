@@ -109,6 +109,91 @@ enum DataService {
             .value
     }
 
+    static func scholarshipImportBatches(
+        limit: Int = 20
+    ) async throws -> [ScholarshipImportBatch] {
+        try await supabase
+            .from("scholarship_import_batches")
+            .select()
+            .order("created_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+    }
+
+    static func scholarshipImportRows(
+        batchId: UUID
+    ) async throws -> [ScholarshipImportRow] {
+        try await supabase
+            .from("scholarship_import_rows")
+            .select(
+                "id,row_number,proposed_action,validation_errors," +
+                "matched_scholarship_id,applied_scholarship_id"
+            )
+            .eq("batch_id", value: batchId.uuidString)
+            .order("row_number", ascending: true)
+            .execute()
+            .value
+    }
+
+    static func stageScholarshipImport(
+        format: String,
+        content: String,
+        sourceLabel: String,
+        sourceURL: String?
+    ) async throws -> ScholarshipImportStageResult {
+        struct Body: Encodable {
+            let format: String
+            let content: String
+            let source_label: String
+            let source_url: String?
+        }
+
+        return try await supabase.functions.invoke(
+            "import-scholarships",
+            options: FunctionInvokeOptions(
+                body: Body(
+                    format: format,
+                    content: content,
+                    source_label: sourceLabel,
+                    source_url: sourceURL
+                )
+            )
+        )
+    }
+
+    static func commitScholarshipImport(
+        batchId: UUID
+    ) async throws -> ScholarshipImportCommitResult {
+        struct Params: Encodable {
+            let p_batch_id: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "commit_scholarship_import",
+                params: Params(p_batch_id: batchId)
+            )
+            .execute()
+            .value
+    }
+
+    static func rollbackScholarshipImport(
+        batchId: UUID
+    ) async throws -> ScholarshipImportRollbackResult {
+        struct Params: Encodable {
+            let p_batch_id: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "rollback_scholarship_import",
+                params: Params(p_batch_id: batchId)
+            )
+            .execute()
+            .value
+    }
+
     static func currentProfile(userId: UUID) async throws -> StudentProfile {
         try await supabase
             .from("student_profiles")

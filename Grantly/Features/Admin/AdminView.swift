@@ -7,6 +7,8 @@ struct AdminView: View {
     @State private var systemHealth: AdminSystemHealth?
     @State private var actionLogs: [AdminActionLog] = []
     @State private var showingAdd = false
+    @State private var showingImport = false
+    @State private var importBatches: [ScholarshipImportBatch] = []
     @State private var auditing = false
     @State private var enrichingMedia = false
     @State private var bulkOperating = false
@@ -237,6 +239,65 @@ struct AdminView: View {
                     Text(bulkMessage)
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                }
+            }
+
+            Section("Catalog imports") {
+                Button {
+                    showingImport = true
+                } label: {
+                    Label(
+                        "Import CSV or JSON",
+                        systemImage: "square.and.arrow.down"
+                    )
+                }
+
+                if importBatches.isEmpty {
+                    Text("No import batches yet.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(importBatches.prefix(8)) { batch in
+                        VStack(alignment: .leading, spacing: 5) {
+                            HStack {
+                                Text(batch.sourceLabel)
+                                    .font(.subheadline.weight(.semibold))
+                                    .lineLimit(1)
+
+                                Spacer()
+
+                                Text(batch.status.capitalized)
+                                    .font(.caption2.bold())
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            HStack(spacing: 10) {
+                                Label("\(batch.insertCount)", systemImage: "plus.circle")
+                                Label("\(batch.updateCount)", systemImage: "arrow.triangle.2.circlepath")
+                                Label("\(batch.skipCount)", systemImage: "forward")
+                                Label("\(batch.errorCount)", systemImage: "exclamationmark.triangle")
+                            }
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+
+                            HStack {
+                                if batch.status == "staged" {
+                                    Button("Commit") {
+                                        Task { await commitImport(batch) }
+                                    }
+                                    .font(.caption.weight(.semibold))
+                                }
+
+                                if batch.status == "committed" {
+                                    Button("Rollback", role: .destructive) {
+                                        Task { await rollbackImport(batch) }
+                                    }
+                                    .font(.caption.weight(.semibold))
+                                }
+                            }
+                        }
+                        .padding(.vertical, 3)
+                    }
                 }
             }
 
@@ -479,6 +540,11 @@ struct AdminView: View {
                 Task { await load() }
             }
         }
+        .sheet(isPresented: $showingImport) {
+            ScholarshipImportView {
+                Task { await load() }
+            }
+        }
         .refreshable { await load() }
         .task { await load() }
     }
@@ -496,12 +562,15 @@ struct AdminView: View {
                 DataService.adminSystemHealth()
             async let logs =
                 DataService.recentAdminActionLogs(limit: 20)
+            async let imports =
+                DataService.scholarshipImportBatches(limit: 20)
 
             scholarships = try await scholarshipRows
             reports = try await reportRows
             analytics = try await analyticsSummary
             systemHealth = try await healthSummary
             actionLogs = try await logs
+            importBatches = try await imports
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -539,6 +608,42 @@ struct AdminView: View {
 
             bulkMessage =
                 "\(affected) scholarship(s) updated."
+
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func commitImport(
+        _ batch: ScholarshipImportBatch
+    ) async {
+        do {
+            let result = try await DataService
+                .commitScholarshipImport(batchId: batch.id)
+
+            bulkMessage =
+                "Import committed: \(result.inserted) inserted, " +
+                "\(result.updated) updated, \(result.skipped) skipped."
+
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func rollbackImport(
+        _ batch: ScholarshipImportBatch
+    ) async {
+        do {
+            let result = try await DataService
+                .rollbackScholarshipImport(batchId: batch.id)
+
+            bulkMessage =
+                "Import rolled back: \(result.removed) removed, " +
+                "\(result.restored) restored."
 
             await load()
         } catch {
@@ -793,6 +898,103 @@ struct AddScholarshipView: View {
             dismiss()
         } catch let err {
             error = err.localizedDescription
+        }
+    }
+}
+
+
+struct ScholarshipImportView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let onStaged: () -> Void
+
+    @State private var format = "csv"
+    @State private var sourceLabel = ""
+    @State private var sourceURL = ""
+    @State private var content = ""
+    @State private var staging = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Picker("Format", selection: $format) {
+                    Text("CSV").tag("csv")
+                    Text("JSON").tag("json")
+                }
+                .pickerStyle(.segmented)
+
+                TextField("Source label", text: $sourceLabel)
+                TextField("Source URL (optional)", text: $sourceURL)
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.URL)
+
+                Section("Import content") {
+                    TextEditor(text: $content)
+                        .font(.system(.caption, design: .monospaced))
+                        .frame(minHeight: 260)
+                }
+
+                Section {
+                    Text(
+                        format == "csv"
+                            ? "CSV headers should use scholarship field names such as title, provider, country, funding_type, official_url, degree_levels and fields. Use | or ; inside array fields."
+                            : "JSON must be an array of scholarship objects."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
+
+                if let errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+            .navigationTitle("Import scholarships")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(staging ? "Staging…" : "Preview") {
+                        Task { await stage() }
+                    }
+                    .disabled(
+                        staging ||
+                        sourceLabel.trimmingCharacters(
+                            in: .whitespacesAndNewlines
+                        ).isEmpty ||
+                        content.trimmingCharacters(
+                            in: .whitespacesAndNewlines
+                        ).isEmpty
+                    )
+                }
+            }
+        }
+    }
+
+    @MainActor
+    private func stage() async {
+        staging = true
+        errorMessage = nil
+        defer { staging = false }
+
+        do {
+            _ = try await DataService.stageScholarshipImport(
+                format: format,
+                content: content,
+                sourceLabel: sourceLabel,
+                sourceURL: sourceURL.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ).isEmpty ? nil : sourceURL
+            )
+
+            onStaged()
+            dismiss()
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 }
