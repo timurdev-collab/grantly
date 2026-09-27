@@ -164,12 +164,38 @@ struct Message: Codable, Identifiable {
     let senderId: UUID
     let body: String
     let createdAt: String
+    let readAt: String?
 
     enum CodingKeys: String, CodingKey {
         case id, body
         case conversationId = "conversation_id"
         case senderId = "sender_id"
         case createdAt = "created_at"
+        case readAt = "read_at"
+    }
+}
+
+struct ConversationSummaryRow: Codable, Identifiable {
+    let conversationId: UUID
+    let otherUserId: UUID?
+    let displayName: String
+    let lastMessage: String?
+    let lastMessageAt: String?
+    let lastMessageSenderId: UUID?
+    let unreadCount: Int
+    let lastReadAt: String?
+
+    var id: UUID { conversationId }
+
+    enum CodingKeys: String, CodingKey {
+        case conversationId = "conversation_id"
+        case otherUserId = "other_user_id"
+        case displayName = "display_name"
+        case lastMessage = "last_message"
+        case lastMessageAt = "last_message_at"
+        case lastMessageSenderId = "last_message_sender_id"
+        case unreadCount = "unread_count"
+        case lastReadAt = "last_read_at"
     }
 }
 
