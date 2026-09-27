@@ -436,6 +436,8 @@ struct MyScholarshipsView: View {
             resultAt: item.resultAt,
             documentsComplete: item.documentsComplete,
             reminderEnabled: item.reminderEnabled,
+            applicationReference: item.applicationReference,
+            portalLastCheckedAt: item.portalLastCheckedAt,
             scholarship: item.scholarship
         )
     }
