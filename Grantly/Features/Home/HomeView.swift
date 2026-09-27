@@ -35,8 +35,6 @@ struct HomeView: View {
                 )
 
                 homeHero
-                quickStats
-                categoryRow
 
                 if profileNeedsSetup {
                     ProfileSetupCard(openProfile: openProfile)
@@ -104,104 +102,79 @@ struct HomeView: View {
     }
 
     private var homeHero: some View {
-        ZStack(alignment: .bottomLeading) {
-            UniversityPhoto(seed: "Grantly premium global university campus", height: 222)
+        ZStack(alignment: .bottomTrailing) {
+            RoundedRectangle(cornerRadius: 24)
+                .fill(
+                    LinearGradient(
+                        colors: [Theme.surfaceRaised, Theme.navy],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
 
-            LinearGradient(
-                colors: [
-                    .clear,
-                    Theme.navyDeep.opacity(0.28),
-                    Theme.navyDeep.opacity(0.96)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
+            Circle()
+                .fill(Theme.orange.opacity(0.14))
+                .frame(width: 180, height: 180)
+                .blur(radius: 12)
+                .offset(x: 74, y: 62)
 
-            LinearGradient(
-                colors: [Theme.blue.opacity(0.20), .clear],
-                startPoint: .topLeading,
-                endPoint: .center
-            )
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text("YOUR GLOBAL FUTURE")
-                    .font(.system(size: 9, weight: .bold))
+            VStack(alignment: .leading, spacing: 9) {
+                Text(profileNeedsSetup ? "START HERE" : "FOR YOU")
+                    .font(.system(size: 10, weight: .bold))
                     .tracking(1.5)
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
 
-                Text("The right scholarship\ncan change everything.")
-                    .font(.system(size: 27, weight: .bold))
-                    .tracking(-0.5)
-                    .foregroundStyle(.white)
+                Text(
+                    profileNeedsSetup
+                        ? "Build your profile.\nFind the right funding."
+                        : "Your scholarship search,\nwithout the noise."
+                )
+                .font(.system(size: 25, weight: .bold))
+                .tracking(-0.45)
+                .foregroundStyle(.white)
 
-                Text("Discover trusted opportunities from universities around the world.")
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.68))
-                    .lineSpacing(3)
-                    .frame(maxWidth: 270, alignment: .leading)
+                Text(
+                    profileNeedsSetup
+                        ? "Tell Grantly what you want to study and we’ll narrow the catalog for you."
+                        : "Verified opportunities, deadlines and application tracking in one place."
+                )
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.64))
+                .lineSpacing(3)
+                .frame(maxWidth: 285, alignment: .leading)
+
+                HStack(spacing: 14) {
+                    Label(
+                        profileNeedsSetup ? "Set up profile" : "\(matches.count) matches",
+                        systemImage: profileNeedsSetup ? "person.crop.circle.badge.plus" : "sparkles"
+                    )
+
+                    Label(
+                        "\(upcoming.count) deadlines",
+                        systemImage: "calendar"
+                    )
+                }
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.76))
+                .padding(.top, 2)
             }
             .padding(18)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-            HStack {
-                Spacer()
-
-                Image(systemName: "arrow.up.right")
-                    .font(.headline.bold())
-                    .foregroundStyle(.white)
-                    .frame(width: 44, height: 44)
-                    .background(Theme.blueGradient)
-                    .clipShape(Circle())
-                    .shadow(color: Theme.blue.opacity(0.28), radius: 10, y: 5)
-                    .padding(16)
-            }
-            .frame(maxHeight: .infinity, alignment: .bottom)
+            Image(systemName: "arrow.up.right")
+                .font(.headline.bold())
+                .foregroundStyle(Theme.navyDeep)
+                .frame(width: 42, height: 42)
+                .background(Theme.orangeGradient)
+                .clipShape(Circle())
+                .padding(16)
         }
-        .frame(height: 222)
+        .frame(height: 190)
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .overlay(
             RoundedRectangle(cornerRadius: 24)
-                .stroke(.white.opacity(0.07))
+                .stroke(.white.opacity(0.06))
         )
-    }
-
-    private var quickStats: some View {
-        HStack(spacing: 10) {
-            HomeStat(
-                value: profileNeedsSetup ? "—" : "\(matches.count)",
-                label: "Matches",
-                icon: "sparkles"
-            )
-
-            HomeStat(
-                value: "\(upcoming.count)",
-                label: "Deadlines",
-                icon: "calendar"
-            )
-
-            HomeStat(
-                value: "60+",
-                label: "Countries",
-                icon: "globe"
-            )
-        }
-    }
-
-    private var categoryRow: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Explore by study level")
-                .font(.headline.bold())
-                .foregroundStyle(.white)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    HomeCategory(icon: "square.grid.2x2.fill", title: "All", active: true)
-                    HomeCategory(icon: "graduationcap", title: "Undergraduate")
-                    HomeCategory(icon: "graduationcap.fill", title: "Master's")
-                    HomeCategory(icon: "doc.text.magnifyingglass", title: "PhD")
-                    HomeCategory(icon: "books.vertical", title: "Research")
-                }
-            }
-        }
     }
 
     @ViewBuilder
@@ -226,7 +199,7 @@ struct HomeView: View {
 
                 Image(systemName: "arrow.right")
                     .font(.caption.bold())
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
             }
 
             if loading {
@@ -423,7 +396,7 @@ private struct HomeStat: View {
             HStack {
                 Image(systemName: icon)
                     .font(.caption.bold())
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
 
                 Spacer()
             }
@@ -490,7 +463,7 @@ private struct HomeMatchCard: View {
                     .foregroundStyle(.white)
                     .padding(.horizontal, 9)
                     .padding(.vertical, 6)
-                    .background(Theme.blue.opacity(0.92))
+                    .background(Theme.orange.opacity(0.92))
                     .clipShape(Capsule())
                     .padding(9)
             }
@@ -598,7 +571,7 @@ struct UpcomingDeadlineCard: View {
                 if let deadline = scholarship.deadline {
                     Label(deadline, systemImage: "calendar")
                         .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                 }
             }
             .padding(12)
@@ -622,7 +595,7 @@ struct ProfileSetupCard: View {
                 HStack {
                     Image(systemName: "person.crop.circle.badge.plus")
                         .font(.title3)
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
 
                     Spacer()
 
@@ -661,7 +634,7 @@ struct ProfileSnapshot: View {
                     Spacer()
 
                     Image(systemName: "checkmark.seal.fill")
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                 }
 
                 Text(profile.intendedMajor ?? "Your study plan")
@@ -737,7 +710,7 @@ struct MatchCard: View {
                     Spacer()
                     Text("\(match.score)%")
                         .font(.caption.bold())
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                 }
             }
         }
@@ -824,7 +797,7 @@ struct NotificationInboxView: View {
                                     .font(.system(size: 15, weight: .semibold))
                                     .foregroundStyle(
                                         notification.readAt == nil
-                                            ? Theme.blueSoft
+                                            ? Theme.orangeSoft
                                             : .white.opacity(0.42)
                                     )
                                     .frame(width: 34, height: 34)
