@@ -26,6 +26,7 @@ struct DraftScholarshipReviewView: View {
     @State private var satRequired: Bool
 
     @State private var readiness: ScholarshipDraftReadiness?
+    @State private var evidence: ScholarshipDraftSourceEvidence?
     @State private var working = false
     @State private var errorMessage: String?
 
@@ -112,6 +113,146 @@ struct DraftScholarshipReviewView: View {
                                 systemImage: "arrow.up.right.square"
                             )
                         }
+                    }
+                }
+
+                Section("Source evidence") {
+                    if let evidence, evidence.available {
+                        if let checkedAt = evidence.checkedAt {
+                            Text("Extracted \(String(checkedAt.prefix(10)))")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        if let candidateUrl = evidence.candidateUrl,
+                           let url = URL(string: candidateUrl) {
+                            Link(destination: url) {
+                                Label(
+                                    "Open evidence source",
+                                    systemImage: "arrow.up.right.square"
+                                )
+                            }
+                        }
+
+                        evidenceRow(
+                            title: "Study level",
+                            value: evidence.detectedDegreeLevels?
+                                .joined(separator: ", "),
+                            confidence: evidence.degreeConfidence,
+                            excerpt: evidence.eligibilityExcerpt
+                        ) {
+                            if let levels = evidence.detectedDegreeLevels {
+                                degreeLevels = levels.joined(separator: ", ")
+                            }
+                        }
+
+                        evidenceRow(
+                            title: "Funding",
+                            value: evidence.detectedFundingType,
+                            confidence: evidence.fundingConfidence,
+                            excerpt: evidence.fundingExcerpt
+                        ) {
+                            if let value = evidence.detectedFundingType {
+                                fundingType = value
+                            }
+                        }
+
+                        evidenceRow(
+                            title: "Tuition coverage",
+                            value: evidence.detectedTuitionCoverage,
+                            confidence: evidence.fundingConfidence,
+                            excerpt: evidence.benefitsExcerpt
+                        ) {
+                            if let value = evidence.detectedTuitionCoverage {
+                                tuitionCoverage = value
+                            }
+                        }
+
+                        evidenceRow(
+                            title: "Stipend",
+                            value: evidence.detectedStipend,
+                            confidence: evidence.fundingConfidence,
+                            excerpt: evidence.benefitsExcerpt
+                        ) {
+                            if let value = evidence.detectedStipend {
+                                stipend = value
+                            }
+                        }
+
+                        evidenceRow(
+                            title: "Eligible nationalities",
+                            value: evidence.detectedEligibleNationalities?
+                                .joined(separator: ", "),
+                            confidence: evidence.eligibilityConfidence,
+                            excerpt: evidence.eligibilityExcerpt
+                        ) {
+                            if let values = evidence.detectedEligibleNationalities {
+                                eligibleNationalities = values.joined(separator: ", ")
+                            }
+                        }
+
+                        evidenceRow(
+                            title: "Deadline",
+                            value: evidence.detectedDeadline,
+                            confidence: evidence.deadlineConfidence,
+                            excerpt: evidence.applicationExcerpt
+                        ) {
+                            if let value = evidence.detectedDeadline {
+                                deadline = value
+                            }
+                        }
+
+                        evidenceRow(
+                            title: "Application cycle",
+                            value: evidence.detectedCycle,
+                            confidence: evidence.cycleConfidence,
+                            excerpt: evidence.applicationExcerpt
+                        ) {
+                            if let value = evidence.detectedCycle {
+                                applicationCycle = value
+                            }
+                        }
+
+                        evidenceToggleRow(
+                            title: "Airfare",
+                            detected: evidence.detectedAirfare,
+                            excerpt: evidence.benefitsExcerpt
+                        ) {
+                            airfare = true
+                        }
+
+                        evidenceToggleRow(
+                            title: "Accommodation",
+                            detected: evidence.detectedAccommodation,
+                            excerpt: evidence.benefitsExcerpt
+                        ) {
+                            accommodation = true
+                        }
+
+                        evidenceToggleRow(
+                            title: "Health insurance",
+                            detected: evidence.detectedHealthInsurance,
+                            excerpt: evidence.benefitsExcerpt
+                        ) {
+                            healthInsurance = true
+                        }
+
+                        if let requirements = evidence.applicationRequirementsExcerpt,
+                           !requirements.isEmpty {
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text("Application requirements evidence")
+                                    .font(.caption.weight(.semibold))
+
+                                Text(requirements)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 3)
+                        }
+                    } else {
+                        Text("No structured source evidence is available yet.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                 }
 
@@ -218,7 +359,7 @@ struct DraftScholarshipReviewView: View {
                 }
             }
             .task {
-                await refreshReadiness()
+                await refreshReviewData()
             }
             .alert(
                 "Unable to update draft",
@@ -231,6 +372,80 @@ struct DraftScholarshipReviewView: View {
             } message: {
                 Text(errorMessage ?? "")
             }
+        }
+    }
+
+    @ViewBuilder
+    private func evidenceRow(
+        title: String,
+        value: String?,
+        confidence: Int?,
+        excerpt: String?,
+        use: @escaping () -> Void
+    ) -> some View {
+        if let value, !value.isEmpty {
+            VStack(alignment: .leading, spacing: 5) {
+                HStack {
+                    Text(title)
+                        .font(.caption.weight(.semibold))
+
+                    Spacer()
+
+                    if let confidence {
+                        Text("\(confidence)%")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                Text(value)
+                    .font(.caption)
+
+                if let excerpt, !excerpt.isEmpty {
+                    Text(excerpt)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(4)
+                }
+
+                Button("Use this value", action: use)
+                    .font(.caption.weight(.semibold))
+            }
+            .padding(.vertical, 3)
+        }
+    }
+
+    @ViewBuilder
+    private func evidenceToggleRow(
+        title: String,
+        detected: Bool?,
+        excerpt: String?,
+        use: @escaping () -> Void
+    ) -> some View {
+        if detected == true {
+            VStack(alignment: .leading, spacing: 5) {
+                HStack {
+                    Text(title)
+                        .font(.caption.weight(.semibold))
+
+                    Spacer()
+
+                    Label("Detected", systemImage: "checkmark.circle")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+
+                if let excerpt, !excerpt.isEmpty {
+                    Text(excerpt)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(4)
+                }
+
+                Button("Use detected benefit", action: use)
+                    .font(.caption.weight(.semibold))
+            }
+            .padding(.vertical, 3)
         }
     }
 
@@ -247,6 +462,21 @@ struct DraftScholarshipReviewView: View {
                 )
             }
             .filter { !$0.isEmpty }
+    }
+
+    @MainActor
+    private func refreshReviewData() async {
+        do {
+            async let readinessTask =
+                DataService.scholarshipDraftReadiness(id: scholarship.id)
+            async let evidenceTask =
+                DataService.scholarshipDraftSourceEvidence(id: scholarship.id)
+
+            readiness = try await readinessTask
+            evidence = try await evidenceTask
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     @MainActor
@@ -291,7 +521,7 @@ struct DraftScholarshipReviewView: View {
                 patch: patch
             )
 
-            await refreshReadiness()
+            await refreshReviewData()
             onUpdated()
         } catch {
             errorMessage = error.localizedDescription
