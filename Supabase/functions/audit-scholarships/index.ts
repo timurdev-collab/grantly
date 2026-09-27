@@ -580,6 +580,64 @@ Deno.serve(async (req) => {
       })
       .eq("id", result.id);
 
+    let observationOutcome = "success";
+
+    if (
+      result.source_http_status === 404 ||
+      result.source_http_status === 410
+    ) {
+      observationOutcome = "not_found";
+    } else if (result.audit_error) {
+      const errorText = String(result.audit_error).toLowerCase();
+
+      if (
+        errorText.includes("http 401") ||
+        errorText.includes("http 403") ||
+        errorText.includes("http 429")
+      ) {
+        observationOutcome = "blocked";
+      } else if (
+        errorText.includes("transient http") ||
+        errorText.includes("http 5")
+      ) {
+        observationOutcome = "transient_error";
+      } else if (
+        errorText.includes("timeout") ||
+        errorText.includes("abort") ||
+        errorText.includes("network") ||
+        errorText.includes("fetch")
+      ) {
+        observationOutcome = "network_error";
+      } else {
+        observationOutcome = "other_error";
+      }
+    }
+
+    await admin
+      .from("scholarship_audit_observations")
+      .insert({
+        scholarship_id: result.id,
+        audit_run_id: auditRun?.id ?? null,
+        checked_at: result.last_checked_at,
+        outcome: observationOutcome,
+        http_status: result.source_http_status,
+        link_status: result.link_status,
+        final_url: result.final_url,
+        source_fingerprint: result.source_fingerprint,
+        source_changed:
+          result.source_changed_at === result.last_checked_at,
+        deadline_candidate: result.deadline_candidate,
+        deadline_confidence: result.deadline_confidence,
+        deadline_candidate_count: result.deadline_candidate_count,
+        deadline_ambiguous: result.deadline_ambiguous,
+        deadline_evidence: result.deadline_evidence,
+        cycle_candidate: result.cycle_candidate,
+        cycle_confidence: result.cycle_confidence,
+        cycle_status: result.cycle_status,
+        audit_failure_count: result.audit_failure_count,
+        audit_error: result.audit_error
+      });
+
     if (!original) continue;
 
     const changes: Array<{
