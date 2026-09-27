@@ -649,13 +649,15 @@ struct UniversityCaseDetailView: View {
                     requirementsSection
                     extraDocumentsSection
 
-                    if let notes = item.notes.nilIfBlank {
+                    if !item.notes
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                        .isEmpty {
                         VStack(alignment: .leading, spacing: 7) {
                             Text("Notes")
                                 .font(.headline.bold())
                                 .foregroundStyle(.white)
 
-                            Text(notes)
+                            Text(item.notes)
                                 .font(.subheadline)
                                 .foregroundStyle(.white.opacity(0.62))
                         }
