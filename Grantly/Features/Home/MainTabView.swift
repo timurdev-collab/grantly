@@ -11,6 +11,7 @@ private enum MainTab: Hashable {
 struct MainTabView: View {
     @State private var profile: StudentProfile?
     @State private var selection: MainTab = .home
+    @State private var networkMonitor = NetworkMonitor()
 
     var body: some View {
         TabView(selection: $selection) {
@@ -61,6 +62,21 @@ struct MainTabView: View {
         .toolbarBackground(Theme.navyDeep, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
         .preferredColorScheme(.dark)
+        .overlay(alignment: .top) {
+            if !networkMonitor.isOnline {
+                OfflineBanner()
+                    .padding(.top, 8)
+                    .padding(.horizontal, 16)
+                    .transition(
+                        .move(edge: .top)
+                            .combined(with: .opacity)
+                    )
+            }
+        }
+        .animation(
+            .easeInOut(duration: 0.2),
+            value: networkMonitor.isOnline
+        )
         .task {
             if profile == nil,
                let userId = try? await supabase.auth.session.user.id {
