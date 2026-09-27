@@ -498,6 +498,31 @@ struct ScholarshipsView: View {
             }
 
             totalCount = page.totalCount
+
+            if reset {
+                let trimmedQuery = query.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                )
+
+                let properties = [
+                    "query": trimmedQuery,
+                    "country": country,
+                    "degree": degree,
+                    "field": field,
+                    "funding": funding,
+                    "source": source,
+                    "sort": sort,
+                    "result_count": String(page.totalCount)
+                ]
+
+                try? await DataService.trackProductEvent(
+                    page.totalCount == 0
+                        ? "zero_result_search"
+                        : "search",
+                    properties: properties
+                )
+            }
+
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
