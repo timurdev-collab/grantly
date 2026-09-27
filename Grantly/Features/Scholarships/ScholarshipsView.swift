@@ -45,40 +45,11 @@ struct ScholarshipsView: View {
         scholarships.filter { $0.verificationStatus == "verified" }.count
     }
 
-    private var topPicks: [Scholarship] {
-        scholarships
-            .filter {
-                $0.verificationStatus == "verified" &&
-                (
-                    $0.fundingType.lowercased().contains("fully") ||
-                    $0.deadline != nil
-                )
-            }
-            .sorted {
-                let leftFully = $0.fundingType.lowercased().contains("fully")
-                let rightFully = $1.fundingType.lowercased().contains("fully")
-
-                if leftFully != rightFully {
-                    return leftFully && !rightFully
-                }
-
-                return ($0.deadline ?? "9999-12-31") <
-                    ($1.deadline ?? "9999-12-31")
-            }
-    }
-
     private var hasFilters: Bool {
         country != "All" ||
         degree != "All" ||
         field != "All" ||
-        funding != "All" ||
-        source != "All"
-    }
-
-    private var shouldShowTopPicks: Bool {
-        query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-        !hasFilters &&
-        !topPicks.isEmpty
+        funding != "All"
     }
 
     private var hasMore: Bool {
@@ -92,7 +63,6 @@ struct ScholarshipsView: View {
             degree,
             field,
             funding,
-            source,
             sort
         ].joined(separator: "|")
     }
@@ -114,16 +84,12 @@ struct ScholarshipsView: View {
                 filters
                     .padding(.horizontal)
 
-                if shouldShowTopPicks {
-                    topPicksSection
-                }
-
                 resultsHeader
 
                 if loading && scholarships.isEmpty {
                     VStack(spacing: 12) {
                         ProgressView()
-                            .tint(Theme.blue)
+                            .tint(Theme.orange)
 
                         Text("Finding trusted opportunities...")
                             .font(.caption)
@@ -157,7 +123,7 @@ struct ScholarshipsView: View {
 
                     if loadingMore {
                         ProgressView()
-                            .tint(Theme.blue)
+                            .tint(Theme.orange)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
                     }
@@ -196,44 +162,29 @@ struct ScholarshipsView: View {
     }
 
     private var exploreHeader: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("Explore")
-                        .font(.system(size: 31, weight: .bold))
-                        .foregroundStyle(.white)
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Explore")
+                    .font(.system(size: 31, weight: .bold))
+                    .foregroundStyle(.white)
 
-                    Text("Scholarships from universities around the world")
-                        .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.56))
-                }
-
-                Spacer()
-
-                Image(systemName: "slider.horizontal.3")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(Theme.blueSoft)
-                    .frame(width: 40, height: 40)
-                    .background(Theme.surface)
-                    .clipShape(RoundedRectangle(cornerRadius: 13))
+                Text(
+                    totalCount > 0
+                        ? "\(totalCount) trusted opportunities"
+                        : "Trusted scholarships, one place"
+                )
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.56))
             }
 
-            HStack(spacing: 10) {
-                ExploreSummary(
-                    value: "\(totalCount)",
-                    label: "Results"
-                )
+            Spacer()
 
-                ExploreSummary(
-                    value: "\(verifiedCount)",
-                    label: "Verified loaded"
-                )
-
-                ExploreSummary(
-                    value: "\(filterOptions.countries.count)",
-                    label: "Countries"
-                )
-            }
+            Image(systemName: "graduationcap.fill")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Theme.orangeSoft)
+                .frame(width: 42, height: 42)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 13))
         }
         .padding(.horizontal)
         .padding(.top, 8)
@@ -271,7 +222,7 @@ struct ScholarshipsView: View {
                             .frame(height: 38)
                             .background(
                                 selected
-                                    ? Theme.blue
+                                    ? Theme.orange
                                     : Theme.surfaceRaised
                             )
                             .clipShape(Capsule())
@@ -279,7 +230,7 @@ struct ScholarshipsView: View {
                                 Capsule()
                                     .stroke(
                                         selected
-                                            ? Theme.blueSoft.opacity(0.35)
+                                            ? Theme.orangeSoft.opacity(0.35)
                                             : .white.opacity(0.06)
                                     )
                             )
@@ -332,16 +283,6 @@ struct ScholarshipsView: View {
                     }
                 }
 
-                filterMenu(
-                    title: source == "All" ? "Trust" : source,
-                    icon: "checkmark.seal",
-                    active: source != "All"
-                ) {
-                    Button("All trusted") { source = "All" }
-                    Button("Verified") { source = "Verified" }
-                    Button("Curated") { source = "Curated" }
-                }
-
                 if hasFilters {
                     Button {
                         clearFilters()
@@ -376,7 +317,7 @@ struct ScholarshipsView: View {
                 Spacer()
 
                 Image(systemName: "sparkles")
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
             }
             .padding(.horizontal)
 
@@ -439,7 +380,7 @@ struct ScholarshipsView: View {
         VStack(spacing: 14) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 28, weight: .semibold))
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
                 .frame(width: 60, height: 60)
                 .background(Theme.surface)
                 .clipShape(Circle())
@@ -458,7 +399,7 @@ struct ScholarshipsView: View {
                     clearFilters()
                 }
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
             }
         }
         .frame(maxWidth: .infinity)
@@ -477,7 +418,7 @@ struct ScholarshipsView: View {
                 .padding(.horizontal, 12)
                 .frame(height: 38)
                 .foregroundStyle(active ? .white : .white.opacity(0.72))
-                .background(active ? Theme.blue : Theme.surfaceRaised)
+                .background(active ? Theme.orange : Theme.surfaceRaised)
                 .clipShape(Capsule())
                 .overlay(
                     Capsule()
@@ -491,7 +432,6 @@ struct ScholarshipsView: View {
         degree = "All"
         field = "All"
         funding = "All"
-        source = "All"
     }
 
     private func optional(_ value: String) -> String? {
@@ -666,7 +606,7 @@ private struct ExploreTopPickCard: View {
 
                     Image(systemName: "arrow.up.right")
                         .font(.caption2.bold())
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                 }
                 .font(.caption2)
                 .foregroundStyle(.white.opacity(0.66))
@@ -705,7 +645,7 @@ struct PremiumScholarshipCard: View {
                 UniversityPhoto(
                     seed: scholarship.provider + scholarship.title + scholarship.country,
                     remoteURL: scholarship.university?.campusImageUrl,
-                    height: 164
+                    height: 142
                 )
 
                 LinearGradient(
@@ -721,7 +661,7 @@ struct PremiumScholarshipCard: View {
 
                     Image(systemName: saved ? "bookmark.fill" : "bookmark")
                         .font(.caption.bold())
-                        .foregroundStyle(saved ? Theme.blueSoft : .white)
+                        .foregroundStyle(saved ? Theme.orangeSoft : .white)
                         .frame(width: 34, height: 34)
                         .background(Theme.navyDeep.opacity(0.80))
                         .clipShape(Circle())
@@ -788,9 +728,9 @@ struct PremiumScholarshipCard: View {
                     if let deadline = scholarship.deadline {
                         Label(deadline, systemImage: "calendar")
                             .font(.caption2.weight(.semibold))
-                            .foregroundStyle(Theme.blueSoft)
+                            .foregroundStyle(Theme.orangeSoft)
                     } else {
-                        Text("Deadline varies")
+                        Text("Deadline not yet confirmed")
                             .font(.caption2.weight(.semibold))
                             .foregroundStyle(.white.opacity(0.48))
                     }
@@ -799,7 +739,7 @@ struct PremiumScholarshipCard: View {
                         .font(.caption.bold())
                         .foregroundStyle(.white)
                         .frame(width: 32, height: 32)
-                        .background(Theme.blueGradient)
+                        .background(Theme.orangeGradient)
                         .clipShape(Circle())
                 }
             }
@@ -833,7 +773,7 @@ struct ReliabilityBadge: View {
         .foregroundStyle(
             score >= 70
                 ? Theme.green
-                : Theme.blueSoft
+                : Theme.orangeSoft
         )
         .accessibilityLabel("\(label), score \(score) out of 100")
     }
@@ -865,7 +805,7 @@ private struct InstitutionBadge: View {
             .clipShape(RoundedRectangle(cornerRadius: 11))
             .overlay(
                 RoundedRectangle(cornerRadius: 11)
-                    .stroke(Theme.blue.opacity(0.25))
+                    .stroke(Theme.orange.opacity(0.25))
             )
     }
 }
