@@ -11,6 +11,8 @@ struct SavedScholarshipItem: Identifiable, Decodable {
     let resultAt: String?
     let documentsComplete: Bool
     let reminderEnabled: Bool
+    let applicationReference: String?
+    let portalLastCheckedAt: String?
     let scholarship: Scholarship
 
     var id: UUID {
@@ -28,6 +30,8 @@ struct SavedScholarshipItem: Identifiable, Decodable {
         case resultAt = "result_at"
         case documentsComplete = "documents_complete"
         case reminderEnabled = "reminder_enabled"
+        case applicationReference = "application_reference"
+        case portalLastCheckedAt = "portal_last_checked_at"
         case scholarship = "scholarships"
     }
 }
