@@ -585,6 +585,22 @@ struct AddScholarshipView: View {
         )
 
         do {
+            let duplicates = try await DataService
+                .scholarshipDuplicateCandidates(
+                    title: title,
+                    provider: provider,
+                    country: country
+                )
+
+            if let duplicate = duplicates.first,
+               duplicate.similarityScore >= 90 {
+                error =
+                    "Possible duplicate: \(duplicate.title) · " +
+                    "\(duplicate.provider). Please review the existing " +
+                    "record before publishing."
+                return
+            }
+
             try await supabase
                 .from("scholarships")
                 .insert(row)
