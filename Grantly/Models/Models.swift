@@ -649,6 +649,30 @@ struct ScholarshipSourceCandidate: Decodable, Identifiable {
     }
 }
 
+struct ScholarshipDraftReadiness: Decodable {
+    let scholarshipId: UUID
+    let ready: Bool
+    let blockers: [String]
+    let warnings: [String]
+    let linkStatus: String?
+    let lastSuccessfulCheckAt: String?
+    let deadlineCandidate: String?
+    let deadlineConfidence: Int?
+    let cycleCandidate: String?
+    let cycleConfidence: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case ready, blockers, warnings
+        case scholarshipId = "scholarship_id"
+        case linkStatus = "link_status"
+        case lastSuccessfulCheckAt = "last_successful_check_at"
+        case deadlineCandidate = "deadline_candidate"
+        case deadlineConfidence = "deadline_confidence"
+        case cycleCandidate = "cycle_candidate"
+        case cycleConfidence = "cycle_confidence"
+    }
+}
+
 struct ScholarshipAuditObservation: Decodable, Identifiable {
     let id: Int
     let scholarshipId: UUID
