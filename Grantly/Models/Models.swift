@@ -123,6 +123,8 @@ struct Scholarship: Codable, Identifiable, Hashable {
     var cycleConfidence: Int?
     var sourceChangedAt: String?
     var nextCheckAt: String?
+    var sourceAuthorityScore: Int?
+    var reliabilityScore: Int?
 
     enum CodingKeys: String, CodingKey {
         case id, slug, title, provider, university, country, region, fields, stipend, airfare, accommodation, status, deadline
@@ -155,6 +157,8 @@ struct Scholarship: Codable, Identifiable, Hashable {
         case cycleConfidence = "cycle_confidence"
         case sourceChangedAt = "source_changed_at"
         case nextCheckAt = "next_check_at"
+        case sourceAuthorityScore = "source_authority_score"
+        case reliabilityScore = "reliability_score"
     }
 }
 
