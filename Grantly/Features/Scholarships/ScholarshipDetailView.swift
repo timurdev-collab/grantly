@@ -50,7 +50,7 @@ struct ScholarshipDetailView: View {
                     Task { await toggleSaved() }
                 } label: {
                     Image(systemName: saved ? "bookmark.fill" : "bookmark")
-                        .foregroundStyle(saved ? Theme.blueSoft : .white)
+                        .foregroundStyle(saved ? Theme.orangeSoft : .white)
                 }
                 .disabled(busy)
             }
@@ -123,7 +123,7 @@ struct ScholarshipDetailView: View {
                         Text("SCHOLARSHIP")
                             .font(.system(size: 9, weight: .bold))
                             .tracking(1.6)
-                            .foregroundStyle(Theme.blueSoft)
+                            .foregroundStyle(Theme.orangeSoft)
 
                         Text(scholarship.title)
                             .font(.system(size: 28, weight: .bold))
@@ -173,7 +173,7 @@ struct ScholarshipDetailView: View {
 
                         Text(deadline)
                             .font(.caption.bold())
-                            .foregroundStyle(Theme.blueSoft)
+                            .foregroundStyle(Theme.orangeSoft)
                     }
                 }
             }
@@ -288,7 +288,7 @@ struct ScholarshipDetailView: View {
                 }
 
                 DetailLine(label: "Country", value: scholarship.country)
-                DetailLine(label: "Deadline", value: scholarship.deadline ?? "Varies / to be announced")
+                DetailLine(label: "Deadline", value: scholarship.deadline ?? "Deadline not yet confirmed")
                 DetailLine(label: "Funding", value: scholarship.fundingType)
                 DetailLine(label: "Source", value: verified ? "Verified" : "Curated")
 
@@ -370,7 +370,7 @@ struct ScholarshipDetailView: View {
                             .font(.caption)
                             .foregroundStyle(.white.opacity(0.52))
 
-                        Text(scholarship.deadline ?? "Varies / to be announced")
+                        Text(scholarship.deadline ?? "Deadline not yet confirmed")
                             .font(.headline.bold())
                             .foregroundStyle(.white)
                     }
@@ -379,7 +379,7 @@ struct ScholarshipDetailView: View {
 
                     Image(systemName: "calendar")
                         .font(.headline)
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                         .frame(width: 42, height: 42)
                         .background(Theme.surfaceRaised)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -410,7 +410,7 @@ struct ScholarshipDetailView: View {
                         Link(destination: websiteURL) {
                             Label("Provider", systemImage: "building.columns")
                                 .font(.caption2.weight(.semibold))
-                                .foregroundStyle(Theme.blueSoft)
+                                .foregroundStyle(Theme.orangeSoft)
                         }
                     }
                 }
@@ -439,7 +439,7 @@ struct ScholarshipDetailView: View {
                             systemImage: "rectangle.stack.badge.plus"
                         )
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                     }
                     .buttonStyle(.plain)
                 }
@@ -456,7 +456,7 @@ struct ScholarshipDetailView: View {
                     .font(.headline)
                     .frame(width: 52, height: 52)
                     .background(Theme.surfaceRaised)
-                    .foregroundStyle(saved ? Theme.blueSoft : .white)
+                    .foregroundStyle(saved ? Theme.orangeSoft : .white)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
             }
             .buttonStyle(.plain)
@@ -472,7 +472,7 @@ struct ScholarshipDetailView: View {
                 .font(.headline.weight(.semibold))
                 .frame(maxWidth: .infinity)
                 .frame(height: 52)
-                .background(Theme.blueGradient)
+                .background(Theme.orangeGradient)
                 .foregroundStyle(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 15))
             }
@@ -565,7 +565,7 @@ private struct DetailSection<Content: View>: View {
 
                 Image(systemName: icon)
                     .font(.caption.bold())
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
                     .frame(width: 32, height: 32)
                     .background(Theme.surfaceRaised)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -591,7 +591,7 @@ private struct GuidanceRow: View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: icon)
                 .font(.caption)
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
                 .frame(width: 22)
 
             Text(text)
