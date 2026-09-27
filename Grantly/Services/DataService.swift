@@ -2,6 +2,73 @@ import Foundation
 import Supabase
 
 enum DataService {
+    static func trackProductEvent(
+        _ eventName: String,
+        scholarshipId: UUID? = nil,
+        properties: [String: String] = [:]
+    ) async throws {
+        let userId = try? await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let user_id: UUID?
+            let event_name: String
+            let scholarship_id: UUID?
+            let properties: [String: String]
+        }
+
+        try await supabase
+            .from("product_events")
+            .insert(
+                Row(
+                    user_id: userId,
+                    event_name: eventName,
+                    scholarship_id: scholarshipId,
+                    properties: properties
+                )
+            )
+            .execute()
+    }
+
+    static func adminAnalyticsSummary(
+        days: Int = 30
+    ) async throws -> AdminAnalyticsSummary {
+        struct Params: Encodable {
+            let p_days: Int
+        }
+
+        return try await supabase
+            .rpc(
+                "admin_analytics_summary",
+                params: Params(p_days: days)
+            )
+            .execute()
+            .value
+    }
+
+    static func scholarshipDuplicateCandidates(
+        title: String,
+        provider: String,
+        country: String
+    ) async throws -> [ScholarshipDuplicateCandidate] {
+        struct Params: Encodable {
+            let p_title: String
+            let p_provider: String
+            let p_country: String
+        }
+
+        return try await supabase
+            .rpc(
+                "find_scholarship_duplicates",
+                params: Params(
+                    p_title: title,
+                    p_provider: provider,
+                    p_country: country
+                )
+            )
+            .execute()
+            .value
+    }
+
     static func currentProfile(userId: UUID) async throws -> StudentProfile {
         try await supabase
             .from("student_profiles")
@@ -111,6 +178,11 @@ enum DataService {
                 .eq("scholarship_id", value: scholarshipId.uuidString)
                 .execute()
         }
+
+        try? await trackProductEvent(
+            saved ? "scholarship_save" : "scholarship_unsave",
+            scholarshipId: scholarshipId
+        )
     }
 
     static func savedScholarshipItems() async throws -> [SavedScholarshipItem] {
@@ -155,6 +227,12 @@ enum DataService {
                 )
             )
             .execute()
+
+        try? await trackProductEvent(
+            "application_status_change",
+            scholarshipId: scholarshipId,
+            properties: ["status": status]
+        )
     }
 
     static func applicationTasks(
