@@ -490,7 +490,7 @@ as $$
           where bc.value = lower(s.country)
         ) then 5 else 0 end
         + case when exists (
-          select 1 from behavior_fing bf
+          select 1 from behavior_funding bf
           where bf.value = lower(s.funding_type)
         ) then 4 else 0 end
         + case when exists (
