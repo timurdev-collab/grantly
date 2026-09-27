@@ -66,7 +66,7 @@ function deadlineCandidate(text: string) {
     /(?:deadline|apply by|application deadline|closing date|applications close|closes)[^.!?]{0,120}?(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})/gi
   ];
 
-  const candidates: Date[] = [];
+  const found = new Map<string, string>();
 
   for (const pattern of patterns) {
     for (const match of clean.matchAll(pattern)) {
@@ -78,46 +78,68 @@ function deadlineCandidate(text: string) {
         const day = Number(match[3]);
         date = new Date(Date.UTC(year, month - 1, day));
       } else {
-        let day: number;
-        let monthName: string;
-        let year: number;
-
-        if (/^\d/.test(match[1])) {
-          day = Number(match[1]);
-          monthName = match[2];
-          year = Number(match[3]);
-        } else {
-          monthName = match[1];
-          day = Number(match[2]);
-          year = Number(match[3]);
-        }
-
+        const numericFirst = /^\d/.test(match[1]);
+        const day = numericFirst ? Number(match[1]) : Number(match[2]);
+        const monthName = numericFirst ? match[2] : match[1];
+        const year = Number(match[3]);
         const month = months[monthName.toLowerCase()];
         date = new Date(Date.UTC(year, month - 1, day));
       }
 
-      if (date && !Number.isNaN(date.getTime())) {
-        candidates.push(date);
+      if (!date || Number.isNaN(date.getTime())) continue;
+
+      const key = date.toISOString().slice(0, 10);
+      const index = match.index ?? 0;
+      const evidence = clean.slice(
+        Math.max(0, index - 70),
+        Math.min(clean.length, index + match[0].length + 90)
+      ).trim();
+
+      if (!found.has(key)) {
+        found.set(key, evidence);
       }
     }
   }
 
-  if (!candidates.length) {
-    return { date: null, confidence: null };
+  const today = Date.now() - 86400000;
+  const future = [...found.entries()]
+    .map(([date, evidence]) => ({
+      date,
+      evidence,
+      time: new Date(`${date}T00:00:00Z`).getTime()
+    }))
+    .filter((item) => item.time >= today)
+    .sort((a, b) => a.time - b.time);
+
+  if (!future.length) {
+    return {
+      date: null,
+      confidence: null,
+      count: found.size,
+      ambiguous: false,
+      evidence: [...found.values()].slice(0, 3).join(" | ") || null
+    };
   }
 
-  const today = Date.now() - 86400000;
-  const future = candidates
-    .filter((date) => date.getTime() >= today)
-    .sort((a, b) => a.getTime() - b.getTime());
-
-  const selected = future[0] ?? candidates.sort(
-    (a, b) => b.getTime() - a.getTime()
-  )[0];
+  if (future.length > 1) {
+    return {
+      date: null,
+      confidence: null,
+      count: future.length,
+      ambiguous: true,
+      evidence: future
+        .slice(0, 3)
+        .map((item) => `${item.date}: ${item.evidence}`)
+        .join(" | ")
+    };
+  }
 
   return {
-    date: selected.toISOString().slice(0, 10),
-    confidence: future.length ? 92 : 70
+    date: future[0].date,
+    confidence: 92,
+    count: 1,
+    ambiguous: false,
+    evidence: future[0].evidence
   };
 }
 
@@ -337,6 +359,9 @@ async function audit(row: Scholarship) {
       audit_error: null,
       deadline_candidate: deadline.date,
       deadline_confidence: deadline.confidence,
+      deadline_candidate_count: deadline.count,
+      deadline_ambiguous: deadline.ambiguous,
+      deadline_evidence: deadline.evidence,
       deadline_verification_status: deadlineState,
       cycle_candidate: cycle.value,
       cycle_confidence: cycle.confidence,
@@ -375,6 +400,9 @@ async function audit(row: Scholarship) {
       audit_error: message,
       deadline_candidate: null,
       deadline_confidence: null,
+      deadline_candidate_count: 0,
+      deadline_ambiguous: false,
+      deadline_evidence: null,
       deadline_verification_status: row.deadline
         ? deadlineVerificationStatus(row.deadline, null)
         : "unconfirmed",
@@ -540,6 +568,9 @@ Deno.serve(async (req) => {
         audit_error: result.audit_error,
         deadline_candidate: result.deadline_candidate,
         deadline_confidence: result.deadline_confidence,
+        deadline_candidate_count: result.deadline_candidate_count,
+        deadline_ambiguous: result.deadline_ambiguous,
+        deadline_evidence: result.deadline_evidence,
         deadline_verification_status:
           result.deadline_verification_status,
         cycle_candidate: result.cycle_candidate,
@@ -671,6 +702,9 @@ Deno.serve(async (req) => {
     ).length,
     deadlineChanges: results.filter(
       (x) => x.deadline_verification_status === "changed"
+    ).length,
+    ambiguousDeadlines: results.filter(
+      (x) => x.deadline_ambiguous
     ).length,
     detectedCycles: results.filter(
       (x) => x.cycle_candidate
