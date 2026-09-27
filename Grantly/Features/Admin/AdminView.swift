@@ -3,6 +3,8 @@ import SwiftUI
 struct AdminView: View {
     @State private var scholarships: [Scholarship] = []
     @State private var reports: [SafetyReport] = []
+    @State private var detectedChanges: [ScholarshipDetectedChange] = []
+    @State private var healthIssues: [CatalogHealthIssue] = []
     @State private var analytics: AdminAnalyticsSummary?
     @State private var systemHealth: AdminSystemHealth?
     @State private var actionLogs: [AdminActionLog] = []
@@ -38,6 +40,34 @@ struct AdminView: View {
 
     private var archivedCount: Int {
         scholarships.filter { $0.status == "archived" }.count
+    }
+
+    private var pendingDeadlineChanges: Int {
+        detectedChanges.filter { $0.fieldName == "deadline" }.count
+    }
+
+    private var pendingCycleChanges: Int {
+        detectedChanges.filter {
+            $0.fieldName == "application_cycle" ||
+            $0.fieldName == "cycle_status"
+        }.count
+    }
+
+    private var expiredIssueCount: Int {
+        healthIssues.filter { $0.issueType == "expired_deadline" }.count
+    }
+
+    private var brokenLinkIssueCount: Int {
+        healthIssues.filter { $0.issueType == "dead_link" }.count
+    }
+
+    private var staleIssueCount: Int {
+        healthIssues.filter { $0.issueType == "stale_source_check" }.count
+    }
+
+    private func scholarshipTitle(for id: UUID) -> String {
+        scholarships.first(where: { $0.id == id })?.title
+            ?? "Scholarship"
     }
 
     private var needsReview: [Scholarship] {
