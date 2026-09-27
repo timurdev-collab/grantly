@@ -1,15 +1,17 @@
 import SwiftUI
 
 enum Theme {
-    // Grantly reference direction: midnight navy, electric blue and clean white.
+    // Grantly direction: deep navy foundation with warm orange accents.
     static let navyDeep = Color(red: 0.004, green: 0.027, blue: 0.055)
     static let navy = Color(red: 0.010, green: 0.055, blue: 0.105)
-    static let surface = Color(red: 0.030, green: 0.095, blue: 0.165)
-    static let surfaceRaised = Color(red: 0.055, green: 0.125, blue: 0.205)
+    static let surface = Color(red: 0.026, green: 0.083, blue: 0.145)
+    static let surfaceRaised = Color(red: 0.045, green: 0.115, blue: 0.185)
 
-    static let blue = Color(red: 0.025, green: 0.54, blue: 1.00)
-    static let blueSoft = Color(red: 0.18, green: 0.68, blue: 1.00)
-    static let sky = Color(red: 0.30, green: 0.76, blue: 1.00)
+    static let blue = Color(red: 0.08, green: 0.39, blue: 0.72)
+    static let blueSoft = Color(red: 0.34, green: 0.58, blue: 0.82)
+    static let sky = Color(red: 0.40, green: 0.66, blue: 0.88)
+    static let orange = Color(red: 1.00, green: 0.47, blue: 0.12)
+    static let orangeSoft = Color(red: 1.00, green: 0.67, blue: 0.34)
     static let green = Color(red: 0.16, green: 0.82, blue: 0.55)
     static let danger = Color(red: 1.00, green: 0.28, blue: 0.34)
 
@@ -17,14 +19,11 @@ enum Theme {
     static let muted = Color.white.opacity(0.62)
 
     // Compatibility aliases used by the existing feature screens.
-    // The old "orange/brass" names now resolve to the blue reference accent.
     static let ink = Color.white
     static let parchment = Color.white
     static let ivory = navyDeep
-    static let orange = blue
-    static let orangeSoft = blueSoft
-    static let brass = blue
-    static let brassSoft = blueSoft
+    static let brass = orange
+    static let brassSoft = orangeSoft
     static let oxblood = danger
     static let forest = green
     static let sage = green.opacity(0.16)
@@ -43,7 +42,7 @@ enum Theme {
     )
 
     static let orangeGradient = LinearGradient(
-        colors: [blueSoft, blue],
+        colors: [orangeSoft, orange],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
