@@ -117,6 +117,12 @@ struct Scholarship: Codable, Identifiable, Hashable {
     var finalUrl: String?
     var deadlineCandidate: String?
     var deadlineConfidence: Int?
+    var deadlineVerificationStatus: String?
+    var cycleStatus: String?
+    var cycleCandidate: String?
+    var cycleConfidence: Int?
+    var sourceChangedAt: String?
+    var nextCheckAt: String?
 
     enum CodingKeys: String, CodingKey {
         case id, slug, title, provider, university, country, region, fields, stipend, airfare, accommodation, status, deadline
@@ -143,6 +149,12 @@ struct Scholarship: Codable, Identifiable, Hashable {
         case finalUrl = "final_url"
         case deadlineCandidate = "deadline_candidate"
         case deadlineConfidence = "deadline_confidence"
+        case deadlineVerificationStatus = "deadline_verification_status"
+        case cycleStatus = "cycle_status"
+        case cycleCandidate = "cycle_candidate"
+        case cycleConfidence = "cycle_confidence"
+        case sourceChangedAt = "source_changed_at"
+        case nextCheckAt = "next_check_at"
     }
 }
 
