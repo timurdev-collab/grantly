@@ -53,7 +53,7 @@ begin
         array(select jsonb_array_elements_text(p->'eligible_nationalities')),
         nullif(p->>'deadline','')::date,
         p->>'official_url',
-        case when p->>'status' = 'archived' then 'archived' else 'draft' end,
+        case when p->>'status' = 'archived' then 'archived' else 'published' end,
         p->>'description',
         p->>'source_label',
         p->>'source_url',
