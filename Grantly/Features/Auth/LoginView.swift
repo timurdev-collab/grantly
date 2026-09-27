@@ -9,6 +9,14 @@ struct LoginView: View {
     @State private var busy = false
     @State private var showingForgotPassword = false
 
+    private var normalizedEmail: String {
+        AuthValidation.normalizedEmail(email)
+    }
+
+    private var emailIsValid: Bool {
+        AuthValidation.isValidEmail(email)
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -18,6 +26,12 @@ struct LoginView: View {
                         .keyboardType(.emailAddress)
 
                     SecureField("Password", text: $password)
+
+                    if !email.isEmpty && !emailIsValid {
+                        Text("Enter a valid email address.")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    }
                 }
 
                 if let error = auth.errorMessage {
@@ -33,7 +47,7 @@ struct LoginView: View {
                         Task {
                             busy = true
                             if await auth.signIn(
-                                email: email.trimmingCharacters(in: .whitespacesAndNewlines),
+                                email: normalizedEmail,
                                 password: password
                             ) {
                                 dismiss()
@@ -42,7 +56,7 @@ struct LoginView: View {
                         }
                     }
                     .disabled(
-                        email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+                        !emailIsValid ||
                         password.isEmpty ||
                         busy
                     )
@@ -71,6 +85,14 @@ private struct ForgotPasswordView: View {
     @State private var email: String
     @State private var busy = false
     @State private var sent = false
+
+    private var normalizedEmail: String {
+        AuthValidation.normalizedEmail(email)
+    }
+
+    private var emailIsValid: Bool {
+        AuthValidation.isValidEmail(email)
+    }
 
     init(initialEmail: String) {
         _email = State(initialValue: initialEmail)
@@ -104,6 +126,12 @@ private struct ForgotPasswordView: View {
                         TextField("Email", text: $email)
                             .textInputAutocapitalization(.never)
                             .keyboardType(.emailAddress)
+
+                        if !email.isEmpty && !emailIsValid {
+                            Text("Enter a valid email address.")
+                                .font(.caption)
+                                .foregroundStyle(.orange)
+                        }
                     }
 
                     if let error = auth.errorMessage {
@@ -119,13 +147,13 @@ private struct ForgotPasswordView: View {
                             Task {
                                 busy = true
                                 sent = await auth.requestPasswordReset(
-                                    email: email.trimmingCharacters(in: .whitespacesAndNewlines)
+                                    email: normalizedEmail
                                 )
                                 busy = false
                             }
                         }
                         .disabled(
-                            email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+                            !emailIsValid ||
                             busy
                         )
                     }
