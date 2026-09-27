@@ -19,3 +19,15 @@ xcodegen generate
 ```
 
 CI regenerates the project automatically, so `project.yml` is the source of truth for release settings.
+
+
+## Active Supabase environments
+
+- Staging project ref: `cbzriyarlvpmtfbjgede`
+- Staging URL: `https://cbzriyarlvpmtfbjgede.supabase.co`
+- Production project ref: `bvcabjwriszghmizbwji`
+- Production URL: `https://bvcabjwriszghmizbwji.supabase.co`
+
+Debug builds now use the staging project. Release builds continue to use production.
+
+The staging project has the core schema, seed catalog and deployed Edge Functions for account deletion, scholarship auditing, university media enrichment, APNs dispatch and scholarship imports. Production-only credentials such as APNs private keys must be configured separately in Supabase secrets and are intentionally not stored in this repository.
