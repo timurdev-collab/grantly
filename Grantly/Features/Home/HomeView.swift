@@ -311,16 +311,27 @@ struct HomeView: View {
                     ($1.deadline ?? "9999-12-31")
                 }
 
-            guard let profile, !profileNeedsSetup else {
+            guard profile != nil, !profileNeedsSetup else {
                 matches = []
                 return
             }
 
-            matches = Array(
-                MatchingService
-                    .rank(profile: profile, scholarships: scholarships)
-                    .prefix(8)
-            )
+            do {
+                matches = try await ScholarshipSearchService
+                    .matches(limit: 8)
+                    .matches
+            } catch {
+                guard let profile else {
+                    matches = []
+                    return
+                }
+
+                matches = Array(
+                    MatchingService
+                        .rank(profile: profile, scholarships: scholarships)
+                        .prefix(8)
+                )
+            }
         } catch {
             matches = []
             upcoming = []
