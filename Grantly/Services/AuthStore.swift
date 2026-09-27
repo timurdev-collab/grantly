@@ -39,7 +39,7 @@ final class AuthStore {
                 needsPasswordReset = true
             }
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = friendlyMessage(for: error)
         }
     }
 
@@ -53,7 +53,7 @@ final class AuthStore {
             userId = session.user.id
             return true
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = friendlyMessage(for: error)
             return false
         }
     }
@@ -69,7 +69,7 @@ final class AuthStore {
             )
             return true
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = friendlyMessage(for: error)
             return false
         }
     }
@@ -85,7 +85,7 @@ final class AuthStore {
             UserDefaults.standard.set(true, forKey: recoveryFlagKey)
             return true
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = friendlyMessage(for: error)
             return false
         }
     }
@@ -101,7 +101,7 @@ final class AuthStore {
             needsPasswordReset = false
             return true
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = friendlyMessage(for: error)
             return false
         }
     }
@@ -133,7 +133,7 @@ final class AuthStore {
             userId = nil
             return true
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = friendlyMessage(for: error)
             return false
         }
     }
@@ -142,11 +142,44 @@ final class AuthStore {
         do {
             try await supabase.auth.signOut()
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = friendlyMessage(for: error)
         }
 
         UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
         needsPasswordReset = false
         userId = nil
+    }
+
+    private func friendlyMessage(for error: Error) -> String {
+        let message = error.localizedDescription.lowercased()
+
+        if message.contains("invalid login credentials") {
+            return "The email or password is incorrect."
+        }
+
+        if message.contains("email not confirmed") {
+            return "Confirm your email address before signing in."
+        }
+
+        if message.contains("user already registered") {
+            return "An account already exists for this email."
+        }
+
+        if message.contains("network") ||
+            message.contains("offline") ||
+            message.contains("internet") {
+            return "Check your internet connection and try again."
+        }
+
+        if message.contains("rate limit") ||
+            message.contains("too many requests") {
+            return "Too many attempts. Please wait a moment and try again."
+        }
+
+        if message.contains("weak password") {
+            return "Choose a stronger password and try again."
+        }
+
+        return "Something went wrong. Please try again."
     }
 }
