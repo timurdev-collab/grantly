@@ -208,11 +208,11 @@ enum DataService {
 
     static func updateScholarshipDraft(
         id: UUID,
-        patch: [String: AnyEncodable]
+        patch: ScholarshipDraftPatch
     ) async throws -> Scholarship {
         struct Params: Encodable {
             let p_scholarship_id: UUID
-            let p_patch: [String: AnyEncodable]
+            let p_patch: ScholarshipDraftPatch
         }
 
         return try await supabase
