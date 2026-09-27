@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct ScholarshipDetailView: View {
-    @Environment(\.openURL) private var openURL
-
     let scholarship: Scholarship
     let match: ScholarshipMatch?
 
@@ -11,6 +9,7 @@ struct ScholarshipDetailView: View {
     @State private var errorMessage: String?
     @State private var selectedTab = "Overview"
     @State private var trackedView = false
+    @State private var showingApplicationWorkspace = false
 
     private let tabs = ["Overview", "Eligibility", "Benefits", "Application"]
 
@@ -58,6 +57,9 @@ struct ScholarshipDetailView: View {
         }
         .safeAreaInset(edge: .bottom) {
             bottomAction
+        }
+        .sheet(isPresented: $showingApplicationWorkspace) {
+            ApplicationWorkspaceView(scholarship: scholarship)
         }
         .task {
             await loadSaved()
@@ -393,6 +395,35 @@ struct ScholarshipDetailView: View {
                         }
                     }
                 }
+
+                Divider()
+                    .overlay(.white.opacity(0.07))
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Label(
+                        "Apply and track in Grantly",
+                        systemImage: "checklist.checked"
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.white)
+
+                    Text("Open the official form inside Grantly, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status.")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.58))
+                        .lineSpacing(3)
+
+                    Button {
+                        showingApplicationWorkspace = true
+                    } label: {
+                        Label(
+                            "Open application workspace",
+                            systemImage: "rectangle.stack.badge.plus"
+                        )
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.blueSoft)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
         }
     }
@@ -412,34 +443,21 @@ struct ScholarshipDetailView: View {
             .buttonStyle(.plain)
             .disabled(busy)
 
-            if let url = URL(string: scholarship.officialUrl) {
-                Button {
-                    Task {
-                        try? await DataService.trackProductEvent(
-                            "official_site_click",
-                            scholarshipId: scholarship.id,
-                            properties: [
-                                "provider": scholarship.provider
-                            ]
-                        )
-
-                        await MainActor.run {
-                            openURL(url)
-                        }
-                    }
-                } label: {
-                    HStack(spacing: 8) {
-                        Text("Apply on official site")
-                        Image(systemName: "arrow.up.right")
-                    }
-                    .font(.headline.weight(.semibold))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 52)
-                    .background(Theme.blueGradient)
-                    .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
+            Button {
+                showingApplicationWorkspace = true
+            } label: {
+                HStack(spacing: 8) {
+                    Text("Apply & track in Grantly")
+                    Image(systemName: "arrow.up.right.square")
                 }
-                .buttonStyle(.plain)
+                .font(.headline.weight(.semibold))
+                .frame(maxWidth: .infinity)
+                .frame(height: 52)
+                .background(Theme.blueGradient)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 15))
+            }
+            .buttonStyle(.plain)
             }
         }
         .padding(.horizontal)
