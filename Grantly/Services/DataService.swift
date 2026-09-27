@@ -190,6 +190,59 @@ enum DataService {
             .execute()
     }
 
+    static func scholarshipDraftReadiness(
+        id: UUID
+    ) async throws -> ScholarshipDraftReadiness {
+        struct Params: Encodable {
+            let p_scholarship_id: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "scholarship_draft_readiness",
+                params: Params(p_scholarship_id: id)
+            )
+            .execute()
+            .value
+    }
+
+    static func updateScholarshipDraft(
+        id: UUID,
+        patch: [String: AnyEncodable]
+    ) async throws -> Scholarship {
+        struct Params: Encodable {
+            let p_scholarship_id: UUID
+            let p_patch: [String: AnyEncodable]
+        }
+
+        return try await supabase
+            .rpc(
+                "update_scholarship_draft",
+                params: Params(
+                    p_scholarship_id: id,
+                    p_patch: patch
+                )
+            )
+            .execute()
+            .value
+    }
+
+    static func publishScholarshipDraft(
+        id: UUID
+    ) async throws -> Scholarship {
+        struct Params: Encodable {
+            let p_scholarship_id: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "publish_scholarship_draft",
+                params: Params(p_scholarship_id: id)
+            )
+            .execute()
+            .value
+    }
+
     static func scholarshipDuplicateCandidates(
         title: String,
         provider: String,
