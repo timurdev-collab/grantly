@@ -44,14 +44,14 @@ targets:
         CURRENT_PROJECT_VERSION: 1
         DEVELOPMENT_TEAM: M9L42LN3CG
         CODE_SIGN_STYLE: Automatic
-        CODE_SIGN_ENTITLEMENTS: Grantly/Grantly.entitlements
       configs:
         Debug:
-          APS_ENVIRONMENT: development
+          CODE_SIGN_ENTITLEMENTS: Grantly/GrantlyDebug.entitlements
           APP_ENVIRONMENT: staging
           SUPABASE_URL: https://cbzriyarlvpmtfbjgede.supabase.co
           SUPABASE_PUBLISHABLE_KEY: sb_publishable_7DtXndOsfZ5WmTZs0RWG8w_EIQ3xZSe
         Release:
+          CODE_SIGN_ENTITLEMENTS: Grantly/Grantly.entitlements
           APS_ENVIRONMENT: production
           APP_ENVIRONMENT: production
           SUPABASE_URL: https://bvcabjwriszghmizbwji.supabase.co
