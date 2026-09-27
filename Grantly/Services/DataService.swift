@@ -420,6 +420,13 @@ enum DataService {
             .value
     }
 
+    static func conversationSummaries() async throws -> [ConversationSummaryRow] {
+        try await supabase
+            .rpc("get_my_conversation_summaries")
+            .execute()
+            .value
+    }
+
     static func conversationMemberships(userId: UUID) async throws -> [ConversationMember] {
         try await supabase
             .from("conversation_members")
@@ -438,14 +445,47 @@ enum DataService {
             .value
     }
 
-    static func messages(conversationId: UUID) async throws -> [Message] {
-        try await supabase
-            .from("messages")
-            .select()
-            .eq("conversation_id", value: conversationId.uuidString)
-            .order("created_at", ascending: true)
+    static func messagesPage(
+        conversationId: UUID,
+        before: String? = nil,
+        limit: Int = 40
+    ) async throws -> [Message] {
+        struct Params: Encodable {
+            let p_conversation_id: UUID
+            let p_before: String?
+            let p_limit: Int
+        }
+
+        let rows: [Message] = try await supabase
+            .rpc(
+                "get_messages_page",
+                params: Params(
+                    p_conversation_id: conversationId,
+                    p_before: before,
+                    p_limit: limit
+                )
+            )
             .execute()
             .value
+
+        return rows.reversed()
+    }
+
+    static func markConversationRead(
+        conversationId: UUID
+    ) async throws {
+        struct Params: Encodable {
+            let p_conversation_id: UUID
+        }
+
+        try await supabase
+            .rpc(
+                "mark_conversation_read",
+                params: Params(
+                    p_conversation_id: conversationId
+                )
+            )
+            .execute()
     }
 
     static func sendMessage(conversationId: UUID, senderId: UUID, body: String) async throws {
