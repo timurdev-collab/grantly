@@ -7,93 +7,83 @@ struct HomeView: View {
     @State private var matches: [ScholarshipMatch] = []
     @State private var upcoming: [Scholarship] = []
     @State private var loading = true
+    @State private var query = ""
 
     private var profileNeedsSetup: Bool {
         guard let profile else { return true }
-
-        let required = [
-            profile.fullName,
-            profile.nationality,
-            profile.intendedMajor,
-            profile.degreeLevel
-        ]
-
+        let required = [profile.fullName, profile.nationality, profile.intendedMajor, profile.degreeLevel]
         return required.contains {
-            ($0 ?? "")
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .isEmpty
+            ($0 ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         }
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 26) {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 18) {
                 brandHeader
+                SearchField(text: $query, prompt: "Search scholarships, countries, universities...")
                 homeHero
+                categoryRow
+
+                HStack {
+                    Text("Featured scholarships")
+                        .font(.title3.bold())
+                        .foregroundStyle(.white)
+                    Spacer()
+                    Text("See all")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.blue)
+                }
 
                 if profileNeedsSetup {
                     ProfileSetupCard(openProfile: openProfile)
-                } else if let profile {
-                    ProfileSnapshot(profile: profile)
-                }
-
-                AcademicSectionHeader(
-                    eyebrow: "Personal intelligence",
-                    title: profileNeedsSetup
-                        ? "Build your profile"
-                        : "Your strongest matches",
-                    trailing: profileNeedsSetup ? nil : "Top \(min(matches.count, 4))"
-                )
-
-                if profileNeedsSetup {
-                    Text("Complete your academic profile once. Grantly will use it to rank opportunities around your degree, field and destination goals.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineSpacing(4)
                 } else if loading {
                     ProgressView()
-                        .tint(Theme.brass)
+                        .tint(Theme.blue)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 30)
-                } else if matches.isEmpty {
-                    EmptyState(
-                        icon: "sparkles",
-                        title: "No matches yet",
-                        text: "Try broadening your profile preferences."
-                    )
-                } else {
+                        .padding(.vertical, 28)
+                } else if !matches.isEmpty {
                     ForEach(matches.prefix(4)) { match in
                         NavigationLink {
-                            ScholarshipDetailView(
-                                scholarship: match.scholarship,
-                                match: match
-                            )
+                            ScholarshipDetailView(scholarship: match.scholarship, match: match)
                         } label: {
                             MatchCard(match: match)
                         }
                         .buttonStyle(.plain)
                     }
+                } else if !upcoming.isEmpty {
+                    ForEach(upcoming.prefix(4)) { scholarship in
+                        NavigationLink {
+                            ScholarshipDetailView(scholarship: scholarship, match: nil)
+                        } label: {
+                            FeaturedScholarshipCard(scholarship: scholarship)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                if let profile, !profileNeedsSetup {
+                    ProfileSnapshot(profile: profile)
                 }
 
                 if !upcoming.isEmpty {
-                    AcademicSectionHeader(
-                        eyebrow: "Calendar",
-                        title: "Deadlines to watch",
-                        trailing: "Verified only"
-                    )
+                    HStack {
+                        Text("Deadlines to watch")
+                            .font(.title3.bold())
+                            .foregroundStyle(.white)
+                        Spacer()
+                        Text("Verified")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.green)
+                    }
 
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
                             ForEach(upcoming.prefix(6)) { scholarship in
                                 NavigationLink {
-                                    ScholarshipDetailView(
-                                        scholarship: scholarship,
-                                        match: nil
-                                    )
+                                    ScholarshipDetailView(scholarship: scholarship, match: nil)
                                 } label: {
-                                    UpcomingDeadlineCard(
-                                        scholarship: scholarship
-                                    )
+                                    UpcomingDeadlineCard(scholarship: scholarship)
                                 }
                                 .buttonStyle(.plain)
                             }
@@ -103,100 +93,72 @@ struct HomeView: View {
             }
             .padding(.horizontal)
             .padding(.top, 10)
-            .padding(.bottom, 30)
+            .padding(.bottom, 28)
         }
         .background(Theme.pageBackground)
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            await load()
-        }
+        .task { await load() }
     }
 
     private var brandHeader: some View {
         HStack(spacing: 10) {
             GrantlyMonogram(size: 38)
-
             Text("Grantly")
-                .font(.system(size: 23, weight: .bold))
+                .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(.white)
-
             Spacer()
-
-            Image(systemName: "bell")
-                .foregroundStyle(.white.opacity(0.78))
-                .frame(width: 36, height: 36)
-                .background(Theme.surface)
-                .clipShape(Circle())
+            Image(systemName: "person.crop.circle.fill")
+                .font(.system(size: 27))
+                .foregroundStyle(Theme.blueSoft)
         }
     }
 
     private var homeHero: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            HStack {
-                GrantlyMonogram(size: 42, dark: false)
+        ZStack(alignment: .bottomLeading) {
+            UniversityPhoto(seed: "Grantly global campus", height: 180)
 
-                Spacer()
-
-                Text("YOUR GLOBAL FUTURE")
-                    .font(.system(size: 10, weight: .bold))
-                    .tracking(1.3)
-                    .foregroundStyle(Theme.orange)
-            }
-
-            Text(greeting)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.66))
-
-            Text("Your global future\nstarts here.")
-                .font(.system(size: 34, weight: .bold))
-                .tracking(-0.6)
-                .foregroundStyle(.white)
-
-            Text("Discover scholarships, track deadlines and move every application forward.")
-                .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.70))
-                .lineSpacing(4)
-
-            HStack(spacing: 8) {
-                HomeSignal(
-                    icon: "sparkles",
-                    label: profileNeedsSetup
-                        ? "Profile needed"
-                        : "\(matches.count) matches"
-                )
-
-                HomeSignal(
-                    icon: "calendar",
-                    label: "\(upcoming.count) deadlines"
-                )
-            }
-        }
-        .padding(20)
-        .background(
             LinearGradient(
-                colors: [Theme.surfaceRaised, Theme.navy],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
+                colors: [.clear, Theme.navyDeep.opacity(0.95)],
+                startPoint: .top,
+                endPoint: .bottom
             )
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 24))
+
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Your global")
+                Text("future starts here")
+            }
+            .font(.system(size: 26, weight: .bold))
+            .foregroundStyle(.white)
+            .padding(16)
+
+            HStack {
+                Spacer()
+                Image(systemName: "arrow.right")
+                    .font(.headline.bold())
+                    .foregroundStyle(.white)
+                    .frame(width: 42, height: 42)
+                    .background(Theme.blue)
+                    .clipShape(Circle())
+                    .padding(14)
+            }
+            .frame(maxHeight: .infinity, alignment: .bottom)
+        }
+        .frame(height: 180)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
-            RoundedRectangle(cornerRadius: 24)
-                .stroke(Theme.brass.opacity(0.18))
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(.white.opacity(0.06))
         )
     }
 
-    private var greeting: String {
-        let first = profile?.fullName?
-            .split(separator: " ")
-            .first
-            .map(String.init)
-
-        if let first, !first.isEmpty {
-            return "Good to see you, \(first)."
+    private var categoryRow: some View {
+        HStack(spacing: 10) {
+            HomeCategory(icon: "square.grid.2x2.fill", title: "All", active: true)
+            HomeCategory(icon: "graduationcap", title: "Undergrad")
+            HomeCategory(icon: "graduationcap.fill", title: "Master's")
+            HomeCategory(icon: "doc.text.magnifyingglass", title: "PhD")
+            HomeCategory(icon: "books.vertical", title: "Research")
         }
-
-        return "Welcome to Grantly."
     }
 
     @MainActor
@@ -205,16 +167,9 @@ struct HomeView: View {
 
         do {
             let scholarships = try await DataService.scholarships()
-
             upcoming = scholarships
-                .filter {
-                    $0.verificationStatus == "verified" &&
-                    $0.deadline != nil
-                }
-                .sorted {
-                    ($0.deadline ?? "9999-12-31") <
-                    ($1.deadline ?? "9999-12-31")
-                }
+                .filter { $0.verificationStatus == "verified" && $0.deadline != nil }
+                .sorted { ($0.deadline ?? "9999-12-31") < ($1.deadline ?? "9999-12-31") }
 
             guard let profile, !profileNeedsSetup else {
                 matches = []
@@ -222,12 +177,7 @@ struct HomeView: View {
             }
 
             matches = Array(
-                MatchingService
-                    .rank(
-                        profile: profile,
-                        scholarships: scholarships
-                    )
-                    .prefix(8)
+                MatchingService.rank(profile: profile, scholarships: scholarships).prefix(8)
             )
         } catch {
             matches = []
@@ -236,18 +186,68 @@ struct HomeView: View {
     }
 }
 
-private struct HomeSignal: View {
+private struct HomeCategory: View {
     let icon: String
-    let label: String
+    let title: String
+    var active: Bool = false
 
     var body: some View {
-        Label(label, systemImage: icon)
-            .font(.caption2.weight(.semibold))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 7)
-            .background(.white.opacity(0.08))
-            .foregroundStyle(.white.opacity(0.76))
-            .clipShape(Capsule())
+        VStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 15, weight: .semibold))
+                .frame(width: 42, height: 42)
+                .background(active ? Theme.blue : Theme.surface)
+                .foregroundStyle(active ? .white : .white.opacity(0.82))
+                .clipShape(RoundedRectangle(cornerRadius: 13))
+
+            Text(title)
+                .font(.system(size: 9, weight: .medium))
+                .foregroundStyle(active ? Theme.blueSoft : .white.opacity(0.65))
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+private struct FeaturedScholarshipCard: View {
+    let scholarship: Scholarship
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            UniversityPhoto(seed: scholarship.provider + scholarship.title, height: 150)
+
+            LinearGradient(
+                colors: [.clear, Theme.navyDeep.opacity(0.96)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            VStack(alignment: .leading, spacing: 6) {
+                FundingBadge(text: scholarship.fundingType)
+                Text(scholarship.title)
+                    .font(.headline.bold())
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+                Text(scholarship.country)
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.72))
+            }
+            .padding(14)
+
+            HStack {
+                Spacer()
+                Image(systemName: "arrow.right")
+                    .font(.caption.bold())
+                    .foregroundStyle(.white)
+                    .frame(width: 34, height: 34)
+                    .background(Theme.blue)
+                    .clipShape(Circle())
+                    .padding(12)
+            }
+            .frame(maxHeight: .infinity, alignment: .bottom)
+        }
+        .frame(height: 150)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
     }
 }
 
@@ -255,61 +255,35 @@ struct UpcomingDeadlineCard: View {
     let scholarship: Scholarship
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 13) {
-            HStack {
-                InstitutionMiniMark(name: scholarship.provider)
+        VStack(alignment: .leading, spacing: 0) {
+            UniversityPhoto(seed: scholarship.provider, height: 96)
 
-                Spacer()
+            VStack(alignment: .leading, spacing: 7) {
+                Text(scholarship.title)
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
 
-                TrustSeal(verified: true)
-            }
+                Text(scholarship.provider)
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.60))
+                    .lineLimit(1)
 
-            Text(scholarship.title)
-                .font(Theme.serifTitle(18, weight: .semibold))
-                .foregroundStyle(Theme.ink)
-                .lineLimit(3)
-
-            Text(scholarship.provider)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
-
-            Spacer(minLength: 2)
-
-            if let deadline = scholarship.deadline {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("NEXT DEADLINE")
-                        .font(.system(size: 9, weight: .bold))
-                        .tracking(1)
-                        .foregroundStyle(.secondary)
-
-                    Text(deadline)
-                        .font(.subheadline.weight(.bold))
-                        .foregroundStyle(Theme.oxblood)
+                if let deadline = scholarship.deadline {
+                    Label(deadline, systemImage: "calendar")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.blueSoft)
                 }
             }
+            .padding(12)
         }
-        .padding(15)
-        .frame(width: 230, height: 178, alignment: .leading)
-        .background(Theme.paperGradient)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .frame(width: 220)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.white.opacity(0.06))
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(.white.opacity(0.06))
         )
-    }
-}
-
-private struct InstitutionMiniMark: View {
-    let name: String
-
-    var body: some View {
-        Text(String(name.prefix(2)).uppercased())
-            .font(.caption2.bold())
-            .foregroundStyle(Theme.parchment)
-            .frame(width: 32, height: 32)
-            .background(Theme.navy)
-            .clipShape(RoundedRectangle(cornerRadius: 9))
     }
 }
 
@@ -318,28 +292,14 @@ struct ProfileSetupCard: View {
 
     var body: some View {
         PremiumCard {
-            VStack(alignment: .leading, spacing: 15) {
-                HStack {
-                    Image(systemName: "graduationcap.fill")
-                        .foregroundStyle(Theme.orange)
-                        .frame(width: 38, height: 38)
-                        .background(Theme.surfaceRaised)
-                        .clipShape(Circle())
+            VStack(alignment: .leading, spacing: 14) {
+                Label("Complete your student profile", systemImage: "graduationcap.fill")
+                    .font(.headline)
+                    .foregroundStyle(.white)
 
-                    Spacer()
-
-                    Text("01")
-                        .font(Theme.serifTitle(19))
-                        .foregroundStyle(Theme.orange)
-                }
-
-                Text("Start with your academic profile.")
-                    .font(Theme.serifTitle(23))
-                    .foregroundStyle(Theme.ink)
-
-                Text("Tell us your degree, field, GPA and destinations. Your matches become useful only when the profile reflects your real goals.")
+                Text("Add your degree, field, GPA and destinations to unlock personalised scholarship matches.")
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.62))
                     .lineSpacing(3)
 
                 Button("Build my profile", action: openProfile)
@@ -354,42 +314,15 @@ struct ProfileSnapshot: View {
 
     var body: some View {
         PremiumCard {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 5) {
-                        SectionEyebrow(text: "Academic profile")
-
-                        Text(profile.intendedMajor ?? "Choose a major")
-                            .font(Theme.serifTitle(22))
-                            .foregroundStyle(Theme.ink)
-                    }
-
-                    Spacer()
-
-                    Text(profile.degreeLevel ?? "Student")
-                        .font(.caption.bold())
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 7)
-                        .background(Theme.surfaceRaised)
-                        .foregroundStyle(.white)
-                        .clipShape(Capsule())
-                }
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Your profile")
+                    .font(.headline.bold())
+                    .foregroundStyle(.white)
 
                 HStack(spacing: 0) {
-                    SnapshotMetric(
-                        label: "GPA",
-                        value: profile.gpaValue.map { "\($0)" } ?? "—"
-                    )
-
-                    SnapshotMetric(
-                        label: "IELTS",
-                        value: profile.ielts.map { "\($0)" } ?? "—"
-                    )
-
-                    SnapshotMetric(
-                        label: "FROM",
-                        value: profile.nationality ?? "—"
-                    )
+                    SnapshotMetric(label: "GPA", value: profile.gpaValue.map { "\($0)" } ?? "—")
+                    SnapshotMetric(label: "IELTS", value: profile.ielts.map { "\($0)" } ?? "—")
+                    SnapshotMetric(label: "FROM", value: profile.nationality ?? "—")
                 }
             }
         }
@@ -404,12 +337,10 @@ struct SnapshotMetric: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(label)
                 .font(.system(size: 9, weight: .bold))
-                .tracking(1)
-                .foregroundStyle(.secondary)
-
+                .foregroundStyle(.white.opacity(0.46))
             Text(value)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(.white)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -419,75 +350,46 @@ struct SnapshotMetric: View {
 struct MatchCard: View {
     let match: ScholarshipMatch
 
-    private var category: String {
-        if !match.eligible {
-            return "Review"
-        }
-
-        if match.score >= 80 {
-            return "Strong fit"
-        }
-
-        return "Possible"
-    }
-
-    private var accent: Color {
-        if !match.eligible {
-            return Theme.oxblood
-        }
-
-        if match.score >= 80 {
-            return Theme.forest
-        }
-
-        return Theme.brass
-    }
-
     var body: some View {
-        PremiumCard {
-            HStack(spacing: 15) {
-                ZStack {
-                    Circle()
-                        .stroke(accent.opacity(0.18), lineWidth: 6)
+        HStack(spacing: 12) {
+            UniversityPhoto(
+                seed: match.scholarship.provider + match.scholarship.title,
+                height: 88
+            )
+            .frame(width: 104)
+            .clipShape(RoundedRectangle(cornerRadius: 13))
 
-                    Text("\(match.score)")
-                        .font(Theme.serifTitle(18, weight: .semibold))
-                        .foregroundStyle(accent)
-                }
-                .frame(width: 56, height: 56)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(match.scholarship.title)
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
 
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(match.scholarship.title)
-                        .font(Theme.serifTitle(18, weight: .semibold))
-                        .foregroundStyle(Theme.ink)
-                        .lineLimit(2)
-
-                    Text(
-                        "\(match.scholarship.country) · " +
-                        "\(match.scholarship.fundingType)"
-                    )
+                Text(match.scholarship.country)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.white.opacity(0.60))
 
-                    Text(category.uppercased())
-                        .font(.system(size: 9, weight: .bold))
-                        .tracking(1)
-                        .foregroundStyle(accent)
+                HStack {
+                    FundingBadge(text: match.scholarship.fundingType)
+                    Spacer()
+                    Text("\(match.score)%")
+                        .font(.caption.bold())
+                        .foregroundStyle(Theme.blueSoft)
                 }
-
-                Spacer()
-
-                Image(systemName: "arrow.up.right")
-                    .font(.caption.bold())
-                    .foregroundStyle(Theme.orange)
             }
         }
+        .padding(10)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(.white.opacity(0.05))
+        )
     }
 }
 
 struct MatchListView: View {
     let profile: StudentProfile?
-
     @State private var matches: [ScholarshipMatch] = []
 
     var body: some View {
@@ -495,10 +397,7 @@ struct MatchListView: View {
             LazyVStack(spacing: 12) {
                 ForEach(matches) { match in
                     NavigationLink {
-                        ScholarshipDetailView(
-                            scholarship: match.scholarship,
-                            match: match
-                        )
+                        ScholarshipDetailView(scholarship: match.scholarship, match: match)
                     } label: {
                         MatchCard(match: match)
                     }
@@ -510,15 +409,9 @@ struct MatchListView: View {
         .background(Theme.pageBackground)
         .navigationTitle("Your Matches")
         .task {
-            guard let profile else {
-                return
-            }
-
+            guard let profile else { return }
             if let rows = try? await DataService.scholarships() {
-                matches = MatchingService.rank(
-                    profile: profile,
-                    scholarships: rows
-                )
+                matches = MatchingService.rank(profile: profile, scholarships: rows)
             }
         }
     }

@@ -32,13 +32,13 @@ struct FundingBadge: View {
             .padding(.vertical, 6)
             .background(
                 text.lowercased().contains("fully")
-                    ? Theme.forest.opacity(0.10)
-                    : Theme.brass.opacity(0.10)
+                    ? Theme.green.opacity(0.18)
+                    : Theme.blue.opacity(0.16)
             )
             .foregroundStyle(
                 text.lowercased().contains("fully")
-                    ? Theme.forest
-                    : Theme.brass
+                    ? Theme.green
+                    : Theme.blueSoft
             )
             .clipShape(Capsule())
     }
@@ -144,17 +144,17 @@ struct GrantlyMonogram: View {
             RoundedRectangle(cornerRadius: size * 0.28)
                 .fill(dark ? Theme.surface : Theme.navyDeep)
 
-            HStack(spacing: size * 0.04) {
-                Capsule()
-                    .fill(Theme.orangeGradient)
-                    .frame(width: size * 0.20, height: size * 0.47)
+            HStack(spacing: size * 0.035) {
+                RoundedRectangle(cornerRadius: size * 0.06)
+                    .fill(Theme.blueGradient)
+                    .frame(width: size * 0.22, height: size * 0.48)
                     .rotationEffect(.degrees(-28))
-                Capsule()
-                    .fill(Theme.orangeGradient)
-                    .frame(width: size * 0.20, height: size * 0.47)
+                RoundedRectangle(cornerRadius: size * 0.06)
+                    .fill(Theme.blueGradient)
+                    .frame(width: size * 0.22, height: size * 0.48)
                     .rotationEffect(.degrees(28))
             }
-            .offset(y: -size * 0.02)
+            .offset(y: -size * 0.01)
         }
         .frame(width: size, height: size)
         .overlay(
@@ -223,5 +223,91 @@ struct TrustSeal: View {
         .background(verified ? Theme.green.opacity(0.15) : Theme.orange.opacity(0.14))
         .foregroundStyle(verified ? Theme.green : Theme.orange)
         .clipShape(Capsule())
+    }
+}
+
+
+struct UniversityPhoto: View {
+    let seed: String
+    var height: CGFloat = 170
+
+    private static let urls = [
+        "https://images.unsplash.com/photo-1564981797816-1043664bf78d?auto=format&fit=crop&w=1200&q=86",
+        "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=86",
+        "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=86",
+        "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1200&q=86",
+        "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?auto=format&fit=crop&w=1200&q=86",
+        "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?auto=format&fit=crop&w=1200&q=86"
+    ]
+
+    private var url: URL? {
+        let value = seed.unicodeScalars.reduce(0) { partial, scalar in
+            (partial &* 31 &+ Int(scalar.value)) & 0x7fffffff
+        }
+        return URL(string: Self.urls[value % Self.urls.count])
+    }
+
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [Theme.surfaceRaised, Theme.navy],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                case .failure:
+                    Image(systemName: "building.columns.fill")
+                        .font(.system(size: 40))
+                        .foregroundStyle(.white.opacity(0.28))
+                default:
+                    ProgressView()
+                        .tint(Theme.blue)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: height)
+        .clipped()
+    }
+}
+
+struct SearchField: View {
+    @Binding var text: String
+    var prompt: String = "Search scholarships..."
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(.white.opacity(0.52))
+
+            TextField(prompt, text: $text)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .foregroundStyle(.white)
+
+            if !text.isEmpty {
+                Button {
+                    text = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.white.opacity(0.45))
+                }
+            }
+        }
+        .font(.subheadline)
+        .padding(.horizontal, 14)
+        .frame(height: 44)
+        .background(Theme.surfaceRaised)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(.white.opacity(0.05))
+        )
     }
 }

@@ -29,7 +29,7 @@ struct MainTabView: View {
                 ScholarshipsView()
             }
             .tabItem {
-                Label("Explore", systemImage: "books.vertical.fill")
+                Label("Explore", systemImage: "magnifyingglass")
             }
             .tag(MainTab.explore)
 
@@ -57,8 +57,8 @@ struct MainTabView: View {
             }
             .tag(MainTab.profile)
         }
-        .tint(Theme.orange)
-        .toolbarBackground(Theme.navy, for: .tabBar)
+        .tint(Theme.blue)
+        .toolbarBackground(Theme.navyDeep, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
         .preferredColorScheme(.dark)
         .task {
