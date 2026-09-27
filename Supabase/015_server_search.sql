@@ -1,13 +1,5 @@
 -- Backend step 1: server-side scholarship search and pagination.
 
-create extension if not exists pg_trgm with schema extensions;
-
-create index if not exists scholarships_title_trgm_idx
-  on public.scholarships using gin (title extensions.gin_trgm_ops);
-
-create index if not exists scholarships_provider_trgm_idx
-  on public.scholarships using gin (provider extensions.gin_trgm_ops);
-
 create index if not exists scholarships_degree_levels_gin_idx
   on public.scholarships using gin (degree_levels);
 
@@ -33,7 +25,7 @@ returns table (
 language sql
 stable
 security invoker
-set search_path = public, extensions
+set search_path = public
 as $$
   with filtered as (
     select s.*
@@ -77,22 +69,9 @@ as $$
         nullif(btrim(p_source), '') is null
         or lower(coalesce(s.verification_status, 'verified')) = lower(btrim(p_source))
       )
-  ),
-  ordered as (
-    select f.*
-    from filtered f
-    order by
-      case when p_sort = 'Deadline' then f.deadline end asc nulls last,
-      case when p_sort in ('Recommended', 'Verified first')
-        then (coalesce(f.verification_status, 'verified') = 'verified')::integer
-      end desc nulls last,
-      case when p_sort = 'Recommended'
-        then (lower(f.funding_type) like '%fully%')::integer
-      end desc nulls last,
-      f.title asc
   )
   select
-    to_jsonb(o),
+    to_jsonb(f),
     count(*) over (),
     case
       when auth.uid() is null then false
@@ -100,14 +79,19 @@ as $$
         select 1
         from public.saved_scholarships ss
         where ss.user_id = auth.uid()
-          and ss.scholarship_id = o.id
+          and ss.scholarship_id = f.id
       )
     end
-  from ordered o
+  from filtered f
+  order by
+    case when p_sort = 'Deadline' then f.deadline end asc nulls last,
+    case when p_sort in ('Recommended', 'Verified first')
+      then (coalesce(f.verification_status, 'verified') = 'verified')::integer
+    end desc nulls last,
+    case when p_sort = 'Recommended'
+      then (lower(f.funding_type) like '%fully%')::integer
+    end desc nulls last,
+    f.title asc
   offset greatest(coalesce(p_offset, 0), 0)
   limit greatest(1, least(coalesce(p_limit, 24), 100));
 $$;
-
-grant execute on function public.search_scholarships(
-  text, text, text, text, text, text, text, integer, integer
-) to anon, authenticated;
