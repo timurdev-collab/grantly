@@ -14,6 +14,15 @@ type Scholarship = {
   application_cycle: string | null;
   source_fingerprint: string | null;
   source_changed_at: string | null;
+  deadline_candidate: string | null;
+  deadline_confidence: number | null;
+  deadline_candidate_count: number | null;
+  deadline_ambiguous: boolean | null;
+  deadline_evidence: string | null;
+  deadline_verification_status: string | null;
+  cycle_candidate: string | null;
+  cycle_confidence: number | null;
+  cycle_status: string | null;
 };
 
 function tokens(value: string) {
@@ -265,6 +274,50 @@ function nextCheckAt(
   return new Date(now + hours * 3600000).toISOString();
 }
 
+function failureResult(
+  row: Scholarship,
+  checkedAt: string,
+  message: string,
+  httpStatus: number | null,
+  outcome: string
+) {
+  const failureCount = (row.audit_failure_count ?? 0) + 1;
+  const retryHours =
+    outcome === "rate_limited" ? 24 :
+    outcome === "blocked" ? 72 :
+    failureCount === 1 ? 6 :
+    failureCount === 2 ? 12 : 24;
+
+  return {
+    id: row.id,
+    audit_outcome: outcome,
+    link_status: row.link_status ?? "unchecked",
+    verification_status:
+      failureCount >= 3 ? "needs_review" : row.verification_status,
+    final_url: row.official_url,
+    source_http_status: httpStatus,
+    audit_failure_count: failureCount,
+    last_successful_check_at: row.last_successful_check_at,
+    source_fingerprint: row.source_fingerprint,
+    source_changed_at: row.source_changed_at,
+    last_checked_at: checkedAt,
+    audit_error: message.slice(0, 500),
+    deadline_candidate: row.deadline_candidate,
+    deadline_confidence: row.deadline_confidence,
+    deadline_candidate_count: row.deadline_candidate_count ?? 0,
+    deadline_ambiguous: row.deadline_ambiguous ?? false,
+    deadline_evidence: row.deadline_evidence,
+    deadline_verification_status:
+      row.deadline_verification_status ?? "unconfirmed",
+    cycle_candidate: row.cycle_candidate,
+    cycle_confidence: row.cycle_confidence,
+    cycle_status: row.cycle_status ?? "unknown",
+    next_check_at: new Date(
+      Date.now() + retryHours * 3600000
+    ).toISOString()
+  };
+}
+
 async function audit(row: Scholarship) {
   const checkedAt = new Date().toISOString();
 
@@ -282,6 +335,77 @@ async function audit(row: Scholarship) {
     });
 
     const finalUrl = response.url || row.official_url;
+
+    if (response.status === 404 || response.status === 410) {
+      return {
+        id: row.id,
+        audit_outcome: "not_found",
+        link_status: "dead",
+        verification_status: "needs_review",
+        final_url: finalUrl,
+        source_http_status: response.status,
+        audit_failure_count: 0,
+        last_successful_check_at: checkedAt,
+        source_fingerprint: row.source_fingerprint,
+        source_changed_at: row.source_changed_at,
+        last_checked_at: checkedAt,
+        audit_error: null,
+        deadline_candidate: row.deadline_candidate,
+        deadline_confidence: row.deadline_confidence,
+        deadline_candidate_count: row.deadline_candidate_count ?? 0,
+        deadline_ambiguous: row.deadline_ambiguous ?? false,
+        deadline_evidence: row.deadline_evidence,
+        deadline_verification_status:
+          row.deadline_verification_status ?? "unconfirmed",
+        cycle_candidate: row.cycle_candidate,
+        cycle_confidence: row.cycle_confidence,
+        cycle_status: row.cycle_status ?? "unknown",
+        next_check_at: new Date(
+          Date.now() + 30 * 86400000
+        ).toISOString()
+      };
+    }
+
+    if (response.status === 401 || response.status === 403) {
+      return failureResult(
+        row,
+        checkedAt,
+        `HTTP ${response.status}: source blocked automated verification`,
+        response.status,
+        "blocked"
+      );
+    }
+
+    if (response.status === 429) {
+      return failureResult(
+        row,
+        checkedAt,
+        "HTTP 429: rate limited",
+        response.status,
+        "rate_limited"
+      );
+    }
+
+    if (response.status >= 500) {
+      return failureResult(
+        row,
+        checkedAt,
+        `HTTP ${response.status}: server error`,
+        response.status,
+        "server_error"
+      );
+    }
+
+    if (!response.ok) {
+      return failureResult(
+        row,
+        checkedAt,
+        `HTTP ${response.status}`,
+        response.status,
+        "http_error"
+      );
+    }
+
     const final = new URL(finalUrl);
     const html = (await response.text()).slice(0, 400000);
     const plain = normalizeText(html);
@@ -309,20 +433,7 @@ async function audit(row: Scholarship) {
     let linkStatus = "reachable";
     let verificationStatus = row.verification_status;
 
-    if (
-      response.status === 404 ||
-      response.status === 410
-    ) {
-      linkStatus = "dead";
-      verificationStatus = "needs_review";
-    } else if (
-      response.status === 429 ||
-      response.status >= 500
-    ) {
-      throw new Error(`Transient HTTP ${response.status}`);
-    } else if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    } else if (originalGeneric || finalGeneric) {
+    if (originalGeneric || finalGeneric) {
       linkStatus = "generic";
       verificationStatus = "needs_review";
     } else if (fundingLanguage && tokenScore >= 0.35) {
@@ -345,6 +456,7 @@ async function audit(row: Scholarship) {
 
     return {
       id: row.id,
+      audit_outcome: "success",
       link_status: linkStatus,
       verification_status: verificationStatus,
       final_url: finalUrl,
@@ -376,43 +488,24 @@ async function audit(row: Scholarship) {
     };
   } catch (error) {
     const message = error instanceof Error
-      ? error.message.slice(0, 500)
+      ? error.message
       : "Unknown audit error";
-    const failureCount = (row.audit_failure_count ?? 0) + 1;
-    const shouldMarkDead = failureCount >= 3;
-    const retryHours = failureCount === 1 ? 6 : failureCount === 2 ? 12 : 24;
 
-    return {
-      id: row.id,
-      link_status: shouldMarkDead
-        ? "dead"
-        : (row.link_status ?? "unchecked"),
-      verification_status: shouldMarkDead
-        ? "needs_review"
-        : row.verification_status,
-      final_url: row.official_url,
-      source_http_status: null,
-      audit_failure_count: failureCount,
-      last_successful_check_at: row.last_successful_check_at,
-      source_fingerprint: row.source_fingerprint,
-      source_changed_at: row.source_changed_at,
-      last_checked_at: checkedAt,
-      audit_error: message,
-      deadline_candidate: null,
-      deadline_confidence: null,
-      deadline_candidate_count: 0,
-      deadline_ambiguous: false,
-      deadline_evidence: null,
-      deadline_verification_status: row.deadline
-        ? deadlineVerificationStatus(row.deadline, null)
-        : "unconfirmed",
-      cycle_candidate: null,
-      cycle_confidence: null,
-      cycle_status: "unknown",
-      next_check_at: new Date(
-        Date.now() + retryHours * 3600000
-      ).toISOString()
-    };
+    const lower = message.toLowerCase();
+    const outcome =
+      lower.includes("abort") || lower.includes("timeout")
+        ? "timeout"
+        : lower.includes("fetch") || lower.includes("network")
+          ? "network_error"
+          : "other_error";
+
+    return failureResult(
+      row,
+      checkedAt,
+      message,
+      null,
+      outcome
+    );
   }
 }
 
@@ -530,15 +623,41 @@ Deno.serve(async (req) => {
       .eq("id", auditRun.id);
   }
 
+  const claimedIds = (rows ?? []).map((row) => row.id);
+  let auditRows: Scholarship[] = [];
+
+  if (claimedIds.length) {
+    const { data: fullRows, error: fullRowsError } = await admin
+      .from("scholarships")
+      .select(
+        "id,title,provider,official_url,verification_status,link_status," +
+        "audit_failure_count,last_successful_check_at,deadline," +
+        "application_cycle,source_fingerprint,source_changed_at," +
+        "deadline_candidate,deadline_confidence,deadline_candidate_count," +
+        "deadline_ambiguous,deadline_evidence,deadline_verification_status," +
+        "cycle_candidate,cycle_confidence,cycle_status"
+      )
+      .in("id", claimedIds);
+
+    if (fullRowsError) {
+      return new Response(JSON.stringify({ error: fullRowsError.message }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    auditRows = (fullRows ?? []) as Scholarship[];
+  }
+
   const results = [];
 
-  for (let index = 0; index < (rows ?? []).length; index += 5) {
-    const chunk = (rows ?? []).slice(index, index + 5);
+  for (let index = 0; index < auditRows.length; index += 5) {
+    const chunk = auditRows.slice(index, index + 5);
     results.push(...await Promise.all(chunk.map(audit)));
   }
 
   for (const result of results) {
-    const original = (rows ?? []).find((row) => row.id === result.id);
+    const original = auditRows.find((row) => row.id === result.id);
 
     await admin
       .from("scholarships")
@@ -569,38 +688,15 @@ Deno.serve(async (req) => {
       })
       .eq("id", result.id);
 
-    let observationOutcome = "success";
-
-    if (
-      result.source_http_status === 404 ||
-      result.source_http_status === 410
-    ) {
-      observationOutcome = "not_found";
-    } else if (result.audit_error) {
-      const errorText = String(result.audit_error).toLowerCase();
-
-      if (
-        errorText.includes("http 401") ||
-        errorText.includes("http 403") ||
-        errorText.includes("http 429")
-      ) {
-        observationOutcome = "blocked";
-      } else if (
-        errorText.includes("transient http") ||
-        errorText.includes("http 5")
-      ) {
-        observationOutcome = "transient_error";
-      } else if (
-        errorText.includes("timeout") ||
-        errorText.includes("abort") ||
-        errorText.includes("network") ||
-        errorText.includes("fetch")
-      ) {
-        observationOutcome = "network_error";
-      } else {
-        observationOutcome = "other_error";
-      }
-    }
+    const observationOutcome =
+      result.audit_outcome === "not_found" ? "not_found" :
+      result.audit_outcome === "blocked" ||
+      result.audit_outcome === "rate_limited" ? "blocked" :
+      result.audit_outcome === "server_error" ? "transient_error" :
+      result.audit_outcome === "timeout" ||
+      result.audit_outcome === "network_error" ? "network_error" :
+      result.audit_outcome === "success" ? "success" :
+      "other_error";
 
     await admin
       .from("scholarship_audit_observations")
