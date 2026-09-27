@@ -1,7 +1,18 @@
 import SwiftUI
 
 struct ScholarshipsView: View {
+    private let pageSize = 20
+
     @State private var scholarships: [Scholarship] = []
+    @State private var totalCount = 0
+    @State private var savedScholarshipIDs: Set<UUID> = []
+    @State private var filterOptions = ScholarshipFilterOptions(
+        countries: [],
+        degrees: [],
+        fields: [],
+        funding: []
+    )
+
     @State private var query = ""
     @State private var country = "All"
     @State private var degree = "All"
@@ -9,27 +20,25 @@ struct ScholarshipsView: View {
     @State private var funding = "All"
     @State private var source = "All"
     @State private var sort = "Recommended"
+
     @State private var loading = true
+    @State private var loadingMore = false
     @State private var errorMessage: String?
 
     private var countryOptions: [String] {
-        ["All"] + Array(Set(scholarships.map(\.country))).sorted()
+        ["All"] + filterOptions.countries
     }
 
     private var degreeOptions: [String] {
-        ["All"] + Array(Set(scholarships.flatMap(\.degreeLevels))).sorted()
+        ["All"] + filterOptions.degrees
     }
 
     private var fieldOptions: [String] {
-        let values = scholarships
-            .flatMap(\.fields)
-            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-
-        return ["All"] + Array(Set(values)).sorted()
+        ["All"] + filterOptions.fields
     }
 
     private var fundingOptions: [String] {
-        ["All"] + Array(Set(scholarships.map(\.fundingType))).sorted()
+        ["All"] + filterOptions.funding
     }
 
     private var verifiedCount: Int {
@@ -48,98 +57,14 @@ struct ScholarshipsView: View {
             .sorted {
                 let leftFully = $0.fundingType.lowercased().contains("fully")
                 let rightFully = $1.fundingType.lowercased().contains("fully")
-                if leftFully != rightFully {
-                    return leftFully && !rightFully
-                }
-                return ($0.deadline ?? "9999-12-31") < ($1.deadline ?? "9999-12-31")
-            }
-    }
-
-    private var filtered: [Scholarship] {
-        let rows = scholarships.filter { scholarship in
-            let q = query
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .lowercased()
-
-            let queryMatches =
-                q.isEmpty ||
-                scholarship.title.lowercased().contains(q) ||
-                scholarship.provider.lowercased().contains(q) ||
-                scholarship.country.lowercased().contains(q) ||
-                scholarship.fields.joined(separator: " ").lowercased().contains(q)
-
-            let countryMatches =
-                country == "All" ||
-                scholarship.country == country
-
-            let degreeMatches =
-                degree == "All" ||
-                scholarship.degreeLevels.contains(degree)
-
-            let fieldMatches =
-                field == "All" ||
-                scholarship.fields.contains(field)
-
-            let fundingMatches =
-                funding == "All" ||
-                scholarship.fundingType == funding
-
-            let verification = scholarship.verificationStatus ?? "verified"
-            let sourceMatches =
-                source == "All" ||
-                (source == "Verified" && verification == "verified") ||
-                (source == "Curated" && verification == "curated")
-
-            return queryMatches &&
-                countryMatches &&
-                degreeMatches &&
-                fieldMatches &&
-                fundingMatches &&
-                sourceMatches
-        }
-
-        switch sort {
-        case "Deadline":
-            return rows.sorted {
-                switch ($0.deadline, $1.deadline) {
-                case let (a?, b?):
-                    return a < b
-                case (_?, nil):
-                    return true
-                case (nil, _?):
-                    return false
-                default:
-                    return $0.title < $1.title
-                }
-            }
-        case "Verified first":
-            return rows.sorted {
-                let left = $0.verificationStatus == "verified"
-                let right = $1.verificationStatus == "verified"
-                if left != right {
-                    return left && !right
-                }
-                return $0.title < $1.title
-            }
-        default:
-            return rows.sorted {
-                let leftVerified = $0.verificationStatus == "verified"
-                let rightVerified = $1.verificationStatus == "verified"
-
-                if leftVerified != rightVerified {
-                    return leftVerified && !rightVerified
-                }
-
-                let leftFully = $0.fundingType.lowercased().contains("fully")
-                let rightFully = $1.fundingType.lowercased().contains("fully")
 
                 if leftFully != rightFully {
                     return leftFully && !rightFully
                 }
 
-                return $0.title < $1.title
+                return ($0.deadline ?? "9999-12-31") <
+                    ($1.deadline ?? "9999-12-31")
             }
-        }
     }
 
     private var hasFilters: Bool {
@@ -154,6 +79,22 @@ struct ScholarshipsView: View {
         query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         !hasFilters &&
         !topPicks.isEmpty
+    }
+
+    private var hasMore: Bool {
+        scholarships.count < totalCount
+    }
+
+    private var searchKey: String {
+        [
+            query,
+            country,
+            degree,
+            field,
+            funding,
+            source,
+            sort
+        ].joined(separator: "|")
     }
 
     var body: some View {
@@ -187,36 +128,10 @@ struct ScholarshipsView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 64)
-                } else if filtered.isEmpty {
-                    VStack(spacing: 14) {
-                        Image(systemName: "magnifyingglass")
-                            .font(.system(size: 28, weight: .semibold))
-                            .foregroundStyle(Theme.blueSoft)
-                            .frame(width: 60, height: 60)
-                            .background(Theme.surface)
-                            .clipShape(Circle())
-
-                        Text("No scholarships found")
-                            .font(.headline.bold())
-                            .foregroundStyle(.white)
-
-                        Text("Try another search or clear one of your filters.")
-                            .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.56))
-                            .multilineTextAlignment(.center)
-
-                        if hasFilters {
-                            Button("Clear filters") {
-                                clearFilters()
-                            }
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.blueSoft)
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 48)
+                } else if scholarships.isEmpty {
+                    emptyState
                 } else {
-                    ForEach(filtered) { scholarship in
+                    ForEach(scholarships) { scholarship in
                         NavigationLink {
                             ScholarshipDetailView(
                                 scholarship: scholarship,
@@ -224,11 +139,24 @@ struct ScholarshipsView: View {
                             )
                         } label: {
                             PremiumScholarshipCard(
-                                scholarship: scholarship
+                                scholarship: scholarship,
+                                saved: savedScholarshipIDs.contains(scholarship.id)
                             )
                         }
                         .buttonStyle(.plain)
                         .padding(.horizontal)
+                        .onAppear {
+                            if scholarship.id == scholarships.last?.id {
+                                Task { await loadMore() }
+                            }
+                        }
+                    }
+
+                    if loadingMore {
+                        ProgressView()
+                            .tint(Theme.blue)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
                     }
                 }
             }
@@ -236,8 +164,21 @@ struct ScholarshipsView: View {
         }
         .background(Theme.pageBackground)
         .navigationBarHidden(true)
-        .refreshable { await load() }
-        .task { await load() }
+        .refreshable {
+            await load(reset: true)
+        }
+        .task {
+            await loadFilterOptions()
+        }
+        .task(id: searchKey) {
+            try? await Task.sleep(nanoseconds: 300_000_000)
+
+            guard !Task.isCancelled else {
+                return
+            }
+
+            await load(reset: true)
+        }
         .alert(
             "Unable to refresh",
             isPresented: Binding(
@@ -276,17 +217,17 @@ struct ScholarshipsView: View {
 
             HStack(spacing: 10) {
                 ExploreSummary(
-                    value: "\(scholarships.count)",
-                    label: "Opportunities"
+                    value: "\(totalCount)",
+                    label: "Results"
                 )
 
                 ExploreSummary(
                     value: "\(verifiedCount)",
-                    label: "Verified"
+                    label: "Verified loaded"
                 )
 
                 ExploreSummary(
-                    value: "\(Set(scholarships.map(\.country)).count)",
+                    value: "\(filterOptions.countries.count)",
                     label: "Countries"
                 )
             }
@@ -408,11 +349,15 @@ struct ScholarshipsView: View {
     private var resultsHeader: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text(hasFilters || !query.isEmpty ? "Search results" : "All scholarships")
-                    .font(.headline.bold())
-                    .foregroundStyle(.white)
+                Text(
+                    hasFilters || !query.isEmpty
+                        ? "Search results"
+                        : "All scholarships"
+                )
+                .font(.headline.bold())
+                .foregroundStyle(.white)
 
-                Text("\(filtered.count) opportunities")
+                Text("\(totalCount) opportunities")
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.48))
             }
@@ -435,6 +380,36 @@ struct ScholarshipsView: View {
         }
         .padding(.horizontal)
         .padding(.top, 2)
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 14) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 28, weight: .semibold))
+                .foregroundStyle(Theme.blueSoft)
+                .frame(width: 60, height: 60)
+                .background(Theme.surface)
+                .clipShape(Circle())
+
+            Text("No scholarships found")
+                .font(.headline.bold())
+                .foregroundStyle(.white)
+
+            Text("Try another search or clear one of your filters.")
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.56))
+                .multilineTextAlignment(.center)
+
+            if hasFilters {
+                Button("Clear filters") {
+                    clearFilters()
+                }
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.blueSoft)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 48)
     }
 
     private func filterMenu<Content: View>(
@@ -466,26 +441,76 @@ struct ScholarshipsView: View {
         source = "All"
     }
 
-    @MainActor
-    private func load() async {
-        let initial = scholarships.isEmpty
+    private func optional(_ value: String) -> String? {
+        value == "All" ? nil : value
+    }
 
-        if initial {
+    @MainActor
+    private func loadFilterOptions() async {
+        do {
+            filterOptions = try await ScholarshipSearchService.filters()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func load(reset: Bool) async {
+        if reset {
             loading = true
+        } else {
+            loadingMore = true
         }
 
         defer {
-            if initial {
-                loading = false
-            }
+            loading = false
+            loadingMore = false
         }
 
         do {
-            scholarships = try await DataService.scholarships()
+            let page = try await ScholarshipSearchService.search(
+                query: query
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .isEmpty
+                    ? nil
+                    : query,
+                country: optional(country),
+                degree: optional(degree),
+                field: optional(field),
+                funding: optional(funding),
+                source: optional(source),
+                sort: sort,
+                offset: reset ? 0 : scholarships.count,
+                limit: pageSize
+            )
+
+            if reset {
+                scholarships = page.scholarships
+                savedScholarshipIDs = page.savedScholarshipIDs
+            } else {
+                let existing = Set(scholarships.map(\.id))
+                scholarships.append(
+                    contentsOf: page.scholarships.filter {
+                        !existing.contains($0.id)
+                    }
+                )
+                savedScholarshipIDs.formUnion(page.savedScholarshipIDs)
+            }
+
+            totalCount = page.totalCount
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    @MainActor
+    private func loadMore() async {
+        guard hasMore, !loading, !loadingMore else {
+            return
+        }
+
+        await load(reset: false)
     }
 }
 
