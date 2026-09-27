@@ -736,6 +736,10 @@ struct AdminView: View {
                 DataService.recentAdminActionLogs(limit: 20)
             async let imports =
                 DataService.scholarshipImportBatches(limit: 20)
+            async let pendingChanges =
+                DataService.pendingScholarshipDetectedChanges(limit: 50)
+            async let openHealth =
+                DataService.openCatalogHealthIssues(limit: 100)
 
             scholarships = try await scholarshipRows
             reports = try await reportRows
@@ -743,6 +747,8 @@ struct AdminView: View {
             systemHealth = try await healthSummary
             actionLogs = try await logs
             importBatches = try await imports
+            detectedChanges = try await pendingChanges
+            healthIssues = try await openHealth
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -816,6 +822,28 @@ struct AdminView: View {
             bulkMessage =
                 "Import rolled back: \(result.removed) removed, " +
                 "\(result.restored) restored."
+
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func reviewDetectedChange(
+        _ change: ScholarshipDetectedChange,
+        accept: Bool
+    ) async {
+        do {
+            if accept {
+                try await DataService.acceptDetectedScholarshipChange(
+                    id: change.id
+                )
+            } else {
+                try await DataService.rejectDetectedScholarshipChange(
+                    id: change.id
+                )
+            }
 
             await load()
         } catch {
