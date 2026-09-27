@@ -407,13 +407,19 @@ enum DataService {
     static func updateApplicationWorkspace(
         scholarshipId: UUID,
         reference: String,
-        notes: String
+        notes: String,
+        personalDeadline: String?,
+        documentsComplete: Bool,
+        reminderEnabled: Bool
     ) async throws {
         let userId = try await supabase.auth.session.user.id
 
         struct Row: Encodable {
             let application_reference: String?
             let notes: String
+            let personal_deadline: String?
+            let documents_complete: Bool
+            let reminder_enabled: Bool
             let updated_at: String
         }
 
@@ -429,6 +435,9 @@ enum DataService {
                     notes: notes.trimmingCharacters(
                         in: .whitespacesAndNewlines
                     ),
+                    personal_deadline: personalDeadline,
+                    documents_complete: documentsComplete,
+                    reminder_enabled: reminderEnabled,
                     updated_at: ISO8601DateFormatter()
                         .string(from: Date())
                 )
@@ -487,6 +496,102 @@ enum DataService {
             scholarshipId: scholarshipId,
             properties: ["status": status]
         )
+    }
+
+    static func applicationDocuments(
+        scholarshipId: UUID
+    ) async throws -> [ApplicationDocument] {
+        let userId = try await supabase.auth.session.user.id
+
+        return try await supabase
+            .from("application_documents")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .eq("scholarship_id", value: scholarshipId.uuidString)
+            .order("created_at", ascending: false)
+            .execute()
+            .value
+    }
+
+    static func uploadApplicationDocument(
+        scholarshipId: UUID,
+        fileName: String,
+        data: Data,
+        contentType: String
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+        let safeName = fileName
+            .replacingOccurrences(of: "/", with: "-")
+            .replacingOccurrences(of: "\\", with: "-")
+        let path =
+            "\(userId.uuidString.lowercased())/" +
+            "\(scholarshipId.uuidString.lowercased())/" +
+            "\(UUID().uuidString.lowercased())-\(safeName)"
+
+        try await supabase.storage
+            .from("application-documents")
+            .upload(
+                path: path,
+                file: data,
+                options: FileOptions(
+                    cacheControl: "3600",
+                    contentType: contentType,
+                    upsert: false
+                )
+            )
+
+        struct Row: Encodable {
+            let user_id: UUID
+            let scholarship_id: UUID
+            let file_name: String
+            let storage_path: String
+            let content_type: String
+            let byte_size: Int
+        }
+
+        do {
+            try await supabase
+                .from("application_documents")
+                .insert(
+                    Row(
+                        user_id: userId,
+                        scholarship_id: scholarshipId,
+                        file_name: fileName,
+                        storage_path: path,
+                        content_type: contentType,
+                        byte_size: data.count
+                    )
+                )
+                .execute()
+        } catch {
+            try? await supabase.storage
+                .from("application-documents")
+                .remove(paths: [path])
+            throw error
+        }
+
+        try? await trackProductEvent(
+            "application_document_upload",
+            scholarshipId: scholarshipId,
+            properties: ["content_type": contentType]
+        )
+    }
+
+    static func deleteApplicationDocument(
+        _ document: ApplicationDocument
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        try await supabase.storage
+            .from("application-documents")
+            .remove(paths: [document.storagePath])
+
+        try await supabase
+            .from("application_documents")
+            .delete()
+            .eq("id", value: document.id.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .execute()
     }
 
     static func applicationTasks(
