@@ -16,6 +16,12 @@ alter table public.scholarships
   add column if not exists cycle_status text not null default 'unknown';
 
 alter table public.scholarships
+  add column if not exists cycle_candidate text;
+
+alter table public.scholarships
+  add column if not exists cycle_confidence integer;
+
+alter table public.scholarships
   add column if not exists deadline_verification_status text not null default 'unconfirmed';
 
 alter table public.scholarships
@@ -29,6 +35,13 @@ alter table public.scholarships
   check (cycle_status in (
     'unknown','open','closed','upcoming','rolling','discontinued'
   ));
+
+alter table public.scholarships
+  drop constraint if exists scholarships_cycle_confidence_check;
+
+alter table public.scholarships
+  add constraint scholarships_cycle_confidence_check
+  check (cycle_confidence is null or cycle_confidence between 0 and 100);
 
 alter table public.scholarships
   drop constraint if exists scholarships_deadline_verification_status_check;
