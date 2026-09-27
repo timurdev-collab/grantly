@@ -498,24 +498,11 @@ Deno.serve(async (req) => {
     .select("id")
     .single();
 
-  let query = admin
-    .from("scholarships")
-    .select(
-      "id,title,provider,official_url,verification_status,link_status," +
-      "audit_failure_count,last_successful_check_at,deadline," +
-      "application_cycle,source_fingerprint,source_changed_at"
-    )
-    .eq("status", "published")
-    .order("next_check_at", { ascending: true, nullsFirst: true })
-    .limit(limit);
-
-  if (!body.force) {
-    query = query.or(
-      `next_check_at.is.null,next_check_at.lte.${now}`
-    );
-  }
-
-  const { data: rows, error } = await query;
+  const { data: rows, error } = await admin
+    .rpc("claim_due_scholarship_audits", {
+      p_limit: limit,
+      p_force: Boolean(body.force)
+    });
 
   if (error) {
     if (auditRun?.id) {
@@ -576,7 +563,9 @@ Deno.serve(async (req) => {
         cycle_candidate: result.cycle_candidate,
         cycle_confidence: result.cycle_confidence,
         cycle_status: result.cycle_status,
-        next_check_at: result.next_check_at
+        next_check_at: result.next_check_at,
+        audit_lease_until: null,
+        audit_lease_token: null
       })
       .eq("id", result.id);
 
