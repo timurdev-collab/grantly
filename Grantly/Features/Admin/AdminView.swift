@@ -4,11 +4,15 @@ struct AdminView: View {
     @State private var scholarships: [Scholarship] = []
     @State private var reports: [SafetyReport] = []
     @State private var analytics: AdminAnalyticsSummary?
+    @State private var systemHealth: AdminSystemHealth?
+    @State private var actionLogs: [AdminActionLog] = []
     @State private var showingAdd = false
     @State private var auditing = false
     @State private var enrichingMedia = false
+    @State private var bulkOperating = false
     @State private var auditMessage: String?
     @State private var mediaMessage: String?
+    @State private var bulkMessage: String?
     @State private var errorMessage: String?
 
     private var published: [Scholarship] {
@@ -128,6 +132,111 @@ struct AdminView: View {
                             .padding(.vertical, 3)
                         }
                     }
+                }
+            }
+
+            if let systemHealth {
+                Section("System health") {
+                    HStack(spacing: 12) {
+                        AdminMetric(
+                            value: "\(systemHealth.activeCronJobs)",
+                            label: "Cron jobs"
+                        )
+                        AdminMetric(
+                            value: "\(systemHealth.pendingPushNotifications)",
+                            label: "Push pending"
+                        )
+                        AdminMetric(
+                            value: "\(systemHealth.failedPushNotifications)",
+                            label: "Push failed"
+                        )
+                        AdminMetric(
+                            value: "\(systemHealth.openBackendErrors)",
+                            label: "Errors"
+                        )
+                    }
+                    .listRowInsets(
+                        EdgeInsets(
+                            top: 14,
+                            leading: 16,
+                            bottom: 14,
+                            trailing: 16
+                        )
+                    )
+
+                    Label(
+                        "\(systemHealth.openCatalogIssues) open catalog issues",
+                        systemImage: "waveform.path.ecg"
+                    )
+                    .font(.caption.weight(.semibold))
+
+                    ForEach(systemHealth.cronJobs) { job in
+                        HStack {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(job.name)
+                                    .font(.caption.weight(.semibold))
+
+                                Text(job.schedule)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Spacer()
+
+                            Image(
+                                systemName: job.active
+                                    ? "checkmark.circle.fill"
+                                    : "pause.circle.fill"
+                            )
+                            .foregroundStyle(
+                                job.active
+                                    ? .green
+                                    : .orange
+                            )
+                        }
+                    }
+                }
+            }
+
+            Section("Bulk catalog actions") {
+                Button {
+                    Task {
+                        await bulkUpdate(
+                            ids: needsReview.map(\.id),
+                            action: "verify"
+                        )
+                    }
+                } label: {
+                    Label(
+                        bulkOperating
+                            ? "Working…"
+                            : "Verify all review items",
+                        systemImage: "checkmark.seal"
+                    )
+                }
+                .disabled(bulkOperating || needsReview.isEmpty)
+
+                Button {
+                    Task {
+                        await bulkUpdate(
+                            ids: published
+                                .filter { $0.deadline != nil && ($0.deadline ?? "") < todayString }
+                                .map(\.id),
+                            action: "archive"
+                        )
+                    }
+                } label: {
+                    Label(
+                        "Archive expired published items",
+                        systemImage: "archivebox"
+                    )
+                }
+                .disabled(bulkOperating)
+
+                if let bulkMessage {
+                    Text(bulkMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
             }
 
@@ -297,6 +406,36 @@ struct AdminView: View {
                 }
             }
 
+            if !actionLogs.isEmpty {
+                Section("Recent admin activity") {
+                    ForEach(actionLogs.prefix(10)) { log in
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(
+                                log.action
+                                    .replacingOccurrences(
+                                        of: "_",
+                                        with: " "
+                                    )
+                                    .capitalized
+                            )
+                            .font(.caption.weight(.semibold))
+
+                            Text(
+                                "\(log.targetType.capitalized) · " +
+                                "\(log.targetIds.count) item(s)"
+                            )
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+
+                            Text(String(log.createdAt.prefix(16)))
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                        .padding(.vertical, 2)
+                    }
+                }
+            }
+
             Section("Published catalog") {
                 ForEach(published.prefix(50)) { scholarship in
                     VStack(alignment: .leading, spacing: 4) {
@@ -353,11 +492,55 @@ struct AdminView: View {
                 DataService.safetyReports()
             async let analyticsSummary =
                 DataService.adminAnalyticsSummary(days: 30)
+            async let healthSummary =
+                DataService.adminSystemHealth()
+            async let logs =
+                DataService.recentAdminActionLogs(limit: 20)
 
             scholarships = try await scholarshipRows
             reports = try await reportRows
             analytics = try await analyticsSummary
+            systemHealth = try await healthSummary
+            actionLogs = try await logs
             errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private var todayString: String {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: Date())
+    }
+
+    @MainActor
+    private func bulkUpdate(
+        ids: [UUID],
+        action: String
+    ) async {
+        guard !ids.isEmpty else {
+            bulkMessage = "No matching records."
+            return
+        }
+
+        bulkOperating = true
+        bulkMessage = nil
+        defer { bulkOperating = false }
+
+        do {
+            let affected = try await DataService
+                .adminBulkUpdateScholarships(
+                    ids: ids,
+                    action: action
+                )
+
+            bulkMessage =
+                "\(affected) scholarship(s) updated."
+
+            await load()
         } catch {
             errorMessage = error.localizedDescription
         }
