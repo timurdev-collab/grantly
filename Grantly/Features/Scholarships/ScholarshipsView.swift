@@ -547,6 +547,7 @@ private struct ExploreTopPickCard: View {
             ZStack(alignment: .topLeading) {
                 UniversityPhoto(
                     seed: "top" + scholarship.provider + scholarship.title,
+                    remoteURL: scholarship.university?.campusImageUrl,
                     height: 126
                 )
 
@@ -625,6 +626,7 @@ struct PremiumScholarshipCard: View {
             ZStack(alignment: .bottomLeading) {
                 UniversityPhoto(
                     seed: scholarship.provider + scholarship.title + scholarship.country,
+                    remoteURL: scholarship.university?.campusImageUrl,
                     height: 164
                 )
 
@@ -651,7 +653,11 @@ struct PremiumScholarshipCard: View {
 
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .top, spacing: 10) {
-                    InstitutionBadge(name: scholarship.provider)
+                    UniversityLogo(
+                        university: scholarship.university,
+                        fallbackName: scholarship.provider,
+                        size: 38
+                    )
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(scholarship.title)

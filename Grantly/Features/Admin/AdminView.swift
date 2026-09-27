@@ -5,7 +5,9 @@ struct AdminView: View {
     @State private var reports: [SafetyReport] = []
     @State private var showingAdd = false
     @State private var auditing = false
+    @State private var enrichingMedia = false
     @State private var auditMessage: String?
+    @State private var mediaMessage: String?
     @State private var errorMessage: String?
 
     private var published: [Scholarship] {
@@ -87,7 +89,23 @@ struct AdminView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Text("The automatic audit checks source availability, page specificity and possible deadline text. It never promotes a record to Verified without review.")
+                Button {
+                    Task { await enrichNextMediaBatch() }
+                } label: {
+                    Label(
+                        enrichingMedia ? "Enriching media…" : "Enrich university media",
+                        systemImage: "photo.on.rectangle.angled"
+                    )
+                }
+                .disabled(enrichingMedia)
+
+                if let mediaMessage {
+                    Text(mediaMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Text("The automatic audit checks source availability, page specificity and possible deadline text. University media enrichment reads public metadata from provider websites and stores discovered icon and social-image URLs.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -274,6 +292,25 @@ struct AdminView: View {
                 "\(result.deadlineCandidates) deadline candidates found."
 
             await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func enrichNextMediaBatch() async {
+        enrichingMedia = true
+        mediaMessage = nil
+        defer { enrichingMedia = false }
+
+        do {
+            let result = try await DataService.enrichUniversityMedia(limit: 10)
+
+            mediaMessage =
+                "Checked \(result.enriched): " +
+                "\(result.ready) ready, " +
+                "\(result.partial) partial, " +
+                "\(result.failed) failed."
         } catch {
             errorMessage = error.localizedDescription
         }

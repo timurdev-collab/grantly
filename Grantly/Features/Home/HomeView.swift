@@ -407,6 +407,7 @@ private struct HomeMatchCard: View {
             ZStack(alignment: .topTrailing) {
                 UniversityPhoto(
                     seed: match.scholarship.provider + match.scholarship.title,
+                    remoteURL: match.scholarship.university?.campusImageUrl,
                     height: 122
                 )
 
@@ -460,6 +461,7 @@ private struct FeaturedScholarshipCard: View {
         VStack(alignment: .leading, spacing: 0) {
             UniversityPhoto(
                 seed: scholarship.provider + scholarship.title,
+                remoteURL: scholarship.university?.campusImageUrl,
                 height: 122
             )
 
@@ -501,7 +503,11 @@ struct UpcomingDeadlineCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            UniversityPhoto(seed: scholarship.provider, height: 92)
+            UniversityPhoto(
+                seed: scholarship.provider,
+                remoteURL: scholarship.university?.campusImageUrl,
+                height: 92
+            )
 
             VStack(alignment: .leading, spacing: 7) {
                 Text(scholarship.title)
@@ -636,6 +642,7 @@ struct MatchCard: View {
         HStack(spacing: 12) {
             UniversityPhoto(
                 seed: match.scholarship.provider + match.scholarship.title,
+                remoteURL: match.scholarship.university?.campusImageUrl,
                 height: 88
             )
             .frame(width: 104)

@@ -25,7 +25,7 @@ enum DataService {
     static func scholarships() async throws -> [Scholarship] {
         let rows: [Scholarship] = try await supabase
             .from("scholarships")
-            .select()
+            .select("*, university:universities(*)")
             .eq("status", value: "published")
             .order("title", ascending: true)
             .execute()
@@ -52,6 +52,21 @@ enum DataService {
             .order("updated_at", ascending: false)
             .execute()
             .value
+    }
+
+    static func enrichUniversityMedia(
+        limit: Int = 10
+    ) async throws -> UniversityMediaEnrichmentResult {
+        struct Body: Encodable {
+            let limit: Int
+        }
+
+        return try await supabase.functions.invoke(
+            "enrich-university-media",
+            options: FunctionInvokeOptions(
+                body: Body(limit: limit)
+            )
+        )
     }
 
     static func auditScholarships(limit: Int = 20) async throws -> ScholarshipAuditResult {
