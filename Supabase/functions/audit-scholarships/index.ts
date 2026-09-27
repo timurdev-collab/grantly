@@ -7,6 +7,9 @@ type Scholarship = {
   provider: string;
   official_url: string;
   verification_status: string;
+  link_status: string | null;
+  audit_failure_count: number;
+  last_successful_check_at: string | null;
   deadline: string | null;
   application_cycle: string | null;
   source_fingerprint: string | null;
@@ -286,13 +289,17 @@ async function audit(row: Scholarship) {
 
     if (
       response.status === 404 ||
-      response.status === 410 ||
-      response.status >= 500
+      response.status === 410
     ) {
       linkStatus = "dead";
       verificationStatus = "needs_review";
+    } else if (
+      response.status === 429 ||
+      response.status >= 500
+    ) {
+      throw new Error(`Transient HTTP ${response.status}`);
     } else if (!response.ok) {
-      verificationStatus = "needs_review";
+      throw new Error(`HTTP ${response.status}`);
     } else if (originalGeneric || finalGeneric) {
       linkStatus = "generic";
       verificationStatus = "needs_review";
@@ -320,6 +327,8 @@ async function audit(row: Scholarship) {
       verification_status: verificationStatus,
       final_url: finalUrl,
       source_http_status: response.status,
+      audit_failure_count: 0,
+      last_successful_check_at: checkedAt,
       source_fingerprint: fingerprint,
       source_changed_at: changed
         ? checkedAt
@@ -344,13 +353,22 @@ async function audit(row: Scholarship) {
     const message = error instanceof Error
       ? error.message.slice(0, 500)
       : "Unknown audit error";
+    const failureCount = (row.audit_failure_count ?? 0) + 1;
+    const shouldMarkDead = failureCount >= 3;
+    const retryHours = failureCount === 1 ? 6 : failureCount === 2 ? 12 : 24;
 
     return {
       id: row.id,
-      link_status: "dead",
-      verification_status: "needs_review",
+      link_status: shouldMarkDead
+        ? "dead"
+        : (row.link_status ?? "unchecked"),
+      verification_status: shouldMarkDead
+        ? "needs_review"
+        : row.verification_status,
       final_url: row.official_url,
       source_http_status: null,
+      audit_failure_count: failureCount,
+      last_successful_check_at: row.last_successful_check_at,
       source_fingerprint: row.source_fingerprint,
       source_changed_at: row.source_changed_at,
       last_checked_at: checkedAt,
@@ -364,7 +382,7 @@ async function audit(row: Scholarship) {
       cycle_confidence: null,
       cycle_status: "unknown",
       next_check_at: new Date(
-        Date.now() + 24 * 3600000
+        Date.now() + retryHours * 3600000
       ).toISOString()
     };
   }
@@ -442,7 +460,8 @@ Deno.serve(async (req) => {
   let query = admin
     .from("scholarships")
     .select(
-      "id,title,provider,official_url,verification_status,deadline," +
+      "id,title,provider,official_url,verification_status,link_status," +
+      "audit_failure_count,last_successful_check_at,deadline," +
       "application_cycle,source_fingerprint,source_changed_at"
     )
     .eq("status", "published")
@@ -481,6 +500,8 @@ Deno.serve(async (req) => {
         verification_status: result.verification_status,
         final_url: result.final_url,
         source_http_status: result.source_http_status,
+        audit_failure_count: result.audit_failure_count,
+        last_successful_check_at: result.last_successful_check_at,
         source_fingerprint: result.source_fingerprint,
         source_changed_at: result.source_changed_at,
         last_checked_at: result.last_checked_at,
