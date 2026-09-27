@@ -190,6 +190,22 @@ enum DataService {
             .execute()
     }
 
+    static func scholarshipDraftSourceEvidence(
+        id: UUID
+    ) async throws -> ScholarshipDraftSourceEvidence {
+        struct Params: Encodable {
+            let p_scholarship_id: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "scholarship_draft_source_evidence",
+                params: Params(p_scholarship_id: id)
+            )
+            .execute()
+            .value
+    }
+
     static func scholarshipDraftReadiness(
         id: UUID
     ) async throws -> ScholarshipDraftReadiness {
