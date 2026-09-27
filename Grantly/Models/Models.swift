@@ -519,3 +519,72 @@ struct AdminActionLog: Decodable, Identifiable {
         case createdAt = "created_at"
     }
 }
+
+
+struct ScholarshipImportBatch: Decodable, Identifiable {
+    let id: UUID
+    let sourceLabel: String
+    let sourceUrl: String?
+    let status: String
+    let totalRows: Int
+    let insertCount: Int
+    let updateCount: Int
+    let skipCount: Int
+    let errorCount: Int
+    let committedAt: String?
+    let rolledBackAt: String?
+    let createdAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, status
+        case sourceLabel = "source_label"
+        case sourceUrl = "source_url"
+        case totalRows = "total_rows"
+        case insertCount = "insert_count"
+        case updateCount = "update_count"
+        case skipCount = "skip_count"
+        case errorCount = "error_count"
+        case committedAt = "committed_at"
+        case rolledBackAt = "rolled_back_at"
+        case createdAt = "created_at"
+    }
+}
+
+struct ScholarshipImportRow: Decodable, Identifiable {
+    let id: Int
+    let rowNumber: Int
+    let proposedAction: String
+    let validationErrors: [String]
+    let matchedScholarshipId: UUID?
+    let appliedScholarshipId: UUID?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case rowNumber = "row_number"
+        case proposedAction = "proposed_action"
+        case validationErrors = "validation_errors"
+        case matchedScholarshipId = "matched_scholarship_id"
+        case appliedScholarshipId = "applied_scholarship_id"
+    }
+}
+
+struct ScholarshipImportStageResult: Decodable {
+    let batchId: UUID
+    let rows: Int
+
+    enum CodingKeys: String, CodingKey {
+        case batchId = "batch_id"
+        case rows
+    }
+}
+
+struct ScholarshipImportCommitResult: Decodable {
+    let inserted: Int
+    let updated: Int
+    let skipped: Int
+}
+
+struct ScholarshipImportRollbackResult: Decodable {
+    let removed: Int
+    let restored: Int
+}
