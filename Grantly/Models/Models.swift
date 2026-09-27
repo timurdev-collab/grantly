@@ -393,6 +393,26 @@ struct UniversityMediaEnrichmentResult: Decodable {
 }
 
 
+struct ApplicationDocument: Codable, Identifiable, Hashable {
+    let id: UUID
+    let scholarshipId: UUID
+    let fileName: String
+    let storagePath: String
+    let contentType: String?
+    let byteSize: Int?
+    let createdAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case scholarshipId = "scholarship_id"
+        case fileName = "file_name"
+        case storagePath = "storage_path"
+        case contentType = "content_type"
+        case byteSize = "byte_size"
+        case createdAt = "created_at"
+    }
+}
+
 struct ApplicationTask: Codable, Identifiable, Hashable {
     let id: UUID
     let scholarshipId: UUID
