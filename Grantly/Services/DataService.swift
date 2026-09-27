@@ -223,10 +223,23 @@ enum DataService {
             .execute()
             .value
 
+        let today = ISO8601DateFormatter()
+            .string(from: Date())
+            .prefix(10)
+
         return rows.filter {
-            $0.verificationStatus != "needs_review" &&
-            $0.linkStatus != "dead" &&
-            $0.linkStatus != "generic"
+            let cycleVisible = !["closed", "discontinued"]
+                .contains($0.cycleStatus ?? "unknown")
+            let deadlineVisible = $0.deadline.map { $0 >= today } ?? true
+            let deadlineStateVisible =
+                $0.deadlineVerificationStatus != "expired"
+
+            return $0.verificationStatus != "needs_review" &&
+                $0.linkStatus != "dead" &&
+                $0.linkStatus != "generic" &&
+                cycleVisible &&
+                deadlineVisible &&
+                deadlineStateVisible
         }
     }
 
