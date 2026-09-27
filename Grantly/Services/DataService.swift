@@ -69,6 +69,25 @@ enum DataService {
         status: String,
         note: String? = nil
     ) async throws {
+        if status == "accepted" {
+            struct Params: Encodable {
+                let p_candidate_id: UUID
+                let p_note: String?
+            }
+
+            try await supabase
+                .rpc(
+                    "accept_source_candidate",
+                    params: Params(
+                        p_candidate_id: id,
+                        p_note: note
+                    )
+                )
+                .execute()
+
+            return
+        }
+
         let userId = try await supabase.auth.session.user.id
 
         struct Row: Encodable {
