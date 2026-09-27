@@ -258,6 +258,16 @@ struct ScholarshipDetailView: View {
                     label: "Provider",
                     value: scholarship.university?.name ?? scholarship.provider
                 )
+
+                if let institutionType = scholarship.university?.entityType {
+                    DetailLine(
+                        label: "Provider type",
+                        value: institutionType
+                            .replacingOccurrences(of: "_", with: " ")
+                            .capitalized
+                    )
+                }
+
                 DetailLine(label: "Country", value: scholarship.country)
                 DetailLine(label: "Deadline", value: scholarship.deadline ?? "Varies / to be announced")
                 DetailLine(label: "Funding", value: scholarship.fundingType)
@@ -353,6 +363,17 @@ struct ScholarshipDetailView: View {
                         Text("Checked \(String(checked.prefix(10)))")
                             .font(.caption2)
                             .foregroundStyle(.white.opacity(0.48))
+                    }
+
+                    Spacer()
+
+                    if let website = scholarship.university?.websiteUrl,
+                       let websiteURL = URL(string: website) {
+                        Link(destination: websiteURL) {
+                            Label("Provider", systemImage: "building.columns")
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(Theme.blueSoft)
+                        }
                     }
                 }
             }
