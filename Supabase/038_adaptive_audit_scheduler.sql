@@ -7,7 +7,7 @@ create table if not exists public.scholarship_audit_scheduler_config (
   endpoint_url text not null,
   cron_token text not null,
   enabled boolean not null default true,
-  batch_limit integer not null default 30
+  batch_limit integer not null default 20
     check (batch_limit between 1 and 30),
   updated_at timestamptz not null default now()
 );
@@ -43,7 +43,8 @@ begin
     body := jsonb_build_object(
       'limit', cfg.batch_limit,
       'force', false
-    )
+    ),
+    timeout_milliseconds := 60000
   )
   into request_id;
 
