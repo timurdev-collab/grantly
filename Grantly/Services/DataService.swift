@@ -854,6 +854,10 @@ enum DataService {
             .from("avatars")
             .getPublicURL(path: path)
 
+        let cacheBustedURL =
+            publicURL.absoluteString +
+            "?v=\(Int(Date().timeIntervalSince1970))"
+
         struct Row: Encodable {
             let avatar_url: String
             let updated_at: String
@@ -863,7 +867,7 @@ enum DataService {
             .from("community_profiles")
             .update(
                 Row(
-                    avatar_url: publicURL.absoluteString,
+                    avatar_url: cacheBustedURL,
                     updated_at: ISO8601DateFormatter()
                         .string(from: Date())
                 )
@@ -871,7 +875,7 @@ enum DataService {
             .eq("id", value: userId.uuidString)
             .execute()
 
-        return publicURL.absoluteString
+        return cacheBustedURL
     }
 
     static func updateCommunityProfile(
