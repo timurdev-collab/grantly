@@ -606,6 +606,45 @@ struct ScholarshipDetectedChange: Decodable, Identifiable {
     }
 }
 
+struct ScholarshipSourceSummary: Decodable {
+    let id: UUID
+    let host: String
+    let displayName: String
+    let sourceKind: String
+    let trustLevel: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, host
+        case displayName = "display_name"
+        case sourceKind = "source_kind"
+        case trustLevel = "trust_level"
+    }
+}
+
+struct ScholarshipSourceCandidate: Decodable, Identifiable {
+    let id: UUID
+    let sourceRegistryId: UUID
+    let candidateUrl: String
+    let candidateTitle: String?
+    let discoveredFromUrl: String
+    let relevanceScore: Int
+    let status: String
+    let firstSeenAt: String
+    let lastSeenAt: String
+    let source: ScholarshipSourceSummary?
+
+    enum CodingKeys: String, CodingKey {
+        case id, status, source
+        case sourceRegistryId = "source_registry_id"
+        case candidateUrl = "candidate_url"
+        case candidateTitle = "candidate_title"
+        case discoveredFromUrl = "discovered_from_url"
+        case relevanceScore = "relevance_score"
+        case firstSeenAt = "first_seen_at"
+        case lastSeenAt = "last_seen_at"
+    }
+}
+
 struct CatalogHealthIssue: Decodable, Identifiable {
     let id: UUID
     let scholarshipId: UUID
