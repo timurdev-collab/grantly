@@ -12,6 +12,28 @@ type Source = {
 function normalizedHost(value: string) {
   return value.toLowerCase().replace(/^www\./, "");
 }
+function canonicalUrl(value: string) {
+  try {
+    const url = new URL(value);
+    url.hash = "";
+
+    const removable = [
+      "utm_source","utm_medium","utm_campaign","utm_term","utm_content",
+      "fbclid","gclid","mc_cid","mc_eid"
+    ];
+
+    for (const key of removable) {
+      url.searchParams.delete(key);
+    }
+
+    url.hostname = normalizedHost(url.hostname);
+    url.pathname = url.pathname.replace(/\/+$/, "") || "/";
+
+    return url.toString();
+  } catch {
+    return value.trim().toLowerCase();
+  }
+}
 
 function decodeHtml(value: string) {
   return value
@@ -190,11 +212,12 @@ Deno.serve(async (req) => {
   let discovered = 0;
   let checked = 0;
   let failed = 0;
+  let duplicateSkipped = 0;
 
   for (const source of (sources ?? []) as Source[]) {
     const { data: scholarships } = await admin
       .from("scholarships")
-      .select("official_url,link_status")
+      .select("id,official_url,link_status")
       .eq("source_registry_id", source.id)
       .eq("status", "published")
       .in("link_status", ["exact", "reachable", "unchecked"])
@@ -205,6 +228,16 @@ Deno.serve(async (req) => {
         .map((row) => row.official_url)
         .filter(Boolean)
     )];
+
+    const existingByCanonical = new Map<string, string>();
+    for (const scholarship of scholarships ?? []) {
+      if (scholarship.official_url) {
+        existingByCanonical.set(
+          canonicalUrl(scholarship.official_url),
+          scholarship.id
+        );
+      }
+    }
 
     if (!seedUrls.length) {
       await admin
@@ -237,23 +270,40 @@ Deno.serve(async (req) => {
         const candidates = extractLinks(html, finalUrl, source.host);
 
         for (const candidate of candidates) {
-          if (candidate.candidateUrl === finalUrl) continue;
+          if (canonicalUrl(candidate.candidateUrl) === canonicalUrl(finalUrl)) {
+            continue;
+          }
+
+          const duplicateId = existingByCanonical.get(
+            canonicalUrl(candidate.candidateUrl)
+          );
+
+          const payload: Record<string, unknown> = {
+            source_registry_id: source.id,
+            candidate_url: candidate.candidateUrl,
+            candidate_title: candidate.title,
+            discovered_from_url: finalUrl,
+            relevance_score: candidate.score,
+            last_seen_at: now
+          };
+
+          if (duplicateId) {
+            payload.status = "ignored";
+            payload.duplicate_of_scholarship_id = duplicateId;
+            payload.review_note = "Already present in scholarship catalog";
+            payload.reviewed_at = now;
+          }
 
           const { error } = await admin
             .from("scholarship_source_candidates")
-            .upsert({
-              source_registry_id: source.id,
-              candidate_url: candidate.candidateUrl,
-              candidate_title: candidate.title,
-              discovered_from_url: finalUrl,
-              relevance_score: candidate.score,
-              last_seen_at: now
-            }, {
+            .upsert(payload, {
               onConflict: "source_registry_id,candidate_url",
               ignoreDuplicates: false
             });
 
-          if (!error) {
+          if (!error && duplicateId) {
+            duplicateSkipped += 1;
+          } else if (!error) {
             sourceFound += 1;
           }
         }
@@ -298,7 +348,8 @@ Deno.serve(async (req) => {
   return new Response(JSON.stringify({
     checked_sources: checked,
     discovered_candidates: discovered,
-    failed_sources: failed
+    failed_sources: failed,
+    duplicate_candidates_skipped: duplicateSkipped
   }), {
     headers: { "Content-Type": "application/json" }
   });
