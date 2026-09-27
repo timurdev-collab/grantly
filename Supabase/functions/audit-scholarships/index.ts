@@ -472,6 +472,8 @@ Deno.serve(async (req) => {
   }
 
   for (const result of results) {
+    const original = (rows ?? []).find((row) => row.id === result.id);
+
     await admin
       .from("scholarships")
       .update({
@@ -493,6 +495,113 @@ Deno.serve(async (req) => {
         next_check_at: result.next_check_at
       })
       .eq("id", result.id);
+
+    if (!original) continue;
+
+    const changes: Array<{
+      field_name: string;
+      old_value: string | null;
+      detected_value: string | null;
+      confidence: number | null;
+    }> = [];
+
+    if (
+      result.deadline_candidate &&
+      result.deadline_candidate !== original.deadline
+    ) {
+      changes.push({
+        field_name: "deadline",
+        old_value: original.deadline,
+        detected_value: result.deadline_candidate,
+        confidence: result.deadline_confidence
+      });
+    }
+
+    if (
+      result.cycle_candidate &&
+      result.cycle_candidate !== original.application_cycle
+    ) {
+      changes.push({
+        field_name: "application_cycle",
+        old_value: original.application_cycle,
+        detected_value: result.cycle_candidate,
+        confidence: result.cycle_confidence
+      });
+    }
+
+    if (
+      result.cycle_status !== "unknown" &&
+      result.cycle_status !== "open"
+    ) {
+      changes.push({
+        field_name: "cycle_status",
+        old_value: null,
+        detected_value: result.cycle_status,
+        confidence: 90
+      });
+    }
+
+    if (
+      result.final_url &&
+      result.final_url !== original.official_url
+    ) {
+      changes.push({
+        field_name: "official_url",
+        old_value: original.official_url,
+        detected_value: result.final_url,
+        confidence: result.link_status === "exact" ? 95 : 70
+      });
+    }
+
+    if (
+      original.source_fingerprint &&
+      result.source_fingerprint &&
+      result.source_fingerprint !== original.source_fingerprint
+    ) {
+      changes.push({
+        field_name: "source_content",
+        old_value: original.source_fingerprint,
+        detected_value: result.source_fingerprint,
+        confidence: 100
+      });
+    }
+
+    for (const change of changes) {
+      const { data: existing } = await admin
+        .from("scholarship_detected_changes")
+        .select("id")
+        .eq("scholarship_id", result.id)
+        .eq("field_name", change.field_name)
+        .eq("detected_value", change.detected_value ?? "")
+        .eq("status", "pending")
+        .maybeSingle();
+
+      if (existing?.id) {
+        await admin
+          .from("scholarship_detected_changes")
+          .update({
+            confidence: change.confidence,
+            source_url: result.final_url || original.official_url,
+            source_fingerprint: result.source_fingerprint,
+            last_detected_at: result.last_checked_at
+          })
+          .eq("id", existing.id);
+      } else {
+        await admin
+          .from("scholarship_detected_changes")
+          .insert({
+            scholarship_id: result.id,
+            field_name: change.field_name,
+            old_value: change.old_value,
+            detected_value: change.detected_value,
+            confidence: change.confidence,
+            source_url: result.final_url || original.official_url,
+            source_fingerprint: result.source_fingerprint,
+            first_detected_at: result.last_checked_at,
+            last_detected_at: result.last_checked_at
+          });
+      }
+    }
   }
 
   return new Response(JSON.stringify({
