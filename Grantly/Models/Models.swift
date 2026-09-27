@@ -56,11 +56,33 @@ struct CommunityProfile: Codable, Identifiable, Hashable {
     }
 }
 
+struct University: Codable, Identifiable, Hashable {
+    let id: UUID
+    var name: String
+    var country: String
+    var city: String?
+    var websiteUrl: String?
+    var logoUrl: String?
+    var campusImageUrl: String?
+    var description: String?
+    var isVerified: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, country, city, description
+        case websiteUrl = "website_url"
+        case logoUrl = "logo_url"
+        case campusImageUrl = "campus_image_url"
+        case isVerified = "is_verified"
+    }
+}
+
 struct Scholarship: Codable, Identifiable, Hashable {
     let id: UUID
     var slug: String
     var title: String
     var provider: String
+    var universityId: UUID?
+    var university: University?
     var country: String
     var region: String
     var degreeLevels: [String]
@@ -93,7 +115,8 @@ struct Scholarship: Codable, Identifiable, Hashable {
     var deadlineConfidence: Int?
 
     enum CodingKeys: String, CodingKey {
-        case id, slug, title, provider, country, region, fields, stipend, airfare, accommodation, status, deadline
+        case id, slug, title, provider, university, country, region, fields, stipend, airfare, accommodation, status, deadline
+        case universityId = "university_id"
         case degreeLevels = "degree_levels"
         case fundingType = "funding_type"
         case tuitionCoverage = "tuition_coverage"
