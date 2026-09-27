@@ -685,6 +685,62 @@ struct ScholarshipDraftPatch: Encodable {
     }
 }
 
+struct ScholarshipFieldProvenanceEntry: Decodable, Identifiable {
+    let id: UUID
+    let fieldName: String
+    let provenanceType: String
+    let sourceUrl: String?
+    let evidenceExcerpt: String?
+    let confidence: Int?
+    let previousValue: JSONValue?
+    let acceptedValue: JSONValue?
+    let acceptedBy: UUID?
+    let acceptedAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, confidence
+        case fieldName = "field_name"
+        case provenanceType = "provenance_type"
+        case sourceUrl = "source_url"
+        case evidenceExcerpt = "evidence_excerpt"
+        case previousValue = "previous_value"
+        case acceptedValue = "accepted_value"
+        case acceptedBy = "accepted_by"
+        case acceptedAt = "accepted_at"
+    }
+}
+
+enum JSONValue: Decodable {
+    case string(String)
+    case number(Double)
+    case bool(Bool)
+    case array([JSONValue])
+    case object([String: JSONValue])
+    case null
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if container.decodeNil() { self = .null; return }
+        if let value = try? container.decode(Bool.self) { self = .bool(value); return }
+        if let value = try? container.decode(Double.self) { self = .number(value); return }
+        if let value = try? container.decode(String.self) { self = .string(value); return }
+        if let value = try? container.decode([JSONValue].self) { self = .array(value); return }
+        if let value = try? container.decode([String: JSONValue].self) { self = .object(value); return }
+        throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unsupported JSON value")
+    }
+
+    var displayText: String {
+        switch self {
+        case .string(let value): return value
+        case .number(let value): return String(value)
+        case .bool(let value): return value ? "Yes" : "No"
+        case .array(let values): return values.map(\.displayText).joined(separator: ", ")
+        case .object: return "Structured value"
+        case .null: return "Not set"
+        }
+    }
+}
+
 struct ScholarshipDraftSourceEvidence: Decodable {
     let scholarshipId: UUID
     let available: Bool
