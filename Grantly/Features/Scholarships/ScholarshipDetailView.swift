@@ -9,37 +9,46 @@ struct ScholarshipDetailView: View {
     @State private var errorMessage: String?
     @State private var selectedTab = "Overview"
 
+    private let tabs = ["Overview", "Eligibility", "Benefits", "Application"]
+
     private var verified: Bool {
         scholarship.verificationStatus == "verified"
     }
 
-    private let tabs = ["Overview", "Eligibility", "Benefits", "Application"]
+    private var institutionInitials: String {
+        let words = scholarship.provider.split(separator: " ")
+        if words.count >= 2 {
+            return (String(words[0].prefix(1)) + String(words[1].prefix(1))).uppercased()
+        }
+        return String(scholarship.provider.prefix(2)).uppercased()
+    }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 0) {
-                heroImage
-                headerContent
-                tabBar
+                hero
+                identity
+                tabsBar
 
-                VStack(alignment: .leading, spacing: 18) {
-                    if selectedTab == "Overview" {
-                        overviewContent
-                    } else if selectedTab == "Eligibility" {
+                VStack(alignment: .leading, spacing: 16) {
+                    switch selectedTab {
+                    case "Eligibility":
                         eligibilityContent
-                    } else if selectedTab == "Benefits" {
+                    case "Benefits":
                         benefitsContent
-                    } else {
+                    case "Application":
                         applicationContent
+                    default:
+                        overviewContent
                     }
                 }
                 .padding()
-                .padding(.bottom, 90)
+                .padding(.bottom, 84)
             }
         }
         .background(Theme.pageBackground)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(Theme.navyDeep.opacity(0.92), for: .navigationBar)
+        .toolbarBackground(Theme.navyDeep.opacity(0.94), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -47,7 +56,7 @@ struct ScholarshipDetailView: View {
                     Task { await toggleSaved() }
                 } label: {
                     Image(systemName: saved ? "bookmark.fill" : "bookmark")
-                        .foregroundStyle(saved ? Theme.blue : .white)
+                        .foregroundStyle(saved ? Theme.blueSoft : .white)
                 }
                 .disabled(busy)
             }
@@ -69,92 +78,185 @@ struct ScholarshipDetailView: View {
         }
     }
 
-    private var heroImage: some View {
-        ZStack(alignment: .bottomLeading) {
+    private var hero: some View {
+        ZStack(alignment: .bottom) {
             UniversityPhoto(
                 seed: scholarship.provider + scholarship.title + scholarship.country,
-                height: 235
+                height: 268
             )
 
             LinearGradient(
-                colors: [.clear, Theme.navyDeep.opacity(0.96)],
-                startPoint: .center,
+                colors: [
+                    Theme.navyDeep.opacity(0.05),
+                    Theme.navyDeep.opacity(0.32),
+                    Theme.navyDeep
+                ],
+                startPoint: .top,
                 endPoint: .bottom
             )
-            .frame(height: 150)
 
-            HStack {
-                FundingBadge(text: scholarship.fundingType)
+            VStack {
+                HStack {
+                    TrustSeal(verified: verified)
+
+                    Spacer()
+
+                    FundingBadge(text: scholarship.fundingType)
+                }
+
                 Spacer()
+
+                HStack(alignment: .bottom) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("SCHOLARSHIP")
+                            .font(.system(size: 9, weight: .bold))
+                            .tracking(1.6)
+                            .foregroundStyle(Theme.blueSoft)
+
+                        Text(scholarship.title)
+                            .font(.system(size: 28, weight: .bold))
+                            .tracking(-0.5)
+                            .foregroundStyle(.white)
+                            .lineLimit(3)
+                    }
+
+                    Spacer(minLength: 12)
+                }
             }
             .padding(16)
         }
+        .frame(height: 268)
     }
 
-    private var headerContent: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(scholarship.title)
-                .font(.system(size: 27, weight: .bold))
-                .foregroundStyle(.white)
+    private var identity: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 12) {
+                Text(institutionInitials)
+                    .font(.caption.bold())
+                    .foregroundStyle(.white)
+                    .frame(width: 44, height: 44)
+                    .background(Theme.surfaceRaised)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Theme.blue.opacity(0.28))
+                    )
 
-            Text(scholarship.provider)
-                .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.68))
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(scholarship.provider)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.white)
 
-            Label(scholarship.country, systemImage: "mappin.circle.fill")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.76))
+                    Label(
+                        scholarship.country,
+                        systemImage: "mappin.and.ellipse"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.58))
+                }
+
+                Spacer()
+
+                if let deadline = scholarship.deadline {
+                    VStack(alignment: .trailing, spacing: 3) {
+                        Text("DEADLINE")
+                            .font(.system(size: 8, weight: .bold))
+                            .tracking(1)
+                            .foregroundStyle(.white.opacity(0.42))
+
+                        Text(deadline)
+                            .font(.caption.bold())
+                            .foregroundStyle(Theme.blueSoft)
+                    }
+                }
+            }
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(scholarship.degreeLevels.prefix(3), id: \.self) { level in
-                        DetailPill(text: level)
+                        DetailPill(icon: "graduationcap", text: level)
                     }
-                    DetailPill(text: scholarship.fields.first ?? "All fields")
-                    DetailPill(text: scholarship.fundingType)
+
+                    if let field = scholarship.fields.first {
+                        DetailPill(icon: "books.vertical", text: field)
+                    }
+
+                    DetailPill(icon: "banknote", text: scholarship.fundingType)
                 }
+            }
+
+            if let match {
+                HStack(spacing: 12) {
+                    ZStack {
+                        Circle()
+                            .stroke(.white.opacity(0.08), lineWidth: 5)
+
+                        Circle()
+                            .trim(from: 0, to: CGFloat(max(0, min(match.score, 100))) / 100)
+                            .stroke(
+                                match.eligible ? Theme.blue : Theme.danger,
+                                style: StrokeStyle(lineWidth: 5, lineCap: .round)
+                            )
+                            .rotationEffect(.degrees(-90))
+
+                        Text("\(match.score)")
+                            .font(.caption.bold())
+                            .foregroundStyle(.white)
+                    }
+                    .frame(width: 48, height: 48)
+
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(match.eligible ? "Strong profile fit" : "Check eligibility")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(.white)
+
+                        Text(match.eligible ? "Based on your current academic profile" : "One or more requirements may need attention")
+                            .font(.caption2)
+                            .foregroundStyle(.white.opacity(0.52))
+                    }
+
+                    Spacer()
+                }
+                .padding(12)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
             }
         }
         .padding(.horizontal)
         .padding(.top, 14)
-        .padding(.bottom, 8)
+        .padding(.bottom, 10)
     }
 
-    private var tabBar: some View {
+    private var tabsBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 24) {
+            HStack(spacing: 8) {
                 ForEach(tabs, id: \.self) { tab in
                     Button {
-                        selectedTab = tab
-                    } label: {
-                        VStack(spacing: 8) {
-                            Text(tab)
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(selectedTab == tab ? Theme.blueSoft : .white.opacity(0.55))
-
-                            Rectangle()
-                                .fill(selectedTab == tab ? Theme.blue : .clear)
-                                .frame(height: 2)
+                        withAnimation(.easeInOut(duration: 0.18)) {
+                            selectedTab = tab
                         }
+                    } label: {
+                        Text(tab)
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(selectedTab == tab ? .white : .white.opacity(0.56))
+                            .padding(.horizontal, 13)
+                            .frame(height: 36)
+                            .background(selectedTab == tab ? Theme.blue : Theme.surface)
+                            .clipShape(Capsule())
                     }
                     .buttonStyle(.plain)
                 }
             }
             .padding(.horizontal)
         }
-        .overlay(alignment: .bottom) {
-            Rectangle()
-                .fill(.white.opacity(0.06))
-                .frame(height: 1)
-        }
-        .padding(.top, 10)
+        .padding(.vertical, 8)
     }
 
     @ViewBuilder
     private var overviewContent: some View {
         if let description = scholarship.description,
            !description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            DetailSection(title: "About") {
+            DetailSection(title: "About", icon: "text.alignleft") {
                 Text(description)
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.70))
@@ -162,37 +264,28 @@ struct ScholarshipDetailView: View {
             }
         }
 
-        DetailSection(title: "At a glance") {
+        DetailSection(title: "At a glance", icon: "sparkles.rectangle.stack") {
             VStack(spacing: 13) {
                 DetailLine(label: "Provider", value: scholarship.provider)
                 DetailLine(label: "Country", value: scholarship.country)
-                DetailLine(
-                    label: "Deadline",
-                    value: scholarship.deadline ?? "Varies / to be announced"
-                )
-                DetailLine(
-                    label: "Source",
-                    value: verified ? "Verified" : "Curated"
-                )
+                DetailLine(label: "Deadline", value: scholarship.deadline ?? "Varies / to be announced")
+                DetailLine(label: "Funding", value: scholarship.fundingType)
+                DetailLine(label: "Source", value: verified ? "Verified" : "Curated")
             }
         }
 
         if let match {
-            DetailSection(title: "Your match") {
+            DetailSection(title: "Why it matches", icon: "person.text.rectangle") {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text(match.eligible ? "\(match.score)% profile match" : "Review eligibility")
-                        .font(.title3.bold())
-                        .foregroundStyle(match.eligible ? Theme.blueSoft : Theme.danger)
-
                     ForEach(match.reasons, id: \.self) { reason in
                         Label(reason, systemImage: "checkmark.circle.fill")
-                            .font(.caption)
+                            .font(.subheadline)
                             .foregroundStyle(Theme.green)
                     }
 
                     ForEach(match.blockers, id: \.self) { blocker in
                         Label(blocker, systemImage: "exclamationmark.triangle.fill")
-                            .font(.caption)
+                            .font(.subheadline)
                             .foregroundStyle(Theme.danger)
                     }
                 }
@@ -200,29 +293,29 @@ struct ScholarshipDetailView: View {
         }
     }
 
+    @ViewBuilder
     private var eligibilityContent: some View {
-        DetailSection(title: "Eligibility") {
+        DetailSection(title: "Eligibility", icon: "checkmark.seal") {
             VStack(spacing: 13) {
                 DetailLine(label: "Degree", value: scholarship.degreeLevels.joined(separator: ", "))
                 DetailLine(label: "Field", value: scholarship.fields.joined(separator: ", "))
-                DetailLine(
-                    label: "Minimum GPA",
-                    value: scholarship.minGpaPercent.map { "\(Int($0))%" } ?? "Not listed"
-                )
-                DetailLine(
-                    label: "Minimum IELTS",
-                    value: scholarship.minIelts.map { String($0) } ?? "Not listed"
-                )
-                DetailLine(
-                    label: "SAT",
-                    value: scholarship.satRequired ? "Required" : "Not listed as required"
-                )
+                DetailLine(label: "Minimum GPA", value: scholarship.minGpaPercent.map { "\(Int($0))%" } ?? "Not listed")
+                DetailLine(label: "Minimum IELTS", value: scholarship.minIelts.map { String($0) } ?? "Not listed")
+                DetailLine(label: "SAT", value: scholarship.satRequired ? "Required" : "Not listed as required")
+            }
+        }
+
+        DetailSection(title: "Before you apply", icon: "checklist") {
+            VStack(alignment: .leading, spacing: 10) {
+                GuidanceRow(icon: "person.text.rectangle", text: "Confirm nationality and residency rules on the official source.")
+                GuidanceRow(icon: "doc.text", text: "Check the current document list and any nomination requirements.")
+                GuidanceRow(icon: "calendar", text: "Verify the application cycle and deadline before preparing documents.")
             }
         }
     }
 
     private var benefitsContent: some View {
-        DetailSection(title: "What it covers") {
+        DetailSection(title: "What it covers", icon: "gift") {
             VStack(spacing: 13) {
                 DetailLine(label: "Tuition", value: scholarship.tuitionCoverage ?? scholarship.fundingType)
                 DetailLine(label: "Stipend", value: scholarship.stipend ?? "Check official source")
@@ -234,26 +327,42 @@ struct ScholarshipDetailView: View {
     }
 
     private var applicationContent: some View {
-        DetailSection(title: "Application") {
-            VStack(alignment: .leading, spacing: 12) {
-                Label(
-                    scholarship.deadline ?? "Deadline varies / to be announced",
-                    systemImage: "calendar"
-                )
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.white)
+        DetailSection(title: "Application", icon: "paperplane") {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Current deadline")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.52))
 
-                Text("Always confirm the current application cycle, eligibility and required documents on the official scholarship website.")
+                        Text(scholarship.deadline ?? "Varies / to be announced")
+                            .font(.headline.bold())
+                            .foregroundStyle(.white)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "calendar")
+                        .font(.headline)
+                        .foregroundStyle(Theme.blueSoft)
+                        .frame(width: 42, height: 42)
+                        .background(Theme.surfaceRaised)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+
+                Text("Always confirm the current cycle, eligibility, documents and deadline on the official scholarship website before submitting.")
                     .font(.subheadline)
                     .foregroundStyle(.white.opacity(0.64))
                     .lineSpacing(4)
 
-                TrustSeal(verified: verified)
+                HStack {
+                    TrustSeal(verified: verified)
 
-                if let checked = scholarship.lastCheckedAt, !checked.isEmpty {
-                    Text("Last checked \(String(checked.prefix(10)))")
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.50))
+                    if let checked = scholarship.lastCheckedAt, !checked.isEmpty {
+                        Text("Checked \(String(checked.prefix(10)))")
+                            .font(.caption2)
+                            .foregroundStyle(.white.opacity(0.48))
+                    }
                 }
             }
         }
@@ -266,29 +375,37 @@ struct ScholarshipDetailView: View {
             } label: {
                 Image(systemName: saved ? "bookmark.fill" : "bookmark")
                     .font(.headline)
-                    .frame(width: 50, height: 50)
+                    .frame(width: 52, height: 52)
                     .background(Theme.surfaceRaised)
-                    .foregroundStyle(saved ? Theme.blue : .white)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .foregroundStyle(saved ? Theme.blueSoft : .white)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
             }
             .buttonStyle(.plain)
             .disabled(busy)
 
             if let url = URL(string: scholarship.officialUrl) {
                 Link(destination: url) {
-                    Text("Apply now")
-                        .font(.headline.weight(.semibold))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Theme.blueGradient)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                    HStack(spacing: 8) {
+                        Text("Apply on official site")
+                        Image(systemName: "arrow.up.right")
+                    }
+                    .font(.headline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 52)
+                    .background(Theme.blueGradient)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
                 }
             }
         }
         .padding(.horizontal)
         .padding(.vertical, 10)
-        .background(.ultraThinMaterial)
+        .background(Theme.navyDeep.opacity(0.96))
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(.white.opacity(0.06))
+                .frame(height: 1)
+        }
     }
 
     @MainActor
@@ -311,8 +428,15 @@ struct ScholarshipDetailView: View {
         defer { busy = false }
 
         do {
-            try await DataService.setSaved(!saved, userId: id, scholarshipId: scholarship.id)
-            saved.toggle()
+            try await DataService.setSaved(
+                !saved,
+                userId: id,
+                scholarshipId: scholarship.id
+            )
+
+            withAnimation(.easeInOut(duration: 0.18)) {
+                saved.toggle()
+            }
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -320,42 +444,83 @@ struct ScholarshipDetailView: View {
 }
 
 private struct DetailPill: View {
+    let icon: String
     let text: String
 
     var body: some View {
-        Text(text)
+        Label(text, systemImage: icon)
             .font(.caption2.weight(.semibold))
-            .foregroundStyle(.white.opacity(0.78))
+            .foregroundStyle(.white.opacity(0.74))
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
             .background(Theme.surfaceRaised)
             .clipShape(Capsule())
+            .lineLimit(1)
     }
 }
 
 private struct DetailSection<Content: View>: View {
     let title: String
+    let icon: String
     let content: Content
 
-    init(title: String, @ViewBuilder content: () -> Content) {
+    init(
+        title: String,
+        icon: String,
+        @ViewBuilder content: () -> Content
+    ) {
         self.title = title
+        self.icon = icon
         self.content = content()
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title)
-                .font(.headline.bold())
-                .foregroundStyle(.white)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text(title)
+                    .font(.headline.bold())
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                Image(systemName: icon)
+                    .font(.caption.bold())
+                    .foregroundStyle(Theme.blueSoft)
+                    .frame(width: 32, height: 32)
+                    .background(Theme.surfaceRaised)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+
             content
         }
         .padding(16)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .clipShape(RoundedRectangle(cornerRadius: 19))
         .overlay(
-            RoundedRectangle(cornerRadius: 18)
+            RoundedRectangle(cornerRadius: 19)
                 .stroke(.white.opacity(0.05))
         )
+    }
+}
+
+private struct GuidanceRow: View {
+    let icon: String
+    let text: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: icon)
+                .font(.caption)
+                .foregroundStyle(Theme.blueSoft)
+                .frame(width: 22)
+
+            Text(text)
+                .font(.caption)
+                .foregroundStyle(.white.opacity(0.64))
+                .lineSpacing(2)
+
+            Spacer(minLength: 0)
+        }
     }
 }
 
@@ -367,7 +532,7 @@ struct DetailLine: View {
         HStack(alignment: .top, spacing: 16) {
             Text(label)
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.56))
+                .foregroundStyle(.white.opacity(0.52))
 
             Spacer(minLength: 12)
 

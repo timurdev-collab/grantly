@@ -20,33 +20,42 @@ struct MyScholarshipsView: View {
         }
     }
 
+    private var appliedCount: Int {
+        items.filter { $0.applicationStatus == "Applied" }.count
+    }
+
+    private var interviewCount: Int {
+        items.filter { $0.applicationStatus == "Interview" }.count
+    }
+
+    private var resultCount: Int {
+        items.filter { $0.applicationStatus == "Result" }.count
+    }
+
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 20) {
-                shortlistHero
+                header
+                pipelineSummary
 
                 if !items.isEmpty {
                     statusFilter
                 }
 
                 if loading {
-                    ProgressView("Opening your shortlist…")
-                        .tint(Theme.orange)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 50)
+                    VStack(spacing: 12) {
+                        ProgressView()
+                            .tint(Theme.blue)
+                        Text("Loading your scholarship tracker...")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.50))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 52)
                 } else if filteredItems.isEmpty {
-                    EmptyState(
-                        icon: "bookmark",
-                        title: selectedStatus == "All"
-                            ? "Your shortlist is empty"
-                            : "Nothing in \(selectedStatus.lowercased())",
-                        text: selectedStatus == "All"
-                            ? "Save scholarships from Explore and manage every application here."
-                            : "Change an application's stage to keep your pipeline accurate."
-                    )
-                    .padding(.top, 30)
+                    emptyState
                 } else {
-                    LazyVStack(spacing: 12) {
+                    LazyVStack(spacing: 13) {
                         ForEach(filteredItems) { item in
                             NavigationLink {
                                 ScholarshipDetailView(
@@ -82,65 +91,14 @@ struct MyScholarshipsView: View {
                 }
             }
             .padding()
+            .padding(.bottom, 24)
         }
         .background(Theme.pageBackground)
-        .navigationTitle("My Scholarships")
-        .navigationBarTitleDisplayMode(.inline)
-        .refreshable {
-            await load()
-        }
-        .task {
-            await load()
-        }
+        .navigationBarHidden(true)
+        .refreshable { await load() }
+        .task { await load() }
         .sheet(item: $editingItem) { item in
-            NavigationStack {
-                VStack(alignment: .leading, spacing: 16) {
-                    SectionEyebrow(text: "Application note")
-
-                    Text(item.scholarship.title)
-                        .font(Theme.serifTitle(24))
-                        .foregroundStyle(.white)
-
-                    TextEditor(text: $noteText)
-                        .frame(minHeight: 190)
-                        .padding(12)
-                        .background(Theme.surface)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color.white.opacity(0.08))
-                        )
-
-                    Text("Keep links, document reminders, interview dates or anything else you want beside this application.")
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.62))
-                        .lineSpacing(3)
-
-                    Spacer()
-                }
-                .padding()
-                .background(Theme.pageBackground)
-                .navigationTitle("Note")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            editingItem = nil
-                        }
-                    }
-
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Save") {
-                            Task {
-                                await saveNote(
-                                    item: item,
-                                    notes: noteText
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+            noteSheet(item)
         }
         .alert(
             "Something went wrong",
@@ -155,40 +113,88 @@ struct MyScholarshipsView: View {
         }
     }
 
-    private var shortlistHero: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            SectionEyebrow(text: "Your scholarships")
+    private var header: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 5) {
+                Text("My Scholarships")
+                    .font(.system(size: 30, weight: .bold))
+                    .foregroundStyle(.white)
 
-            Text("Track every\nopportunity.")
-                .font(Theme.serifTitle(31, weight: .medium))
-                .tracking(-0.5)
-                .foregroundStyle(Color.white)
+                Text("Turn your shortlist into an application plan")
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.54))
+            }
 
-            Text("Save scholarships, update application stages and keep deadlines in one place.")
-                .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.68))
-                .lineSpacing(3)
+            Spacer()
 
-            HStack(spacing: 20) {
-                ShortlistMetric(
-                    value: "\(items.count)",
-                    label: "saved"
+            Image(systemName: "bookmark.fill")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Theme.blueSoft)
+                .frame(width: 42, height: 42)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 13))
+        }
+    }
+
+    private var pipelineSummary: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Application pipeline")
+                        .font(.headline.bold())
+                        .foregroundStyle(.white)
+
+                    Text("Keep every opportunity moving")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.48))
+                }
+
+                Spacer()
+
+                Text("\(items.count) saved")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.blueSoft)
+            }
+
+            HStack(spacing: 8) {
+                TrackerMetric(
+                    value: "\(items.filter { $0.applicationStatus == "Planning" }.count)",
+                    label: "Planning",
+                    icon: "list.bullet.clipboard"
                 )
 
-                ShortlistMetric(
-                    value: "\(items.filter { $0.applicationStatus == "Applied" }.count)",
-                    label: "applied"
+                TrackerMetric(
+                    value: "\(appliedCount)",
+                    label: "Applied",
+                    icon: "paperplane.fill"
                 )
 
-                ShortlistMetric(
-                    value: "\(items.filter { $0.applicationStatus == "Interview" }.count)",
-                    label: "interviews"
+                TrackerMetric(
+                    value: "\(interviewCount)",
+                    label: "Interview",
+                    icon: "person.2.fill"
+                )
+
+                TrackerMetric(
+                    value: "\(resultCount)",
+                    label: "Result",
+                    icon: "checkmark.seal.fill"
                 )
             }
         }
-        .padding(20)
-        .background(Theme.heroGradient)
-        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .padding(16)
+        .background(
+            LinearGradient(
+                colors: [Theme.surfaceRaised, Theme.surface],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(.white.opacity(0.05))
+        )
     }
 
     private var statusFilter: some View {
@@ -205,29 +211,113 @@ struct MyScholarshipsView: View {
 
     private func statusChip(_ status: String) -> some View {
         Button {
-            selectedStatus = status
+            withAnimation(.easeInOut(duration: 0.18)) {
+                selectedStatus = status
+            }
         } label: {
             Text(status)
                 .font(.caption.weight(.semibold))
-                .padding(.horizontal, 13)
-                .padding(.vertical, 9)
-                .background(
-                    selectedStatus == status
-                        ? Theme.navy
-                        : Color.white
-                )
                 .foregroundStyle(
                     selectedStatus == status
-                        ? Color.white
-                        : Theme.navy
+                        ? .white
+                        : .white.opacity(0.66)
+                )
+                .padding(.horizontal, 13)
+                .frame(height: 38)
+                .background(
+                    selectedStatus == status
+                        ? Theme.blue
+                        : Theme.surface
                 )
                 .clipShape(Capsule())
-                .overlay(
-                    Capsule()
-                        .stroke(Color.white.opacity(0.08))
-                )
         }
         .buttonStyle(.plain)
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 14) {
+            Image(systemName: selectedStatus == "All" ? "bookmark" : "tray")
+                .font(.system(size: 26, weight: .semibold))
+                .foregroundStyle(Theme.blueSoft)
+                .frame(width: 60, height: 60)
+                .background(Theme.surface)
+                .clipShape(Circle())
+
+            Text(
+                selectedStatus == "All"
+                    ? "Your shortlist is empty"
+                    : "Nothing in \(selectedStatus.lowercased())"
+            )
+            .font(.headline.bold())
+            .foregroundStyle(.white)
+
+            Text(
+                selectedStatus == "All"
+                    ? "Save scholarships from Explore and manage each application here."
+                    : "Update a scholarship's stage when your application progresses."
+            )
+            .font(.subheadline)
+            .foregroundStyle(.white.opacity(0.55))
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: 290)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 48)
+    }
+
+    private func noteSheet(_ item: SavedScholarshipItem) -> some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Application note")
+                    .font(.caption.bold())
+                    .foregroundStyle(Theme.blueSoft)
+
+                Text(item.scholarship.title)
+                    .font(.title3.bold())
+                    .foregroundStyle(.white)
+
+                TextEditor(text: $noteText)
+                    .scrollContentBackground(.hidden)
+                    .frame(minHeight: 190)
+                    .padding(12)
+                    .background(Theme.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(.white.opacity(0.07))
+                    )
+
+                Text("Keep document reminders, interview dates, useful links or anything else you need beside this application.")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.56))
+                    .lineSpacing(3)
+
+                Spacer()
+            }
+            .padding()
+            .background(Theme.pageBackground)
+            .navigationTitle("Note")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        editingItem = nil
+                    }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        Task {
+                            await saveNote(
+                                item: item,
+                                notes: noteText
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        .preferredColorScheme(.dark)
     }
 
     @MainActor
@@ -297,8 +387,10 @@ struct MyScholarshipsView: View {
                 scholarshipId: item.scholarshipId
             )
 
-            items.removeAll {
-                $0.scholarshipId == item.scholarshipId
+            withAnimation(.easeInOut(duration: 0.18)) {
+                items.removeAll {
+                    $0.scholarshipId == item.scholarshipId
+                }
             }
         } catch {
             errorMessage = error.localizedDescription
@@ -325,21 +417,29 @@ struct MyScholarshipsView: View {
     }
 }
 
-private struct ShortlistMetric: View {
+private struct TrackerMetric: View {
     let value: String
     let label: String
+    let icon: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(value)
-                .font(Theme.serifTitle(22))
-                .foregroundStyle(Color.white)
+        VStack(alignment: .leading, spacing: 7) {
+            Image(systemName: icon)
+                .font(.caption.bold())
+                .foregroundStyle(Theme.blueSoft)
 
-            Text(label.uppercased())
-                .font(.system(size: 9, weight: .bold))
-                .tracking(1)
+            Text(value)
+                .font(.headline.bold())
+                .foregroundStyle(.white)
+
+            Text(label)
+                .font(.system(size: 9, weight: .medium))
                 .foregroundStyle(.white.opacity(0.45))
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(Theme.navyDeep.opacity(0.35))
+        .clipShape(RoundedRectangle(cornerRadius: 13))
     }
 }
 
@@ -351,23 +451,22 @@ private struct ApplicationCard: View {
     let onRemove: () -> Void
 
     var body: some View {
-        PremiumCard {
-            VStack(alignment: .leading, spacing: 13) {
+        HStack(spacing: 12) {
+            UniversityPhoto(
+                seed: item.scholarship.provider + item.scholarship.title,
+                height: 128
+            )
+            .frame(width: 112)
+            .clipShape(RoundedRectangle(cornerRadius: 15))
+
+            VStack(alignment: .leading, spacing: 7) {
                 HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text(item.scholarship.title)
-                            .font(Theme.serifTitle(19))
-                            .foregroundStyle(.white)
+                    Text(item.scholarship.title)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.white)
+                        .lineLimit(2)
 
-                        Text(
-                            "\(item.scholarship.provider) · " +
-                            "\(item.scholarship.country)"
-                        )
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.62))
-                    }
-
-                    Spacer()
+                    Spacer(minLength: 8)
 
                     Menu {
                         Button("Remove", role: .destructive) {
@@ -375,65 +474,72 @@ private struct ApplicationCard: View {
                         }
                     } label: {
                         Image(systemName: "ellipsis")
-                            .foregroundStyle(.white.opacity(0.62))
-                            .frame(width: 28, height: 28)
+                            .foregroundStyle(.white.opacity(0.50))
+                            .frame(width: 24, height: 24)
                     }
                 }
 
-                HStack {
+                Text(item.scholarship.provider)
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.50))
+                    .lineLimit(1)
+
+                HStack(spacing: 6) {
                     Menu {
                         ForEach(statuses, id: \.self) { status in
                             Button {
                                 onStatus(status)
                             } label: {
                                 if status == item.applicationStatus {
-                                    Label(
-                                        status,
-                                        systemImage: "checkmark"
-                                    )
+                                    Label(status, systemImage: "checkmark")
                                 } else {
                                     Text(status)
                                 }
                             }
                         }
                     } label: {
-                        ApplicationStatusPill(
-                            status: item.applicationStatus
-                        )
+                        ApplicationStatusPill(status: item.applicationStatus)
                     }
 
                     Spacer()
 
                     Button(action: onNote) {
-                        Label(
-                            item.notes?
-                                .trimmingCharacters(
-                                    in: .whitespacesAndNewlines
-                                )
-                                .isEmpty == false
-                                ? "Edit note"
-                                : "Add note",
-                            systemImage: "note.text"
-                        )
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.orange)
+                        Image(systemName: "note.text")
+                            .font(.caption)
+                            .foregroundStyle(
+                                item.notes?
+                                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                                    .isEmpty == false
+                                    ? Theme.blueSoft
+                                    : .white.opacity(0.54)
+                            )
                     }
                     .buttonStyle(.plain)
                 }
 
+                if let deadline = item.scholarship.deadline {
+                    Label(deadline, systemImage: "calendar")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.blueSoft)
+                }
+
                 if let notes = item.notes?
-                    .trimmingCharacters(
-                        in: .whitespacesAndNewlines
-                    ),
+                    .trimmingCharacters(in: .whitespacesAndNewlines),
                    !notes.isEmpty {
                     Text(notes)
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.62))
-                        .lineLimit(3)
-                        .padding(.top, 2)
+                        .font(.caption2)
+                        .foregroundStyle(.white.opacity(0.52))
+                        .lineLimit(1)
                 }
             }
         }
+        .padding(10)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(.white.opacity(0.05))
+        )
     }
 }
 
@@ -442,10 +548,10 @@ private struct ApplicationStatusPill: View {
 
     var body: some View {
         Label(status, systemImage: icon)
-            .font(.caption.weight(.semibold))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 7)
-            .background(color.opacity(0.10))
+            .font(.caption2.weight(.semibold))
+            .padding(.horizontal, 9)
+            .padding(.vertical, 6)
+            .background(color.opacity(0.14))
             .foregroundStyle(color)
             .clipShape(Capsule())
     }
@@ -466,13 +572,13 @@ private struct ApplicationStatusPill: View {
     private var color: Color {
         switch status {
         case "Applied":
-            return Theme.orange
+            return Theme.blueSoft
         case "Interview":
-            return Theme.orange
+            return Color(red: 0.70, green: 0.55, blue: 1.0)
         case "Result":
-            return Theme.forest
+            return Theme.green
         default:
-            return Theme.navy
+            return .white.opacity(0.62)
         }
     }
 }
