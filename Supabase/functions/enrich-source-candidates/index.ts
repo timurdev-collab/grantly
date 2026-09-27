@@ -269,6 +269,10 @@ Deno.serve(async (req) => {
           onConflict: "candidate_id"
         });
 
+      await admin.rpc("sync_source_candidate_draft_profile", {
+        p_candidate_id: candidate.id
+      });
+
       ready += 1;
     } catch (err) {
       const message = err instanceof Error
