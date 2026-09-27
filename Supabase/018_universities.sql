@@ -21,22 +21,26 @@ revoke all on public.universities from anon, authenticated;
 grant select on public.universities to anon, authenticated;
 grant insert, update, delete on public.universities to authenticated;
 
+drop policy if exists "public reads universities" on public.universities;
 create policy "public reads universities"
 on public.universities for select
 to anon, authenticated
 using (true);
 
+drop policy if exists "admins insert universities" on public.universities;
 create policy "admins insert universities"
 on public.universities for insert
 to authenticated
 with check (public.is_admin());
 
+drop policy if exists "admins update universities" on public.universities;
 create policy "admins update universities"
 on public.universities for update
 to authenticated
 using (public.is_admin())
 with check (public.is_admin());
 
+drop policy if exists "admins delete universities" on public.universities;
 create policy "admins delete universities"
 on public.universities for delete
 to authenticated
@@ -78,6 +82,7 @@ begin
 end;
 $$;
 
+drop trigger if exists universities_set_updated_at on public.universities;
 create trigger universities_set_updated_at
 before update on public.universities
 for each row execute function public.set_updated_at();
