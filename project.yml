@@ -31,20 +31,43 @@ targets:
           - UIInterfaceOrientationPortrait
         NSAppTransportSecurity:
           NSAllowsArbitraryLoads: false
+        APP_ENVIRONMENT: $(APP_ENVIRONMENT)
+        SUPABASE_URL: $(SUPABASE_URL)
+        SUPABASE_PUBLISHABLE_KEY: $(SUPABASE_PUBLISHABLE_KEY)
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.grantly.app
         PRODUCT_NAME: Grantly
         INFOPLIST_FILE: Grantly/Info.plist
         GENERATE_INFOPLIST_FILE: NO
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
         DEVELOPMENT_TEAM: M9L42LN3CG
         CODE_SIGN_STYLE: Automatic
         CODE_SIGN_ENTITLEMENTS: Grantly/Grantly.entitlements
       configs:
         Debug:
           APS_ENVIRONMENT: development
+          APP_ENVIRONMENT: staging
+          SUPABASE_URL: https://bvcabjwriszghmizbwji.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_8zllTlQ9y95acFTsw0uljg_XZ4nuli2
         Release:
           APS_ENVIRONMENT: production
+          APP_ENVIRONMENT: production
+          SUPABASE_URL: https://bvcabjwriszghmizbwji.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_8zllTlQ9y95acFTsw0uljg_XZ4nuli2
     dependencies:
       - package: Supabase
         product: Supabase
+
+  GrantlyTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - GrantlyTests
+    dependencies:
+      - target: Grantly
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.grantly.tests
+        GENERATE_INFOPLIST_FILE: YES
