@@ -15,14 +15,6 @@ struct ScholarshipDetailView: View {
         scholarship.verificationStatus == "verified"
     }
 
-    private var institutionInitials: String {
-        let words = scholarship.provider.split(separator: " ")
-        if words.count >= 2 {
-            return (String(words[0].prefix(1)) + String(words[1].prefix(1))).uppercased()
-        }
-        return String(scholarship.provider.prefix(2)).uppercased()
-    }
-
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 0) {
@@ -82,6 +74,7 @@ struct ScholarshipDetailView: View {
         ZStack(alignment: .bottom) {
             UniversityPhoto(
                 seed: scholarship.provider + scholarship.title + scholarship.country,
+                remoteURL: scholarship.university?.campusImageUrl,
                 height: 268
             )
 
@@ -131,19 +124,14 @@ struct ScholarshipDetailView: View {
     private var identity: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(spacing: 12) {
-                Text(institutionInitials)
-                    .font(.caption.bold())
-                    .foregroundStyle(.white)
-                    .frame(width: 44, height: 44)
-                    .background(Theme.surfaceRaised)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Theme.blue.opacity(0.28))
-                    )
+                UniversityLogo(
+                    university: scholarship.university,
+                    fallbackName: scholarship.provider,
+                    size: 44
+                )
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(scholarship.provider)
+                    Text(scholarship.university?.name ?? scholarship.provider)
                         .font(.subheadline.bold())
                         .foregroundStyle(.white)
 
@@ -266,7 +254,10 @@ struct ScholarshipDetailView: View {
 
         DetailSection(title: "At a glance", icon: "sparkles.rectangle.stack") {
             VStack(spacing: 13) {
-                DetailLine(label: "Provider", value: scholarship.provider)
+                DetailLine(
+                    label: "Provider",
+                    value: scholarship.university?.name ?? scholarship.provider
+                )
                 DetailLine(label: "Country", value: scholarship.country)
                 DetailLine(label: "Deadline", value: scholarship.deadline ?? "Varies / to be announced")
                 DetailLine(label: "Funding", value: scholarship.fundingType)
