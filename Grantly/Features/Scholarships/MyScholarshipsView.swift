@@ -61,7 +61,7 @@ struct MyScholarshipsView: View {
                 if loading {
                     VStack(spacing: 12) {
                         ProgressView()
-                            .tint(Theme.blue)
+                            .tint(Theme.orange)
                         Text("Loading your scholarship tracker...")
                             .font(.caption)
                             .foregroundStyle(.white.opacity(0.50))
@@ -161,7 +161,7 @@ struct MyScholarshipsView: View {
 
             Image(systemName: "bookmark.fill")
                 .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
                 .frame(width: 42, height: 42)
                 .background(Theme.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 13))
@@ -185,7 +185,7 @@ struct MyScholarshipsView: View {
 
                 Text("\(items.count) saved")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
             }
 
             HStack(spacing: 8) {
@@ -258,7 +258,7 @@ struct MyScholarshipsView: View {
                 .frame(height: 38)
                 .background(
                     selectedStatus == status
-                        ? Theme.blue
+                        ? Theme.orange
                         : Theme.surface
                 )
                 .clipShape(Capsule())
@@ -270,7 +270,7 @@ struct MyScholarshipsView: View {
         VStack(spacing: 14) {
             Image(systemName: selectedStatus == "All" ? "bookmark" : "tray")
                 .font(.system(size: 26, weight: .semibold))
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
                 .frame(width: 60, height: 60)
                 .background(Theme.surface)
                 .clipShape(Circle())
@@ -302,7 +302,7 @@ struct MyScholarshipsView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Application note")
                     .font(.caption.bold())
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
 
                 Text(item.scholarship.title)
                     .font(.title3.bold())
@@ -467,7 +467,7 @@ private struct TrackerMetric: View {
         VStack(alignment: .leading, spacing: 7) {
             Image(systemName: icon)
                 .font(.caption.bold())
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
 
             Text(value)
                 .font(.headline.bold())
@@ -497,7 +497,8 @@ private struct ApplicationCard: View {
         HStack(spacing: 12) {
             UniversityPhoto(
                 seed: item.scholarship.provider + item.scholarship.title,
-                height: 128
+                remoteURL: item.scholarship.university?.campusImageUrl,
+                height: 116
             )
             .frame(width: 112)
             .clipShape(RoundedRectangle(cornerRadius: 15))
@@ -549,7 +550,7 @@ private struct ApplicationCard: View {
                     Button(action: onTasks) {
                         Image(systemName: "checklist")
                             .font(.caption)
-                            .foregroundStyle(Theme.blueSoft)
+                            .foregroundStyle(Theme.orangeSoft)
                     }
                     .buttonStyle(.plain)
 
@@ -560,7 +561,7 @@ private struct ApplicationCard: View {
                                 item.notes?
                                     .trimmingCharacters(in: .whitespacesAndNewlines)
                                     .isEmpty == false
-                                    ? Theme.blueSoft
+                                    ? Theme.orangeSoft
                                     : .white.opacity(0.54)
                             )
                     }
@@ -569,7 +570,7 @@ private struct ApplicationCard: View {
                     Button(action: onWorkspace) {
                         Image(systemName: "rectangle.stack.badge.plus")
                             .font(.caption)
-                            .foregroundStyle(Theme.blueSoft)
+                            .foregroundStyle(Theme.orangeSoft)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Open Application Center")
@@ -578,7 +579,7 @@ private struct ApplicationCard: View {
                 if let deadline = item.scholarship.deadline {
                     Label(deadline, systemImage: "calendar")
                         .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                 }
 
                 if let notes = item.notes?
@@ -645,7 +646,7 @@ private struct ApplicationStatusPill: View {
     private var color: Color {
         switch status {
         case "Applied", "Submitted":
-            return Theme.blueSoft
+            return Theme.orangeSoft
         case "Interview":
             return Color(red: 0.70, green: 0.55, blue: 1.0)
         case "Offer", "Result":
