@@ -185,6 +185,43 @@ enum DataService {
         )
     }
 
+    static func setRecommendationFeedback(
+        scholarshipId: UUID,
+        feedback: String?
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        if let feedback {
+            struct Row: Encodable {
+                let user_id: UUID
+                let scholarship_id: UUID
+                let feedback: String
+                let updated_at: String
+            }
+
+            try await supabase
+                .from("recommendation_feedback")
+                .upsert(
+                    Row(
+                        user_id: userId,
+                        scholarship_id: scholarshipId,
+                        feedback: feedback,
+                        updated_at: ISO8601DateFormatter()
+                            .string(from: Date())
+                    ),
+                    onConflict: "user_id,scholarship_id"
+                )
+                .execute()
+        } else {
+            try await supabase
+                .from("recommendation_feedback")
+                .delete()
+                .eq("user_id", value: userId.uuidString)
+                .eq("scholarship_id", value: scholarshipId.uuidString)
+                .execute()
+        }
+    }
+
     static func savedScholarshipItems() async throws -> [SavedScholarshipItem] {
         let userId = try await supabase.auth.session.user.id
 
