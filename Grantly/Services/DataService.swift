@@ -498,6 +498,323 @@ enum DataService {
         )
     }
 
+    static func universityChoices() async throws -> [University] {
+        try await supabase
+            .from("universities")
+            .select()
+            .eq("entity_type", value: "university")
+            .order("name", ascending: true)
+            .execute()
+            .value
+    }
+
+    static func universityApplicationCases() async throws
+        -> [UniversityApplicationCase] {
+        let userId = try await supabase.auth.session.user.id
+
+        return try await supabase
+            .from("university_application_cases")
+            .select("*, university:universities(*)")
+            .eq("user_id", value: userId.uuidString)
+            .order("updated_at", ascending: false)
+            .execute()
+            .value
+    }
+
+    static func createUniversityApplicationCase(
+        universityId: UUID,
+        programName: String,
+        degreeLevel: String?,
+        intake: String?
+    ) async throws -> UUID {
+        struct Params: Encodable {
+            let p_university_id: UUID
+            let p_program_name: String
+            let p_degree_level: String?
+            let p_intake: String?
+        }
+
+        return try await supabase
+            .rpc(
+                "create_university_application_case",
+                params: Params(
+                    p_university_id: universityId,
+                    p_program_name: programName,
+                    p_degree_level: degreeLevel,
+                    p_intake: intake
+                )
+            )
+            .execute()
+            .value
+    }
+
+    static func universityCase(
+        id: UUID
+    ) async throws -> UniversityApplicationCase {
+        let userId = try await supabase.auth.session.user.id
+
+        return try await supabase
+            .from("university_application_cases")
+            .select("*, university:universities(*)")
+            .eq("id", value: id.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .single()
+            .execute()
+            .value
+    }
+
+    static func updateUniversityCase(
+        id: UUID,
+        programName: String,
+        degreeLevel: String?,
+        intake: String?,
+        applicationReference: String?,
+        deadline: String?,
+        notes: String
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let program_name: String
+            let degree_level: String?
+            let intake: String?
+            let application_reference: String?
+            let deadline: String?
+            let notes: String
+            let updated_at: String
+        }
+
+        try await supabase
+            .from("university_application_cases")
+            .update(
+                Row(
+                    program_name: programName.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    ),
+                    degree_level: degreeLevel,
+                    intake: intake,
+                    application_reference: applicationReference?
+                        .trimmingCharacters(in: .whitespacesAndNewlines),
+                    deadline: deadline,
+                    notes: notes.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    ),
+                    updated_at: ISO8601DateFormatter()
+                        .string(from: Date())
+                )
+            )
+            .eq("id", value: id.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+    }
+
+    static func setUniversityCaseStatus(
+        caseId: UUID,
+        status: String
+    ) async throws {
+        struct Params: Encodable {
+            let p_case_id: UUID
+            let p_status: String
+        }
+
+        try await supabase
+            .rpc(
+                "set_university_case_status",
+                params: Params(
+                    p_case_id: caseId,
+                    p_status: status
+                )
+            )
+            .execute()
+    }
+
+    static func deleteUniversityCase(
+        caseId: UUID
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        let documents = try await universityCaseDocuments(
+            caseId: caseId
+        )
+
+        if !documents.isEmpty {
+            try? await supabase.storage
+                .from("university-case-documents")
+                .remove(paths: documents.map(\.storagePath))
+        }
+
+        try await supabase
+            .from("university_application_cases")
+            .delete()
+            .eq("id", value: caseId.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+    }
+
+    static func universityCaseRequirements(
+        caseId: UUID
+    ) async throws -> [UniversityCaseRequirement] {
+        let userId = try await supabase.auth.session.user.id
+
+        return try await supabase
+            .from("university_case_requirements")
+            .select()
+            .eq("case_id", value: caseId.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .order("position", ascending: true)
+            .execute()
+            .value
+    }
+
+    static func addUniversityCaseRequirement(
+        caseId: UUID,
+        title: String,
+        category: String,
+        required: Bool,
+        sourceURL: String? = nil
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+        let existing = try await universityCaseRequirements(
+            caseId: caseId
+        )
+        let nextPosition = (existing.map(\.position).max() ?? 0) + 10
+
+        struct Row: Encodable {
+            let case_id: UUID
+            let user_id: UUID
+            let title: String
+            let category: String
+            let is_required: Bool
+            let is_official: Bool
+            let source_url: String?
+            let position: Int
+        }
+
+        try await supabase
+            .from("university_case_requirements")
+            .insert(
+                Row(
+                    case_id: caseId,
+                    user_id: userId,
+                    title: title.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    ),
+                    category: category,
+                    is_required: required,
+                    is_official: sourceURL != nil,
+                    source_url: sourceURL,
+                    position: nextPosition
+                )
+            )
+            .execute()
+    }
+
+    static func deleteUniversityCaseRequirement(
+        requirementId: UUID
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        try await supabase
+            .from("university_case_requirements")
+            .delete()
+            .eq("id", value: requirementId.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+    }
+
+    static func universityCaseDocuments(
+        caseId: UUID
+    ) async throws -> [UniversityCaseDocument] {
+        let userId = try await supabase.auth.session.user.id
+
+        return try await supabase
+            .from("university_case_documents")
+            .select()
+            .eq("case_id", value: caseId.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .order("created_at", ascending: false)
+            .execute()
+            .value
+    }
+
+    static func uploadUniversityCaseDocument(
+        caseId: UUID,
+        requirementId: UUID?,
+        fileName: String,
+        data: Data,
+        contentType: String
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+        let safeName = fileName
+            .replacingOccurrences(of: "/", with: "-")
+            .replacingOccurrences(of: "\\", with: "-")
+        let path =
+            "\(userId.uuidString.lowercased())/" +
+            "\(caseId.uuidString.lowercased())/" +
+            "\(UUID().uuidString.lowercased())-\(safeName)"
+
+        try await supabase.storage
+            .from("university-case-documents")
+            .upload(
+                path: path,
+                file: data,
+                options: FileOptions(
+                    cacheControl: "3600",
+                    contentType: contentType,
+                    upsert: false
+                )
+            )
+
+        struct Row: Encodable {
+            let case_id: UUID
+            let requirement_id: UUID?
+            let user_id: UUID
+            let file_name: String
+            let storage_path: String
+            let content_type: String
+            let byte_size: Int
+        }
+
+        do {
+            try await supabase
+                .from("university_case_documents")
+                .insert(
+                    Row(
+                        case_id: caseId,
+                        requirement_id: requirementId,
+                        user_id: userId,
+                        file_name: fileName,
+                        storage_path: path,
+                        content_type: contentType,
+                        byte_size: data.count
+                    )
+                )
+                .execute()
+        } catch {
+            try? await supabase.storage
+                .from("university-case-documents")
+                .remove(paths: [path])
+            throw error
+        }
+    }
+
+    static func deleteUniversityCaseDocument(
+        _ document: UniversityCaseDocument
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        try await supabase.storage
+            .from("university-case-documents")
+            .remove(paths: [document.storagePath])
+
+        try await supabase
+            .from("university_case_documents")
+            .delete()
+            .eq("id", value: document.id.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+    }
+
     static func applicationDocuments(
         scholarshipId: UUID
     ) async throws -> [ApplicationDocument] {

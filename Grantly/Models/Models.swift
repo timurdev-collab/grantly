@@ -393,6 +393,84 @@ struct UniversityMediaEnrichmentResult: Decodable {
 }
 
 
+struct UniversityApplicationCase: Codable, Identifiable, Hashable {
+    let id: UUID
+    let universityId: UUID
+    var programName: String
+    var degreeLevel: String?
+    var intake: String?
+    var applicationStatus: String
+    var applicationReference: String?
+    var deadline: String?
+    var notes: String
+    var submittedAt: String?
+    var interviewAt: String?
+    var resultAt: String?
+    var createdAt: String
+    var updatedAt: String
+    var university: University
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case universityId = "university_id"
+        case programName = "program_name"
+        case degreeLevel = "degree_level"
+        case intake
+        case applicationStatus = "application_status"
+        case applicationReference = "application_reference"
+        case deadline
+        case notes
+        case submittedAt = "submitted_at"
+        case interviewAt = "interview_at"
+        case resultAt = "result_at"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case university
+    }
+}
+
+struct UniversityCaseRequirement: Codable, Identifiable, Hashable {
+    let id: UUID
+    let caseId: UUID
+    let title: String
+    let category: String
+    let isRequired: Bool
+    let isOfficial: Bool
+    let sourceUrl: String?
+    let notes: String?
+    let position: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id, title, category, notes, position
+        case caseId = "case_id"
+        case isRequired = "is_required"
+        case isOfficial = "is_official"
+        case sourceUrl = "source_url"
+    }
+}
+
+struct UniversityCaseDocument: Codable, Identifiable, Hashable {
+    let id: UUID
+    let caseId: UUID
+    let requirementId: UUID?
+    let fileName: String
+    let storagePath: String
+    let contentType: String?
+    let byteSize: Int?
+    let createdAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case caseId = "case_id"
+        case requirementId = "requirement_id"
+        case fileName = "file_name"
+        case storagePath = "storage_path"
+        case contentType = "content_type"
+        case byteSize = "byte_size"
+        case createdAt = "created_at"
+    }
+}
+
 struct ApplicationDocument: Codable, Identifiable, Hashable {
     let id: UUID
     let scholarshipId: UUID
