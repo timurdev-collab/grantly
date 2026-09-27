@@ -331,6 +331,148 @@ struct AdminView: View {
                 }
             }
 
+            Section("Data reliability queue") {
+                HStack(spacing: 12) {
+                    AdminMetric(
+                        value: "\(pendingDeadlineChanges)",
+                        label: "Deadline"
+                    )
+                    AdminMetric(
+                        value: "\(pendingCycleChanges)",
+                        label: "Cycle"
+                    )
+                    AdminMetric(
+                        value: "\(brokenLinkIssueCount)",
+                        label: "Broken"
+                    )
+                    AdminMetric(
+                        value: "\(staleIssueCount)",
+                        label: "Stale"
+                    )
+                }
+                .listRowInsets(
+                    EdgeInsets(
+                        top: 14,
+                        leading: 16,
+                        bottom: 14,
+                        trailing: 16
+                    )
+                )
+
+                if expiredIssueCount > 0 {
+                    Label(
+                        "\(expiredIssueCount) expired deadline issue(s)",
+                        systemImage: "calendar.badge.exclamationmark"
+                    )
+                    .font(.caption.weight(.semibold))
+                }
+
+                if detectedChanges.isEmpty {
+                    Text("No detected changes waiting for review.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(detectedChanges.prefix(20)) { change in
+                        VStack(alignment: .leading, spacing: 7) {
+                            Text(scholarshipTitle(for: change.scholarshipId))
+                                .font(.subheadline.weight(.semibold))
+                                .lineLimit(2)
+
+                            HStack {
+                                Text(
+                                    change.fieldName
+                                        .replacingOccurrences(
+                                            of: "_",
+                                            with: " "
+                                        )
+                                        .capitalized
+                                )
+                                .font(.caption.weight(.semibold))
+
+                                Spacer()
+
+                                if let confidence = change.confidence {
+                                    Text("\(confidence)% confidence")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+
+                            if change.oldValue != change.detectedValue {
+                                Text(
+                                    "\(change.oldValue ?? "Not set") → " +
+                                    "\(change.detectedValue ?? "Not detected")"
+                                )
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            }
+
+                            if let url = URL(string: change.sourceUrl) {
+                                Link(destination: url) {
+                                    Label(
+                                        "Open official source",
+                                        systemImage: "arrow.up.right.square"
+                                    )
+                                    .font(.caption)
+                                }
+                            }
+
+                            HStack {
+                                Button("Accept") {
+                                    Task {
+                                        await reviewDetectedChange(
+                                            change,
+                                            accept: true
+                                        )
+                                    }
+                                }
+                                .buttonStyle(.borderless)
+                                .font(.caption.weight(.semibold))
+
+                                Button("Reject", role: .destructive) {
+                                    Task {
+                                        await reviewDetectedChange(
+                                            change,
+                                            accept: false
+                                        )
+                                    }
+                                }
+                                .buttonStyle(.borderless)
+                                .font(.caption.weight(.semibold))
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+
+                if !healthIssues.isEmpty {
+                    DisclosureGroup("Open catalog health issues") {
+                        ForEach(healthIssues.prefix(20)) { issue in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(scholarshipTitle(for: issue.scholarshipId))
+                                    .font(.caption.weight(.semibold))
+                                    .lineLimit(2)
+
+                                Text(
+                                    issue.issueType
+                                        .replacingOccurrences(
+                                            of: "_",
+                                            with: " "
+                                        )
+                                        .capitalized
+                                )
+                                .font(.caption2.weight(.semibold))
+
+                                Text(issue.detail)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 3)
+                        }
+                    }
+                }
+            }
+
             Section("Catalog health") {
                 HStack(spacing: 12) {
                     AdminMetric(
