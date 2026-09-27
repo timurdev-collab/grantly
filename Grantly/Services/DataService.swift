@@ -54,6 +54,21 @@ enum DataService {
             .value
     }
 
+    static func enrichUniversityMedia(
+        limit: Int = 10
+    ) async throws -> UniversityMediaEnrichmentResult {
+        struct Body: Encodable {
+            let limit: Int
+        }
+
+        return try await supabase.functions.invoke(
+            "enrich-university-media",
+            options: FunctionInvokeOptions(
+                body: Body(limit: limit)
+            )
+        )
+    }
+
     static func auditScholarships(limit: Int = 20) async throws -> ScholarshipAuditResult {
         struct Body: Encodable {
             let limit: Int
