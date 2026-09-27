@@ -606,6 +606,7 @@ private struct ExploreTopPickCard: View {
 
 struct PremiumScholarshipCard: View {
     let scholarship: Scholarship
+    var saved: Bool = false
 
     private var verified: Bool {
         scholarship.verificationStatus == "verified"
@@ -638,9 +639,9 @@ struct PremiumScholarshipCard: View {
 
                     Spacer()
 
-                    Image(systemName: "bookmark")
+                    Image(systemName: saved ? "bookmark.fill" : "bookmark")
                         .font(.caption.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(saved ? Theme.blueSoft : .white)
                         .frame(width: 34, height: 34)
                         .background(Theme.navyDeep.opacity(0.80))
                         .clipShape(Circle())
