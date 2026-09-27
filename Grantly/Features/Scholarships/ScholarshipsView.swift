@@ -108,6 +108,9 @@ struct ScholarshipsView: View {
                 )
                 .padding(.horizontal)
 
+                studyLevelSelector
+                    .padding(.horizontal)
+
                 filters
                     .padding(.horizontal)
 
@@ -236,6 +239,66 @@ struct ScholarshipsView: View {
         .padding(.top, 8)
     }
 
+    private var studyLevelSelector: some View {
+        VStack(alignment: .leading, spacing: 9) {
+            Text("Explore by study level")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.white.opacity(0.58))
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(degreeOptions, id: \.self) { value in
+                        let selected = degree == value
+
+                        Button {
+                            degree = value
+                        } label: {
+                            HStack(spacing: 6) {
+                                if value != "All" {
+                                    Image(systemName: "graduationcap.fill")
+                                        .font(.caption2)
+                                }
+
+                                Text(value)
+                                    .font(.caption.weight(.semibold))
+                            }
+                            .foregroundStyle(
+                                selected
+                                    ? .white
+                                    : .white.opacity(0.70)
+                            )
+                            .padding(.horizontal, 13)
+                            .frame(height: 38)
+                            .background(
+                                selected
+                                    ? Theme.blue
+                                    : Theme.surfaceRaised
+                            )
+                            .clipShape(Capsule())
+                            .overlay(
+                                Capsule()
+                                    .stroke(
+                                        selected
+                                            ? Theme.blueSoft.opacity(0.35)
+                                            : .white.opacity(0.06)
+                                    )
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(
+                            value == "All"
+                                ? "All study levels"
+                                : "\(value) study level"
+                        )
+                        .accessibilityAddTraits(
+                            selected ? .isSelected : []
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     private var filters: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
@@ -246,16 +309,6 @@ struct ScholarshipsView: View {
                 ) {
                     ForEach(countryOptions, id: \.self) { value in
                         Button(value) { country = value }
-                    }
-                }
-
-                filterMenu(
-                    title: degree == "All" ? "Study level" : degree,
-                    icon: "graduationcap",
-                    active: degree != "All"
-                ) {
-                    ForEach(degreeOptions, id: \.self) { value in
-                        Button(value) { degree = value }
                     }
                 }
 

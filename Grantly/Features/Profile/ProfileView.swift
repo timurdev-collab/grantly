@@ -1,4 +1,6 @@
+import PhotosUI
 import SwiftUI
+import UIKit
 
 struct ProfileView: View {
     @Environment(AuthStore.self) private var auth
@@ -23,6 +25,9 @@ struct ProfileView: View {
     @State private var showingDeleteAccount = false
     @State private var deletingAccount = false
     @State private var showingEditProfile = false
+    @State private var avatarURL: String?
+    @State private var selectedPhoto: PhotosPickerItem?
+    @State private var uploadingPhoto = false
 
     private var displayName: String {
         let value = fullName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -140,12 +145,29 @@ struct ProfileView: View {
                                 endPoint: .bottomTrailing
                             )
                         )
-                        .frame(width: 86, height: 86)
 
-                    Text(profileInitials)
-                        .font(.system(size: 26, weight: .bold))
-                        .foregroundStyle(.white)
+                    if let avatarURL,
+                       let url = URL(string: avatarURL) {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            default:
+                                Text(profileInitials)
+                                    .font(.system(size: 26, weight: .bold))
+                                    .foregroundStyle(.white)
+                            }
+                        }
+                    } else {
+                        Text(profileInitials)
+                            .font(.system(size: 26, weight: .bold))
+                            .foregroundStyle(.white)
+                    }
                 }
+                .frame(width: 86, height: 86)
+                .clipShape(Circle())
                 .overlay(
                     Circle()
                         .stroke(.white.opacity(0.12), lineWidth: 1)
@@ -454,6 +476,60 @@ struct ProfileView: View {
                     .keyboardType(.decimalPad)
                 }
 
+                Section("Profile photo") {
+                    HStack(spacing: 14) {
+                        ZStack {
+                            Circle()
+                                .fill(Theme.surfaceRaised)
+
+                            if let avatarURL,
+                               let url = URL(string: avatarURL) {
+                                AsyncImage(url: url) { phase in
+                                    switch phase {
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                    default:
+                                        Text(profileInitials)
+                                            .font(.headline.bold())
+                                            .foregroundStyle(.white)
+                                    }
+                                }
+                            } else {
+                                Text(profileInitials)
+                                    .font(.headline.bold())
+                                    .foregroundStyle(.white)
+                            }
+                        }
+                        .frame(width: 62, height: 62)
+                        .clipShape(Circle())
+
+                        VStack(alignment: .leading, spacing: 8) {
+                            PhotosPicker(
+                                selection: $selectedPhoto,
+                                matching: .images
+                            ) {
+                                Label(
+                                    uploadingPhoto
+                                        ? "Uploading…"
+                                        : "Choose photo",
+                                    systemImage: "photo.on.rectangle"
+                                )
+                            }
+                            .disabled(uploadingPhoto)
+
+                            Text("JPG, PNG or HEIC. Up to 5 MB.")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+                .onChange(of: selectedPhoto) {
+                    guard selectedPhoto != nil else { return }
+                    Task { await uploadSelectedPhoto() }
+                }
+
                 Section("Community") {
                     TextField(
                         "Short bio",
@@ -541,6 +617,7 @@ struct ProfileView: View {
         ) {
             bio = community.bio ?? ""
             visible = community.isVisible ?? true
+            avatarURL = community.avatarUrl
         }
     }
 
@@ -552,6 +629,86 @@ struct ProfileView: View {
         if !(await auth.deleteAccount()) {
             status = auth.errorMessage ?? "Your account could not be deleted."
         }
+    }
+
+    @MainActor
+    private func uploadSelectedPhoto() async {
+        guard
+            let selectedPhoto,
+            let userId = auth.userId
+        else {
+            return
+        }
+
+        uploadingPhoto = true
+        status = ""
+        defer {
+            uploadingPhoto = false
+            self.selectedPhoto = nil
+        }
+
+        do {
+            guard
+                let rawData = try await selectedPhoto
+                    .loadTransferable(type: Data.self),
+                let image = UIImage(data: rawData),
+                let jpegData = resizedJPEGData(
+                    from: image,
+                    maxDimension: 1200,
+                    compressionQuality: 0.82
+                )
+            else {
+                status = "Could not read that photo."
+                return
+            }
+
+            guard jpegData.count <= 5 * 1024 * 1024 else {
+                status = "Please choose a smaller photo."
+                return
+            }
+
+            avatarURL = try await DataService.uploadProfileAvatar(
+                userId: userId,
+                imageData: jpegData
+            )
+
+            status = "Profile photo updated."
+        } catch {
+            status = error.localizedDescription
+        }
+    }
+
+    private func resizedJPEGData(
+        from image: UIImage,
+        maxDimension: CGFloat,
+        compressionQuality: CGFloat
+    ) -> Data? {
+        let size = image.size
+        let longestSide = max(size.width, size.height)
+
+        guard longestSide > 0 else {
+            return nil
+        }
+
+        let scale = min(1, maxDimension / longestSide)
+        let targetSize = CGSize(
+            width: size.width * scale,
+            height: size.height * scale
+        )
+
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        let resized = renderer.image { _ in
+            image.draw(
+                in: CGRect(
+                    origin: .zero,
+                    size: targetSize
+                )
+            )
+        }
+
+        return resized.jpegData(
+            compressionQuality: compressionQuality
+        )
     }
 
     @MainActor
