@@ -3,6 +3,7 @@ import SwiftUI
 struct AdminView: View {
     @State private var scholarships: [Scholarship] = []
     @State private var reports: [SafetyReport] = []
+    @State private var analytics: AdminAnalyticsSummary?
     @State private var showingAdd = false
     @State private var auditing = false
     @State private var enrichingMedia = false
@@ -45,6 +46,91 @@ struct AdminView: View {
 
     var body: some View {
         List {
+            if let analytics {
+                Section("Product analytics · \(analytics.days) days") {
+                    HStack(spacing: 12) {
+                        AdminMetric(
+                            value: "\(analytics.views)",
+                            label: "Views"
+                        )
+                        AdminMetric(
+                            value: "\(analytics.saves)",
+                            label: "Saves"
+                        )
+                        AdminMetric(
+                            value: "\(analytics.officialClicks)",
+                            label: "Clicks"
+                        )
+                        AdminMetric(
+                            value: "\(analytics.applications)",
+                            label: "Applied"
+                        )
+                    }
+                    .listRowInsets(
+                        EdgeInsets(
+                            top: 14,
+                            leading: 16,
+                            bottom: 14,
+                            trailing: 16
+                        )
+                    )
+
+                    HStack {
+                        Label(
+                            "\(analytics.searches) searches",
+                            systemImage: "magnifyingglass"
+                        )
+
+                        Spacer()
+
+                        Label(
+                            "\(analytics.zeroResultSearches) zero results",
+                            systemImage: "exclamationmark.magnifyingglass"
+                        )
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                    Label(
+                        "\(analytics.openHealthIssues) open catalog issues",
+                        systemImage: "stethoscope"
+                    )
+                    .font(.caption.weight(.semibold))
+
+                    if !analytics.topScholarships.isEmpty {
+                        ForEach(analytics.topScholarships.prefix(5)) { item in
+                            VStack(alignment: .leading, spacing: 5) {
+                                Text(item.title)
+                                    .font(.subheadline.weight(.semibold))
+                                    .lineLimit(2)
+
+                                Text(item.provider)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+
+                                HStack(spacing: 12) {
+                                    Label(
+                                        "\(item.views)",
+                                        systemImage: "eye"
+                                    )
+                                    Label(
+                                        "\(item.saves)",
+                                        systemImage: "bookmark"
+                                    )
+                                    Label(
+                                        "\(item.officialClicks)",
+                                        systemImage: "arrow.up.right.square"
+                                    )
+                                }
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 3)
+                        }
+                    }
+                }
+            }
+
             Section("Catalog health") {
                 HStack(spacing: 12) {
                     AdminMetric(
@@ -265,9 +351,12 @@ struct AdminView: View {
                 DataService.allScholarshipsForAdmin()
             async let reportRows =
                 DataService.safetyReports()
+            async let analyticsSummary =
+                DataService.adminAnalyticsSummary(days: 30)
 
             scholarships = try await scholarshipRows
             reports = try await reportRows
+            analytics = try await analyticsSummary
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
