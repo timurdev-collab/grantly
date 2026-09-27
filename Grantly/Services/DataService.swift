@@ -363,12 +363,104 @@ enum DataService {
                 result_at,
                 documents_complete,
                 reminder_enabled,
+                application_reference,
+                portal_last_checked_at,
                 scholarships!saved_scholarships_scholarship_id_fkey (*, university:universities(*))
             """)
             .eq("user_id", value: userId.uuidString)
             .order("updated_at", ascending: false)
             .execute()
             .value
+    }
+
+    static func savedApplication(
+        scholarshipId: UUID
+    ) async throws -> SavedScholarshipItem? {
+        let userId = try await supabase.auth.session.user.id
+
+        let rows: [SavedScholarshipItem] = try await supabase
+            .from("saved_scholarships")
+            .select("""
+                scholarship_id,
+                application_status,
+                notes,
+                application_deadline,
+                personal_deadline,
+                submitted_at,
+                interview_at,
+                result_at,
+                documents_complete,
+                reminder_enabled,
+                application_reference,
+                portal_last_checked_at,
+                scholarships!saved_scholarships_scholarship_id_fkey (*, university:universities(*))
+            """)
+            .eq("user_id", value: userId.uuidString)
+            .eq("scholarship_id", value: scholarshipId.uuidString)
+            .limit(1)
+            .execute()
+            .value
+
+        return rows.first
+    }
+
+    static func updateApplicationWorkspace(
+        scholarshipId: UUID,
+        reference: String,
+        notes: String
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let application_reference: String?
+            let notes: String
+            let updated_at: String
+        }
+
+        let cleanedReference = reference
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        try await supabase
+            .from("saved_scholarships")
+            .update(
+                Row(
+                    application_reference:
+                        cleanedReference.isEmpty ? nil : cleanedReference,
+                    notes: notes.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    ),
+                    updated_at: ISO8601DateFormatter()
+                        .string(from: Date())
+                )
+            )
+            .eq("user_id", value: userId.uuidString)
+            .eq("scholarship_id", value: scholarshipId.uuidString)
+            .execute()
+    }
+
+    static func markApplicationPortalChecked(
+        scholarshipId: UUID
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let portal_last_checked_at: String
+            let updated_at: String
+        }
+
+        let now = ISO8601DateFormatter().string(from: Date())
+
+        try await supabase
+            .from("saved_scholarships")
+            .update(
+                Row(
+                    portal_last_checked_at: now,
+                    updated_at: now
+                )
+            )
+            .eq("user_id", value: userId.uuidString)
+            .eq("scholarship_id", value: scholarshipId.uuidString)
+            .execute()
     }
 
     static func updateApplicationStatus(
