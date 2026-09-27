@@ -649,6 +649,49 @@ struct ScholarshipSourceCandidate: Decodable, Identifiable {
     }
 }
 
+struct ScholarshipAuditObservation: Decodable, Identifiable {
+    let id: Int
+    let scholarshipId: UUID
+    let auditRunId: UUID?
+    let checkedAt: String
+    let outcome: String
+    let httpStatus: Int?
+    let linkStatus: String?
+    let finalUrl: String?
+    let sourceChanged: Bool
+    let deadlineCandidate: String?
+    let deadlineConfidence: Int?
+    let deadlineCandidateCount: Int?
+    let deadlineAmbiguous: Bool
+    let deadlineEvidence: String?
+    let cycleCandidate: String?
+    let cycleConfidence: Int?
+    let cycleStatus: String?
+    let auditFailureCount: Int
+    let auditError: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, outcome
+        case scholarshipId = "scholarship_id"
+        case auditRunId = "audit_run_id"
+        case checkedAt = "checked_at"
+        case httpStatus = "http_status"
+        case linkStatus = "link_status"
+        case finalUrl = "final_url"
+        case sourceChanged = "source_changed"
+        case deadlineCandidate = "deadline_candidate"
+        case deadlineConfidence = "deadline_confidence"
+        case deadlineCandidateCount = "deadline_candidate_count"
+        case deadlineAmbiguous = "deadline_ambiguous"
+        case deadlineEvidence = "deadline_evidence"
+        case cycleCandidate = "cycle_candidate"
+        case cycleConfidence = "cycle_confidence"
+        case cycleStatus = "cycle_status"
+        case auditFailureCount = "audit_failure_count"
+        case auditError = "audit_error"
+    }
+}
+
 struct CatalogHealthIssue: Decodable, Identifiable {
     let id: UUID
     let scholarshipId: UUID
