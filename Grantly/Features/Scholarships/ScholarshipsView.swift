@@ -3,29 +3,63 @@ import SwiftUI
 struct ScholarshipsView: View {
     @State private var scholarships: [Scholarship] = []
     @State private var query = ""
-    @State private var region = "All"
+    @State private var country = "All"
     @State private var degree = "All"
+    @State private var field = "All"
     @State private var funding = "All"
     @State private var source = "All"
     @State private var sort = "Recommended"
     @State private var loading = true
     @State private var errorMessage: String?
 
-    private var regionOptions: [String] {
-        ["All"] + Array(Set(scholarships.map(\.region))).sorted()
+    private var countryOptions: [String] {
+        ["All"] + Array(Set(scholarships.map(\.country))).sorted()
     }
 
     private var degreeOptions: [String] {
         ["All"] + Array(Set(scholarships.flatMap(\.degreeLevels))).sorted()
     }
 
+    private var fieldOptions: [String] {
+        let values = scholarships
+            .flatMap(\.fields)
+            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+
+        return ["All"] + Array(Set(values)).sorted()
+    }
+
     private var fundingOptions: [String] {
         ["All"] + Array(Set(scholarships.map(\.fundingType))).sorted()
     }
 
+    private var verifiedCount: Int {
+        scholarships.filter { $0.verificationStatus == "verified" }.count
+    }
+
+    private var topPicks: [Scholarship] {
+        scholarships
+            .filter {
+                $0.verificationStatus == "verified" &&
+                (
+                    $0.fundingType.lowercased().contains("fully") ||
+                    $0.deadline != nil
+                )
+            }
+            .sorted {
+                let leftFully = $0.fundingType.lowercased().contains("fully")
+                let rightFully = $1.fundingType.lowercased().contains("fully")
+                if leftFully != rightFully {
+                    return leftFully && !rightFully
+                }
+                return ($0.deadline ?? "9999-12-31") < ($1.deadline ?? "9999-12-31")
+            }
+    }
+
     private var filtered: [Scholarship] {
         let rows = scholarships.filter { scholarship in
-            let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            let q = query
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .lowercased()
 
             let queryMatches =
                 q.isEmpty ||
@@ -34,9 +68,21 @@ struct ScholarshipsView: View {
                 scholarship.country.lowercased().contains(q) ||
                 scholarship.fields.joined(separator: " ").lowercased().contains(q)
 
-            let regionMatches = region == "All" || scholarship.region == region
-            let degreeMatches = degree == "All" || scholarship.degreeLevels.contains(degree)
-            let fundingMatches = funding == "All" || scholarship.fundingType == funding
+            let countryMatches =
+                country == "All" ||
+                scholarship.country == country
+
+            let degreeMatches =
+                degree == "All" ||
+                scholarship.degreeLevels.contains(degree)
+
+            let fieldMatches =
+                field == "All" ||
+                scholarship.fields.contains(field)
+
+            let fundingMatches =
+                funding == "All" ||
+                scholarship.fundingType == funding
 
             let verification = scholarship.verificationStatus ?? "verified"
             let sourceMatches =
@@ -44,103 +90,149 @@ struct ScholarshipsView: View {
                 (source == "Verified" && verification == "verified") ||
                 (source == "Curated" && verification == "curated")
 
-            return queryMatches && regionMatches && degreeMatches && fundingMatches && sourceMatches
+            return queryMatches &&
+                countryMatches &&
+                degreeMatches &&
+                fieldMatches &&
+                fundingMatches &&
+                sourceMatches
         }
 
         switch sort {
         case "Deadline":
             return rows.sorted {
                 switch ($0.deadline, $1.deadline) {
-                case let (a?, b?): return a < b
-                case (_?, nil): return true
-                case (nil, _?): return false
-                default: return $0.title < $1.title
+                case let (a?, b?):
+                    return a < b
+                case (_?, nil):
+                    return true
+                case (nil, _?):
+                    return false
+                default:
+                    return $0.title < $1.title
                 }
             }
         case "Verified first":
             return rows.sorted {
                 let left = $0.verificationStatus == "verified"
                 let right = $1.verificationStatus == "verified"
-                if left != right { return left && !right }
+                if left != right {
+                    return left && !right
+                }
                 return $0.title < $1.title
             }
         default:
             return rows.sorted {
-                let left = $0.verificationStatus == "verified"
-                let right = $1.verificationStatus == "verified"
-                if left != right { return left && !right }
+                let leftVerified = $0.verificationStatus == "verified"
+                let rightVerified = $1.verificationStatus == "verified"
+
+                if leftVerified != rightVerified {
+                    return leftVerified && !rightVerified
+                }
+
+                let leftFully = $0.fundingType.lowercased().contains("fully")
+                let rightFully = $1.fundingType.lowercased().contains("fully")
+
+                if leftFully != rightFully {
+                    return leftFully && !rightFully
+                }
+
                 return $0.title < $1.title
             }
         }
     }
 
+    private var hasFilters: Bool {
+        country != "All" ||
+        degree != "All" ||
+        field != "All" ||
+        funding != "All" ||
+        source != "All"
+    }
+
+    private var shouldShowTopPicks: Bool {
+        query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+        !hasFilters &&
+        !topPicks.isEmpty
+    }
+
     var body: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(spacing: 14) {
-                HStack {
-                    Text("Explore")
-                        .font(.system(size: 30, weight: .bold))
-                        .foregroundStyle(.white)
+            LazyVStack(spacing: 18) {
+                exploreHeader
 
-                    Spacer()
-                }
+                SearchField(
+                    text: $query,
+                    prompt: "Search scholarships, universities, countries..."
+                )
                 .padding(.horizontal)
-                .padding(.top, 8)
-
-                SearchField(text: $query, prompt: "Search scholarships...")
-                    .padding(.horizontal)
 
                 filters
                     .padding(.horizontal)
 
-                HStack {
-                    Text("\(filtered.count) scholarships found")
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.58))
-
-                    Spacer()
-
-                    Menu {
-                        Button("Recommended") { sort = "Recommended" }
-                        Button("Verified first") { sort = "Verified first" }
-                        Button("Deadline") { sort = "Deadline" }
-                    } label: {
-                        HStack(spacing: 5) {
-                            Text("Sort")
-                            Image(systemName: "slider.horizontal.3")
-                        }
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.72))
-                    }
+                if shouldShowTopPicks {
+                    topPicksSection
                 }
-                .padding(.horizontal)
-                .padding(.top, 2)
+
+                resultsHeader
 
                 if loading && scholarships.isEmpty {
-                    ProgressView()
-                        .tint(Theme.blue)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 60)
+                    VStack(spacing: 12) {
+                        ProgressView()
+                            .tint(Theme.blue)
+
+                        Text("Finding trusted opportunities...")
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.50))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 64)
                 } else if filtered.isEmpty {
-                    EmptyState(
-                        icon: "magnifyingglass",
-                        title: "No scholarships found",
-                        text: "Try another search or clear a filter."
-                    )
-                    .padding(.top, 36)
+                    VStack(spacing: 14) {
+                        Image(systemName: "magnifyingglass")
+                            .font(.system(size: 28, weight: .semibold))
+                            .foregroundStyle(Theme.blueSoft)
+                            .frame(width: 60, height: 60)
+                            .background(Theme.surface)
+                            .clipShape(Circle())
+
+                        Text("No scholarships found")
+                            .font(.headline.bold())
+                            .foregroundStyle(.white)
+
+                        Text("Try another search or clear one of your filters.")
+                            .font(.subheadline)
+                            .foregroundStyle(.white.opacity(0.56))
+                            .multilineTextAlignment(.center)
+
+                        if hasFilters {
+                            Button("Clear filters") {
+                                clearFilters()
+                            }
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.blueSoft)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 48)
                 } else {
                     ForEach(filtered) { scholarship in
                         NavigationLink {
-                            ScholarshipDetailView(scholarship: scholarship, match: nil)
+                            ScholarshipDetailView(
+                                scholarship: scholarship,
+                                match: nil
+                            )
                         } label: {
-                            PremiumScholarshipCard(scholarship: scholarship)
+                            PremiumScholarshipCard(
+                                scholarship: scholarship
+                            )
                         }
                         .buttonStyle(.plain)
                         .padding(.horizontal)
                     }
                 }
             }
-            .padding(.bottom, 28)
+            .padding(.bottom, 30)
         }
         .background(Theme.pageBackground)
         .navigationBarHidden(true)
@@ -159,28 +251,98 @@ struct ScholarshipsView: View {
         }
     }
 
+    private var exploreHeader: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Explore")
+                        .font(.system(size: 31, weight: .bold))
+                        .foregroundStyle(.white)
+
+                    Text("Scholarships from universities around the world")
+                        .font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.56))
+                }
+
+                Spacer()
+
+                Image(systemName: "slider.horizontal.3")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Theme.blueSoft)
+                    .frame(width: 40, height: 40)
+                    .background(Theme.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: 13))
+            }
+
+            HStack(spacing: 10) {
+                ExploreSummary(
+                    value: "\(scholarships.count)",
+                    label: "Opportunities"
+                )
+
+                ExploreSummary(
+                    value: "\(verifiedCount)",
+                    label: "Verified"
+                )
+
+                ExploreSummary(
+                    value: "\(Set(scholarships.map(\.country)).count)",
+                    label: "Countries"
+                )
+            }
+        }
+        .padding(.horizontal)
+        .padding(.top, 8)
+    }
+
     private var filters: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                filterMenu(title: region == "All" ? "Countries" : region) {
-                    ForEach(regionOptions, id: \.self) { value in
-                        Button(value) { region = value }
+                filterMenu(
+                    title: country == "All" ? "Countries" : country,
+                    icon: "globe",
+                    active: country != "All"
+                ) {
+                    ForEach(countryOptions, id: \.self) { value in
+                        Button(value) { country = value }
                     }
                 }
 
-                filterMenu(title: degree == "All" ? "Study level" : degree) {
+                filterMenu(
+                    title: degree == "All" ? "Study level" : degree,
+                    icon: "graduationcap",
+                    active: degree != "All"
+                ) {
                     ForEach(degreeOptions, id: \.self) { value in
                         Button(value) { degree = value }
                     }
                 }
 
-                filterMenu(title: funding == "All" ? "Funding" : funding) {
+                filterMenu(
+                    title: field == "All" ? "Field" : field,
+                    icon: "books.vertical",
+                    active: field != "All"
+                ) {
+                    ForEach(fieldOptions, id: \.self) { value in
+                        Button(value) { field = value }
+                    }
+                }
+
+                filterMenu(
+                    title: funding == "All" ? "Funding" : funding,
+                    icon: "banknote",
+                    active: funding != "All"
+                ) {
                     ForEach(fundingOptions, id: \.self) { value in
                         Button(value) { funding = value }
                     }
                 }
 
-                filterMenu(title: source == "All" ? "Type" : source) {
+                filterMenu(
+                    title: source == "All" ? "Trust" : source,
+                    icon: "checkmark.seal",
+                    active: source != "All"
+                ) {
                     Button("All trusted") { source = "All" }
                     Button("Verified") { source = "Verified" }
                     Button("Curated") { source = "Curated" }
@@ -188,47 +350,135 @@ struct ScholarshipsView: View {
 
                 if hasFilters {
                     Button {
-                        region = "All"
-                        degree = "All"
-                        funding = "All"
-                        source = "All"
+                        clearFilters()
                     } label: {
-                        Image(systemName: "xmark")
-                            .font(.caption.bold())
-                            .frame(width: 34, height: 34)
-                            .background(Theme.surfaceRaised)
-                            .foregroundStyle(.white)
-                            .clipShape(Circle())
+                        Label("Clear", systemImage: "xmark")
+                            .font(.caption.weight(.semibold))
+                            .padding(.horizontal, 12)
+                            .frame(height: 38)
+                            .background(Theme.surface)
+                            .foregroundStyle(.white.opacity(0.74))
+                            .clipShape(Capsule())
                     }
+                    .buttonStyle(.plain)
                 }
             }
         }
     }
 
-    private var hasFilters: Bool {
-        region != "All" || degree != "All" || funding != "All" || source != "All"
+    private var topPicksSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Top opportunities")
+                        .font(.headline.bold())
+                        .foregroundStyle(.white)
+
+                    Text("Verified scholarships worth a closer look")
+                        .font(.caption)
+                        .foregroundStyle(.white.opacity(0.50))
+                }
+
+                Spacer()
+
+                Image(systemName: "sparkles")
+                    .foregroundStyle(Theme.blueSoft)
+            }
+            .padding(.horizontal)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(topPicks.prefix(6)) { scholarship in
+                        NavigationLink {
+                            ScholarshipDetailView(
+                                scholarship: scholarship,
+                                match: nil
+                            )
+                        } label: {
+                            ExploreTopPickCard(scholarship: scholarship)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+    }
+
+    private var resultsHeader: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(hasFilters || !query.isEmpty ? "Search results" : "All scholarships")
+                    .font(.headline.bold())
+                    .foregroundStyle(.white)
+
+                Text("\(filtered.count) opportunities")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.48))
+            }
+
+            Spacer()
+
+            Menu {
+                Button("Recommended") { sort = "Recommended" }
+                Button("Verified first") { sort = "Verified first" }
+                Button("Deadline") { sort = "Deadline" }
+            } label: {
+                Label(sort, systemImage: "arrow.up.arrow.down")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.74))
+                    .padding(.horizontal, 11)
+                    .frame(height: 34)
+                    .background(Theme.surface)
+                    .clipShape(Capsule())
+            }
+        }
+        .padding(.horizontal)
+        .padding(.top, 2)
     }
 
     private func filterMenu<Content: View>(
         title: String,
+        icon: String,
+        active: Bool,
         @ViewBuilder content: () -> Content
     ) -> some View {
         Menu(content: content) {
-            Text(title)
+            Label(title, systemImage: icon)
                 .font(.caption.weight(.semibold))
                 .padding(.horizontal, 12)
-                .padding(.vertical, 9)
-                .foregroundStyle(.white)
-                .background(Theme.surfaceRaised)
+                .frame(height: 38)
+                .foregroundStyle(active ? .white : .white.opacity(0.72))
+                .background(active ? Theme.blue : Theme.surfaceRaised)
                 .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(.white.opacity(active ? 0 : 0.06))
+                )
         }
+    }
+
+    private func clearFilters() {
+        country = "All"
+        degree = "All"
+        field = "All"
+        funding = "All"
+        source = "All"
     }
 
     @MainActor
     private func load() async {
         let initial = scholarships.isEmpty
-        if initial { loading = true }
-        defer { if initial { loading = false } }
+
+        if initial {
+            loading = true
+        }
+
+        defer {
+            if initial {
+                loading = false
+            }
+        }
 
         do {
             scholarships = try await DataService.scholarships()
@@ -239,6 +489,96 @@ struct ScholarshipsView: View {
     }
 }
 
+private struct ExploreSummary: View {
+    let value: String
+    let label: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(value)
+                .font(.system(size: 17, weight: .bold))
+                .foregroundStyle(.white)
+
+            Text(label)
+                .font(.system(size: 9, weight: .medium))
+                .foregroundStyle(.white.opacity(0.45))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(.white.opacity(0.05))
+        )
+    }
+}
+
+private struct ExploreTopPickCard: View {
+    let scholarship: Scholarship
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack(alignment: .topLeading) {
+                UniversityPhoto(
+                    seed: "top" + scholarship.provider + scholarship.title,
+                    height: 126
+                )
+
+                LinearGradient(
+                    colors: [Theme.navyDeep.opacity(0.10), Theme.navyDeep.opacity(0.64)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+
+                TrustSeal(
+                    verified: scholarship.verificationStatus == "verified"
+                )
+                .padding(10)
+            }
+
+            VStack(alignment: .leading, spacing: 7) {
+                FundingBadge(text: scholarship.fundingType)
+
+                Text(scholarship.title)
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+                    .frame(height: 38, alignment: .top)
+
+                Text(scholarship.provider)
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.54))
+                    .lineLimit(1)
+
+                HStack {
+                    Label(
+                        scholarship.country,
+                        systemImage: "mappin.and.ellipse"
+                    )
+                    .lineLimit(1)
+
+                    Spacer()
+
+                    Image(systemName: "arrow.up.right")
+                        .font(.caption2.bold())
+                        .foregroundStyle(Theme.blueSoft)
+                }
+                .font(.caption2)
+                .foregroundStyle(.white.opacity(0.66))
+            }
+            .padding(12)
+        }
+        .frame(width: 232)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 19))
+        .overlay(
+            RoundedRectangle(cornerRadius: 19)
+                .stroke(.white.opacity(0.05))
+        )
+    }
+}
+
 struct PremiumScholarshipCard: View {
     let scholarship: Scholarship
 
@@ -246,57 +586,87 @@ struct PremiumScholarshipCard: View {
         scholarship.verificationStatus == "verified"
     }
 
+    private var primaryDegree: String {
+        scholarship.degreeLevels.first ?? "Multiple levels"
+    }
+
+    private var primaryField: String {
+        scholarship.fields.first ?? "All fields"
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ZStack(alignment: .topTrailing) {
+            ZStack(alignment: .bottomLeading) {
                 UniversityPhoto(
                     seed: scholarship.provider + scholarship.title + scholarship.country,
-                    height: 145
+                    height: 164
                 )
 
-                Button {} label: {
+                LinearGradient(
+                    colors: [.clear, Theme.navyDeep.opacity(0.92)],
+                    startPoint: .center,
+                    endPoint: .bottom
+                )
+
+                HStack(alignment: .bottom) {
+                    FundingBadge(text: scholarship.fundingType)
+
+                    Spacer()
+
                     Image(systemName: "bookmark")
                         .font(.caption.bold())
                         .foregroundStyle(.white)
                         .frame(width: 34, height: 34)
-                        .background(Theme.navyDeep.opacity(0.84))
+                        .background(Theme.navyDeep.opacity(0.80))
                         .clipShape(Circle())
                 }
-                .buttonStyle(.plain)
-                .padding(10)
-
-                VStack {
-                    Spacer()
-                    HStack {
-                        FundingBadge(text: scholarship.fundingType)
-                        Spacer()
-                    }
-                    .padding(11)
-                }
+                .padding(12)
             }
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text(scholarship.title)
-                    .font(.headline.bold())
-                    .foregroundStyle(.white)
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(2)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(alignment: .top, spacing: 10) {
+                    InstitutionBadge(name: scholarship.provider)
 
-                Text(scholarship.provider)
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.60))
-                    .lineLimit(1)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(scholarship.title)
+                            .font(.headline.bold())
+                            .foregroundStyle(.white)
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(2)
+
+                        Text(scholarship.provider)
+                            .font(.caption)
+                            .foregroundStyle(.white.opacity(0.58))
+                            .lineLimit(1)
+                    }
+
+                    Spacer(minLength: 0)
+                }
 
                 HStack(spacing: 8) {
-                    Label(scholarship.country, systemImage: "mappin.and.ellipse")
-                    if let degree = scholarship.degreeLevels.first {
-                        Label(degree, systemImage: "graduationcap")
-                    }
-                }
-                .font(.caption2)
-                .foregroundStyle(.white.opacity(0.62))
+                    MetadataPill(
+                        icon: "mappin.and.ellipse",
+                        text: scholarship.country
+                    )
 
-                HStack {
+                    MetadataPill(
+                        icon: "graduationcap",
+                        text: primaryDegree
+                    )
+                }
+
+                if !primaryField.isEmpty {
+                    Label(primaryField, systemImage: "books.vertical")
+                        .font(.caption2)
+                        .foregroundStyle(.white.opacity(0.56))
+                        .lineLimit(1)
+                }
+
+                Rectangle()
+                    .fill(.white.opacity(0.06))
+                    .frame(height: 1)
+
+                HStack(spacing: 8) {
                     TrustSeal(verified: verified)
 
                     Spacer()
@@ -304,25 +674,76 @@ struct PremiumScholarshipCard: View {
                     if let deadline = scholarship.deadline {
                         Label(deadline, systemImage: "calendar")
                             .font(.caption2.weight(.semibold))
-                            .foregroundStyle(.white.opacity(0.72))
+                            .foregroundStyle(Theme.blueSoft)
+                    } else {
+                        Text("Deadline varies")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(.white.opacity(0.48))
                     }
 
                     Image(systemName: "arrow.right")
                         .font(.caption.bold())
                         .foregroundStyle(.white)
                         .frame(width: 32, height: 32)
-                        .background(Theme.blue)
+                        .background(Theme.blueGradient)
                         .clipShape(Circle())
                 }
             }
             .padding(13)
         }
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
-            RoundedRectangle(cornerRadius: 18)
+            RoundedRectangle(cornerRadius: 20)
                 .stroke(.white.opacity(0.05))
         )
+    }
+}
+
+private struct InstitutionBadge: View {
+    let name: String
+
+    private var initials: String {
+        let words = name.split(separator: " ")
+
+        if words.count >= 2 {
+            return (
+                String(words[0].prefix(1)) +
+                String(words[1].prefix(1))
+            )
+            .uppercased()
+        }
+
+        return String(name.prefix(2)).uppercased()
+    }
+
+    var body: some View {
+        Text(initials)
+            .font(.caption2.bold())
+            .foregroundStyle(.white)
+            .frame(width: 38, height: 38)
+            .background(Theme.surfaceRaised)
+            .clipShape(RoundedRectangle(cornerRadius: 11))
+            .overlay(
+                RoundedRectangle(cornerRadius: 11)
+                    .stroke(Theme.blue.opacity(0.25))
+            )
+    }
+}
+
+private struct MetadataPill: View {
+    let icon: String
+    let text: String
+
+    var body: some View {
+        Label(text, systemImage: icon)
+            .font(.caption2.weight(.medium))
+            .foregroundStyle(.white.opacity(0.68))
+            .padding(.horizontal, 9)
+            .padding(.vertical, 6)
+            .background(Theme.surfaceRaised)
+            .clipShape(Capsule())
+            .lineLimit(1)
     }
 }
 
