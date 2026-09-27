@@ -69,6 +69,46 @@ enum DataService {
             .value
     }
 
+    static func adminSystemHealth() async throws -> AdminSystemHealth {
+        try await supabase
+            .rpc("admin_system_health")
+            .execute()
+            .value
+    }
+
+    static func recentAdminActionLogs(
+        limit: Int = 20
+    ) async throws -> [AdminActionLog] {
+        try await supabase
+            .from("admin_action_logs")
+            .select("id,action,target_type,target_ids,created_at")
+            .order("created_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+    }
+
+    static func adminBulkUpdateScholarships(
+        ids: [UUID],
+        action: String
+    ) async throws -> Int {
+        struct Params: Encodable {
+            let p_ids: [UUID]
+            let p_action: String
+        }
+
+        return try await supabase
+            .rpc(
+                "admin_bulk_update_scholarships",
+                params: Params(
+                    p_ids: ids,
+                    p_action: action
+                )
+            )
+            .execute()
+            .value
+    }
+
     static func currentProfile(userId: UUID) async throws -> StudentProfile {
         try await supabase
             .from("student_profiles")
