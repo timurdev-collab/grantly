@@ -17,7 +17,27 @@ struct EmptyState: View {
     let text: String
 
     var body: some View {
-        ContentUnavailableView(title, systemImage: icon, description: Text(text))
+        VStack(spacing: 13) {
+            Image(systemName: icon)
+                .font(.system(size: 25, weight: .semibold))
+                .foregroundStyle(Theme.blueSoft)
+                .frame(width: 58, height: 58)
+                .background(Theme.surface)
+                .clipShape(Circle())
+
+            Text(title)
+                .font(.headline.bold())
+                .foregroundStyle(.white)
+
+            Text(text)
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.54))
+                .multilineTextAlignment(.center)
+                .lineSpacing(3)
+                .frame(maxWidth: 300)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 30)
     }
 }
 
@@ -180,6 +200,12 @@ struct PremiumCard<Content: View>: View {
                 RoundedRectangle(cornerRadius: 18)
                     .stroke(Color.white.opacity(0.06), lineWidth: 1)
             )
+            .shadow(
+                color: Color.black.opacity(0.10),
+                radius: 12,
+                x: 0,
+                y: 6
+            )
     }
 }
 
@@ -261,6 +287,7 @@ struct UniversityPhoto: View {
                     image
                         .resizable()
                         .scaledToFill()
+                        .transition(.opacity)
                 case .failure:
                     Image(systemName: "building.columns.fill")
                         .font(.system(size: 40))
@@ -309,5 +336,18 @@ struct SearchField: View {
             RoundedRectangle(cornerRadius: 14)
                 .stroke(.white.opacity(0.05))
         )
+    }
+}
+
+
+struct CardPressButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.985 : 1)
+            .opacity(configuration.isPressed ? 0.92 : 1)
+            .animation(
+                .easeOut(duration: 0.14),
+                value: configuration.isPressed
+            )
     }
 }
