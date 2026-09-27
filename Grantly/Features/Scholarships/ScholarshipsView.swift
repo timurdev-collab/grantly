@@ -779,6 +779,10 @@ struct PremiumScholarshipCard: View {
                 HStack(spacing: 8) {
                     TrustSeal(verified: verified)
 
+                    if let score = scholarship.reliabilityScore {
+                        ReliabilityBadge(score: score)
+                    }
+
                     Spacer()
 
                     if let deadline = scholarship.deadline {
@@ -807,6 +811,31 @@ struct PremiumScholarshipCard: View {
             RoundedRectangle(cornerRadius: 20)
                 .stroke(.white.opacity(0.05))
         )
+    }
+}
+
+struct ReliabilityBadge: View {
+    let score: Int
+
+    private var label: String {
+        if score >= 85 { return "High reliability" }
+        if score >= 70 { return "Reliable" }
+        if score >= 55 { return "Moderate" }
+        return "Limited"
+    }
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "shield.checkered")
+            Text("\(score)")
+        }
+        .font(.caption2.weight(.semibold))
+        .foregroundStyle(
+            score >= 70
+                ? Theme.green
+                : Theme.blueSoft
+        )
+        .accessibilityLabel("\(label), score \(score) out of 100")
     }
 }
 

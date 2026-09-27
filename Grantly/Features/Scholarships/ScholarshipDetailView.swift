@@ -291,6 +291,21 @@ struct ScholarshipDetailView: View {
                 DetailLine(label: "Deadline", value: scholarship.deadline ?? "Varies / to be announced")
                 DetailLine(label: "Funding", value: scholarship.fundingType)
                 DetailLine(label: "Source", value: verified ? "Verified" : "Curated")
+
+                if let score = scholarship.reliabilityScore {
+                    DetailLine(
+                        label: "Data reliability",
+                        value: "\(score)/100"
+                    )
+                }
+
+                if let checked = scholarship.lastCheckedAt,
+                   !checked.isEmpty {
+                    DetailLine(
+                        label: "Last source check",
+                        value: String(checked.prefix(10))
+                    )
+                }
             }
         }
 
@@ -377,6 +392,10 @@ struct ScholarshipDetailView: View {
 
                 HStack {
                     TrustSeal(verified: verified)
+
+                    if let score = scholarship.reliabilityScore {
+                        ReliabilityBadge(score: score)
+                    }
 
                     if let checked = scholarship.lastCheckedAt, !checked.isEmpty {
                         Text("Checked \(String(checked.prefix(10)))")
