@@ -27,6 +27,7 @@ struct DraftScholarshipReviewView: View {
 
     @State private var readiness: ScholarshipDraftReadiness?
     @State private var evidence: ScholarshipDraftSourceEvidence?
+    @State private var provenanceHistory: [ScholarshipFieldProvenanceEntry] = []
     @State private var working = false
     @State private var errorMessage: String?
 
@@ -256,6 +257,68 @@ struct DraftScholarshipReviewView: View {
                     }
                 }
 
+                Section("Field provenance") {
+                    if provenanceHistory.isEmpty {
+                        Text("No accepted field changes recorded yet.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach(provenanceHistory.prefix(30)) { entry in
+                            VStack(alignment: .leading, spacing: 5) {
+                                HStack {
+                                    Text(
+                                        entry.fieldName
+                                            .replacingOccurrences(of: "_", with: " ")
+                                            .capitalized
+                                    )
+                                    .font(.caption.weight(.semibold))
+
+                                    Spacer()
+
+                                    Text(
+                                        entry.provenanceType == "source_extracted"
+                                            ? "Source-derived"
+                                            : "Manual"
+                                    )
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(.secondary)
+                                }
+
+                                Text(
+                                    "\(entry.previousValue?.displayText ?? "Not set") → " +
+                                    "\(entry.acceptedValue?.displayText ?? "Not set")"
+                                )
+                                .font(.caption2)
+
+                                if let confidence = entry.confidence {
+                                    Text("\(confidence)% source confidence")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+
+                                if let excerpt = entry.evidenceExcerpt,
+                                   !excerpt.isEmpty {
+                                    Text(excerpt)
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                        .lineLimit(3)
+                                }
+
+                                if let sourceUrl = entry.sourceUrl,
+                                   let url = URL(string: sourceUrl) {
+                                    Link("Open supporting source", destination: url)
+                                        .font(.caption2.weight(.semibold))
+                                }
+
+                                Text(String(entry.acceptedAt.prefix(16)))
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 3)
+                        }
+                    }
+                }
+
                 Section("Core information") {
                     TextField("Title", text: $title)
                     TextField("Provider", text: $provider)
@@ -471,9 +534,12 @@ struct DraftScholarshipReviewView: View {
                 DataService.scholarshipDraftReadiness(id: scholarship.id)
             async let evidenceTask =
                 DataService.scholarshipDraftSourceEvidence(id: scholarship.id)
+            async let provenanceTask =
+                DataService.scholarshipFieldProvenanceHistory(id: scholarship.id)
 
             readiness = try await readinessTask
             evidence = try await evidenceTask
+            provenanceHistory = try await provenanceTask
         } catch {
             errorMessage = error.localizedDescription
         }
