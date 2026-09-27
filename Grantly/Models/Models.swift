@@ -65,6 +65,7 @@ struct University: Codable, Identifiable, Hashable {
     var logoUrl: String?
     var campusImageUrl: String?
     var description: String?
+    var entityType: String
     var isVerified: Bool
 
     enum CodingKeys: String, CodingKey {
@@ -72,6 +73,7 @@ struct University: Codable, Identifiable, Hashable {
         case websiteUrl = "website_url"
         case logoUrl = "logo_url"
         case campusImageUrl = "campus_image_url"
+        case entityType = "entity_type"
         case isVerified = "is_verified"
     }
 }
