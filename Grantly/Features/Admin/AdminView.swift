@@ -12,6 +12,7 @@ struct AdminView: View {
     @State private var actionLogs: [AdminActionLog] = []
     @State private var showingAdd = false
     @State private var showingImport = false
+    @State private var selectedDraft: Scholarship?
     @State private var importBatches: [ScholarshipImportBatch] = []
     @State private var auditing = false
     @State private var enrichingMedia = false
@@ -42,6 +43,10 @@ struct AdminView: View {
 
     private var archivedCount: Int {
         scholarships.filter { $0.status == "archived" }.count
+    }
+
+    private var draftScholarships: [Scholarship] {
+        scholarships.filter { $0.status == "draft" }
     }
 
     private var pendingDeadlineChanges: Int {
@@ -339,6 +344,45 @@ struct AdminView: View {
                                     .font(.caption.weight(.semibold))
                                 }
                             }
+                        }
+                        .padding(.vertical, 3)
+                    }
+                }
+            }
+
+            Section("Draft scholarship review") {
+                if draftScholarships.isEmpty {
+                    Text("No scholarship drafts waiting for review.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(draftScholarships.prefix(20)) { draft in
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(draft.title)
+                                .font(.subheadline.weight(.semibold))
+                                .lineLimit(2)
+
+                            HStack(spacing: 10) {
+                                Label(
+                                    draft.provider,
+                                    systemImage: "building.columns"
+                                )
+                                .lineLimit(1)
+
+                                if let linkStatus = draft.linkStatus {
+                                    Label(
+                                        linkStatus.capitalized,
+                                        systemImage: "link"
+                                    )
+                                }
+                            }
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+
+                            Button("Review & publish") {
+                                selectedDraft = draft
+                            }
+                            .font(.caption.weight(.semibold))
                         }
                         .padding(.vertical, 3)
                     }
@@ -912,6 +956,13 @@ struct AdminView: View {
         }
         .sheet(isPresented: $showingImport) {
             ScholarshipImportView {
+                Task { await load() }
+            }
+        }
+        .sheet(item: $selectedDraft) { draft in
+            DraftScholarshipReviewView(
+                scholarship: draft
+            ) {
                 Task { await load() }
             }
         }
