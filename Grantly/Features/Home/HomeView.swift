@@ -858,6 +858,15 @@ struct NotificationInboxView: View {
             try await DataService.markNotificationRead(
                 notificationId: notification.id
             )
+
+            try? await DataService.trackProductEvent(
+                "notification_open",
+                scholarshipId: notification.scholarshipId,
+                properties: [
+                    "kind": notification.kind
+                ]
+            )
+
             await load()
         } catch {
             errorMessage = error.localizedDescription
