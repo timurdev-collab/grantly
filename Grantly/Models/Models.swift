@@ -477,3 +477,45 @@ struct ScholarshipDuplicateCandidate: Decodable, Identifiable {
         case similarityScore = "similarity_score"
     }
 }
+
+
+struct AdminCronJobHealth: Decodable, Identifiable {
+    let name: String
+    let schedule: String
+    let active: Bool
+
+    var id: String { name }
+}
+
+struct AdminSystemHealth: Decodable {
+    let openCatalogIssues: Int
+    let failedPushNotifications: Int
+    let pendingPushNotifications: Int
+    let openBackendErrors: Int
+    let activeCronJobs: Int
+    let cronJobs: [AdminCronJobHealth]
+
+    enum CodingKeys: String, CodingKey {
+        case openCatalogIssues = "open_catalog_issues"
+        case failedPushNotifications = "failed_push_notifications"
+        case pendingPushNotifications = "pending_push_notifications"
+        case openBackendErrors = "open_backend_errors"
+        case activeCronJobs = "active_cron_jobs"
+        case cronJobs = "cron_jobs"
+    }
+}
+
+struct AdminActionLog: Decodable, Identifiable {
+    let id: Int
+    let action: String
+    let targetType: String
+    let targetIds: [UUID]
+    let createdAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, action
+        case targetType = "target_type"
+        case targetIds = "target_ids"
+        case createdAt = "created_at"
+    }
+}
