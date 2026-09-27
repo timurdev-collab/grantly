@@ -3,6 +3,8 @@ import SwiftUI
 struct AdminView: View {
     @State private var scholarships: [Scholarship] = []
     @State private var reports: [SafetyReport] = []
+    @State private var detectedChanges: [ScholarshipDetectedChange] = []
+    @State private var healthIssues: [CatalogHealthIssue] = []
     @State private var analytics: AdminAnalyticsSummary?
     @State private var systemHealth: AdminSystemHealth?
     @State private var actionLogs: [AdminActionLog] = []
@@ -38,6 +40,34 @@ struct AdminView: View {
 
     private var archivedCount: Int {
         scholarships.filter { $0.status == "archived" }.count
+    }
+
+    private var pendingDeadlineChanges: Int {
+        detectedChanges.filter { $0.fieldName == "deadline" }.count
+    }
+
+    private var pendingCycleChanges: Int {
+        detectedChanges.filter {
+            $0.fieldName == "application_cycle" ||
+            $0.fieldName == "cycle_status"
+        }.count
+    }
+
+    private var expiredIssueCount: Int {
+        healthIssues.filter { $0.issueType == "expired_deadline" }.count
+    }
+
+    private var brokenLinkIssueCount: Int {
+        healthIssues.filter { $0.issueType == "dead_link" }.count
+    }
+
+    private var staleIssueCount: Int {
+        healthIssues.filter { $0.issueType == "stale_source_check" }.count
+    }
+
+    private func scholarshipTitle(for id: UUID) -> String {
+        scholarships.first(where: { $0.id == id })?.title
+            ?? "Scholarship"
     }
 
     private var needsReview: [Scholarship] {
@@ -297,6 +327,148 @@ struct AdminView: View {
                             }
                         }
                         .padding(.vertical, 3)
+                    }
+                }
+            }
+
+            Section("Data reliability queue") {
+                HStack(spacing: 12) {
+                    AdminMetric(
+                        value: "\(pendingDeadlineChanges)",
+                        label: "Deadline"
+                    )
+                    AdminMetric(
+                        value: "\(pendingCycleChanges)",
+                        label: "Cycle"
+                    )
+                    AdminMetric(
+                        value: "\(brokenLinkIssueCount)",
+                        label: "Broken"
+                    )
+                    AdminMetric(
+                        value: "\(staleIssueCount)",
+                        label: "Stale"
+                    )
+                }
+                .listRowInsets(
+                    EdgeInsets(
+                        top: 14,
+                        leading: 16,
+                        bottom: 14,
+                        trailing: 16
+                    )
+                )
+
+                if expiredIssueCount > 0 {
+                    Label(
+                        "\(expiredIssueCount) expired deadline issue(s)",
+                        systemImage: "calendar.badge.exclamationmark"
+                    )
+                    .font(.caption.weight(.semibold))
+                }
+
+                if detectedChanges.isEmpty {
+                    Text("No detected changes waiting for review.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(detectedChanges.prefix(20)) { change in
+                        VStack(alignment: .leading, spacing: 7) {
+                            Text(scholarshipTitle(for: change.scholarshipId))
+                                .font(.subheadline.weight(.semibold))
+                                .lineLimit(2)
+
+                            HStack {
+                                Text(
+                                    change.fieldName
+                                        .replacingOccurrences(
+                                            of: "_",
+                                            with: " "
+                                        )
+                                        .capitalized
+                                )
+                                .font(.caption.weight(.semibold))
+
+                                Spacer()
+
+                                if let confidence = change.confidence {
+                                    Text("\(confidence)% confidence")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+
+                            if change.oldValue != change.detectedValue {
+                                Text(
+                                    "\(change.oldValue ?? "Not set") → " +
+                                    "\(change.detectedValue ?? "Not detected")"
+                                )
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            }
+
+                            if let url = URL(string: change.sourceUrl) {
+                                Link(destination: url) {
+                                    Label(
+                                        "Open official source",
+                                        systemImage: "arrow.up.right.square"
+                                    )
+                                    .font(.caption)
+                                }
+                            }
+
+                            HStack {
+                                Button("Accept") {
+                                    Task {
+                                        await reviewDetectedChange(
+                                            change,
+                                            accept: true
+                                        )
+                                    }
+                                }
+                                .buttonStyle(.borderless)
+                                .font(.caption.weight(.semibold))
+
+                                Button("Reject", role: .destructive) {
+                                    Task {
+                                        await reviewDetectedChange(
+                                            change,
+                                            accept: false
+                                        )
+                                    }
+                                }
+                                .buttonStyle(.borderless)
+                                .font(.caption.weight(.semibold))
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+
+                if !healthIssues.isEmpty {
+                    DisclosureGroup("Open catalog health issues") {
+                        ForEach(healthIssues.prefix(20)) { issue in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(scholarshipTitle(for: issue.scholarshipId))
+                                    .font(.caption.weight(.semibold))
+                                    .lineLimit(2)
+
+                                Text(
+                                    issue.issueType
+                                        .replacingOccurrences(
+                                            of: "_",
+                                            with: " "
+                                        )
+                                        .capitalized
+                                )
+                                .font(.caption2.weight(.semibold))
+
+                                Text(issue.detail)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 3)
+                        }
                     }
                 }
             }
@@ -564,6 +736,10 @@ struct AdminView: View {
                 DataService.recentAdminActionLogs(limit: 20)
             async let imports =
                 DataService.scholarshipImportBatches(limit: 20)
+            async let pendingChanges =
+                DataService.pendingScholarshipDetectedChanges(limit: 50)
+            async let openHealth =
+                DataService.openCatalogHealthIssues(limit: 100)
 
             scholarships = try await scholarshipRows
             reports = try await reportRows
@@ -571,6 +747,8 @@ struct AdminView: View {
             systemHealth = try await healthSummary
             actionLogs = try await logs
             importBatches = try await imports
+            detectedChanges = try await pendingChanges
+            healthIssues = try await openHealth
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -644,6 +822,28 @@ struct AdminView: View {
             bulkMessage =
                 "Import rolled back: \(result.removed) removed, " +
                 "\(result.restored) restored."
+
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func reviewDetectedChange(
+        _ change: ScholarshipDetectedChange,
+        accept: Bool
+    ) async {
+        do {
+            if accept {
+                try await DataService.acceptDetectedScholarshipChange(
+                    id: change.id
+                )
+            } else {
+                try await DataService.rejectDetectedScholarshipChange(
+                    id: change.id
+                )
+            }
 
             await load()
         } catch {

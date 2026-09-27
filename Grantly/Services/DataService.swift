@@ -45,6 +45,72 @@ enum DataService {
             .value
     }
 
+    static func pendingScholarshipDetectedChanges(
+        limit: Int = 50
+    ) async throws -> [ScholarshipDetectedChange] {
+        try await supabase
+            .from("scholarship_detected_changes")
+            .select()
+            .eq("status", value: "pending")
+            .order("last_detected_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+    }
+
+    static func openCatalogHealthIssues(
+        limit: Int = 100
+    ) async throws -> [CatalogHealthIssue] {
+        try await supabase
+            .from("catalog_health_issues")
+            .select()
+            .is("resolved_at", value: nil)
+            .order("detected_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+    }
+
+    static func acceptDetectedScholarshipChange(
+        id: UUID,
+        note: String? = nil
+    ) async throws {
+        struct Params: Encodable {
+            let p_change_id: UUID
+            let p_note: String?
+        }
+
+        try await supabase
+            .rpc(
+                "accept_detected_scholarship_change",
+                params: Params(
+                    p_change_id: id,
+                    p_note: note
+                )
+            )
+            .execute()
+    }
+
+    static func rejectDetectedScholarshipChange(
+        id: UUID,
+        note: String? = nil
+    ) async throws {
+        struct Params: Encodable {
+            let p_change_id: UUID
+            let p_note: String?
+        }
+
+        try await supabase
+            .rpc(
+                "reject_detected_scholarship_change",
+                params: Params(
+                    p_change_id: id,
+                    p_note: note
+                )
+            )
+            .execute()
+    }
+
     static func scholarshipDuplicateCandidates(
         title: String,
         provider: String,
