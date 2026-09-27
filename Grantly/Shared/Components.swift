@@ -413,3 +413,33 @@ struct UniversityLogo: View {
         )
     }
 }
+
+
+struct OfflineBanner: View {
+    var body: some View {
+        Label(
+            "You’re offline. Some content may be unavailable.",
+            systemImage: "wifi.slash"
+        )
+        .font(.caption.weight(.semibold))
+        .foregroundStyle(.white)
+        .padding(.horizontal, 14)
+        .frame(height: 40)
+        .background(.ultraThinMaterial)
+        .background(Theme.navy.opacity(0.92))
+        .clipShape(Capsule())
+        .overlay(
+            Capsule()
+                .stroke(.white.opacity(0.08), lineWidth: 1)
+        )
+        .shadow(
+            color: .black.opacity(0.18),
+            radius: 10,
+            x: 0,
+            y: 4
+        )
+        .accessibilityLabel(
+            "Offline. Some content may be unavailable."
+        )
+    }
+}
