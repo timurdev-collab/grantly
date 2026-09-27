@@ -45,6 +45,54 @@ enum DataService {
             .value
     }
 
+    static func pendingScholarshipSourceCandidates(
+        limit: Int = 50
+    ) async throws -> [ScholarshipSourceCandidate] {
+        try await supabase
+            .from("scholarship_source_candidates")
+            .select("""
+                *,
+                source:scholarship_source_registry(
+                    id,host,display_name,source_kind,trust_level
+                )
+            """)
+            .eq("status", value: "pending")
+            .order("relevance_score", ascending: false)
+            .order("last_seen_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+    }
+
+    static func reviewScholarshipSourceCandidate(
+        id: UUID,
+        status: String,
+        note: String? = nil
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let status: String
+            let reviewed_at: String
+            let reviewed_by: UUID
+            let review_note: String?
+        }
+
+        try await supabase
+            .from("scholarship_source_candidates")
+            .update(
+                Row(
+                    status: status,
+                    reviewed_at: ISO8601DateFormatter()
+                        .string(from: Date()),
+                    reviewed_by: userId,
+                    review_note: note
+                )
+            )
+            .eq("id", value: id.uuidString)
+            .execute()
+    }
+
     static func pendingScholarshipDetectedChanges(
         limit: Int = 50
     ) async throws -> [ScholarshipDetectedChange] {

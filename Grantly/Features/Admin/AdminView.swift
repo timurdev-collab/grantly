@@ -5,6 +5,7 @@ struct AdminView: View {
     @State private var reports: [SafetyReport] = []
     @State private var detectedChanges: [ScholarshipDetectedChange] = []
     @State private var healthIssues: [CatalogHealthIssue] = []
+    @State private var sourceCandidates: [ScholarshipSourceCandidate] = []
     @State private var analytics: AdminAnalyticsSummary?
     @State private var systemHealth: AdminSystemHealth?
     @State private var actionLogs: [AdminActionLog] = []
@@ -473,6 +474,92 @@ struct AdminView: View {
                 }
             }
 
+            Section("Official source discoveries") {
+                if sourceCandidates.isEmpty {
+                    Text("No new official-source links waiting for review.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(sourceCandidates.prefix(20)) { candidate in
+                        VStack(alignment: .leading, spacing: 7) {
+                            Text(
+                                candidate.candidateTitle?
+                                    .trimmingCharacters(
+                                        in: .whitespacesAndNewlines
+                                    )
+                                    .nonEmpty
+                                    ?? candidate.source?.displayName
+                                    ?? "Official source candidate"
+                            )
+                            .font(.subheadline.weight(.semibold))
+                            .lineLimit(2)
+
+                            HStack {
+                                Text(
+                                    candidate.source?.host
+                                        ?? "Official source"
+                                )
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+
+                                Spacer()
+
+                                Text("\(candidate.relevanceScore)% relevance")
+                                    .font(.caption2.weight(.semibold))
+                            }
+
+                            if let url = URL(
+                                string: candidate.candidateUrl
+                            ) {
+                                Link(destination: url) {
+                                    Label(
+                                        "Open discovered page",
+                                        systemImage: "arrow.up.right.square"
+                                    )
+                                    .font(.caption)
+                                }
+                            }
+
+                            HStack {
+                                Button("Keep") {
+                                    Task {
+                                        await reviewSourceCandidate(
+                                            candidate,
+                                            status: "accepted"
+                                        )
+                                    }
+                                }
+                                .buttonStyle(.borderless)
+                                .font(.caption.weight(.semibold))
+
+                                Button("Ignore") {
+                                    Task {
+                                        await reviewSourceCandidate(
+                                            candidate,
+                                            status: "ignored"
+                                        )
+                                    }
+                                }
+                                .buttonStyle(.borderless)
+                                .font(.caption.weight(.semibold))
+
+                                Button("Reject", role: .destructive) {
+                                    Task {
+                                        await reviewSourceCandidate(
+                                            candidate,
+                                            status: "rejected"
+                                        )
+                                    }
+                                }
+                                .buttonStyle(.borderless)
+                                .font(.caption.weight(.semibold))
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+            }
+
             Section("Catalog health") {
                 HStack(spacing: 12) {
                     AdminMetric(
@@ -740,6 +827,8 @@ struct AdminView: View {
                 DataService.pendingScholarshipDetectedChanges(limit: 50)
             async let openHealth =
                 DataService.openCatalogHealthIssues(limit: 100)
+            async let sourceDiscoveryRows =
+                DataService.pendingScholarshipSourceCandidates(limit: 50)
 
             scholarships = try await scholarshipRows
             reports = try await reportRows
@@ -749,6 +838,7 @@ struct AdminView: View {
             importBatches = try await imports
             detectedChanges = try await pendingChanges
             healthIssues = try await openHealth
+            sourceCandidates = try await sourceDiscoveryRows
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -823,6 +913,22 @@ struct AdminView: View {
                 "Import rolled back: \(result.removed) removed, " +
                 "\(result.restored) restored."
 
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func reviewSourceCandidate(
+        _ candidate: ScholarshipSourceCandidate,
+        status: String
+    ) async {
+        do {
+            try await DataService.reviewScholarshipSourceCandidate(
+                id: candidate.id,
+                status: status
+            )
             await load()
         } catch {
             errorMessage = error.localizedDescription
@@ -907,6 +1013,12 @@ struct AdminView: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+private extension String {
+    var nonEmpty: String? {
+        isEmpty ? nil : self
     }
 }
 
