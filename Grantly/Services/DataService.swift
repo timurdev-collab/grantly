@@ -93,6 +93,18 @@ enum DataService {
             .execute()
     }
 
+    static func recentScholarshipAuditObservations(
+        limit: Int = 80
+    ) async throws -> [ScholarshipAuditObservation] {
+        try await supabase
+            .from("scholarship_audit_observations")
+            .select()
+            .order("checked_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+    }
+
     static func pendingScholarshipDetectedChanges(
         limit: Int = 50
     ) async throws -> [ScholarshipDetectedChange] {
