@@ -35,10 +35,10 @@ struct MainTabView: View {
             .tag(MainTab.explore)
 
             NavigationStack {
-                MyScholarshipsView()
+                CasesHubView()
             }
             .tabItem {
-                Label("Shortlist", systemImage: "bookmark.fill")
+                Label("Cases", systemImage: "folder.fill")
             }
             .tag(MainTab.saved)
 
