@@ -38,6 +38,7 @@ struct StudentProfile: Codable, Identifiable {
 struct CommunityProfile: Codable, Identifiable, Hashable {
     let id: UUID
     var displayName: String?
+    var avatarUrl: String?
     var nationality: String?
     var major: String?
     var targetRegions: [String]?
@@ -48,6 +49,7 @@ struct CommunityProfile: Codable, Identifiable, Hashable {
     enum CodingKeys: String, CodingKey {
         case id
         case displayName = "display_name"
+        case avatarUrl = "avatar_url"
         case nationality, major
         case targetRegions = "target_regions"
         case targetCountries = "target_countries"
