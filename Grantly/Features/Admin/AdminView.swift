@@ -487,10 +487,9 @@ struct AdminView: View {
                                     .trimmingCharacters(
                                         in: .whitespacesAndNewlines
                                     )
-                                    .isEmpty == false
-                                    ? candidate.candidateTitle!
-                                    : candidate.source?.displayName
-                                        ?? "Official source candidate"
+                                    .nonEmpty
+                                    ?? candidate.source?.displayName
+                                    ?? "Official source candidate"
                             )
                             .font(.subheadline.weight(.semibold))
                             .lineLimit(2)
@@ -1014,6 +1013,12 @@ struct AdminView: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+private extension String {
+    var nonEmpty: String? {
+        isEmpty ? nil : self
     }
 }
 
