@@ -632,7 +632,7 @@ struct AdminView: View {
                             }
 
                             HStack {
-                                Button("Keep") {
+                                Button("Create draft") {
                                     Task {
                                         await reviewSourceCandidate(
                                             candidate,
