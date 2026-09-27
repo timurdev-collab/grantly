@@ -8,6 +8,18 @@ struct SignupView: View {
     @State private var busy = false
     @State private var created = false
 
+    private var normalizedEmail: String {
+        AuthValidation.normalizedEmail(email)
+    }
+
+    private var emailIsValid: Bool {
+        AuthValidation.isValidEmail(email)
+    }
+
+    private var passwordIssue: String? {
+        AuthValidation.passwordIssue(password)
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -25,6 +37,19 @@ struct SignupView: View {
                             .textInputAutocapitalization(.never)
                             .keyboardType(.emailAddress)
                         SecureField("Password — at least 8 characters", text: $password)
+
+                        if !email.isEmpty && !emailIsValid {
+                            Text("Enter a valid email address.")
+                                .font(.caption)
+                                .foregroundStyle(.orange)
+                        }
+
+                        if !password.isEmpty,
+                           let passwordIssue {
+                            Text(passwordIssue)
+                                .font(.caption)
+                                .foregroundStyle(.orange)
+                        }
                     }
 
                     if let error = auth.errorMessage {
@@ -35,11 +60,18 @@ struct SignupView: View {
                         Button(busy ? "Creating…" : "Create account") {
                             Task {
                                 busy = true
-                                created = await auth.signUp(email: email, password: password)
+                                created = await auth.signUp(
+                                    email: normalizedEmail,
+                                    password: password
+                                )
                                 busy = false
                             }
                         }
-                        .disabled(email.isEmpty || password.count < 8 || busy)
+                        .disabled(
+                            !emailIsValid ||
+                            passwordIssue != nil ||
+                            busy
+                        )
                     }
                 }
             }
