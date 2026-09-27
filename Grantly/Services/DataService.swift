@@ -609,6 +609,53 @@ enum DataService {
             .value
     }
 
+    static func addApplicationTask(
+        scholarshipId: UUID,
+        title: String,
+        position: Int
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+        let cleaned = title.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+
+        guard !cleaned.isEmpty else {
+            return
+        }
+
+        struct Row: Encodable {
+            let user_id: UUID
+            let scholarship_id: UUID
+            let title: String
+            let position: Int
+        }
+
+        try await supabase
+            .from("application_tasks")
+            .insert(
+                Row(
+                    user_id: userId,
+                    scholarship_id: scholarshipId,
+                    title: cleaned,
+                    position: position
+                )
+            )
+            .execute()
+    }
+
+    static func deleteApplicationTask(
+        taskId: UUID
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        try await supabase
+            .from("application_tasks")
+            .delete()
+            .eq("id", value: taskId.uuidString)
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+    }
+
     static func setApplicationTaskCompleted(
         taskId: UUID,
         completed: Bool
