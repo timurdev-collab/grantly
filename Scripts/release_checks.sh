@@ -8,7 +8,7 @@ if grep -R --line-number --exclude-dir=.git   "SUPABASE_SERVICE_ROLE_KEY" Grantl
   exit 1
 fi
 
-if ! grep -q "<string>1.0</string>" Grantly/Info.plist; then
+if ! grep -q "<string>1.0.0</string>" Grantly/Info.plist; then
   echo "CFBundleShortVersionString is missing or unexpected."
   exit 1
 fi
