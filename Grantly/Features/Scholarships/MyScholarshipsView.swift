@@ -58,7 +58,7 @@ struct MyScholarshipsView: View {
                     statusFilter
                 }
 
-                if loading {
+                if loading && items.isEmpty {
                     VStack(spacing: 12) {
                         ProgressView()
                             .tint(Theme.orange)
@@ -117,6 +117,7 @@ struct MyScholarshipsView: View {
         }
         .background(Theme.pageBackground)
         .navigationBarHidden(true)
+        .scrollBounceBehavior(.always, axes: .vertical)
         .refreshable { await load() }
         .task { await load() }
         .sheet(item: $editingItem) { item in
@@ -159,12 +160,7 @@ struct MyScholarshipsView: View {
 
             Spacer()
 
-            Image(systemName: "bookmark.fill")
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(Theme.orangeSoft)
-                .frame(width: 42, height: 42)
-                .background(Theme.surface)
-                .clipShape(RoundedRectangle(cornerRadius: 13))
+            RefreshButton(loading: loading) { await load() }
         }
     }
 
@@ -359,6 +355,7 @@ struct MyScholarshipsView: View {
 
         do {
             items = try await DataService.savedScholarshipItems()
+            errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
         }

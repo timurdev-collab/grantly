@@ -516,3 +516,31 @@ struct OfflineBanner: View {
         )
     }
 }
+
+/// A visible alternative to the pull-to-refresh gesture, including empty lists.
+struct RefreshButton: View {
+    let loading: Bool
+    let action: () async -> Void
+
+    var body: some View {
+        Button {
+            Task { await action() }
+        } label: {
+            Group {
+                if loading {
+                    ProgressView().tint(Theme.accent)
+                } else {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 17, weight: .semibold))
+                }
+            }
+            .frame(width: 44, height: 44)
+            .foregroundStyle(Theme.accent)
+            .background(Theme.surface)
+            .clipShape(RoundedRectangle(cornerRadius: 13))
+        }
+        .buttonStyle(.plain)
+        .disabled(loading)
+        .accessibilityLabel(loading ? "Refreshing" : "Refresh")
+    }
+}

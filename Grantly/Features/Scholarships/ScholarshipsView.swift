@@ -23,6 +23,7 @@ struct ScholarshipsView: View {
 
     @State private var loading = true
     @State private var loadingMore = false
+    @State private var requestID = UUID()
     @State private var errorMessage: String?
 
     private var countryOptions: [String] {
@@ -133,8 +134,9 @@ struct ScholarshipsView: View {
         }
         .background(Theme.pageBackground)
         .navigationBarHidden(true)
+        .scrollBounceBehavior(.always, axes: .vertical)
         .refreshable {
-            await load(reset: true)
+            await refresh()
         }
         .task {
             await loadFilterOptions()
@@ -179,12 +181,9 @@ struct ScholarshipsView: View {
 
             Spacer()
 
-            Image(systemName: "graduationcap.fill")
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(Theme.orangeSoft)
-                .frame(width: 42, height: 42)
-                .background(Theme.surface)
-                .clipShape(RoundedRectangle(cornerRadius: 13))
+            RefreshButton(loading: loading) {
+                await refresh()
+            }
         }
         .padding(.horizontal)
         .padding(.top, 8)
@@ -409,16 +408,29 @@ struct ScholarshipsView: View {
     }
 
     @MainActor
+    private func refresh() async {
+        await load(reset: true)
+        await loadFilterOptions()
+    }
+
+    @MainActor
     private func load(reset: Bool) async {
+        let currentRequest = UUID()
+        requestID = currentRequest
+        let currentSearchKey = searchKey
+
         if reset {
             loading = true
+            loadingMore = false
         } else {
             loadingMore = true
         }
 
         defer {
-            loading = false
-            loadingMore = false
+            if requestID == currentRequest {
+                loading = false
+                loadingMore = false
+            }
         }
 
         do {
@@ -438,6 +450,11 @@ struct ScholarshipsView: View {
                 limit: pageSize
             )
 
+            guard requestID == currentRequest,
+                  searchKey == currentSearchKey,
+                  !Task.isCancelled else { return }
+
+            errorMessage = nil
             if reset {
                 scholarships = page.scholarships
                 savedScholarshipIDs = page.savedScholarshipIDs
@@ -477,8 +494,8 @@ struct ScholarshipsView: View {
                 )
             }
 
-            errorMessage = nil
         } catch {
+            guard requestID == currentRequest, !Task.isCancelled else { return }
             errorMessage = error.localizedDescription
         }
     }
