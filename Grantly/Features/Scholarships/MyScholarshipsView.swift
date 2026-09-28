@@ -356,6 +356,8 @@ struct MyScholarshipsView: View {
         do {
             items = try await DataService.savedScholarshipItems()
             errorMessage = nil
+        } catch is CancellationError {
+            return
         } catch {
             errorMessage = error.localizedDescription
         }
