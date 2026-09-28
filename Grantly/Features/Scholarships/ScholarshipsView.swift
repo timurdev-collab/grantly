@@ -93,7 +93,7 @@ struct ScholarshipsView: View {
 
                         Text("Finding trusted opportunities...")
                             .font(.caption)
-                            .foregroundStyle(Theme.ink.opacity(0.50))
+                            .foregroundStyle(Theme.muted)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 64)
@@ -174,7 +174,7 @@ struct ScholarshipsView: View {
                         : "Trusted scholarships, one place"
                 )
                 .font(.subheadline)
-                .foregroundStyle(Theme.ink.opacity(0.56))
+                .foregroundStyle(Theme.muted)
             }
 
             Spacer()
@@ -194,7 +194,7 @@ struct ScholarshipsView: View {
         VStack(alignment: .leading, spacing: 9) {
             Text("Explore by study level")
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.ink.opacity(0.58))
+                .foregroundStyle(Theme.muted)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
@@ -292,7 +292,7 @@ struct ScholarshipsView: View {
                             .padding(.horizontal, 12)
                             .frame(height: 38)
                             .background(Theme.surface)
-                            .foregroundStyle(Theme.ink.opacity(0.74))
+                            .foregroundStyle(Theme.muted)
                             .clipShape(Capsule())
                     }
                     .buttonStyle(.plain)
@@ -314,7 +314,7 @@ struct ScholarshipsView: View {
 
                 Text("\(totalCount) opportunities")
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.48))
+                    .foregroundStyle(Theme.muted)
             }
 
             Spacer()
@@ -326,7 +326,7 @@ struct ScholarshipsView: View {
             } label: {
                 Label(sort, systemImage: "arrow.up.arrow.down")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.ink.opacity(0.74))
+                    .foregroundStyle(Theme.muted)
                     .padding(.horizontal, 11)
                     .frame(height: 34)
                     .background(Theme.surface)
@@ -352,7 +352,7 @@ struct ScholarshipsView: View {
 
             Text("Try another search or clear one of your filters.")
                 .font(.subheadline)
-                .foregroundStyle(Theme.ink.opacity(0.56))
+                .foregroundStyle(Theme.muted)
                 .multilineTextAlignment(.center)
 
             if hasFilters {
@@ -505,7 +505,7 @@ private struct ExploreSummary: View {
 
             Text(label)
                 .font(.system(size: 9, weight: .medium))
-                .foregroundStyle(Theme.ink.opacity(0.45))
+                .foregroundStyle(Theme.muted)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
@@ -553,7 +553,7 @@ private struct ExploreTopPickCard: View {
 
                 Text(scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.ink.opacity(0.54))
+                    .foregroundStyle(Theme.muted)
                     .lineLimit(1)
 
                 HStack {
@@ -570,7 +570,7 @@ private struct ExploreTopPickCard: View {
                         .foregroundStyle(Theme.orangeSoft)
                 }
                 .font(.caption2)
-                .foregroundStyle(Theme.ink.opacity(0.66))
+                .foregroundStyle(Theme.muted)
             }
             .padding(12)
         }
@@ -647,7 +647,7 @@ struct PremiumScholarshipCard: View {
 
                         Text(scholarship.provider)
                             .font(.caption)
-                            .foregroundStyle(Theme.ink.opacity(0.58))
+                            .foregroundStyle(Theme.muted)
                             .lineLimit(1)
                     }
 
@@ -669,7 +669,7 @@ struct PremiumScholarshipCard: View {
                 if !primaryField.isEmpty {
                     Label(primaryField, systemImage: "books.vertical")
                         .font(.caption2)
-                        .foregroundStyle(Theme.ink.opacity(0.56))
+                        .foregroundStyle(Theme.muted)
                         .lineLimit(1)
                 }
 
@@ -693,12 +693,12 @@ struct PremiumScholarshipCard: View {
                     } else {
                         Text("Deadline not yet confirmed")
                             .font(.caption2.weight(.semibold))
-                            .foregroundStyle(Theme.ink.opacity(0.48))
+                            .foregroundStyle(Theme.muted)
                     }
 
                     Image(systemName: "arrow.right")
                         .font(.caption.bold())
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.onAccent)
                         .frame(width: 32, height: 32)
                         .background(Theme.orangeGradient)
                         .clipShape(Circle())
@@ -778,7 +778,7 @@ private struct MetadataPill: View {
     var body: some View {
         Label(text, systemImage: icon)
             .font(.caption2.weight(.medium))
-            .foregroundStyle(Theme.ink.opacity(0.68))
+            .foregroundStyle(Theme.muted)
             .padding(.horizontal, 9)
             .padding(.vertical, 6)
             .background(Theme.surfaceRaised)

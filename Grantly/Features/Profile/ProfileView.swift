@@ -186,7 +186,7 @@ struct ProfileView: View {
                         .joined(separator: " · ")
                 )
                 .font(.subheadline)
-                .foregroundStyle(Theme.ink.opacity(0.56))
+                .foregroundStyle(Theme.muted)
                 .multilineTextAlignment(.center)
 
                 HStack(spacing: 8) {
@@ -233,7 +233,7 @@ struct ProfileView: View {
 
                     Text("Used privately for scholarship matching")
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.48))
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -346,12 +346,12 @@ struct ProfileView: View {
                     : bio
             )
             .font(.subheadline)
-            .foregroundStyle(Theme.ink.opacity(0.64))
+            .foregroundStyle(Theme.muted)
             .lineSpacing(3)
 
             Text("GPA, IELTS, income and residence details are never copied into your public community profile.")
                 .font(.caption)
-                .foregroundStyle(Theme.ink.opacity(0.44))
+                .foregroundStyle(Theme.muted)
                 .lineSpacing(3)
         }
         .padding(16)
@@ -791,7 +791,7 @@ private struct ProfileMetric: View {
 
             Text(label)
                 .font(.caption2)
-                .foregroundStyle(Theme.ink.opacity(0.44))
+                .foregroundStyle(Theme.muted)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(11)
@@ -816,7 +816,7 @@ private struct ProfileSummaryLine: View {
 
             Text(label)
                 .font(.subheadline)
-                .foregroundStyle(Theme.ink.opacity(0.52))
+                .foregroundStyle(Theme.muted)
 
             Spacer()
 
@@ -851,7 +851,7 @@ private struct ProfileMenuRow: View {
 
                 Text(subtitle)
                     .font(.caption2)
-                    .foregroundStyle(Theme.ink.opacity(0.46))
+                    .foregroundStyle(Theme.muted)
                     .lineLimit(1)
             }
 
@@ -895,7 +895,7 @@ private struct BlockedUsersView: View {
 
                                 Text(row.id.uuidString.prefix(8))
                                     .font(.caption2)
-                                    .foregroundStyle(Theme.ink.opacity(0.62))
+                                    .foregroundStyle(Theme.muted)
                             }
 
                             Spacer()
@@ -1011,12 +1011,12 @@ private struct PrivacyAndSafetyView: View {
 
             Section("Scholarship information") {
                 Text("Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying.")
-                    .foregroundStyle(Theme.ink.opacity(0.62))
+                    .foregroundStyle(Theme.muted)
             }
 
             Section("Account control") {
                 Text("You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships.")
-                    .foregroundStyle(Theme.ink.opacity(0.62))
+                    .foregroundStyle(Theme.muted)
             }
         }
         .scrollContentBackground(.hidden)

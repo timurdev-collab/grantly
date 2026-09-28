@@ -159,7 +159,7 @@ struct ScholarshipDetailView: View {
                         systemImage: "mappin.and.ellipse"
                     )
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.58))
+                    .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -169,7 +169,7 @@ struct ScholarshipDetailView: View {
                         Text("DEADLINE")
                             .font(.system(size: 8, weight: .bold))
                             .tracking(1)
-                            .foregroundStyle(Theme.ink.opacity(0.42))
+                            .foregroundStyle(Theme.muted)
 
                         Text(deadline)
                             .font(.caption.bold())
@@ -219,7 +219,7 @@ struct ScholarshipDetailView: View {
 
                         Text(match.eligible ? "Based on your current academic profile" : "One or more requirements may need attention")
                             .font(.caption2)
-                            .foregroundStyle(Theme.ink.opacity(0.52))
+                            .foregroundStyle(Theme.muted)
                     }
 
                     Spacer()
@@ -266,7 +266,7 @@ struct ScholarshipDetailView: View {
             DetailSection(title: "About", icon: "text.alignleft") {
                 Text(description)
                     .font(.subheadline)
-                    .foregroundStyle(Theme.ink.opacity(0.70))
+                    .foregroundStyle(Theme.muted)
                     .lineSpacing(4)
             }
         }
@@ -368,7 +368,7 @@ struct ScholarshipDetailView: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Current deadline")
                             .font(.caption)
-                            .foregroundStyle(Theme.ink.opacity(0.52))
+                            .foregroundStyle(Theme.muted)
 
                         Text(scholarship.deadline ?? "Deadline not yet confirmed")
                             .font(.headline.bold())
@@ -387,7 +387,7 @@ struct ScholarshipDetailView: View {
 
                 Text("Always confirm the current cycle, eligibility, documents and deadline on the official scholarship website before submitting.")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.ink.opacity(0.64))
+                    .foregroundStyle(Theme.muted)
                     .lineSpacing(4)
 
                 HStack {
@@ -400,7 +400,7 @@ struct ScholarshipDetailView: View {
                     if let checked = scholarship.lastCheckedAt, !checked.isEmpty {
                         Text("Checked \(String(checked.prefix(10)))")
                             .font(.caption2)
-                            .foregroundStyle(Theme.ink.opacity(0.48))
+                            .foregroundStyle(Theme.muted)
                     }
 
                     Spacer()
@@ -428,7 +428,7 @@ struct ScholarshipDetailView: View {
 
                     Text("Open the official form inside Grantly, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status.")
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.58))
+                        .foregroundStyle(Theme.muted)
                         .lineSpacing(3)
 
                     Button {
@@ -530,7 +530,7 @@ private struct DetailPill: View {
     var body: some View {
         Label(text, systemImage: icon)
             .font(.caption2.weight(.semibold))
-            .foregroundStyle(Theme.ink.opacity(0.74))
+            .foregroundStyle(Theme.muted)
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
             .background(Theme.surfaceRaised)
@@ -596,7 +596,7 @@ private struct GuidanceRow: View {
 
             Text(text)
                 .font(.caption)
-                .foregroundStyle(Theme.ink.opacity(0.64))
+                .foregroundStyle(Theme.muted)
                 .lineSpacing(2)
 
             Spacer(minLength: 0)
@@ -612,7 +612,7 @@ struct DetailLine: View {
         HStack(alignment: .top, spacing: 16) {
             Text(label)
                 .font(.subheadline)
-                .foregroundStyle(Theme.ink.opacity(0.52))
+                .foregroundStyle(Theme.muted)
 
             Spacer(minLength: 12)
 

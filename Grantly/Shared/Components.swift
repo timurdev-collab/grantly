@@ -31,7 +31,7 @@ struct EmptyState: View {
 
             Text(text)
                 .font(.subheadline)
-                .foregroundStyle(Theme.ink.opacity(0.54))
+                .foregroundStyle(Theme.muted)
                 .multilineTextAlignment(.center)
                 .lineSpacing(3)
                 .frame(maxWidth: 300)
@@ -392,7 +392,7 @@ struct SearchField: View {
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(Theme.ink.opacity(0.52))
+                .foregroundStyle(Theme.muted)
 
             TextField(prompt, text: $text)
                 .textInputAutocapitalization(.never)
@@ -404,7 +404,7 @@ struct SearchField: View {
                     text = ""
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(Theme.ink.opacity(0.45))
+                        .foregroundStyle(Theme.muted)
                 }
             }
         }

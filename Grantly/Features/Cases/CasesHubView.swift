@@ -109,7 +109,7 @@ struct UniversityCasesView: View {
 
                 Text("Track every university application separately")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.ink.opacity(0.54))
+                    .foregroundStyle(Theme.muted)
             }
 
             Spacer()
@@ -119,7 +119,7 @@ struct UniversityCasesView: View {
             } label: {
                 Image(systemName: "plus")
                     .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.onAccent)
                     .frame(width: 42, height: 42)
                     .background(Theme.orange)
                     .clipShape(RoundedRectangle(cornerRadius: 13))
@@ -164,7 +164,7 @@ struct UniversityCasesView: View {
 
             Text("Choose a university, add the program, then track required documents, missing files, deadlines and status in one place.")
                 .font(.subheadline)
-                .foregroundStyle(Theme.ink.opacity(0.54))
+                .foregroundStyle(Theme.muted)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 320)
 
@@ -208,7 +208,7 @@ private struct UniversityCaseMetric: View {
 
             Text(label)
                 .font(.caption2)
-                .foregroundStyle(Theme.ink.opacity(0.46))
+                .foregroundStyle(Theme.muted)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
@@ -249,7 +249,7 @@ private struct UniversityCaseCard: View {
                 if !item.programName.isEmpty {
                     Text(item.programName)
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.62))
+                        .foregroundStyle(Theme.muted)
                         .lineLimit(1)
                 }
 
@@ -376,7 +376,7 @@ struct CreateUniversityCaseView: View {
         VStack(spacing: 0) {
             HStack(spacing: 10) {
                 Image(systemName: "magnifyingglass")
-                    .foregroundStyle(Theme.ink.opacity(0.40))
+                    .foregroundStyle(Theme.muted)
 
                 TextField(
                     "Search university or country",
@@ -453,7 +453,7 @@ struct CreateUniversityCaseView: View {
 
                         Text(university.country)
                             .font(.caption)
-                            .foregroundStyle(Theme.ink.opacity(0.50))
+                            .foregroundStyle(Theme.muted)
                     }
                 }
 
@@ -496,7 +496,7 @@ struct CreateUniversityCaseView: View {
 
                     Text("Grantly will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case.")
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.54))
+                        .foregroundStyle(Theme.muted)
                         .lineSpacing(3)
                 }
                 .padding(16)
@@ -659,7 +659,7 @@ struct UniversityCaseDetailView: View {
 
                             Text(item.notes)
                                 .font(.subheadline)
-                                .foregroundStyle(Theme.ink.opacity(0.62))
+                                .foregroundStyle(Theme.muted)
                         }
                         .padding(16)
                         .background(Theme.surface)
@@ -723,7 +723,7 @@ struct UniversityCaseDetailView: View {
                     if !item.programName.isEmpty {
                         Text(item.programName)
                             .font(.caption)
-                            .foregroundStyle(Theme.ink.opacity(0.54))
+                            .foregroundStyle(Theme.muted)
                     }
                 }
 
@@ -749,7 +749,7 @@ struct UniversityCaseDetailView: View {
                         systemImage: "flag.fill"
                     )
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.onAccent)
                     .padding(.horizontal, 11)
                     .frame(height: 36)
                     .background(Theme.orange)
@@ -771,7 +771,7 @@ struct UniversityCaseDetailView: View {
                     systemImage: "number"
                 )
                 .font(.caption)
-                .foregroundStyle(Theme.ink.opacity(0.56))
+                .foregroundStyle(Theme.muted)
             }
         }
         .padding(16)
@@ -860,7 +860,7 @@ struct UniversityCaseDetailView: View {
 
             Text(label)
                 .font(.system(size: 9))
-                .foregroundStyle(Theme.ink.opacity(0.46))
+                .foregroundStyle(Theme.muted)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 10)
@@ -878,7 +878,7 @@ struct UniversityCaseDetailView: View {
 
                     Text("See exactly what is attached and what is missing")
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.48))
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -899,7 +899,7 @@ struct UniversityCaseDetailView: View {
 
             Text("Starter items are planning aids until you verify them against the university's official admissions page. Official/source-linked requirements can be added to the same case.")
                 .font(.caption2)
-                .foregroundStyle(Theme.ink.opacity(0.42))
+                .foregroundStyle(Theme.muted)
                 .lineSpacing(3)
         }
         .padding(16)
@@ -952,7 +952,7 @@ struct UniversityCaseDetailView: View {
                         }
                     }
                     .font(.caption2)
-                    .foregroundStyle(Theme.ink.opacity(0.44))
+                    .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -976,7 +976,7 @@ struct UniversityCaseDetailView: View {
 
                     Text(attached.fileName)
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.62))
+                        .foregroundStyle(Theme.muted)
                         .lineLimit(1)
 
                     Spacer()
@@ -1020,7 +1020,7 @@ struct UniversityCaseDetailView: View {
             if extras.isEmpty {
                 Text("Upload any additional application file that does not belong to a checklist item.")
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.48))
+                    .foregroundStyle(Theme.muted)
             } else {
                 ForEach(extras) { document in
                     HStack {
@@ -1029,7 +1029,7 @@ struct UniversityCaseDetailView: View {
                             systemImage: "doc.fill"
                         )
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.66))
+                        .foregroundStyle(Theme.muted)
                         .lineLimit(1)
 
                         Spacer()

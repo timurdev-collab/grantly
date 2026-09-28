@@ -68,7 +68,7 @@ struct HomeView: View {
 
                 Text(firstName.map { "Welcome back, \($0)" } ?? "Find your next opportunity")
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.54))
+                    .foregroundStyle(Theme.muted)
             }
 
             Spacer()
@@ -139,7 +139,7 @@ struct HomeView: View {
                         : "Verified opportunities, deadlines and application tracking in one place."
                 )
                 .font(.caption)
-                .foregroundStyle(Theme.ink.opacity(0.64))
+                .foregroundStyle(Theme.muted)
                 .lineSpacing(3)
                 .frame(maxWidth: 285, alignment: .leading)
 
@@ -155,7 +155,7 @@ struct HomeView: View {
                     )
                 }
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.ink.opacity(0.76))
+                .foregroundStyle(Theme.muted)
                 .padding(.top, 2)
             }
             .padding(18)
@@ -192,7 +192,7 @@ struct HomeView: View {
                             : "Based on your academic profile"
                     )
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.52))
+                    .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -278,7 +278,7 @@ struct HomeView: View {
 
                         Text("Verified opportunities closing soon")
                             .font(.caption)
-                            .foregroundStyle(Theme.ink.opacity(0.52))
+                            .foregroundStyle(Theme.muted)
                     }
 
                     Spacer()
@@ -407,7 +407,7 @@ private struct HomeStat: View {
 
             Text(label)
                 .font(.caption2)
-                .foregroundStyle(Theme.ink.opacity(0.50))
+                .foregroundStyle(Theme.muted)
         }
         .padding(13)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -479,7 +479,7 @@ private struct HomeMatchCard: View {
 
                 Text(match.scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.ink.opacity(0.54))
+                    .foregroundStyle(Theme.muted)
                     .lineLimit(1)
 
                 Label(
@@ -487,7 +487,7 @@ private struct HomeMatchCard: View {
                     systemImage: "mappin.and.ellipse"
                 )
                 .font(.caption2)
-                .foregroundStyle(Theme.ink.opacity(0.66))
+                .foregroundStyle(Theme.muted)
             }
             .padding(12)
         }
@@ -523,7 +523,7 @@ private struct FeaturedScholarshipCard: View {
 
                 Text(scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.ink.opacity(0.54))
+                    .foregroundStyle(Theme.muted)
                     .lineLimit(1)
 
                 Label(
@@ -531,7 +531,7 @@ private struct FeaturedScholarshipCard: View {
                     systemImage: "mappin.and.ellipse"
                 )
                 .font(.caption2)
-                .foregroundStyle(Theme.ink.opacity(0.66))
+                .foregroundStyle(Theme.muted)
             }
             .padding(12)
         }
@@ -565,7 +565,7 @@ struct UpcomingDeadlineCard: View {
 
                 Text(scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.ink.opacity(0.52))
+                    .foregroundStyle(Theme.muted)
                     .lineLimit(1)
 
                 if let deadline = scholarship.deadline {
@@ -601,7 +601,7 @@ struct ProfileSetupCard: View {
 
                     Text("1 min")
                         .font(.caption2.bold())
-                        .foregroundStyle(Theme.ink.opacity(0.50))
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Text("Unlock personalised matches")
@@ -610,7 +610,7 @@ struct ProfileSetupCard: View {
 
                 Text("Add your degree, field, GPA and destination goals so Grantly can rank scholarships around you.")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.ink.opacity(0.62))
+                    .foregroundStyle(Theme.muted)
                     .lineSpacing(3)
 
                 Button("Complete my profile", action: openProfile)
@@ -639,7 +639,7 @@ struct ProfileSnapshot: View {
 
                 Text(profile.intendedMajor ?? "Your study plan")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink.opacity(0.78))
+                    .foregroundStyle(Theme.muted)
 
                 HStack(spacing: 0) {
                     SnapshotMetric(
@@ -671,7 +671,7 @@ struct SnapshotMetric: View {
             Text(label)
                 .font(.system(size: 9, weight: .bold))
                 .tracking(0.8)
-                .foregroundStyle(Theme.ink.opacity(0.42))
+                .foregroundStyle(Theme.muted)
 
             Text(value)
                 .font(.subheadline.weight(.semibold))
@@ -703,7 +703,7 @@ struct MatchCard: View {
 
                 Text(match.scholarship.country)
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.60))
+                    .foregroundStyle(Theme.muted)
 
                 HStack {
                     FundingBadge(text: match.scholarship.fundingType)
@@ -821,7 +821,7 @@ struct NotificationInboxView: View {
 
                                     Text(notification.body)
                                         .font(.caption)
-                                        .foregroundStyle(Theme.ink.opacity(0.58))
+                                        .foregroundStyle(Theme.muted)
                                         .multilineTextAlignment(.leading)
                                         .lineLimit(3)
 

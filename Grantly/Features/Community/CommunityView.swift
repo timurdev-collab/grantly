@@ -55,7 +55,7 @@ struct CommunityView: View {
 
                         Text("Loading the Grantly community...")
                             .font(.caption)
-                            .foregroundStyle(Theme.ink.opacity(0.50))
+                            .foregroundStyle(Theme.muted)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 50)
@@ -74,7 +74,7 @@ struct CommunityView: View {
 
                         Text("Try another name, country or study field.")
                             .font(.subheadline)
-                            .foregroundStyle(Theme.ink.opacity(0.54))
+                            .foregroundStyle(Theme.muted)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 44)
@@ -87,7 +87,7 @@ struct CommunityView: View {
 
                             Text("\(filtered.count) visible community profiles")
                                 .font(.caption)
-                                .foregroundStyle(Theme.ink.opacity(0.48))
+                                .foregroundStyle(Theme.muted)
                         }
 
                         Spacer()
@@ -127,7 +127,7 @@ struct CommunityView: View {
 
                 Text("Meet students pursuing opportunities worldwide")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.ink.opacity(0.54))
+                    .foregroundStyle(Theme.muted)
             }
 
             Spacer()
@@ -171,7 +171,7 @@ struct CommunityView: View {
 
                 Text("Connect around study goals, countries and universities while keeping sensitive academic details private.")
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.67))
+                    .foregroundStyle(Theme.muted)
                     .lineSpacing(3)
                     .frame(maxWidth: 290, alignment: .leading)
 
@@ -180,7 +180,7 @@ struct CommunityView: View {
                     Label("Report & block", systemImage: "hand.raised.fill")
                 }
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.ink.opacity(0.62))
+                .foregroundStyle(Theme.muted)
             }
             .padding(16)
         }
@@ -231,7 +231,7 @@ struct CommunityRow: View {
                         .joined(separator: " · ")
                 )
                 .font(.caption)
-                .foregroundStyle(Theme.ink.opacity(0.58))
+                .foregroundStyle(Theme.muted)
                 .lineLimit(1)
 
                 Label(destinations, systemImage: "airplane")
@@ -334,7 +334,7 @@ struct CommunityProfileView: View {
                     ) {
                         Text(bio)
                             .font(.subheadline)
-                            .foregroundStyle(Theme.ink.opacity(0.70))
+                            .foregroundStyle(Theme.muted)
                             .lineSpacing(4)
                     }
                 }
@@ -364,7 +364,7 @@ struct CommunityProfileView: View {
                 if !status.isEmpty {
                     Text(status)
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.58))
+                        .foregroundStyle(Theme.muted)
                         .multilineTextAlignment(.center)
                 }
             }
@@ -408,7 +408,7 @@ struct CommunityProfileView: View {
                     .joined(separator: " · ")
             )
             .font(.subheadline)
-            .foregroundStyle(Theme.ink.opacity(0.58))
+            .foregroundStyle(Theme.muted)
 
             HStack(spacing: 8) {
                 Label("Community profile", systemImage: "person.2.fill")
@@ -479,7 +479,7 @@ struct CommunityProfileView: View {
             } else {
                 Text("This is your public community profile.")
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.50))
+                    .foregroundStyle(Theme.muted)
             }
         }
     }

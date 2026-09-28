@@ -64,7 +64,7 @@ struct MyScholarshipsView: View {
                             .tint(Theme.orange)
                         Text("Loading your scholarship tracker...")
                             .font(.caption)
-                            .foregroundStyle(Theme.ink.opacity(0.50))
+                            .foregroundStyle(Theme.muted)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 52)
@@ -154,7 +154,7 @@ struct MyScholarshipsView: View {
 
                 Text("Turn your shortlist into an application plan")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.ink.opacity(0.54))
+                    .foregroundStyle(Theme.muted)
             }
 
             Spacer()
@@ -178,7 +178,7 @@ struct MyScholarshipsView: View {
 
                     Text("Keep every opportunity moving")
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.48))
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -289,7 +289,7 @@ struct MyScholarshipsView: View {
                     : "Update a scholarship's stage when your application progresses."
             )
             .font(.subheadline)
-            .foregroundStyle(Theme.ink.opacity(0.55))
+            .foregroundStyle(Theme.muted)
             .multilineTextAlignment(.center)
             .frame(maxWidth: 290)
         }
@@ -321,7 +321,7 @@ struct MyScholarshipsView: View {
 
                 Text("Keep document reminders, interview dates, useful links or anything else you need beside this application.")
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.56))
+                    .foregroundStyle(Theme.muted)
                     .lineSpacing(3)
 
                 Spacer()
@@ -475,7 +475,7 @@ private struct TrackerMetric: View {
 
             Text(label)
                 .font(.system(size: 9, weight: .medium))
-                .foregroundStyle(Theme.ink.opacity(0.45))
+                .foregroundStyle(Theme.muted)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(10)
@@ -518,14 +518,14 @@ private struct ApplicationCard: View {
                         }
                     } label: {
                         Image(systemName: "ellipsis")
-                            .foregroundStyle(Theme.ink.opacity(0.50))
+                            .foregroundStyle(Theme.muted)
                             .frame(width: 24, height: 24)
                     }
                 }
 
                 Text(item.scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.ink.opacity(0.50))
+                    .foregroundStyle(Theme.muted)
                     .lineLimit(1)
 
                 HStack(spacing: 6) {
@@ -587,7 +587,7 @@ private struct ApplicationCard: View {
                    !notes.isEmpty {
                     Text(notes)
                         .font(.caption2)
-                        .foregroundStyle(Theme.ink.opacity(0.52))
+                        .foregroundStyle(Theme.muted)
                         .lineLimit(1)
                 }
 
@@ -598,7 +598,7 @@ private struct ApplicationCard: View {
                         systemImage: "number"
                     )
                     .font(.caption2)
-                    .foregroundStyle(Theme.ink.opacity(0.46))
+                    .foregroundStyle(Theme.muted)
                     .lineLimit(1)
                 }
             }

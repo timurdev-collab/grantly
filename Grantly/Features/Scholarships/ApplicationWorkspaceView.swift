@@ -162,7 +162,7 @@ struct ApplicationWorkspaceView: View {
 
                     Text(scholarship.provider)
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.54))
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -205,7 +205,7 @@ struct ApplicationWorkspaceView: View {
 
                     Text("Your progress inside Grantly")
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.48))
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -225,7 +225,7 @@ struct ApplicationWorkspaceView: View {
                 } label: {
                     Text(status)
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.onAccent)
                         .padding(.horizontal, 12)
                         .frame(height: 36)
                         .background(Theme.orange)
@@ -241,7 +241,7 @@ struct ApplicationWorkspaceView: View {
             HStack {
                 Text("\(completedTasks) of \(tasks.count) preparation steps")
                     .font(.caption2)
-                    .foregroundStyle(Theme.ink.opacity(0.46))
+                    .foregroundStyle(Theme.muted)
 
                 Spacer()
 
@@ -270,7 +270,7 @@ struct ApplicationWorkspaceView: View {
 
             Text("Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status.")
                 .font(.caption)
-                .foregroundStyle(Theme.ink.opacity(0.54))
+                .foregroundStyle(Theme.muted)
                 .lineSpacing(3)
         }
         .padding(16)
@@ -365,7 +365,7 @@ struct ApplicationWorkspaceView: View {
 
             Text("Set an earlier personal target so you have time to fix missing documents before the official deadline.")
                 .font(.caption)
-                .foregroundStyle(Theme.ink.opacity(0.52))
+                .foregroundStyle(Theme.muted)
                 .lineSpacing(3)
         }
         .padding(16)
@@ -408,7 +408,7 @@ struct ApplicationWorkspaceView: View {
             } else if tasks.isEmpty {
                 Text("No checklist items yet.")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.ink.opacity(0.52))
+                    .foregroundStyle(Theme.muted)
             } else {
                 ForEach(tasks) { task in
                     Button {
@@ -456,7 +456,7 @@ struct ApplicationWorkspaceView: View {
                     : "Mark this ready after checking every required document against the official portal."
             )
             .font(.caption2)
-            .foregroundStyle(Theme.ink.opacity(0.42))
+            .foregroundStyle(Theme.muted)
         }
         .padding(16)
         .background(Theme.surface)
@@ -473,7 +473,7 @@ struct ApplicationWorkspaceView: View {
 
                     Text("Private files for this application")
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.48))
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -499,7 +499,7 @@ struct ApplicationWorkspaceView: View {
 
                     Text("Keep transcripts, letters and supporting files together.")
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.48))
+                        .foregroundStyle(Theme.muted)
                         .multilineTextAlignment(.center)
                 }
                 .frame(maxWidth: .infinity)
@@ -521,7 +521,7 @@ struct ApplicationWorkspaceView: View {
 
                             Text(fileSize(document.byteSize))
                                 .font(.caption2)
-                                .foregroundStyle(Theme.ink.opacity(0.42))
+                                .foregroundStyle(Theme.muted)
                         }
 
                         Spacer()
@@ -542,7 +542,7 @@ struct ApplicationWorkspaceView: View {
                 systemImage: "lock.fill"
             )
             .font(.caption2)
-            .foregroundStyle(Theme.ink.opacity(0.42))
+            .foregroundStyle(Theme.muted)
         }
         .padding(16)
         .background(Theme.surface)
@@ -558,7 +558,7 @@ struct ApplicationWorkspaceView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text("Application / confirmation number")
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.48))
+                    .foregroundStyle(Theme.muted)
 
                 TextField("Example: APP-2026-12345", text: $reference)
                     .textInputAutocapitalization(.characters)
@@ -570,7 +570,7 @@ struct ApplicationWorkspaceView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text("Notes")
                     .font(.caption)
-                    .foregroundStyle(Theme.ink.opacity(0.48))
+                    .foregroundStyle(Theme.muted)
 
                 TextField(
                     "Add portal notes, document reminders or next steps",
@@ -619,7 +619,7 @@ struct ApplicationWorkspaceView: View {
 
                     Text("Open it without leaving Grantly")
                         .font(.caption)
-                        .foregroundStyle(Theme.ink.opacity(0.48))
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -631,7 +631,7 @@ struct ApplicationWorkspaceView: View {
             if let checked = item?.portalLastCheckedAt {
                 Text("Last checked \(displayDate(checked))")
                     .font(.caption2)
-                    .foregroundStyle(Theme.ink.opacity(0.44))
+                    .foregroundStyle(Theme.muted)
             }
 
             Button {
@@ -655,7 +655,7 @@ struct ApplicationWorkspaceView: View {
 
             Text("The official website handles the actual submission. Grantly keeps your preparation, files and progress organized around it.")
                 .font(.caption2)
-                .foregroundStyle(Theme.ink.opacity(0.42))
+                .foregroundStyle(Theme.muted)
                 .lineSpacing(3)
         }
         .padding(16)

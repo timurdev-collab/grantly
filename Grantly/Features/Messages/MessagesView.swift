@@ -157,7 +157,7 @@ private struct ConversationRow: View {
                                 : "\(conversation.unreadCount)"
                         )
                         .font(.caption2.bold())
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.onAccent)
                         .padding(.horizontal, 7)
                         .frame(minHeight: 20)
                         .background(Theme.blue)

@@ -39,7 +39,7 @@ struct WelcomeView: View {
                     Text("Discover scholarships, connect with a global community and take the next step in your journey.")
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
-                        .foregroundStyle(Theme.ink.opacity(0.68))
+                        .foregroundStyle(Theme.muted)
                         .lineSpacing(4)
                         .padding(.horizontal, 34)
                         .padding(.top, 12)
