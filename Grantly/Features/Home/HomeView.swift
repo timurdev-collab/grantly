@@ -97,7 +97,6 @@ struct HomeView: View {
             VStack(alignment: .leading, spacing: 24) {
                 greetingHeader
                 nextStepCard
-                applicationsSection
                 recommendationsSection
                 deadlinesSection
             }
@@ -377,57 +376,42 @@ struct HomeView: View {
 
     @ViewBuilder
     private var deadlinesSection: some View {
-        if !applicationPreviews.isEmpty || !upcoming.isEmpty {
+        if !allDeadlineItems.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                HomeSectionHeader(
-                    title: "Upcoming deadlines",
-                    subtitle: "The next dates worth checking",
-                    actionTitle: nil,
-                    action: {}
-                )
+                HStack(alignment: .bottom) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Upcoming deadlines")
+                            .font(.headline.bold())
+                            .foregroundStyle(Theme.ink)
+
+                        Text("The next dates worth checking")
+                            .font(.caption)
+                            .foregroundStyle(Theme.muted)
+                    }
+
+                    Spacer()
+
+                    NavigationLink {
+                        UpcomingDeadlinesView(items: allDeadlineItems)
+                    } label: {
+                        Text("See all")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.orangeSoft)
+                    }
+                    .buttonStyle(.plain)
+                }
 
                 VStack(spacing: 0) {
-                    let applicationDeadlines = Array(
-                        applicationPreviews
-                            .filter { $0.deadline != nil }
-                            .prefix(3)
-                    )
+                    ForEach(Array(allDeadlineItems.prefix(3))) { item in
+                        HomeDeadlineRow(
+                            title: item.title,
+                            deadline: displayDeadline(item.deadline),
+                            status: item.status
+                        )
 
-                    if !applicationDeadlines.isEmpty {
-                        ForEach(applicationDeadlines) { preview in
-                            HomeDeadlineRow(
-                                title: preview.title,
-                                deadline: displayDeadline(preview.deadline),
-                                status: preview.status
-                            )
-
-                            if preview.id != applicationDeadlines.last?.id {
-                                Divider()
-                                    .overlay(Theme.ink.opacity(0.06))
-                            }
-                        }
-                    } else {
-                        ForEach(Array(upcoming.prefix(3))) { scholarship in
-                            NavigationLink {
-                                ScholarshipDetailView(
-                                    scholarship: scholarship,
-                                    match: nil
-                                )
-                            } label: {
-                                HomeDeadlineRow(
-                                    title: scholarship.title,
-                                    deadline: displayDeadline(
-                                        scholarship.deadline
-                                    ),
-                                    status: scholarship.provider
-                                )
-                            }
-                            .buttonStyle(.plain)
-
-                            if scholarship.id != upcoming.prefix(3).last?.id {
-                                Divider()
-                                    .overlay(Theme.ink.opacity(0.06))
-                            }
+                        if item.id != allDeadlineItems.prefix(3).last?.id {
+                            Divider()
+                                .overlay(Theme.ink.opacity(0.06))
                         }
                     }
                 }
@@ -435,6 +419,46 @@ struct HomeView: View {
                 .background(Theme.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 18))
             }
+        }
+    }
+
+    private var allDeadlineItems: [HomeDeadlineItem] {
+        var items: [HomeDeadlineItem] = []
+
+        for preview in applicationPreviews {
+            guard let deadline = preview.deadline, !deadline.isEmpty else {
+                continue
+            }
+
+            items.append(
+                HomeDeadlineItem(
+                    id: preview.id,
+                    title: preview.title,
+                    status: preview.status,
+                    deadline: deadline,
+                    scholarship: nil
+                )
+            )
+        }
+
+        for scholarship in upcoming {
+            guard let deadline = scholarship.deadline, !deadline.isEmpty else {
+                continue
+            }
+
+            items.append(
+                HomeDeadlineItem(
+                    id: "catalog-\(scholarship.id.uuidString)",
+                    title: scholarship.title,
+                    status: scholarship.provider,
+                    deadline: deadline,
+                    scholarship: scholarship
+                )
+            )
+        }
+
+        return items.sorted {
+            $0.deadline < $1.deadline
         }
     }
 
@@ -604,6 +628,81 @@ private struct HomeApplicationRow: View {
                 .foregroundStyle(Theme.muted)
         }
         .padding(13)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 17))
+        .overlay(
+            RoundedRectangle(cornerRadius: 17)
+                .stroke(Theme.ink.opacity(0.05))
+        )
+    }
+}
+
+private struct HomeDeadlineItem: Identifiable {
+    let id: String
+    let title: String
+    let status: String
+    let deadline: String
+    let scholarship: Scholarship?
+}
+
+private struct UpcomingDeadlinesView: View {
+    let items: [HomeDeadlineItem]
+
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            LazyVStack(spacing: 10) {
+                ForEach(items) { item in
+                    if let scholarship = item.scholarship {
+                        NavigationLink {
+                            ScholarshipDetailView(
+                                scholarship: scholarship,
+                                match: nil
+                            )
+                        } label: {
+                            deadlineCard(item)
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        deadlineCard(item)
+                    }
+                }
+            }
+            .padding()
+            .padding(.bottom, 24)
+        }
+        .background(Theme.pageBackground)
+        .navigationTitle("Upcoming Deadlines")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func deadlineCard(_ item: HomeDeadlineItem) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "calendar")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(Theme.orangeSoft)
+                .frame(width: 42, height: 42)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(item.title)
+                    .font(.subheadline.bold())
+                    .foregroundStyle(Theme.ink)
+                    .lineLimit(2)
+
+                Text(item.status)
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            Text(String(item.deadline.prefix(10)))
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.orangeSoft)
+        }
+        .padding(14)
         .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 17))
         .overlay(

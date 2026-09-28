@@ -9,50 +9,72 @@ struct AdvisorsView: View {
                         .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(Theme.ink)
 
-                    Text("Get guidance from education advisors and counselors")
+                    Text("Talk directly with people who can help with your study plans")
                         .font(.subheadline)
                         .foregroundStyle(Theme.muted)
                 }
 
-                VStack(spacing: 16) {
-                    Image(systemName: "person.crop.circle.badge.questionmark")
-                        .font(.system(size: 34, weight: .semibold))
-                        .foregroundStyle(Theme.orangeSoft)
-                        .frame(width: 72, height: 72)
-                        .background(Theme.surface)
-                        .clipShape(Circle())
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack(spacing: 14) {
+                        ZStack {
+                            Circle()
+                                .fill(Theme.surfaceRaised)
+                                .frame(width: 66, height: 66)
 
-                    Text("Advisors are coming soon")
-                        .font(.title3.bold())
-                        .foregroundStyle(Theme.ink)
+                            GrantlyMonogram(size: 50)
+                        }
 
-                    Text("Once advisors and counselors join Grantly, you’ll be able to choose an advisor and message them directly here.")
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Grantly Advisor")
+                                .font(.headline.bold())
+                                .foregroundStyle(Theme.ink)
+
+                            Text("Founding Advisor")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.orangeSoft)
+
+                            Text("Scholarships · Admissions · Study planning")
+                                .font(.caption)
+                                .foregroundStyle(Theme.muted)
+                        }
+
+                        Spacer()
+                    }
+
+                    Text("Ask questions about scholarships, applications, universities, documents, or your next steps.")
                         .font(.subheadline)
                         .foregroundStyle(Theme.muted)
-                        .multilineTextAlignment(.center)
-                        .lineSpacing(4)
-                        .frame(maxWidth: 320)
+                        .lineSpacing(3)
 
-                    Label(
-                        "Direct messaging will be available here",
-                        systemImage: "bubble.left.and.bubble.right.fill"
-                    )
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.muted)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 9)
-                    .background(Theme.surfaceRaised)
-                    .clipShape(Capsule())
+                    NavigationLink {
+                        MessagesView()
+                    } label: {
+                        Label(
+                            "Message advisor",
+                            systemImage: "bubble.left.fill"
+                        )
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 48)
+                        .background(Theme.orangeGradient)
+                        .foregroundStyle(Theme.onAccent)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                    }
+                    .buttonStyle(.plain)
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 58)
-                .padding(.horizontal, 18)
+                .padding(18)
                 .background(Theme.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 22))
                 .overlay(
                     RoundedRectangle(cornerRadius: 22)
                         .stroke(Theme.ink.opacity(0.05))
                 )
+
+                Text("More advisors and counselors will appear here as they join Grantly.")
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top, 2)
             }
             .padding()
             .padding(.bottom, 24)
@@ -61,7 +83,6 @@ struct AdvisorsView: View {
         .navigationBarHidden(true)
     }
 }
-
 
 struct CommunityView: View {
     @State private var profiles: [CommunityProfile] = []
