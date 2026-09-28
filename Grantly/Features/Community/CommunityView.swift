@@ -55,7 +55,7 @@ struct CommunityView: View {
 
                         Text("Loading the Grantly community...")
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.50))
+                            .foregroundStyle(Theme.muted)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 50)
@@ -70,11 +70,11 @@ struct CommunityView: View {
 
                         Text("No students found")
                             .font(.headline.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
 
                         Text("Try another name, country or study field.")
                             .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.54))
+                            .foregroundStyle(Theme.muted)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 44)
@@ -83,11 +83,11 @@ struct CommunityView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Students to connect with")
                                 .font(.headline.bold())
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Theme.ink)
 
                             Text("\(filtered.count) visible community profiles")
                                 .font(.caption)
-                                .foregroundStyle(.white.opacity(0.48))
+                                .foregroundStyle(Theme.muted)
                         }
 
                         Spacer()
@@ -123,11 +123,11 @@ struct CommunityView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Community")
                     .font(.system(size: 30, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Text("Meet students pursuing opportunities worldwide")
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.54))
+                    .foregroundStyle(Theme.muted)
             }
 
             Spacer()
@@ -167,11 +167,11 @@ struct CommunityView: View {
 
                 Text("You are not applying\nalone.")
                     .font(.system(size: 25, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Text("Connect around study goals, countries and universities while keeping sensitive academic details private.")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.67))
+                    .foregroundStyle(Theme.muted)
                     .lineSpacing(3)
                     .frame(maxWidth: 290, alignment: .leading)
 
@@ -180,7 +180,7 @@ struct CommunityView: View {
                     Label("Report & block", systemImage: "hand.raised.fill")
                 }
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.62))
+                .foregroundStyle(Theme.muted)
             }
             .padding(16)
         }
@@ -222,7 +222,7 @@ struct CommunityRow: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(profile.displayName ?? "Student")
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Text(
                     [profile.nationality, profile.major]
@@ -231,7 +231,7 @@ struct CommunityRow: View {
                         .joined(separator: " · ")
                 )
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.58))
+                .foregroundStyle(Theme.muted)
                 .lineLimit(1)
 
                 Label(destinations, systemImage: "airplane")
@@ -244,14 +244,14 @@ struct CommunityRow: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption.bold())
-                .foregroundStyle(.white.opacity(0.35))
+                .foregroundStyle(Theme.ink.opacity(0.35))
         }
         .padding(13)
         .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(
             RoundedRectangle(cornerRadius: 18)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -292,20 +292,20 @@ private struct CommunityAvatar: View {
                     default:
                         Text(initials)
                             .font(.system(size: size * 0.27, weight: .bold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
                     }
                 }
             } else {
                 Text(initials)
                     .font(.system(size: size * 0.27, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
             }
         }
         .frame(width: size, height: size)
         .clipShape(Circle())
         .overlay(
             Circle()
-                .stroke(.white.opacity(0.12))
+                .stroke(Theme.ink.opacity(0.12))
         )
     }
 }
@@ -334,7 +334,7 @@ struct CommunityProfileView: View {
                     ) {
                         Text(bio)
                             .font(.subheadline)
-                            .foregroundStyle(.white.opacity(0.70))
+                            .foregroundStyle(Theme.muted)
                             .lineSpacing(4)
                     }
                 }
@@ -364,7 +364,7 @@ struct CommunityProfileView: View {
                 if !status.isEmpty {
                     Text(status)
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.58))
+                        .foregroundStyle(Theme.muted)
                         .multilineTextAlignment(.center)
                 }
             }
@@ -399,7 +399,7 @@ struct CommunityProfileView: View {
 
             Text(profile.displayName ?? "Student")
                 .font(.system(size: 27, weight: .bold))
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             Text(
                 [profile.nationality, profile.major]
@@ -408,7 +408,7 @@ struct CommunityProfileView: View {
                     .joined(separator: " · ")
             )
             .font(.subheadline)
-            .foregroundStyle(.white.opacity(0.58))
+            .foregroundStyle(Theme.muted)
 
             HStack(spacing: 8) {
                 Label("Community profile", systemImage: "person.2.fill")
@@ -479,7 +479,7 @@ struct CommunityProfileView: View {
             } else {
                 Text("This is your public community profile.")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.50))
+                    .foregroundStyle(Theme.muted)
             }
         }
     }
@@ -556,7 +556,7 @@ private struct ProfileInfoCard<Content: View>: View {
             HStack {
                 Text(title)
                     .font(.headline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Spacer()
 
@@ -575,7 +575,7 @@ private struct ProfileInfoCard<Content: View>: View {
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(
             RoundedRectangle(cornerRadius: 18)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }

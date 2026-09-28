@@ -61,10 +61,10 @@ struct MyScholarshipsView: View {
                 if loading {
                     VStack(spacing: 12) {
                         ProgressView()
-                            .tint(Theme.blue)
+                            .tint(Theme.orange)
                         Text("Loading your scholarship tracker...")
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.50))
+                            .foregroundStyle(Theme.muted)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 52)
@@ -150,18 +150,18 @@ struct MyScholarshipsView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text("My Scholarships")
                     .font(.system(size: 30, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Text("Turn your shortlist into an application plan")
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.54))
+                    .foregroundStyle(Theme.muted)
             }
 
             Spacer()
 
             Image(systemName: "bookmark.fill")
                 .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
                 .frame(width: 42, height: 42)
                 .background(Theme.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 13))
@@ -174,18 +174,18 @@ struct MyScholarshipsView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Application pipeline")
                         .font(.headline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
 
                     Text("Keep every opportunity moving")
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.48))
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
 
                 Text("\(items.count) saved")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
             }
 
             HStack(spacing: 8) {
@@ -225,7 +225,7 @@ struct MyScholarshipsView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 
@@ -252,13 +252,13 @@ struct MyScholarshipsView: View {
                 .foregroundStyle(
                     selectedStatus == status
                         ? .white
-                        : .white.opacity(0.66)
+                        : Theme.ink.opacity(0.66)
                 )
                 .padding(.horizontal, 13)
                 .frame(height: 38)
                 .background(
                     selectedStatus == status
-                        ? Theme.blue
+                        ? Theme.orange
                         : Theme.surface
                 )
                 .clipShape(Capsule())
@@ -270,7 +270,7 @@ struct MyScholarshipsView: View {
         VStack(spacing: 14) {
             Image(systemName: selectedStatus == "All" ? "bookmark" : "tray")
                 .font(.system(size: 26, weight: .semibold))
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
                 .frame(width: 60, height: 60)
                 .background(Theme.surface)
                 .clipShape(Circle())
@@ -281,7 +281,7 @@ struct MyScholarshipsView: View {
                     : "Nothing in \(selectedStatus.lowercased())"
             )
             .font(.headline.bold())
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.ink)
 
             Text(
                 selectedStatus == "All"
@@ -289,7 +289,7 @@ struct MyScholarshipsView: View {
                     : "Update a scholarship's stage when your application progresses."
             )
             .font(.subheadline)
-            .foregroundStyle(.white.opacity(0.55))
+            .foregroundStyle(Theme.muted)
             .multilineTextAlignment(.center)
             .frame(maxWidth: 290)
         }
@@ -302,11 +302,11 @@ struct MyScholarshipsView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Application note")
                     .font(.caption.bold())
-                    .foregroundStyle(Theme.blueSoft)
+                    .foregroundStyle(Theme.orangeSoft)
 
                 Text(item.scholarship.title)
                     .font(.title3.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 TextEditor(text: $noteText)
                     .scrollContentBackground(.hidden)
@@ -316,12 +316,12 @@ struct MyScholarshipsView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
-                            .stroke(.white.opacity(0.07))
+                            .stroke(Theme.ink.opacity(0.07))
                     )
 
                 Text("Keep document reminders, interview dates, useful links or anything else you need beside this application.")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.56))
+                    .foregroundStyle(Theme.muted)
                     .lineSpacing(3)
 
                 Spacer()
@@ -349,7 +349,7 @@ struct MyScholarshipsView: View {
                 }
             }
         }
-        .preferredColorScheme(.dark)
+
     }
 
     @MainActor
@@ -467,15 +467,15 @@ private struct TrackerMetric: View {
         VStack(alignment: .leading, spacing: 7) {
             Image(systemName: icon)
                 .font(.caption.bold())
-                .foregroundStyle(Theme.blueSoft)
+                .foregroundStyle(Theme.orangeSoft)
 
             Text(value)
                 .font(.headline.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             Text(label)
                 .font(.system(size: 9, weight: .medium))
-                .foregroundStyle(.white.opacity(0.45))
+                .foregroundStyle(Theme.muted)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(10)
@@ -497,7 +497,8 @@ private struct ApplicationCard: View {
         HStack(spacing: 12) {
             UniversityPhoto(
                 seed: item.scholarship.provider + item.scholarship.title,
-                height: 128
+                remoteURL: item.scholarship.university?.campusImageUrl,
+                height: 116
             )
             .frame(width: 112)
             .clipShape(RoundedRectangle(cornerRadius: 15))
@@ -506,7 +507,7 @@ private struct ApplicationCard: View {
                 HStack(alignment: .top) {
                     Text(item.scholarship.title)
                         .font(.subheadline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
                         .lineLimit(2)
 
                     Spacer(minLength: 8)
@@ -517,14 +518,14 @@ private struct ApplicationCard: View {
                         }
                     } label: {
                         Image(systemName: "ellipsis")
-                            .foregroundStyle(.white.opacity(0.50))
+                            .foregroundStyle(Theme.muted)
                             .frame(width: 24, height: 24)
                     }
                 }
 
                 Text(item.scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.50))
+                    .foregroundStyle(Theme.muted)
                     .lineLimit(1)
 
                 HStack(spacing: 6) {
@@ -549,7 +550,7 @@ private struct ApplicationCard: View {
                     Button(action: onTasks) {
                         Image(systemName: "checklist")
                             .font(.caption)
-                            .foregroundStyle(Theme.blueSoft)
+                            .foregroundStyle(Theme.orangeSoft)
                     }
                     .buttonStyle(.plain)
 
@@ -560,8 +561,8 @@ private struct ApplicationCard: View {
                                 item.notes?
                                     .trimmingCharacters(in: .whitespacesAndNewlines)
                                     .isEmpty == false
-                                    ? Theme.blueSoft
-                                    : .white.opacity(0.54)
+                                    ? Theme.orangeSoft
+                                    : Theme.ink.opacity(0.54)
                             )
                     }
                     .buttonStyle(.plain)
@@ -569,7 +570,7 @@ private struct ApplicationCard: View {
                     Button(action: onWorkspace) {
                         Image(systemName: "rectangle.stack.badge.plus")
                             .font(.caption)
-                            .foregroundStyle(Theme.blueSoft)
+                            .foregroundStyle(Theme.orangeSoft)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Open Application Center")
@@ -578,7 +579,7 @@ private struct ApplicationCard: View {
                 if let deadline = item.scholarship.deadline {
                     Label(deadline, systemImage: "calendar")
                         .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.blueSoft)
+                        .foregroundStyle(Theme.orangeSoft)
                 }
 
                 if let notes = item.notes?
@@ -586,7 +587,7 @@ private struct ApplicationCard: View {
                    !notes.isEmpty {
                     Text(notes)
                         .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.52))
+                        .foregroundStyle(Theme.muted)
                         .lineLimit(1)
                 }
 
@@ -597,7 +598,7 @@ private struct ApplicationCard: View {
                         systemImage: "number"
                     )
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.46))
+                    .foregroundStyle(Theme.muted)
                     .lineLimit(1)
                 }
             }
@@ -607,7 +608,7 @@ private struct ApplicationCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(
             RoundedRectangle(cornerRadius: 18)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -645,7 +646,7 @@ private struct ApplicationStatusPill: View {
     private var color: Color {
         switch status {
         case "Applied", "Submitted":
-            return Theme.blueSoft
+            return Theme.orangeSoft
         case "Interview":
             return Color(red: 0.70, green: 0.55, blue: 1.0)
         case "Offer", "Result":

@@ -5,6 +5,7 @@ import UIKit
 struct ProfileView: View {
     @Environment(AuthStore.self) private var auth
     @Binding var profile: StudentProfile?
+    @AppStorage("grantly.appearance") private var appearance: AppAppearance = .system
 
     @State private var fullName = ""
     @State private var nationality = ""
@@ -117,7 +118,7 @@ struct ProfileView: View {
             HStack {
                 Text("Profile")
                     .font(.system(size: 30, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Spacer()
 
@@ -157,25 +158,25 @@ struct ProfileView: View {
                             default:
                                 Text(profileInitials)
                                     .font(.system(size: 26, weight: .bold))
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Theme.ink)
                             }
                         }
                     } else {
                         Text(profileInitials)
                             .font(.system(size: 26, weight: .bold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
                     }
                 }
                 .frame(width: 86, height: 86)
                 .clipShape(Circle())
                 .overlay(
                     Circle()
-                        .stroke(.white.opacity(0.12), lineWidth: 1)
+                        .stroke(Theme.ink.opacity(0.12), lineWidth: 1)
                 )
 
                 Text(displayName)
                     .font(.system(size: 25, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Text(
                     [degreeLevel, intendedMajor, nationality]
@@ -185,7 +186,7 @@ struct ProfileView: View {
                         .joined(separator: " · ")
                 )
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.56))
+                .foregroundStyle(Theme.muted)
                 .multilineTextAlignment(.center)
 
                 HStack(spacing: 8) {
@@ -228,11 +229,11 @@ struct ProfileView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Academic profile")
                         .font(.headline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
 
                     Text("Used privately for scholarship matching")
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.48))
+                        .foregroundStyle(Theme.muted)
                 }
 
                 Spacer()
@@ -245,7 +246,7 @@ struct ProfileView: View {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     Capsule()
-                        .fill(.white.opacity(0.07))
+                        .fill(Theme.ink.opacity(0.07))
                         .frame(height: 6)
 
                     Capsule()
@@ -281,7 +282,7 @@ struct ProfileView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 
@@ -290,7 +291,7 @@ struct ProfileView: View {
             HStack {
                 Text("Study goals")
                     .font(.headline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Spacer()
 
@@ -321,7 +322,7 @@ struct ProfileView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 
@@ -330,12 +331,12 @@ struct ProfileView: View {
             HStack {
                 Text("Community profile")
                     .font(.headline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Spacer()
 
                 Circle()
-                    .fill(visible ? Theme.green : .white.opacity(0.25))
+                    .fill(visible ? Theme.green : Theme.ink.opacity(0.25))
                     .frame(width: 8, height: 8)
             }
 
@@ -345,12 +346,12 @@ struct ProfileView: View {
                     : bio
             )
             .font(.subheadline)
-            .foregroundStyle(.white.opacity(0.64))
+            .foregroundStyle(Theme.muted)
             .lineSpacing(3)
 
             Text("GPA, IELTS, income and residence details are never copied into your public community profile.")
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.44))
+                .foregroundStyle(Theme.muted)
                 .lineSpacing(3)
         }
         .padding(16)
@@ -358,12 +359,23 @@ struct ProfileView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 
     private var settingsCard: some View {
         VStack(spacing: 0) {
+            Picker("Appearance", selection: $appearance) {
+                ForEach(AppAppearance.allCases) { option in
+                    Text(option.title).tag(option)
+                }
+            }
+            .tint(Theme.accent)
+            .padding(.vertical, 12)
+            .accessibilityHint("System follows your device. Light uses cream and brown; dark uses navy and blue.")
+
+            Divider()
+
             NavigationLink {
                 PrivacyAndSafetyView()
             } label: {
@@ -377,7 +389,7 @@ struct ProfileView: View {
             .buttonStyle(.plain)
 
             Divider()
-                .overlay(.white.opacity(0.06))
+                .overlay(Theme.ink.opacity(0.06))
 
             NavigationLink {
                 BlockedUsersView()
@@ -406,7 +418,7 @@ struct ProfileView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 48)
                     .background(Theme.surface)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
             .buttonStyle(.plain)
@@ -493,13 +505,13 @@ struct ProfileView: View {
                                     default:
                                         Text(profileInitials)
                                             .font(.headline.bold())
-                                            .foregroundStyle(.white)
+                                            .foregroundStyle(Theme.ink)
                                     }
                                 }
                             } else {
                                 Text(profileInitials)
                                     .font(.headline.bold())
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Theme.ink)
                             }
                         }
                         .frame(width: 62, height: 62)
@@ -579,7 +591,7 @@ struct ProfileView: View {
                 }
             }
         }
-        .preferredColorScheme(.dark)
+
     }
 
     private func csv(_ value: String) -> [String] {
@@ -775,11 +787,11 @@ private struct ProfileMetric: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(value)
                 .font(.headline.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             Text(label)
                 .font(.caption2)
-                .foregroundStyle(.white.opacity(0.44))
+                .foregroundStyle(Theme.muted)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(11)
@@ -804,13 +816,13 @@ private struct ProfileSummaryLine: View {
 
             Text(label)
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.52))
+                .foregroundStyle(Theme.muted)
 
             Spacer()
 
             Text(value)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
                 .multilineTextAlignment(.trailing)
                 .lineLimit(2)
         }
@@ -835,11 +847,11 @@ private struct ProfileMenuRow: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Text(subtitle)
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.46))
+                    .foregroundStyle(Theme.muted)
                     .lineLimit(1)
             }
 
@@ -847,7 +859,7 @@ private struct ProfileMenuRow: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption.bold())
-                .foregroundStyle(.white.opacity(0.28))
+                .foregroundStyle(Theme.ink.opacity(0.28))
         }
         .padding(.vertical, 12)
     }
@@ -883,7 +895,7 @@ private struct BlockedUsersView: View {
 
                                 Text(row.id.uuidString.prefix(8))
                                     .font(.caption2)
-                                    .foregroundStyle(.white.opacity(0.62))
+                                    .foregroundStyle(Theme.muted)
                             }
 
                             Spacer()
@@ -999,12 +1011,12 @@ private struct PrivacyAndSafetyView: View {
 
             Section("Scholarship information") {
                 Text("Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying.")
-                    .foregroundStyle(.white.opacity(0.62))
+                    .foregroundStyle(Theme.muted)
             }
 
             Section("Account control") {
                 Text("You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships.")
-                    .foregroundStyle(.white.opacity(0.62))
+                    .foregroundStyle(Theme.muted)
             }
         }
         .scrollContentBackground(.hidden)

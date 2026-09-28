@@ -27,11 +27,11 @@ struct EmptyState: View {
 
             Text(title)
                 .font(.headline.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             Text(text)
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.54))
+                .foregroundStyle(Theme.muted)
                 .multilineTextAlignment(.center)
                 .lineSpacing(3)
                 .frame(maxWidth: 300)
@@ -179,7 +179,7 @@ struct GrantlyMonogram: View {
         .frame(width: size, height: size)
         .overlay(
             RoundedRectangle(cornerRadius: size * 0.28)
-                .stroke(Color.white.opacity(0.07), lineWidth: 1)
+                .stroke(Theme.ink.opacity(0.07), lineWidth: 1)
         )
     }
 }
@@ -198,7 +198,7 @@ struct PremiumCard<Content: View>: View {
             .clipShape(RoundedRectangle(cornerRadius: 18))
             .overlay(
                 RoundedRectangle(cornerRadius: 18)
-                    .stroke(Color.white.opacity(0.06), lineWidth: 1)
+                    .stroke(Theme.ink.opacity(0.06), lineWidth: 1)
             )
             .shadow(
                 color: Color.black.opacity(0.10),
@@ -220,7 +220,7 @@ struct AcademicSectionHeader: View {
                 SectionEyebrow(text: eyebrow)
                 Text(title)
                     .font(Theme.serifTitle(25))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
             }
 
             Spacer()
@@ -259,37 +259,86 @@ struct UniversityPhoto: View {
     var height: CGFloat = 170
 
     private static let urls = [
-        "https://images.unsplash.com/photo-1564981797816-1043664bf78d?auto=format&fit=crop&w=1200&q=86",
-        "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=86",
-        "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=86",
-        "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1200&q=86",
-        "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?auto=format&fit=crop&w=1200&q=86",
-        "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?auto=format&fit=crop&w=1200&q=86"
+        "https://images.unsplash.com/photo-1564981797816-1043664bf78d?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1567168544813-cc03465b4fa8?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1560523159-4a9692d222ef?auto=format&fit=crop&w=1200&q=84",
+        "https://images.unsplash.com/photo-1560785496-3c9d27877182?auto=format&fit=crop&w=1200&q=84"
     ]
 
-    private var url: URL? {
-        if let remoteURL,
-           let remote = URL(string: remoteURL),
-           !remoteURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return remote
-        }
-
-        let value = seed.unicodeScalars.reduce(0) { partial, scalar in
+    private var seedValue: Int {
+        seed.unicodeScalars.reduce(0) { partial, scalar in
             (partial &* 31 &+ Int(scalar.value)) & 0x7fffffff
         }
+    }
 
-        return URL(string: Self.urls[value % Self.urls.count])
+    private var stockURL: URL? {
+        URL(string: Self.urls[seedValue % Self.urls.count])
+    }
+
+    private var primaryURL: URL? {
+        guard let remoteURL,
+              !remoteURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else {
+            return nil
+        }
+
+        return URL(string: remoteURL)
     }
 
     var body: some View {
         ZStack {
             LinearGradient(
-                colors: [Theme.surfaceRaised, Theme.navy],
+                colors: [
+                    Theme.surfaceRaised,
+                    seedValue.isMultiple(of: 2)
+                        ? Theme.navy
+                        : Theme.orange.opacity(0.30)
+                ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
 
-            AsyncImage(url: url) { phase in
+            if let primaryURL {
+                AsyncImage(url: primaryURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .transition(.opacity)
+                    case .failure:
+                        stockImage
+                    default:
+                        placeholder
+                    }
+                }
+            } else {
+                stockImage
+            }
+
+            LinearGradient(
+                colors: [.clear, Theme.navyDeep.opacity(0.20)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: height)
+        .clipped()
+    }
+
+    @ViewBuilder
+    private var stockImage: some View {
+        if let stockURL {
+            AsyncImage(url: stockURL) { phase in
                 switch phase {
                 case .success(let image):
                     image
@@ -297,18 +346,42 @@ struct UniversityPhoto: View {
                         .scaledToFill()
                         .transition(.opacity)
                 case .failure:
-                    Image(systemName: "building.columns.fill")
-                        .font(.system(size: 40))
-                        .foregroundStyle(.white.opacity(0.28))
+                    fallbackMark
                 default:
-                    ProgressView()
-                        .tint(Theme.blue)
+                    placeholder
                 }
             }
+        } else {
+            fallbackMark
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: height)
-        .clipped()
+    }
+
+    private var placeholder: some View {
+        ZStack {
+            Theme.surface
+
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Theme.ink.opacity(0.04))
+                .frame(width: 76, height: 52)
+                .overlay {
+                    Image(systemName: "building.columns")
+                        .foregroundStyle(Theme.ink.opacity(0.30))
+                }
+        }
+    }
+
+    private var fallbackMark: some View {
+        ZStack {
+            LinearGradient(
+                colors: [Theme.surfaceRaised, Theme.navy],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            Image(systemName: "building.columns.fill")
+                .font(.system(size: 36))
+                .foregroundStyle(Theme.orangeSoft.opacity(0.72))
+        }
     }
 }
 
@@ -319,19 +392,19 @@ struct SearchField: View {
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(.white.opacity(0.52))
+                .foregroundStyle(Theme.muted)
 
             TextField(prompt, text: $text)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             if !text.isEmpty {
                 Button {
                     text = ""
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.white.opacity(0.45))
+                        .foregroundStyle(Theme.muted)
                 }
             }
         }
@@ -342,7 +415,7 @@ struct SearchField: View {
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .overlay(
             RoundedRectangle(cornerRadius: 14)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -397,13 +470,13 @@ struct UniversityLogo: View {
                     default:
                         Text(initials)
                             .font(.system(size: size * 0.28, weight: .bold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
                     }
                 }
             } else {
                 Text(initials)
                     .font(.system(size: size * 0.28, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
             }
         }
         .frame(width: size, height: size)
@@ -422,7 +495,7 @@ struct OfflineBanner: View {
             systemImage: "wifi.slash"
         )
         .font(.caption.weight(.semibold))
-        .foregroundStyle(.white)
+        .foregroundStyle(Theme.ink)
         .padding(.horizontal, 14)
         .frame(height: 40)
         .background(.ultraThinMaterial)
@@ -430,7 +503,7 @@ struct OfflineBanner: View {
         .clipShape(Capsule())
         .overlay(
             Capsule()
-                .stroke(.white.opacity(0.08), lineWidth: 1)
+                .stroke(Theme.ink.opacity(0.08), lineWidth: 1)
         )
         .shadow(
             color: .black.opacity(0.18),

@@ -1,64 +1,70 @@
 import SwiftUI
+import UIKit
+
+enum AppAppearance: String, CaseIterable, Identifiable {
+    case system, light, dark
+    var id: String { rawValue }
+    var title: String { rawValue.capitalized }
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: return nil
+        case .light: return .light
+        case .dark: return .dark
+        }
+    }
+}
 
 enum Theme {
-    // Grantly reference direction: midnight navy, electric blue and clean white.
-    static let navyDeep = Color(red: 0.004, green: 0.027, blue: 0.055)
-    static let navy = Color(red: 0.010, green: 0.055, blue: 0.105)
-    static let surface = Color(red: 0.030, green: 0.095, blue: 0.165)
-    static let surfaceRaised = Color(red: 0.055, green: 0.125, blue: 0.205)
+    // Semantic colors resolve against the view's current appearance.
+    private static func adaptive(light: UInt32, dark: UInt32) -> Color {
+        Color(uiColor: UIColor { traits in
+            let hex = traits.userInterfaceStyle == .dark ? dark : light
+            return UIColor(
+                red: CGFloat((hex >> 16) & 255) / 255,
+                green: CGFloat((hex >> 8) & 255) / 255,
+                blue: CGFloat(hex & 255) / 255,
+                alpha: 1
+            )
+        })
+    }
 
-    static let blue = Color(red: 0.025, green: 0.54, blue: 1.00)
-    static let blueSoft = Color(red: 0.18, green: 0.68, blue: 1.00)
-    static let sky = Color(red: 0.30, green: 0.76, blue: 1.00)
-    static let green = Color(red: 0.16, green: 0.82, blue: 0.55)
-    static let danger = Color(red: 1.00, green: 0.28, blue: 0.34)
+    static let navyDeep = adaptive(light: 0xF7F1E7, dark: 0x081B38)
+    static let navy = adaptive(light: 0xF0E7DA, dark: 0x0B2345)
+    static let surface = adaptive(light: 0xFFFCF6, dark: 0x10294A)
+    static let surfaceRaised = adaptive(light: 0xEFE4D5, dark: 0x163456)
+    static let ink = adaptive(light: 0x493023, dark: 0xFFFFFF)
+    static let muted = adaptive(light: 0x745B4B, dark: 0xAABBD0)
+    static let accent = adaptive(light: 0x845B3C, dark: 0x0866FF)
+    static let accentSoft = adaptive(light: 0x795134, dark: 0x6BA6FF)
+    static let onAccent = Color.white
+    static let green = adaptive(light: 0x246B48, dark: 0x29D18C)
+    static let danger = adaptive(light: 0xB32D39, dark: 0xFF4757)
 
-    static let white = Color.white
-    static let muted = Color.white.opacity(0.62)
-
-    // Compatibility aliases used by the existing feature screens.
-    // The old "orange/brass" names now resolve to the blue reference accent.
-    static let ink = Color.white
-    static let parchment = Color.white
+    // Legacy names remain aliases so every feature adopts the same palette.
+    static let blue = accent
+    static let blueSoft = accentSoft
+    static let sky = accentSoft
+    static let orange = accent
+    static let orangeSoft = accentSoft
+    static let white = ink
+    static let parchment = ink
     static let ivory = navyDeep
-    static let orange = blue
-    static let orangeSoft = blueSoft
-    static let brass = blue
-    static let brassSoft = blueSoft
+    static let brass = accent
+    static let brassSoft = accentSoft
     static let oxblood = danger
     static let forest = green
     static let sage = green.opacity(0.16)
     static let mist = surfaceRaised
-    static let violet = blue
+    static let violet = accent
     static let soft = surfaceRaised
     static let mint = green.opacity(0.16)
-
     static let pageBackground = navyDeep
     static let cardBackground = surface
 
-    static let heroGradient = LinearGradient(
-        colors: [surfaceRaised, navy],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-
-    static let orangeGradient = LinearGradient(
-        colors: [blueSoft, blue],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-
-    static let blueGradient = LinearGradient(
-        colors: [blueSoft, blue],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-
-    static let paperGradient = LinearGradient(
-        colors: [surfaceRaised, surface],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
+    static let heroGradient = LinearGradient(colors: [surfaceRaised, navy], startPoint: .topLeading, endPoint: .bottomTrailing)
+    static let orangeGradient = LinearGradient(colors: [accent, accent], startPoint: .topLeading, endPoint: .bottomTrailing)
+    static let blueGradient = orangeGradient
+    static let paperGradient = LinearGradient(colors: [surfaceRaised, surface], startPoint: .topLeading, endPoint: .bottomTrailing)
 
     static func serifTitle(_ size: CGFloat, weight: Font.Weight = .semibold) -> Font {
         .system(size: size, weight: weight, design: .default)

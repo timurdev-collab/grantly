@@ -157,7 +157,7 @@ private struct ConversationRow: View {
                                 : "\(conversation.unreadCount)"
                         )
                         .font(.caption2.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.onAccent)
                         .padding(.horizontal, 7)
                         .frame(minHeight: 20)
                         .background(Theme.blue)
@@ -340,7 +340,7 @@ struct ChatView: View {
                     .font(.headline.bold())
                     .frame(width: 42, height: 42)
                     .background(Theme.blueGradient)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.onAccent)
                     .clipShape(Circle())
             }
             .disabled(
@@ -357,7 +357,7 @@ struct ChatView: View {
         .background(Theme.navyDeep.opacity(0.96))
         .overlay(alignment: .top) {
             Rectangle()
-                .fill(.white.opacity(0.06))
+                .fill(Theme.ink.opacity(0.06))
                 .frame(height: 1)
         }
     }
@@ -548,7 +548,7 @@ struct Bubble: View {
                             ? Theme.blue
                             : Theme.surfaceRaised
                     )
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
                     .clipShape(
                         RoundedRectangle(cornerRadius: 16)
                     )

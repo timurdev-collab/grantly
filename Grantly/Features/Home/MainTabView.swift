@@ -58,10 +58,10 @@ struct MainTabView: View {
             }
             .tag(MainTab.profile)
         }
-        .tint(Theme.blue)
+        .tint(Theme.orange)
         .toolbarBackground(Theme.navyDeep, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
-        .preferredColorScheme(.dark)
+
         .overlay(alignment: .top) {
             if !networkMonitor.isOnline {
                 OfflineBanner()
