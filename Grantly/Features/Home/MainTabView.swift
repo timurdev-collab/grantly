@@ -4,7 +4,7 @@ private enum MainTab: Hashable {
     case home
     case explore
     case saved
-    case community
+    case advisors
     case profile
 }
 
@@ -43,12 +43,12 @@ struct MainTabView: View {
             .tag(MainTab.saved)
 
             NavigationStack {
-                CommunityView()
+                AdvisorsView()
             }
             .tabItem {
-                Label("Community", systemImage: "person.2.fill")
+                Label("Advisors", systemImage: "person.crop.circle.badge.questionmark")
             }
-            .tag(MainTab.community)
+            .tag(MainTab.advisors)
 
             NavigationStack {
                 ProfileView(profile: $profile)
