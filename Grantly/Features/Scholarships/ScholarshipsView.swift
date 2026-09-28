@@ -618,6 +618,13 @@ struct PremiumScholarshipCard: View {
         scholarship.degreeLevels.first ?? "Multiple levels"
     }
 
+    private var countryLabel: String {
+        let flag = countryFlag(for: scholarship.country)
+        return flag.isEmpty
+            ? scholarship.country
+            : "\(flag) \(scholarship.country)"
+    }
+
     var body: some View {
         HStack(alignment: .top, spacing: 13) {
             ExploreUniversityLogo(
@@ -658,7 +665,7 @@ struct PremiumScholarshipCard: View {
 
                     MetadataPill(
                         icon: "mappin.and.ellipse",
-                        text: scholarship.country
+                        text: countryLabel
                     )
 
                     MetadataPill(
@@ -703,6 +710,53 @@ struct PremiumScholarshipCard: View {
                 .stroke(Theme.ink.opacity(0.05))
         )
     }
+}
+
+private func countryFlag(for countryName: String) -> String {
+    let normalized = countryName
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+        .lowercased()
+
+    let aliases: [String: String] = [
+        "south korea": "KR",
+        "korea": "KR",
+        "republic of korea": "KR",
+        "north korea": "KP",
+        "united states": "US",
+        "united states of america": "US",
+        "usa": "US",
+        "u.s.a.": "US",
+        "united kingdom": "GB",
+        "uk": "GB",
+        "u.k.": "GB",
+        "russia": "RU",
+        "czech republic": "CZ",
+        "vietnam": "VN",
+        "viet nam": "VN",
+        "taiwan": "TW",
+        "hong kong": "HK"
+    ]
+
+    let code: String? = aliases[normalized] ?? Locale.isoRegionCodes.first {
+        guard let name = Locale(identifier: "en_US")
+            .localizedString(forRegionCode: $0)?
+            .lowercased() else {
+            return false
+        }
+
+        return name == normalized
+    }
+
+    guard let code, code.count == 2 else {
+        return ""
+    }
+
+    let base: UInt32 = 127397
+    let scalars = code.uppercased().unicodeScalars.compactMap {
+        UnicodeScalar(base + $0.value)
+    }
+
+    return String(String.UnicodeScalarView(scalars))
 }
 
 private struct ExploreUniversityLogo: View {
