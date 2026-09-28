@@ -39,6 +39,7 @@ struct ScholarshipDetailView: View {
                 .padding()
                 .padding(.bottom, 84)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .background(Theme.pageBackground)
         .navigationBarTitleDisplayMode(.inline)
@@ -232,6 +233,7 @@ struct ScholarshipDetailView: View {
         .padding(.horizontal)
         .padding(.top, 14)
         .padding(.bottom, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var tabsBar: some View {
@@ -574,6 +576,7 @@ private struct DetailSection<Content: View>: View {
             content
         }
         .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 19))
         .overlay(
@@ -613,13 +616,13 @@ struct DetailLine: View {
             Text(label)
                 .font(.subheadline)
                 .foregroundStyle(Theme.muted)
-
-            Spacer(minLength: 12)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             Text(value)
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Theme.ink)
                 .multilineTextAlignment(.trailing)
+                .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 }
