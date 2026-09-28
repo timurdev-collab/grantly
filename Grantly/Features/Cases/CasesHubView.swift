@@ -57,7 +57,7 @@ struct UniversityCasesView: View {
                 header
                 summary
 
-                if loading {
+                if loading && cases.isEmpty {
                     ProgressView()
                         .tint(Theme.orange)
                         .frame(maxWidth: .infinity)
@@ -80,6 +80,7 @@ struct UniversityCasesView: View {
             .padding()
             .padding(.bottom, 24)
         }
+        .scrollBounceBehavior(.always, axes: .vertical)
         .refreshable { await load() }
         .task { await load() }
         .sheet(isPresented: $showingCreateCase, onDismiss: {
@@ -113,6 +114,8 @@ struct UniversityCasesView: View {
             }
 
             Spacer()
+
+            RefreshButton(loading: loading) { await load() }
 
             Button {
                 showingCreateCase = true
@@ -185,6 +188,7 @@ struct UniversityCasesView: View {
 
         do {
             cases = try await DataService.universityApplicationCases()
+            errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
         }
