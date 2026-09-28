@@ -3,17 +3,29 @@ import SwiftUI
 struct HomeView: View {
     @Binding var profile: StudentProfile?
     let openProfile: () -> Void
+    let openExplore: () -> Void
+    let openApplications: () -> Void
 
     @State private var matches: [ScholarshipMatch] = []
     @State private var upcoming: [Scholarship] = []
+    @State private var universityApplications: [UniversityApplicationCase] = []
+    @State private var scholarshipApplications: [SavedScholarshipItem] = []
     @State private var loading = true
     @State private var unreadNotifications = 0
 
     private var profileNeedsSetup: Bool {
         guard let profile else { return true }
-        let required = [profile.fullName, profile.nationality, profile.intendedMajor, profile.degreeLevel]
+        let required = [
+            profile.fullName,
+            profile.nationality,
+            profile.intendedMajor,
+            profile.degreeLevel
+        ]
+
         return required.contains {
-            ($0 ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            ($0 ?? "")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .isEmpty
         }
     }
 
@@ -24,44 +36,90 @@ struct HomeView: View {
             .map(String.init)
     }
 
+    private var applicationPreviews: [HomeApplicationPreview] {
+        let universityRows = universityApplications.map {
+            HomeApplicationPreview(
+                id: "university-\($0.id.uuidString)",
+                title: $0.university.name,
+                subtitle: $0.programName.isEmpty
+                    ? ($0.degreeLevel ?? "University application")
+                    : $0.programName,
+                status: $0.applicationStatus,
+                deadline: $0.deadline
+            )
+        }
+
+        let activeStatuses = Set([
+            "preparing",
+            "applied",
+            "submitted",
+            "interview",
+            "offer",
+            "rejected",
+            "withdrawn"
+        ])
+
+        let scholarshipRows = scholarshipApplications
+            .filter {
+                activeStatuses.contains(
+                    $0.applicationStatus.lowercased()
+                )
+            }
+            .map {
+                HomeApplicationPreview(
+                    id: "scholarship-\($0.scholarshipId.uuidString)",
+                    title: $0.scholarship.title,
+                    subtitle: $0.scholarship.provider,
+                    status: $0.applicationStatus,
+                    deadline:
+                        $0.personalDeadline ??
+                        $0.applicationDeadline ??
+                        $0.scholarship.deadline
+                )
+            }
+
+        return (universityRows + scholarshipRows)
+            .sorted {
+                ($0.deadline ?? "9999-12-31") <
+                ($1.deadline ?? "9999-12-31")
+            }
+    }
+
+    private var nextDeadline: HomeApplicationPreview? {
+        applicationPreviews.first { preview in
+            guard let deadline = preview.deadline else { return false }
+            return !deadline.isEmpty
+        }
+    }
+
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 22) {
-                brandHeader
-                homeHero
-
-                if profileNeedsSetup {
-                    ProfileSetupCard(openProfile: openProfile)
-                }
-
-                matchesSection
-
-                if let profile, !profileNeedsSetup {
-                    ProfileSnapshot(profile: profile)
-                }
-
+            VStack(alignment: .leading, spacing: 24) {
+                greetingHeader
+                nextStepCard
+                applicationsSection
+                recommendationsSection
                 deadlinesSection
             }
             .padding(.horizontal)
-            .padding(.top, 10)
+            .padding(.top, 12)
             .padding(.bottom, 32)
         }
         .background(Theme.pageBackground)
         .navigationBarTitleDisplayMode(.inline)
+        .refreshable { await load() }
         .task { await load() }
     }
 
-    private var brandHeader: some View {
-        HStack(spacing: 11) {
-            GrantlyMonogram(size: 40)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Grantly")
-                    .font(.system(size: 22, weight: .bold))
+    private var greetingHeader: some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 5) {
+                Text(firstName.map { "Good morning, \($0)" } ?? "Good morning")
+                    .font(.system(size: 29, weight: .bold))
                     .foregroundStyle(Theme.ink)
 
-                Text(firstName.map { "Welcome back, \($0)" } ?? "Find your next opportunity")
-                    .font(.caption)
+                Text("Here’s what needs your attention")
+                    .font(.subheadline)
                     .foregroundStyle(Theme.muted)
             }
 
@@ -73,21 +131,30 @@ struct HomeView: View {
                 ZStack(alignment: .topTrailing) {
                     Circle()
                         .fill(Theme.surface)
-                        .frame(width: 40, height: 40)
+                        .frame(width: 42, height: 42)
 
-                    Image(systemName: unreadNotifications > 0 ? "bell.fill" : "bell")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Theme.ink.opacity(0.84))
-                        .frame(width: 40, height: 40)
+                    Image(
+                        systemName:
+                            unreadNotifications > 0
+                            ? "bell.fill"
+                            : "bell"
+                    )
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(Theme.ink.opacity(0.84))
+                    .frame(width: 42, height: 42)
 
                     if unreadNotifications > 0 {
-                        Text(unreadNotifications > 9 ? "9+" : "\(unreadNotifications)")
-                            .font(.system(size: 8, weight: .bold))
-                            .foregroundStyle(Theme.ink)
-                            .frame(minWidth: 16, minHeight: 16)
-                            .background(Theme.danger)
-                            .clipShape(Circle())
-                            .offset(x: 2, y: -2)
+                        Text(
+                            unreadNotifications > 9
+                                ? "9+"
+                                : "\(unreadNotifications)"
+                        )
+                        .font(.system(size: 8, weight: .bold))
+                        .foregroundStyle(Theme.onAccent)
+                        .frame(minWidth: 16, minHeight: 16)
+                        .background(Theme.orange)
+                        .clipShape(Circle())
+                        .offset(x: 2, y: -2)
                     }
                 }
             }
@@ -95,116 +162,185 @@ struct HomeView: View {
         }
     }
 
-    private var homeHero: some View {
-        ZStack(alignment: .bottomTrailing) {
-            RoundedRectangle(cornerRadius: 24)
-                .fill(
-                    LinearGradient(
-                        colors: [Theme.surfaceRaised, Theme.navy],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+    private var nextStepCard: some View {
+        let content = nextStepContent
 
-            Circle()
-                .fill(Theme.orange.opacity(0.14))
-                .frame(width: 180, height: 180)
-                .blur(radius: 12)
-                .offset(x: 74, y: 62)
-
-            VStack(alignment: .leading, spacing: 9) {
-                Text(profileNeedsSetup ? "START HERE" : "FOR YOU")
+        return VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("NEXT STEP")
                     .font(.system(size: 10, weight: .bold))
-                    .tracking(1.5)
+                    .tracking(1.4)
                     .foregroundStyle(Theme.orangeSoft)
 
-                Text(
-                    profileNeedsSetup
-                        ? "Build your profile.\nFind the right funding."
-                        : "Your scholarship search,\nwithout the noise."
-                )
-                .font(.system(size: 25, weight: .bold))
-                .tracking(-0.45)
+                Spacer()
+
+                Image(systemName: content.icon)
+                    .font(.headline)
+                    .foregroundStyle(Theme.orangeSoft)
+            }
+
+            Text(content.title)
+                .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(Theme.ink)
 
-                Text(
-                    profileNeedsSetup
-                        ? "Tell Grantly what you want to study and we’ll narrow the catalog for you."
-                        : "Verified opportunities, deadlines and application tracking in one place."
-                )
-                .font(.caption)
+            Text(content.message)
+                .font(.subheadline)
                 .foregroundStyle(Theme.muted)
                 .lineSpacing(3)
-                .frame(maxWidth: 285, alignment: .leading)
 
-                HStack(spacing: 14) {
-                    Label(
-                        profileNeedsSetup ? "Set up profile" : "\(matches.count) matches",
-                        systemImage: profileNeedsSetup ? "person.crop.circle.badge.plus" : "sparkles"
-                    )
-
-                    Label(
-                        "\(upcoming.count) deadlines",
-                        systemImage: "calendar"
-                    )
-                }
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.muted)
-                .padding(.top, 2)
+            Button(content.buttonTitle) {
+                content.action()
             }
-            .padding(18)
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            Image(systemName: "arrow.up.right")
-                .font(.headline.bold())
-                .foregroundStyle(Theme.onAccent)
-                .frame(width: 42, height: 42)
-                .background(Theme.orangeGradient)
-                .clipShape(Circle())
-                .padding(16)
+            .font(.subheadline.weight(.semibold))
+            .frame(maxWidth: .infinity)
+            .frame(height: 48)
+            .background(Theme.orangeGradient)
+            .foregroundStyle(Theme.onAccent)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .buttonStyle(.plain)
         }
-        .frame(height: 190)
-        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .padding(18)
+        .background(
+            LinearGradient(
+                colors: [Theme.surfaceRaised, Theme.navy],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 22))
         .overlay(
-            RoundedRectangle(cornerRadius: 24)
+            RoundedRectangle(cornerRadius: 22)
                 .stroke(Theme.ink.opacity(0.06))
         )
     }
 
+    private var nextStepContent: HomeNextStep {
+        if profileNeedsSetup {
+            return HomeNextStep(
+                title: "Complete your profile",
+                message:
+                    "Add your study level, intended major and background so Grantly can improve your recommendations.",
+                buttonTitle: "Complete profile",
+                icon: "person.crop.circle.badge.plus",
+                action: openProfile
+            )
+        }
+
+        if applicationPreviews.isEmpty {
+            return HomeNextStep(
+                title: "Find your first opportunity",
+                message:
+                    "Explore verified scholarships and save the ones you want to consider.",
+                buttonTitle: "Explore scholarships",
+                icon: "magnifyingglass",
+                action: openExplore
+            )
+        }
+
+        if let nextDeadline {
+            return HomeNextStep(
+                title: "Deadline coming up",
+                message:
+                    "\(nextDeadline.title) · \(displayDeadline(nextDeadline.deadline))",
+                buttonTitle: "Open applications",
+                icon: "calendar.badge.exclamationmark",
+                action: openApplications
+            )
+        }
+
+        return HomeNextStep(
+            title: "Continue your applications",
+            message:
+                "You have \(applicationPreviews.count) application\(applicationPreviews.count == 1 ? "" : "s") in progress.",
+            buttonTitle: "Open applications",
+            icon: "checklist",
+            action: openApplications
+        )
+    }
+
     @ViewBuilder
-    private var matchesSection: some View {
+    private var applicationsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(profileNeedsSetup ? "Featured scholarships" : "Best matches for you")
-                        .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
+            HomeSectionHeader(
+                title: "Your applications",
+                subtitle: applicationPreviews.isEmpty
+                    ? "Applications you start will appear here"
+                    : "\(applicationPreviews.count) application\(applicationPreviews.count == 1 ? "" : "s") to track",
+                actionTitle: applicationPreviews.isEmpty ? nil : "View all",
+                action: openApplications
+            )
 
-                    Text(
-                        profileNeedsSetup
-                            ? "Trusted opportunities selected by Grantly"
-                            : "Based on your academic profile"
-                    )
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
+            if loading && applicationPreviews.isEmpty {
+                ProgressView()
+                    .tint(Theme.orange)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 24)
+            } else if applicationPreviews.isEmpty {
+                Button {
+                    openExplore()
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title3)
+                            .foregroundStyle(Theme.orangeSoft)
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("No applications yet")
+                                .font(.subheadline.bold())
+                                .foregroundStyle(Theme.ink)
+
+                            Text("Find a scholarship or university to get started.")
+                                .font(.caption)
+                                .foregroundStyle(Theme.muted)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .font(.caption.bold())
+                            .foregroundStyle(Theme.muted)
+                    }
+                    .padding(14)
+                    .background(Theme.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: 17))
                 }
-
-                Spacer()
-
-                Image(systemName: "arrow.right")
-                    .font(.caption.bold())
-                    .foregroundStyle(Theme.orangeSoft)
+                .buttonStyle(.plain)
+            } else {
+                VStack(spacing: 9) {
+                    ForEach(applicationPreviews.prefix(3)) { preview in
+                        Button {
+                            openApplications()
+                        } label: {
+                            HomeApplicationRow(preview: preview)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
             }
+        }
+    }
+
+    @ViewBuilder
+    private var recommendationsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HomeSectionHeader(
+                title: "Recommended for you",
+                subtitle: profileNeedsSetup
+                    ? "A few trusted opportunities to start with"
+                    : "Based on your current profile",
+                actionTitle: "Explore more",
+                action: openExplore
+            )
 
             if loading {
                 ProgressView()
-                    .tint(Theme.blue)
+                    .tint(Theme.orange)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 34)
+                    .padding(.vertical, 28)
             } else if !matches.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
-                        ForEach(matches.prefix(5)) { match in
+                        ForEach(matches.prefix(3)) { match in
                             NavigationLink {
                                 ScholarshipDetailView(
                                     scholarship: match.scholarship,
@@ -214,43 +350,22 @@ struct HomeView: View {
                                 HomeMatchCard(match: match)
                             }
                             .buttonStyle(.plain)
-                            .contextMenu {
-                                Button {
-                                    Task {
-                                        await markInterested(match)
-                                    }
-                                } label: {
-                                    Label(
-                                        "More like this",
-                                        systemImage: "hand.thumbsup"
-                                    )
-                                }
-
-                                Button(role: .destructive) {
-                                    Task {
-                                        await hideRecommendation(match)
-                                    }
-                                } label: {
-                                    Label(
-                                        "Not interested",
-                                        systemImage: "eye.slash"
-                                    )
-                                }
-                            }
                         }
                     }
                 }
-            } else if !upcoming.isEmpty {
+            } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
-                        ForEach(upcoming.prefix(5)) { scholarship in
+                        ForEach(upcoming.prefix(3)) { scholarship in
                             NavigationLink {
                                 ScholarshipDetailView(
                                     scholarship: scholarship,
                                     match: nil
                                 )
                             } label: {
-                                FeaturedScholarshipCard(scholarship: scholarship)
+                                FeaturedScholarshipCard(
+                                    scholarship: scholarship
+                                )
                             }
                             .buttonStyle(.plain)
                         }
@@ -262,74 +377,85 @@ struct HomeView: View {
 
     @ViewBuilder
     private var deadlinesSection: some View {
-        if !upcoming.isEmpty {
+        if !applicationPreviews.isEmpty || !upcoming.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Deadlines to watch")
-                            .font(.headline.bold())
-                            .foregroundStyle(Theme.ink)
+                HomeSectionHeader(
+                    title: "Upcoming deadlines",
+                    subtitle: "The next dates worth checking",
+                    actionTitle: nil,
+                    action: {}
+                )
 
-                        Text("Verified opportunities closing soon")
-                            .font(.caption)
-                            .foregroundStyle(Theme.muted)
-                    }
+                VStack(spacing: 0) {
+                    let applicationDeadlines = Array(
+                        applicationPreviews
+                            .filter { $0.deadline != nil }
+                            .prefix(3)
+                    )
 
-                    Spacer()
+                    if !applicationDeadlines.isEmpty {
+                        ForEach(applicationDeadlines) { preview in
+                            HomeDeadlineRow(
+                                title: preview.title,
+                                deadline: displayDeadline(preview.deadline),
+                                status: preview.status
+                            )
 
-                    Label("Verified", systemImage: "checkmark.seal.fill")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.green)
-                }
-
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(upcoming.prefix(6)) { scholarship in
+                            if preview.id != applicationDeadlines.last?.id {
+                                Divider()
+                                    .overlay(Theme.ink.opacity(0.06))
+                            }
+                        }
+                    } else {
+                        ForEach(Array(upcoming.prefix(3))) { scholarship in
                             NavigationLink {
                                 ScholarshipDetailView(
                                     scholarship: scholarship,
                                     match: nil
                                 )
                             } label: {
-                                UpcomingDeadlineCard(scholarship: scholarship)
+                                HomeDeadlineRow(
+                                    title: scholarship.title,
+                                    deadline: displayDeadline(
+                                        scholarship.deadline
+                                    ),
+                                    status: scholarship.provider
+                                )
                             }
                             .buttonStyle(.plain)
+
+                            if scholarship.id != upcoming.prefix(3).last?.id {
+                                Divider()
+                                    .overlay(Theme.ink.opacity(0.06))
+                            }
                         }
                     }
                 }
+                .padding(.horizontal, 14)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
             }
         }
     }
 
-    @MainActor
-    private func markInterested(_ match: ScholarshipMatch) async {
-        try? await DataService.setRecommendationFeedback(
-            scholarshipId: match.scholarship.id,
-            feedback: "interested"
-        )
-
-        await load()
-    }
-
-    @MainActor
-    private func hideRecommendation(_ match: ScholarshipMatch) async {
-        do {
-            try await DataService.setRecommendationFeedback(
-                scholarshipId: match.scholarship.id,
-                feedback: "not_interested"
-            )
-
-            matches.removeAll {
-                $0.scholarship.id == match.scholarship.id
-            }
-        } catch {
-            // Keep the current recommendations if the preference could not save.
+    private func displayDeadline(_ value: String?) -> String {
+        guard let value, !value.isEmpty else {
+            return "Deadline not set"
         }
+
+        return String(value.prefix(10))
     }
 
     @MainActor
     private func load() async {
+        loading = true
         defer { loading = false }
+
+        async let caseRows = DataService.universityApplicationCases()
+        async let savedRows = DataService.savedScholarshipItems()
+
+        universityApplications = (try? await caseRows) ?? []
+        scholarshipApplications = (try? await savedRows) ?? []
 
         if let notifications = try? await DataService.appNotifications(
             limit: 100
@@ -359,7 +485,7 @@ struct HomeView: View {
 
             do {
                 matches = try await ScholarshipSearchService
-                    .matches(limit: 8)
+                    .matches(limit: 3)
                     .matches
             } catch {
                 guard let profile else {
@@ -369,14 +495,150 @@ struct HomeView: View {
 
                 matches = Array(
                     MatchingService
-                        .rank(profile: profile, scholarships: scholarships)
-                        .prefix(8)
+                        .rank(
+                            profile: profile,
+                            scholarships: scholarships
+                        )
+                        .prefix(3)
                 )
             }
         } catch {
             matches = []
             upcoming = []
         }
+    }
+}
+
+private struct HomeNextStep {
+    let title: String
+    let message: String
+    let buttonTitle: String
+    let icon: String
+    let action: () -> Void
+}
+
+private struct HomeApplicationPreview: Identifiable {
+    let id: String
+    let title: String
+    let subtitle: String
+    let status: String
+    let deadline: String?
+}
+
+private struct HomeSectionHeader: View {
+    let title: String
+    let subtitle: String
+    let actionTitle: String?
+    let action: () -> Void
+
+    var body: some View {
+        HStack(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.headline.bold())
+                    .foregroundStyle(Theme.ink)
+
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+            }
+
+            Spacer()
+
+            if let actionTitle {
+                Button(actionTitle, action: action)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.orangeSoft)
+                    .buttonStyle(.plain)
+            }
+        }
+    }
+}
+
+private struct HomeApplicationRow: View {
+    let preview: HomeApplicationPreview
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "doc.text.fill")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(Theme.orangeSoft)
+                .frame(width: 40, height: 40)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(preview.title)
+                    .font(.subheadline.bold())
+                    .foregroundStyle(Theme.ink)
+                    .lineLimit(1)
+
+                Text(preview.subtitle)
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(1)
+
+                HStack(spacing: 7) {
+                    Text(preview.status)
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.orangeSoft)
+
+                    if let deadline = preview.deadline {
+                        Text("·")
+                            .foregroundStyle(Theme.muted)
+
+                        Label(
+                            String(deadline.prefix(10)),
+                            systemImage: "calendar"
+                        )
+                        .font(.caption2)
+                        .foregroundStyle(Theme.muted)
+                    }
+                }
+            }
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .font(.caption.bold())
+                .foregroundStyle(Theme.muted)
+        }
+        .padding(13)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 17))
+        .overlay(
+            RoundedRectangle(cornerRadius: 17)
+                .stroke(Theme.ink.opacity(0.05))
+        )
+    }
+}
+
+private struct HomeDeadlineRow: View {
+    let title: String
+    let deadline: String
+    let status: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+                    .lineLimit(1)
+
+                Text(status)
+                    .font(.caption2)
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(1)
+            }
+
+            Spacer()
+
+            Text(deadline)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.orangeSoft)
+        }
+        .padding(.vertical, 12)
     }
 }
 
