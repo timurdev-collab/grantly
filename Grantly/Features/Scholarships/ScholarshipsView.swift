@@ -618,49 +618,24 @@ struct PremiumScholarshipCard: View {
         scholarship.degreeLevels.first ?? "Multiple levels"
     }
 
-    private var primaryField: String {
-        scholarship.fields.first ?? "All fields"
+    private var countryLabel: String {
+        let flag = countryFlag(for: scholarship.country)
+        return flag.isEmpty
+            ? scholarship.country
+            : "\(flag) \(scholarship.country)"
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ZStack(alignment: .bottomLeading) {
-                UniversityPhoto(
-                    seed: scholarship.provider + scholarship.title + scholarship.country,
-                    remoteURL: scholarship.university?.campusImageUrl,
-                    height: 142
-                )
+        HStack(alignment: .top, spacing: 13) {
+            ExploreUniversityLogo(
+                university: scholarship.university,
+                fallbackName: scholarship.provider,
+                size: 54
+            )
 
-                LinearGradient(
-                    colors: [.clear, Theme.navyDeep.opacity(0.92)],
-                    startPoint: .center,
-                    endPoint: .bottom
-                )
-
-                HStack(alignment: .bottom) {
-                    FundingBadge(text: scholarship.fundingType)
-
-                    Spacer()
-
-                    Image(systemName: saved ? "bookmark.fill" : "bookmark")
-                        .font(.caption.bold())
-                        .foregroundStyle(saved ? Theme.orangeSoft : Theme.ink)
-                        .frame(width: 34, height: 34)
-                        .background(Theme.navyDeep.opacity(0.80))
-                        .clipShape(Circle())
-                }
-                .padding(12)
-            }
-
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(alignment: .top, spacing: 10) {
-                    UniversityLogo(
-                        university: scholarship.university,
-                        fallbackName: scholarship.provider,
-                        size: 38
-                    )
-
-                    VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(alignment: .top, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 3) {
                         Text(scholarship.title)
                             .font(.headline.bold())
                             .foregroundStyle(Theme.ink)
@@ -673,13 +648,24 @@ struct PremiumScholarshipCard: View {
                             .lineLimit(1)
                     }
 
-                    Spacer(minLength: 0)
+                    Spacer(minLength: 4)
+
+                    Image(systemName: saved ? "bookmark.fill" : "bookmark")
+                        .font(.caption.bold())
+                        .foregroundStyle(
+                            saved ? Theme.orangeSoft : Theme.muted
+                        )
+                        .frame(width: 30, height: 30)
+                        .background(Theme.surfaceRaised)
+                        .clipShape(Circle())
                 }
 
-                HStack(spacing: 8) {
+                HStack(spacing: 7) {
+                    FundingBadge(text: scholarship.fundingType)
+
                     MetadataPill(
                         icon: "mappin.and.ellipse",
-                        text: scholarship.country
+                        text: countryLabel
                     )
 
                     MetadataPill(
@@ -687,17 +673,6 @@ struct PremiumScholarshipCard: View {
                         text: primaryDegree
                     )
                 }
-
-                if !primaryField.isEmpty {
-                    Label(primaryField, systemImage: "books.vertical")
-                        .font(.caption2)
-                        .foregroundStyle(Theme.muted)
-                        .lineLimit(1)
-                }
-
-                Rectangle()
-                    .fill(Theme.ink.opacity(0.06))
-                    .frame(height: 1)
 
                 HStack(spacing: 8) {
                     TrustSeal(verified: verified)
@@ -709,30 +684,141 @@ struct PremiumScholarshipCard: View {
                     Spacer()
 
                     if let deadline = scholarship.deadline {
-                        Label(deadline, systemImage: "calendar")
-                            .font(.caption2.weight(.semibold))
-                            .foregroundStyle(Theme.orangeSoft)
+                        Label(
+                            String(deadline.prefix(10)),
+                            systemImage: "calendar"
+                        )
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.orangeSoft)
                     } else {
-                        Text("Deadline not yet confirmed")
+                        Text("Deadline TBC")
                             .font(.caption2.weight(.semibold))
                             .foregroundStyle(Theme.muted)
                     }
 
-                    Image(systemName: "arrow.right")
+                    Image(systemName: "chevron.right")
                         .font(.caption.bold())
-                        .foregroundStyle(Theme.onAccent)
-                        .frame(width: 32, height: 32)
-                        .background(Theme.orangeGradient)
-                        .clipShape(Circle())
+                        .foregroundStyle(Theme.muted)
                 }
             }
-            .padding(13)
         }
+        .padding(14)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 18)
                 .stroke(Theme.ink.opacity(0.05))
+        )
+    }
+}
+
+private func countryFlag(for countryName: String) -> String {
+    let normalized = countryName
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+        .lowercased()
+
+    let aliases: [String: String] = [
+        "south korea": "KR",
+        "korea": "KR",
+        "republic of korea": "KR",
+        "north korea": "KP",
+        "united states": "US",
+        "united states of america": "US",
+        "usa": "US",
+        "u.s.a.": "US",
+        "united kingdom": "GB",
+        "uk": "GB",
+        "u.k.": "GB",
+        "russia": "RU",
+        "czech republic": "CZ",
+        "vietnam": "VN",
+        "viet nam": "VN",
+        "taiwan": "TW",
+        "hong kong": "HK"
+    ]
+
+    let code: String? = aliases[normalized] ?? Locale.isoRegionCodes.first {
+        guard let name = Locale(identifier: "en_US")
+            .localizedString(forRegionCode: $0)?
+            .lowercased() else {
+            return false
+        }
+
+        return name == normalized
+    }
+
+    guard let code, code.count == 2 else {
+        return ""
+    }
+
+    let base: UInt32 = 127397
+    let scalars = code.uppercased().unicodeScalars.compactMap {
+        UnicodeScalar(base + $0.value)
+    }
+
+    return String(String.UnicodeScalarView(scalars))
+}
+
+private struct ExploreUniversityLogo: View {
+    let university: University?
+    let fallbackName: String
+    var size: CGFloat = 54
+
+    private var initials: String {
+        let source = university?.name ?? fallbackName
+        let words = source.split(separator: " ")
+
+        if words.count >= 2 {
+            return (
+                String(words[0].prefix(1)) +
+                String(words[1].prefix(1))
+            ).uppercased()
+        }
+
+        return String(source.prefix(2)).uppercased()
+    }
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(Theme.surfaceRaised)
+
+            if let logoURL = university?.logoUrl,
+               let url = URL(string: logoURL) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .padding(size * 0.15)
+                    default:
+                        Text(initials)
+                            .font(
+                                .system(
+                                    size: size * 0.25,
+                                    weight: .bold
+                                )
+                            )
+                            .foregroundStyle(Theme.ink)
+                    }
+                }
+            } else {
+                Text(initials)
+                    .font(
+                        .system(
+                            size: size * 0.25,
+                            weight: .bold
+                        )
+                    )
+                    .foregroundStyle(Theme.ink)
+            }
+        }
+        .frame(width: size, height: size)
+        .clipShape(Circle())
+        .overlay(
+            Circle()
+                .stroke(Theme.orange.opacity(0.22))
         )
     }
 }
