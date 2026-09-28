@@ -135,6 +135,7 @@ struct ScholarshipsView: View {
         .background(Theme.pageBackground)
         .navigationBarHidden(true)
         .scrollBounceBehavior(.always, axes: .vertical)
+        .scrollDismissesKeyboard(.interactively)
         .refreshable {
             await refresh()
         }
@@ -402,6 +403,8 @@ struct ScholarshipsView: View {
     private func loadFilterOptions() async {
         do {
             filterOptions = try await ScholarshipSearchService.filters()
+        } catch is CancellationError {
+            return
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -494,6 +497,8 @@ struct ScholarshipsView: View {
                 )
             }
 
+        } catch is CancellationError {
+            return
         } catch {
             guard requestID == currentRequest, !Task.isCancelled else { return }
             errorMessage = error.localizedDescription
