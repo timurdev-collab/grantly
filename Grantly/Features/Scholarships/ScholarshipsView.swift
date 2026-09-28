@@ -135,7 +135,7 @@ struct ScholarshipsView: View {
         .background(Theme.pageBackground)
         .navigationBarHidden(true)
         .scrollBounceBehavior(.always, axes: .vertical)
-        .scrollDismissesKeyboard(.interactively)
+        .scrollDismissesKeyboard(.immediately)
         .refreshable {
             await refresh()
         }
