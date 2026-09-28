@@ -38,7 +38,7 @@ struct MainTabView: View {
                 CasesHubView()
             }
             .tabItem {
-                Label("Cases", systemImage: "folder.fill")
+                Label("Applications", systemImage: "folder.fill")
             }
             .tag(MainTab.saved)
 
