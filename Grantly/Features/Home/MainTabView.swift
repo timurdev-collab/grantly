@@ -18,7 +18,9 @@ struct MainTabView: View {
             NavigationStack {
                 HomeView(
                     profile: $profile,
-                    openProfile: { selection = .profile }
+                    openProfile: { selection = .profile },
+                    openExplore: { selection = .explore },
+                    openApplications: { selection = .saved }
                 )
             }
             .tabItem {
