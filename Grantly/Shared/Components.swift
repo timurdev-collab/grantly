@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct SectionEyebrow: View {
     let text: String
@@ -401,14 +402,23 @@ struct SearchField: View {
                 .submitLabel(.search)
                 .focused($isFocused)
                 .onSubmit {
-                    isFocused = false
+                    dismissKeyboard()
+                }
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Spacer()
+
+                        Button("Done") {
+                            dismissKeyboard()
+                        }
+                    }
                 }
                 .foregroundStyle(Theme.ink)
 
             if !text.isEmpty {
                 Button {
                     text = ""
-                    isFocused = false
+                    dismissKeyboard()
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(Theme.muted)
@@ -423,6 +433,16 @@ struct SearchField: View {
         .overlay(
             RoundedRectangle(cornerRadius: 14)
                 .stroke(Theme.ink.opacity(0.05))
+        )
+    }
+
+    private func dismissKeyboard() {
+        isFocused = false
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil,
+            from: nil,
+            for: nil
         )
     }
 }
