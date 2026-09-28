@@ -423,35 +423,41 @@ struct HomeView: View {
     }
 
     private var allDeadlineItems: [HomeDeadlineItem] {
-        let applicationItems = applicationPreviews.compactMap { preview in
+        var items: [HomeDeadlineItem] = []
+
+        for preview in applicationPreviews {
             guard let deadline = preview.deadline, !deadline.isEmpty else {
-                return nil
+                continue
             }
 
-            return HomeDeadlineItem(
-                id: preview.id,
-                title: preview.title,
-                status: preview.status,
-                deadline: deadline,
-                scholarship: nil
+            items.append(
+                HomeDeadlineItem(
+                    id: preview.id,
+                    title: preview.title,
+                    status: preview.status,
+                    deadline: deadline,
+                    scholarship: nil
+                )
             )
         }
 
-        let scholarshipItems = upcoming.compactMap { scholarship in
+        for scholarship in upcoming {
             guard let deadline = scholarship.deadline, !deadline.isEmpty else {
-                return nil
+                continue
             }
 
-            return HomeDeadlineItem(
-                id: "catalog-\(scholarship.id.uuidString)",
-                title: scholarship.title,
-                status: scholarship.provider,
-                deadline: deadline,
-                scholarship: scholarship
+            items.append(
+                HomeDeadlineItem(
+                    id: "catalog-\(scholarship.id.uuidString)",
+                    title: scholarship.title,
+                    status: scholarship.provider,
+                    deadline: deadline,
+                    scholarship: scholarship
+                )
             )
         }
 
-        return (applicationItems + scholarshipItems).sorted {
+        return items.sorted {
             $0.deadline < $1.deadline
         }
     }
