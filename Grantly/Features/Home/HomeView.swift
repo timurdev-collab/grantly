@@ -7,7 +7,6 @@ struct HomeView: View {
     @State private var matches: [ScholarshipMatch] = []
     @State private var upcoming: [Scholarship] = []
     @State private var loading = true
-    @State private var query = ""
     @State private var unreadNotifications = 0
 
     private var profileNeedsSetup: Bool {
@@ -29,11 +28,6 @@ struct HomeView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 22) {
                 brandHeader
-                SearchField(
-                    text: $query,
-                    prompt: "Search scholarships, countries, universities..."
-                )
-
                 homeHero
 
                 if profileNeedsSetup {
