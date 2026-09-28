@@ -1,5 +1,68 @@
 import SwiftUI
 
+struct AdvisorsView: View {
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 22) {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Advisors")
+                        .font(.system(size: 30, weight: .bold))
+                        .foregroundStyle(Theme.ink)
+
+                    Text("Get guidance from education advisors and counselors")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.muted)
+                }
+
+                VStack(spacing: 16) {
+                    Image(systemName: "person.crop.circle.badge.questionmark")
+                        .font(.system(size: 34, weight: .semibold))
+                        .foregroundStyle(Theme.orangeSoft)
+                        .frame(width: 72, height: 72)
+                        .background(Theme.surface)
+                        .clipShape(Circle())
+
+                    Text("Advisors are coming soon")
+                        .font(.title3.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    Text("Once advisors and counselors join Grantly, you’ll be able to choose an advisor and message them directly here.")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.muted)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(4)
+                        .frame(maxWidth: 320)
+
+                    Label(
+                        "Direct messaging will be available here",
+                        systemImage: "bubble.left.and.bubble.right.fill"
+                    )
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.muted)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 9)
+                    .background(Theme.surfaceRaised)
+                    .clipShape(Capsule())
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 58)
+                .padding(.horizontal, 18)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 22))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 22)
+                        .stroke(Theme.ink.opacity(0.05))
+                )
+            }
+            .padding()
+            .padding(.bottom, 24)
+        }
+        .background(Theme.pageBackground)
+        .navigationBarHidden(true)
+    }
+}
+
+
 struct CommunityView: View {
     @State private var profiles: [CommunityProfile] = []
     @State private var blockedUserIDs: Set<UUID> = []
