@@ -18,28 +18,35 @@ struct ScholarshipDetailView: View {
     }
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 0) {
-                hero
-                identity
-                tabsBar
+        GeometryReader { proxy in
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 0) {
+                    hero
+                    identity
+                    tabsBar
 
-                VStack(alignment: .leading, spacing: 16) {
-                    switch selectedTab {
-                    case "Eligibility":
-                        eligibilityContent
-                    case "Benefits":
-                        benefitsContent
-                    case "Application":
-                        applicationContent
-                    default:
-                        overviewContent
+                    VStack(alignment: .leading, spacing: 16) {
+                        switch selectedTab {
+                        case "Eligibility":
+                            eligibilityContent
+                        case "Benefits":
+                            benefitsContent
+                        case "Application":
+                            applicationContent
+                        default:
+                            overviewContent
+                        }
                     }
+                    .padding()
+                    .padding(.bottom, 84)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding()
-                .padding(.bottom, 84)
+                .frame(
+                    width: proxy.size.width,
+                    alignment: .leading
+                )
+                .clipped()
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .background(Theme.pageBackground)
         .navigationBarTitleDisplayMode(.inline)
@@ -130,6 +137,12 @@ struct ScholarshipDetailView: View {
                             .font(.system(size: 28, weight: .bold))
                             .tracking(-0.5)
                             .foregroundStyle(Theme.ink)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(
+                                maxWidth: .infinity,
+                                alignment: .leading
+                            )
                             .lineLimit(3)
                     }
 
@@ -143,17 +156,22 @@ struct ScholarshipDetailView: View {
 
     private var identity: some View {
         VStack(alignment: .leading, spacing: 14) {
-            HStack(spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
                 UniversityLogo(
                     university: scholarship.university,
                     fallbackName: scholarship.provider,
                     size: 44
                 )
 
-                VStack(alignment: .leading, spacing: 3) {
+                VStack(alignment: .leading, spacing: 5) {
                     Text(scholarship.university?.name ?? scholarship.provider)
                         .font(.subheadline.bold())
                         .foregroundStyle(Theme.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(
+                            maxWidth: .infinity,
+                            alignment: .leading
+                        )
 
                     Label(
                         scholarship.country,
@@ -161,22 +179,21 @@ struct ScholarshipDetailView: View {
                     )
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
-                }
 
-                Spacer()
+                    if let deadline = scholarship.deadline {
+                        HStack(spacing: 6) {
+                            Text("Deadline")
+                                .font(.caption2.weight(.semibold))
+                                .foregroundStyle(Theme.muted)
 
-                if let deadline = scholarship.deadline {
-                    VStack(alignment: .trailing, spacing: 3) {
-                        Text("DEADLINE")
-                            .font(.system(size: 8, weight: .bold))
-                            .tracking(1)
-                            .foregroundStyle(Theme.muted)
-
-                        Text(deadline)
-                            .font(.caption.bold())
-                            .foregroundStyle(Theme.orangeSoft)
+                            Text(String(deadline.prefix(10)))
+                                .font(.caption2.bold())
+                                .foregroundStyle(Theme.orangeSoft)
+                        }
                     }
                 }
+
+                Spacer(minLength: 0)
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -366,7 +383,7 @@ struct ScholarshipDetailView: View {
     private var applicationContent: some View {
         DetailSection(title: "Application", icon: "paperplane") {
             VStack(alignment: .leading, spacing: 14) {
-                HStack {
+                HStack(alignment: .top, spacing: 12) {
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Current deadline")
                             .font(.caption)
@@ -375,9 +392,12 @@ struct ScholarshipDetailView: View {
                         Text(scholarship.deadline ?? "Deadline not yet confirmed")
                             .font(.headline.bold())
                             .foregroundStyle(Theme.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(
+                                maxWidth: .infinity,
+                                alignment: .leading
+                            )
                     }
-
-                    Spacer()
 
                     Image(systemName: "calendar")
                         .font(.headline)
@@ -601,8 +621,8 @@ private struct GuidanceRow: View {
                 .font(.caption)
                 .foregroundStyle(Theme.muted)
                 .lineSpacing(2)
-
-            Spacer(minLength: 0)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }
@@ -612,17 +632,23 @@ struct DetailLine: View {
     let value: String
 
     var body: some View {
-        HStack(alignment: .top, spacing: 16) {
+        HStack(alignment: .top, spacing: 12) {
             Text(label)
                 .font(.subheadline)
                 .foregroundStyle(Theme.muted)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(width: 104, alignment: .leading)
 
             Text(value)
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Theme.ink)
                 .multilineTextAlignment(.trailing)
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .trailing
+                )
+                .layoutPriority(1)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
