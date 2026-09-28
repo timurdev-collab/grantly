@@ -189,6 +189,8 @@ struct UniversityCasesView: View {
         do {
             cases = try await DataService.universityApplicationCases()
             errorMessage = nil
+        } catch is CancellationError {
+            return
         } catch {
             errorMessage = error.localizedDescription
         }

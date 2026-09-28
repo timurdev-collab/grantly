@@ -388,6 +388,7 @@ struct UniversityPhoto: View {
 struct SearchField: View {
     @Binding var text: String
     var prompt: String = "Search scholarships..."
+    @FocusState private var isFocused: Bool
 
     var body: some View {
         HStack(spacing: 10) {
@@ -397,11 +398,17 @@ struct SearchField: View {
             TextField(prompt, text: $text)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
+                .submitLabel(.search)
+                .focused($isFocused)
+                .onSubmit {
+                    isFocused = false
+                }
                 .foregroundStyle(Theme.ink)
 
             if !text.isEmpty {
                 Button {
                     text = ""
+                    isFocused = false
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(Theme.muted)
