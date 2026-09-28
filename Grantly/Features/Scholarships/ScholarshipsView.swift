@@ -93,7 +93,7 @@ struct ScholarshipsView: View {
 
                         Text("Finding trusted opportunities...")
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.50))
+                            .foregroundStyle(Theme.ink.opacity(0.50))
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 64)
@@ -166,7 +166,7 @@ struct ScholarshipsView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Explore")
                     .font(.system(size: 31, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Text(
                     totalCount > 0
@@ -174,7 +174,7 @@ struct ScholarshipsView: View {
                         : "Trusted scholarships, one place"
                 )
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.56))
+                .foregroundStyle(Theme.ink.opacity(0.56))
             }
 
             Spacer()
@@ -194,7 +194,7 @@ struct ScholarshipsView: View {
         VStack(alignment: .leading, spacing: 9) {
             Text("Explore by study level")
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.58))
+                .foregroundStyle(Theme.ink.opacity(0.58))
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
@@ -216,7 +216,7 @@ struct ScholarshipsView: View {
                             .foregroundStyle(
                                 selected
                                     ? .white
-                                    : .white.opacity(0.70)
+                                    : Theme.ink.opacity(0.70)
                             )
                             .padding(.horizontal, 13)
                             .frame(height: 38)
@@ -231,7 +231,7 @@ struct ScholarshipsView: View {
                                     .stroke(
                                         selected
                                             ? Theme.orangeSoft.opacity(0.35)
-                                            : .white.opacity(0.06)
+                                            : Theme.ink.opacity(0.06)
                                     )
                             )
                         }
@@ -292,50 +292,11 @@ struct ScholarshipsView: View {
                             .padding(.horizontal, 12)
                             .frame(height: 38)
                             .background(Theme.surface)
-                            .foregroundStyle(.white.opacity(0.74))
+                            .foregroundStyle(Theme.ink.opacity(0.74))
                             .clipShape(Capsule())
                     }
                     .buttonStyle(.plain)
                 }
-            }
-        }
-    }
-
-    private var topPicksSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Top opportunities")
-                        .font(.headline.bold())
-                        .foregroundStyle(.white)
-
-                    Text("Verified scholarships worth a closer look")
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.50))
-                }
-
-                Spacer()
-
-                Image(systemName: "sparkles")
-                    .foregroundStyle(Theme.orangeSoft)
-            }
-            .padding(.horizontal)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(topPicks.prefix(6)) { scholarship in
-                        NavigationLink {
-                            ScholarshipDetailView(
-                                scholarship: scholarship,
-                                match: nil
-                            )
-                        } label: {
-                            ExploreTopPickCard(scholarship: scholarship)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(.horizontal)
             }
         }
     }
@@ -349,11 +310,11 @@ struct ScholarshipsView: View {
                         : "All scholarships"
                 )
                 .font(.headline.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
                 Text("\(totalCount) opportunities")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.48))
+                    .foregroundStyle(Theme.ink.opacity(0.48))
             }
 
             Spacer()
@@ -365,7 +326,7 @@ struct ScholarshipsView: View {
             } label: {
                 Label(sort, systemImage: "arrow.up.arrow.down")
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.74))
+                    .foregroundStyle(Theme.ink.opacity(0.74))
                     .padding(.horizontal, 11)
                     .frame(height: 34)
                     .background(Theme.surface)
@@ -387,11 +348,11 @@ struct ScholarshipsView: View {
 
             Text("No scholarships found")
                 .font(.headline.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             Text("Try another search or clear one of your filters.")
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.56))
+                .foregroundStyle(Theme.ink.opacity(0.56))
                 .multilineTextAlignment(.center)
 
             if hasFilters {
@@ -417,12 +378,12 @@ struct ScholarshipsView: View {
                 .font(.caption.weight(.semibold))
                 .padding(.horizontal, 12)
                 .frame(height: 38)
-                .foregroundStyle(active ? .white : .white.opacity(0.72))
+                .foregroundStyle(active ? .white : Theme.ink.opacity(0.72))
                 .background(active ? Theme.orange : Theme.surfaceRaised)
                 .clipShape(Capsule())
                 .overlay(
                     Capsule()
-                        .stroke(.white.opacity(active ? 0 : 0.06))
+                        .stroke(Theme.ink.opacity(active ? 0 : 0.06))
                 )
         }
     }
@@ -540,11 +501,11 @@ private struct ExploreSummary: View {
         VStack(alignment: .leading, spacing: 3) {
             Text(value)
                 .font(.system(size: 17, weight: .bold))
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             Text(label)
                 .font(.system(size: 9, weight: .medium))
-                .foregroundStyle(.white.opacity(0.45))
+                .foregroundStyle(Theme.ink.opacity(0.45))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
@@ -552,7 +513,7 @@ private struct ExploreSummary: View {
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .overlay(
             RoundedRectangle(cornerRadius: 14)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -586,13 +547,13 @@ private struct ExploreTopPickCard: View {
 
                 Text(scholarship.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
                     .lineLimit(2)
                     .frame(height: 38, alignment: .top)
 
                 Text(scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.54))
+                    .foregroundStyle(Theme.ink.opacity(0.54))
                     .lineLimit(1)
 
                 HStack {
@@ -609,7 +570,7 @@ private struct ExploreTopPickCard: View {
                         .foregroundStyle(Theme.orangeSoft)
                 }
                 .font(.caption2)
-                .foregroundStyle(.white.opacity(0.66))
+                .foregroundStyle(Theme.ink.opacity(0.66))
             }
             .padding(12)
         }
@@ -618,7 +579,7 @@ private struct ExploreTopPickCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 19))
         .overlay(
             RoundedRectangle(cornerRadius: 19)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -661,7 +622,7 @@ struct PremiumScholarshipCard: View {
 
                     Image(systemName: saved ? "bookmark.fill" : "bookmark")
                         .font(.caption.bold())
-                        .foregroundStyle(saved ? Theme.orangeSoft : .white)
+                        .foregroundStyle(saved ? Theme.orangeSoft : Theme.ink)
                         .frame(width: 34, height: 34)
                         .background(Theme.navyDeep.opacity(0.80))
                         .clipShape(Circle())
@@ -680,13 +641,13 @@ struct PremiumScholarshipCard: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(scholarship.title)
                             .font(.headline.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
                             .multilineTextAlignment(.leading)
                             .lineLimit(2)
 
                         Text(scholarship.provider)
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.58))
+                            .foregroundStyle(Theme.ink.opacity(0.58))
                             .lineLimit(1)
                     }
 
@@ -708,12 +669,12 @@ struct PremiumScholarshipCard: View {
                 if !primaryField.isEmpty {
                     Label(primaryField, systemImage: "books.vertical")
                         .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.56))
+                        .foregroundStyle(Theme.ink.opacity(0.56))
                         .lineLimit(1)
                 }
 
                 Rectangle()
-                    .fill(.white.opacity(0.06))
+                    .fill(Theme.ink.opacity(0.06))
                     .frame(height: 1)
 
                 HStack(spacing: 8) {
@@ -732,12 +693,12 @@ struct PremiumScholarshipCard: View {
                     } else {
                         Text("Deadline not yet confirmed")
                             .font(.caption2.weight(.semibold))
-                            .foregroundStyle(.white.opacity(0.48))
+                            .foregroundStyle(Theme.ink.opacity(0.48))
                     }
 
                     Image(systemName: "arrow.right")
                         .font(.caption.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
                         .frame(width: 32, height: 32)
                         .background(Theme.orangeGradient)
                         .clipShape(Circle())
@@ -749,7 +710,7 @@ struct PremiumScholarshipCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -799,7 +760,7 @@ private struct InstitutionBadge: View {
     var body: some View {
         Text(initials)
             .font(.caption2.bold())
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.ink)
             .frame(width: 38, height: 38)
             .background(Theme.surfaceRaised)
             .clipShape(RoundedRectangle(cornerRadius: 11))
@@ -817,7 +778,7 @@ private struct MetadataPill: View {
     var body: some View {
         Label(text, systemImage: icon)
             .font(.caption2.weight(.medium))
-            .foregroundStyle(.white.opacity(0.68))
+            .foregroundStyle(Theme.ink.opacity(0.68))
             .padding(.horizontal, 9)
             .padding(.vertical, 6)
             .background(Theme.surfaceRaised)
@@ -846,7 +807,7 @@ struct FilterChip: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 9)
             .background(Theme.surfaceRaised)
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.ink)
             .clipShape(Capsule())
     }
 }

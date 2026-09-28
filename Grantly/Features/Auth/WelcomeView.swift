@@ -27,19 +27,19 @@ struct WelcomeView: View {
 
                     Text("Grantly")
                         .font(.system(size: 36, weight: .bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
                         .padding(.top, 14)
 
                     Text("Global opportunities for\nbrighter futures")
                         .font(.system(size: 24, weight: .bold))
                         .multilineTextAlignment(.center)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
                         .padding(.top, 30)
 
                     Text("Discover scholarships, connect with a global community and take the next step in your journey.")
                         .font(.subheadline)
                         .multilineTextAlignment(.center)
-                        .foregroundStyle(.white.opacity(0.68))
+                        .foregroundStyle(Theme.ink.opacity(0.68))
                         .lineSpacing(4)
                         .padding(.horizontal, 34)
                         .padding(.top, 12)
@@ -85,8 +85,8 @@ struct WelcomeView: View {
 
                     HStack(spacing: 6) {
                         Circle().fill(Theme.blue).frame(width: 7, height: 7)
-                        Circle().fill(.white.opacity(0.30)).frame(width: 6, height: 6)
-                        Circle().fill(.white.opacity(0.30)).frame(width: 6, height: 6)
+                        Circle().fill(Theme.ink.opacity(0.30)).frame(width: 6, height: 6)
+                        Circle().fill(Theme.ink.opacity(0.30)).frame(width: 6, height: 6)
                     }
                     .padding(.top, 10)
 
@@ -108,14 +108,14 @@ struct WelcomeView: View {
                 }
             }
         }
-        .preferredColorScheme(.dark)
+
         .sheet(isPresented: $showingLogin) {
             LoginView()
-                .preferredColorScheme(.dark)
+
         }
         .sheet(isPresented: $showingSignup) {
             SignupView()
-                .preferredColorScheme(.dark)
+
         }
     }
 }
@@ -131,7 +131,7 @@ struct PrimaryButtonStyle: ButtonStyle {
                     .fill(Theme.blueGradient)
                     .opacity(configuration.isPressed ? 0.82 : 1)
             )
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.onAccent)
             .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 }
@@ -143,7 +143,7 @@ struct SecondaryButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 15)
             .background(Theme.navyDeep.opacity(configuration.isPressed ? 0.75 : 1))
-            .foregroundStyle(.white)
+            .foregroundStyle(Theme.ink)
             .overlay(
                 RoundedRectangle(cornerRadius: 14)
                     .stroke(Theme.blue.opacity(0.75), lineWidth: 1)

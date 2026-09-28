@@ -203,11 +203,14 @@ struct GrantlyApp: App {
     private var appDelegate
 
     @State private var auth = AuthStore()
+    @AppStorage("grantly.appearance") private var appearance: AppAppearance = .system
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(auth)
+                .preferredColorScheme(appearance.colorScheme)
+                .foregroundStyle(Theme.ink)
                 .tint(Theme.violet)
                 .onOpenURL { url in
                     Task {

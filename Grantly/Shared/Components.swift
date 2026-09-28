@@ -27,11 +27,11 @@ struct EmptyState: View {
 
             Text(title)
                 .font(.headline.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             Text(text)
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.54))
+                .foregroundStyle(Theme.ink.opacity(0.54))
                 .multilineTextAlignment(.center)
                 .lineSpacing(3)
                 .frame(maxWidth: 300)
@@ -179,7 +179,7 @@ struct GrantlyMonogram: View {
         .frame(width: size, height: size)
         .overlay(
             RoundedRectangle(cornerRadius: size * 0.28)
-                .stroke(Color.white.opacity(0.07), lineWidth: 1)
+                .stroke(Theme.ink.opacity(0.07), lineWidth: 1)
         )
     }
 }
@@ -198,7 +198,7 @@ struct PremiumCard<Content: View>: View {
             .clipShape(RoundedRectangle(cornerRadius: 18))
             .overlay(
                 RoundedRectangle(cornerRadius: 18)
-                    .stroke(Color.white.opacity(0.06), lineWidth: 1)
+                    .stroke(Theme.ink.opacity(0.06), lineWidth: 1)
             )
             .shadow(
                 color: Color.black.opacity(0.10),
@@ -220,7 +220,7 @@ struct AcademicSectionHeader: View {
                 SectionEyebrow(text: eyebrow)
                 Text(title)
                     .font(Theme.serifTitle(25))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
             }
 
             Spacer()
@@ -361,11 +361,11 @@ struct UniversityPhoto: View {
             Theme.surface
 
             RoundedRectangle(cornerRadius: 14)
-                .fill(.white.opacity(0.04))
+                .fill(Theme.ink.opacity(0.04))
                 .frame(width: 76, height: 52)
                 .overlay {
                     Image(systemName: "building.columns")
-                        .foregroundStyle(.white.opacity(0.30))
+                        .foregroundStyle(Theme.ink.opacity(0.30))
                 }
         }
     }
@@ -392,19 +392,19 @@ struct SearchField: View {
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
-                .foregroundStyle(.white.opacity(0.52))
+                .foregroundStyle(Theme.ink.opacity(0.52))
 
             TextField(prompt, text: $text)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             if !text.isEmpty {
                 Button {
                     text = ""
                 } label: {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.white.opacity(0.45))
+                        .foregroundStyle(Theme.ink.opacity(0.45))
                 }
             }
         }
@@ -415,7 +415,7 @@ struct SearchField: View {
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .overlay(
             RoundedRectangle(cornerRadius: 14)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -470,13 +470,13 @@ struct UniversityLogo: View {
                     default:
                         Text(initials)
                             .font(.system(size: size * 0.28, weight: .bold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
                     }
                 }
             } else {
                 Text(initials)
                     .font(.system(size: size * 0.28, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
             }
         }
         .frame(width: size, height: size)
@@ -495,7 +495,7 @@ struct OfflineBanner: View {
             systemImage: "wifi.slash"
         )
         .font(.caption.weight(.semibold))
-        .foregroundStyle(.white)
+        .foregroundStyle(Theme.ink)
         .padding(.horizontal, 14)
         .frame(height: 40)
         .background(.ultraThinMaterial)
@@ -503,7 +503,7 @@ struct OfflineBanner: View {
         .clipShape(Capsule())
         .overlay(
             Capsule()
-                .stroke(.white.opacity(0.08), lineWidth: 1)
+                .stroke(Theme.ink.opacity(0.08), lineWidth: 1)
         )
         .shadow(
             color: .black.opacity(0.18),

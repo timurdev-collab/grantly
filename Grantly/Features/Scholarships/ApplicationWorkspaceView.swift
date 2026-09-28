@@ -142,7 +142,7 @@ struct ApplicationWorkspaceView: View {
                 Text(errorMessage ?? "")
             }
         }
-        .preferredColorScheme(.dark)
+
     }
 
     private var summaryCard: some View {
@@ -157,12 +157,12 @@ struct ApplicationWorkspaceView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(scholarship.title)
                         .font(.headline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
                         .lineLimit(2)
 
                     Text(scholarship.provider)
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.54))
+                        .foregroundStyle(Theme.ink.opacity(0.54))
                 }
 
                 Spacer()
@@ -201,11 +201,11 @@ struct ApplicationWorkspaceView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Application status")
                         .font(.headline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
 
                     Text("Your progress inside Grantly")
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.48))
+                        .foregroundStyle(Theme.ink.opacity(0.48))
                 }
 
                 Spacer()
@@ -225,7 +225,7 @@ struct ApplicationWorkspaceView: View {
                 } label: {
                     Text(status)
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
                         .padding(.horizontal, 12)
                         .frame(height: 36)
                         .background(Theme.orange)
@@ -241,7 +241,7 @@ struct ApplicationWorkspaceView: View {
             HStack {
                 Text("\(completedTasks) of \(tasks.count) preparation steps")
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.46))
+                    .foregroundStyle(Theme.ink.opacity(0.46))
 
                 Spacer()
 
@@ -262,7 +262,7 @@ struct ApplicationWorkspaceView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 44)
                     .background(Theme.surfaceRaised)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
                     .clipShape(RoundedRectangle(cornerRadius: 13))
                 }
                 .buttonStyle(.plain)
@@ -270,7 +270,7 @@ struct ApplicationWorkspaceView: View {
 
             Text("Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status.")
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.54))
+                .foregroundStyle(Theme.ink.opacity(0.54))
                 .lineSpacing(3)
         }
         .padding(16)
@@ -294,7 +294,7 @@ struct ApplicationWorkspaceView: View {
                         .fill(
                             complete
                                 ? Theme.orange
-                                : .white.opacity(0.12)
+                                : Theme.ink.opacity(0.12)
                         )
                         .frame(width: 10, height: 10)
 
@@ -303,7 +303,7 @@ struct ApplicationWorkspaceView: View {
                         .foregroundStyle(
                             complete
                                 ? .white.opacity(0.82)
-                                : .white.opacity(0.30)
+                                : Theme.ink.opacity(0.30)
                         )
                         .lineLimit(1)
                 }
@@ -315,7 +315,7 @@ struct ApplicationWorkspaceView: View {
                             index < currentIndex &&
                             !["Rejected", "Withdrawn"].contains(status)
                                 ? Theme.orange.opacity(0.65)
-                                : .white.opacity(0.08)
+                                : Theme.ink.opacity(0.08)
                         )
                         .frame(height: 2)
                         .offset(y: -8)
@@ -329,7 +329,7 @@ struct ApplicationWorkspaceView: View {
             HStack {
                 Text("Plan your deadline")
                     .font(.headline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Spacer()
 
@@ -345,7 +345,7 @@ struct ApplicationWorkspaceView: View {
                     displayedComponents: .date
                 )
                 .datePickerStyle(.compact)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
             }
 
             Toggle(
@@ -365,7 +365,7 @@ struct ApplicationWorkspaceView: View {
 
             Text("Set an earlier personal target so you have time to fix missing documents before the official deadline.")
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.52))
+                .foregroundStyle(Theme.ink.opacity(0.52))
                 .lineSpacing(3)
         }
         .padding(16)
@@ -378,7 +378,7 @@ struct ApplicationWorkspaceView: View {
             HStack {
                 Text("Application checklist")
                     .font(.headline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Spacer()
 
@@ -408,7 +408,7 @@ struct ApplicationWorkspaceView: View {
             } else if tasks.isEmpty {
                 Text("No checklist items yet.")
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.52))
+                    .foregroundStyle(Theme.ink.opacity(0.52))
             } else {
                 ForEach(tasks) { task in
                     Button {
@@ -429,7 +429,7 @@ struct ApplicationWorkspaceView: View {
 
                             Text(task.title)
                                 .font(.subheadline)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Theme.ink)
                                 .multilineTextAlignment(.leading)
 
                             Spacer()
@@ -456,7 +456,7 @@ struct ApplicationWorkspaceView: View {
                     : "Mark this ready after checking every required document against the official portal."
             )
             .font(.caption2)
-            .foregroundStyle(.white.opacity(0.42))
+            .foregroundStyle(Theme.ink.opacity(0.42))
         }
         .padding(16)
         .background(Theme.surface)
@@ -469,11 +469,11 @@ struct ApplicationWorkspaceView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Document vault")
                         .font(.headline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
 
                     Text("Private files for this application")
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.48))
+                        .foregroundStyle(Theme.ink.opacity(0.48))
                 }
 
                 Spacer()
@@ -495,11 +495,11 @@ struct ApplicationWorkspaceView: View {
                 VStack(spacing: 8) {
                     Image(systemName: "lock.doc")
                         .font(.title2)
-                        .foregroundStyle(.white.opacity(0.34))
+                        .foregroundStyle(Theme.ink.opacity(0.34))
 
                     Text("Keep transcripts, letters and supporting files together.")
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.48))
+                        .foregroundStyle(Theme.ink.opacity(0.48))
                         .multilineTextAlignment(.center)
                 }
                 .frame(maxWidth: .infinity)
@@ -516,12 +516,12 @@ struct ApplicationWorkspaceView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(document.fileName)
                                 .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Theme.ink)
                                 .lineLimit(1)
 
                             Text(fileSize(document.byteSize))
                                 .font(.caption2)
-                                .foregroundStyle(.white.opacity(0.42))
+                                .foregroundStyle(Theme.ink.opacity(0.42))
                         }
 
                         Spacer()
@@ -542,7 +542,7 @@ struct ApplicationWorkspaceView: View {
                 systemImage: "lock.fill"
             )
             .font(.caption2)
-            .foregroundStyle(.white.opacity(0.42))
+            .foregroundStyle(Theme.ink.opacity(0.42))
         }
         .padding(16)
         .background(Theme.surface)
@@ -553,12 +553,12 @@ struct ApplicationWorkspaceView: View {
         VStack(alignment: .leading, spacing: 13) {
             Text("Submission details")
                 .font(.headline.bold())
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             VStack(alignment: .leading, spacing: 6) {
                 Text("Application / confirmation number")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.48))
+                    .foregroundStyle(Theme.ink.opacity(0.48))
 
                 TextField("Example: APP-2026-12345", text: $reference)
                     .textInputAutocapitalization(.characters)
@@ -570,7 +570,7 @@ struct ApplicationWorkspaceView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text("Notes")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.48))
+                    .foregroundStyle(Theme.ink.opacity(0.48))
 
                 TextField(
                     "Add portal notes, document reminders or next steps",
@@ -615,11 +615,11 @@ struct ApplicationWorkspaceView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Official application portal")
                         .font(.headline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
 
                     Text("Open it without leaving Grantly")
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.48))
+                        .foregroundStyle(Theme.ink.opacity(0.48))
                 }
 
                 Spacer()
@@ -631,7 +631,7 @@ struct ApplicationWorkspaceView: View {
             if let checked = item?.portalLastCheckedAt {
                 Text("Last checked \(displayDate(checked))")
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.44))
+                    .foregroundStyle(Theme.ink.opacity(0.44))
             }
 
             Button {
@@ -647,7 +647,7 @@ struct ApplicationWorkspaceView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
                 .background(Theme.orangeGradient)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.onAccent)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
             }
             .buttonStyle(.plain)
@@ -655,7 +655,7 @@ struct ApplicationWorkspaceView: View {
 
             Text("The official website handles the actual submission. Grantly keeps your preparation, files and progress organized around it.")
                 .font(.caption2)
-                .foregroundStyle(.white.opacity(0.42))
+                .foregroundStyle(Theme.ink.opacity(0.42))
                 .lineSpacing(3)
         }
         .padding(16)

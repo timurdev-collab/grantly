@@ -64,11 +64,11 @@ struct HomeView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Grantly")
                     .font(.system(size: 22, weight: .bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Text(firstName.map { "Welcome back, \($0)" } ?? "Find your next opportunity")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.54))
+                    .foregroundStyle(Theme.ink.opacity(0.54))
             }
 
             Spacer()
@@ -83,13 +83,13 @@ struct HomeView: View {
 
                     Image(systemName: unreadNotifications > 0 ? "bell.fill" : "bell")
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(.white.opacity(0.84))
+                        .foregroundStyle(Theme.ink.opacity(0.84))
                         .frame(width: 40, height: 40)
 
                     if unreadNotifications > 0 {
                         Text(unreadNotifications > 9 ? "9+" : "\(unreadNotifications)")
                             .font(.system(size: 8, weight: .bold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
                             .frame(minWidth: 16, minHeight: 16)
                             .background(Theme.danger)
                             .clipShape(Circle())
@@ -131,7 +131,7 @@ struct HomeView: View {
                 )
                 .font(.system(size: 25, weight: .bold))
                 .tracking(-0.45)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
                 Text(
                     profileNeedsSetup
@@ -139,7 +139,7 @@ struct HomeView: View {
                         : "Verified opportunities, deadlines and application tracking in one place."
                 )
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.64))
+                .foregroundStyle(Theme.ink.opacity(0.64))
                 .lineSpacing(3)
                 .frame(maxWidth: 285, alignment: .leading)
 
@@ -155,7 +155,7 @@ struct HomeView: View {
                     )
                 }
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.76))
+                .foregroundStyle(Theme.ink.opacity(0.76))
                 .padding(.top, 2)
             }
             .padding(18)
@@ -163,7 +163,7 @@ struct HomeView: View {
 
             Image(systemName: "arrow.up.right")
                 .font(.headline.bold())
-                .foregroundStyle(Theme.navyDeep)
+                .foregroundStyle(Theme.onAccent)
                 .frame(width: 42, height: 42)
                 .background(Theme.orangeGradient)
                 .clipShape(Circle())
@@ -173,7 +173,7 @@ struct HomeView: View {
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .overlay(
             RoundedRectangle(cornerRadius: 24)
-                .stroke(.white.opacity(0.06))
+                .stroke(Theme.ink.opacity(0.06))
         )
     }
 
@@ -184,7 +184,7 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(profileNeedsSetup ? "Featured scholarships" : "Best matches for you")
                         .font(.headline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
 
                     Text(
                         profileNeedsSetup
@@ -192,7 +192,7 @@ struct HomeView: View {
                             : "Based on your academic profile"
                     )
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.52))
+                    .foregroundStyle(Theme.ink.opacity(0.52))
                 }
 
                 Spacer()
@@ -274,11 +274,11 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Deadlines to watch")
                             .font(.headline.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
 
                         Text("Verified opportunities closing soon")
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.52))
+                            .foregroundStyle(Theme.ink.opacity(0.52))
                     }
 
                     Spacer()
@@ -403,11 +403,11 @@ private struct HomeStat: View {
 
             Text(value)
                 .font(.system(size: 19, weight: .bold))
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
 
             Text(label)
                 .font(.caption2)
-                .foregroundStyle(.white.opacity(0.50))
+                .foregroundStyle(Theme.ink.opacity(0.50))
         }
         .padding(13)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -415,7 +415,7 @@ private struct HomeStat: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -434,14 +434,14 @@ private struct HomeCategory: View {
                 .font(.caption.weight(.semibold))
                 .lineLimit(1)
         }
-        .foregroundStyle(active ? .white : .white.opacity(0.70))
+        .foregroundStyle(active ? .white : Theme.ink.opacity(0.70))
         .padding(.horizontal, 13)
         .frame(height: 38)
         .background(active ? Theme.blue : Theme.surface)
         .clipShape(Capsule())
         .overlay(
             Capsule()
-                .stroke(.white.opacity(active ? 0 : 0.06))
+                .stroke(Theme.ink.opacity(active ? 0 : 0.06))
         )
     }
 }
@@ -460,7 +460,7 @@ private struct HomeMatchCard: View {
 
                 Text("\(match.score)% match")
                     .font(.caption2.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
                     .padding(.horizontal, 9)
                     .padding(.vertical, 6)
                     .background(Theme.orange.opacity(0.92))
@@ -473,13 +473,13 @@ private struct HomeMatchCard: View {
 
                 Text(match.scholarship.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
                     .lineLimit(2)
                     .frame(height: 38, alignment: .top)
 
                 Text(match.scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.54))
+                    .foregroundStyle(Theme.ink.opacity(0.54))
                     .lineLimit(1)
 
                 Label(
@@ -487,7 +487,7 @@ private struct HomeMatchCard: View {
                     systemImage: "mappin.and.ellipse"
                 )
                 .font(.caption2)
-                .foregroundStyle(.white.opacity(0.66))
+                .foregroundStyle(Theme.ink.opacity(0.66))
             }
             .padding(12)
         }
@@ -496,7 +496,7 @@ private struct HomeMatchCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 19))
         .overlay(
             RoundedRectangle(cornerRadius: 19)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -517,13 +517,13 @@ private struct FeaturedScholarshipCard: View {
 
                 Text(scholarship.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
                     .lineLimit(2)
                     .frame(height: 38, alignment: .top)
 
                 Text(scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.54))
+                    .foregroundStyle(Theme.ink.opacity(0.54))
                     .lineLimit(1)
 
                 Label(
@@ -531,7 +531,7 @@ private struct FeaturedScholarshipCard: View {
                     systemImage: "mappin.and.ellipse"
                 )
                 .font(.caption2)
-                .foregroundStyle(.white.opacity(0.66))
+                .foregroundStyle(Theme.ink.opacity(0.66))
             }
             .padding(12)
         }
@@ -540,7 +540,7 @@ private struct FeaturedScholarshipCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 19))
         .overlay(
             RoundedRectangle(cornerRadius: 19)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -559,13 +559,13 @@ struct UpcomingDeadlineCard: View {
             VStack(alignment: .leading, spacing: 7) {
                 Text(scholarship.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
                     .lineLimit(2)
                     .frame(height: 38, alignment: .top)
 
                 Text(scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(.white.opacity(0.52))
+                    .foregroundStyle(Theme.ink.opacity(0.52))
                     .lineLimit(1)
 
                 if let deadline = scholarship.deadline {
@@ -581,7 +581,7 @@ struct UpcomingDeadlineCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(
             RoundedRectangle(cornerRadius: 18)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -601,16 +601,16 @@ struct ProfileSetupCard: View {
 
                     Text("1 min")
                         .font(.caption2.bold())
-                        .foregroundStyle(.white.opacity(0.50))
+                        .foregroundStyle(Theme.ink.opacity(0.50))
                 }
 
                 Text("Unlock personalised matches")
                     .font(.headline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Text("Add your degree, field, GPA and destination goals so Grantly can rank scholarships around you.")
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.62))
+                    .foregroundStyle(Theme.ink.opacity(0.62))
                     .lineSpacing(3)
 
                 Button("Complete my profile", action: openProfile)
@@ -629,7 +629,7 @@ struct ProfileSnapshot: View {
                 HStack {
                     Text("Academic snapshot")
                         .font(.headline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
 
                     Spacer()
 
@@ -639,7 +639,7 @@ struct ProfileSnapshot: View {
 
                 Text(profile.intendedMajor ?? "Your study plan")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.78))
+                    .foregroundStyle(Theme.ink.opacity(0.78))
 
                 HStack(spacing: 0) {
                     SnapshotMetric(
@@ -671,11 +671,11 @@ struct SnapshotMetric: View {
             Text(label)
                 .font(.system(size: 9, weight: .bold))
                 .tracking(0.8)
-                .foregroundStyle(.white.opacity(0.42))
+                .foregroundStyle(Theme.ink.opacity(0.42))
 
             Text(value)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -698,12 +698,12 @@ struct MatchCard: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(match.scholarship.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
                     .lineLimit(2)
 
                 Text(match.scholarship.country)
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.60))
+                    .foregroundStyle(Theme.ink.opacity(0.60))
 
                 HStack {
                     FundingBadge(text: match.scholarship.fundingType)
@@ -719,7 +719,7 @@ struct MatchCard: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -798,7 +798,7 @@ struct NotificationInboxView: View {
                                     .foregroundStyle(
                                         notification.readAt == nil
                                             ? Theme.orangeSoft
-                                            : .white.opacity(0.42)
+                                            : Theme.ink.opacity(0.42)
                                     )
                                     .frame(width: 34, height: 34)
                                     .background(Theme.surfaceRaised)
@@ -808,7 +808,7 @@ struct NotificationInboxView: View {
                                     HStack {
                                         Text(notification.title)
                                             .font(.subheadline.weight(.semibold))
-                                            .foregroundStyle(.white)
+                                            .foregroundStyle(Theme.ink)
 
                                         Spacer()
 
@@ -821,13 +821,13 @@ struct NotificationInboxView: View {
 
                                     Text(notification.body)
                                         .font(.caption)
-                                        .foregroundStyle(.white.opacity(0.58))
+                                        .foregroundStyle(Theme.ink.opacity(0.58))
                                         .multilineTextAlignment(.leading)
                                         .lineLimit(3)
 
                                     Text(relativeTime(notification.createdAt))
                                         .font(.caption2)
-                                        .foregroundStyle(.white.opacity(0.36))
+                                        .foregroundStyle(Theme.ink.opacity(0.36))
                                 }
                             }
                             .padding(.vertical, 5)

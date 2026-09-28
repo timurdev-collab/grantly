@@ -50,7 +50,7 @@ struct ScholarshipDetailView: View {
                     Task { await toggleSaved() }
                 } label: {
                     Image(systemName: saved ? "bookmark.fill" : "bookmark")
-                        .foregroundStyle(saved ? Theme.orangeSoft : .white)
+                        .foregroundStyle(saved ? Theme.orangeSoft : Theme.ink)
                 }
                 .disabled(busy)
             }
@@ -128,7 +128,7 @@ struct ScholarshipDetailView: View {
                         Text(scholarship.title)
                             .font(.system(size: 28, weight: .bold))
                             .tracking(-0.5)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
                             .lineLimit(3)
                     }
 
@@ -152,14 +152,14 @@ struct ScholarshipDetailView: View {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(scholarship.university?.name ?? scholarship.provider)
                         .font(.subheadline.bold())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Theme.ink)
 
                     Label(
                         scholarship.country,
                         systemImage: "mappin.and.ellipse"
                     )
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.58))
+                    .foregroundStyle(Theme.ink.opacity(0.58))
                 }
 
                 Spacer()
@@ -169,7 +169,7 @@ struct ScholarshipDetailView: View {
                         Text("DEADLINE")
                             .font(.system(size: 8, weight: .bold))
                             .tracking(1)
-                            .foregroundStyle(.white.opacity(0.42))
+                            .foregroundStyle(Theme.ink.opacity(0.42))
 
                         Text(deadline)
                             .font(.caption.bold())
@@ -196,7 +196,7 @@ struct ScholarshipDetailView: View {
                 HStack(spacing: 12) {
                     ZStack {
                         Circle()
-                            .stroke(.white.opacity(0.08), lineWidth: 5)
+                            .stroke(Theme.ink.opacity(0.08), lineWidth: 5)
 
                         Circle()
                             .trim(from: 0, to: CGFloat(max(0, min(match.score, 100))) / 100)
@@ -208,18 +208,18 @@ struct ScholarshipDetailView: View {
 
                         Text("\(match.score)")
                             .font(.caption.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
                     }
                     .frame(width: 48, height: 48)
 
                     VStack(alignment: .leading, spacing: 3) {
                         Text(match.eligible ? "Strong profile fit" : "Check eligibility")
                             .font(.subheadline.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
 
                         Text(match.eligible ? "Based on your current academic profile" : "One or more requirements may need attention")
                             .font(.caption2)
-                            .foregroundStyle(.white.opacity(0.52))
+                            .foregroundStyle(Theme.ink.opacity(0.52))
                     }
 
                     Spacer()
@@ -245,7 +245,7 @@ struct ScholarshipDetailView: View {
                     } label: {
                         Text(tab)
                             .font(.caption.weight(.semibold))
-                            .foregroundStyle(selectedTab == tab ? .white : .white.opacity(0.56))
+                            .foregroundStyle(selectedTab == tab ? .white : Theme.ink.opacity(0.56))
                             .padding(.horizontal, 13)
                             .frame(height: 36)
                             .background(selectedTab == tab ? Theme.blue : Theme.surface)
@@ -266,7 +266,7 @@ struct ScholarshipDetailView: View {
             DetailSection(title: "About", icon: "text.alignleft") {
                 Text(description)
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.70))
+                    .foregroundStyle(Theme.ink.opacity(0.70))
                     .lineSpacing(4)
             }
         }
@@ -368,11 +368,11 @@ struct ScholarshipDetailView: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Current deadline")
                             .font(.caption)
-                            .foregroundStyle(.white.opacity(0.52))
+                            .foregroundStyle(Theme.ink.opacity(0.52))
 
                         Text(scholarship.deadline ?? "Deadline not yet confirmed")
                             .font(.headline.bold())
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Theme.ink)
                     }
 
                     Spacer()
@@ -387,7 +387,7 @@ struct ScholarshipDetailView: View {
 
                 Text("Always confirm the current cycle, eligibility, documents and deadline on the official scholarship website before submitting.")
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.64))
+                    .foregroundStyle(Theme.ink.opacity(0.64))
                     .lineSpacing(4)
 
                 HStack {
@@ -400,7 +400,7 @@ struct ScholarshipDetailView: View {
                     if let checked = scholarship.lastCheckedAt, !checked.isEmpty {
                         Text("Checked \(String(checked.prefix(10)))")
                             .font(.caption2)
-                            .foregroundStyle(.white.opacity(0.48))
+                            .foregroundStyle(Theme.ink.opacity(0.48))
                     }
 
                     Spacer()
@@ -416,7 +416,7 @@ struct ScholarshipDetailView: View {
                 }
 
                 Divider()
-                    .overlay(.white.opacity(0.07))
+                    .overlay(Theme.ink.opacity(0.07))
 
                 VStack(alignment: .leading, spacing: 8) {
                     Label(
@@ -424,11 +424,11 @@ struct ScholarshipDetailView: View {
                         systemImage: "checklist.checked"
                     )
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                     Text("Open the official form inside Grantly, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status.")
                         .font(.caption)
-                        .foregroundStyle(.white.opacity(0.58))
+                        .foregroundStyle(Theme.ink.opacity(0.58))
                         .lineSpacing(3)
 
                     Button {
@@ -456,7 +456,7 @@ struct ScholarshipDetailView: View {
                     .font(.headline)
                     .frame(width: 52, height: 52)
                     .background(Theme.surfaceRaised)
-                    .foregroundStyle(saved ? Theme.orangeSoft : .white)
+                    .foregroundStyle(saved ? Theme.orangeSoft : Theme.ink)
                     .clipShape(RoundedRectangle(cornerRadius: 15))
             }
             .buttonStyle(.plain)
@@ -473,7 +473,7 @@ struct ScholarshipDetailView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 52)
                 .background(Theme.orangeGradient)
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.onAccent)
                 .clipShape(RoundedRectangle(cornerRadius: 15))
             }
             .buttonStyle(.plain)
@@ -483,7 +483,7 @@ struct ScholarshipDetailView: View {
         .background(Theme.navyDeep.opacity(0.96))
         .overlay(alignment: .top) {
             Rectangle()
-                .fill(.white.opacity(0.06))
+                .fill(Theme.ink.opacity(0.06))
                 .frame(height: 1)
         }
     }
@@ -530,7 +530,7 @@ private struct DetailPill: View {
     var body: some View {
         Label(text, systemImage: icon)
             .font(.caption2.weight(.semibold))
-            .foregroundStyle(.white.opacity(0.74))
+            .foregroundStyle(Theme.ink.opacity(0.74))
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
             .background(Theme.surfaceRaised)
@@ -559,7 +559,7 @@ private struct DetailSection<Content: View>: View {
             HStack {
                 Text(title)
                     .font(.headline.bold())
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.ink)
 
                 Spacer()
 
@@ -578,7 +578,7 @@ private struct DetailSection<Content: View>: View {
         .clipShape(RoundedRectangle(cornerRadius: 19))
         .overlay(
             RoundedRectangle(cornerRadius: 19)
-                .stroke(.white.opacity(0.05))
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 }
@@ -596,7 +596,7 @@ private struct GuidanceRow: View {
 
             Text(text)
                 .font(.caption)
-                .foregroundStyle(.white.opacity(0.64))
+                .foregroundStyle(Theme.ink.opacity(0.64))
                 .lineSpacing(2)
 
             Spacer(minLength: 0)
@@ -612,13 +612,13 @@ struct DetailLine: View {
         HStack(alignment: .top, spacing: 16) {
             Text(label)
                 .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.52))
+                .foregroundStyle(Theme.ink.opacity(0.52))
 
             Spacer(minLength: 12)
 
             Text(value)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.white)
+                .foregroundStyle(Theme.ink)
                 .multilineTextAlignment(.trailing)
         }
     }
