@@ -97,6 +97,8 @@ struct HomeView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 24) {
                 greetingHeader
+                LanguageFlagStrip()
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 nextStepCard
                 recommendationsSection
                 deadlinesSection
@@ -126,8 +128,6 @@ struct HomeView: View {
             Spacer()
 
             HStack(spacing: 10) {
-                LanguageFlagMenu()
-
                 NavigationLink {
                     NotificationInboxView()
                 } label: {
