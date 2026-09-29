@@ -5,6 +5,7 @@ import UIKit
 struct ProfileView: View {
     @Environment(AuthStore.self) private var auth
     @Binding var profile: StudentProfile?
+    var showsNavigationBar = false
     @AppStorage("grantly.appearance") private var appearance: AppAppearance = .system
     @AppStorage("grantly.language") private var language: AppLanguage = .english
 
@@ -111,7 +112,9 @@ struct ProfileView: View {
             .padding(.bottom, 24)
         }
         .background(Theme.pageBackground)
-        .navigationBarHidden(true)
+        .navigationTitle(showsNavigationBar ? "Profile" : "")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarHidden(!showsNavigationBar)
         .task { await populate() }
         .sheet(isPresented: $showingEditProfile) {
             editProfileSheet
