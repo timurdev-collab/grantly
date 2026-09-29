@@ -126,6 +126,8 @@ struct HomeView: View {
             Spacer()
 
             HStack(spacing: 10) {
+                LanguageFlagMenu()
+
                 NavigationLink {
                     NotificationInboxView()
                 } label: {
