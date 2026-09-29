@@ -347,7 +347,7 @@ struct AdvisorsView: View {
 }
 
 
-private struct AdvisorChatDestination: Identifiable {
+struct AdvisorChatDestination: Identifiable {
     let conversationId: UUID
     let otherUserId: UUID
     let title: String
