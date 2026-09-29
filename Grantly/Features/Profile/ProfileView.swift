@@ -63,6 +63,22 @@ struct ProfileView: View {
                 communityCard
                 settingsCard
 
+                if profile?.role == "student" {
+                    NavigationLink {
+                        AdvisorApplicationView(
+                            defaultName: profile?.fullName ?? ""
+                        )
+                    } label: {
+                        ProfileMenuRow(
+                            icon: "person.crop.circle.badge.checkmark",
+                            title: "Apply as an advisor",
+                            subtitle: "Create a counselor profile for admin review",
+                            tint: Theme.orangeSoft
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 if profile?.role == "admin" {
                     NavigationLink {
                         AdminView()
@@ -1023,5 +1039,152 @@ private struct PrivacyAndSafetyView: View {
         .background(Theme.pageBackground)
         .navigationTitle("Privacy & Safety")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+
+private struct AdvisorApplicationView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let defaultName: String
+
+    @State private var displayName = ""
+    @State private var title = ""
+    @State private var bio = ""
+    @State private var specialties = ""
+    @State private var countries = ""
+    @State private var languages = ""
+    @State private var submitting = false
+    @State private var submitted = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        Form {
+            Section("Professional profile") {
+                TextField("Full name", text: $displayName)
+                TextField(
+                    "Title, e.g. Admissions Counselor",
+                    text: $title
+                )
+
+                TextField(
+                    "Short professional bio",
+                    text: $bio,
+                    axis: .vertical
+                )
+                .lineLimit(3...6)
+            }
+
+            Section("Expertise") {
+                TextField(
+                    "Specialties, separated by commas",
+                    text: $specialties
+                )
+                TextField(
+                    "Countries or regions, separated by commas",
+                    text: $countries
+                )
+                TextField(
+                    "Languages, separated by commas",
+                    text: $languages
+                )
+            }
+
+            Section {
+                Text(
+                    "Advisor profiles are not visible to students until an administrator reviews and approves the application."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
+            if submitted {
+                Section {
+                    Label(
+                        "Application submitted for review",
+                        systemImage: "checkmark.circle.fill"
+                    )
+                    .foregroundStyle(.green)
+
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            } else {
+                Section {
+                    Button(
+                        submitting
+                            ? "Submitting…"
+                            : "Submit advisor application"
+                    ) {
+                        Task { await submit() }
+                    }
+                    .disabled(
+                        submitting ||
+                        displayName
+                            .trimmingCharacters(
+                                in: .whitespacesAndNewlines
+                            )
+                            .isEmpty
+                    )
+                }
+            }
+
+            if let errorMessage {
+                Section {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .navigationTitle("Advisor Application")
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            if displayName.isEmpty {
+                displayName = defaultName
+            }
+        }
+    }
+
+    @MainActor
+    private func submit() async {
+        submitting = true
+        errorMessage = nil
+        defer { submitting = false }
+
+        do {
+            try await DataService.requestAdvisorAccess(
+                displayName: displayName
+                    .trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    ),
+                title: title
+                    .trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    ),
+                bio: bio
+                    .trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    ),
+                specialties: csvValues(specialties),
+                countries: csvValues(countries),
+                languages: csvValues(languages)
+            )
+            submitted = true
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func csvValues(_ value: String) -> [String] {
+        value
+            .split(separator: ",")
+            .map {
+                $0.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                )
+            }
+            .filter { !$0.isEmpty }
     }
 }

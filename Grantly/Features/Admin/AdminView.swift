@@ -101,6 +101,21 @@ struct AdminView: View {
 
     var body: some View {
         List {
+            Section("People & access") {
+                NavigationLink {
+                    AdminPeopleView()
+                } label: {
+                    Label(
+                        "Students & advisors",
+                        systemImage: "person.2.badge.gearshape"
+                    )
+                }
+
+                Text("Manage student access and review advisor applications.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             if let analytics {
                 Section("Product analytics · \(analytics.days) days") {
                     HStack(spacing: 12) {
@@ -1173,6 +1188,294 @@ struct AdminView: View {
             try await DataService.updateSafetyReportStatus(
                 reportId: report.id,
                 status: status
+            )
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+private struct AdminPeopleView: View {
+    @State private var users: [AdminUserAccount] = []
+    @State private var query = ""
+    @State private var loading = true
+    @State private var workingUserID: UUID?
+    @State private var errorMessage: String?
+
+    private var filteredUsers: [AdminUserAccount] {
+        let trimmed = query
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+
+        guard !trimmed.isEmpty else { return users }
+
+        return users.filter { user in
+            [
+                user.fullName ?? "",
+                user.email ?? "",
+                user.role,
+                user.advisorStatus ?? "",
+                user.advisorTitle ?? ""
+            ]
+            .joined(separator: " ")
+            .lowercased()
+            .contains(trimmed)
+        }
+    }
+
+    private var pendingAdvisorCount: Int {
+        users.filter { $0.advisorStatus == "pending" }.count
+    }
+
+    var body: some View {
+        List {
+            Section {
+                HStack(spacing: 12) {
+                    AdminMetric(
+                        value: "\(users.filter { $0.role == "student" }.count)",
+                        label: "Students"
+                    )
+                    AdminMetric(
+                        value: "\(users.filter { $0.role == "advisor" }.count)",
+                        label: "Advisors"
+                    )
+                    AdminMetric(
+                        value: "\(pendingAdvisorCount)",
+                        label: "Pending"
+                    )
+                }
+                .listRowInsets(
+                    EdgeInsets(
+                        top: 14,
+                        leading: 16,
+                        bottom: 14,
+                        trailing: 16
+                    )
+                )
+            }
+
+            Section {
+                TextField("Search people", text: $query)
+                    .textInputAutocapitalization(.never)
+            }
+
+            if loading {
+                Section {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                }
+            } else if filteredUsers.isEmpty {
+                Section {
+                    Text("No matching accounts.")
+                        .foregroundStyle(.secondary)
+                }
+            } else {
+                Section("Accounts") {
+                    ForEach(filteredUsers) { user in
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(alignment: .top) {
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text(user.fullName?.nonEmpty ?? user.email ?? "User")
+                                        .font(.subheadline.weight(.semibold))
+
+                                    if let email = user.email,
+                                       email != user.fullName {
+                                        Text(email)
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+
+                                Spacer()
+
+                                Text(user.role.capitalized)
+                                    .font(.caption2.weight(.semibold))
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.secondary.opacity(0.12))
+                                    .clipShape(Capsule())
+                            }
+
+                            if let advisorStatus = user.advisorStatus {
+                                HStack(spacing: 7) {
+                                    Label(
+                                        advisorStatus
+                                            .replacingOccurrences(of: "_", with: " ")
+                                            .capitalized,
+                                        systemImage: advisorStatus == "approved"
+                                            ? "checkmark.seal.fill"
+                                            : "clock.badge.questionmark"
+                                    )
+                                    .font(.caption)
+                                    .foregroundStyle(
+                                        advisorStatus == "approved"
+                                            ? .green
+                                            : advisorStatus == "rejected"
+                                                ? .red
+                                                : .orange
+                                    )
+
+                                    if let title = user.advisorTitle?.nonEmpty {
+                                        Text("· \(title)")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+
+                            if user.isSuspended {
+                                Label(
+                                    "Account suspended",
+                                    systemImage: "lock.fill"
+                                )
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(.red)
+                            }
+
+                            Menu {
+                                if user.advisorStatus == "pending" {
+                                    Button("Approve advisor") {
+                                        Task {
+                                            await reviewAdvisor(
+                                                user,
+                                                action: "approve"
+                                            )
+                                        }
+                                    }
+
+                                    Button("Reject advisor", role: .destructive) {
+                                        Task {
+                                            await reviewAdvisor(
+                                                user,
+                                                action: "reject"
+                                            )
+                                        }
+                                    }
+                                }
+
+                                if user.advisorStatus == "approved" {
+                                    Button("Suspend advisor") {
+                                        Task {
+                                            await reviewAdvisor(
+                                                user,
+                                                action: "suspend"
+                                            )
+                                        }
+                                    }
+                                }
+
+                                if user.advisorStatus == "suspended" {
+                                    Button("Restore advisor") {
+                                        Task {
+                                            await reviewAdvisor(
+                                                user,
+                                                action: "restore"
+                                            )
+                                        }
+                                    }
+                                }
+
+                                Divider()
+
+                                if user.isSuspended {
+                                    Button("Restore account") {
+                                        Task {
+                                            await setSuspended(
+                                                user,
+                                                suspended: false
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    Button(
+                                        "Suspend account",
+                                        role: .destructive
+                                    ) {
+                                        Task {
+                                            await setSuspended(
+                                                user,
+                                                suspended: true
+                                            )
+                                        }
+                                    }
+                                }
+                            } label: {
+                                Label(
+                                    workingUserID == user.id
+                                        ? "Updating…"
+                                        : "Manage",
+                                    systemImage: "ellipsis.circle"
+                                )
+                                .font(.caption.weight(.semibold))
+                            }
+                            .disabled(workingUserID != nil)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+            }
+
+            if let errorMessage {
+                Section {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .navigationTitle("Students & Advisors")
+        .refreshable { await load() }
+        .task { await load() }
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            users = try await DataService.adminUserAccounts()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func reviewAdvisor(
+        _ user: AdminUserAccount,
+        action: String
+    ) async {
+        workingUserID = user.id
+        defer { workingUserID = nil }
+
+        do {
+            try await DataService.adminReviewAdvisor(
+                userId: user.id,
+                action: action
+            )
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func setSuspended(
+        _ user: AdminUserAccount,
+        suspended: Bool
+    ) async {
+        workingUserID = user.id
+        defer { workingUserID = nil }
+
+        do {
+            try await DataService.adminSetAccountSuspended(
+                userId: user.id,
+                suspended: suspended
             )
             await load()
         } catch {
