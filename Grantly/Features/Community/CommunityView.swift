@@ -1,86 +1,676 @@
 import SwiftUI
+import LiveKit
+import UIKit
+import Combine
 
 struct AdvisorsView: View {
+    @State private var advisors: [AdvisorDirectoryProfile] = []
+    @State private var registration: AdvisorRegistration?
+    @State private var loading = true
+    @State private var requestingAdvisorID: UUID?
+    @State private var errorMessage: String?
+    @State private var chatDestination: AdvisorChatDestination?
+    @State private var callSession: AdvisorCallSession?
+
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 22) {
+            VStack(alignment: .leading, spacing: 20) {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("Advisors")
                         .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(Theme.ink)
 
-                    Text("Talk directly with people who can help with your study plans")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.muted)
-                }
-
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack(spacing: 14) {
-                        ZStack {
-                            Circle()
-                                .fill(Theme.surfaceRaised)
-                                .frame(width: 66, height: 66)
-
-                            GrantlyMonogram(size: 50)
-                        }
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Grantly Advisor")
-                                .font(.headline.bold())
-                                .foregroundStyle(Theme.ink)
-
-                            Text("Founding Advisor")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.orangeSoft)
-
-                            Text("Scholarships · Admissions · Study planning")
-                                .font(.caption)
-                                .foregroundStyle(Theme.muted)
-                        }
-
-                        Spacer()
-                    }
-
-                    Text("Ask questions about scholarships, applications, universities, documents, or your next steps.")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.muted)
-                        .lineSpacing(3)
-
-                    NavigationLink {
-                        MessagesView()
-                    } label: {
-                        Label(
-                            "Message advisor",
-                            systemImage: "bubble.left.fill"
-                        )
-                        .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 48)
-                        .background(Theme.orangeGradient)
-                        .foregroundStyle(Theme.onAccent)
-                        .clipShape(RoundedRectangle(cornerRadius: 14))
-                    }
-                    .buttonStyle(.plain)
-                }
-                .padding(18)
-                .background(Theme.surface)
-                .clipShape(RoundedRectangle(cornerRadius: 22))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 22)
-                        .stroke(Theme.ink.opacity(0.05))
-                )
-
-                Text("More advisors and counselors will appear here as they join Grantly.")
-                    .font(.caption)
+                    Text(
+                        "Choose a verified advisor to support your study plans"
+                    )
+                    .font(.subheadline)
                     .foregroundStyle(Theme.muted)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.top, 2)
+                }
+
+                if let registration {
+                    currentRegistrationCard(registration)
+                }
+
+                if loading && advisors.isEmpty {
+                    ProgressView()
+                        .tint(Theme.accent)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 44)
+                } else if advisors.isEmpty {
+                    EmptyState(
+                        icon: "person.crop.circle.badge.questionmark",
+                        title: "No advisors available yet",
+                        text:
+                            "Approved counselors will appear here once they are available."
+                    )
+                    .padding(.vertical, 24)
+                } else {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Available advisors")
+                            .font(.headline.bold())
+                            .foregroundStyle(Theme.ink)
+
+                        ForEach(advisors) { advisor in
+                            advisorCard(advisor)
+                        }
+                    }
+                }
+
+                if let errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
             }
             .padding()
             .padding(.bottom, 24)
         }
         .background(Theme.pageBackground)
         .navigationBarHidden(true)
+        .refreshable { await load() }
+        .task { await load() }
+        .sheet(item: $chatDestination) { destination in
+            NavigationStack {
+                ChatView(
+                    conversationId: destination.conversationId,
+                    otherUserId: destination.otherUserId,
+                    title: destination.title
+                )
+            }
+        }
+        .sheet(item: $callSession) { session in
+            AdvisorCallPreparationView(session: session)
+        }
+    }
+
+    private func currentRegistrationCard(
+        _ registration: AdvisorRegistration
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 9) {
+            Text(
+                registration.status == "active"
+                    ? "Your advisor"
+                    : "Advisor request pending"
+            )
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(Theme.accentSoft)
+
+            Text(registration.advisorName)
+                .font(.headline.bold())
+                .foregroundStyle(Theme.ink)
+
+            if let title = registration.advisorTitle,
+               !title.isEmpty {
+                Text(title)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+            }
+
+            if registration.status == "active" {
+                HStack(spacing: 10) {
+                    Button {
+                        Task {
+                            await openConversation(registration)
+                        }
+                    } label: {
+                        Label(
+                            "Message",
+                            systemImage: "bubble.left.fill"
+                        )
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .background(Theme.orangeGradient)
+                        .foregroundStyle(Theme.onAccent)
+                        .clipShape(RoundedRectangle(cornerRadius: 13))
+                    }
+                    .buttonStyle(.plain)
+
+                    Button {
+                        Task {
+                            await prepareVideoCall(registration)
+                        }
+                    } label: {
+                        Label(
+                            "Video",
+                            systemImage: "video.fill"
+                        )
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .background(Theme.surface)
+                        .foregroundStyle(Theme.ink)
+                        .clipShape(RoundedRectangle(cornerRadius: 13))
+                    }
+                    .buttonStyle(.plain)
+                }
+            } else {
+                Text(
+                    "The advisor can accept your registration from their Advisor Portal."
+                )
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+            }
+        }
+        .padding(16)
+        .background(Theme.surfaceRaised)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+    }
+
+    private func advisorCard(
+        _ advisor: AdvisorDirectoryProfile
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 13) {
+                ZStack {
+                    Circle()
+                        .fill(Theme.surfaceRaised)
+                        .frame(width: 58, height: 58)
+
+                    if let value = advisor.avatarUrl,
+                       let url = URL(string: value) {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            Image(systemName: "person.fill")
+                                .foregroundStyle(Theme.muted)
+                        }
+                        .frame(width: 54, height: 54)
+                        .clipShape(Circle())
+                    } else {
+                        Image(systemName: "person.fill")
+                            .foregroundStyle(Theme.muted)
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(advisor.displayName ?? "Grantly Advisor")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    if let title = advisor.title,
+                       !title.isEmpty {
+                        Text(title)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.accentSoft)
+                    }
+
+                    let detail = (
+                        advisor.specialties +
+                        advisor.countries
+                    )
+                    .prefix(3)
+                    .joined(separator: " · ")
+
+                    if !detail.isEmpty {
+                        Text(detail)
+                            .font(.caption)
+                            .foregroundStyle(Theme.muted)
+                            .lineLimit(2)
+                    }
+                }
+
+                Spacer()
+            }
+
+            if let bio = advisor.bio,
+               !bio.isEmpty {
+                Text(bio)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(4)
+            }
+
+            Button {
+                Task { await request(advisor) }
+            } label: {
+                Label(
+                    requestingAdvisorID == advisor.id
+                        ? "Sending request…"
+                        : buttonTitle(for: advisor),
+                    systemImage: "person.badge.plus"
+                )
+                .font(.subheadline.weight(.semibold))
+                .frame(maxWidth: .infinity)
+                .frame(height: 46)
+                .background(Theme.orangeGradient)
+                .foregroundStyle(Theme.onAccent)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+            }
+            .buttonStyle(.plain)
+            .disabled(
+                requestingAdvisorID != nil ||
+                registration?.status == "active" ||
+                registration?.advisorId == advisor.id
+            )
+            .opacity(
+                registration?.status == "active" ||
+                registration?.advisorId == advisor.id
+                    ? 0.55
+                    : 1
+            )
+        }
+        .padding(17)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(Theme.ink.opacity(0.05))
+        )
+    }
+
+    private func buttonTitle(
+        for advisor: AdvisorDirectoryProfile
+    ) -> String {
+        if let registration {
+            if registration.advisorId == advisor.id {
+                return registration.status == "active"
+                    ? "Your advisor"
+                    : "Request sent"
+            }
+
+            if registration.status == "active" {
+                return "Already registered"
+            }
+        }
+
+        return "Register with advisor"
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            async let directoryRows = DataService.availableAdvisors()
+            async let currentRegistration =
+                DataService.myAdvisorRegistration()
+
+            advisors = try await directoryRows
+            registration = try await currentRegistration
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func openConversation(
+        _ registration: AdvisorRegistration
+    ) async {
+        do {
+            let conversationId =
+                try await DataService.ensureAdvisorConversation(
+                    assignmentId: registration.assignmentId
+                )
+
+            chatDestination = AdvisorChatDestination(
+                conversationId: conversationId,
+                otherUserId: registration.advisorId,
+                title: registration.advisorName
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func prepareVideoCall(
+        _ registration: AdvisorRegistration
+    ) async {
+        do {
+            callSession =
+                try await DataService.createAdvisorCallSession(
+                    assignmentId: registration.assignmentId
+                )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func request(
+        _ advisor: AdvisorDirectoryProfile
+    ) async {
+        requestingAdvisorID = advisor.id
+        defer { requestingAdvisorID = nil }
+
+        do {
+            try await DataService.requestAdvisor(
+                advisorId: advisor.id
+            )
+            await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+
+struct AdvisorChatDestination: Identifiable {
+    let conversationId: UUID
+    let otherUserId: UUID
+    let title: String
+
+    var id: UUID { conversationId }
+}
+
+struct AdvisorCallPreparationView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State var session: AdvisorCallSession
+    @StateObject private var call = AdvisorCallController()
+    @State private var recordingConsent = false
+    @State private var savingConsent = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Theme.pageBackground
+                    .ignoresSafeArea()
+
+                VStack(spacing: 16) {
+                    ZStack(alignment: .bottomTrailing) {
+                        LiveKitTrackView(track: call.remoteVideoTrack)
+                            .background(Theme.surface)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .overlay {
+                                if call.remoteVideoTrack == nil {
+                                    VStack(spacing: 10) {
+                                        Image(systemName: "video.fill")
+                                            .font(.system(size: 28))
+                                            .foregroundStyle(Theme.accentSoft)
+
+                                        Text(
+                                            call.connected
+                                                ? "Waiting for the other participant"
+                                                : "Preparing secure video call"
+                                        )
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(Theme.ink)
+                                    }
+                                }
+                            }
+
+                        LiveKitTrackView(track: call.localVideoTrack)
+                            .frame(width: 112, height: 154)
+                            .background(Theme.surfaceRaised)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(
+                                        Theme.ink.opacity(0.08),
+                                        lineWidth: 1
+                                    )
+                            )
+                            .padding(12)
+                    }
+                    .frame(maxHeight: .infinity)
+
+                    HStack(spacing: 12) {
+                        callControl(
+                            icon: call.microphoneEnabled
+                                ? "mic.fill"
+                                : "mic.slash.fill",
+                            active: call.microphoneEnabled
+                        ) {
+                            Task { await call.toggleMicrophone() }
+                        }
+
+                        callControl(
+                            icon: call.cameraEnabled
+                                ? "video.fill"
+                                : "video.slash.fill",
+                            active: call.cameraEnabled
+                        ) {
+                            Task { await call.toggleCamera() }
+                        }
+
+                        callControl(
+                            icon: "rectangle.on.rectangle",
+                            active: call.screenSharing
+                        ) {
+                            Task { await call.toggleScreenShare() }
+                        }
+
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "phone.down.fill")
+                                .font(.system(size: 18, weight: .bold))
+                                .frame(width: 52, height: 52)
+                                .background(Color.red)
+                                .foregroundStyle(.white)
+                                .clipShape(Circle())
+                        }
+                    }
+
+                    Toggle(
+                        "Allow session recording",
+                        isOn: $recordingConsent
+                    )
+                    .tint(Theme.accent)
+                    .onChange(of: recordingConsent) {
+                        Task { await updateRecordingConsent() }
+                    }
+
+                    Text(
+                        "Recording requires explicit consent from both the student and advisor. Screen sharing uses the iOS system capture permission."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+
+                    if let message = errorMessage ?? call.errorMessage {
+                        Text(message)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("Advisor Video Call")
+            .navigationBarTitleDisplayMode(.inline)
+            .task {
+                await connect()
+            }
+        }
+    }
+
+    private func callControl(
+        icon: String,
+        active: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.system(size: 17, weight: .semibold))
+                .frame(width: 52, height: 52)
+                .background(
+                    active
+                        ? Theme.accent
+                        : Theme.surfaceRaised
+                )
+                .foregroundStyle(
+                    active
+                        ? Theme.onAccent
+                        : Theme.ink
+                )
+                .clipShape(Circle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    @MainActor
+    private func connect() async {
+        do {
+            let credentials =
+                try await DataService.liveKitCallCredentials(
+                    callId: session.id
+                )
+            try await call.connect(credentials)
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func updateRecordingConsent() async {
+        savingConsent = true
+        defer { savingConsent = false }
+
+        do {
+            session =
+                try await DataService
+                    .setAdvisorCallRecordingConsent(
+                        callId: session.id,
+                        consent: recordingConsent
+                    )
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+private final class AdvisorCallController:
+    NSObject,
+    ObservableObject,
+    RoomDelegate
+{
+    @Published var localVideoTrack: VideoTrack?
+    @Published var remoteVideoTrack: VideoTrack?
+    @Published var connected = false
+    @Published var cameraEnabled = false
+    @Published var microphoneEnabled = false
+    @Published var screenSharing = false
+    @Published var errorMessage: String?
+
+    lazy var room = Room(delegate: self)
+
+    @MainActor
+    func connect(
+        _ credentials: LiveKitCallCredentials
+    ) async throws {
+        do {
+            try await room.connect(
+                url: credentials.url,
+                token: credentials.token
+            )
+
+            try await room.localParticipant
+                .setCamera(enabled: true)
+            try await room.localParticipant
+                .setMicrophone(enabled: true)
+
+            connected = true
+            cameraEnabled = true
+            microphoneEnabled = true
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+            throw error
+        }
+    }
+
+    @MainActor
+    func toggleCamera() async {
+        do {
+            let next = !cameraEnabled
+            try await room.localParticipant
+                .setCamera(enabled: next)
+            cameraEnabled = next
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    func toggleMicrophone() async {
+        do {
+            let next = !microphoneEnabled
+            try await room.localParticipant
+                .setMicrophone(enabled: next)
+            microphoneEnabled = next
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    func toggleScreenShare() async {
+        do {
+            let next = !screenSharing
+            try await room.localParticipant
+                .setScreenShare(enabled: next)
+            screenSharing = next
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func room(
+        _: Room,
+        participant _: LocalParticipant,
+        didPublishTrack publication: LocalTrackPublication
+    ) {
+        guard let track = publication.track as? VideoTrack else {
+            return
+        }
+
+        DispatchQueue.main.async {
+            if publication.source == .camera {
+                self.localVideoTrack = track
+            }
+        }
+    }
+
+    func room(
+        _: Room,
+        participant _: RemoteParticipant,
+        didSubscribeTrack publication: RemoteTrackPublication
+    ) {
+        guard let track = publication.track as? VideoTrack else {
+            return
+        }
+
+        DispatchQueue.main.async {
+            self.remoteVideoTrack = track
+        }
+    }
+
+    func room(
+        _: Room,
+        participant _: RemoteParticipant,
+        didUnsubscribeTrack publication: RemoteTrackPublication
+    ) {
+        guard publication.track is VideoTrack else {
+            return
+        }
+
+        DispatchQueue.main.async {
+            self.remoteVideoTrack = nil
+        }
+    }
+}
+
+private struct LiveKitTrackView: UIViewRepresentable {
+    let track: VideoTrack?
+
+    func makeUIView(context: Context) -> VideoView {
+        let view = VideoView()
+        view.clipsToBounds = true
+        return view
+    }
+
+    func updateUIView(
+        _ uiView: VideoView,
+        context: Context
+    ) {
+        uiView.track = track
     }
 }
 

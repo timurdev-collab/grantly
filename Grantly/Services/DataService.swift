@@ -61,6 +61,135 @@ enum DataService {
             .execute()
     }
 
+    static func ensureAdvisorConversation(
+        assignmentId: UUID
+    ) async throws -> UUID {
+        struct Params: Encodable {
+            let p_assignment_id: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "ensure_advisor_conversation",
+                params: Params(p_assignment_id: assignmentId)
+            )
+            .execute()
+            .value
+    }
+
+    static func liveKitCallCredentials(
+        callId: UUID
+    ) async throws -> LiveKitCallCredentials {
+        struct Body: Encodable {
+            let call_id: UUID
+        }
+
+        return try await supabase.functions.invoke(
+            "livekit-token",
+            options: FunctionInvokeOptions(
+                body: Body(call_id: callId)
+            )
+        )
+    }
+
+    static func createAdvisorCallSession(
+        assignmentId: UUID,
+        recordingRequested: Bool = false
+    ) async throws -> AdvisorCallSession {
+        struct Params: Encodable {
+            let p_assignment_id: UUID
+            let p_recording_requested: Bool
+        }
+
+        return try await supabase
+            .rpc(
+                "create_advisor_call_session",
+                params: Params(
+                    p_assignment_id: assignmentId,
+                    p_recording_requested: recordingRequested
+                )
+            )
+            .execute()
+            .value
+    }
+
+    static func setAdvisorCallRecordingConsent(
+        callId: UUID,
+        consent: Bool
+    ) async throws -> AdvisorCallSession {
+        struct Params: Encodable {
+            let p_call_id: UUID
+            let p_consent: Bool
+        }
+
+        return try await supabase
+            .rpc(
+                "set_advisor_call_recording_consent",
+                params: Params(
+                    p_call_id: callId,
+                    p_consent: consent
+                )
+            )
+            .execute()
+            .value
+    }
+
+    static func availableAdvisors() async throws -> [AdvisorDirectoryProfile] {
+        try await supabase
+            .rpc("available_advisors")
+            .execute()
+            .value
+    }
+
+    static func requestAdvisor(advisorId: UUID) async throws {
+        struct Params: Encodable {
+            let p_advisor_id: UUID
+        }
+
+        try await supabase
+            .rpc(
+                "request_advisor",
+                params: Params(p_advisor_id: advisorId)
+            )
+            .execute()
+    }
+
+    static func myAdvisorRegistration() async throws -> AdvisorRegistration? {
+        let rows: [AdvisorRegistration] = try await supabase
+            .rpc("my_advisor_registration")
+            .execute()
+            .value
+
+        return rows.first
+    }
+
+    static func advisorMyStudents() async throws -> [AdvisorStudent] {
+        try await supabase
+            .rpc("advisor_my_students")
+            .execute()
+            .value
+    }
+
+    static func advisorManageStudent(
+        assignmentId: UUID,
+        action: String
+    ) async throws {
+        struct Params: Encodable {
+            let p_assignment_id: UUID
+            let p_action: String
+        }
+
+        try await supabase
+            .rpc(
+                "advisor_manage_student",
+                params: Params(
+                    p_assignment_id: assignmentId,
+                    p_action: action
+                )
+            )
+            .execute()
+    }
+
     static func adminUserAccounts() async throws -> [AdminUserAccount] {
         try await supabase
             .rpc("admin_user_accounts")

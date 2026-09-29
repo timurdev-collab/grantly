@@ -67,6 +67,126 @@ struct AdminUserAccount: Codable, Identifiable {
     }
 }
 
+
+struct AdvisorDirectoryProfile: Codable, Identifiable, Hashable {
+    let id: UUID
+    let displayName: String?
+    let title: String?
+    let bio: String?
+    let specialties: [String]
+    let countries: [String]
+    let languages: [String]
+    let avatarUrl: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case displayName = "display_name"
+        case title, bio, specialties, countries, languages
+        case avatarUrl = "avatar_url"
+    }
+}
+
+struct AdvisorRegistration: Codable, Identifiable {
+    let assignmentId: UUID
+    let advisorId: UUID
+    let advisorName: String
+    let advisorTitle: String?
+    let advisorAvatarUrl: String?
+    let status: String
+    let requestedAt: String
+
+    var id: UUID { assignmentId }
+
+    enum CodingKeys: String, CodingKey {
+        case assignmentId = "assignment_id"
+        case advisorId = "advisor_id"
+        case advisorName = "advisor_name"
+        case advisorTitle = "advisor_title"
+        case advisorAvatarUrl = "advisor_avatar_url"
+        case status
+        case requestedAt = "requested_at"
+    }
+}
+
+struct AdvisorStudent: Codable, Identifiable {
+    let assignmentId: UUID
+    let studentId: UUID
+    let fullName: String?
+    let nationality: String?
+    let residenceCountry: String?
+    let intendedMajor: String?
+    let degreeLevel: String?
+    let targetCountries: [String]?
+    let status: String
+    let requestedAt: String
+    let activatedAt: String?
+
+    var id: UUID { assignmentId }
+
+    enum CodingKeys: String, CodingKey {
+        case assignmentId = "assignment_id"
+        case studentId = "student_id"
+        case fullName = "full_name"
+        case nationality
+        case residenceCountry = "residence_country"
+        case intendedMajor = "intended_major"
+        case degreeLevel = "degree_level"
+        case targetCountries = "target_countries"
+        case status
+        case requestedAt = "requested_at"
+        case activatedAt = "activated_at"
+    }
+}
+
+
+
+struct LiveKitCallCredentials: Codable {
+    let url: String
+    let token: String
+    let roomName: String
+
+    enum CodingKeys: String, CodingKey {
+        case url, token
+        case roomName = "room_name"
+    }
+}
+
+struct AdvisorCallSession: Codable, Identifiable {
+    let id: UUID
+    let assignmentId: UUID
+    let conversationId: UUID?
+    let startedBy: UUID
+    let roomName: String
+    let status: String
+    let scheduledFor: String?
+    let startedAt: String?
+    let endedAt: String?
+    let screenShareAllowed: Bool
+    let recordingRequested: Bool
+    let recordingConsentStudent: Bool
+    let recordingConsentAdvisor: Bool
+    let createdAt: String
+    let updatedAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case assignmentId = "assignment_id"
+        case conversationId = "conversation_id"
+        case startedBy = "started_by"
+        case roomName = "room_name"
+        case status
+        case scheduledFor = "scheduled_for"
+        case startedAt = "started_at"
+        case endedAt = "ended_at"
+        case screenShareAllowed = "screen_share_allowed"
+        case recordingRequested = "recording_requested"
+        case recordingConsentStudent = "recording_consent_student"
+        case recordingConsentAdvisor = "recording_consent_advisor"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
+}
+
 struct CommunityProfile: Codable, Identifiable, Hashable {
     let id: UUID
     var displayName: String?

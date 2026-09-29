@@ -1196,7 +1196,7 @@ struct AdminView: View {
     }
 }
 
-private struct AdminPeopleView: View {
+struct AdminPeopleView: View {
     @State private var users: [AdminUserAccount] = []
     @State private var query = ""
     @State private var loading = true

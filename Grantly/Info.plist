@@ -37,6 +37,10 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Grantly uses your camera for advisor video calls.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Grantly uses your microphone for advisor video calls.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

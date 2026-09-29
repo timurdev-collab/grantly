@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A7B8C9D0E1F2030405060708 /* LiveKit in Frameworks */ = {isa = PBXBuildFile; productRef = B7B8C9D0E1F2030405060708 /* LiveKit */; };
 		0C85559ABE9B6503D5421022 /* GrantlyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9C3691CEE37F967931AACA /* GrantlyApp.swift */; };
 		105E8C5BF134090BD3B2C854 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE633CF6447197A677DE1B05 /* MessagesView.swift */; };
 		15F296E319530D8193A8CE8E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A39168AA961A3D24592CBD /* Theme.swift */; };
@@ -67,6 +68,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52809D369CFE4D5610A41900 /* Supabase in Frameworks */,
+				A7B8C9D0E1F2030405060708 /* LiveKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +243,7 @@
 			name = Grantly;
 			packageProductDependencies = (
 				D284FD1027222CB758E07F30 /* Supabase */,
+				B7B8C9D0E1F2030405060708 /* LiveKit */,
 			);
 			productName = Grantly;
 			productReference = B5FBBA9D60D0AFBF09E84CC0 /* Grantly.app */;
@@ -266,6 +269,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				FC7FB39224FDDC3A2D122DE7 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				C7B8C9D0E1F2030405060708 /* XCRemoteSwiftPackageReference "client-sdk-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FA395B9E12BE6C2FBA68C018 /* Products */;
@@ -518,6 +522,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		C7B8C9D0E1F2030405060708 /* XCRemoteSwiftPackageReference "client-sdk-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/livekit/client-sdk-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.17.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -525,6 +537,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FC7FB39224FDDC3A2D122DE7 /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
+		};
+		B7B8C9D0E1F2030405060708 /* LiveKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C7B8C9D0E1F2030405060708 /* XCRemoteSwiftPackageReference "client-sdk-swift" */;
+			productName = LiveKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
