@@ -65,8 +65,9 @@ struct LanguageFlagMenu: View {
                 }
             }
         } label: {
-            Text(language.flag)
-                .font(.system(size: 22))
+            Image(systemName: "globe")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundStyle(Theme.ink.opacity(0.84))
                 .frame(width: 42, height: 42)
                 .background(Theme.surface)
                 .clipShape(Circle())
