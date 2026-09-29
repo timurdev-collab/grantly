@@ -1600,3 +1600,11 @@ private struct FlowingText: View {
             .lineSpacing(3)
     }
 }
+
+
+private extension String {
+    var nonEmpty: String? {
+        let value = trimmingCharacters(in: .whitespacesAndNewlines)
+        return value.isEmpty ? nil : value
+    }
+}
