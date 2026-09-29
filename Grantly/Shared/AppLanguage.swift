@@ -31,3 +31,37 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         }
     }
 }
+
+
+enum L10n {
+    static var language: AppLanguage {
+        let raw = UserDefaults.standard.string(forKey: "grantly.language") ?? AppLanguage.english.rawValue
+        return AppLanguage(rawValue: raw) ?? .english
+    }
+
+    static func string(_ key: String) -> String {
+        guard
+            let path = Bundle.main.path(
+                forResource: language.localeIdentifier,
+                ofType: "lproj"
+            ),
+            let bundle = Bundle(path: path)
+        else {
+            return key
+        }
+
+        return bundle.localizedString(
+            forKey: key,
+            value: key,
+            table: nil
+        )
+    }
+
+    static func format(_ key: String, _ arguments: CVarArg...) -> String {
+        String(
+            format: string(key),
+            locale: Locale(identifier: language.localeIdentifier),
+            arguments: arguments
+        )
+    }
+}
