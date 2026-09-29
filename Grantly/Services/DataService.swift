@@ -61,6 +61,64 @@ enum DataService {
             .execute()
     }
 
+    static func ensureAdvisorConversation(
+        assignmentId: UUID
+    ) async throws -> UUID {
+        struct Params: Encodable {
+            let p_assignment_id: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "ensure_advisor_conversation",
+                params: Params(p_assignment_id: assignmentId)
+            )
+            .execute()
+            .value
+    }
+
+    static func createAdvisorCallSession(
+        assignmentId: UUID,
+        recordingRequested: Bool = false
+    ) async throws -> AdvisorCallSession {
+        struct Params: Encodable {
+            let p_assignment_id: UUID
+            let p_recording_requested: Bool
+        }
+
+        return try await supabase
+            .rpc(
+                "create_advisor_call_session",
+                params: Params(
+                    p_assignment_id: assignmentId,
+                    p_recording_requested: recordingRequested
+                )
+            )
+            .execute()
+            .value
+    }
+
+    static func setAdvisorCallRecordingConsent(
+        callId: UUID,
+        consent: Bool
+    ) async throws -> AdvisorCallSession {
+        struct Params: Encodable {
+            let p_call_id: UUID
+            let p_consent: Bool
+        }
+
+        return try await supabase
+            .rpc(
+                "set_advisor_call_recording_consent",
+                params: Params(
+                    p_call_id: callId,
+                    p_consent: consent
+                )
+            )
+            .execute()
+            .value
+    }
+
     static func availableAdvisors() async throws -> [AdvisorDirectoryProfile] {
         try await supabase
             .rpc("available_advisors")
