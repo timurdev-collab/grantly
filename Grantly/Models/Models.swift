@@ -35,6 +35,38 @@ struct StudentProfile: Codable, Identifiable {
     }
 }
 
+struct AdminUserAccount: Codable, Identifiable {
+    let userId: UUID
+    let email: String?
+    let fullName: String?
+    let role: String
+    let accountCreatedAt: String
+    let lastSignInAt: String?
+    let bannedUntil: String?
+    let advisorStatus: String?
+    let advisorTitle: String?
+    let advisorActive: Bool?
+
+    var id: UUID { userId }
+
+    var isSuspended: Bool {
+        bannedUntil != nil
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case userId = "user_id"
+        case email
+        case fullName = "full_name"
+        case role
+        case accountCreatedAt = "account_created_at"
+        case lastSignInAt = "last_sign_in_at"
+        case bannedUntil = "banned_until"
+        case advisorStatus = "advisor_status"
+        case advisorTitle = "advisor_title"
+        case advisorActive = "advisor_active"
+    }
+}
+
 struct CommunityProfile: Codable, Identifiable, Hashable {
     let id: UUID
     var displayName: String?
