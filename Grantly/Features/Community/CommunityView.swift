@@ -1,3 +1,4 @@
+import AVKit
 import SwiftUI
 import LiveKit
 import UIKit
@@ -36,23 +37,29 @@ struct AdvisorsView: View {
                         .tint(Theme.accent)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 44)
-                } else if advisors.isEmpty {
-                    EmptyState(
-                        icon: "person.crop.circle.badge.questionmark",
-                        title: "No advisors available yet",
-                        text:
-                            "Approved counselors will appear here once they are available."
-                    )
-                    .padding(.vertical, 24)
                 } else {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Available advisors")
-                            .font(.headline.bold())
-                            .foregroundStyle(Theme.ink)
+                        HStack(alignment: .firstTextBaseline) {
+                            Text("Meet our advisors")
+                                .font(.headline.bold())
+                                .foregroundStyle(Theme.ink)
 
-                        ForEach(advisors) { advisor in
-                            advisorCard(advisor)
+                            Spacer()
+
+                            if !advisors.isEmpty {
+                                Text("\(advisors.count) available")
+                                    .font(.caption)
+                                    .foregroundStyle(Theme.muted)
+                            }
                         }
+
+                        Text(
+                            "Open a profile to watch an introduction and learn how each advisor can help."
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+
+                        advisorGrid
                     }
                 }
 
@@ -157,102 +164,91 @@ struct AdvisorsView: View {
         .clipShape(RoundedRectangle(cornerRadius: 18))
     }
 
-    private func advisorCard(
+    private var advisorGrid: some View {
+        let placeholderCount = max(0, 5 - advisors.count)
+        let columns = [
+            GridItem(.flexible(), spacing: 12),
+            GridItem(.flexible(), spacing: 12)
+        ]
+
+        return LazyVGrid(columns: columns, spacing: 12) {
+            ForEach(advisors) { advisor in
+                NavigationLink {
+                    AdvisorDetailView(
+                        advisor: advisor,
+                        registration: registration,
+                        onRequest: {
+                            await request(advisor)
+                        }
+                    )
+                } label: {
+                    advisorGridCard(advisor)
+                }
+                .buttonStyle(.plain)
+            }
+
+            ForEach(0..<placeholderCount, id: \.self) { _ in
+                advisorPlaceholderCard
+            }
+        }
+    }
+
+    private func advisorGridCard(
         _ advisor: AdvisorDirectoryProfile
     ) -> some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(spacing: 13) {
-                ZStack {
-                    Circle()
-                        .fill(Theme.surfaceRaised)
-                        .frame(width: 58, height: 58)
+        VStack(spacing: 10) {
+            ZStack {
+                Circle()
+                    .fill(Theme.surfaceRaised)
+                    .frame(width: 72, height: 72)
 
-                    if let value = advisor.avatarUrl,
-                       let url = URL(string: value) {
-                        AsyncImage(url: url) { image in
+                if let value = advisor.avatarUrl,
+                   let url = URL(string: value) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .success(let image):
                             image
                                 .resizable()
                                 .scaledToFill()
-                        } placeholder: {
+                        default:
                             Image(systemName: "person.fill")
+                                .font(.system(size: 25))
                                 .foregroundStyle(Theme.muted)
                         }
-                        .frame(width: 54, height: 54)
-                        .clipShape(Circle())
-                    } else {
-                        Image(systemName: "person.fill")
-                            .foregroundStyle(Theme.muted)
                     }
+                    .frame(width: 68, height: 68)
+                    .clipShape(Circle())
+                } else {
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 25))
+                        .foregroundStyle(Theme.muted)
                 }
-
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(advisor.displayName ?? "Grantly Advisor")
-                        .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
-
-                    if let title = advisor.title,
-                       !title.isEmpty {
-                        Text(title)
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Theme.accentSoft)
-                    }
-
-                    let detail = (
-                        advisor.specialties +
-                        advisor.countries
-                    )
-                    .prefix(3)
-                    .joined(separator: " · ")
-
-                    if !detail.isEmpty {
-                        Text(detail)
-                            .font(.caption)
-                            .foregroundStyle(Theme.muted)
-                            .lineLimit(2)
-                    }
-                }
-
-                Spacer()
             }
 
-            if let bio = advisor.bio,
-               !bio.isEmpty {
-                Text(bio)
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
-                    .lineLimit(4)
-            }
-
-            Button {
-                Task { await request(advisor) }
-            } label: {
-                Label(
-                    requestingAdvisorID == advisor.id
-                        ? "Sending request…"
-                        : buttonTitle(for: advisor),
-                    systemImage: "person.badge.plus"
-                )
+            Text(advisor.displayName ?? "Grantly Advisor")
                 .font(.subheadline.weight(.semibold))
-                .frame(maxWidth: .infinity)
-                .frame(height: 46)
-                .background(Theme.orangeGradient)
-                .foregroundStyle(Theme.onAccent)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .foregroundStyle(Theme.ink)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+
+            if let title = advisor.title,
+               !title.isEmpty {
+                Text(title)
+                    .font(.caption2)
+                    .foregroundStyle(Theme.muted)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
             }
-            .buttonStyle(.plain)
-            .disabled(
-                requestingAdvisorID != nil ||
-                registration?.status == "active" ||
-                registration?.advisorId == advisor.id
-            )
-            .opacity(
-                registration?.status == "active" ||
-                registration?.advisorId == advisor.id
-                    ? 0.55
-                    : 1
-            )
+
+            if advisor.isFeatured {
+                Label("Featured", systemImage: "star.fill")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(Theme.accentSoft)
+            }
         }
-        .padding(17)
+        .frame(maxWidth: .infinity)
+        .frame(minHeight: 178)
+        .padding(12)
         .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(
@@ -261,22 +257,39 @@ struct AdvisorsView: View {
         )
     }
 
-    private func buttonTitle(
-        for advisor: AdvisorDirectoryProfile
-    ) -> String {
-        if let registration {
-            if registration.advisorId == advisor.id {
-                return registration.status == "active"
-                    ? "Your advisor"
-                    : "Request sent"
-            }
+    private var advisorPlaceholderCard: some View {
+        VStack(spacing: 10) {
+            Circle()
+                .fill(Theme.surfaceRaised)
+                .frame(width: 72, height: 72)
+                .overlay {
+                    Image(systemName: "person.crop.circle.badge.plus")
+                        .font(.system(size: 24, weight: .medium))
+                        .foregroundStyle(Theme.muted.opacity(0.55))
+                }
 
-            if registration.status == "active" {
-                return "Already registered"
-            }
+            Text("New advisor")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Theme.muted)
+
+            Text("Coming soon")
+                .font(.caption2)
+                .foregroundStyle(Theme.muted.opacity(0.75))
         }
-
-        return "Register with advisor"
+        .frame(maxWidth: .infinity)
+        .frame(minHeight: 178)
+        .padding(12)
+        .background(Theme.surfaceRaised.opacity(0.7))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(
+                    Theme.ink.opacity(0.06),
+                    style: StrokeStyle(lineWidth: 1, dash: [5, 5])
+                )
+        )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Advisor coming soon")
     }
 
     @MainActor
@@ -349,6 +362,329 @@ struct AdvisorsView: View {
     }
 }
 
+
+struct AdvisorDetailView: View {
+    let advisor: AdvisorDirectoryProfile
+    let registration: AdvisorRegistration?
+    let onRequest: () async -> Void
+
+    @State private var requesting = false
+    @State private var requestSent = false
+    @State private var errorMessage: String?
+
+    private var requestStateTitle: String {
+        if requestSent ||
+            registration?.advisorId == advisor.id {
+            return registration?.status == "active"
+                ? "Your advisor"
+                : "Request sent"
+        }
+
+        if registration?.status == "active" {
+            return "You already have an advisor"
+        }
+
+        return "Request this advisor"
+    }
+
+    private var canRequest: Bool {
+        !requesting &&
+        !requestSent &&
+        registration?.advisorId != advisor.id &&
+        registration?.status != "active"
+    }
+
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 22) {
+                header
+                introductionVideo
+                aboutSection
+                expertiseSection
+                linksSection
+
+                Button {
+                    Task {
+                        requesting = true
+                        defer { requesting = false }
+
+                        await onRequest()
+                        requestSent = true
+                    }
+                } label: {
+                    Label(
+                        requesting ? "Sending request…" : requestStateTitle,
+                        systemImage: "person.badge.plus"
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(
+                        canRequest
+                            ? Theme.orangeGradient
+                            : LinearGradient(
+                                colors: [
+                                    Theme.surfaceRaised,
+                                    Theme.surfaceRaised
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                    )
+                    .foregroundStyle(
+                        canRequest ? Theme.onAccent : Theme.muted
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                }
+                .buttonStyle(.plain)
+                .disabled(!canRequest)
+
+                if let errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(Theme.danger)
+                }
+            }
+            .padding()
+            .padding(.bottom, 28)
+        }
+        .background(Theme.pageBackground)
+        .navigationTitle("Advisor")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var header: some View {
+        VStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(Theme.surfaceRaised)
+
+                if let value = advisor.avatarUrl,
+                   let url = URL(string: value) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        default:
+                            Image(systemName: "person.fill")
+                                .font(.system(size: 38))
+                                .foregroundStyle(Theme.muted)
+                        }
+                    }
+                } else {
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 38))
+                        .foregroundStyle(Theme.muted)
+                }
+            }
+            .frame(width: 112, height: 112)
+            .clipShape(Circle())
+
+            Text(advisor.displayName ?? "Grantly Advisor")
+                .font(.system(size: 26, weight: .bold))
+                .foregroundStyle(Theme.ink)
+                .multilineTextAlignment(.center)
+
+            if let title = advisor.title?.nonEmpty {
+                Text(title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.accentSoft)
+                    .multilineTextAlignment(.center)
+            }
+
+            if let organization = advisor.organization?.nonEmpty {
+                Text(organization)
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+            }
+
+            if let years = advisor.yearsExperience {
+                Label(
+                    "\(years) years experience",
+                    systemImage: "briefcase.fill"
+                )
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(18)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+    }
+
+    @ViewBuilder
+    private var introductionVideo: some View {
+        if let value = advisor.introVideoUrl,
+           let url = URL(string: value) {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Introduction")
+                    .font(.headline.bold())
+                    .foregroundStyle(Theme.ink)
+
+                if ["mp4", "mov", "m4v"]
+                    .contains(url.pathExtension.lowercased()) {
+                    VideoPlayer(player: AVPlayer(url: url))
+                        .frame(height: 210)
+                        .clipShape(RoundedRectangle(cornerRadius: 18))
+                } else {
+                    Link(destination: url) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "play.circle.fill")
+                                .font(.system(size: 32))
+                                .foregroundStyle(Theme.accent)
+
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text("Watch introduction")
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(Theme.ink)
+
+                                Text("Opens the advisor's video")
+                                    .font(.caption)
+                                    .foregroundStyle(Theme.muted)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "arrow.up.right")
+                                .foregroundStyle(Theme.muted)
+                        }
+                        .padding(16)
+                        .background(Theme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 18))
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
+    private var aboutSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("About")
+                .font(.headline.bold())
+                .foregroundStyle(Theme.ink)
+
+            if let shortBio = advisor.shortBio?.nonEmpty {
+                Text(shortBio)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+            }
+
+            if let bio = advisor.bio?.nonEmpty {
+                Text(bio)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+                    .lineSpacing(3)
+            }
+
+            if let approach = advisor.mentoringApproach?.nonEmpty {
+                Divider()
+
+                Text("How I help")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+
+                Text(approach)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+                    .lineSpacing(3)
+            }
+        }
+        .padding(16)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+
+    private var expertiseSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Expertise")
+                .font(.headline.bold())
+                .foregroundStyle(Theme.ink)
+
+            if !advisor.specialties.isEmpty {
+                AdvisorTagWrap(
+                    title: "Specialties",
+                    values: advisor.specialties
+                )
+            }
+
+            if !advisor.countries.isEmpty {
+                AdvisorTagWrap(
+                    title: "Countries",
+                    values: advisor.countries
+                )
+            }
+
+            if !advisor.languages.isEmpty {
+                AdvisorTagWrap(
+                    title: "Languages",
+                    values: advisor.languages
+                )
+            }
+        }
+        .padding(16)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+
+    @ViewBuilder
+    private var linksSection: some View {
+        if advisor.linkedinUrl?.nonEmpty != nil ||
+            advisor.websiteUrl?.nonEmpty != nil {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Professional links")
+                    .font(.headline.bold())
+                    .foregroundStyle(Theme.ink)
+
+                if let value = advisor.linkedinUrl,
+                   let url = URL(string: value) {
+                    Link(destination: url) {
+                        Label(
+                            "LinkedIn",
+                            systemImage: "person.text.rectangle"
+                        )
+                    }
+                }
+
+                if let value = advisor.websiteUrl,
+                   let url = URL(string: value) {
+                    Link(destination: url) {
+                        Label(
+                            "Website",
+                            systemImage: "globe"
+                        )
+                    }
+                }
+            }
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(Theme.accent)
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Theme.surface)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+        }
+    }
+}
+
+private struct AdvisorTagWrap: View {
+    let title: String
+    let values: [String]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            Text(title)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.muted)
+
+            Text(values.prefix(8).joined(separator: " · "))
+                .font(.subheadline)
+                .foregroundStyle(Theme.ink)
+        }
+    }
+}
 
 struct AdvisorChatDestination: Identifiable {
     let conversationId: UUID
