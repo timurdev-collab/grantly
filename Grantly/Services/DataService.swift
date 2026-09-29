@@ -190,6 +190,14 @@ enum DataService {
             .execute()
     }
 
+    static func adminAdvisorAssignments() async throws
+        -> [AdminAdvisorAssignment] {
+        try await supabase
+            .rpc("admin_advisor_assignments")
+            .execute()
+            .value
+    }
+
     static func adminUserAccounts() async throws -> [AdminUserAccount] {
         try await supabase
             .rpc("admin_user_accounts")
