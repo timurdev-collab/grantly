@@ -1592,8 +1592,8 @@ struct AddScholarshipView: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Publish") {
-                        Task { await publish() }
+                    Button("Save Draft") {
+                        Task { await saveDraft() }
                     }
                 }
             }
@@ -1601,7 +1601,7 @@ struct AddScholarshipView: View {
     }
 
     @MainActor
-    private func publish() async {
+    private func saveDraft() async {
         struct Row: Encodable {
             let slug: String
             let title: String
@@ -1614,13 +1614,9 @@ struct AddScholarshipView: View {
             let degree_levels: [String]
             let fields: [String]
             let eligible_nationalities: [String]
-            let verified_at: String
             let verification_status: String
             let link_status: String
-            let last_checked_at: String
         }
-
-        let now = ISO8601DateFormatter().string(from: Date())
 
         let row = Row(
             slug: slug,
@@ -1630,7 +1626,7 @@ struct AddScholarshipView: View {
             region: region,
             funding_type: funding,
             official_url: url,
-            status: "published",
+            status: "draft",
             degree_levels: degreeLevels
                 .split(separator: ",")
                 .map {
@@ -1646,10 +1642,8 @@ struct AddScholarshipView: View {
                     )
                 },
             eligible_nationalities: ["ALL"],
-            verified_at: now,
-            verification_status: "verified",
-            link_status: "exact",
-            last_checked_at: now
+            verification_status: "needs_review",
+            link_status: "unchecked"
         )
 
         do {
