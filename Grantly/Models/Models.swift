@@ -108,6 +108,32 @@ struct AdvisorRegistration: Codable, Identifiable {
     }
 }
 
+struct AdminAdvisorAssignment: Codable, Identifiable {
+    let assignmentId: UUID
+    let advisorId: UUID
+    let advisorName: String
+    let studentId: UUID
+    let studentName: String
+    let studentEmail: String?
+    let status: String
+    let requestedAt: String
+    let activatedAt: String?
+
+    var id: UUID { assignmentId }
+
+    enum CodingKeys: String, CodingKey {
+        case assignmentId = "assignment_id"
+        case advisorId = "advisor_id"
+        case advisorName = "advisor_name"
+        case studentId = "student_id"
+        case studentName = "student_name"
+        case studentEmail = "student_email"
+        case status
+        case requestedAt = "requested_at"
+        case activatedAt = "activated_at"
+    }
+}
+
 struct AdvisorStudent: Codable, Identifiable {
     let assignmentId: UUID
     let studentId: UUID

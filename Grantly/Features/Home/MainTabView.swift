@@ -8,10 +8,29 @@ private enum MainTab: Hashable {
     case profile
 }
 
+private enum AdminExperience: String, CaseIterable {
+    case admin
+    case advisor
+    case student
+
+    var title: String {
+        rawValue.capitalized
+    }
+
+    var icon: String {
+        switch self {
+        case .admin: return "shield.fill"
+        case .advisor: return "person.crop.circle.badge.questionmark"
+        case .student: return "graduationcap.fill"
+        }
+    }
+}
+
 struct MainTabView: View {
     @State private var profile: StudentProfile?
     @State private var loadingProfile = true
     @State private var profileLoadError: String?
+    @State private var adminExperience: AdminExperience = .admin
 
     var body: some View {
         Group {
@@ -24,7 +43,29 @@ struct MainTabView: View {
             } else if let profile {
                 switch profile.role {
                 case "admin":
-                    AdminPortalView(profile: $profile)
+                    switch adminExperience {
+                    case .admin:
+                        AdminPortalView(
+                            profile: $profile,
+                            onSelectExperience: {
+                                adminExperience = $0
+                            }
+                        )
+                    case .advisor:
+                        AdminAdvisorExperienceView(
+                            profile: $profile,
+                            returnToAdmin: {
+                                adminExperience = .admin
+                            }
+                        )
+                    case .student:
+                        StudentMainTabs(
+                            profile: $profile,
+                            adminReturnAction: {
+                                adminExperience = .admin
+                            }
+                        )
+                    }
                 case "advisor":
                     AdvisorPortalView(profile: $profile)
                 default:
@@ -86,6 +127,8 @@ struct MainTabView: View {
 
 private struct StudentMainTabs: View {
     @Binding var profile: StudentProfile?
+    var adminReturnAction: (() -> Void)? = nil
+
     @State private var selection: MainTab = .home
     @State private var networkMonitor = NetworkMonitor()
 
@@ -157,11 +200,32 @@ private struct StudentMainTabs: View {
             .easeInOut(duration: 0.2),
             value: networkMonitor.isOnline
         )
+        .overlay(alignment: .topLeading) {
+            if let adminReturnAction {
+                Button(action: adminReturnAction) {
+                    Label("Admin", systemImage: "shield.fill")
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, 11)
+                        .frame(height: 34)
+                        .background(Theme.surface)
+                        .foregroundStyle(Theme.ink)
+                        .clipShape(Capsule())
+                        .overlay(
+                            Capsule()
+                                .stroke(Theme.ink.opacity(0.08))
+                        )
+                }
+                .buttonStyle(.plain)
+                .padding(.top, 8)
+                .padding(.leading, 16)
+            }
+        }
     }
 }
 
 private struct AdminPortalView: View {
     @Binding var profile: StudentProfile?
+    let onSelectExperience: (AdminExperience) -> Void
 
     var body: some View {
         NavigationStack {
@@ -182,6 +246,48 @@ private struct AdminPortalView: View {
 
                         LanguageFlagMenu()
                     }
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("View Grantly as")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.muted)
+
+                        HStack(spacing: 8) {
+                            ForEach(AdminExperience.allCases, id: \.self) { mode in
+                                Button {
+                                    onSelectExperience(mode)
+                                } label: {
+                                    Label(mode.title, systemImage: mode.icon)
+                                        .font(.caption.weight(.semibold))
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 42)
+                                        .background(
+                                            mode == .admin
+                                                ? Theme.accent
+                                                : Theme.surface
+                                        )
+                                        .foregroundStyle(
+                                            mode == .admin
+                                                ? Theme.onAccent
+                                                : Theme.ink
+                                        )
+                                        .clipShape(
+                                            RoundedRectangle(cornerRadius: 12)
+                                        )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+
+                        Text(
+                            "Student and Advisor views let you inspect the product without changing your real admin role."
+                        )
+                        .font(.caption2)
+                        .foregroundStyle(Theme.muted)
+                    }
+                    .padding(14)
+                    .background(Theme.surfaceRaised)
+                    .clipShape(RoundedRectangle(cornerRadius: 18))
 
                     NavigationLink {
                         AdminPeopleView()
@@ -263,6 +369,168 @@ private struct AdminPortalView: View {
             RoundedRectangle(cornerRadius: 20)
                 .stroke(Theme.ink.opacity(0.05))
         )
+    }
+}
+
+private struct AdminAdvisorExperienceView: View {
+    @Binding var profile: StudentProfile?
+    let returnToAdmin: () -> Void
+
+    @State private var assignments: [AdminAdvisorAssignment] = []
+    @State private var loading = true
+    @State private var errorMessage: String?
+
+    private var activeCount: Int {
+        assignments.filter { $0.status == "active" }.count
+    }
+
+    private var requestCount: Int {
+        assignments.filter { $0.status == "requested" }.count
+    }
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    HStack(alignment: .top, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Advisor View")
+                                .font(.system(size: 30, weight: .bold))
+                                .foregroundStyle(Theme.ink)
+
+                            Text(
+                                "Admin preview of the live advisor workflow"
+                            )
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                        }
+
+                        Spacer()
+
+                        LanguageFlagMenu()
+                    }
+                    .padding(.vertical, 8)
+
+                    Button(action: returnToAdmin) {
+                        Label(
+                            "Return to Admin",
+                            systemImage: "shield.fill"
+                        )
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Theme.accent)
+                }
+                .listRowBackground(Theme.pageBackground)
+
+                Section("Overview") {
+                    HStack(spacing: 12) {
+                        AdvisorPortalMetric(
+                            value: "\(activeCount)",
+                            label: "Active"
+                        )
+                        AdvisorPortalMetric(
+                            value: "\(requestCount)",
+                            label: "Requests"
+                        )
+                    }
+                }
+
+                Section("Advisor assignments") {
+                    if loading {
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
+                    } else if assignments.isEmpty {
+                        Text("No advisor assignments yet.")
+                            .font(.caption)
+                            .foregroundStyle(Theme.muted)
+                    } else {
+                        ForEach(assignments) { row in
+                            VStack(alignment: .leading, spacing: 5) {
+                                HStack {
+                                    Text(row.advisorName)
+                                        .font(.subheadline.weight(.semibold))
+
+                                    Spacer()
+
+                                    Text(row.status.capitalized)
+                                        .font(.caption2.weight(.semibold))
+                                        .foregroundStyle(Theme.accentSoft)
+                                }
+
+                                Text(row.studentName)
+                                    .font(.caption)
+                                    .foregroundStyle(Theme.ink)
+
+                                if let email = row.studentEmail,
+                                   !email.isEmpty {
+                                    Text(email)
+                                        .font(.caption2)
+                                        .foregroundStyle(Theme.muted)
+                                }
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                }
+
+                Section {
+                    Text(
+                        "Admin preview does not impersonate an advisor for private messages or calls. Use an actual advisor account to test identity-specific communication."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                }
+
+                Section("Advisor tools") {
+                    NavigationLink {
+                        MessagesView()
+                    } label: {
+                        Label(
+                            "Messages",
+                            systemImage: "bubble.left.and.bubble.right.fill"
+                        )
+                    }
+
+                    NavigationLink {
+                        ProfileView(profile: $profile)
+                    } label: {
+                        Label(
+                            "Profile & settings",
+                            systemImage: "person.crop.circle.fill"
+                        )
+                    }
+                }
+
+                if let errorMessage {
+                    Section {
+                        Text(errorMessage)
+                            .font(.caption)
+                            .foregroundStyle(Theme.danger)
+                    }
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .background(Theme.pageBackground)
+            .navigationBarHidden(true)
+            .refreshable { await load() }
+            .task { await load() }
+        }
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            assignments = try await DataService.adminAdvisorAssignments()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 
