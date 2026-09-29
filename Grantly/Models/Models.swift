@@ -70,19 +70,119 @@ struct AdminUserAccount: Codable, Identifiable {
 
 struct AdvisorDirectoryProfile: Codable, Identifiable, Hashable {
     let id: UUID
-    let displayName: String?
-    let title: String?
-    let bio: String?
-    let specialties: [String]
-    let countries: [String]
-    let languages: [String]
-    let avatarUrl: String?
+    var displayName: String?
+    var title: String?
+    var organization: String?
+    var shortBio: String?
+    var bio: String?
+    var mentoringApproach: String?
+    var yearsExperience: Int?
+    var specialties: [String]
+    var countries: [String]
+    var languages: [String]
+    var avatarUrl: String?
+    var avatarStoragePath: String?
+    var introVideoStoragePath: String?
+    var introVideoUrl: String?
+    var linkedinUrl: String?
+    var websiteUrl: String?
+    var isFeatured: Bool
 
     enum CodingKeys: String, CodingKey {
         case id
         case displayName = "display_name"
-        case title, bio, specialties, countries, languages
+        case title
+        case organization
+        case shortBio = "short_bio"
+        case bio
+        case mentoringApproach = "mentoring_approach"
+        case yearsExperience = "years_experience"
+        case specialties, countries, languages
         case avatarUrl = "avatar_url"
+        case avatarStoragePath = "avatar_storage_path"
+        case introVideoStoragePath = "intro_video_storage_path"
+        case introVideoUrl = "intro_video_url"
+        case linkedinUrl = "linkedin_url"
+        case websiteUrl = "website_url"
+        case isFeatured = "is_featured"
+    }
+}
+
+struct AdvisorApplicationProfile: Codable, Identifiable {
+    let id: UUID
+    var displayName: String?
+    var title: String?
+    var organization: String?
+    var shortBio: String?
+    var bio: String?
+    var mentoringApproach: String?
+    var yearsExperience: Int?
+    var specialties: [String]
+    var countries: [String]
+    var languages: [String]
+    var avatarUrl: String?
+    var avatarStoragePath: String?
+    var introVideoStoragePath: String?
+    var introVideoUrl: String?
+    var linkedinUrl: String?
+    var websiteUrl: String?
+    var approvalStatus: String
+    var isActive: Bool
+    var requestedAt: String
+    var reviewedAt: String?
+    var reviewedBy: UUID?
+    var reviewNote: String?
+    var isFeatured: Bool
+    var displayOrder: Int?
+    var applicationVersion: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case displayName = "display_name"
+        case title
+        case organization
+        case shortBio = "short_bio"
+        case bio
+        case mentoringApproach = "mentoring_approach"
+        case yearsExperience = "years_experience"
+        case specialties, countries, languages
+        case avatarUrl = "avatar_url"
+        case avatarStoragePath = "avatar_storage_path"
+        case introVideoStoragePath = "intro_video_storage_path"
+        case introVideoUrl = "intro_video_url"
+        case linkedinUrl = "linkedin_url"
+        case websiteUrl = "website_url"
+        case approvalStatus = "approval_status"
+        case isActive = "is_active"
+        case requestedAt = "requested_at"
+        case reviewedAt = "reviewed_at"
+        case reviewedBy = "reviewed_by"
+        case reviewNote = "review_note"
+        case isFeatured = "is_featured"
+        case displayOrder = "display_order"
+        case applicationVersion = "application_version"
+    }
+}
+
+struct AdvisorReviewEvent: Codable, Identifiable {
+    let id: UUID
+    let advisorId: UUID
+    let adminId: UUID?
+    let action: String
+    let previousStatus: String?
+    let newStatus: String
+    let note: String?
+    let applicationVersion: Int
+    let createdAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, action, note
+        case advisorId = "advisor_id"
+        case adminId = "admin_id"
+        case previousStatus = "previous_status"
+        case newStatus = "new_status"
+        case applicationVersion = "application_version"
+        case createdAt = "created_at"
     }
 }
 
