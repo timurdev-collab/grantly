@@ -29,6 +29,56 @@ enum DataService {
             .execute()
     }
 
+    static func adminUserAccounts() async throws -> [AdminUserAccount] {
+        try await supabase
+            .rpc("admin_user_accounts")
+            .execute()
+            .value
+    }
+
+    static func adminReviewAdvisor(
+        userId: UUID,
+        action: String,
+        note: String? = nil
+    ) async throws {
+        struct Params: Encodable {
+            let p_user_id: UUID
+            let p_action: String
+            let p_note: String?
+        }
+
+        try await supabase
+            .rpc(
+                "admin_review_advisor",
+                params: Params(
+                    p_user_id: userId,
+                    p_action: action,
+                    p_note: note
+                )
+            )
+            .execute()
+    }
+
+    static func adminSetAccountSuspended(
+        userId: UUID,
+        suspended: Bool
+    ) async throws {
+        struct Params: Encodable {
+            let p_user_id: UUID
+            let p_suspended: Bool
+        }
+
+        try await supabase
+            .rpc(
+                "admin_set_account_suspended",
+                params: Params(
+                    p_user_id: userId,
+                    p_suspended: suspended
+                )
+            )
+            .execute()
+    }
+
     static func adminAnalyticsSummary(
         days: Int = 30
     ) async throws -> AdminAnalyticsSummary {
