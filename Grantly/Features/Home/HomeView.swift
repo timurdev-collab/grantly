@@ -374,10 +374,10 @@ struct HomeView: View {
     private var recommendationsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HomeSectionHeader(
-                title: "Recommended for you",
+                title: "Best matches for your profile",
                 subtitle: profileNeedsSetup
-                    ? "A few trusted opportunities to start with"
-                    : "Based on your current profile",
+                    ? "Complete your profile to unlock stronger matches"
+                    : "AI-assisted ranking based on your profile and study goals",
                 actionTitle: "Explore more",
                 action: openExplore
             )
