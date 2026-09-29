@@ -61,6 +61,165 @@ enum DataService {
             .execute()
     }
 
+    static func submitAdvisorApplication(
+        displayName: String,
+        title: String,
+        organization: String,
+        shortBio: String,
+        bio: String,
+        mentoringApproach: String,
+        yearsExperience: Int?,
+        specialties: [String],
+        countries: [String],
+        languages: [String],
+        linkedinURL: String,
+        websiteURL: String,
+        avatarStoragePath: String?,
+        introVideoStoragePath: String? = nil,
+        introVideoURL: String
+    ) async throws -> AdvisorApplicationProfile {
+        struct Params: Encodable {
+            let p_display_name: String
+            let p_title: String?
+            let p_organization: String?
+            let p_short_bio: String?
+            let p_bio: String?
+            let p_mentoring_approach: String?
+            let p_years_experience: Int?
+            let p_specialties: [String]
+            let p_countries: [String]
+            let p_languages: [String]
+            let p_linkedin_url: String?
+            let p_website_url: String?
+            let p_avatar_storage_path: String?
+            let p_intro_video_storage_path: String?
+            let p_intro_video_url: String?
+        }
+
+        return try await supabase
+            .rpc(
+                "submit_advisor_application",
+                params: Params(
+                    p_display_name: displayName,
+                    p_title: title.nonEmptyOrNil,
+                    p_organization: organization.nonEmptyOrNil,
+                    p_short_bio: shortBio.nonEmptyOrNil,
+                    p_bio: bio.nonEmptyOrNil,
+                    p_mentoring_approach: mentoringApproach.nonEmptyOrNil,
+                    p_years_experience: yearsExperience,
+                    p_specialties: specialties,
+                    p_countries: countries,
+                    p_languages: languages,
+                    p_linkedin_url: linkedinURL.nonEmptyOrNil,
+                    p_website_url: websiteURL.nonEmptyOrNil,
+                    p_avatar_storage_path: avatarStoragePath,
+                    p_intro_video_storage_path: introVideoStoragePath,
+                    p_intro_video_url: introVideoURL.nonEmptyOrNil
+                )
+            )
+            .execute()
+            .value
+    }
+
+    static func myAdvisorApplication()
+        async throws -> AdvisorApplicationProfile? {
+        let userId = try await supabase.auth.session.user.id
+        let rows: [AdvisorApplicationProfile] = try await supabase
+            .from("advisor_profiles")
+            .select()
+            .eq("id", value: userId.uuidString)
+            .limit(1)
+            .execute()
+            .value
+
+        guard var profile = rows.first else { return nil }
+        profile = try await resolveAdvisorApplicationMedia(profile)
+        return profile
+    }
+
+    static func adminAdvisorApplications()
+        async throws -> [AdvisorApplicationProfile] {
+        let rows: [AdvisorApplicationProfile] = try await supabase
+            .rpc("admin_advisor_applications")
+            .execute()
+            .value
+
+        var resolved: [AdvisorApplicationProfile] = []
+        for var profile in rows {
+            profile = try await resolveAdvisorApplicationMedia(profile)
+            resolved.append(profile)
+        }
+        return resolved
+    }
+
+    static func advisorReviewHistory(
+        advisorId: UUID
+    ) async throws -> [AdvisorReviewEvent] {
+        try await supabase
+            .from("advisor_review_events")
+            .select()
+            .eq("advisor_id", value: advisorId.uuidString)
+            .order("created_at", ascending: false)
+            .execute()
+            .value
+    }
+
+    static func uploadAdvisorAvatar(
+        userId: UUID,
+        imageData: Data
+    ) async throws -> String {
+        let path =
+            "\(userId.uuidString.lowercased())/avatar/" +
+            "\(UUID().uuidString.lowercased()).jpg"
+
+        try await supabase.storage
+            .from("advisor-media")
+            .upload(
+                path: path,
+                file: imageData,
+                options: FileOptions(
+                    cacheControl: "3600",
+                    contentType: "image/jpeg",
+                    upsert: false
+                )
+            )
+
+        return path
+    }
+
+    static func signedAdvisorMediaURL(
+        path: String,
+        expiresIn: Int = 3600
+    ) async throws -> String {
+        let url = try await supabase.storage
+            .from("advisor-media")
+            .createSignedURL(
+                path: path,
+                expiresIn: expiresIn
+            )
+
+        return url.absoluteString
+    }
+
+    private static func resolveAdvisorApplicationMedia(
+        _ input: AdvisorApplicationProfile
+    ) async throws -> AdvisorApplicationProfile {
+        var profile = input
+
+        if let path = profile.avatarStoragePath,
+           !path.isEmpty {
+            profile.avatarUrl = try await signedAdvisorMediaURL(path: path)
+        }
+
+        if let path = profile.introVideoStoragePath,
+           !path.isEmpty {
+            profile.introVideoUrl =
+                try await signedAdvisorMediaURL(path: path)
+        }
+
+        return profile
+    }
+
     static func ensureAdvisorConversation(
         assignmentId: UUID
     ) async throws -> UUID {
@@ -135,10 +294,29 @@ enum DataService {
     }
 
     static func availableAdvisors() async throws -> [AdvisorDirectoryProfile] {
-        try await supabase
+        let rows: [AdvisorDirectoryProfile] = try await supabase
             .rpc("available_advisors")
             .execute()
             .value
+
+        var resolved: [AdvisorDirectoryProfile] = []
+        for var advisor in rows {
+            if let path = advisor.avatarStoragePath,
+               !path.isEmpty {
+                advisor.avatarUrl =
+                    try await signedAdvisorMediaURL(path: path)
+            }
+
+            if let path = advisor.introVideoStoragePath,
+               !path.isEmpty {
+                advisor.introVideoUrl =
+                    try await signedAdvisorMediaURL(path: path)
+            }
+
+            resolved.append(advisor)
+        }
+
+        return resolved
     }
 
     static func requestAdvisor(advisorId: UUID) async throws {
@@ -1937,5 +2115,13 @@ enum DataService {
             .from("community_profiles")
             .upsert(row)
             .execute()
+    }
+}
+
+
+private extension String {
+    var nonEmptyOrNil: String? {
+        let value = trimmingCharacters(in: .whitespacesAndNewlines)
+        return value.isEmpty ? nil : value
     }
 }
