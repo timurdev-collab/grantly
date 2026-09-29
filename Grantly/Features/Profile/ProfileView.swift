@@ -1059,31 +1059,310 @@ private struct AdvisorApplicationView: View {
 
     let defaultName: String
 
+    @State private var step = 0
+    @State private var existingApplication: AdvisorApplicationProfile?
+    @State private var loadingApplication = true
+
     @State private var displayName = ""
     @State private var title = ""
+    @State private var organization = ""
+    @State private var yearsExperience = ""
+    @State private var shortBio = ""
     @State private var bio = ""
+    @State private var mentoringApproach = ""
     @State private var specialties = ""
     @State private var countries = ""
     @State private var languages = ""
+    @State private var introVideoURL = ""
+    @State private var linkedinURL = ""
+    @State private var websiteURL = ""
+
+    @State private var selectedPhoto: PhotosPickerItem?
+    @State private var selectedPhotoData: Data?
+    @State private var selectedPhotoImage: UIImage?
+
     @State private var submitting = false
     @State private var submitted = false
     @State private var errorMessage: String?
 
+    private let stepTitles = [
+        "Professional profile",
+        "How you can help",
+        "Introduction & review"
+    ]
+
+    private var normalizedVideoURL: URL? {
+        guard
+            let url = URL(
+                string: introVideoURL
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+            ),
+            url.scheme?.lowercased() == "https",
+            url.host != nil
+        else {
+            return nil
+        }
+
+        return url
+    }
+
     var body: some View {
         Form {
-            Section("Professional profile") {
+            if loadingApplication {
+                Section {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                }
+            } else {
+                if let existingApplication {
+                    applicationStatusSection(existingApplication)
+                }
+
+                Section {
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            Text("Step \(step + 1) of 3")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Theme.accentSoft)
+
+                            Spacer()
+
+                            Text(stepTitles[step])
+                                .font(.caption)
+                                .foregroundStyle(Theme.muted)
+                        }
+
+                        GeometryReader { geometry in
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .fill(Theme.ink.opacity(0.07))
+
+                                Capsule()
+                                    .fill(Theme.accent)
+                                    .frame(
+                                        width:
+                                            geometry.size.width *
+                                            CGFloat(step + 1) / 3
+                                    )
+                            }
+                        }
+                        .frame(height: 6)
+                    }
+                    .padding(.vertical, 4)
+                }
+
+                if step == 0 {
+                    basicProfileStep
+                } else if step == 1 {
+                    expertiseStep
+                } else {
+                    introAndReviewStep
+                }
+
+                if let errorMessage {
+                    Section {
+                        Label(
+                            errorMessage,
+                            systemImage: "exclamationmark.circle.fill"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Theme.danger)
+                    }
+                }
+
+                Section {
+                    HStack(spacing: 12) {
+                        if step > 0 {
+                            Button("Back") {
+                                errorMessage = nil
+                                step -= 1
+                            }
+                            .buttonStyle(.bordered)
+                        }
+
+                        Button {
+                            if step < 2 {
+                                continueToNextStep()
+                            } else {
+                                Task { await submit() }
+                            }
+                        } label: {
+                            HStack {
+                                Spacer()
+                                Text(
+                                    step < 2
+                                        ? "Continue"
+                                        : submitting
+                                            ? "Submitting…"
+                                            : "Submit for review"
+                                )
+                                .fontWeight(.semibold)
+                                Spacer()
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(Theme.accent)
+                        .disabled(submitting)
+                    }
+                }
+
+                Section {
+                    Label(
+                        "Your profile stays private until a Grantly admin approves it.",
+                        systemImage: "lock.shield.fill"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                }
+            }
+        }
+        .navigationTitle("Advisor Application")
+        .navigationBarTitleDisplayMode(.inline)
+        .task { await loadExistingApplication() }
+        .onChange(of: selectedPhoto) {
+            Task { await loadSelectedPhoto() }
+        }
+        .alert(
+            "Application submitted",
+            isPresented: $submitted
+        ) {
+            Button("Done") {
+                dismiss()
+            }
+        } message: {
+            Text(
+                "Your profile is now in the admin review queue. It will not appear to students until it is approved."
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func applicationStatusSection(
+        _ application: AdvisorApplicationProfile
+    ) -> some View {
+        Section("Application status") {
+            HStack(spacing: 10) {
+                Image(systemName: statusIcon(application.approvalStatus))
+                    .foregroundStyle(
+                        statusColor(application.approvalStatus)
+                    )
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(
+                        application.approvalStatus
+                            .replacingOccurrences(of: "_", with: " ")
+                            .capitalized
+                    )
+                    .font(.subheadline.weight(.semibold))
+
+                    Text("Application version \(application.applicationVersion)")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.muted)
+                }
+            }
+
+            if let note = application.reviewNote,
+               !note.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+               ).isEmpty {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Admin feedback")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.muted)
+
+                    Text(note)
+                        .font(.subheadline)
+                }
+            }
+
+            if application.approvalStatus == "pending" {
+                Text(
+                    "You can still update and resubmit while the application is waiting for review."
+                )
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+            }
+        }
+    }
+
+    private var basicProfileStep: some View {
+        Group {
+            Section("Profile photo") {
+                HStack(spacing: 14) {
+                    advisorPhotoPreview
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        PhotosPicker(
+                            selection: $selectedPhoto,
+                            matching: .images
+                        ) {
+                            Label(
+                                selectedPhotoData == nil
+                                    ? "Choose photo"
+                                    : "Change photo",
+                                systemImage: "photo"
+                            )
+                        }
+
+                        Text(
+                            "Use a clear professional headshot. Students will see this in the advisor grid."
+                        )
+                        .font(.caption2)
+                        .foregroundStyle(Theme.muted)
+                    }
+                }
+            }
+
+            Section("Professional details") {
                 TextField("Full name", text: $displayName)
+                    .textContentType(.name)
+
                 TextField(
-                    "Title, e.g. Admissions Counselor",
-                    text: $title
+                    "Professional title",
+                    text: $title,
+                    prompt: Text("Admissions Advisor")
                 )
 
                 TextField(
-                    "Short professional bio",
+                    "Organization (optional)",
+                    text: $organization
+                )
+
+                TextField(
+                    "Years of relevant experience",
+                    text: $yearsExperience
+                )
+                .keyboardType(.numberPad)
+            }
+        }
+    }
+
+    private var expertiseStep: some View {
+        Group {
+            Section("Your introduction") {
+                TextField(
+                    "One-line summary",
+                    text: $shortBio,
+                    axis: .vertical
+                )
+                .lineLimit(2...3)
+
+                TextField(
+                    "Professional background and experience",
                     text: $bio,
                     axis: .vertical
                 )
-                .lineLimit(3...6)
+                .lineLimit(5...10)
+
+                TextField(
+                    "How will you help students?",
+                    text: $mentoringApproach,
+                    axis: .vertical
+                )
+                .lineLimit(4...8)
             }
 
             Section("Expertise") {
@@ -1091,111 +1370,416 @@ private struct AdvisorApplicationView: View {
                     "Specialties, separated by commas",
                     text: $specialties
                 )
+
                 TextField(
                     "Countries or regions, separated by commas",
                     text: $countries
                 )
+
                 TextField(
                     "Languages, separated by commas",
                     text: $languages
                 )
-            }
 
-            Section {
                 Text(
-                    "Advisor profiles are not visible to students until an administrator reviews and approves the application."
+                    "Be specific. For example: US admissions, scholarship essays, graduate applications."
+                )
+                .font(.caption2)
+                .foregroundStyle(Theme.muted)
+            }
+        }
+    }
+
+    private var introAndReviewStep: some View {
+        Group {
+            Section("Introduction video") {
+                TextField(
+                    "https://youtube.com/…",
+                    text: $introVideoURL
+                )
+                .textInputAutocapitalization(.never)
+                .keyboardType(.URL)
+                .autocorrectionDisabled()
+
+                Text(
+                    "Add a short introduction video from YouTube, Loom, Vimeo or another secure HTTPS link. Around 60–90 seconds works best."
                 )
                 .font(.caption)
-                .foregroundStyle(.secondary)
-            }
+                .foregroundStyle(Theme.muted)
 
-            if submitted {
-                Section {
+                if normalizedVideoURL != nil {
                     Label(
-                        "Application submitted for review",
+                        "Video link looks valid",
                         systemImage: "checkmark.circle.fill"
                     )
-                    .foregroundStyle(.green)
+                    .font(.caption)
+                    .foregroundStyle(Theme.green)
+                }
+            }
 
-                    Button("Done") {
-                        dismiss()
+            Section("Professional links") {
+                TextField("LinkedIn URL (optional)", text: $linkedinURL)
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.URL)
+                    .autocorrectionDisabled()
+
+                TextField("Website URL (optional)", text: $websiteURL)
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.URL)
+                    .autocorrectionDisabled()
+            }
+
+            Section("Review") {
+                advisorReviewRow("Name", displayName)
+                advisorReviewRow("Title", title)
+                advisorReviewRow(
+                    "Experience",
+                    yearsExperience.isEmpty
+                        ? "Not specified"
+                        : "\(yearsExperience) years"
+                )
+                advisorReviewRow(
+                    "Specialties",
+                    csvValues(specialties).joined(separator: " · ")
+                )
+                advisorReviewRow(
+                    "Countries",
+                    csvValues(countries).joined(separator: " · ")
+                )
+                advisorReviewRow(
+                    "Languages",
+                    csvValues(languages).joined(separator: " · ")
+                )
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var advisorPhotoPreview: some View {
+        ZStack {
+            Circle()
+                .fill(Theme.surfaceRaised)
+
+            if let image = selectedPhotoImage {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+            } else if let value = existingApplication?.avatarUrl,
+                      let url = URL(string: value) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    default:
+                        Image(systemName: "person.fill")
+                            .foregroundStyle(Theme.muted)
                     }
                 }
             } else {
-                Section {
-                    Button(
-                        submitting
-                            ? "Submitting…"
-                            : "Submit advisor application"
-                    ) {
-                        Task { await submit() }
-                    }
-                    .disabled(
-                        submitting ||
-                        displayName
-                            .trimmingCharacters(
-                                in: .whitespacesAndNewlines
-                            )
-                            .isEmpty
-                    )
-                }
-            }
-
-            if let errorMessage {
-                Section {
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                }
+                Image(systemName: "person.fill")
+                    .font(.system(size: 26))
+                    .foregroundStyle(Theme.muted)
             }
         }
-        .navigationTitle("Advisor Application")
-        .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            if displayName.isEmpty {
+        .frame(width: 78, height: 78)
+        .clipShape(Circle())
+        .overlay(
+            Circle()
+                .stroke(Theme.ink.opacity(0.08), lineWidth: 1)
+        )
+    }
+
+    private func advisorReviewRow(
+        _ label: String,
+        _ value: String
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(label)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Theme.muted)
+
+            Text(
+                value.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ).isEmpty
+                    ? "Not provided"
+                    : value
+            )
+            .font(.subheadline)
+        }
+    }
+
+    private func continueToNextStep() {
+        errorMessage = validationMessage(for: step)
+
+        guard errorMessage == nil else { return }
+        step += 1
+    }
+
+    private func validationMessage(
+        for step: Int
+    ) -> String? {
+        if step == 0 {
+            if displayName.trimmed.isEmpty {
+                return "Please enter your full name."
+            }
+
+            if title.trimmed.isEmpty {
+                return "Please enter your professional title."
+            }
+
+            if selectedPhotoData == nil &&
+                existingApplication?.avatarStoragePath == nil &&
+                existingApplication?.avatarUrl == nil {
+                return "Please add a professional profile photo."
+            }
+
+            if let years = Int(yearsExperience),
+               !(0...80).contains(years) {
+                return "Please check your years of experience."
+            }
+
+            return nil
+        }
+
+        if step == 1 {
+            if bio.trimmed.count < 80 {
+                return "Please add a little more detail to your professional background."
+            }
+
+            if csvValues(specialties).isEmpty {
+                return "Please add at least one specialty."
+            }
+
+            if csvValues(languages).isEmpty {
+                return "Please add at least one language."
+            }
+
+            return nil
+        }
+
+        if normalizedVideoURL == nil {
+            return "Please add a valid HTTPS introduction video link."
+        }
+
+        if !linkedinURL.trimmed.isEmpty &&
+            !isValidHTTPSURL(linkedinURL) {
+            return "Please check your LinkedIn URL."
+        }
+
+        if !websiteURL.trimmed.isEmpty &&
+            !isValidHTTPSURL(websiteURL) {
+            return "Please check your website URL."
+        }
+
+        return nil
+    }
+
+    @MainActor
+    private func loadExistingApplication() async {
+        loadingApplication = true
+        defer { loadingApplication = false }
+
+        do {
+            if let application =
+                try await DataService.myAdvisorApplication() {
+                existingApplication = application
+                populate(from: application)
+            } else if displayName.isEmpty {
                 displayName = defaultName
             }
+        } catch {
+            displayName = displayName.isEmpty
+                ? defaultName
+                : displayName
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func loadSelectedPhoto() async {
+        guard let selectedPhoto else { return }
+
+        do {
+            guard
+                let rawData = try await selectedPhoto
+                    .loadTransferable(type: Data.self),
+                let image = UIImage(data: rawData),
+                let jpegData = resizedJPEGData(
+                    from: image,
+                    maxDimension: 1200,
+                    compressionQuality: 0.82
+                )
+            else {
+                errorMessage = "Could not read that photo."
+                return
+            }
+
+            guard jpegData.count <= 5 * 1024 * 1024 else {
+                errorMessage = "Please choose a smaller photo."
+                return
+            }
+
+            selectedPhotoData = jpegData
+            selectedPhotoImage = UIImage(data: jpegData)
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 
     @MainActor
     private func submit() async {
+        if let message = validationMessage(for: 0) ??
+            validationMessage(for: 1) ??
+            validationMessage(for: 2) {
+            errorMessage = message
+            return
+        }
+
         submitting = true
         errorMessage = nil
         defer { submitting = false }
 
         do {
-            try await DataService.requestAdvisorAccess(
-                displayName: displayName
-                    .trimmingCharacters(
-                        in: .whitespacesAndNewlines
-                    ),
-                title: title
-                    .trimmingCharacters(
-                        in: .whitespacesAndNewlines
-                    ),
-                bio: bio
-                    .trimmingCharacters(
-                        in: .whitespacesAndNewlines
-                    ),
+            let userId = try await supabase.auth.session.user.id
+            var avatarPath = existingApplication?.avatarStoragePath
+
+            if let selectedPhotoData {
+                avatarPath = try await DataService.uploadAdvisorAvatar(
+                    userId: userId,
+                    imageData: selectedPhotoData
+                )
+            }
+
+            let result = try await DataService.submitAdvisorApplication(
+                displayName: displayName.trimmed,
+                title: title.trimmed,
+                organization: organization.trimmed,
+                shortBio: shortBio.trimmed,
+                bio: bio.trimmed,
+                mentoringApproach: mentoringApproach.trimmed,
+                yearsExperience: Int(yearsExperience),
                 specialties: csvValues(specialties),
                 countries: csvValues(countries),
-                languages: csvValues(languages)
+                languages: csvValues(languages),
+                linkedinURL: linkedinURL.trimmed,
+                websiteURL: websiteURL.trimmed,
+                avatarStoragePath: avatarPath,
+                introVideoURL: introVideoURL.trimmed
             )
+
+            existingApplication = result
             submitted = true
         } catch {
             errorMessage = error.localizedDescription
         }
     }
 
+    private func populate(
+        from application: AdvisorApplicationProfile
+    ) {
+        displayName = application.displayName ?? defaultName
+        title = application.title ?? ""
+        organization = application.organization ?? ""
+        yearsExperience = application.yearsExperience
+            .map(String.init) ?? ""
+        shortBio = application.shortBio ?? ""
+        bio = application.bio ?? ""
+        mentoringApproach = application.mentoringApproach ?? ""
+        specialties = application.specialties.joined(separator: ", ")
+        countries = application.countries.joined(separator: ", ")
+        languages = application.languages.joined(separator: ", ")
+        introVideoURL = application.introVideoUrl ?? ""
+        linkedinURL = application.linkedinUrl ?? ""
+        websiteURL = application.websiteUrl ?? ""
+    }
+
     private func csvValues(_ value: String) -> [String] {
         value
             .split(separator: ",")
-            .map {
-                $0.trimmingCharacters(
-                    in: .whitespacesAndNewlines
-                )
-            }
+            .map { String($0).trimmed }
             .filter { !$0.isEmpty }
+    }
+
+    private func isValidHTTPSURL(
+        _ value: String
+    ) -> Bool {
+        guard
+            let url = URL(string: value.trimmed),
+            url.scheme?.lowercased() == "https",
+            url.host != nil
+        else {
+            return false
+        }
+
+        return true
+    }
+
+    private func resizedJPEGData(
+        from image: UIImage,
+        maxDimension: CGFloat,
+        compressionQuality: CGFloat
+    ) -> Data? {
+        let size = image.size
+        let longestSide = max(size.width, size.height)
+
+        guard longestSide > 0 else { return nil }
+
+        let scale = min(1, maxDimension / longestSide)
+        let targetSize = CGSize(
+            width: size.width * scale,
+            height: size.height * scale
+        )
+
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        let resized = renderer.image { _ in
+            image.draw(
+                in: CGRect(
+                    origin: .zero,
+                    size: targetSize
+                )
+            )
+        }
+
+        return resized.jpegData(
+            compressionQuality: compressionQuality
+        )
+    }
+
+    private func statusIcon(_ status: String) -> String {
+        switch status {
+        case "approved":
+            return "checkmark.seal.fill"
+        case "changes_requested":
+            return "pencil.circle.fill"
+        case "rejected":
+            return "xmark.circle.fill"
+        case "suspended":
+            return "pause.circle.fill"
+        default:
+            return "clock.fill"
+        }
+    }
+
+    private func statusColor(_ status: String) -> Color {
+        switch status {
+        case "approved":
+            return Theme.green
+        case "changes_requested":
+            return Theme.sand
+        case "rejected", "suspended":
+            return Theme.danger
+        default:
+            return Theme.accentSoft
+        }
+    }
+}
+
+private extension String {
+    var trimmed: String {
+        trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }
