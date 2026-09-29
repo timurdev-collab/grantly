@@ -46,6 +46,50 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     }
 }
 
+struct LanguageFlagStrip: View {
+    @AppStorage("grantly.language")
+    private var language: AppLanguage = .english
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(AppLanguage.allCases) { option in
+                Button {
+                    language = option
+                } label: {
+                    Text(option.flag)
+                        .font(.system(size: 21))
+                        .frame(width: 34, height: 34)
+                        .background(
+                            language == option
+                                ? Theme.surfaceRaised
+                                : Color.clear
+                        )
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                                .stroke(
+                                    language == option
+                                        ? Theme.accent.opacity(0.45)
+                                        : Theme.ink.opacity(0.06),
+                                    lineWidth: language == option ? 1.5 : 1
+                                )
+                        )
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text(option.title))
+            }
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 7)
+        .background(Theme.surface)
+        .clipShape(Capsule())
+        .overlay(
+            Capsule()
+                .stroke(Theme.ink.opacity(0.06), lineWidth: 1)
+        )
+    }
+}
+
 struct LanguageFlagMenu: View {
     @AppStorage("grantly.language")
     private var language: AppLanguage = .english
