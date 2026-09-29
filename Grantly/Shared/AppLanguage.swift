@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 enum AppLanguage: String, CaseIterable, Identifiable {
     case english = "en"
@@ -29,6 +30,54 @@ enum AppLanguage: String, CaseIterable, Identifiable {
         case .spanish: return "Español"
         case .german: return "Deutsch"
         }
+    }
+
+    var flag: String {
+        switch self {
+        case .english: return "🇬🇧"
+        case .russian: return "🇷🇺"
+        case .vietnamese: return "🇻🇳"
+        case .arabic: return "🇸🇦"
+        case .chinese: return "🇨🇳"
+        case .french: return "🇫🇷"
+        case .spanish: return "🇪🇸"
+        case .german: return "🇩🇪"
+        }
+    }
+}
+
+struct LanguageFlagMenu: View {
+    @AppStorage("grantly.language")
+    private var language: AppLanguage = .english
+
+    var body: some View {
+        Menu {
+            ForEach(AppLanguage.allCases) { option in
+                Button {
+                    language = option
+                } label: {
+                    HStack {
+                        Text("\(option.flag) \(option.title)")
+                        if language == option {
+                            Image(systemName: "checkmark")
+                        }
+                    }
+                }
+            }
+        } label: {
+            Text(language.flag)
+                .font(.system(size: 22))
+                .frame(width: 42, height: 42)
+                .background(Theme.surface)
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Theme.ink.opacity(0.08), lineWidth: 1)
+                )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text("Language"))
+        .accessibilityValue(Text(language.title))
     }
 }
 
