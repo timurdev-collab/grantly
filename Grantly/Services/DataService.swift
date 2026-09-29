@@ -123,12 +123,12 @@ enum DataService {
 
     static func myAdvisorApplication()
         async throws -> AdvisorApplicationProfile? {
-        let rows: [AdvisorApplicationProfile] = try await supabase
+        let profile: AdvisorApplicationProfile? = try await supabase
             .rpc("my_advisor_application")
             .execute()
             .value
 
-        guard var profile = rows.first else { return nil }
+        guard var profile else { return nil }
         profile = try await resolveAdvisorApplicationMedia(profile)
         return profile
     }
