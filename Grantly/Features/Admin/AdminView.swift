@@ -1255,6 +1255,30 @@ struct AdminPeopleView: View {
                 )
             }
 
+            Section("Advisor review") {
+                NavigationLink {
+                    AdminAdvisorApplicationsView()
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "person.crop.circle.badge.checkmark")
+                            .foregroundStyle(Theme.accent)
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Advisor applications")
+                                .font(.subheadline.weight(.semibold))
+
+                            Text(
+                                pendingAdvisorCount == 0
+                                    ? "No applications waiting for review"
+                                    : "\(pendingAdvisorCount) application(s) waiting"
+                            )
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+
             Section {
                 TextField("Search people", text: $query)
                     .textInputAutocapitalization(.never)
@@ -1478,6 +1502,489 @@ struct AdminPeopleView: View {
                 suspended: suspended
             )
             await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+struct AdminAdvisorApplicationsView: View {
+    @State private var applications: [AdvisorApplicationProfile] = []
+    @State private var filter = "pending"
+    @State private var loading = true
+    @State private var errorMessage: String?
+
+    private let filters = [
+        "pending",
+        "changes_requested",
+        "approved",
+        "rejected",
+        "suspended"
+    ]
+
+    private var filtered: [AdvisorApplicationProfile] {
+        applications.filter { $0.approvalStatus == filter }
+    }
+
+    var body: some View {
+        List {
+            Section {
+                Picker("Status", selection: $filter) {
+                    ForEach(filters, id: \.self) { status in
+                        Text(
+                            status
+                                .replacingOccurrences(
+                                    of: "_",
+                                    with: " "
+                                )
+                                .capitalized
+                        )
+                        .tag(status)
+                    }
+                }
+                .pickerStyle(.menu)
+            }
+
+            if loading {
+                Section {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                }
+            } else if filtered.isEmpty {
+                Section {
+                    ContentUnavailableView(
+                        "No applications",
+                        systemImage: "person.crop.circle.badge.checkmark",
+                        description: Text(
+                            "There are no \(filter.replacingOccurrences(of: "_", with: " ")) advisor applications."
+                        )
+                    )
+                }
+            } else {
+                Section {
+                    ForEach(filtered) { application in
+                        NavigationLink {
+                            AdminAdvisorReviewView(
+                                application: application,
+                                onUpdated: {
+                                    await load()
+                                }
+                            )
+                        } label: {
+                            advisorRow(application)
+                        }
+                    }
+                }
+            }
+
+            if let errorMessage {
+                Section {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(Theme.danger)
+                }
+            }
+        }
+        .navigationTitle("Advisor Applications")
+        .refreshable { await load() }
+        .task { await load() }
+    }
+
+    private func advisorRow(
+        _ application: AdvisorApplicationProfile
+    ) -> some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(Theme.surfaceRaised)
+
+                if let value = application.avatarUrl,
+                   let url = URL(string: value) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        default:
+                            Image(systemName: "person.fill")
+                                .foregroundStyle(Theme.muted)
+                        }
+                    }
+                } else {
+                    Image(systemName: "person.fill")
+                        .foregroundStyle(Theme.muted)
+                }
+            }
+            .frame(width: 54, height: 54)
+            .clipShape(Circle())
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(
+                    application.displayName?.nonEmpty
+                        ?? "Advisor applicant"
+                )
+                .font(.subheadline.weight(.semibold))
+
+                Text(
+                    [
+                        application.title,
+                        application.organization
+                    ]
+                    .compactMap { $0?.nonEmpty }
+                    .joined(separator: " · ")
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .lineLimit(2)
+
+                Text(
+                    application.specialties
+                        .prefix(3)
+                        .joined(separator: " · ")
+                )
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+            }
+
+            Spacer()
+
+            Text("v\(application.applicationVersion)")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Theme.muted)
+        }
+        .padding(.vertical, 3)
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            applications =
+                try await DataService.adminAdvisorApplications()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+struct AdminAdvisorReviewView: View {
+    let application: AdvisorApplicationProfile
+    let onUpdated: () async -> Void
+
+    @Environment(\.dismiss) private var dismiss
+    @State private var reviewNote = ""
+    @State private var workingAction: String?
+    @State private var errorMessage: String?
+    @State private var showActionConfirmation: String?
+
+    var body: some View {
+        List {
+            Section {
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(Theme.surfaceRaised)
+
+                        if let value = application.avatarUrl,
+                           let url = URL(string: value) {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                default:
+                                    Image(systemName: "person.fill")
+                                        .foregroundStyle(Theme.muted)
+                                }
+                            }
+                        } else {
+                            Image(systemName: "person.fill")
+                                .foregroundStyle(Theme.muted)
+                        }
+                    }
+                    .frame(width: 78, height: 78)
+                    .clipShape(Circle())
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(
+                            application.displayName?.nonEmpty
+                                ?? "Advisor applicant"
+                        )
+                        .font(.title3.bold())
+
+                        if let title = application.title?.nonEmpty {
+                            Text(title)
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.accentSoft)
+                        }
+
+                        if let org = application.organization?.nonEmpty {
+                            Text(org)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+
+            Section("Background") {
+                if let summary = application.shortBio?.nonEmpty {
+                    Text(summary)
+                        .font(.subheadline.weight(.semibold))
+                }
+
+                Text(
+                    application.bio?.nonEmpty
+                        ?? "No background provided."
+                )
+
+                if let approach =
+                    application.mentoringApproach?.nonEmpty {
+                    LabeledContent("How they help") {
+                        Text(approach)
+                            .multilineTextAlignment(.trailing)
+                    }
+                }
+
+                if let years = application.yearsExperience {
+                    LabeledContent(
+                        "Experience",
+                        value: "\(years) years"
+                    )
+                }
+            }
+
+            Section("Expertise") {
+                advisorList(
+                    "Specialties",
+                    application.specialties
+                )
+                advisorList(
+                    "Countries",
+                    application.countries
+                )
+                advisorList(
+                    "Languages",
+                    application.languages
+                )
+            }
+
+            Section("Introduction video") {
+                if let value = application.introVideoUrl,
+                   let url = URL(string: value) {
+                    Link(destination: url) {
+                        Label(
+                            "Open introduction video",
+                            systemImage: "play.rectangle.fill"
+                        )
+                    }
+                } else {
+                    Label(
+                        "No introduction video",
+                        systemImage: "exclamationmark.triangle"
+                    )
+                    .foregroundStyle(Theme.danger)
+                }
+            }
+
+            if application.linkedinUrl?.nonEmpty != nil ||
+                application.websiteUrl?.nonEmpty != nil {
+                Section("Verification links") {
+                    if let value = application.linkedinUrl,
+                       let url = URL(string: value) {
+                        Link("LinkedIn", destination: url)
+                    }
+
+                    if let value = application.websiteUrl,
+                       let url = URL(string: value) {
+                        Link("Website", destination: url)
+                    }
+                }
+            }
+
+            Section("Admin note") {
+                TextEditor(text: $reviewNote)
+                    .frame(minHeight: 90)
+
+                Text(
+                    "A note is required when requesting changes or rejecting an application."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
+            Section("Decision") {
+                if application.approvalStatus == "pending" ||
+                    application.approvalStatus == "changes_requested" {
+                    Button {
+                        showActionConfirmation = "approve"
+                    } label: {
+                        Label(
+                            "Approve & publish",
+                            systemImage: "checkmark.seal.fill"
+                        )
+                    }
+                    .tint(.green)
+
+                    Button {
+                        showActionConfirmation = "request_changes"
+                    } label: {
+                        Label(
+                            "Request changes",
+                            systemImage: "pencil.circle"
+                        )
+                    }
+
+                    Button(role: .destructive) {
+                        showActionConfirmation = "reject"
+                    } label: {
+                        Label(
+                            "Reject application",
+                            systemImage: "xmark.circle"
+                        )
+                    }
+                }
+
+                if application.approvalStatus == "approved" {
+                    Button(role: .destructive) {
+                        showActionConfirmation = "suspend"
+                    } label: {
+                        Label(
+                            "Suspend advisor",
+                            systemImage: "pause.circle"
+                        )
+                    }
+                }
+
+                if application.approvalStatus == "suspended" {
+                    Button {
+                        showActionConfirmation = "restore"
+                    } label: {
+                        Label(
+                            "Restore advisor",
+                            systemImage: "arrow.counterclockwise.circle"
+                        )
+                    }
+                }
+            }
+
+            if let errorMessage {
+                Section {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(Theme.danger)
+                }
+            }
+        }
+        .navigationTitle("Review Advisor")
+        .navigationBarTitleDisplayMode(.inline)
+        .disabled(workingAction != nil)
+        .confirmationDialog(
+            confirmationTitle,
+            isPresented: Binding(
+                get: { showActionConfirmation != nil },
+                set: {
+                    if !$0 {
+                        showActionConfirmation = nil
+                    }
+                }
+            )
+        ) {
+            if let action = showActionConfirmation {
+                Button(
+                    actionTitle(action),
+                    role: action == "reject" ||
+                        action == "suspend"
+                        ? .destructive
+                        : nil
+                ) {
+                    Task { await perform(action) }
+                }
+
+                Button("Cancel", role: .cancel) {}
+            }
+        }
+    }
+
+    private var confirmationTitle: String {
+        guard let action = showActionConfirmation else {
+            return "Review advisor"
+        }
+
+        return actionTitle(action) + "?"
+    }
+
+    private func actionTitle(_ action: String) -> String {
+        switch action {
+        case "approve":
+            return "Approve & publish"
+        case "request_changes":
+            return "Request changes"
+        case "reject":
+            return "Reject application"
+        case "suspend":
+            return "Suspend advisor"
+        case "restore":
+            return "Restore advisor"
+        default:
+            return "Continue"
+        }
+    }
+
+    private func advisorList(
+        _ label: String,
+        _ values: [String]
+    ) -> some View {
+        LabeledContent(label) {
+            Text(
+                values.isEmpty
+                    ? "Not provided"
+                    : values.joined(separator: " · ")
+            )
+            .multilineTextAlignment(.trailing)
+        }
+    }
+
+    @MainActor
+    private func perform(
+        _ action: String
+    ) async {
+        if ["request_changes", "reject"].contains(action) &&
+            reviewNote
+                .trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                )
+                .isEmpty {
+            errorMessage =
+                "Please add a clear note for the advisor first."
+            showActionConfirmation = nil
+            return
+        }
+
+        workingAction = action
+        defer { workingAction = nil }
+
+        do {
+            try await DataService.adminReviewAdvisor(
+                userId: application.id,
+                action: action,
+                note: reviewNote
+                    .trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    )
+                    .nonEmpty
+            )
+            await onUpdated()
+            dismiss()
         } catch {
             errorMessage = error.localizedDescription
         }
