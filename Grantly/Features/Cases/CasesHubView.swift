@@ -1193,7 +1193,7 @@ struct UniversityCaseDetailView: View {
             let data = try Data(contentsOf: url)
 
             guard data.count <= 6 * 1024 * 1024 else {
-                errorMessage = "Please choose a file smaller than 6 MB."
+                errorMessage = L10n.string("Please choose a file smaller than 6 MB.")
                 return
             }
 
@@ -1212,7 +1212,7 @@ struct UniversityCaseDetailView: View {
                 "image/heic",
                 "image/heif"
             ].contains(contentType) else {
-                errorMessage = "Please choose a PDF or image file."
+                errorMessage = L10n.string("Please choose a PDF or image file.")
                 return
             }
 
