@@ -1,4 +1,7 @@
 import SwiftUI
+import LiveKit
+import UIKit
+import Combine
 
 struct AdvisorsView: View {
     @State private var advisors: [AdvisorDirectoryProfile] = []
@@ -358,69 +361,159 @@ struct AdvisorChatDestination: Identifiable {
 struct AdvisorCallPreparationView: View {
     @Environment(\.dismiss) private var dismiss
     @State var session: AdvisorCallSession
+    @StateObject private var call = AdvisorCallController()
     @State private var recordingConsent = false
     @State private var savingConsent = false
     @State private var errorMessage: String?
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 18) {
-                Label(
-                    "Secure advisor video session",
-                    systemImage: "video.fill"
-                )
-                .font(.title3.bold())
-                .foregroundStyle(Theme.ink)
+            ZStack {
+                Theme.pageBackground
+                    .ignoresSafeArea()
 
-                Text(
-                    "The Grantly relationship and room are ready. Camera, microphone and screen sharing connect through the configured realtime media service."
-                )
-                .font(.subheadline)
-                .foregroundStyle(Theme.muted)
+                VStack(spacing: 16) {
+                    ZStack(alignment: .bottomTrailing) {
+                        LiveKitTrackView(track: call.remoteVideoTrack)
+                            .background(Theme.surface)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .overlay {
+                                if call.remoteVideoTrack == nil {
+                                    VStack(spacing: 10) {
+                                        Image(systemName: "video.fill")
+                                            .font(.system(size: 28))
+                                            .foregroundStyle(Theme.accentSoft)
 
-                Toggle(
-                    "Allow this session to be recorded",
-                    isOn: $recordingConsent
-                )
-                .tint(Theme.accent)
-                .onChange(of: recordingConsent) {
-                    Task { await updateRecordingConsent() }
+                                        Text(
+                                            call.connected
+                                                ? "Waiting for the other participant"
+                                                : "Preparing secure video call"
+                                        )
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(Theme.ink)
+                                    }
+                                }
+                            }
+
+                        LiveKitTrackView(track: call.localVideoTrack)
+                            .frame(width: 112, height: 154)
+                            .background(Theme.surfaceRaised)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(
+                                        Theme.ink.opacity(0.08),
+                                        lineWidth: 1
+                                    )
+                            )
+                            .padding(12)
+                    }
+                    .frame(maxHeight: .infinity)
+
+                    HStack(spacing: 12) {
+                        callControl(
+                            icon: call.microphoneEnabled
+                                ? "mic.fill"
+                                : "mic.slash.fill",
+                            active: call.microphoneEnabled
+                        ) {
+                            Task { await call.toggleMicrophone() }
+                        }
+
+                        callControl(
+                            icon: call.cameraEnabled
+                                ? "video.fill"
+                                : "video.slash.fill",
+                            active: call.cameraEnabled
+                        ) {
+                            Task { await call.toggleCamera() }
+                        }
+
+                        callControl(
+                            icon: "rectangle.on.rectangle",
+                            active: call.screenSharing
+                        ) {
+                            Task { await call.toggleScreenShare() }
+                        }
+
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "phone.down.fill")
+                                .font(.system(size: 18, weight: .bold))
+                                .frame(width: 52, height: 52)
+                                .background(Color.red)
+                                .foregroundStyle(.white)
+                                .clipShape(Circle())
+                        }
+                    }
+
+                    Toggle(
+                        "Allow session recording",
+                        isOn: $recordingConsent
+                    )
+                    .tint(Theme.accent)
+                    .onChange(of: recordingConsent) {
+                        Task { await updateRecordingConsent() }
+                    }
+
+                    Text(
+                        "Recording requires explicit consent from both the student and advisor. Screen sharing uses the iOS system capture permission."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+
+                    if let message = errorMessage ?? call.errorMessage {
+                        Text(message)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
                 }
-
-                Text(
-                    "Recording only becomes available after both the student and advisor explicitly consent."
-                )
-                .font(.caption)
-                .foregroundStyle(Theme.muted)
-
-                Label(
-                    "Screen sharing is allowed for this session",
-                    systemImage: "rectangle.on.rectangle"
-                )
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.ink)
-
-                Spacer()
-
-                Button("Close") {
-                    dismiss()
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 48)
-                .background(Theme.surfaceRaised)
-                .foregroundStyle(Theme.ink)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-
-                if let errorMessage {
-                    Text(errorMessage)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                }
+                .padding()
             }
-            .padding()
-            .background(Theme.pageBackground)
-            .navigationTitle("Video Call")
+            .navigationTitle("Advisor Video Call")
             .navigationBarTitleDisplayMode(.inline)
+            .task {
+                await connect()
+            }
+        }
+    }
+
+    private func callControl(
+        icon: String,
+        active: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.system(size: 17, weight: .semibold))
+                .frame(width: 52, height: 52)
+                .background(
+                    active
+                        ? Theme.accent
+                        : Theme.surfaceRaised
+                )
+                .foregroundStyle(
+                    active
+                        ? Theme.onAccent
+                        : Theme.ink
+                )
+                .clipShape(Circle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    @MainActor
+    private func connect() async {
+        do {
+            let credentials =
+                try await DataService.liveKitCallCredentials(
+                    callId: session.id
+                )
+            try await call.connect(credentials)
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 
@@ -440,6 +533,144 @@ struct AdvisorCallPreparationView: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+private final class AdvisorCallController:
+    NSObject,
+    ObservableObject,
+    RoomDelegate
+{
+    @Published var localVideoTrack: VideoTrack?
+    @Published var remoteVideoTrack: VideoTrack?
+    @Published var connected = false
+    @Published var cameraEnabled = false
+    @Published var microphoneEnabled = false
+    @Published var screenSharing = false
+    @Published var errorMessage: String?
+
+    lazy var room = Room(delegate: self)
+
+    @MainActor
+    func connect(
+        _ credentials: LiveKitCallCredentials
+    ) async throws {
+        do {
+            try await room.connect(
+                url: credentials.url,
+                token: credentials.token
+            )
+
+            try await room.localParticipant
+                .setCamera(enabled: true)
+            try await room.localParticipant
+                .setMicrophone(enabled: true)
+
+            connected = true
+            cameraEnabled = true
+            microphoneEnabled = true
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+            throw error
+        }
+    }
+
+    @MainActor
+    func toggleCamera() async {
+        do {
+            let next = !cameraEnabled
+            try await room.localParticipant
+                .setCamera(enabled: next)
+            cameraEnabled = next
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    func toggleMicrophone() async {
+        do {
+            let next = !microphoneEnabled
+            try await room.localParticipant
+                .setMicrophone(enabled: next)
+            microphoneEnabled = next
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    func toggleScreenShare() async {
+        do {
+            let next = !screenSharing
+            try await room.localParticipant
+                .setScreenShare(enabled: next)
+            screenSharing = next
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func room(
+        _: Room,
+        participant _: LocalParticipant,
+        didPublishTrack publication: LocalTrackPublication
+    ) {
+        guard let track = publication.track as? VideoTrack else {
+            return
+        }
+
+        DispatchQueue.main.async {
+            if publication.source == .camera {
+                self.localVideoTrack = track
+            }
+        }
+    }
+
+    func room(
+        _: Room,
+        participant _: RemoteParticipant,
+        didSubscribeTrack publication: RemoteTrackPublication
+    ) {
+        guard let track = publication.track as? VideoTrack else {
+            return
+        }
+
+        DispatchQueue.main.async {
+            self.remoteVideoTrack = track
+        }
+    }
+
+    func room(
+        _: Room,
+        participant _: RemoteParticipant,
+        didUnsubscribeTrack publication: RemoteTrackPublication
+    ) {
+        guard publication.track is VideoTrack else {
+            return
+        }
+
+        DispatchQueue.main.async {
+            self.remoteVideoTrack = nil
+        }
+    }
+}
+
+private struct LiveKitTrackView: UIViewRepresentable {
+    let track: VideoTrack?
+
+    func makeUIView(context: Context) -> VideoView {
+        let view = VideoView()
+        view.clipsToBounds = true
+        return view
+    }
+
+    func updateUIView(
+        _ uiView: VideoView,
+        context: Context
+    ) {
+        uiView.track = track
     }
 }
 
