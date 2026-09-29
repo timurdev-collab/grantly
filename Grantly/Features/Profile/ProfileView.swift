@@ -6,6 +6,7 @@ struct ProfileView: View {
     @Environment(AuthStore.self) private var auth
     @Binding var profile: StudentProfile?
     @AppStorage("grantly.appearance") private var appearance: AppAppearance = .system
+    @AppStorage("grantly.language") private var language: AppLanguage = .english
 
     @State private var fullName = ""
     @State private var nationality = ""
@@ -389,6 +390,16 @@ struct ProfileView: View {
             .tint(Theme.accent)
             .padding(.vertical, 12)
             .accessibilityHint("System follows your device. Light uses cream and brown; dark uses navy and blue.")
+
+            Divider()
+
+            Picker("Language", selection: $language) {
+                ForEach(AppLanguage.allCases) { option in
+                    Text(option.title).tag(option)
+                }
+            }
+            .tint(Theme.accent)
+            .padding(.vertical, 12)
 
             Divider()
 
