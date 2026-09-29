@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var scholarshipApplications: [SavedScholarshipItem] = []
     @State private var loading = true
     @State private var unreadNotifications = 0
+    @State private var avatarURL: String?
 
     private var profileNeedsSetup: Bool {
         guard let profile else { return true }
@@ -113,7 +114,7 @@ struct HomeView: View {
     private var greetingHeader: some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 5) {
-                Text(firstName.map { "Good morning, \($0)" } ?? "Good morning")
+                Text(firstName.map { "Hi, \($0)" } ?? "Hi")
                     .font(.system(size: 29, weight: .bold))
                     .foregroundStyle(Theme.ink)
 
@@ -124,40 +125,90 @@ struct HomeView: View {
 
             Spacer()
 
-            NavigationLink {
-                NotificationInboxView()
-            } label: {
-                ZStack(alignment: .topTrailing) {
-                    Circle()
-                        .fill(Theme.surface)
+            HStack(spacing: 10) {
+                NavigationLink {
+                    NotificationInboxView()
+                } label: {
+                    ZStack(alignment: .topTrailing) {
+                        Circle()
+                            .fill(Theme.surface)
+                            .frame(width: 42, height: 42)
+
+                        Image(
+                            systemName:
+                                unreadNotifications > 0
+                                ? "bell.fill"
+                                : "bell"
+                        )
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(Theme.ink.opacity(0.84))
                         .frame(width: 42, height: 42)
 
-                    Image(
-                        systemName:
-                            unreadNotifications > 0
-                            ? "bell.fill"
-                            : "bell"
-                    )
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Theme.ink.opacity(0.84))
-                    .frame(width: 42, height: 42)
-
-                    if unreadNotifications > 0 {
-                        Text(
-                            unreadNotifications > 9
-                                ? "9+"
-                                : "\(unreadNotifications)"
-                        )
-                        .font(.system(size: 8, weight: .bold))
-                        .foregroundStyle(Theme.onAccent)
-                        .frame(minWidth: 16, minHeight: 16)
-                        .background(Theme.orange)
-                        .clipShape(Circle())
-                        .offset(x: 2, y: -2)
+                        if unreadNotifications > 0 {
+                            Text(
+                                unreadNotifications > 9
+                                    ? "9+"
+                                    : "\(unreadNotifications)"
+                            )
+                            .font(.system(size: 8, weight: .bold))
+                            .foregroundStyle(Theme.onAccent)
+                            .frame(minWidth: 16, minHeight: 16)
+                            .background(Theme.orange)
+                            .clipShape(Circle())
+                            .offset(x: 2, y: -2)
+                        }
                     }
                 }
+                .buttonStyle(.plain)
+
+                Button(action: openProfile) {
+                    ZStack {
+                        Circle()
+                            .fill(Theme.surface)
+                            .frame(width: 42, height: 42)
+
+                        if let avatarURL,
+                           let url = URL(string: avatarURL) {
+                            AsyncImage(url: url) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            } placeholder: {
+                                profileAvatarFallback
+                            }
+                            .frame(width: 38, height: 38)
+                            .clipShape(Circle())
+                        } else {
+                            profileAvatarFallback
+                        }
+                    }
+                    .overlay(
+                        Circle()
+                            .stroke(Theme.ink.opacity(0.08), lineWidth: 1)
+                    )
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Open profile")
             }
-            .buttonStyle(.plain)
+        }
+    }
+
+    @ViewBuilder
+    private var profileAvatarFallback: some View {
+        if let initial = firstName?.first {
+            Text(String(initial).uppercased())
+                .font(.system(size: 15, weight: .bold))
+                .foregroundStyle(Theme.ink)
+                .frame(width: 38, height: 38)
+                .background(Theme.surfaceRaised)
+                .clipShape(Circle())
+        } else {
+            Image(systemName: "person.fill")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(Theme.ink.opacity(0.72))
+                .frame(width: 38, height: 38)
+                .background(Theme.surfaceRaised)
+                .clipShape(Circle())
         }
     }
 
@@ -323,10 +374,10 @@ struct HomeView: View {
     private var recommendationsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HomeSectionHeader(
-                title: "Recommended for you",
+                title: "Best matches for your profile",
                 subtitle: profileNeedsSetup
-                    ? "A few trusted opportunities to start with"
-                    : "Based on your current profile",
+                    ? "Complete your profile to unlock stronger matches"
+                    : "AI-assisted ranking based on your profile and study goals",
                 actionTitle: "Explore more",
                 action: openExplore
             )
@@ -474,6 +525,15 @@ struct HomeView: View {
     private func load() async {
         loading = true
         defer { loading = false }
+
+        if let userId = profile?.id,
+           let communityProfile = try? await DataService.currentCommunityProfile(
+               userId: userId
+           ) {
+            avatarURL = communityProfile.avatarUrl
+        } else {
+            avatarURL = nil
+        }
 
         async let caseRows = DataService.universityApplicationCases()
         async let savedRows = DataService.savedScholarshipItems()
