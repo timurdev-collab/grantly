@@ -167,14 +167,20 @@ private struct AdminPortalView: View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Admin Portal")
-                            .font(.system(size: 32, weight: .bold))
-                            .foregroundStyle(Theme.ink)
+                    HStack(alignment: .top, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Admin Portal")
+                                .font(.system(size: 32, weight: .bold))
+                                .foregroundStyle(Theme.ink)
 
-                        Text("Control students, advisors and Grantly operations")
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.muted)
+                            Text("Control students, advisors and Grantly operations")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.muted)
+                        }
+
+                        Spacer()
+
+                        LanguageFlagMenu()
                     }
 
                     NavigationLink {
@@ -280,16 +286,22 @@ private struct AdvisorPortalView: View {
         NavigationStack {
             List {
                 Section {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Advisor Portal")
-                            .font(.system(size: 30, weight: .bold))
-                            .foregroundStyle(Theme.ink)
+                    HStack(alignment: .top, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Advisor Portal")
+                                .font(.system(size: 30, weight: .bold))
+                                .foregroundStyle(Theme.ink)
 
-                        Text(
-                            "Manage students who registered with you"
-                        )
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.muted)
+                            Text(
+                                "Manage students who registered with you"
+                            )
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                        }
+
+                        Spacer()
+
+                        LanguageFlagMenu()
                     }
                     .padding(.vertical, 8)
                 }
