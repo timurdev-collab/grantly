@@ -29,6 +29,38 @@ enum DataService {
             .execute()
     }
 
+    static func requestAdvisorAccess(
+        displayName: String,
+        title: String,
+        bio: String,
+        specialties: [String],
+        countries: [String],
+        languages: [String]
+    ) async throws {
+        struct Params: Encodable {
+            let p_display_name: String
+            let p_title: String?
+            let p_bio: String?
+            let p_specialties: [String]
+            let p_countries: [String]
+            let p_languages: [String]
+        }
+
+        try await supabase
+            .rpc(
+                "request_advisor_access",
+                params: Params(
+                    p_display_name: displayName,
+                    p_title: title.isEmpty ? nil : title,
+                    p_bio: bio.isEmpty ? nil : bio,
+                    p_specialties: specialties,
+                    p_countries: countries,
+                    p_languages: languages
+                )
+            )
+            .execute()
+    }
+
     static func adminUserAccounts() async throws -> [AdminUserAccount] {
         try await supabase
             .rpc("admin_user_accounts")
