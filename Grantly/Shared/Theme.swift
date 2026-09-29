@@ -15,7 +15,7 @@ enum AppAppearance: String, CaseIterable, Identifiable {
 }
 
 enum Theme {
-    // Preserve the original midnight navy/electric blue dark palette; light stays cream/brown.
+    // Dark mode uses deep forest green with cream text; light mode uses warm cream with dark green accents.
     private static func adaptive(light: UInt32, dark: (CGFloat, CGFloat, CGFloat), darkAlpha: CGFloat = 1) -> Color {
         Color(uiColor: UIColor { traits in
             if traits.userInterfaceStyle == .dark {
@@ -31,22 +31,22 @@ enum Theme {
         })
     }
 
-    static let navyDeep = adaptive(light: 0xF7F1E7, dark: (0.004, 0.027, 0.055))
-    static let navy = adaptive(light: 0xF0E7DA, dark: (0.010, 0.055, 0.105))
-    static let surface = adaptive(light: 0xFFFCF6, dark: (0.030, 0.095, 0.165))
-    static let surfaceRaised = adaptive(light: 0xEFE4D5, dark: (0.055, 0.125, 0.205))
-    static let ink = adaptive(light: 0x493023, dark: (1, 1, 1))
-    static let muted = adaptive(light: 0x745B4B, dark: (1, 1, 1), darkAlpha: 0.62)
-    static let accent = adaptive(light: 0x845B3C, dark: (0.025, 0.54, 1))
-    static let accentSoft = adaptive(light: 0x795134, dark: (0.18, 0.68, 1))
-    static let onAccent = Color.white
-    static let green = adaptive(light: 0x246B48, dark: (0.16, 0.82, 0.55))
+    static let navyDeep = adaptive(light: 0xF7F1E4, dark: (0.043, 0.184, 0.149))
+    static let navy = adaptive(light: 0xEFE6D6, dark: (0.071, 0.239, 0.196))
+    static let surface = adaptive(light: 0xFFF9EE, dark: (0.090, 0.282, 0.231))
+    static let surfaceRaised = adaptive(light: 0xEFE4D2, dark: (0.125, 0.329, 0.278))
+    static let ink = adaptive(light: 0x14382F, dark: (0.965, 0.941, 0.886))
+    static let muted = adaptive(light: 0x49675E, dark: (0.965, 0.941, 0.886), darkAlpha: 0.68)
+    static let accent = adaptive(light: 0x1F5A48, dark: (0.776, 0.847, 0.737))
+    static let accentSoft = adaptive(light: 0x34725E, dark: (0.859, 0.894, 0.808))
+    static let onAccent = adaptive(light: 0xFFF9EE, dark: (0.043, 0.184, 0.149))
+    static let green = adaptive(light: 0x2E6B55, dark: (0.608, 0.776, 0.655))
     static let danger = adaptive(light: 0xB32D39, dark: (1, 0.28, 0.34))
 
     // Legacy names remain aliases so every feature adopts the same palette.
     static let blue = accent
     static let blueSoft = accentSoft
-    static let sky = adaptive(light: 0x795134, dark: (0.30, 0.76, 1))
+    static let sky = adaptive(light: 0x34725E, dark: (0.741, 0.839, 0.737))
     static let orange = accent
     static let orangeSoft = accentSoft
     static let white = ink
@@ -65,7 +65,7 @@ enum Theme {
     static let cardBackground = surface
 
     static let heroGradient = LinearGradient(colors: [surfaceRaised, navy], startPoint: .topLeading, endPoint: .bottomTrailing)
-    private static let gradientStart = adaptive(light: 0x845B3C, dark: (0.18, 0.68, 1))
+    private static let gradientStart = adaptive(light: 0x34725E, dark: (0.859, 0.894, 0.808))
     static let orangeGradient = LinearGradient(colors: [gradientStart, accent], startPoint: .topLeading, endPoint: .bottomTrailing)
     static let blueGradient = orangeGradient
     static let paperGradient = LinearGradient(colors: [surfaceRaised, surface], startPoint: .topLeading, endPoint: .bottomTrailing)
