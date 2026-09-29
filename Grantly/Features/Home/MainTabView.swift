@@ -11,6 +11,7 @@ private enum MainTab: Hashable {
 struct MainTabView: View {
     @State private var profile: StudentProfile?
     @State private var loadingProfile = true
+    @State private var profileLoadError: String?
 
     var body: some View {
         Group {
@@ -30,7 +31,32 @@ struct MainTabView: View {
                     StudentMainTabs(profile: $profile)
                 }
             } else {
-                StudentMainTabs(profile: $profile)
+                VStack(spacing: 14) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: 28))
+                        .foregroundStyle(Theme.accentSoft)
+
+                    Text("Unable to load your account")
+                        .font(.headline)
+                        .foregroundStyle(Theme.ink)
+
+                    Text(
+                        profileLoadError ??
+                        "We could not confirm your account role. Try again before continuing."
+                    )
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+                    .multilineTextAlignment(.center)
+
+                    Button("Try again") {
+                        Task { await loadProfile() }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Theme.accent)
+                }
+                .padding(24)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Theme.pageBackground)
             }
         }
         .task {
@@ -42,14 +68,19 @@ struct MainTabView: View {
 
     @MainActor
     private func loadProfile() async {
+        loadingProfile = true
+        profileLoadError = nil
         defer { loadingProfile = false }
 
-        guard let userId = try? await supabase.auth.session.user.id else {
+        do {
+            let userId = try await supabase.auth.session.user.id
+            profile = try await DataService.currentProfile(userId: userId)
+        } catch {
             profile = nil
-            return
+            profileLoadError =
+                "Your profile could not be loaded securely. " +
+                "Please check your connection and try again."
         }
-
-        profile = try? await DataService.currentProfile(userId: userId)
     }
 }
 
