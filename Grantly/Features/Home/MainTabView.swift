@@ -77,9 +77,9 @@ struct MainTabView: View {
             profile = try await DataService.currentProfile(userId: userId)
         } catch {
             profile = nil
-            profileLoadError =
-                "Your profile could not be loaded securely. " +
-                "Please check your connection and try again."
+            profileLoadError = L10n.string(
+                "Your profile could not be loaded securely. Please check your connection and try again."
+            )
         }
     }
 }
