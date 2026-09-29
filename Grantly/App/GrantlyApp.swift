@@ -114,12 +114,19 @@ enum NotificationRegistration {
 
                 let content = UNMutableNotificationContent()
                 content.title = daysBefore == 0
-                    ? "Scholarship deadline today"
-                    : "Scholarship deadline approaching"
+                    ? L10n.string("Scholarship deadline today")
+                    : L10n.string("Scholarship deadline approaching")
 
                 content.body = daysBefore == 0
-                    ? "\(item.scholarship.title) is due today."
-                    : "\(item.scholarship.title) is due in \(daysBefore) days."
+                    ? L10n.format(
+                        "%@ is due today.",
+                        item.scholarship.title
+                    )
+                    : L10n.format(
+                        "%@ is due in %d days.",
+                        item.scholarship.title,
+                        daysBefore
+                    )
 
                 content.sound = .default
                 content.userInfo = [
@@ -156,9 +163,12 @@ enum NotificationRegistration {
                 }
 
                 let content = UNMutableNotificationContent()
-                content.title = "Application task due"
-                content.body =
-                    "\(task.title) for \(item.scholarship.title)"
+                content.title = L10n.string("Application task due")
+                content.body = L10n.format(
+                    "%@ for %@",
+                    task.title,
+                    item.scholarship.title
+                )
                 content.sound = .default
                 content.userInfo = [
                     "kind": "task",
@@ -204,17 +214,26 @@ struct GrantlyApp: App {
 
     @State private var auth = AuthStore()
     @AppStorage("grantly.appearance") private var appearance: AppAppearance = .system
+    @AppStorage("grantly.language") private var language: AppLanguage = .english
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(auth)
                 .preferredColorScheme(appearance.colorScheme)
+                .environment(\.locale, Locale(identifier: language.localeIdentifier))
+                .environment(\.layoutDirection, language.isRightToLeft ? .rightToLeft : .leftToRight)
                 .foregroundStyle(Theme.ink)
                 .tint(Theme.violet)
                 .onOpenURL { url in
                     Task {
                         await auth.handleDeepLink(url)
+                    }
+                }
+                .onChange(of: language) { _, _ in
+                    Task {
+                        await NotificationRegistration
+                            .scheduleLocalApplicationReminders()
                     }
                 }
         }

@@ -123,7 +123,7 @@ final class AuthStore {
                 .invoke("delete-account")
 
             guard response.deleted else {
-                errorMessage = "Your account could not be deleted."
+                errorMessage = L10n.string("Your account could not be deleted.")
                 return false
             }
 
@@ -154,32 +154,32 @@ final class AuthStore {
         let message = error.localizedDescription.lowercased()
 
         if message.contains("invalid login credentials") {
-            return "The email or password is incorrect."
+            return L10n.string("The email or password is incorrect.")
         }
 
         if message.contains("email not confirmed") {
-            return "Confirm your email address before signing in."
+            return L10n.string("Confirm your email address before signing in.")
         }
 
         if message.contains("user already registered") {
-            return "An account already exists for this email."
+            return L10n.string("An account already exists for this email.")
         }
 
         if message.contains("network") ||
             message.contains("offline") ||
             message.contains("internet") {
-            return "Check your internet connection and try again."
+            return L10n.string("Check your internet connection and try again.")
         }
 
         if message.contains("rate limit") ||
             message.contains("too many requests") {
-            return "Too many attempts. Please wait a moment and try again."
+            return L10n.string("Too many attempts. Please wait a moment and try again.")
         }
 
         if message.contains("weak password") {
-            return "Choose a stronger password and try again."
+            return L10n.string("Choose a stronger password and try again.")
         }
 
-        return "Something went wrong. Please try again."
+        return L10n.string("Something went wrong. Please try again.")
     }
 }

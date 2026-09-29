@@ -6,6 +6,7 @@ struct ProfileView: View {
     @Environment(AuthStore.self) private var auth
     @Binding var profile: StudentProfile?
     @AppStorage("grantly.appearance") private var appearance: AppAppearance = .system
+    @AppStorage("grantly.language") private var language: AppLanguage = .english
 
     @State private var fullName = ""
     @State private var nationality = ""
@@ -97,7 +98,7 @@ struct ProfileView: View {
                     Text(status)
                         .font(.caption)
                         .foregroundStyle(
-                            status == "Profile saved."
+                            status == L10n.string("Profile saved.")
                                 ? Theme.green
                                 : Theme.danger
                         )
@@ -392,6 +393,16 @@ struct ProfileView: View {
 
             Divider()
 
+            Picker("Language", selection: $language) {
+                ForEach(AppLanguage.allCases) { option in
+                    Text(option.title).tag(option)
+                }
+            }
+            .tint(Theme.accent)
+            .padding(.vertical, 12)
+
+            Divider()
+
             NavigationLink {
                 PrivacyAndSafetyView()
             } label: {
@@ -593,7 +604,7 @@ struct ProfileView: View {
                         Task {
                             await save()
 
-                            if status == "Profile saved." {
+                            if status == L10n.string("Profile saved.") {
                                 showingEditProfile = false
                             }
                         }
@@ -655,7 +666,7 @@ struct ProfileView: View {
         defer { deletingAccount = false }
 
         if !(await auth.deleteAccount()) {
-            status = auth.errorMessage ?? "Your account could not be deleted."
+            status = auth.errorMessage ?? L10n.string("Your account could not be deleted.")
         }
     }
 
@@ -686,12 +697,12 @@ struct ProfileView: View {
                     compressionQuality: 0.82
                 )
             else {
-                status = "Could not read that photo."
+                status = L10n.string("Could not read that photo.")
                 return
             }
 
             guard jpegData.count <= 5 * 1024 * 1024 else {
-                status = "Please choose a smaller photo."
+                status = L10n.string("Please choose a smaller photo.")
                 return
             }
 
@@ -700,7 +711,7 @@ struct ProfileView: View {
                 imageData: jpegData
             )
 
-            status = "Profile photo updated."
+            status = L10n.string("Profile photo updated.")
         } catch {
             status = error.localizedDescription
         }
@@ -748,14 +759,14 @@ struct ProfileView: View {
         defer { saving = false }
 
         if let value = Double(ielts), !(0...9).contains(value) {
-            status = "IELTS must be between 0 and 9."
+            status = L10n.string("IELTS must be between 0 and 9.")
             return
         }
 
         if let gpa = Double(gpaValue),
            let scale = Double(gpaScale),
            (scale <= 0 || gpa < 0 || gpa > scale) {
-            status = "Please check your GPA and GPA scale."
+            status = L10n.string("Please check your GPA and GPA scale.")
             return
         }
 
@@ -788,7 +799,7 @@ struct ProfileView: View {
             )
 
             profile = try await DataService.currentProfile(userId: userId)
-            status = "Profile saved."
+            status = L10n.string("Profile saved.")
         } catch {
             status = error.localizedDescription
         }

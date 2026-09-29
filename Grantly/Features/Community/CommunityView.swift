@@ -1183,7 +1183,7 @@ struct CommunityProfileView: View {
                 otherUser: profile.id
             )
 
-            status = "Conversation created. Open Messages from Community."
+            status = L10n.string("Conversation created. Open Messages from Community.")
         } catch {
             status = error.localizedDescription
         }
@@ -1198,11 +1198,11 @@ struct CommunityProfileView: View {
             if isBlocked {
                 try await DataService.unblockUser(profile.id)
                 isBlocked = false
-                status = "Student unblocked."
+                status = L10n.string("Student unblocked.")
             } else {
                 try await DataService.blockUser(profile.id)
                 isBlocked = true
-                status = "Student blocked. Messaging is disabled between your accounts."
+                status = L10n.string("Student blocked. Messaging is disabled between your accounts.")
             }
         } catch {
             status = error.localizedDescription

@@ -827,10 +827,10 @@ struct ReliabilityBadge: View {
     let score: Int
 
     private var label: String {
-        if score >= 85 { return "High reliability" }
-        if score >= 70 { return "Reliable" }
-        if score >= 55 { return "Moderate" }
-        return "Limited"
+        if score >= 85 { return L10n.string("High reliability") }
+        if score >= 70 { return L10n.string("Reliable") }
+        if score >= 55 { return L10n.string("Moderate") }
+        return L10n.string("Limited")
     }
 
     var body: some View {
