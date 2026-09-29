@@ -204,12 +204,15 @@ struct GrantlyApp: App {
 
     @State private var auth = AuthStore()
     @AppStorage("grantly.appearance") private var appearance: AppAppearance = .system
+    @AppStorage("grantly.language") private var language: AppLanguage = .english
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(auth)
                 .preferredColorScheme(appearance.colorScheme)
+                .environment(\.locale, Locale(identifier: language.localeIdentifier))
+                .environment(\.layoutDirection, language.isRightToLeft ? .rightToLeft : .leftToRight)
                 .foregroundStyle(Theme.ink)
                 .tint(Theme.violet)
                 .onOpenURL { url in
