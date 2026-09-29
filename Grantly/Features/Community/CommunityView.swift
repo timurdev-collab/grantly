@@ -6,6 +6,8 @@ struct AdvisorsView: View {
     @State private var loading = true
     @State private var requestingAdvisorID: UUID?
     @State private var errorMessage: String?
+    @State private var chatDestination: AdvisorChatDestination?
+    @State private var callSession: AdvisorCallSession?
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -64,6 +66,18 @@ struct AdvisorsView: View {
         .navigationBarHidden(true)
         .refreshable { await load() }
         .task { await load() }
+        .sheet(item: $chatDestination) { destination in
+            NavigationStack {
+                ChatView(
+                    conversationId: destination.conversationId,
+                    otherUserId: destination.otherUserId,
+                    title: destination.title
+                )
+            }
+        }
+        .sheet(item: $callSession) { session in
+            AdvisorCallPreparationView(session: session)
+        }
     }
 
     private func currentRegistrationCard(
@@ -90,21 +104,43 @@ struct AdvisorsView: View {
             }
 
             if registration.status == "active" {
-                NavigationLink {
-                    MessagesView()
-                } label: {
-                    Label(
-                        "Message advisor",
-                        systemImage: "bubble.left.fill"
-                    )
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 44)
-                    .background(Theme.orangeGradient)
-                    .foregroundStyle(Theme.onAccent)
-                    .clipShape(RoundedRectangle(cornerRadius: 13))
+                HStack(spacing: 10) {
+                    Button {
+                        Task {
+                            await openConversation(registration)
+                        }
+                    } label: {
+                        Label(
+                            "Message",
+                            systemImage: "bubble.left.fill"
+                        )
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .background(Theme.orangeGradient)
+                        .foregroundStyle(Theme.onAccent)
+                        .clipShape(RoundedRectangle(cornerRadius: 13))
+                    }
+                    .buttonStyle(.plain)
+
+                    Button {
+                        Task {
+                            await prepareVideoCall(registration)
+                        }
+                    } label: {
+                        Label(
+                            "Video",
+                            systemImage: "video.fill"
+                        )
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 44)
+                        .background(Theme.surface)
+                        .foregroundStyle(Theme.ink)
+                        .clipShape(RoundedRectangle(cornerRadius: 13))
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             } else {
                 Text(
                     "The advisor can accept your registration from their Advisor Portal."
@@ -259,6 +295,40 @@ struct AdvisorsView: View {
     }
 
     @MainActor
+    private func openConversation(
+        _ registration: AdvisorRegistration
+    ) async {
+        do {
+            let conversationId =
+                try await DataService.ensureAdvisorConversation(
+                    assignmentId: registration.assignmentId
+                )
+
+            chatDestination = AdvisorChatDestination(
+                conversationId: conversationId,
+                otherUserId: registration.advisorId,
+                title: registration.advisorName
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func prepareVideoCall(
+        _ registration: AdvisorRegistration
+    ) async {
+        do {
+            callSession =
+                try await DataService.createAdvisorCallSession(
+                    assignmentId: registration.assignmentId
+                )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
     private func request(
         _ advisor: AdvisorDirectoryProfile
     ) async {
@@ -270,6 +340,103 @@ struct AdvisorsView: View {
                 advisorId: advisor.id
             )
             await load()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+
+private struct AdvisorChatDestination: Identifiable {
+    let conversationId: UUID
+    let otherUserId: UUID
+    let title: String
+
+    var id: UUID { conversationId }
+}
+
+struct AdvisorCallPreparationView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State var session: AdvisorCallSession
+    @State private var recordingConsent = false
+    @State private var savingConsent = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 18) {
+                Label(
+                    "Secure advisor video session",
+                    systemImage: "video.fill"
+                )
+                .font(.title3.bold())
+                .foregroundStyle(Theme.ink)
+
+                Text(
+                    "The Grantly relationship and room are ready. Camera, microphone and screen sharing connect through the configured realtime media service."
+                )
+                .font(.subheadline)
+                .foregroundStyle(Theme.muted)
+
+                Toggle(
+                    "Allow this session to be recorded",
+                    isOn: $recordingConsent
+                )
+                .tint(Theme.accent)
+                .onChange(of: recordingConsent) {
+                    Task { await updateRecordingConsent() }
+                }
+
+                Text(
+                    "Recording only becomes available after both the student and advisor explicitly consent."
+                )
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+
+                Label(
+                    "Screen sharing is allowed for this session",
+                    systemImage: "rectangle.on.rectangle"
+                )
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Theme.ink)
+
+                Spacer()
+
+                Button("Close") {
+                    dismiss()
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 48)
+                .background(Theme.surfaceRaised)
+                .foregroundStyle(Theme.ink)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+
+                if let errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+            .padding()
+            .background(Theme.pageBackground)
+            .navigationTitle("Video Call")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+
+    @MainActor
+    private func updateRecordingConsent() async {
+        savingConsent = true
+        defer { savingConsent = false }
+
+        do {
+            session =
+                try await DataService
+                    .setAdvisorCallRecordingConsent(
+                        callId: session.id,
+                        consent: recordingConsent
+                    )
+            errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
         }
