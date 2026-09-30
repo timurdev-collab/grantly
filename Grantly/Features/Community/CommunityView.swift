@@ -96,8 +96,8 @@ struct AdvisorsView: View {
         VStack(alignment: .leading, spacing: 9) {
             Text(
                 registration.status == "active"
-                    ? "Your advisor"
-                    : "Advisor request pending"
+                    ? L10n.string("Your advisor")
+                    : L10n.string("Advisor request pending")
             )
             .font(.caption.weight(.semibold))
             .foregroundStyle(Theme.accentSoft)
@@ -722,8 +722,8 @@ struct AdvisorCallPreparationView: View {
 
                                         Text(
                                             call.connected
-                                                ? "Waiting for the other participant"
-                                                : "Preparing secure video call"
+                                                ? L10n.string("Waiting for the other participant")
+                                                : L10n.string("Preparing secure video call")
                                         )
                                         .font(.subheadline.weight(.semibold))
                                         .foregroundStyle(Theme.ink)
