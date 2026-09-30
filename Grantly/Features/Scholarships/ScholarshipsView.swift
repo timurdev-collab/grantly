@@ -652,7 +652,7 @@ struct PremiumScholarshipCard: View {
                     Image(systemName: "checkmark.seal.fill")
                         .font(.subheadline)
                         .foregroundStyle(Theme.blueSoft)
-                        .accessibilityLabel("Verified")
+                        .accessibilityHidden(true)
                 }
             }
             .padding(.horizontal, 14)
