@@ -211,7 +211,7 @@ struct ProfileView: View {
 
                 HStack(spacing: 8) {
                     Label(
-                        visible ? "Community visible" : "Community hidden",
+                        visible ? L10n.string("Community visible") : L10n.string("Community hidden"),
                         systemImage: visible ? "eye.fill" : "eye.slash.fill"
                     )
 
@@ -459,7 +459,7 @@ struct ProfileView: View {
                 showingDeleteAccount = true
             } label: {
                 Label(
-                    deletingAccount ? "Deleting account..." : "Delete account",
+                    deletingAccount ? L10n.string("Deleting account...") : L10n.string("Delete account"),
                     systemImage: "trash"
                 )
                 .font(.caption.weight(.semibold))
@@ -603,7 +603,7 @@ struct ProfileView: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(saving ? "Saving..." : "Save") {
+                    Button(saving ? L10n.string("Saving...") : L10n.string("Save")) {
                         Task {
                             await save()
 
@@ -1304,8 +1304,8 @@ private struct AdvisorApplicationView: View {
                         ) {
                             Label(
                                 selectedPhotoData == nil
-                                    ? "Choose photo"
-                                    : "Change photo",
+                                    ? L10n.string("Choose photo")
+                                    : L10n.string("Change photo"),
                                 systemImage: "photo"
                             )
                         }
@@ -1438,8 +1438,8 @@ private struct AdvisorApplicationView: View {
                 advisorReviewRow(
                     "Experience",
                     yearsExperience.isEmpty
-                        ? "Not specified"
-                        : "\(yearsExperience) years"
+                        ? L10n.string("Not specified")
+                        : L10n.format("%@ years", yearsExperience)
                 )
                 advisorReviewRow(
                     "Specialties",
