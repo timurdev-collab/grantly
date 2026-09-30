@@ -571,3 +571,5 @@
 "Publish" = "发布";
 "Please choose media smaller than 50 MB." = "请选择小于50 MB的媒体文件。";
 "Shorts require a video." = "短视频必须使用视频文件。";
+
+"Please choose media smaller than 6 MB." = "请选择小于6 MB的媒体文件。";
