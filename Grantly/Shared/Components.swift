@@ -128,7 +128,7 @@ struct ReportSheet: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(busy ? "Sending…" : "Send") {
+                    Button(busy ? L10n.string("Sending…") : L10n.string("Send")) {
                         Task { await submit() }
                     }
                     .disabled(busy || details.count > 1000)
