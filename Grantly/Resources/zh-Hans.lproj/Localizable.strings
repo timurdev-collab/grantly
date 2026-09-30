@@ -538,3 +538,15 @@
 
 "Start a conversation with an advisor." = "与顾问开始对话。";
 "Conversation created. Open Messages." = "对话已创建。打开“消息”。";
+
+"University applications" = "大学申请";
+"Scholarship applications" = "奖学金申请";
+"Universities you are applying to" = "你正在申请的大学";
+"Add university application" = "添加大学申请";
+"Add your first university application" = "添加你的第一个大学申请";
+"Add application" = "添加申请";
+"Delete application?" = "删除申请？";
+"Delete" = "删除";
+"This removes the application and its uploaded documents." = "这将删除该申请及其已上传的文件。";
+"%d applications" = "%d 个申请";
+"Tasks" = "任务";
