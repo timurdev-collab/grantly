@@ -71,8 +71,8 @@ struct DraftScholarshipReviewView: View {
                     if let readiness {
                         Label(
                             readiness.ready
-                                ? "Ready to publish"
-                                : "\(readiness.blockers.count) blocker(s)",
+                                ? L10n.string("Ready to publish")
+                                : L10n.format("%d blockers", readiness.blockers.count),
                             systemImage: readiness.ready
                                 ? "checkmark.seal.fill"
                                 : "exclamationmark.triangle.fill"
