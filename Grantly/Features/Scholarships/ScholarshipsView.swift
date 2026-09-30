@@ -666,21 +666,6 @@ struct PremiumScholarshipCard: View {
             .frame(maxWidth: .infinity)
             .clipped()
 
-            HStack(spacing: 18) {
-                Image(systemName: "heart")
-                Image(systemName: "paperplane")
-                Image(systemName: "calendar")
-
-                Spacer()
-
-                Image(systemName: saved ? "bookmark.fill" : "bookmark")
-                    .foregroundStyle(saved ? Theme.orangeSoft : Theme.ink)
-            }
-            .font(.system(size: 19, weight: .medium))
-            .foregroundStyle(Theme.ink)
-            .padding(.horizontal, 14)
-            .padding(.top, 12)
-
             VStack(alignment: .leading, spacing: 8) {
                 Text(scholarship.title)
                     .font(.headline.weight(.bold))
