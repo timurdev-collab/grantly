@@ -573,3 +573,11 @@
 "Shorts require a video." = "短视频必须使用视频文件。";
 
 "Please choose media smaller than 6 MB." = "请选择小于6 MB的媒体文件。";
+
+"Preparing video..." = "正在准备视频...";
+"Uploading video..." = "正在上传视频...";
+"Could not prepare the video upload." = "无法准备视频上传。";
+"The video upload could not be started." = "无法开始上传视频。";
+"The video upload was interrupted. Please try again." = "视频上传已中断，请重试。";
+"Could not prepare this video for upload." = "无法准备此视频进行上传。";
+"Please choose a video smaller than 250 MB." = "请选择小于250 MB的视频。";
