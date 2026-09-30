@@ -550,3 +550,24 @@
 "This removes the application and its uploaded documents." = "Thao tác này sẽ xóa hồ sơ và các tài liệu đã tải lên.";
 "%d applications" = "%d hồ sơ";
 "Tasks" = "Nhiệm vụ";
+
+"Create" = "Tạo";
+"No community posts yet" = "Chưa có bài đăng cộng đồng";
+"Share a photo, video or short with other students." = "Chia sẻ ảnh, video hoặc video ngắn với các sinh viên khác.";
+"Create post" = "Tạo bài đăng";
+"Your story" = "Tin của bạn";
+"Short" = "Video ngắn";
+"Type" = "Loại";
+"Post" = "Bài đăng";
+"Story" = "Tin";
+"Add a story caption..." = "Thêm chú thích cho tin...";
+"Share something with students..." = "Chia sẻ điều gì đó với sinh viên...";
+"Add photo or video" = "Thêm ảnh hoặc video";
+"Change media" = "Đổi nội dung";
+"Video ready to publish" = "Video đã sẵn sàng để đăng";
+"Stories disappear after 24 hours." = "Tin sẽ biến mất sau 24 giờ.";
+"Shorts are vertical video posts. Choose a video for the best result." = "Video ngắn phù hợp nhất với video dọc.";
+"Publishing..." = "Đang đăng...";
+"Publish" = "Đăng";
+"Please choose media smaller than 50 MB." = "Vui lòng chọn tệp nhỏ hơn 50 MB.";
+"Shorts require a video." = "Video ngắn yêu cầu một tệp video.";
