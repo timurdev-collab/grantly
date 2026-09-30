@@ -378,8 +378,7 @@ struct HomeView: View {
             HomeSectionHeader(
                 title: "Best matches for your profile",
                 subtitle: profileNeedsSetup
-                    ? "Complete your profile to unlock stronger matches"
-                    : "AI-assisted ranking based on your profile and study goals",
+                    ? L10n.string("Complete your profile to unlock stronger matches") : L10n.string("AI-assisted ranking based on your profile and study goals"),
                 actionTitle: "Explore more",
                 action: openExplore
             )
