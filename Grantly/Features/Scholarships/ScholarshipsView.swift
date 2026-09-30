@@ -626,52 +626,36 @@ struct PremiumScholarshipCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 10) {
-                ExploreUniversityLogo(
-                    university: scholarship.university,
-                    fallbackName: scholarship.provider,
-                    size: 40
-                )
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(scholarship.provider)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.ink)
-                        .lineLimit(1)
-
-                    Text(countryLabel)
-                        .font(.caption2)
-                        .foregroundStyle(Theme.muted)
-                        .lineLimit(1)
-                }
-
-                Spacer()
-
-                if verified {
-                    Image(systemName: "checkmark.seal.fill")
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.blueSoft)
-                        .accessibilityHidden(true)
-                }
-            }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 11)
-
-            UniversityPhoto(
-                seed: scholarship.provider + scholarship.title,
-                remoteURL: scholarship.university?.campusImageUrl,
-                height: 210
+        HStack(alignment: .top, spacing: 12) {
+            ExploreUniversityLogo(
+                university: scholarship.university,
+                fallbackName: scholarship.provider,
+                size: 48
             )
-            .frame(maxWidth: .infinity)
-            .clipped()
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text(scholarship.title)
-                    .font(.headline.weight(.bold))
-                    .foregroundStyle(Theme.ink)
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(3)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(alignment: .top, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(scholarship.title)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.ink)
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(2)
+
+                        Text(scholarship.provider)
+                            .font(.caption2)
+                            .foregroundStyle(Theme.muted)
+                            .lineLimit(1)
+                    }
+
+                    Spacer(minLength: 4)
+
+                    Image(systemName: saved ? "bookmark.fill" : "bookmark")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(
+                            saved ? Theme.orangeSoft : Theme.muted
+                        )
+                }
 
                 HStack(spacing: 7) {
                     FundingBadge(text: scholarship.fundingType)
@@ -682,12 +666,14 @@ struct PremiumScholarshipCard: View {
                     )
                 }
 
-                HStack(spacing: 8) {
-                    TrustSeal(verified: verified)
-
-                    if let score = scholarship.reliabilityScore {
-                        ReliabilityBadge(score: score)
+                HStack(spacing: 6) {
+                    if verified {
+                        Image(systemName: "checkmark.seal.fill")
+                            .foregroundStyle(Theme.blueSoft)
                     }
+
+                    Text(countryLabel)
+                        .lineLimit(1)
 
                     Spacer()
 
@@ -696,23 +682,23 @@ struct PremiumScholarshipCard: View {
                             String(deadline.prefix(10)),
                             systemImage: "calendar"
                         )
-                        .font(.caption2.weight(.semibold))
                         .foregroundStyle(Theme.orangeSoft)
-                    } else {
-                        Text("Deadline TBC")
-                            .font(.caption2.weight(.semibold))
-                            .foregroundStyle(Theme.muted)
                     }
                 }
+                .font(.caption2)
+                .foregroundStyle(Theme.muted)
             }
-            .padding(.horizontal, 14)
-            .padding(.top, 10)
-            .padding(.bottom, 14)
+
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(Theme.muted)
+                .padding(.top, 15)
         }
+        .padding(12)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
         .overlay(
-            RoundedRectangle(cornerRadius: 18)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(Theme.ink.opacity(0.05))
         )
     }
