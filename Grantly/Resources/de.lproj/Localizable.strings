@@ -573,3 +573,11 @@
 "Shorts require a video." = "Kurzvideos benötigen eine Videodatei.";
 
 "Please choose media smaller than 6 MB." = "Bitte wähle eine Datei unter 6 MB.";
+
+"Preparing video..." = "Video wird vorbereitet...";
+"Uploading video..." = "Video wird hochgeladen...";
+"Could not prepare the video upload." = "Der Video-Upload konnte nicht vorbereitet werden.";
+"The video upload could not be started." = "Der Video-Upload konnte nicht gestartet werden.";
+"The video upload was interrupted. Please try again." = "Der Video-Upload wurde unterbrochen. Bitte versuche es erneut.";
+"Could not prepare this video for upload." = "Dieses Video konnte nicht für den Upload vorbereitet werden.";
+"Please choose a video smaller than 250 MB." = "Bitte wähle ein Video unter 250 MB.";

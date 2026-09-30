@@ -573,3 +573,11 @@
 "Shorts require a video." = "Для короткого видео нужен видеофайл.";
 
 "Please choose media smaller than 6 MB." = "Выберите файл размером менее 6 МБ.";
+
+"Preparing video..." = "Подготовка видео...";
+"Uploading video..." = "Загрузка видео...";
+"Could not prepare the video upload." = "Не удалось подготовить загрузку видео.";
+"The video upload could not be started." = "Не удалось начать загрузку видео.";
+"The video upload was interrupted. Please try again." = "Загрузка видео была прервана. Попробуйте ещё раз.";
+"Could not prepare this video for upload." = "Не удалось подготовить это видео к загрузке.";
+"Please choose a video smaller than 250 MB." = "Выберите видео размером менее 250 МБ.";

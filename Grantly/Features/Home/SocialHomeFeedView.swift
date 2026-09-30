@@ -403,12 +403,19 @@ private struct SocialPostComposer: View {
     @State private var caption = ""
     @State private var selectedItem: PhotosPickerItem?
     @State private var mediaData: Data?
+    @State private var videoURL: URL?
     @State private var mediaType: String?
     @State private var fileExtension: String?
     @State private var previewImage: UIImage?
     @State private var loadingMedia = false
     @State private var publishing = false
+    @State private var uploadProgress = 0.0
+    @State private var publishingStage = ""
     @State private var errorMessage: String?
+
+    private var hasMedia: Bool {
+        mediaData != nil || videoURL != nil
+    }
 
     private var requiresMedia: Bool {
         kind == .story || kind == .short
@@ -417,8 +424,8 @@ private struct SocialPostComposer: View {
     private var canPublish: Bool {
         !publishing &&
         (!caption.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-         mediaData != nil) &&
-        (!requiresMedia || mediaData != nil)
+         hasMedia) &&
+        (!requiresMedia || hasMedia)
     }
 
     var body: some View {
@@ -450,15 +457,15 @@ private struct SocialPostComposer: View {
                     ) {
                         HStack(spacing: 10) {
                             Image(
-                                systemName: mediaData == nil
-                                    ? "photo.on.rectangle.angled"
-                                    : "arrow.triangle.2.circlepath"
+                                systemName: hasMedia
+                                    ? "arrow.triangle.2.circlepath"
+                                    : "photo.on.rectangle.angled"
                             )
 
                             Text(
-                                mediaData == nil
-                                    ? L10n.string("Add photo or video")
-                                    : L10n.string("Change media")
+                                hasMedia
+                                    ? L10n.string("Change media")
+                                    : L10n.string("Add photo or video")
                             )
 
                             Spacer()
@@ -474,6 +481,7 @@ private struct SocialPostComposer: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .buttonStyle(.plain)
+                    .disabled(publishing)
 
                     if let previewImage {
                         Image(uiImage: previewImage)
@@ -482,8 +490,7 @@ private struct SocialPostComposer: View {
                             .frame(maxHeight: 340)
                             .frame(maxWidth: .infinity)
                             .clipShape(RoundedRectangle(cornerRadius: 14))
-                    } else if mediaData != nil,
-                              mediaType?.hasPrefix("video/") == true {
+                    } else if videoURL != nil {
                         Label(
                             "Video ready to publish",
                             systemImage: "video.fill"
@@ -492,6 +499,28 @@ private struct SocialPostComposer: View {
                         .foregroundStyle(Theme.accentSoft)
                         .padding(14)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Theme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+
+                    if publishing && videoURL != nil {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text(publishingStage)
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(Theme.ink)
+
+                                Spacer()
+
+                                Text("\(Int(uploadProgress * 100))%")
+                                    .font(.caption.monospacedDigit())
+                                    .foregroundStyle(Theme.muted)
+                            }
+
+                            ProgressView(value: uploadProgress)
+                                .tint(Theme.accent)
+                        }
+                        .padding(12)
                         .background(Theme.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
@@ -520,8 +549,10 @@ private struct SocialPostComposer: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
+                        cleanupSelectedVideo()
                         dismiss()
                     }
+                    .disabled(publishing)
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
@@ -540,12 +571,14 @@ private struct SocialPostComposer: View {
             }
             .onChange(of: kind) {
                 if kind == .short,
-                   mediaType?.hasPrefix("video/") == false {
-                    selectedItem = nil
-                    mediaData = nil
-                    mediaType = nil
-                    fileExtension = nil
-                    previewImage = nil
+                   videoURL == nil,
+                   hasMedia {
+                    clearMedia()
+                }
+            }
+            .onDisappear {
+                if !publishing {
+                    cleanupSelectedVideo()
                 }
             }
         }
@@ -558,39 +591,58 @@ private struct SocialPostComposer: View {
         loadingMedia = true
         defer { loadingMedia = false }
 
+        let types = selectedItem.supportedContentTypes
+        let type =
+            types.first(where: { $0.conforms(to: .movie) }) ??
+            types.first(where: { $0.conforms(to: .image) })
+        let isVideo = type?.conforms(to: .movie) == true
+
         do {
-            guard let data = try await selectedItem.loadTransferable(
-                type: Data.self
-            ) else {
-                errorMessage = L10n.string("Could not read that photo.")
-                return
+            if isVideo {
+                guard let transfer = try await selectedItem
+                    .loadTransferable(type: SocialVideoTransfer.self) else {
+                    errorMessage = L10n.string(
+                        "Could not prepare this video for upload."
+                    )
+                    return
+                }
+
+                cleanupSelectedVideo()
+                videoURL = transfer.url
+                mediaData = nil
+                mediaType = "video/mp4"
+                fileExtension = "mp4"
+                previewImage = nil
+            } else {
+                guard let data = try await selectedItem.loadTransferable(
+                    type: Data.self
+                ) else {
+                    errorMessage = L10n.string("Could not read that photo.")
+                    return
+                }
+
+                guard data.count <= 6 * 1024 * 1024 else {
+                    errorMessage = L10n.string(
+                        "Please choose media smaller than 6 MB."
+                    )
+                    return
+                }
+
+                if kind == .short {
+                    errorMessage = L10n.string("Shorts require a video.")
+                    return
+                }
+
+                cleanupSelectedVideo()
+                videoURL = nil
+                mediaData = data
+                mediaType =
+                    type?.preferredMIMEType ?? "image/jpeg"
+                fileExtension =
+                    type?.preferredFilenameExtension ?? "jpg"
+                previewImage = UIImage(data: data)
             }
 
-            guard data.count <= 6 * 1024 * 1024 else {
-                errorMessage = L10n.string("Please choose media smaller than 6 MB.")
-                return
-            }
-
-            let types = selectedItem.supportedContentTypes
-            let type =
-                types.first(where: { $0.conforms(to: .movie) }) ??
-                types.first(where: { $0.conforms(to: .image) })
-
-            let isVideo = type?.conforms(to: .movie) == true
-
-            if kind == .short && !isVideo {
-                errorMessage = L10n.string("Shorts require a video.")
-                return
-            }
-
-            mediaData = data
-            mediaType =
-                type?.preferredMIMEType ??
-                (isVideo ? "video/mp4" : "image/jpeg")
-            fileExtension =
-                type?.preferredFilenameExtension ??
-                (isVideo ? "mp4" : "jpg")
-            previewImage = isVideo ? nil : UIImage(data: data)
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -602,21 +654,90 @@ private struct SocialPostComposer: View {
         guard canPublish else { return }
 
         publishing = true
-        defer { publishing = false }
+        uploadProgress = 0
+        errorMessage = nil
+
+        defer {
+            publishing = false
+            publishingStage = ""
+        }
+
+        let cleanCaption = caption.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
 
         do {
-            try await DataService.createSocialPost(
-                kind: kind,
-                caption: caption.trimmingCharacters(
-                    in: .whitespacesAndNewlines
-                ),
-                mediaData: mediaData,
-                mediaType: mediaType,
-                fileExtension: fileExtension
-            )
+            if let videoURL {
+                publishingStage = L10n.string("Preparing video...")
+                uploadProgress = 0.05
+
+                let compressedURL = try await SocialVideoPipeline.compress(
+                    videoURL
+                )
+                defer {
+                    try? FileManager.default.removeItem(
+                        at: compressedURL
+                    )
+                }
+
+                uploadProgress = 0.12
+                publishingStage = L10n.string("Uploading video...")
+
+                let mediaPath = try await SocialVideoPipeline.upload(
+                    fileURL: compressedURL
+                ) { progress in
+                    await MainActor.run {
+                        uploadProgress = 0.12 + (progress * 0.83)
+                    }
+                }
+
+                do {
+                    uploadProgress = 0.97
+                    try await DataService
+                        .createSocialPostWithUploadedMedia(
+                            kind: kind,
+                            caption: cleanCaption,
+                            mediaPath: mediaPath,
+                            mediaType: "video"
+                        )
+                } catch {
+                    try? await DataService.deleteSocialMedia(
+                        path: mediaPath
+                    )
+                    throw error
+                }
+
+                uploadProgress = 1
+                cleanupSelectedVideo()
+            } else {
+                try await DataService.createSocialPost(
+                    kind: kind,
+                    caption: cleanCaption,
+                    mediaData: mediaData,
+                    mediaType: mediaType,
+                    fileExtension: fileExtension
+                )
+            }
+
             dismiss()
         } catch {
             errorMessage = error.localizedDescription
+        }
+    }
+
+    private func clearMedia() {
+        cleanupSelectedVideo()
+        selectedItem = nil
+        mediaData = nil
+        videoURL = nil
+        mediaType = nil
+        fileExtension = nil
+        previewImage = nil
+    }
+
+    private func cleanupSelectedVideo() {
+        if let videoURL {
+            try? FileManager.default.removeItem(at: videoURL)
         }
     }
 }
