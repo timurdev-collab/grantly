@@ -235,7 +235,7 @@ struct ScholarshipDetailView: View {
                             .font(.subheadline.bold())
                             .foregroundStyle(Theme.ink)
 
-                        Text(match.eligible ? "Based on your current academic profile" : "One or more requirements may need attention")
+                        Text(match.eligible ? L10n.string("Based on your current academic profile") : L10n.string("One or more requirements may need attention"))
                             .font(.caption2)
                             .foregroundStyle(Theme.muted)
                     }
@@ -309,7 +309,7 @@ struct ScholarshipDetailView: View {
                 DetailLine(label: "Country", value: scholarship.country)
                 DetailLine(label: "Deadline", value: scholarship.deadline ?? "Deadline not yet confirmed")
                 DetailLine(label: "Funding", value: scholarship.fundingType)
-                DetailLine(label: "Source", value: verified ? "Verified" : "Curated")
+                DetailLine(label: "Source", value: verified ? L10n.string("Verified") : L10n.string("Curated"))
 
                 if let score = scholarship.reliabilityScore {
                     DetailLine(
@@ -355,7 +355,7 @@ struct ScholarshipDetailView: View {
                 DetailLine(label: "Field", value: scholarship.fields.joined(separator: ", "))
                 DetailLine(label: "Minimum GPA", value: scholarship.minGpaPercent.map { "\(Int($0))%" } ?? "Not listed")
                 DetailLine(label: "Minimum IELTS", value: scholarship.minIelts.map { String($0) } ?? "Not listed")
-                DetailLine(label: "SAT", value: scholarship.satRequired ? "Required" : "Not listed as required")
+                DetailLine(label: "SAT", value: scholarship.satRequired ? L10n.string("Required") : L10n.string("Not listed as required"))
             }
         }
 
@@ -373,9 +373,9 @@ struct ScholarshipDetailView: View {
             VStack(spacing: 13) {
                 DetailLine(label: "Tuition", value: scholarship.tuitionCoverage ?? scholarship.fundingType)
                 DetailLine(label: "Stipend", value: scholarship.stipend ?? "Check official source")
-                DetailLine(label: "Airfare", value: scholarship.airfare ? "Included" : "Not listed")
-                DetailLine(label: "Accommodation", value: scholarship.accommodation ? "Included" : "Not listed")
-                DetailLine(label: "Health insurance", value: scholarship.healthInsurance ? "Included" : "Not listed")
+                DetailLine(label: "Airfare", value: scholarship.airfare ? L10n.string("Included") : L10n.string("Not listed"))
+                DetailLine(label: "Accommodation", value: scholarship.accommodation ? L10n.string("Included") : L10n.string("Not listed"))
+                DetailLine(label: "Health insurance", value: scholarship.healthInsurance ? L10n.string("Included") : L10n.string("Not listed"))
             }
         }
     }
