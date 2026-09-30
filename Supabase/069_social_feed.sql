@@ -86,7 +86,7 @@ values (
   'social-media',
   'social-media',
   false,
-  6291456,
+  209715200,
   array[
     'image/jpeg',
     'image/png',
