@@ -2174,11 +2174,6 @@ enum DataService {
                     )
                 )
 
-            let publicURL = try supabase.storage
-                .from("social-media")
-                .getPublicURL(path: path)
-
-            mediaURL = publicURL.absoluteString
             mediaPath = path
         }
 
@@ -2262,11 +2257,27 @@ enum DataService {
             uniqueKeysWithValues: profiles.map { ($0.id, $0) }
         )
 
-        return posts.map { post in
+        var hydrated: [SocialPost] = []
+        hydrated.reserveCapacity(posts.count)
+
+        for post in posts {
             var value = post
             value.author = map[post.authorId]
-            return value
+
+            if let path = post.mediaPath {
+                value.mediaUrl = try? await supabase.storage
+                    .from("social-media")
+                    .createSignedURL(
+                        path: path,
+                        expiresIn: 60 * 60
+                    )
+                    .absoluteString
+            }
+
+            hydrated.append(value)
         }
+
+        return hydrated
     }
 
 }

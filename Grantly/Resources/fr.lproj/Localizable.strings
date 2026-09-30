@@ -571,3 +571,5 @@
 "Publish" = "Publier";
 "Please choose media smaller than 50 MB." = "Veuillez choisir un fichier de moins de 50 Mo.";
 "Shorts require a video." = "Les vidéos courtes nécessitent une vidéo.";
+
+"Please choose media smaller than 6 MB." = "Veuillez choisir un fichier de moins de 6 Mo.";
