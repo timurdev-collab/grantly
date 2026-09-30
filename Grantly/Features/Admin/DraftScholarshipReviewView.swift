@@ -99,7 +99,7 @@ struct DraftScholarshipReviewView: View {
                         }
 
                         if let checked = readiness.lastSuccessfulCheckAt {
-                            Text("Source checked \(String(checked.prefix(10)))")
+                            Text(L10n.format("Source checked %@", String(checked.prefix(10))))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -120,7 +120,7 @@ struct DraftScholarshipReviewView: View {
                 Section("Source evidence") {
                     if let evidence, evidence.available {
                         if let checkedAt = evidence.checkedAt {
-                            Text("Extracted \(String(checkedAt.prefix(10)))")
+                            Text(L10n.format("Extracted %@", String(checkedAt.prefix(10))))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -291,7 +291,7 @@ struct DraftScholarshipReviewView: View {
                                 .font(.caption2)
 
                                 if let confidence = entry.confidence {
-                                    Text("\(confidence)% source confidence")
+                                    Text(L10n.format("%d%% source confidence", confidence))
                                         .font(.caption2)
                                         .foregroundStyle(.secondary)
                                 }
