@@ -499,6 +499,18 @@ struct ProfileView: View {
                 VStack(spacing: 16) {
                     settingsCard
 
+                    NavigationLink {
+                        MyContentView()
+                    } label: {
+                        ProfileMenuRow(
+                            icon: "rectangle.stack.badge.person.crop",
+                            title: "My content",
+                            subtitle: "Edit or delete your posts, stories and shorts",
+                            tint: Theme.orangeSoft
+                        )
+                    }
+                    .buttonStyle(.plain)
+
                     if profile?.role == "student" {
                         NavigationLink {
                             AdvisorApplicationView(
