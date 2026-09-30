@@ -85,8 +85,8 @@ insert into storage.buckets (
 values (
   'social-media',
   'social-media',
-  true,
-  52428800,
+  false,
+  6291456,
   array[
     'image/jpeg',
     'image/png',
@@ -101,6 +101,33 @@ set
   public = excluded.public,
   file_size_limit = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
+
+
+
+drop policy if exists "authenticated users read visible social media" on storage.objects;
+create policy "authenticated users read visible social media"
+on storage.objects for select to authenticated
+using (
+  bucket_id = 'social-media'
+  and exists (
+    select 1
+    from public.social_posts p
+    join public.community_profiles cp
+      on cp.id = p.author_id
+    where p.media_path = storage.objects.name
+      and p.is_active = true
+      and (p.expires_at is null or p.expires_at > now())
+      and cp.is_visible = true
+      and not exists (
+        select 1
+        from public.user_blocks b
+        where
+          (b.blocker_id = (select auth.uid()) and b.blocked_id = p.author_id)
+          or
+          (b.blocked_id = (select auth.uid()) and b.blocker_id = p.author_id)
+      )
+  )
+);
 
 drop policy if exists "users upload own social media" on storage.objects;
 create policy "users upload own social media"
