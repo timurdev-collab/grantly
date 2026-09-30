@@ -538,3 +538,15 @@
 
 "Start a conversation with an advisor." = "ابدأ محادثة مع مستشار.";
 "Conversation created. Open Messages." = "تم إنشاء المحادثة. افتح الرسائل.";
+
+"University applications" = "طلبات الجامعات";
+"Scholarship applications" = "طلبات المنح";
+"Universities you are applying to" = "الجامعات التي تتقدم إليها";
+"Add university application" = "إضافة طلب جامعة";
+"Add your first university application" = "أضف أول طلب جامعة";
+"Add application" = "إضافة طلب";
+"Delete application?" = "حذف الطلب؟";
+"Delete" = "حذف";
+"This removes the application and its uploaded documents." = "سيؤدي هذا إلى حذف الطلب والمستندات المرفوعة.";
+"%d applications" = "%d طلبات";
+"Tasks" = "المهام";
