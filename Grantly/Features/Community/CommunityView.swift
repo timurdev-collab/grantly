@@ -265,7 +265,7 @@ struct AdvisorsView: View {
                     .foregroundStyle(Theme.accentSoft)
             }
 
-            Text("View profile")
+            Text("Profile")
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(Theme.ink)
                 .frame(maxWidth: .infinity)
