@@ -306,8 +306,7 @@ struct ScholarshipsView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(
                     hasFilters || !query.isEmpty
-                        ? "Search results"
-                        : "All scholarships"
+                        ? L10n.string("Search results") : L10n.string("All scholarships")
                 )
                 .font(.headline.bold())
                 .foregroundStyle(Theme.ink)
