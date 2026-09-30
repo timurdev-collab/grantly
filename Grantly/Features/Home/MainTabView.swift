@@ -145,7 +145,10 @@ private struct StudentMainTabs: View {
                 )
             }
             .tabItem {
-                Label("Home", systemImage: "house.fill")
+                Label(
+                    "Home",
+                    systemImage: selection == .home ? "house.fill" : "house"
+                )
             }
             .tag(MainTab.home)
 
@@ -161,7 +164,10 @@ private struct StudentMainTabs: View {
                 CasesHubView()
             }
             .tabItem {
-                Label("Applications", systemImage: "folder.fill")
+                Label(
+                    "Applications",
+                    systemImage: selection == .saved ? "folder.fill" : "folder"
+                )
             }
             .tag(MainTab.saved)
 
@@ -171,7 +177,9 @@ private struct StudentMainTabs: View {
             .tabItem {
                 Label(
                     "Advisors",
-                    systemImage: "person.crop.circle.badge.questionmark"
+                    systemImage: selection == .advisors
+                        ? "person.2.fill"
+                        : "person.2"
                 )
             }
             .tag(MainTab.advisors)
@@ -180,12 +188,17 @@ private struct StudentMainTabs: View {
                 ProfileView(profile: $profile)
             }
             .tabItem {
-                Label("Profile", systemImage: "person.crop.circle.fill")
+                Label(
+                    "Profile",
+                    systemImage: selection == .profile
+                        ? "person.crop.circle.fill"
+                        : "person.crop.circle"
+                )
             }
             .tag(MainTab.profile)
         }
-        .tint(Theme.accent)
-        .toolbarBackground(Theme.navyDeep, for: .tabBar)
+        .tint(Theme.ink)
+        .toolbarBackground(Theme.surface, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
         .overlay(alignment: .top) {
             if !networkMonitor.isOnline {
