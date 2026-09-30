@@ -580,3 +580,20 @@
 "Uploading video" = "Загрузка видео";
 "This video cannot be prepared for upload." = "Это видео нельзя подготовить к загрузке.";
 "Video preparation failed. Please try another video." = "Не удалось подготовить видео. Попробуйте другое видео.";
+
+"My content" = "Мой контент";
+"Edit or delete your posts, stories and shorts" = "Редактируйте или удаляйте публикации, истории и короткие видео";
+"Content" = "Контент";
+"No content yet" = "Контента пока нет";
+"Posts, stories and shorts you publish will appear here." = "Здесь появятся ваши публикации, истории и короткие видео.";
+"All" = "Все";
+"Posts" = "Публикации";
+"Stories" = "Истории";
+"Shorts" = "Короткие видео";
+"Edit caption" = "Изменить подпись";
+"Delete this content?" = "Удалить этот контент?";
+"This cannot be undone." = "Это действие нельзя отменить.";
+"Caption" = "Подпись";
+"Write a caption..." = "Напишите подпись...";
+"Edit content" = "Редактировать контент";
+"Saving..." = "Сохранение...";
