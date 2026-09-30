@@ -1088,11 +1088,13 @@ private struct AdvisorApplicationView: View {
     @State private var submitted = false
     @State private var errorMessage: String?
 
-    private let stepTitles = [
-        "Professional profile",
-        "How you can help",
-        "Introduction & review"
-    ]
+    private var stepTitles: [String] {
+        [
+            L10n.string("Professional profile"),
+            L10n.string("How you can help"),
+            L10n.string("Introduction & review")
+        ]
+    }
 
     private var normalizedVideoURL: URL? {
         guard
@@ -1197,10 +1199,10 @@ private struct AdvisorApplicationView: View {
                                 Spacer()
                                 Text(
                                     step < 2
-                                        ? "Continue"
+                                        ? L10n.string("Continue")
                                         : submitting
-                                            ? "Submitting…"
-                                            : "Submit for review"
+                                            ? L10n.string("Submitting…")
+                                            : L10n.string("Submit for review")
                                 )
                                 .fontWeight(.semibold)
                                 Spacer()
@@ -1255,13 +1257,18 @@ private struct AdvisorApplicationView: View {
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(
-                        application.approvalStatus
-                            .replacingOccurrences(of: "_", with: " ")
-                            .capitalized
+                        localizedAdvisorStatus(
+                            application.approvalStatus
+                        )
                     )
                     .font(.subheadline.weight(.semibold))
 
-                    Text("Application version \(application.applicationVersion)")
+                    Text(
+                        L10n.format(
+                            "Application version %@",
+                            String(application.applicationVersion)
+                        )
+                    )
                         .font(.caption2)
                         .foregroundStyle(Theme.muted)
                 }
@@ -1304,8 +1311,8 @@ private struct AdvisorApplicationView: View {
                         ) {
                             Label(
                                 selectedPhotoData == nil
-                                    ? "Choose photo"
-                                    : "Change photo",
+                                    ? L10n.string("Choose photo")
+                                    : L10n.string("Change photo"),
                                 systemImage: "photo"
                             )
                         }
@@ -1499,7 +1506,7 @@ private struct AdvisorApplicationView: View {
         _ value: String
     ) -> some View {
         VStack(alignment: .leading, spacing: 3) {
-            Text(label)
+            Text(L10n.string(label))
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(Theme.muted)
 
@@ -1507,7 +1514,7 @@ private struct AdvisorApplicationView: View {
                 value.trimmingCharacters(
                     in: .whitespacesAndNewlines
                 ).isEmpty
-                    ? "Not provided"
+                    ? L10n.string("Not provided")
                     : value
             )
             .font(.subheadline)
@@ -1526,22 +1533,22 @@ private struct AdvisorApplicationView: View {
     ) -> String? {
         if step == 0 {
             if displayName.trimmed.isEmpty {
-                return "Please enter your full name."
+                return L10n.string("Please enter your full name.")
             }
 
             if title.trimmed.isEmpty {
-                return "Please enter your professional title."
+                return L10n.string("Please enter your professional title.")
             }
 
             if selectedPhotoData == nil &&
                 existingApplication?.avatarStoragePath == nil &&
                 existingApplication?.avatarUrl == nil {
-                return "Please add a professional profile photo."
+                return L10n.string("Please add a professional profile photo.")
             }
 
             if let years = Int(yearsExperience),
                !(0...80).contains(years) {
-                return "Please check your years of experience."
+                return L10n.string("Please check your years of experience.")
             }
 
             return nil
@@ -1549,32 +1556,32 @@ private struct AdvisorApplicationView: View {
 
         if step == 1 {
             if bio.trimmed.count < 80 {
-                return "Please add a little more detail to your professional background."
+                return L10n.string("Please add a little more detail to your professional background.")
             }
 
             if csvValues(specialties).isEmpty {
-                return "Please add at least one specialty."
+                return L10n.string("Please add at least one specialty.")
             }
 
             if csvValues(languages).isEmpty {
-                return "Please add at least one language."
+                return L10n.string("Please add at least one language.")
             }
 
             return nil
         }
 
         if normalizedVideoURL == nil {
-            return "Please add a valid HTTPS introduction video link."
+            return L10n.string("Please add a valid HTTPS introduction video link.")
         }
 
         if !linkedinURL.trimmed.isEmpty &&
             !isValidHTTPSURL(linkedinURL) {
-            return "Please check your LinkedIn URL."
+            return L10n.string("Please check your LinkedIn URL.")
         }
 
         if !websiteURL.trimmed.isEmpty &&
             !isValidHTTPSURL(websiteURL) {
-            return "Please check your website URL."
+            return L10n.string("Please check your website URL.")
         }
 
         return nil
@@ -1616,12 +1623,12 @@ private struct AdvisorApplicationView: View {
                     compressionQuality: 0.82
                 )
             else {
-                errorMessage = "Could not read that photo."
+                errorMessage = L10n.string("Could not read that photo.")
                 return
             }
 
             guard jpegData.count <= 5 * 1024 * 1024 else {
-                errorMessage = "Please choose a smaller photo."
+                errorMessage = L10n.string("Please choose a smaller photo.")
                 return
             }
 
@@ -1750,6 +1757,23 @@ private struct AdvisorApplicationView: View {
         return resized.jpegData(
             compressionQuality: compressionQuality
         )
+    }
+
+    private func localizedAdvisorStatus(
+        _ status: String
+    ) -> String {
+        switch status {
+        case "changes_requested":
+            return L10n.string("Changes Requested")
+        case "approved":
+            return L10n.string("Approved")
+        case "rejected":
+            return L10n.string("Rejected")
+        case "suspended":
+            return L10n.string("Suspended")
+        default:
+            return L10n.string("Pending")
+        }
     }
 
     private func statusIcon(_ status: String) -> String {
