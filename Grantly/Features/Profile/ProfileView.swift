@@ -1127,7 +1127,7 @@ private struct AdvisorApplicationView: View {
                 Section {
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
-                            Text("Step \(step + 1) of 3")
+                            Text(L10n.format("Step %d of 3", step + 1))
                                 .font(.caption.weight(.semibold))
                                 .foregroundStyle(Theme.accentSoft)
 
@@ -1261,7 +1261,7 @@ private struct AdvisorApplicationView: View {
                     )
                     .font(.subheadline.weight(.semibold))
 
-                    Text("Application version \(application.applicationVersion)")
+                    Text(L10n.format("Application version %d", application.applicationVersion))
                         .font(.caption2)
                         .foregroundStyle(Theme.muted)
                 }
