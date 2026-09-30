@@ -573,3 +573,10 @@
 "Shorts require a video." = "Video ngắn yêu cầu một tệp video.";
 
 "Please choose media smaller than 6 MB." = "Vui lòng chọn tệp nhỏ hơn 6 MB.";
+
+"Preparing video..." = "Đang chuẩn bị video...";
+"Could not read that video." = "Không thể đọc video này.";
+"Please choose a video smaller than 200 MB." = "Vui lòng chọn video nhỏ hơn 200 MB.";
+"Uploading video" = "Đang tải video lên";
+"This video cannot be prepared for upload." = "Không thể chuẩn bị video này để tải lên.";
+"Video preparation failed. Please try another video." = "Chuẩn bị video thất bại. Vui lòng thử video khác.";
