@@ -844,7 +844,9 @@ struct ReliabilityBadge: View {
                 ? Theme.green
                 : Theme.orangeSoft
         )
-        .accessibilityLabel("\(label), score \(score) out of 100")
+        .accessibilityLabel(
+            L10n.format("%@, score %d out of 100", label, score)
+        )
     }
 }
 
