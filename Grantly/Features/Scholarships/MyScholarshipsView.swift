@@ -281,8 +281,7 @@ struct MyScholarshipsView: View {
 
             Text(
                 selectedStatus == "All"
-                    ? "Save scholarships from Explore and manage each application here."
-                    : "Update a scholarship's stage when your application progresses."
+                    ? L10n.string("Save scholarships from Explore and manage each application here.") : L10n.string("Update a scholarship's stage when your application progresses.")
             )
             .font(.subheadline)
             .foregroundStyle(Theme.muted)
