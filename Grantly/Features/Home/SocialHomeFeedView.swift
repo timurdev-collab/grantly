@@ -2,6 +2,7 @@ import AVKit
 import PhotosUI
 import SwiftUI
 import UniformTypeIdentifiers
+import UIKit
 
 struct SocialHomeFeedView: View {
     @Environment(AuthStore.self) private var auth
@@ -112,7 +113,7 @@ struct SocialHomeFeedView: View {
                 } label: {
                     VStack(spacing: 6) {
                         ZStack(alignment: .bottomTrailing) {
-                            CommunityAvatar(
+                            SocialAvatar(
                                 name: currentName ?? "You",
                                 imageURL: currentAvatarURL,
                                 size: 62
@@ -159,7 +160,7 @@ struct SocialHomeFeedView: View {
                                     )
                                     .frame(width: 66, height: 66)
 
-                                CommunityAvatar(
+                                SocialAvatar(
                                     name: story.author?.displayName ?? "Student",
                                     imageURL: story.author?.avatarUrl,
                                     size: 58
@@ -213,7 +214,7 @@ private struct SocialPostCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 10) {
-                CommunityAvatar(
+                SocialAvatar(
                     name: post.author?.displayName ?? "Student",
                     imageURL: post.author?.avatarUrl,
                     size: 38
@@ -326,7 +327,7 @@ private struct SocialStoryViewer: View {
 
             VStack(spacing: 0) {
                 HStack(spacing: 10) {
-                    CommunityAvatar(
+                    SocialAvatar(
                         name: story.author?.displayName ?? "Student",
                         imageURL: story.author?.avatarUrl,
                         size: 36
@@ -422,8 +423,8 @@ private struct SocialPostComposer: View {
 
                     TextField(
                         kind == .story
-                            ? "Add a story caption..."
-                            : "Share something with students...",
+                            ? L10n.string("Add a story caption...")
+                            : L10n.string("Share something with students..."),
                         text: $caption,
                         axis: .vertical
                     )
@@ -445,8 +446,8 @@ private struct SocialPostComposer: View {
 
                             Text(
                                 mediaData == nil
-                                    ? "Add photo or video"
-                                    : "Change media"
+                                    ? L10n.string("Add photo or video")
+                                    : L10n.string("Change media")
                             )
 
                             Spacer()
@@ -513,7 +514,11 @@ private struct SocialPostComposer: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(publishing ? "Publishing..." : "Publish") {
+                    Button(
+                        publishing
+                            ? L10n.string("Publishing...")
+                            : L10n.string("Publish")
+                    ) {
                         Task { await publish() }
                     }
                     .disabled(!canPublish)
@@ -551,7 +556,7 @@ private struct SocialPostComposer: View {
             }
 
             guard data.count <= 50 * 1024 * 1024 else {
-                errorMessage = "Please choose media smaller than 50 MB."
+                errorMessage = L10n.string("Please choose media smaller than 50 MB.")
                 return
             }
 
@@ -563,7 +568,7 @@ private struct SocialPostComposer: View {
             let isVideo = type?.conforms(to: .movie) == true
 
             if kind == .short && !isVideo {
-                errorMessage = "Shorts require a video."
+                errorMessage = L10n.string("Shorts require a video.")
                 return
             }
 
@@ -602,5 +607,66 @@ private struct SocialPostComposer: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+
+private struct SocialAvatar: View {
+    let name: String
+    var imageURL: String?
+    var size: CGFloat
+
+    private var initials: String {
+        let words = name.split(separator: " ")
+
+        if words.count >= 2 {
+            return (
+                String(words[0].prefix(1)) +
+                String(words[1].prefix(1))
+            ).uppercased()
+        }
+
+        return name.isEmpty
+            ? "G"
+            : String(name.prefix(2)).uppercased()
+    }
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(Theme.surfaceRaised)
+
+            if let imageURL,
+               let url = URL(string: imageURL) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    default:
+                        Text(initials)
+                            .font(
+                                .system(
+                                    size: size * 0.28,
+                                    weight: .bold
+                                )
+                            )
+                            .foregroundStyle(Theme.ink)
+                    }
+                }
+            } else {
+                Text(initials)
+                    .font(
+                        .system(
+                            size: size * 0.28,
+                            weight: .bold
+                        )
+                    )
+                    .foregroundStyle(Theme.ink)
+            }
+        }
+        .frame(width: size, height: size)
+        .clipShape(Circle())
     }
 }
