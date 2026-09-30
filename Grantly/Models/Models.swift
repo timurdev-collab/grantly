@@ -326,7 +326,7 @@ struct SocialPost: Codable, Identifiable, Hashable {
     let authorId: UUID
     let kind: SocialPostKind
     let caption: String
-    let mediaUrl: String?
+    var mediaUrl: String?
     let mediaPath: String?
     let mediaType: String?
     let createdAt: String
