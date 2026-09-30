@@ -2151,7 +2151,6 @@ enum DataService {
         fileExtension: String?
     ) async throws {
         let userId = try await supabase.auth.session.user.id
-        var mediaURL: String?
         var mediaPath: String?
 
         if let mediaData,
@@ -2177,6 +2176,31 @@ enum DataService {
             mediaPath = path
         }
 
+        do {
+            try await createSocialPostWithUploadedMedia(
+                kind: kind,
+                caption: caption,
+                mediaPath: mediaPath,
+                mediaType: mediaType.map {
+                    $0.hasPrefix("video/") ? "video" : "image"
+                }
+            )
+        } catch {
+            if let mediaPath {
+                try? await deleteSocialMedia(path: mediaPath)
+            }
+            throw error
+        }
+    }
+
+    static func createSocialPostWithUploadedMedia(
+        kind: SocialPostKind,
+        caption: String,
+        mediaPath: String?,
+        mediaType: String?
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
         struct Row: Encodable {
             let author_id: UUID
             let kind: String
@@ -2196,31 +2220,26 @@ enum DataService {
             expiresAt = nil
         }
 
-        do {
-            try await supabase
-                .from("social_posts")
-                .insert(
-                    Row(
-                        author_id: userId,
-                        kind: kind.rawValue,
-                        caption: caption,
-                        media_url: mediaURL,
-                        media_path: mediaPath,
-                        media_type: mediaType.map {
-                            $0.hasPrefix("video/") ? "video" : "image"
-                        },
-                        expires_at: expiresAt
-                    )
+        try await supabase
+            .from("social_posts")
+            .insert(
+                Row(
+                    author_id: userId,
+                    kind: kind.rawValue,
+                    caption: caption,
+                    media_url: nil,
+                    media_path: mediaPath,
+                    media_type: mediaType,
+                    expires_at: expiresAt
                 )
-                .execute()
-        } catch {
-            if let mediaPath {
-                try? await supabase.storage
-                    .from("social-media")
-                    .remove(paths: [mediaPath])
-            }
-            throw error
-        }
+            )
+            .execute()
+    }
+
+    static func deleteSocialMedia(path: String) async throws {
+        try await supabase.storage
+            .from("social-media")
+            .remove(paths: [path])
     }
 
     static func deleteSocialPost(_ post: SocialPost) async throws {
