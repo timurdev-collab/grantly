@@ -728,8 +728,8 @@ private struct ApplicationTasksSheet: View {
                 Section("Reminder foundation") {
                     Label(
                         item.reminderEnabled
-                            ? "Deadline reminders enabled"
-                            : "Deadline reminders disabled",
+                            ? L10n.string("Deadline reminders enabled")
+                            : L10n.string("Deadline reminders disabled"),
                         systemImage: item.reminderEnabled
                             ? "bell.fill"
                             : "bell.slash"
