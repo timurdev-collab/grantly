@@ -95,15 +95,20 @@ struct HomeView: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 0) {
                 greetingHeader
-                nextStepCard
-                recommendationsSection
-                deadlinesSection
+                quickActionsRail
+
+                VStack(alignment: .leading, spacing: 24) {
+                    nextStepCard
+                    recommendationsSection
+                    applicationsSection
+                    deadlinesSection
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 20)
+                .padding(.bottom, 32)
             }
-            .padding(.horizontal)
-            .padding(.top, 12)
-            .padding(.bottom, 32)
         }
         .background(Theme.pageBackground)
         .navigationBarTitleDisplayMode(.inline)
@@ -112,39 +117,29 @@ struct HomeView: View {
     }
 
     private var greetingHeader: some View {
-        HStack(alignment: .top, spacing: 12) {
-            VStack(alignment: .leading, spacing: 5) {
-                Text(firstName.map { "Hi, \($0)" } ?? "Hi")
-                    .font(.system(size: 29, weight: .bold))
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 12) {
+                Text("Grantly")
+                    .font(.system(size: 26, weight: .bold, design: .rounded))
                     .foregroundStyle(Theme.ink)
 
-                Text("Here’s what needs your attention")
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
-            }
+                Spacer()
 
-            Spacer()
-
-            HStack(spacing: 10) {
                 LanguageFlagMenu()
 
                 NavigationLink {
                     NotificationInboxView()
                 } label: {
                     ZStack(alignment: .topTrailing) {
-                        Circle()
-                            .fill(Theme.surface)
-                            .frame(width: 42, height: 42)
-
                         Image(
                             systemName:
                                 unreadNotifications > 0
-                                ? "bell.fill"
-                                : "bell"
+                                ? "heart.fill"
+                                : "heart"
                         )
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(Theme.ink.opacity(0.84))
-                        .frame(width: 42, height: 42)
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(Theme.ink)
+                        .frame(width: 38, height: 38)
 
                         if unreadNotifications > 0 {
                             Text(
@@ -157,42 +152,93 @@ struct HomeView: View {
                             .frame(minWidth: 16, minHeight: 16)
                             .background(Theme.orange)
                             .clipShape(Circle())
-                            .offset(x: 2, y: -2)
+                            .offset(x: 3, y: -1)
                         }
                     }
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Notifications")
 
+                NavigationLink {
+                    MessagesView()
+                } label: {
+                    Image(systemName: "paperplane")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(Theme.ink)
+                        .frame(width: 38, height: 38)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Messages")
+            }
+
+            Text(firstName.map { "Hi, \($0)" } ?? "Hi")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Theme.ink)
+
+            Text("Here’s what needs your attention")
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
+        .padding(.bottom, 14)
+        .background(Theme.surface)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(Theme.ink.opacity(0.07))
+                .frame(height: 1)
+        }
+    }
+
+    private var quickActionsRail: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 18) {
                 Button(action: openProfile) {
-                    ZStack {
-                        Circle()
-                            .fill(Theme.surface)
-                            .frame(width: 42, height: 42)
-
-                        if let avatarURL,
-                           let url = URL(string: avatarURL) {
-                            AsyncImage(url: url) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                            } placeholder: {
-                                profileAvatarFallback
-                            }
-                            .frame(width: 38, height: 38)
-                            .clipShape(Circle())
-                        } else {
-                            profileAvatarFallback
-                        }
-                    }
-                    .overlay(
-                        Circle()
-                            .stroke(Theme.ink.opacity(0.08), lineWidth: 1)
+                    HomeQuickAction(
+                        title: "Profile",
+                        systemImage: nil,
+                        avatarURL: avatarURL,
+                        fallback: firstName.flatMap { $0.first.map(String.init) }
                     )
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Open profile")
+
+                Button(action: openExplore) {
+                    HomeQuickAction(
+                        title: "Explore",
+                        systemImage: "magnifyingglass",
+                        avatarURL: nil,
+                        fallback: nil
+                    )
+                }
+                .buttonStyle(.plain)
+
+                Button(action: openApplications) {
+                    HomeQuickAction(
+                        title: "Applications",
+                        systemImage: "folder",
+                        avatarURL: nil,
+                        fallback: nil
+                    )
+                }
+                .buttonStyle(.plain)
+
+                NavigationLink {
+                    MessagesView()
+                } label: {
+                    HomeQuickAction(
+                        title: "Messages",
+                        systemImage: "bubble.left.and.bubble.right",
+                        avatarURL: nil,
+                        fallback: nil
+                    )
+                }
+                .buttonStyle(.plain)
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
         }
+        .background(Theme.surface)
     }
 
     @ViewBuilder
@@ -390,37 +436,33 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 28)
             } else if !matches.isEmpty {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(matches.prefix(3)) { match in
-                            NavigationLink {
-                                ScholarshipDetailView(
-                                    scholarship: match.scholarship,
-                                    match: match
-                                )
-                            } label: {
-                                HomeMatchCard(match: match)
-                            }
-                            .buttonStyle(.plain)
+                LazyVStack(spacing: 16) {
+                    ForEach(matches.prefix(3)) { match in
+                        NavigationLink {
+                            ScholarshipDetailView(
+                                scholarship: match.scholarship,
+                                match: match
+                            )
+                        } label: {
+                            HomeMatchCard(match: match)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             } else {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
-                        ForEach(upcoming.prefix(3)) { scholarship in
-                            NavigationLink {
-                                ScholarshipDetailView(
-                                    scholarship: scholarship,
-                                    match: nil
-                                )
-                            } label: {
-                                FeaturedScholarshipCard(
-                                    scholarship: scholarship
-                                )
-                            }
-                            .buttonStyle(.plain)
+                LazyVStack(spacing: 16) {
+                    ForEach(upcoming.prefix(3)) { scholarship in
+                        NavigationLink {
+                            ScholarshipDetailView(
+                                scholarship: scholarship,
+                                match: nil
+                            )
+                        } label: {
+                            FeaturedScholarshipCard(
+                                scholarship: scholarship
+                            )
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -591,6 +633,75 @@ struct HomeView: View {
         } catch {
             matches = []
             upcoming = []
+        }
+    }
+}
+
+private struct HomeQuickAction: View {
+    let title: String
+    let systemImage: String?
+    let avatarURL: String?
+    let fallback: String?
+
+    var body: some View {
+        VStack(spacing: 7) {
+            ZStack {
+                Circle()
+                    .stroke(
+                        LinearGradient(
+                            colors: [Theme.orangeSoft, Theme.blueSoft],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 2
+                    )
+                    .frame(width: 66, height: 66)
+
+                Circle()
+                    .fill(Theme.pageBackground)
+                    .frame(width: 60, height: 60)
+
+                if let avatarURL,
+                   let url = URL(string: avatarURL) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        default:
+                            quickFallback
+                        }
+                    }
+                    .frame(width: 56, height: 56)
+                    .clipShape(Circle())
+                } else if let systemImage {
+                    Image(systemName: systemImage)
+                        .font(.system(size: 21, weight: .semibold))
+                        .foregroundStyle(Theme.ink)
+                } else {
+                    quickFallback
+                }
+            }
+
+            Text(title)
+                .font(.caption2)
+                .foregroundStyle(Theme.ink)
+                .lineLimit(1)
+                .frame(width: 72)
+        }
+    }
+
+    @ViewBuilder
+    private var quickFallback: some View {
+        if let fallback, !fallback.isEmpty {
+            Text(fallback.uppercased())
+                .font(.headline.bold())
+                .foregroundStyle(Theme.ink)
+        } else {
+            Image(systemName: "person.fill")
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(Theme.muted)
         }
     }
 }
@@ -872,7 +983,7 @@ private struct HomeMatchCard: View {
                 UniversityPhoto(
                     seed: match.scholarship.provider + match.scholarship.title,
                     remoteURL: match.scholarship.university?.campusImageUrl,
-                    height: 122
+                    height: 190
                 )
 
                 Text("\(match.score)% match")
@@ -908,7 +1019,7 @@ private struct HomeMatchCard: View {
             }
             .padding(12)
         }
-        .frame(width: 228)
+        .frame(maxWidth: .infinity)
         .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 19))
         .overlay(
