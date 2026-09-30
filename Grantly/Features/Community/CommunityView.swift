@@ -1095,7 +1095,7 @@ struct CommunityView: View {
                                 .font(.headline.bold())
                                 .foregroundStyle(Theme.ink)
 
-                            Text("\(filtered.count) visible community profiles")
+                            Text(L10n.format("%d visible community profiles", filtered.count))
                                 .font(.caption)
                                 .foregroundStyle(Theme.muted)
                         }
