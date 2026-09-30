@@ -47,7 +47,12 @@ struct AdvisorsView: View {
                             Spacer()
 
                             if !advisors.isEmpty {
-                                Text("\(advisors.count) available")
+                                Text(
+                                    L10n.format(
+                                        "%d available",
+                                        advisors.count
+                                    )
+                                )
                                     .font(.caption)
                                     .foregroundStyle(Theme.muted)
                             }
@@ -96,8 +101,8 @@ struct AdvisorsView: View {
         VStack(alignment: .leading, spacing: 9) {
             Text(
                 registration.status == "active"
-                    ? "Your advisor"
-                    : "Advisor request pending"
+                    ? L10n.string("Your advisor")
+                    : L10n.string("Advisor request pending")
             )
             .font(.caption.weight(.semibold))
             .foregroundStyle(Theme.accentSoft)
