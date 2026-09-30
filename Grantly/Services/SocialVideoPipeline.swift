@@ -1,6 +1,7 @@
 import AVFoundation
 import CoreTransferable
 import Foundation
+import UniformTypeIdentifiers
 
 struct SocialVideoTransfer: Transferable {
     let url: URL
