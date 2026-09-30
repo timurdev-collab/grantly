@@ -2234,6 +2234,41 @@ enum DataService {
         }
     }
 
+    static func mySocialPosts(
+        limit: Int = 100
+    ) async throws -> [SocialPost] {
+        let userId = try await supabase.auth.session.user.id
+
+        let posts: [SocialPost] = try await supabase
+            .from("social_posts")
+            .select()
+            .eq("author_id", value: userId.uuidString)
+            .order("created_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+
+        return try await attachSocialAuthors(to: posts)
+    }
+
+    static func updateSocialPostCaption(
+        postId: UUID,
+        caption: String
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let caption: String
+        }
+
+        try await supabase
+            .from("social_posts")
+            .update(Row(caption: caption))
+            .eq("id", value: postId.uuidString)
+            .eq("author_id", value: userId.uuidString)
+            .execute()
+    }
+
     static func deleteSocialPost(_ post: SocialPost) async throws {
         let userId = try await supabase.auth.session.user.id
 
