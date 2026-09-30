@@ -550,3 +550,24 @@
 "This removes the application and its uploaded documents." = "Cela supprime la candidature et les documents téléversés.";
 "%d applications" = "%d candidatures";
 "Tasks" = "Tâches";
+
+"Create" = "Créer";
+"No community posts yet" = "Aucune publication de la communauté pour le moment";
+"Share a photo, video or short with other students." = "Partagez une photo, une vidéo ou un format court avec d'autres étudiants.";
+"Create post" = "Créer une publication";
+"Your story" = "Votre story";
+"Short" = "Vidéo courte";
+"Type" = "Type";
+"Post" = "Publication";
+"Story" = "Story";
+"Add a story caption..." = "Ajoutez une légende à la story...";
+"Share something with students..." = "Partagez quelque chose avec les étudiants...";
+"Add photo or video" = "Ajouter une photo ou une vidéo";
+"Change media" = "Changer le média";
+"Video ready to publish" = "Vidéo prête à être publiée";
+"Stories disappear after 24 hours." = "Les stories disparaissent après 24 heures.";
+"Shorts are vertical video posts. Choose a video for the best result." = "Les vidéos courtes fonctionnent mieux au format vertical.";
+"Publishing..." = "Publication...";
+"Publish" = "Publier";
+"Please choose media smaller than 50 MB." = "Veuillez choisir un fichier de moins de 50 Mo.";
+"Shorts require a video." = "Les vidéos courtes nécessitent une vidéo.";

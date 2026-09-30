@@ -313,6 +313,40 @@ struct AdvisorCallSession: Codable, Identifiable {
     }
 }
 
+enum SocialPostKind: String, Codable, CaseIterable, Identifiable {
+    case post
+    case story
+    case short
+
+    var id: String { rawValue }
+}
+
+struct SocialPost: Codable, Identifiable, Hashable {
+    let id: UUID
+    let authorId: UUID
+    let kind: SocialPostKind
+    let caption: String
+    let mediaUrl: String?
+    let mediaPath: String?
+    let mediaType: String?
+    let createdAt: String
+    let expiresAt: String?
+    let isActive: Bool
+
+    var author: CommunityProfile?
+
+    enum CodingKeys: String, CodingKey {
+        case id, kind, caption, author
+        case authorId = "author_id"
+        case mediaUrl = "media_url"
+        case mediaPath = "media_path"
+        case mediaType = "media_type"
+        case createdAt = "created_at"
+        case expiresAt = "expires_at"
+        case isActive = "is_active"
+    }
+}
+
 struct CommunityProfile: Codable, Identifiable, Hashable {
     let id: UUID
     var displayName: String?

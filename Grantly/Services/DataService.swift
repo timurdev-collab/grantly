@@ -2116,6 +2116,159 @@ enum DataService {
             .upsert(row)
             .execute()
     }
+
+    static func socialFeed(limit: Int = 30) async throws -> [SocialPost] {
+        let posts: [SocialPost] = try await supabase
+            .from("social_posts")
+            .select()
+            .neq("kind", value: SocialPostKind.story.rawValue)
+            .order("created_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+
+        return try await attachSocialAuthors(to: posts)
+    }
+
+    static func socialStories(limit: Int = 30) async throws -> [SocialPost] {
+        let posts: [SocialPost] = try await supabase
+            .from("social_posts")
+            .select()
+            .eq("kind", value: SocialPostKind.story.rawValue)
+            .order("created_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+
+        return try await attachSocialAuthors(to: posts)
+    }
+
+    static func createSocialPost(
+        kind: SocialPostKind,
+        caption: String,
+        mediaData: Data?,
+        mediaType: String?,
+        fileExtension: String?
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+        var mediaURL: String?
+        var mediaPath: String?
+
+        if let mediaData,
+           let mediaType,
+           let fileExtension {
+            let fileId = UUID().uuidString.lowercased()
+            let path =
+                "\(userId.uuidString.lowercased())/" +
+                "\(fileId).\(fileExtension)"
+
+            try await supabase.storage
+                .from("social-media")
+                .upload(
+                    path: path,
+                    file: mediaData,
+                    options: FileOptions(
+                        cacheControl: "3600",
+                        contentType: mediaType,
+                        upsert: false
+                    )
+                )
+
+            let publicURL = try supabase.storage
+                .from("social-media")
+                .getPublicURL(path: path)
+
+            mediaURL = publicURL.absoluteString
+            mediaPath = path
+        }
+
+        struct Row: Encodable {
+            let author_id: UUID
+            let kind: String
+            let caption: String
+            let media_url: String?
+            let media_path: String?
+            let media_type: String?
+            let expires_at: String?
+        }
+
+        let expiresAt: String?
+        if kind == .story {
+            expiresAt = ISO8601DateFormatter().string(
+                from: Date().addingTimeInterval(24 * 60 * 60)
+            )
+        } else {
+            expiresAt = nil
+        }
+
+        do {
+            try await supabase
+                .from("social_posts")
+                .insert(
+                    Row(
+                        author_id: userId,
+                        kind: kind.rawValue,
+                        caption: caption,
+                        media_url: mediaURL,
+                        media_path: mediaPath,
+                        media_type: mediaType.map {
+                            $0.hasPrefix("video/") ? "video" : "image"
+                        },
+                        expires_at: expiresAt
+                    )
+                )
+                .execute()
+        } catch {
+            if let mediaPath {
+                try? await supabase.storage
+                    .from("social-media")
+                    .remove(paths: [mediaPath])
+            }
+            throw error
+        }
+    }
+
+    static func deleteSocialPost(_ post: SocialPost) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        try await supabase
+            .from("social_posts")
+            .delete()
+            .eq("id", value: post.id.uuidString)
+            .eq("author_id", value: userId.uuidString)
+            .execute()
+
+        if let mediaPath = post.mediaPath {
+            try? await supabase.storage
+                .from("social-media")
+                .remove(paths: [mediaPath])
+        }
+    }
+
+    private static func attachSocialAuthors(
+        to posts: [SocialPost]
+    ) async throws -> [SocialPost] {
+        guard !posts.isEmpty else { return [] }
+
+        let ids = Array(Set(posts.map(\.authorId)))
+        let profiles: [CommunityProfile] = try await supabase
+            .from("community_profiles")
+            .select()
+            .in("id", values: ids.map(\.uuidString))
+            .execute()
+            .value
+
+        let map = Dictionary(
+            uniqueKeysWithValues: profiles.map { ($0.id, $0) }
+        )
+
+        return posts.map { post in
+            var value = post
+            value.author = map[post.authorId]
+            return value
+        }
+    }
+
 }
 
 

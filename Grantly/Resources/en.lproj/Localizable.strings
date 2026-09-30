@@ -550,3 +550,24 @@
 "This removes the application and its uploaded documents." = "This removes the application and its uploaded documents.";
 "%d applications" = "%d applications";
 "Tasks" = "Tasks";
+
+"Create" = "Create";
+"No community posts yet" = "No community posts yet";
+"Share a photo, video or short with other students." = "Share a photo, video or short with other students.";
+"Create post" = "Create post";
+"Your story" = "Your story";
+"Short" = "Short";
+"Type" = "Type";
+"Post" = "Post";
+"Story" = "Story";
+"Add a story caption..." = "Add a story caption...";
+"Share something with students..." = "Share something with students...";
+"Add photo or video" = "Add photo or video";
+"Change media" = "Change media";
+"Video ready to publish" = "Video ready to publish";
+"Stories disappear after 24 hours." = "Stories disappear after 24 hours.";
+"Shorts are vertical video posts. Choose a video for the best result." = "Shorts are vertical video posts. Choose a video for the best result.";
+"Publishing..." = "Publishing...";
+"Publish" = "Publish";
+"Please choose media smaller than 50 MB." = "Please choose media smaller than 50 MB.";
+"Shorts require a video." = "Shorts require a video.";
