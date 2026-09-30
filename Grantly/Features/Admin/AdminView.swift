@@ -1269,8 +1269,13 @@ struct AdminPeopleView: View {
 
                             Text(
                                 pendingAdvisorCount == 0
-                                    ? "No applications waiting for review"
-                                    : "\(pendingAdvisorCount) application(s) waiting"
+                                    ? L10n.string(
+                                        "No applications waiting for review"
+                                    )
+                                    : L10n.format(
+                                        "%d application(s) waiting",
+                                        pendingAdvisorCount
+                                    )
                             )
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -1316,7 +1321,11 @@ struct AdminPeopleView: View {
 
                                 Spacer()
 
-                                Text(user.role.capitalized)
+                                Text(
+                                    L10n.string(
+                                        user.role.capitalized
+                                    )
+                                )
                                     .font(.caption2.weight(.semibold))
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
@@ -1327,9 +1336,9 @@ struct AdminPeopleView: View {
                             if let advisorStatus = user.advisorStatus {
                                 HStack(spacing: 7) {
                                     Label(
-                                        advisorStatus
-                                            .replacingOccurrences(of: "_", with: " ")
-                                            .capitalized,
+                                        localizedAdvisorStatus(
+                                            advisorStatus
+                                        ),
                                         systemImage: advisorStatus == "approved"
                                             ? "checkmark.seal.fill"
                                             : "clock.badge.questionmark"
@@ -1531,15 +1540,8 @@ struct AdminAdvisorApplicationsView: View {
             Section {
                 Picker("Status", selection: $filter) {
                     ForEach(filters, id: \.self) { status in
-                        Text(
-                            status
-                                .replacingOccurrences(
-                                    of: "_",
-                                    with: " "
-                                )
-                                .capitalized
-                        )
-                        .tag(status)
+                        Text(localizedAdvisorStatus(status))
+                            .tag(status)
                     }
                 }
                 .pickerStyle(.menu)
@@ -1559,7 +1561,11 @@ struct AdminAdvisorApplicationsView: View {
                         "No applications",
                         systemImage: "person.crop.circle.badge.checkmark",
                         description: Text(
-                            "There are no \(filter.replacingOccurrences(of: "_", with: " ")) advisor applications."
+                            L10n.format(
+                                "There are no %@ advisor applications.",
+                                localizedAdvisorStatus(filter)
+                                    .lowercased()
+                            )
                         )
                     )
                 }
@@ -1926,17 +1932,17 @@ struct AdminAdvisorReviewView: View {
     private func actionTitle(_ action: String) -> String {
         switch action {
         case "approve":
-            return "Approve & publish"
+            return L10n.string("Approve & publish")
         case "request_changes":
-            return "Request changes"
+            return L10n.string("Request changes")
         case "reject":
-            return "Reject application"
+            return L10n.string("Reject application")
         case "suspend":
-            return "Suspend advisor"
+            return L10n.string("Suspend advisor")
         case "restore":
-            return "Restore advisor"
+            return L10n.string("Restore advisor")
         default:
-            return "Continue"
+            return L10n.string("Continue")
         }
     }
 
@@ -1964,8 +1970,9 @@ struct AdminAdvisorReviewView: View {
                     in: .whitespacesAndNewlines
                 )
                 .isEmpty {
-            errorMessage =
+            errorMessage = L10n.string(
                 "Please add a clear note for the advisor first."
+            )
             showActionConfirmation = nil
             return
         }
@@ -1988,6 +1995,23 @@ struct AdminAdvisorReviewView: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+private func localizedAdvisorStatus(
+    _ status: String
+) -> String {
+    switch status {
+    case "changes_requested":
+        return L10n.string("Changes Requested")
+    case "approved":
+        return L10n.string("Approved")
+    case "rejected":
+        return L10n.string("Rejected")
+    case "suspended":
+        return L10n.string("Suspended")
+    default:
+        return L10n.string("Pending")
     }
 }
 

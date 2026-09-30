@@ -14,7 +14,7 @@ private enum AdminExperience: String, CaseIterable {
     case student
 
     var title: String {
-        rawValue.capitalized
+        L10n.string(rawValue.capitalized)
     }
 
     var icon: String {
@@ -83,7 +83,9 @@ struct MainTabView: View {
 
                     Text(
                         profileLoadError ??
-                        "We could not confirm your account role. Try again before continuing."
+                        L10n.string(
+                            "We could not confirm your account role. Try again before continuing."
+                        )
                     )
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
@@ -346,11 +348,11 @@ private struct AdminPortalView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 14))
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(title)
+                Text(L10n.string(title))
                     .font(.headline.bold())
                     .foregroundStyle(Theme.ink)
 
-                Text(subtitle)
+                Text(L10n.string(subtitle))
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
                     .multilineTextAlignment(.leading)
