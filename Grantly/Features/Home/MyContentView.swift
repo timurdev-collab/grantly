@@ -330,7 +330,11 @@ private struct EditSocialPostSheet: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(saving ? "Saving..." : "Save") {
+                    Button(
+                        saving
+                            ? L10n.string("Saving...")
+                            : L10n.string("Save")
+                    ) {
                         Task { await save() }
                     }
                     .disabled(saving)
