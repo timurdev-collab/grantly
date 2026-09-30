@@ -15,11 +15,6 @@ struct MessagesView: View {
                         .foregroundStyle(Theme.ink)
 
                     Spacer()
-
-                    Image(systemName: "square.and.pencil")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(Theme.ink)
-                        .frame(width: 40, height: 40)
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 10)
@@ -34,7 +29,7 @@ struct MessagesView: View {
                     EmptyState(
                         icon: "bubble.left.and.bubble.right",
                         title: "No messages yet",
-                        text: "Start a conversation from the Community tab."
+                        text: "Start a conversation with an advisor."
                     )
                     .padding(.horizontal, 16)
                     .padding(.vertical, 36)
@@ -57,7 +52,8 @@ struct MessagesView: View {
             .padding(.bottom, 24)
         }
         .background(Theme.pageBackground)
-        .navigationBarHidden(true)
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
         .refreshable { await load() }
         .task {
             await load()
