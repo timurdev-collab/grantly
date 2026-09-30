@@ -35,6 +35,12 @@ on public.social_posts for select to authenticated
 using (
   is_active = true
   and (expires_at is null or expires_at > now())
+  and exists (
+    select 1
+    from public.community_profiles cp
+    where cp.id = social_posts.author_id
+      and cp.is_visible = true
+  )
   and not exists (
     select 1
     from public.user_blocks b
