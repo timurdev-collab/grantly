@@ -573,3 +573,10 @@
 "Shorts require a video." = "المقاطع القصيرة تتطلب فيديو.";
 
 "Please choose media smaller than 6 MB." = "يرجى اختيار ملف أصغر من 6 ميغابايت.";
+
+"Preparing video..." = "جارٍ تجهيز الفيديو...";
+"Could not read that video." = "تعذر قراءة هذا الفيديو.";
+"Please choose a video smaller than 200 MB." = "يرجى اختيار فيديو أصغر من 200 ميغابايت.";
+"Uploading video" = "جارٍ رفع الفيديو";
+"This video cannot be prepared for upload." = "لا يمكن تجهيز هذا الفيديو للرفع.";
+"Video preparation failed. Please try another video." = "فشل تجهيز الفيديو. جرّب فيديو آخر.";
