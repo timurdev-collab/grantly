@@ -33,21 +33,24 @@ drop policy if exists "authenticated users view social posts" on public.social_p
 create policy "authenticated users view social posts"
 on public.social_posts for select to authenticated
 using (
-  is_active = true
-  and (expires_at is null or expires_at > now())
-  and exists (
-    select 1
-    from public.community_profiles cp
-    where cp.id = social_posts.author_id
-      and cp.is_visible = true
-  )
-  and not exists (
-    select 1
-    from public.user_blocks b
-    where
-      (b.blocker_id = (select auth.uid()) and b.blocked_id = social_posts.author_id)
-      or
-      (b.blocked_id = (select auth.uid()) and b.blocker_id = social_posts.author_id)
+  author_id = (select auth.uid())
+  or (
+    is_active = true
+    and (expires_at is null or expires_at > now())
+    and exists (
+      select 1
+      from public.community_profiles cp
+      where cp.id = social_posts.author_id
+        and cp.is_visible = true
+    )
+    and not exists (
+      select 1
+      from public.user_blocks b
+      where
+        (b.blocker_id = (select auth.uid()) and b.blocked_id = social_posts.author_id)
+        or
+        (b.blocked_id = (select auth.uid()) and b.blocker_id = social_posts.author_id)
+    )
   )
 );
 
@@ -112,19 +115,24 @@ using (
   and exists (
     select 1
     from public.social_posts p
-    join public.community_profiles cp
+    left join public.community_profiles cp
       on cp.id = p.author_id
     where p.media_path = storage.objects.name
-      and p.is_active = true
-      and (p.expires_at is null or p.expires_at > now())
-      and cp.is_visible = true
-      and not exists (
-        select 1
-        from public.user_blocks b
-        where
-          (b.blocker_id = (select auth.uid()) and b.blocked_id = p.author_id)
-          or
-          (b.blocked_id = (select auth.uid()) and b.blocker_id = p.author_id)
+      and (
+        p.author_id = (select auth.uid())
+        or (
+          p.is_active = true
+          and (p.expires_at is null or p.expires_at > now())
+          and cp.is_visible = true
+          and not exists (
+            select 1
+            from public.user_blocks b
+            where
+              (b.blocker_id = (select auth.uid()) and b.blocked_id = p.author_id)
+              or
+              (b.blocked_id = (select auth.uid()) and b.blocker_id = p.author_id)
+          )
+        )
       )
   )
 );
