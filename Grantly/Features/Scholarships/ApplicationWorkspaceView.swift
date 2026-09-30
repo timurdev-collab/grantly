@@ -356,7 +356,7 @@ struct ApplicationWorkspaceView: View {
 
             if let official = scholarship.deadline {
                 Label(
-                    "Official deadline: \(official)",
+                    L10n.format("Official deadline: %@", official),
                     systemImage: "calendar.badge.exclamationmark"
                 )
                 .font(.caption)
