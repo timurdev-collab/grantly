@@ -580,3 +580,20 @@
 "Uploading video" = "Téléversement de la vidéo";
 "This video cannot be prepared for upload." = "Cette vidéo ne peut pas être préparée pour le téléversement.";
 "Video preparation failed. Please try another video." = "La préparation de la vidéo a échoué. Essayez une autre vidéo.";
+
+"My content" = "Mon contenu";
+"Edit or delete your posts, stories and shorts" = "Modifiez ou supprimez vos publications, stories et vidéos courtes";
+"Content" = "Contenu";
+"No content yet" = "Aucun contenu pour le moment";
+"Posts, stories and shorts you publish will appear here." = "Vos publications, stories et vidéos courtes apparaîtront ici.";
+"All" = "Tout";
+"Posts" = "Publications";
+"Stories" = "Stories";
+"Shorts" = "Vidéos courtes";
+"Edit caption" = "Modifier la légende";
+"Delete this content?" = "Supprimer ce contenu ?";
+"This cannot be undone." = "Cette action est irréversible.";
+"Caption" = "Légende";
+"Write a caption..." = "Écrivez une légende...";
+"Edit content" = "Modifier le contenu";
+"Saving..." = "Enregistrement...";
