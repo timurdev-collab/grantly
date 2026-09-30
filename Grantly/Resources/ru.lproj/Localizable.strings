@@ -535,3 +535,6 @@
 "The automatic audit checks source availability, page specificity and possible deadline text. University media enrichment reads public metadata from provider websites and stores discovered icon and social-image URLs." = "Автоматический аудит проверяет доступность источника, специфичность страницы и возможный текст срока. Обогащение медиа университетов читает публичные метаданные с сайтов организаций и сохраняет найденные иконки и изображения.";
 
 "Add your degree, field, GPA and destination goals so Grantly can rank scholarships around you." = "Добавьте уровень обучения, направление, GPA и цели по странам, чтобы Grantly мог ранжировать стипендии для вас.";
+
+"Start a conversation with an advisor." = "Начните разговор с консультантом.";
+"Conversation created. Open Messages." = "Разговор создан. Откройте сообщения.";

@@ -1607,7 +1607,7 @@ struct CommunityProfileView: View {
                 otherUser: profile.id
             )
 
-            status = L10n.string("Conversation created. Open Messages from Community.")
+            status = L10n.string("Conversation created. Open Messages.")
         } catch {
             status = error.localizedDescription
         }

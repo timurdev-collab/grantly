@@ -535,3 +535,6 @@
 "The automatic audit checks source availability, page specificity and possible deadline text. University media enrichment reads public metadata from provider websites and stores discovered icon and social-image URLs." = "Kiểm tra tự động xác minh tính khả dụng của nguồn, mức độ cụ thể của trang và văn bản hạn có thể có. Hệ thống bổ sung media trường đại học đọc metadata công khai từ website của nhà cung cấp và lưu biểu tượng cùng URL ảnh mạng xã hội.";
 
 "Add your degree, field, GPA and destination goals so Grantly can rank scholarships around you." = "Thêm bậc học, lĩnh vực, GPA và mục tiêu điểm đến để Grantly xếp hạng học bổng phù hợp với bạn.";
+
+"Start a conversation with an advisor." = "Bắt đầu cuộc trò chuyện với một cố vấn.";
+"Conversation created. Open Messages." = "Cuộc trò chuyện đã được tạo. Mở Tin nhắn.";
