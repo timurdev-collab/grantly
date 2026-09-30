@@ -495,19 +495,31 @@ struct ProfileView: View {
 
                 Spacer()
 
-                Circle()
-                    .fill(visible ? Theme.green : Theme.ink.opacity(0.25))
-                    .frame(width: 8, height: 8)
+                Label(
+                    visible ? "Community visible" : "Community hidden",
+                    systemImage: visible ? "eye.fill" : "eye.slash.fill"
+                )
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Theme.blueSoft)
             }
 
-            Text(
-                bio.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    ? "Add a short bio so other students know your study interests."
-                    : bio
+            ProfileSummaryLine(
+                icon: "graduationcap.fill",
+                label: "Degree",
+                value: degreeLevel
             )
-            .font(.subheadline)
-            .foregroundStyle(Theme.muted)
-            .lineSpacing(3)
+
+            ProfileSummaryLine(
+                icon: "books.vertical.fill",
+                label: "Major",
+                value: intendedMajor.isEmpty ? "Not set" : intendedMajor
+            )
+
+            ProfileSummaryLine(
+                icon: "globe",
+                label: "Countries",
+                value: targetCountries.isEmpty ? "Not set" : targetCountries
+            )
 
             Text("GPA, IELTS, income and residence details are never copied into your public community profile.")
                 .font(.caption)
@@ -516,9 +528,9 @@ struct ProfileView: View {
         }
         .padding(16)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 18)
                 .stroke(Theme.ink.opacity(0.05))
         )
     }
