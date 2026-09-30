@@ -52,7 +52,6 @@ struct MyScholarshipsView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 20) {
                 header
-                pipelineSummary
 
                 if !items.isEmpty {
                     statusFilter
@@ -71,43 +70,35 @@ struct MyScholarshipsView: View {
                 } else if filteredItems.isEmpty {
                     emptyState
                 } else {
-                    LazyVStack(spacing: 13) {
+                    LazyVStack(spacing: 10) {
                         ForEach(filteredItems) { item in
-                            NavigationLink {
-                                ScholarshipDetailView(
-                                    scholarship: item.scholarship,
-                                    match: nil
-                                )
-                            } label: {
-                                ApplicationCard(
-                                    item: item,
-                                    statuses: statuses,
-                                    onStatus: { status in
-                                        Task {
-                                            await updateStatus(
-                                                item: item,
-                                                status: status
-                                            )
-                                        }
-                                    },
-                                    onNote: {
-                                        editingItem = item
-                                        noteText = item.notes ?? ""
-                                    },
-                                    onTasks: {
-                                        taskItem = item
-                                    },
-                                    onWorkspace: {
-                                        workspaceItem = item
-                                    },
-                                    onRemove: {
-                                        Task {
-                                            await remove(item)
-                                        }
+                            ApplicationCard(
+                                item: item,
+                                statuses: statuses,
+                                onStatus: { status in
+                                    Task {
+                                        await updateStatus(
+                                            item: item,
+                                            status: status
+                                        )
                                     }
-                                )
-                            }
-                            .buttonStyle(.plain)
+                                },
+                                onNote: {
+                                    editingItem = item
+                                    noteText = item.notes ?? ""
+                                },
+                                onTasks: {
+                                    taskItem = item
+                                },
+                                onWorkspace: {
+                                    workspaceItem = item
+                                },
+                                onRemove: {
+                                    Task {
+                                        await remove(item)
+                                    }
+                                }
+                            )
                         }
                     }
                 }
@@ -147,15 +138,19 @@ struct MyScholarshipsView: View {
     }
 
     private var header: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 5) {
-                Text("My Scholarships")
-                    .font(.system(size: 30, weight: .bold))
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Scholarship applications")
+                    .font(.headline.bold())
                     .foregroundStyle(Theme.ink)
 
-                Text("Turn your shortlist into an application plan")
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                Text(
+                    items.isEmpty
+                        ? L10n.string("Save scholarships from Explore and manage each application here.")
+                        : L10n.format("%d applications", items.count)
+                )
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
             }
 
             Spacer()
@@ -493,120 +488,95 @@ private struct ApplicationCard: View {
     let onRemove: () -> Void
 
     var body: some View {
-        HStack(spacing: 12) {
-            UniversityPhoto(
-                seed: item.scholarship.provider + item.scholarship.title,
-                remoteURL: item.scholarship.university?.campusImageUrl,
-                height: 116
-            )
-            .frame(width: 112)
-            .clipShape(RoundedRectangle(cornerRadius: 15))
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 11) {
+                UniversityLogo(
+                    university: item.scholarship.university,
+                    fallbackName: item.scholarship.provider,
+                    size: 44
+                )
 
-            VStack(alignment: .leading, spacing: 7) {
-                HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(item.scholarship.title)
-                        .font(.subheadline.bold())
+                        .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.ink)
                         .lineLimit(2)
 
-                    Spacer(minLength: 8)
-
-                    Menu {
-                        Button("Remove", role: .destructive) {
-                            onRemove()
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis")
-                            .foregroundStyle(Theme.muted)
-                            .frame(width: 24, height: 24)
-                    }
-                }
-
-                Text(item.scholarship.provider)
-                    .font(.caption2)
-                    .foregroundStyle(Theme.muted)
-                    .lineLimit(1)
-
-                HStack(spacing: 6) {
-                    Menu {
-                        ForEach(statuses, id: \.self) { status in
-                            Button {
-                                onStatus(status)
-                            } label: {
-                                if status == item.applicationStatus {
-                                    Label(status, systemImage: "checkmark")
-                                } else {
-                                    Text(status)
-                                }
-                            }
-                        }
-                    } label: {
-                        ApplicationStatusPill(status: item.applicationStatus)
-                    }
-
-                    Spacer()
-
-                    Button(action: onTasks) {
-                        Image(systemName: "checklist")
-                            .font(.caption)
-                            .foregroundStyle(Theme.orangeSoft)
-                    }
-                    .buttonStyle(.plain)
-
-                    Button(action: onNote) {
-                        Image(systemName: "note.text")
-                            .font(.caption)
-                            .foregroundStyle(
-                                item.notes?
-                                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                                    .isEmpty == false
-                                    ? Theme.orangeSoft
-                                    : Theme.ink.opacity(0.54)
-                            )
-                    }
-                    .buttonStyle(.plain)
-
-                    Button(action: onWorkspace) {
-                        Image(systemName: "rectangle.stack.badge.plus")
-                            .font(.caption)
-                            .foregroundStyle(Theme.orangeSoft)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel("Open Application Center")
-                }
-
-                if let deadline = item.scholarship.deadline {
-                    Label(deadline, systemImage: "calendar")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.orangeSoft)
-                }
-
-                if let notes = item.notes?
-                    .trimmingCharacters(in: .whitespacesAndNewlines),
-                   !notes.isEmpty {
-                    Text(notes)
+                    Text(item.scholarship.provider)
                         .font(.caption2)
                         .foregroundStyle(Theme.muted)
                         .lineLimit(1)
                 }
 
-                if let reference = item.applicationReference,
-                   !reference.isEmpty {
-                    Label(
-                        reference,
-                        systemImage: "number"
-                    )
-                    .font(.caption2)
-                    .foregroundStyle(Theme.muted)
-                    .lineLimit(1)
+                Spacer(minLength: 4)
+
+                Button(role: .destructive, action: onRemove) {
+                    Image(systemName: "trash")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Theme.danger)
+                        .frame(width: 36, height: 36)
+                        .background(Theme.surfaceRaised)
+                        .clipShape(Circle())
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Delete")
+            }
+
+            HStack(spacing: 8) {
+                Menu {
+                    ForEach(statuses, id: \.self) { status in
+                        Button {
+                            onStatus(status)
+                        } label: {
+                            if status == item.applicationStatus {
+                                Label(status, systemImage: "checkmark")
+                            } else {
+                                Text(status)
+                            }
+                        }
+                    }
+                } label: {
+                    ApplicationStatusPill(status: item.applicationStatus)
+                }
+
+                Spacer()
+
+                Button(action: onTasks) {
+                    Image(systemName: "checklist")
+                        .frame(width: 34, height: 34)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(Theme.orangeSoft)
+                .accessibilityLabel("Tasks")
+
+                Button(action: onNote) {
+                    Image(systemName: "note.text")
+                        .frame(width: 34, height: 34)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(Theme.ink.opacity(0.72))
+                .accessibilityLabel("Note")
+
+                Button(action: onWorkspace) {
+                    Image(systemName: "rectangle.stack.badge.plus")
+                        .frame(width: 34, height: 34)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(Theme.orangeSoft)
+                .accessibilityLabel("Open Application Center")
+            }
+
+            if let deadline = item.scholarship.deadline {
+                Label(deadline, systemImage: "calendar")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(Theme.orangeSoft)
             }
         }
-        .padding(10)
+        .padding(12)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
         .overlay(
-            RoundedRectangle(cornerRadius: 18)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(Theme.ink.opacity(0.05))
         )
     }

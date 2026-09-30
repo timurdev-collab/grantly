@@ -538,3 +538,15 @@
 
 "Start a conversation with an advisor." = "Начните разговор с консультантом.";
 "Conversation created. Open Messages." = "Разговор создан. Откройте сообщения.";
+
+"University applications" = "Заявки в университеты";
+"Scholarship applications" = "Заявки на стипендии";
+"Universities you are applying to" = "Университеты, в которые вы подаёте документы";
+"Add university application" = "Добавить заявку в университет";
+"Add your first university application" = "Добавьте первую заявку в университет";
+"Add application" = "Добавить заявку";
+"Delete application?" = "Удалить заявку?";
+"Delete" = "Удалить";
+"This removes the application and its uploaded documents." = "Заявка и загруженные документы будут удалены.";
+"%d applications" = "%d заявок";
+"Tasks" = "Задачи";

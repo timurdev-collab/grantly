@@ -538,3 +538,15 @@
 
 "Start a conversation with an advisor." = "Commencez une conversation avec un conseiller.";
 "Conversation created. Open Messages." = "Conversation créée. Ouvrez Messages.";
+
+"University applications" = "Candidatures universitaires";
+"Scholarship applications" = "Demandes de bourse";
+"Universities you are applying to" = "Universités auxquelles vous postulez";
+"Add university application" = "Ajouter une candidature universitaire";
+"Add your first university application" = "Ajoutez votre première candidature universitaire";
+"Add application" = "Ajouter une candidature";
+"Delete application?" = "Supprimer la candidature ?";
+"Delete" = "Supprimer";
+"This removes the application and its uploaded documents." = "Cela supprime la candidature et les documents téléversés.";
+"%d applications" = "%d candidatures";
+"Tasks" = "Tâches";

@@ -32,6 +32,7 @@ struct ProfileView: View {
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var uploadingPhoto = false
     @State private var selectedProfileSection = 0
+    @State private var showingSettings = false
 
     private var displayName: String {
         let value = fullName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -66,43 +67,9 @@ struct ProfileView: View {
                 VStack(spacing: 16) {
                     if selectedProfileSection == 0 {
                         communityCard
-                    } else if selectedProfileSection == 1 {
+                    } else {
                         academicSnapshot
                         destinationCard
-                    } else {
-                        settingsCard
-
-                        if profile?.role == "student" {
-                            NavigationLink {
-                                AdvisorApplicationView(
-                                    defaultName: profile?.fullName ?? ""
-                                )
-                            } label: {
-                                ProfileMenuRow(
-                                    icon: "person.crop.circle.badge.checkmark",
-                                    title: "Apply as an advisor",
-                                    subtitle: "Create a counselor profile for admin review",
-                                    tint: Theme.orangeSoft
-                                )
-                            }
-                            .buttonStyle(.plain)
-                        }
-
-                        if profile?.role == "admin" {
-                            NavigationLink {
-                                AdminView()
-                            } label: {
-                                ProfileMenuRow(
-                                    icon: "shield.lefthalf.filled",
-                                    title: "Admin dashboard",
-                                    subtitle: "Scholarship and safety administration",
-                                    tint: Theme.blueSoft
-                                )
-                            }
-                            .buttonStyle(.plain)
-                        }
-
-                        accountCard
                     }
 
                     if !status.isEmpty {
@@ -129,6 +96,9 @@ struct ProfileView: View {
         .sheet(isPresented: $showingEditProfile) {
             editProfileSheet
         }
+        .sheet(isPresented: $showingSettings) {
+            settingsSheet
+        }
         .alert(
             "Delete your Grantly account?",
             isPresented: $showingDeleteAccount
@@ -154,9 +124,7 @@ struct ProfileView: View {
                 Spacer()
 
                 Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        selectedProfileSection = 2
-                    }
+                    showingSettings = true
                 } label: {
                     Image(systemName: "gearshape")
                         .font(.system(size: 19, weight: .semibold))
@@ -309,18 +277,13 @@ struct ProfileView: View {
         HStack(spacing: 0) {
             profileSectionButton(
                 index: 0,
-                systemImage: "person.text.rectangle",
+                systemImage: "person.crop.circle",
                 accessibilityLabel: "Community profile"
             )
             profileSectionButton(
                 index: 1,
                 systemImage: "graduationcap",
                 accessibilityLabel: "Academic profile"
-            )
-            profileSectionButton(
-                index: 2,
-                systemImage: "gearshape",
-                accessibilityLabel: "Settings"
             )
         }
         .frame(height: 48)
@@ -503,36 +466,85 @@ struct ProfileView: View {
                 .foregroundStyle(Theme.blueSoft)
             }
 
-            ProfileSummaryLine(
-                icon: "graduationcap.fill",
-                label: "Degree",
-                value: degreeLevel
+            Text(
+                bio.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    ? L10n.string("Add a short bio so other students know your study interests.")
+                    : bio
             )
+            .font(.subheadline)
+            .foregroundStyle(Theme.ink)
+            .lineSpacing(3)
 
-            ProfileSummaryLine(
-                icon: "books.vertical.fill",
-                label: "Major",
-                value: intendedMajor.isEmpty ? "Not set" : intendedMajor
-            )
+            HStack(spacing: 8) {
+                Image(systemName: "lock.fill")
+                    .foregroundStyle(Theme.muted)
 
-            ProfileSummaryLine(
-                icon: "globe",
-                label: "Countries",
-                value: targetCountries.isEmpty ? "Not set" : targetCountries
-            )
-
-            Text("GPA, IELTS, income and residence details are never copied into your public community profile.")
-                .font(.caption)
-                .foregroundStyle(Theme.muted)
-                .lineSpacing(3)
+                Text("GPA, IELTS, income and residence details are never copied into your public community profile.")
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+            }
         }
-        .padding(16)
+        .padding(14)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
         .overlay(
-            RoundedRectangle(cornerRadius: 18)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(Theme.ink.opacity(0.05))
         )
+    }
+
+    private var settingsSheet: some View {
+        NavigationStack {
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 16) {
+                    settingsCard
+
+                    if profile?.role == "student" {
+                        NavigationLink {
+                            AdvisorApplicationView(
+                                defaultName: profile?.fullName ?? ""
+                            )
+                        } label: {
+                            ProfileMenuRow(
+                                icon: "person.crop.circle.badge.checkmark",
+                                title: "Apply as an advisor",
+                                subtitle: "Create a counselor profile for admin review",
+                                tint: Theme.orangeSoft
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    if profile?.role == "admin" {
+                        NavigationLink {
+                            AdminView()
+                        } label: {
+                            ProfileMenuRow(
+                                icon: "shield.lefthalf.filled",
+                                title: "Admin dashboard",
+                                subtitle: "Scholarship and safety administration",
+                                tint: Theme.blueSoft
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    accountCard
+                }
+                .padding(16)
+                .padding(.bottom, 24)
+            }
+            .background(Theme.pageBackground)
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        showingSettings = false
+                    }
+                }
+            }
+        }
     }
 
     private var settingsCard: some View {

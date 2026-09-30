@@ -19,13 +19,13 @@ struct CasesHubView: View {
 
             HStack(spacing: 8) {
                 applicationTab(
-                    title: "University Cases",
+                    title: "University applications",
                     index: 0,
                     icon: "building.columns"
                 )
 
                 applicationTab(
-                    title: "Scholarships",
+                    title: "Scholarship applications",
                     index: 1,
                     icon: "graduationcap"
                 )
@@ -81,6 +81,7 @@ struct UniversityCasesView: View {
     @State private var loading = true
     @State private var showingCreateCase = false
     @State private var errorMessage: String?
+    @State private var caseToDelete: UniversityApplicationCase?
 
     private var activeCount: Int {
         cases.filter {
@@ -116,14 +117,29 @@ struct UniversityCasesView: View {
                 } else if cases.isEmpty {
                     emptyState
                 } else {
-                    LazyVStack(spacing: 12) {
+                    LazyVStack(spacing: 10) {
                         ForEach(cases) { item in
-                            NavigationLink {
-                                UniversityCaseDetailView(caseId: item.id)
-                            } label: {
-                                UniversityCaseCard(item: item)
+                            HStack(spacing: 8) {
+                                NavigationLink {
+                                    UniversityCaseDetailView(caseId: item.id)
+                                } label: {
+                                    UniversityCaseCard(item: item)
+                                }
+                                .buttonStyle(.plain)
+
+                                Button(role: .destructive) {
+                                    caseToDelete = item
+                                } label: {
+                                    Image(systemName: "trash")
+                                        .font(.system(size: 15, weight: .semibold))
+                                        .foregroundStyle(Theme.danger)
+                                        .frame(width: 40, height: 40)
+                                        .background(Theme.surface)
+                                        .clipShape(Circle())
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityLabel("Delete")
                             }
-                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -150,16 +166,31 @@ struct UniversityCasesView: View {
         } message: {
             Text(errorMessage ?? "")
         }
+        .alert(
+            "Delete application?",
+            isPresented: Binding(
+                get: { caseToDelete != nil },
+                set: { if !$0 { caseToDelete = nil } }
+            )
+        ) {
+            Button("Delete", role: .destructive) {
+                guard let item = caseToDelete else { return }
+                Task { await deleteCase(item) }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This removes the application and its uploaded documents.")
+        }
     }
 
     private var header: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 5) {
-                Text("University Cases")
-                    .font(.system(size: 30, weight: .bold))
+                Text("University applications")
+                    .font(.headline.bold())
                     .foregroundStyle(Theme.ink)
 
-                Text("Track every university application separately")
+                Text("Universities you are applying to")
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
             }
@@ -179,7 +210,7 @@ struct UniversityCasesView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 13))
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Create university case")
+            .accessibilityLabel("Add university application")
         }
     }
 
@@ -212,7 +243,7 @@ struct UniversityCasesView: View {
                 .background(Theme.surface)
                 .clipShape(Circle())
 
-            Text("Create your first university case")
+            Text("Add your first university application")
                 .font(.headline.bold())
                 .foregroundStyle(Theme.ink)
 
@@ -222,7 +253,7 @@ struct UniversityCasesView: View {
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: 320)
 
-            Button("Create case") {
+            Button("Add application") {
                 showingCreateCase = true
             }
             .buttonStyle(.borderedProminent)
@@ -242,6 +273,19 @@ struct UniversityCasesView: View {
             errorMessage = nil
         } catch is CancellationError {
             return
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func deleteCase(_ item: UniversityApplicationCase) async {
+        do {
+            try await DataService.deleteUniversityCase(caseId: item.id)
+            withAnimation(.easeInOut(duration: 0.18)) {
+                cases.removeAll { $0.id == item.id }
+            }
+            caseToDelete = nil
         } catch {
             errorMessage = error.localizedDescription
         }

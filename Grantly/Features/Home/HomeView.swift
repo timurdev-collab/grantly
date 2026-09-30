@@ -978,52 +978,44 @@ private struct HomeMatchCard: View {
     let match: ScholarshipMatch
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ZStack(alignment: .topTrailing) {
-                UniversityPhoto(
-                    seed: match.scholarship.provider + match.scholarship.title,
-                    remoteURL: match.scholarship.university?.campusImageUrl,
-                    height: 190
-                )
+        HStack(spacing: 12) {
+            UniversityLogo(
+                university: match.scholarship.university,
+                fallbackName: match.scholarship.provider,
+                size: 46
+            )
 
-                Text("\(match.score)% match")
-                    .font(.caption2.bold())
-                    .foregroundStyle(Theme.ink)
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 6)
-                    .background(Theme.orange.opacity(0.92))
-                    .clipShape(Capsule())
-                    .padding(9)
-            }
-
-            VStack(alignment: .leading, spacing: 7) {
-                FundingBadge(text: match.scholarship.fundingType)
-
+            VStack(alignment: .leading, spacing: 5) {
                 Text(match.scholarship.title)
-                    .font(.subheadline.bold())
+                    .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.ink)
                     .lineLimit(2)
-                    .frame(height: 38, alignment: .top)
 
                 Text(match.scholarship.provider)
                     .font(.caption2)
                     .foregroundStyle(Theme.muted)
                     .lineLimit(1)
 
-                Label(
-                    match.scholarship.country,
-                    systemImage: "mappin.and.ellipse"
-                )
-                .font(.caption2)
-                .foregroundStyle(Theme.muted)
+                HStack(spacing: 7) {
+                    FundingBadge(text: match.scholarship.fundingType)
+
+                    Text("\(match.score)% match")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.orangeSoft)
+                }
             }
-            .padding(12)
+
+            Spacer(minLength: 4)
+
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(Theme.muted)
         }
-        .frame(maxWidth: .infinity)
+        .padding(12)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 19))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
         .overlay(
-            RoundedRectangle(cornerRadius: 19)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(Theme.ink.opacity(0.05))
         )
     }
@@ -1033,41 +1025,48 @@ private struct FeaturedScholarshipCard: View {
     let scholarship: Scholarship
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            UniversityPhoto(
-                seed: scholarship.provider + scholarship.title,
-                remoteURL: scholarship.university?.campusImageUrl,
-                height: 122
+        HStack(spacing: 12) {
+            UniversityLogo(
+                university: scholarship.university,
+                fallbackName: scholarship.provider,
+                size: 46
             )
 
-            VStack(alignment: .leading, spacing: 7) {
-                FundingBadge(text: scholarship.fundingType)
-
+            VStack(alignment: .leading, spacing: 5) {
                 Text(scholarship.title)
-                    .font(.subheadline.bold())
+                    .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.ink)
                     .lineLimit(2)
-                    .frame(height: 38, alignment: .top)
 
                 Text(scholarship.provider)
                     .font(.caption2)
                     .foregroundStyle(Theme.muted)
                     .lineLimit(1)
 
-                Label(
-                    scholarship.country,
-                    systemImage: "mappin.and.ellipse"
-                )
-                .font(.caption2)
-                .foregroundStyle(Theme.muted)
+                HStack(spacing: 7) {
+                    FundingBadge(text: scholarship.fundingType)
+
+                    Label(
+                        scholarship.country,
+                        systemImage: "mappin.and.ellipse"
+                    )
+                    .font(.caption2)
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(1)
+                }
             }
-            .padding(12)
+
+            Spacer(minLength: 4)
+
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(Theme.muted)
         }
-        .frame(width: 228)
+        .padding(12)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 19))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
         .overlay(
-            RoundedRectangle(cornerRadius: 19)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(Theme.ink.opacity(0.05))
         )
     }
