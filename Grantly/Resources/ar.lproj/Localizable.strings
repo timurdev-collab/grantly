@@ -550,3 +550,24 @@
 "This removes the application and its uploaded documents." = "سيؤدي هذا إلى حذف الطلب والمستندات المرفوعة.";
 "%d applications" = "%d طلبات";
 "Tasks" = "المهام";
+
+"Create" = "إنشاء";
+"No community posts yet" = "لا توجد منشورات في المجتمع بعد";
+"Share a photo, video or short with other students." = "شارك صورة أو فيديو أو مقطعًا قصيرًا مع الطلاب الآخرين.";
+"Create post" = "إنشاء منشور";
+"Your story" = "قصتك";
+"Short" = "مقطع قصير";
+"Type" = "النوع";
+"Post" = "منشور";
+"Story" = "قصة";
+"Add a story caption..." = "أضف تعليقًا للقصة...";
+"Share something with students..." = "شارك شيئًا مع الطلاب...";
+"Add photo or video" = "إضافة صورة أو فيديو";
+"Change media" = "تغيير الوسائط";
+"Video ready to publish" = "الفيديو جاهز للنشر";
+"Stories disappear after 24 hours." = "تختفي القصص بعد 24 ساعة.";
+"Shorts are vertical video posts. Choose a video for the best result." = "المقاطع القصيرة تعمل بشكل أفضل مع الفيديو العمودي.";
+"Publishing..." = "جارٍ النشر...";
+"Publish" = "نشر";
+"Please choose media smaller than 50 MB." = "يرجى اختيار ملف أصغر من 50 ميغابايت.";
+"Shorts require a video." = "المقاطع القصيرة تتطلب فيديو.";
