@@ -299,3 +299,21 @@
 "Review Advisor" = "Berater prüfen";
 "Review advisor" = "Berater prüfen";
 "Please add a clear note for the advisor first." = "Bitte füge zuerst eine klare Notiz für den Berater hinzu.";
+
+
+/* Dynamic advisor localization */
+"We could not confirm your account role. Try again before continuing." = "Deine Kontorolle konnte nicht bestätigt werden. Versuche es erneut, bevor du fortfährst.";
+"Changes Requested" = "Änderungen angefordert";
+"Approved" = "Freigegeben";
+"Rejected" = "Abgelehnt";
+"Suspended" = "Gesperrt";
+"%d years experience" = "%d Jahre Erfahrung";
+"%d application(s) waiting" = "%d Bewerbung(en) warten";
+"There are no %@ advisor applications." = "Es gibt keine Beraterbewerbungen mit dem Status „%@“.";
+"Step %d of 3" = "Schritt %d von 3";
+"Admissions Advisor" = "Studienzulassungsberater";
+"Be specific. For example: US admissions, scholarship essays, graduate applications." = "Sei konkret, zum Beispiel: US-Zulassungen, Stipendienessays, Bewerbungen für weiterführende Studiengänge.";
+"Add a short introduction video from YouTube, Loom, Vimeo or another secure HTTPS link. Around 60–90 seconds works best." = "Füge ein kurzes Vorstellungsvideo von YouTube, Loom, Vimeo oder über einen anderen sicheren HTTPS-Link hinzu. Etwa 60–90 Sekunden sind ideal.";
+"Video link looks valid" = "Videolink sieht gültig aus";
+"%@ years" = "%@ Jahre";
+"%d available" = "%d verfügbar";
