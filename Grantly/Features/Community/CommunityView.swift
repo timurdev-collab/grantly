@@ -376,8 +376,7 @@ struct AdvisorDetailView: View {
         if requestSent ||
             registration?.advisorId == advisor.id {
             return registration?.status == "active"
-                ? "Your advisor"
-                : "Request sent"
+                ? L10n.string("Your advisor") : L10n.string("Request sent")
         }
 
         if registration?.status == "active" {
@@ -1447,8 +1446,7 @@ struct CommunityProfileView: View {
                 } label: {
                     Label(
                         openingConversation
-                            ? "Opening..."
-                            : "Start conversation",
+                            ? L10n.string("Opening...") : L10n.string("Start conversation"),
                         systemImage: "message.fill"
                     )
                 }
@@ -1463,8 +1461,7 @@ struct CommunityProfileView: View {
                             ? "Updating..."
                             : (
                                 isBlocked
-                                    ? "Unblock student"
-                                    : "Block student"
+                                    ? L10n.string("Unblock student") : L10n.string("Block student")
                             ),
                         systemImage: isBlocked
                             ? "person.crop.circle.badge.checkmark"
