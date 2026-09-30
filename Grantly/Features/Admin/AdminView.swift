@@ -231,7 +231,7 @@ struct AdminView: View {
                     )
 
                     Label(
-                        "\(systemHealth.openCatalogIssues) open catalog issues",
+                        L10n.format("%d open catalog issues", systemHealth.openCatalogIssues),
                         systemImage: "waveform.path.ecg"
                     )
                     .font(.caption.weight(.semibold))
@@ -434,7 +434,7 @@ struct AdminView: View {
 
                 if expiredIssueCount > 0 {
                     Label(
-                        "\(expiredIssueCount) expired deadline issue(s)",
+                        L10n.format("%d expired deadline issues", expiredIssueCount),
                         systemImage: "calendar.badge.exclamationmark"
                     )
                     .font(.caption.weight(.semibold))
@@ -465,7 +465,7 @@ struct AdminView: View {
                                 Spacer()
 
                                 if let confidence = change.confidence {
-                                    Text("\(confidence)% confidence")
+                                    Text(L10n.format("%d%% confidence", confidence))
                                         .font(.caption2)
                                         .foregroundStyle(.secondary)
                                 }
@@ -605,7 +605,7 @@ struct AdminView: View {
 
                             HStack(spacing: 10) {
                                 if let status = observation.httpStatus {
-                                    Text("HTTP \(status)")
+                                    Text(L10n.format("HTTP %d", status))
                                 }
 
                                 if observation.sourceChanged {
@@ -674,7 +674,7 @@ struct AdminView: View {
 
                                 Spacer()
 
-                                Text("\(candidate.relevanceScore)% relevance")
+                                Text(L10n.format("%d%% relevance", candidate.relevanceScore))
                                     .font(.caption2.weight(.semibold))
                             }
 
@@ -1653,7 +1653,7 @@ struct AdminAdvisorApplicationsView: View {
 
             Spacer()
 
-            Text("v\(application.applicationVersion)")
+            Text(L10n.format("v%d", application.applicationVersion))
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(Theme.muted)
         }
