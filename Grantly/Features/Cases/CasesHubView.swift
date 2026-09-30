@@ -773,7 +773,7 @@ struct UniversityCaseDetailView: View {
 
             if let reference = item.applicationReference.nilIfBlank {
                 Label(
-                    "Reference: \(reference)",
+                    L10n.format("Reference: %@", reference),
                     systemImage: "number"
                 )
                 .font(.caption)
@@ -796,8 +796,11 @@ struct UniversityCaseDetailView: View {
                     Text(
                         missingRequirements.isEmpty &&
                         !requiredRequirements.isEmpty
-                            ? "All required documents are attached"
-                            : "\(missingRequirements.count) required document(s) missing"
+                            ? L10n.string("All required documents are attached")
+                            : L10n.format(
+                                "%d required documents missing",
+                                missingRequirements.count
+                            )
                     )
                     .font(.caption)
                     .foregroundStyle(
