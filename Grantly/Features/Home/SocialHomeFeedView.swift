@@ -31,6 +31,17 @@ struct SocialHomeFeedView: View {
 
                 Spacer()
 
+                NavigationLink {
+                    MyContentView()
+                } label: {
+                    Text("Manage")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.ink)
+                        .padding(.horizontal, 10)
+                        .frame(height: 34)
+                }
+                .buttonStyle(.plain)
+
                 Button {
                     showingComposer = true
                 } label: {
