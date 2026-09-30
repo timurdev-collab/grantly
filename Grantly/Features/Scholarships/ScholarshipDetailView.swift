@@ -420,7 +420,7 @@ struct ScholarshipDetailView: View {
                     }
 
                     if let checked = scholarship.lastCheckedAt, !checked.isEmpty {
-                        Text("Checked \(String(checked.prefix(10)))")
+                        Text(L10n.format("Checked %@", String(checked.prefix(10))))
                             .font(.caption2)
                             .foregroundStyle(Theme.muted)
                     }
