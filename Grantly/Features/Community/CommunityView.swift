@@ -485,68 +485,122 @@ struct AdvisorDetailView: View {
     }
 
     private var header: some View {
-        VStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(Theme.surfaceRaised)
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .center, spacing: 18) {
+                ZStack {
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                colors: [Theme.orangeSoft, Theme.blueSoft],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 3
+                        )
 
-                if let value = advisor.avatarUrl,
-                   let url = URL(string: value) {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        default:
-                            Image(systemName: "person.fill")
-                                .font(.system(size: 38))
-                                .foregroundStyle(Theme.muted)
+                    Circle()
+                        .fill(Theme.surfaceRaised)
+                        .padding(5)
+
+                    if let value = advisor.avatarUrl,
+                       let url = URL(string: value) {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            default:
+                                Image(systemName: "person.fill")
+                                    .font(.system(size: 34))
+                                    .foregroundStyle(Theme.muted)
+                            }
                         }
+                        .padding(7)
+                    } else {
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 34))
+                            .foregroundStyle(Theme.muted)
                     }
-                } else {
-                    Image(systemName: "person.fill")
-                        .font(.system(size: 38))
+                }
+                .frame(width: 104, height: 104)
+                .clipShape(Circle())
+
+                HStack(spacing: 18) {
+                    advisorStat(
+                        value: "\(advisor.specialties.count)",
+                        label: "Specialties"
+                    )
+                    advisorStat(
+                        value: "\(advisor.countries.count)",
+                        label: "Countries"
+                    )
+                    advisorStat(
+                        value: "\(advisor.languages.count)",
+                        label: "Languages"
+                    )
+                }
+                .frame(maxWidth: .infinity)
+            }
+
+            VStack(alignment: .leading, spacing: 5) {
+                Text(advisor.displayName ?? "Grantly Advisor")
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(Theme.ink)
+
+                if let title = advisor.title?.nonEmpty {
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.ink)
+                }
+
+                if let organization = advisor.organization?.nonEmpty {
+                    Text(organization)
+                        .font(.caption)
                         .foregroundStyle(Theme.muted)
                 }
-            }
-            .frame(width: 112, height: 112)
-            .clipShape(Circle())
 
-            Text(advisor.displayName ?? "Grantly Advisor")
-                .font(.system(size: 26, weight: .bold))
-                .foregroundStyle(Theme.ink)
-                .multilineTextAlignment(.center)
+                if let shortBio = advisor.shortBio?.nonEmpty {
+                    Text(shortBio)
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.ink)
+                        .lineSpacing(3)
+                }
 
-            if let title = advisor.title?.nonEmpty {
-                Text(title)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.accentSoft)
-                    .multilineTextAlignment(.center)
-            }
-
-            if let organization = advisor.organization?.nonEmpty {
-                Text(organization)
+                if let years = advisor.yearsExperience {
+                    Label(
+                        L10n.format(
+                            "%d years experience",
+                            years
+                        ),
+                        systemImage: "briefcase.fill"
+                    )
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
-            }
-
-            if let years = advisor.yearsExperience {
-                Label(
-                    L10n.format(
-                        "%d years experience",
-                        years
-                    ),
-                    systemImage: "briefcase.fill"
-                )
-                .font(.caption)
-                .foregroundStyle(Theme.muted)
+                }
             }
         }
-        .frame(maxWidth: .infinity)
-        .padding(18)
+        .padding(16)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+    }
+
+    private func advisorStat(
+        value: String,
+        label: String
+    ) -> some View {
+        VStack(spacing: 3) {
+            Text(value)
+                .font(.headline.weight(.bold))
+                .foregroundStyle(Theme.ink)
+
+            Text(L10n.string(label))
+                .font(.caption2)
+                .foregroundStyle(Theme.muted)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+        }
+        .frame(maxWidth: .infinity)
     }
 
     @ViewBuilder
