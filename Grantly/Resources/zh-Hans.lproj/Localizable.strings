@@ -299,3 +299,21 @@
 "Review Advisor" = "审核顾问";
 "Review advisor" = "审核顾问";
 "Please add a clear note for the advisor first." = "请先为顾问添加清晰的备注。";
+
+
+/* Dynamic advisor localization */
+"We could not confirm your account role. Try again before continuing." = "无法确认你的账号角色。请重试后再继续。";
+"Changes Requested" = "需要修改";
+"Approved" = "已批准";
+"Rejected" = "已拒绝";
+"Suspended" = "已暂停";
+"%d years experience" = "%d 年经验";
+"%d application(s) waiting" = "%d 份申请待处理";
+"There are no %@ advisor applications." = "没有状态为“%@”的顾问申请。";
+"Step %d of 3" = "第 %d 步，共 3 步";
+"Admissions Advisor" = "招生顾问";
+"Be specific. For example: US admissions, scholarship essays, graduate applications." = "请具体说明，例如：美国申请、奖学金文书、研究生申请。";
+"Add a short introduction video from YouTube, Loom, Vimeo or another secure HTTPS link. Around 60–90 seconds works best." = "添加来自 YouTube、Loom、Vimeo 或其他安全 HTTPS 链接的简短介绍视频。建议时长约 60–90 秒。";
+"Video link looks valid" = "视频链接有效";
+"%@ years" = "%@ 年";
+"%d available" = "%d 位可选";
