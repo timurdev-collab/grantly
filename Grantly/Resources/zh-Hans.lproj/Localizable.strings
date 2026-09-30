@@ -276,7 +276,7 @@
 "GLOBAL COHORT" = "全球社群";
 "GPA" = "GPA";
 "GPA, IELTS, income and residence details are never copied into your public community profile." = "GPA、IELTS、收入和居住信息绝不会显示在你的公开社区资料中。";
-"Global opportunities for\\nbrighter futures" = "全球机会，点亮\\n更美好的未来";
+"Global opportunities for\nbrighter futures" = "全球机会，点亮\n更美好的未来";
 "Grantly" = "Grantly";
 "Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying." = "Grantly 帮助你发现并整理机会。申请前请始终在奖学金官方网站确认截止日期、资格条件和资助内容。";
 "Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status." = "Grantly 会跟踪你的进度，但提交状态和最终决定仍以奖学金提供方的官方信息为准。";
@@ -450,7 +450,7 @@
 "Website" = "网站";
 "Website URL (optional)" = "网站链接（可选）";
 "Years of relevant experience" = "相关经验年数";
-"You are not applying\\nalone." = "你的申请之路\\n并不孤单。";
+"You are not applying\nalone." = "你的申请之路\n并不孤单。";
 "You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships." = "你可以在“个人资料”中永久删除 Grantly 账户。删除登录账户后，也会根据数据库关系删除关联资料以及属于该用户的应用数据。";
 "You can report a student or message and block a student whenever needed." = "需要时，你可以举报学生或消息，也可以屏蔽学生。";
 "You can still update and resubmit while the application is waiting for review." = "申请等待审核期间，你仍然可以修改并重新提交。";
