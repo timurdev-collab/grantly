@@ -278,7 +278,7 @@
 "GLOBAL COHORT" = "GLOBAL COHORT";
 "GPA" = "GPA";
 "GPA, IELTS, income and residence details are never copied into your public community profile." = "GPA, IELTS, income and residence details are never copied into your public community profile.";
-"Global opportunities for\\nbrighter futures" = "Global opportunities for\\nbrighter futures";
+"Global opportunities for\nbrighter futures" = "Global opportunities for\nbrighter futures";
 "Grantly" = "Grantly";
 "Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying." = "Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying.";
 "Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status." = "Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status.";
@@ -452,7 +452,7 @@
 "Website" = "Website";
 "Website URL (optional)" = "Website URL (optional)";
 "Years of relevant experience" = "Years of relevant experience";
-"You are not applying\\nalone." = "You are not applying\\nalone.";
+"You are not applying\nalone." = "You are not applying\nalone.";
 "You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships." = "You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships.";
 "You can report a student or message and block a student whenever needed." = "You can report a student or message and block a student whenever needed.";
 "You can still update and resubmit while the application is waiting for review." = "You can still update and resubmit while the application is waiting for review.";
