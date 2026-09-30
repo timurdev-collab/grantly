@@ -571,3 +571,5 @@
 "Publish" = "Đăng";
 "Please choose media smaller than 50 MB." = "Vui lòng chọn tệp nhỏ hơn 50 MB.";
 "Shorts require a video." = "Video ngắn yêu cầu một tệp video.";
+
+"Please choose media smaller than 6 MB." = "Vui lòng chọn tệp nhỏ hơn 6 MB.";
