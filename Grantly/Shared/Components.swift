@@ -240,7 +240,7 @@ struct TrustSeal: View {
 
     var body: some View {
         Label(
-            verified ? "Verified" : "Curated",
+            verified ? L10n.string("Verified") : L10n.string("Curated"),
             systemImage: verified ? "checkmark.seal.fill" : "seal"
         )
         .font(.caption2.weight(.bold))
@@ -568,6 +568,6 @@ struct RefreshButton: View {
         }
         .buttonStyle(.plain)
         .disabled(loading)
-        .accessibilityLabel(loading ? "Refreshing" : "Refresh")
+        .accessibilityLabel(loading ? L10n.string("Refreshing") : L10n.string("Refresh"))
     }
 }
