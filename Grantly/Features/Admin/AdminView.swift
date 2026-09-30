@@ -117,7 +117,7 @@ struct AdminView: View {
             }
 
             if let analytics {
-                Section("Product analytics · \(analytics.days) days") {
+                Section(LocalizedStringKey(L10n.format("Product analytics · %d days", analytics.days))) {
                     HStack(spacing: 12) {
                         AdminMetric(
                             value: "\(analytics.views)",
@@ -147,14 +147,14 @@ struct AdminView: View {
 
                     HStack {
                         Label(
-                            "\(analytics.searches) searches",
+                            L10n.format("%d searches", analytics.searches),
                             systemImage: "magnifyingglass"
                         )
 
                         Spacer()
 
                         Label(
-                            "\(analytics.zeroResultSearches) zero results",
+                            L10n.format("%d zero-result searches", analytics.zeroResultSearches),
                             systemImage: "exclamationmark.magnifyingglass"
                         )
                     }
@@ -162,7 +162,7 @@ struct AdminView: View {
                     .foregroundStyle(.secondary)
 
                     Label(
-                        "\(analytics.openHealthIssues) open catalog issues",
+                        L10n.format("%d open catalog issues", analytics.openHealthIssues),
                         systemImage: "stethoscope"
                     )
                     .font(.caption.weight(.semibold))
@@ -911,8 +911,11 @@ struct AdminView: View {
                             .font(.caption.weight(.semibold))
 
                             Text(
-                                "\(log.targetType.capitalized) · " +
-                                "\(log.targetIds.count) item(s)"
+                                L10n.format(
+                                    "%@ · %d items",
+                                    log.targetType.capitalized,
+                                    log.targetIds.count
+                                )
                             )
                             .font(.caption2)
                             .foregroundStyle(.secondary)
@@ -1559,7 +1562,10 @@ struct AdminAdvisorApplicationsView: View {
                         "No applications",
                         systemImage: "person.crop.circle.badge.checkmark",
                         description: Text(
-                            "There are no \(filter.replacingOccurrences(of: "_", with: " ")) advisor applications."
+                            L10n.format(
+                                "No %@ advisor applications.",
+                                filter.replacingOccurrences(of: "_", with: " ")
+                            )
                         )
                     )
                 }
