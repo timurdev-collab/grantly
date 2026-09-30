@@ -188,8 +188,19 @@ struct SocialHomeFeedView: View {
         async let storyRows = DataService.socialStories(limit: 24)
         async let feedRows = DataService.socialFeed(limit: 30)
 
-        stories = (try? await storyRows) ?? []
-        posts = (try? await feedRows) ?? []
+        do {
+            let (loadedStories, loadedPosts) = try await (
+                storyRows,
+                feedRows
+            )
+            stories = loadedStories
+            posts = loadedPosts
+            errorMessage = nil
+        } catch is CancellationError {
+            return
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     @MainActor
@@ -555,8 +566,8 @@ private struct SocialPostComposer: View {
                 return
             }
 
-            guard data.count <= 50 * 1024 * 1024 else {
-                errorMessage = L10n.string("Please choose media smaller than 50 MB.")
+            guard data.count <= 6 * 1024 * 1024 else {
+                errorMessage = L10n.string("Please choose media smaller than 6 MB.")
                 return
             }
 
