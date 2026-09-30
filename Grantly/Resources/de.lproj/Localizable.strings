@@ -538,3 +538,15 @@
 
 "Start a conversation with an advisor." = "Beginne ein Gespräch mit einem Berater.";
 "Conversation created. Open Messages." = "Unterhaltung erstellt. Öffne Nachrichten.";
+
+"University applications" = "Universitätsbewerbungen";
+"Scholarship applications" = "Stipendienbewerbungen";
+"Universities you are applying to" = "Universitäten, bei denen du dich bewirbst";
+"Add university application" = "Universitätsbewerbung hinzufügen";
+"Add your first university application" = "Füge deine erste Universitätsbewerbung hinzu";
+"Add application" = "Bewerbung hinzufügen";
+"Delete application?" = "Bewerbung löschen?";
+"Delete" = "Löschen";
+"This removes the application and its uploaded documents." = "Dadurch werden die Bewerbung und die hochgeladenen Dokumente gelöscht.";
+"%d applications" = "%d Bewerbungen";
+"Tasks" = "Aufgaben";
