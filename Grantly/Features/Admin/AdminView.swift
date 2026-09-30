@@ -762,7 +762,7 @@ struct AdminView: View {
                     Task { await auditNextBatch() }
                 } label: {
                     Label(
-                        auditing ? "Auditing links…" : "Audit next 20 listings",
+                        auditing ? L10n.string("Auditing links…") : L10n.string("Audit next 20 listings"),
                         systemImage: "checkmark.shield"
                     )
                 }
@@ -778,7 +778,7 @@ struct AdminView: View {
                     Task { await enrichNextMediaBatch() }
                 } label: {
                     Label(
-                        enrichingMedia ? "Enriching media…" : "Enrich university media",
+                        enrichingMedia ? L10n.string("Enriching media…") : L10n.string("Enrich university media"),
                         systemImage: "photo.on.rectangle.angled"
                     )
                 }
@@ -1272,8 +1272,8 @@ struct AdminPeopleView: View {
 
                             Text(
                                 pendingAdvisorCount == 0
-                                    ? "No applications waiting for review"
-                                    : "\(pendingAdvisorCount) application(s) waiting"
+                                    ? L10n.string("No applications waiting for review")
+                                    : L10n.format("%d advisor applications waiting", pendingAdvisorCount)
                             )
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -1433,8 +1433,8 @@ struct AdminPeopleView: View {
                             } label: {
                                 Label(
                                     workingUserID == user.id
-                                        ? "Updating…"
-                                        : "Manage",
+                                        ? L10n.string("Updating…")
+                                        : L10n.string("Manage"),
                                     systemImage: "ellipsis.circle"
                                 )
                                 .font(.caption.weight(.semibold))
@@ -2225,8 +2225,8 @@ struct ScholarshipImportView: View {
                 Section {
                     Text(
                         format == "csv"
-                            ? "CSV headers should use scholarship field names such as title, provider, country, funding_type, official_url, degree_levels and fields. Use | or ; inside array fields."
-                            : "JSON must be an array of scholarship objects."
+                            ? L10n.string("CSV headers should use scholarship field names such as title, provider, country, funding_type, official_url, degree_levels and fields. Use | or ; inside array fields.")
+                            : L10n.string("JSON must be an array of scholarship objects.")
                     )
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -2245,7 +2245,7 @@ struct ScholarshipImportView: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(staging ? "Staging…" : "Preview") {
+                    Button(staging ? L10n.string("Staging…") : L10n.string("Preview")) {
                         Task { await stage() }
                     }
                     .disabled(
