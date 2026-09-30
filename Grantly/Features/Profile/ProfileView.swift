@@ -504,8 +504,8 @@ struct ProfileView: View {
                     } label: {
                         ProfileMenuRow(
                             icon: "rectangle.stack.badge.person.crop",
-                            title: "My content",
-                            subtitle: "Edit or delete your posts, stories and shorts",
+                            title: L10n.string("My content"),
+                            subtitle: L10n.string("Edit or delete your posts, stories and shorts"),
                             tint: Theme.orangeSoft
                         )
                     }
