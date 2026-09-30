@@ -299,3 +299,21 @@
 "Review Advisor" = "مراجعة المستشار";
 "Review advisor" = "مراجعة المستشار";
 "Please add a clear note for the advisor first." = "يرجى أولًا إضافة ملاحظة واضحة للمستشار.";
+
+
+/* Dynamic advisor localization */
+"We could not confirm your account role. Try again before continuing." = "تعذر تأكيد دور حسابك. حاول مرة أخرى قبل المتابعة.";
+"Changes Requested" = "مطلوب تعديلات";
+"Approved" = "معتمد";
+"Rejected" = "مرفوض";
+"Suspended" = "معلّق";
+"%d years experience" = "خبرة %d سنوات";
+"%d application(s) waiting" = "%d طلب بانتظار المراجعة";
+"There are no %@ advisor applications." = "لا توجد طلبات مستشارين بحالة «%@».";
+"Step %d of 3" = "الخطوة %d من 3";
+"Admissions Advisor" = "مستشار قبول";
+"Be specific. For example: US admissions, scholarship essays, graduate applications." = "كن محددًا، مثل: القبول في الولايات المتحدة، مقالات المنح، طلبات الدراسات العليا.";
+"Add a short introduction video from YouTube, Loom, Vimeo or another secure HTTPS link. Around 60–90 seconds works best." = "أضف فيديو تعريفيًا قصيرًا من YouTube أو Loom أو Vimeo أو رابط HTTPS آمن آخر. مدة 60–90 ثانية مناسبة.";
+"Video link looks valid" = "رابط الفيديو صالح";
+"%@ years" = "%@ سنوات";
+"%d available" = "%d متاح";
