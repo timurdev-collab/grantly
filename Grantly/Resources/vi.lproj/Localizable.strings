@@ -299,3 +299,21 @@
 "Review Advisor" = "Xét duyệt cố vấn";
 "Review advisor" = "Xét duyệt cố vấn";
 "Please add a clear note for the advisor first." = "Vui lòng thêm ghi chú rõ ràng cho cố vấn trước.";
+
+
+/* Dynamic advisor localization */
+"We could not confirm your account role. Try again before continuing." = "Không thể xác nhận vai trò tài khoản của bạn. Hãy thử lại trước khi tiếp tục.";
+"Changes Requested" = "Cần chỉnh sửa";
+"Approved" = "Đã phê duyệt";
+"Rejected" = "Đã từ chối";
+"Suspended" = "Đã tạm ngưng";
+"%d years experience" = "%d năm kinh nghiệm";
+"%d application(s) waiting" = "%d đơn đang chờ";
+"There are no %@ advisor applications." = "Không có đơn cố vấn ở trạng thái %@.";
+"Step %d of 3" = "Bước %d/3";
+"Admissions Advisor" = "Cố vấn tuyển sinh";
+"Be specific. For example: US admissions, scholarship essays, graduate applications." = "Hãy cụ thể, ví dụ: tuyển sinh Mỹ, bài luận học bổng, hồ sơ sau đại học.";
+"Add a short introduction video from YouTube, Loom, Vimeo or another secure HTTPS link. Around 60–90 seconds works best." = "Thêm video giới thiệu ngắn từ YouTube, Loom, Vimeo hoặc một liên kết HTTPS an toàn khác. Khoảng 60–90 giây là phù hợp nhất.";
+"Video link looks valid" = "Liên kết video hợp lệ";
+"%@ years" = "%@ năm";
+"%d available" = "%d cố vấn đang hoạt động";
