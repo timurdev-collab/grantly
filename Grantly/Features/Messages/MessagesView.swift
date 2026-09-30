@@ -323,8 +323,7 @@ struct ChatView: View {
         HStack(spacing: 10) {
             TextField(
                 blockedByMe
-                    ? "Unblock this student to send messages"
-                    : "Write a message…",
+                    ? L10n.string("Unblock this student to send messages") : L10n.string("Write a message…"),
                 text: $draft,
                 axis: .vertical
             )
