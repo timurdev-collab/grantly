@@ -172,11 +172,11 @@ struct AdvisorsView: View {
     private var advisorGrid: some View {
         let placeholderCount = max(0, 5 - advisors.count)
         let columns = [
-            GridItem(.flexible(), spacing: 12),
-            GridItem(.flexible(), spacing: 12)
+            GridItem(.flexible(), spacing: 10),
+            GridItem(.flexible(), spacing: 10)
         ]
 
-        return LazyVGrid(columns: columns, spacing: 12) {
+        return LazyVGrid(columns: columns, spacing: 10) {
             ForEach(advisors) { advisor in
                 NavigationLink {
                     AdvisorDetailView(
@@ -201,7 +201,7 @@ struct AdvisorsView: View {
     private func advisorGridCard(
         _ advisor: AdvisorDirectoryProfile
     ) -> some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 7) {
             ZStack {
                 Circle()
                     .stroke(
@@ -210,13 +210,13 @@ struct AdvisorsView: View {
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
-                        lineWidth: 3
+                        lineWidth: 2
                     )
-                    .frame(width: 82, height: 82)
+                    .frame(width: 60, height: 60)
 
                 Circle()
                     .fill(Theme.surfaceRaised)
-                    .frame(width: 74, height: 74)
+                    .frame(width: 54, height: 54)
 
                 if let value = advisor.avatarUrl,
                    let url = URL(string: value) {
@@ -228,15 +228,15 @@ struct AdvisorsView: View {
                                 .scaledToFill()
                         default:
                             Image(systemName: "person.fill")
-                                .font(.system(size: 25))
+                                .font(.system(size: 19))
                                 .foregroundStyle(Theme.muted)
                         }
                     }
-                    .frame(width: 70, height: 70)
+                    .frame(width: 50, height: 50)
                     .clipShape(Circle())
                 } else {
                     Image(systemName: "person.fill")
-                        .font(.system(size: 25))
+                        .font(.system(size: 19))
                         .foregroundStyle(Theme.muted)
                 }
             }
@@ -245,10 +245,10 @@ struct AdvisorsView: View {
                 advisor.displayName ??
                 L10n.string("Grantly Advisor")
             )
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.ink)
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(Theme.ink)
+            .multilineTextAlignment(.center)
+            .lineLimit(1)
 
             if let title = advisor.title,
                !title.isEmpty {
@@ -256,47 +256,40 @@ struct AdvisorsView: View {
                     .font(.caption2)
                     .foregroundStyle(Theme.muted)
                     .multilineTextAlignment(.center)
-                    .lineLimit(2)
+                    .lineLimit(1)
             }
 
             if advisor.isFeatured {
-                Label("Featured", systemImage: "star.fill")
-                    .font(.caption2.weight(.semibold))
+                Image(systemName: "star.fill")
+                    .font(.caption2)
                     .foregroundStyle(Theme.accentSoft)
+                    .accessibilityLabel("Featured")
             }
-
-            Text("Profile")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.ink)
-                .frame(maxWidth: .infinity)
-                .frame(height: 32)
-                .background(Theme.surfaceRaised)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .frame(maxWidth: .infinity)
-        .frame(minHeight: 206)
-        .padding(12)
+        .frame(minHeight: 124)
+        .padding(10)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
         .overlay(
-            RoundedRectangle(cornerRadius: 18)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(Theme.ink.opacity(0.05))
         )
     }
 
     private var advisorPlaceholderCard: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 7) {
             Circle()
                 .fill(Theme.surfaceRaised)
-                .frame(width: 72, height: 72)
+                .frame(width: 54, height: 54)
                 .overlay {
                     Image(systemName: "person.crop.circle.badge.plus")
-                        .font(.system(size: 24, weight: .medium))
+                        .font(.system(size: 19, weight: .medium))
                         .foregroundStyle(Theme.muted.opacity(0.55))
                 }
 
             Text("New advisor")
-                .font(.subheadline.weight(.semibold))
+                .font(.caption.weight(.semibold))
                 .foregroundStyle(Theme.muted)
 
             Text("Coming soon")
@@ -304,15 +297,15 @@ struct AdvisorsView: View {
                 .foregroundStyle(Theme.muted.opacity(0.75))
         }
         .frame(maxWidth: .infinity)
-        .frame(minHeight: 178)
-        .padding(12)
+        .frame(minHeight: 124)
+        .padding(10)
         .background(Theme.surfaceRaised.opacity(0.7))
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: 15))
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 15)
                 .stroke(
                     Theme.ink.opacity(0.06),
-                    style: StrokeStyle(lineWidth: 1, dash: [5, 5])
+                    style: StrokeStyle(lineWidth: 1, dash: [4, 4])
                 )
         )
         .accessibilityElement(children: .combine)
