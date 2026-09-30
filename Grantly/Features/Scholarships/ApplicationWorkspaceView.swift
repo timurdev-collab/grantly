@@ -452,8 +452,7 @@ struct ApplicationWorkspaceView: View {
 
             Text(
                 documentsComplete
-                    ? "You marked the document set as ready."
-                    : "Mark this ready after checking every required document against the official portal."
+                    ? L10n.string("You marked the document set as ready.") : L10n.string("Mark this ready after checking every required document against the official portal.")
             )
             .font(.caption2)
             .foregroundStyle(Theme.muted)
@@ -482,7 +481,7 @@ struct ApplicationWorkspaceView: View {
                     showingFileImporter = true
                 } label: {
                     Label(
-                        uploadingDocument ? "Uploading…" : "Add file",
+                        uploadingDocument ? L10n.string("Uploading…") : L10n.string("Add file"),
                         systemImage: "plus"
                     )
                     .font(.caption.weight(.semibold))
@@ -639,8 +638,7 @@ struct ApplicationWorkspaceView: View {
             } label: {
                 Label(
                     isSubmittedOrLater
-                        ? "Check official status"
-                        : "Open application form",
+                        ? L10n.string("Check official status") : L10n.string("Open application form"),
                     systemImage: "arrow.up.right.square"
                 )
                 .font(.subheadline.weight(.semibold))
