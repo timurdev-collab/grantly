@@ -97,16 +97,21 @@ struct HomeView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 0) {
                 greetingHeader
-                quickActionsRail
 
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: 20) {
                     nextStepCard
+
+                    SocialHomeFeedView(
+                        currentAvatarURL: avatarURL,
+                        currentName: profile?.fullName,
+                        onChanged: {}
+                    )
+
                     recommendationsSection
-                    applicationsSection
                     deadlinesSection
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 20)
+                .padding(.top, 14)
                 .padding(.bottom, 32)
             }
         }
@@ -263,52 +268,45 @@ struct HomeView: View {
     private var nextStepCard: some View {
         let content = nextStepContent
 
-        return VStack(alignment: .leading, spacing: 14) {
-            HStack {
-                Text("NEXT STEP")
-                    .font(.system(size: 10, weight: .bold))
-                    .tracking(1.4)
-                    .foregroundStyle(Theme.orangeSoft)
+        return HStack(spacing: 12) {
+            Image(systemName: content.icon)
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Theme.orangeSoft)
+                .frame(width: 36, height: 36)
+                .background(Theme.surfaceRaised)
+                .clipShape(Circle())
 
-                Spacer()
+            VStack(alignment: .leading, spacing: 2) {
+                Text(content.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+                    .lineLimit(1)
 
-                Image(systemName: content.icon)
-                    .font(.headline)
-                    .foregroundStyle(Theme.orangeSoft)
+                Text(content.message)
+                    .font(.caption2)
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(1)
             }
 
-            Text(content.title)
-                .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(Theme.ink)
-
-            Text(content.message)
-                .font(.subheadline)
-                .foregroundStyle(Theme.muted)
-                .lineSpacing(3)
+            Spacer(minLength: 6)
 
             Button(content.buttonTitle) {
                 content.action()
             }
-            .font(.subheadline.weight(.semibold))
-            .frame(maxWidth: .infinity)
-            .frame(height: 48)
-            .background(Theme.orangeGradient)
+            .font(.caption2.weight(.semibold))
             .foregroundStyle(Theme.onAccent)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .padding(.horizontal, 10)
+            .frame(height: 32)
+            .background(Theme.accent)
+            .clipShape(Capsule())
             .buttonStyle(.plain)
         }
-        .padding(18)
-        .background(
-            LinearGradient(
-                colors: [Theme.surfaceRaised, Theme.navy],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .padding(10)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
         .overlay(
-            RoundedRectangle(cornerRadius: 22)
-                .stroke(Theme.ink.opacity(0.06))
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Theme.ink.opacity(0.05))
         )
     }
 
