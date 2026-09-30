@@ -538,3 +538,15 @@
 
 "Start a conversation with an advisor." = "Bắt đầu cuộc trò chuyện với một cố vấn.";
 "Conversation created. Open Messages." = "Cuộc trò chuyện đã được tạo. Mở Tin nhắn.";
+
+"University applications" = "Hồ sơ đại học";
+"Scholarship applications" = "Hồ sơ học bổng";
+"Universities you are applying to" = "Các trường đại học bạn đang nộp hồ sơ";
+"Add university application" = "Thêm hồ sơ đại học";
+"Add your first university application" = "Thêm hồ sơ đại học đầu tiên";
+"Add application" = "Thêm hồ sơ";
+"Delete application?" = "Xóa hồ sơ?";
+"Delete" = "Xóa";
+"This removes the application and its uploaded documents." = "Thao tác này sẽ xóa hồ sơ và các tài liệu đã tải lên.";
+"%d applications" = "%d hồ sơ";
+"Tasks" = "Nhiệm vụ";
