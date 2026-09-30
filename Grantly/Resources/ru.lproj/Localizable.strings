@@ -571,3 +571,5 @@
 "Publish" = "Опубликовать";
 "Please choose media smaller than 50 MB." = "Выберите файл размером менее 50 МБ.";
 "Shorts require a video." = "Для короткого видео нужен видеофайл.";
+
+"Please choose media smaller than 6 MB." = "Выберите файл размером менее 6 МБ.";
