@@ -550,3 +550,24 @@
 "This removes the application and its uploaded documents." = "Заявка и загруженные документы будут удалены.";
 "%d applications" = "%d заявок";
 "Tasks" = "Задачи";
+
+"Create" = "Создать";
+"No community posts yet" = "В сообществе пока нет публикаций";
+"Share a photo, video or short with other students." = "Поделитесь фото, видео или коротким роликом с другими студентами.";
+"Create post" = "Создать публикацию";
+"Your story" = "Ваша история";
+"Short" = "Короткое видео";
+"Type" = "Тип";
+"Post" = "Публикация";
+"Story" = "История";
+"Add a story caption..." = "Добавьте подпись к истории...";
+"Share something with students..." = "Поделитесь чем-нибудь со студентами...";
+"Add photo or video" = "Добавить фото или видео";
+"Change media" = "Заменить медиа";
+"Video ready to publish" = "Видео готово к публикации";
+"Stories disappear after 24 hours." = "Истории исчезают через 24 часа.";
+"Shorts are vertical video posts. Choose a video for the best result." = "Короткие видео лучше публиковать в вертикальном формате.";
+"Publishing..." = "Публикация...";
+"Publish" = "Опубликовать";
+"Please choose media smaller than 50 MB." = "Выберите файл размером менее 50 МБ.";
+"Shorts require a video." = "Для короткого видео нужен видеофайл.";
