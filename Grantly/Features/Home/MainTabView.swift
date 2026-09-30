@@ -314,7 +314,7 @@ private struct AdminPortalView: View {
                     .buttonStyle(.plain)
 
                     NavigationLink {
-                        ProfileView(profile: $profile)
+                        ProfileView(profile: $profile, showsNavigationBar: true)
                     } label: {
                         portalCard(
                             icon: "person.crop.circle.fill",
@@ -495,7 +495,7 @@ private struct AdminAdvisorExperienceView: View {
                     }
 
                     NavigationLink {
-                        ProfileView(profile: $profile)
+                        ProfileView(profile: $profile, showsNavigationBar: true)
                     } label: {
                         Label(
                             "Profile & settings",
@@ -674,7 +674,7 @@ private struct AdvisorPortalView: View {
                     }
 
                     NavigationLink {
-                        ProfileView(profile: $profile)
+                        ProfileView(profile: $profile, showsNavigationBar: true)
                     } label: {
                         Label(
                             "Profile & settings",
