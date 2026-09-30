@@ -2147,34 +2147,45 @@ enum DataService {
         kind: SocialPostKind,
         caption: String,
         mediaData: Data?,
+        mediaFileURL: URL?,
         mediaType: String?,
-        fileExtension: String?
+        fileExtension: String?,
+        uploadProgress: @escaping @Sendable (Double) -> Void = { _ in }
     ) async throws {
         let userId = try await supabase.auth.session.user.id
         var mediaURL: String?
         var mediaPath: String?
 
-        if let mediaData,
-           let mediaType,
+        if let mediaType,
            let fileExtension {
             let fileId = UUID().uuidString.lowercased()
             let path =
                 "\(userId.uuidString.lowercased())/" +
                 "\(fileId).\(fileExtension)"
 
-            try await supabase.storage
-                .from("social-media")
-                .upload(
+            if let mediaFileURL {
+                try await SocialMediaUploader.uploadResumable(
+                    fileURL: mediaFileURL,
                     path: path,
-                    file: mediaData,
-                    options: FileOptions(
-                        cacheControl: "3600",
-                        contentType: mediaType,
-                        upsert: false
-                    )
+                    contentType: mediaType,
+                    progress: uploadProgress
                 )
-
-            mediaPath = path
+                mediaPath = path
+            } else if let mediaData {
+                try await supabase.storage
+                    .from("social-media")
+                    .upload(
+                        path: path,
+                        file: mediaData,
+                        options: FileOptions(
+                            cacheControl: "3600",
+                            contentType: mediaType,
+                            upsert: false
+                        )
+                    )
+                mediaPath = path
+                uploadProgress(1)
+            }
         }
 
         struct Row: Encodable {
@@ -2221,6 +2232,41 @@ enum DataService {
             }
             throw error
         }
+    }
+
+    static func mySocialPosts(
+        limit: Int = 100
+    ) async throws -> [SocialPost] {
+        let userId = try await supabase.auth.session.user.id
+
+        let posts: [SocialPost] = try await supabase
+            .from("social_posts")
+            .select()
+            .eq("author_id", value: userId.uuidString)
+            .order("created_at", ascending: false)
+            .limit(limit)
+            .execute()
+            .value
+
+        return try await attachSocialAuthors(to: posts)
+    }
+
+    static func updateSocialPostCaption(
+        postId: UUID,
+        caption: String
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let caption: String
+        }
+
+        try await supabase
+            .from("social_posts")
+            .update(Row(caption: caption))
+            .eq("id", value: postId.uuidString)
+            .eq("author_id", value: userId.uuidString)
+            .execute()
     }
 
     static func deleteSocialPost(_ post: SocialPost) async throws {

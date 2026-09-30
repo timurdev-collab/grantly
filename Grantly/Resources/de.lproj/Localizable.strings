@@ -573,3 +573,27 @@
 "Shorts require a video." = "Kurzvideos benötigen eine Videodatei.";
 
 "Please choose media smaller than 6 MB." = "Bitte wähle eine Datei unter 6 MB.";
+
+"Preparing video..." = "Video wird vorbereitet...";
+"Could not read that video." = "Dieses Video konnte nicht gelesen werden.";
+"Please choose a video smaller than 200 MB." = "Bitte wähle ein Video unter 200 MB.";
+"Uploading video" = "Video wird hochgeladen";
+"This video cannot be prepared for upload." = "Dieses Video kann nicht für den Upload vorbereitet werden.";
+"Video preparation failed. Please try another video." = "Die Videovorbereitung ist fehlgeschlagen. Bitte versuche ein anderes Video.";
+
+"My content" = "Meine Inhalte";
+"Edit or delete your posts, stories and shorts" = "Bearbeite oder lösche deine Beiträge, Stories und Kurzvideos";
+"Content" = "Inhalte";
+"No content yet" = "Noch keine Inhalte";
+"Posts, stories and shorts you publish will appear here." = "Deine Beiträge, Stories und Kurzvideos erscheinen hier.";
+"All" = "Alle";
+"Posts" = "Beiträge";
+"Stories" = "Stories";
+"Shorts" = "Kurzvideos";
+"Edit caption" = "Text bearbeiten";
+"Delete this content?" = "Diesen Inhalt löschen?";
+"This cannot be undone." = "Dies kann nicht rückgängig gemacht werden.";
+"Caption" = "Text";
+"Write a caption..." = "Text schreiben...";
+"Edit content" = "Inhalt bearbeiten";
+"Saving..." = "Wird gespeichert...";

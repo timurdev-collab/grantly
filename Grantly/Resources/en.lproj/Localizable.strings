@@ -573,3 +573,27 @@
 "Shorts require a video." = "Shorts require a video.";
 
 "Please choose media smaller than 6 MB." = "Please choose media smaller than 6 MB.";
+
+"Preparing video..." = "Preparing video...";
+"Could not read that video." = "Could not read that video.";
+"Please choose a video smaller than 200 MB." = "Please choose a video smaller than 200 MB.";
+"Uploading video" = "Uploading video";
+"This video cannot be prepared for upload." = "This video cannot be prepared for upload.";
+"Video preparation failed. Please try another video." = "Video preparation failed. Please try another video.";
+
+"My content" = "My content";
+"Edit or delete your posts, stories and shorts" = "Edit or delete your posts, stories and shorts";
+"Content" = "Content";
+"No content yet" = "No content yet";
+"Posts, stories and shorts you publish will appear here." = "Posts, stories and shorts you publish will appear here.";
+"All" = "All";
+"Posts" = "Posts";
+"Stories" = "Stories";
+"Shorts" = "Shorts";
+"Edit caption" = "Edit caption";
+"Delete this content?" = "Delete this content?";
+"This cannot be undone." = "This cannot be undone.";
+"Caption" = "Caption";
+"Write a caption..." = "Write a caption...";
+"Edit content" = "Edit content";
+"Saving..." = "Saving...";

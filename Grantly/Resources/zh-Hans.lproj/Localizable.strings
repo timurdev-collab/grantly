@@ -573,3 +573,27 @@
 "Shorts require a video." = "短视频必须使用视频文件。";
 
 "Please choose media smaller than 6 MB." = "请选择小于6 MB的媒体文件。";
+
+"Preparing video..." = "正在准备视频...";
+"Could not read that video." = "无法读取该视频。";
+"Please choose a video smaller than 200 MB." = "请选择小于 200 MB 的视频。";
+"Uploading video" = "正在上传视频";
+"This video cannot be prepared for upload." = "无法准备此视频进行上传。";
+"Video preparation failed. Please try another video." = "视频准备失败，请尝试其他视频。";
+
+"My content" = "我的内容";
+"Edit or delete your posts, stories and shorts" = "编辑或删除你的帖子、动态和短视频";
+"Content" = "内容";
+"No content yet" = "暂无内容";
+"Posts, stories and shorts you publish will appear here." = "你发布的帖子、动态和短视频会显示在这里。";
+"All" = "全部";
+"Posts" = "帖子";
+"Stories" = "动态";
+"Shorts" = "短视频";
+"Edit caption" = "编辑说明";
+"Delete this content?" = "删除此内容？";
+"This cannot be undone." = "此操作无法撤销。";
+"Caption" = "说明";
+"Write a caption..." = "写说明...";
+"Edit content" = "编辑内容";
+"Saving..." = "正在保存...";
