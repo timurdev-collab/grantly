@@ -380,7 +380,7 @@ struct ChatView: View {
             )
         }
         .padding()
-        .background(Theme.navyDeep.opacity(0.96))
+        .background(Theme.surface)
         .overlay(alignment: .top) {
             Rectangle()
                 .fill(Theme.ink.opacity(0.06))
