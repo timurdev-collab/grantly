@@ -875,7 +875,7 @@ private struct HomeMatchCard: View {
                     height: 122
                 )
 
-                Text("\(match.score)% match")
+                Text(L10n.format("%d%% match", match.score))
                     .font(.caption2.bold())
                     .foregroundStyle(Theme.ink)
                     .padding(.horizontal, 9)
