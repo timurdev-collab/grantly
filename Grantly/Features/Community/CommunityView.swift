@@ -204,8 +204,19 @@ struct AdvisorsView: View {
         VStack(spacing: 10) {
             ZStack {
                 Circle()
+                    .stroke(
+                        LinearGradient(
+                            colors: [Theme.orangeSoft, Theme.blueSoft],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 3
+                    )
+                    .frame(width: 82, height: 82)
+
+                Circle()
                     .fill(Theme.surfaceRaised)
-                    .frame(width: 72, height: 72)
+                    .frame(width: 74, height: 74)
 
                 if let value = advisor.avatarUrl,
                    let url = URL(string: value) {
@@ -221,7 +232,7 @@ struct AdvisorsView: View {
                                 .foregroundStyle(Theme.muted)
                         }
                     }
-                    .frame(width: 68, height: 68)
+                    .frame(width: 70, height: 70)
                     .clipShape(Circle())
                 } else {
                     Image(systemName: "person.fill")
@@ -253,14 +264,22 @@ struct AdvisorsView: View {
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(Theme.accentSoft)
             }
+
+            Text("View profile")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.ink)
+                .frame(maxWidth: .infinity)
+                .frame(height: 32)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .frame(maxWidth: .infinity)
-        .frame(minHeight: 178)
+        .frame(minHeight: 206)
         .padding(12)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 18)
                 .stroke(Theme.ink.opacity(0.05))
         )
     }
