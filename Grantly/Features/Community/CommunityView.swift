@@ -47,7 +47,7 @@ struct AdvisorsView: View {
                             Spacer()
 
                             if !advisors.isEmpty {
-                                Text("\(advisors.count) available")
+                                Text(L10n.format("%d advisors available", advisors.count))
                                     .font(.caption)
                                     .foregroundStyle(Theme.muted)
                             }
@@ -502,7 +502,7 @@ struct AdvisorDetailView: View {
 
             if let years = advisor.yearsExperience {
                 Label(
-                    "\(years) years experience",
+                    L10n.format("%d years experience", years),
                     systemImage: "briefcase.fill"
                 )
                 .font(.caption)
