@@ -554,8 +554,7 @@ struct ProfileView: View {
                             ) {
                                 Label(
                                     uploadingPhoto
-                                        ? "Uploading…"
-                                        : "Choose photo",
+                                        ? L10n.string("Uploading…") : L10n.string("Choose photo"),
                                     systemImage: "photo.on.rectangle"
                                 )
                             }
@@ -1199,8 +1198,7 @@ private struct AdvisorApplicationView: View {
                                     step < 2
                                         ? "Continue"
                                         : submitting
-                                            ? "Submitting…"
-                                            : "Submit for review"
+                                            ? L10n.string("Submitting…") : L10n.string("Submit for review")
                                 )
                                 .fontWeight(.semibold)
                                 Spacer()
