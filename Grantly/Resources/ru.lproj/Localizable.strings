@@ -299,3 +299,21 @@
 "Review Advisor" = "Проверка консультанта";
 "Review advisor" = "Проверить консультанта";
 "Please add a clear note for the advisor first." = "Сначала добавьте понятный комментарий для консультанта.";
+
+
+/* Dynamic advisor localization */
+"We could not confirm your account role. Try again before continuing." = "Не удалось подтвердить роль вашего аккаунта. Повторите попытку, прежде чем продолжить.";
+"Changes Requested" = "Запрошены изменения";
+"Approved" = "Одобрено";
+"Rejected" = "Отклонено";
+"Suspended" = "Приостановлено";
+"%d years experience" = "Опыт: %d лет";
+"%d application(s) waiting" = "Заявок в ожидании: %d";
+"There are no %@ advisor applications." = "Нет заявок консультантов со статусом «%@».";
+"Step %d of 3" = "Шаг %d из 3";
+"Admissions Advisor" = "Консультант по поступлению";
+"Be specific. For example: US admissions, scholarship essays, graduate applications." = "Указывайте конкретно, например: поступление в США, эссе на стипендию, поступление в магистратуру.";
+"Add a short introduction video from YouTube, Loom, Vimeo or another secure HTTPS link. Around 60–90 seconds works best." = "Добавьте короткое видео-знакомство с YouTube, Loom, Vimeo или по другой безопасной HTTPS-ссылке. Оптимальная длительность — около 60–90 секунд.";
+"Video link looks valid" = "Ссылка на видео выглядит корректной";
+"%@ years" = "%@ лет";
+"%d available" = "Доступно: %d";
