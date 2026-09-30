@@ -343,16 +343,14 @@ struct CreateUniversityCaseView: View {
             .background(Theme.pageBackground)
             .navigationTitle(
                 selectedUniversity == nil
-                    ? "Choose University"
-                    : "New Case"
+                    ? L10n.string("Choose University") : L10n.string("New Case")
             )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(
                         selectedUniversity == nil
-                            ? "Close"
-                            : "Back"
+                            ? L10n.string("Close") : L10n.string("Back")
                     ) {
                         if selectedUniversity == nil {
                             dismiss()
@@ -520,8 +518,7 @@ struct CreateUniversityCaseView: View {
 
                         Text(
                             creating
-                                ? "Creating…"
-                                : "Create university case"
+                                ? L10n.string("Creating…") : L10n.string("Create university case")
                         )
                     }
                     .font(.headline)
