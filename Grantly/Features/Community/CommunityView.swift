@@ -225,7 +225,10 @@ struct AdvisorsView: View {
                 }
             }
 
-            Text(advisor.displayName ?? "Grantly Advisor")
+            Text(
+                advisor.displayName ??
+                L10n.string("Grantly Advisor")
+            )
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Theme.ink)
                 .multilineTextAlignment(.center)
@@ -289,7 +292,9 @@ struct AdvisorsView: View {
                 )
         )
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Advisor coming soon")
+        .accessibilityLabel(
+            L10n.string("Advisor coming soon")
+        )
     }
 
     @MainActor
@@ -376,15 +381,15 @@ struct AdvisorDetailView: View {
         if requestSent ||
             registration?.advisorId == advisor.id {
             return registration?.status == "active"
-                ? "Your advisor"
-                : "Request sent"
+                ? L10n.string("Your advisor")
+                : L10n.string("Request sent")
         }
 
         if registration?.status == "active" {
-            return "You already have an advisor"
+            return L10n.string("You already have an advisor")
         }
 
-        return "Request this advisor"
+        return L10n.string("Request this advisor")
     }
 
     private var canRequest: Bool {
@@ -413,7 +418,9 @@ struct AdvisorDetailView: View {
                     }
                 } label: {
                     Label(
-                        requesting ? "Sending request…" : requestStateTitle,
+                        requesting
+                            ? L10n.string("Sending request…")
+                            : requestStateTitle,
                         systemImage: "person.badge.plus"
                     )
                     .font(.subheadline.weight(.semibold))
@@ -502,7 +509,10 @@ struct AdvisorDetailView: View {
 
             if let years = advisor.yearsExperience {
                 Label(
-                    "\(years) years experience",
+                    L10n.format(
+                        "%d years experience",
+                        years
+                    ),
                     systemImage: "briefcase.fill"
                 )
                 .font(.caption)
@@ -675,7 +685,7 @@ private struct AdvisorTagWrap: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Text(title)
+            Text(L10n.string(title))
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(Theme.muted)
 
