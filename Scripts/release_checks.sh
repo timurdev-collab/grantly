@@ -28,4 +28,4 @@ if ! grep -q "APP_ENVIRONMENT: production" project.yml; then
   exit 1
 fi
 
-echo "Release checks passed."
+python3 Scripts/localization_checks.py\n\necho "Release checks passed."
