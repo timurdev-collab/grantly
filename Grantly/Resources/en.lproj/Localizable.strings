@@ -299,3 +299,21 @@
 "Review Advisor" = "Review Advisor";
 "Review advisor" = "Review advisor";
 "Please add a clear note for the advisor first." = "Please add a clear note for the advisor first.";
+
+
+/* Dynamic advisor localization */
+"We could not confirm your account role. Try again before continuing." = "We could not confirm your account role. Try again before continuing.";
+"Changes Requested" = "Changes Requested";
+"Approved" = "Approved";
+"Rejected" = "Rejected";
+"Suspended" = "Suspended";
+"%d years experience" = "%d years experience";
+"%d application(s) waiting" = "%d application(s) waiting";
+"There are no %@ advisor applications." = "There are no %@ advisor applications.";
+"Step %d of 3" = "Step %d of 3";
+"Admissions Advisor" = "Admissions Advisor";
+"Be specific. For example: US admissions, scholarship essays, graduate applications." = "Be specific. For example: US admissions, scholarship essays, graduate applications.";
+"Add a short introduction video from YouTube, Loom, Vimeo or another secure HTTPS link. Around 60–90 seconds works best." = "Add a short introduction video from YouTube, Loom, Vimeo or another secure HTTPS link. Around 60–90 seconds works best.";
+"Video link looks valid" = "Video link looks valid";
+"%@ years" = "%@ years";
+"%d available" = "%d available";
