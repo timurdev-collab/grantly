@@ -355,7 +355,7 @@ struct DraftScholarshipReviewView: View {
                             deadline = candidate
                         } label: {
                             Text(
-                                "Use detected deadline \(candidate)" +
+                                L10n.format("Use detected deadline %@", candidate) +
                                 confidenceText(
                                     readiness?.deadlineConfidence
                                 )
@@ -371,7 +371,7 @@ struct DraftScholarshipReviewView: View {
                             applicationCycle = candidate
                         } label: {
                             Text(
-                                "Use detected cycle \(candidate)" +
+                                L10n.format("Use detected cycle %@", candidate) +
                                 confidenceText(
                                     readiness?.cycleConfidence
                                 )
@@ -392,7 +392,7 @@ struct DraftScholarshipReviewView: View {
                         Task { await save() }
                     } label: {
                         Label(
-                            working ? "Saving…" : "Save draft",
+                            working ? L10n.string("Saving…") : L10n.string("Save draft"),
                             systemImage: "square.and.arrow.down"
                         )
                     }
@@ -402,7 +402,7 @@ struct DraftScholarshipReviewView: View {
                         Task { await publish() }
                     } label: {
                         Label(
-                            working ? "Working…" : "Publish scholarship",
+                            working ? L10n.string("Working…") : L10n.string("Publish scholarship"),
                             systemImage: "checkmark.seal"
                         )
                     }
@@ -513,7 +513,7 @@ struct DraftScholarshipReviewView: View {
     }
 
     private func confidenceText(_ confidence: Int?) -> String {
-        confidence.map { " (\($0)% confidence)" } ?? ""
+        confidence.map { " " + L10n.format("(%d%% confidence)", $0) } ?? ""
     }
 
     private func values(_ text: String) -> [String] {
