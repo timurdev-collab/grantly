@@ -7,35 +7,57 @@ struct MessagesView: View {
     @State private var errorMessage: String?
 
     var body: some View {
-        Group {
-            if loading && conversations.isEmpty {
-                ProgressView()
-                    .tint(Theme.blue)
-            } else if conversations.isEmpty {
-                EmptyState(
-                    icon: "bubble.left.and.bubble.right",
-                    title: "No messages yet",
-                    text: "Start a conversation from the Community tab."
-                )
-            } else {
-                List(conversations) { conversation in
-                    NavigationLink {
-                        ChatView(
-                            conversationId: conversation.conversationId,
-                            otherUserId: conversation.otherUserId,
-                            title: conversation.displayName
-                        )
-                    } label: {
-                        ConversationRow(conversation: conversation)
-                    }
-                    .listRowBackground(Theme.surface)
+        ScrollView(showsIndicators: false) {
+            LazyVStack(spacing: 0) {
+                HStack {
+                    Text("Messages")
+                        .font(.system(size: 30, weight: .bold))
+                        .foregroundStyle(Theme.ink)
+
+                    Spacer()
+
+                    Image(systemName: "square.and.pencil")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundStyle(Theme.ink)
+                        .frame(width: 40, height: 40)
                 }
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
+                .padding(.horizontal, 16)
+                .padding(.top, 10)
+                .padding(.bottom, 8)
+
+                if loading && conversations.isEmpty {
+                    ProgressView()
+                        .tint(Theme.blue)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 56)
+                } else if conversations.isEmpty {
+                    EmptyState(
+                        icon: "bubble.left.and.bubble.right",
+                        title: "No messages yet",
+                        text: "Start a conversation from the Community tab."
+                    )
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 36)
+                } else {
+                    ForEach(conversations) { conversation in
+                        NavigationLink {
+                            ChatView(
+                                conversationId: conversation.conversationId,
+                                otherUserId: conversation.otherUserId,
+                                title: conversation.displayName
+                            )
+                        } label: {
+                            ConversationRow(conversation: conversation)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.horizontal, 16)
+                    }
+                }
             }
+            .padding(.bottom, 24)
         }
         .background(Theme.pageBackground)
-        .navigationTitle("Messages")
+        .navigationBarHidden(true)
         .refreshable { await load() }
         .task {
             await load()
@@ -110,10 +132,14 @@ private struct ConversationRow: View {
         HStack(spacing: 12) {
             Text(conversation.displayName.prefix(2).uppercased())
                 .font(.caption.bold())
-                .frame(width: 44, height: 44)
+                .frame(width: 50, height: 50)
                 .background(Theme.blue.opacity(0.14))
                 .foregroundStyle(Theme.blueSoft)
-                .clipShape(RoundedRectangle(cornerRadius: 13))
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Theme.ink.opacity(0.08), lineWidth: 1)
+                )
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
@@ -166,7 +192,7 @@ private struct ConversationRow: View {
                 }
             }
         }
-        .padding(.vertical, 5)
+        .padding(.vertical, 10)
     }
 
     private func relativeTime(_ value: String) -> String {
@@ -354,7 +380,7 @@ struct ChatView: View {
             )
         }
         .padding()
-        .background(Theme.navyDeep.opacity(0.96))
+        .background(Theme.surface)
         .overlay(alignment: .top) {
             Rectangle()
                 .fill(Theme.ink.opacity(0.06))

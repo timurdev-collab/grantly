@@ -6,14 +6,32 @@ struct CasesHubView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Picker("Cases", selection: $segment) {
-                Text("University Cases").tag(0)
-                Text("Scholarships").tag(1)
+            HStack {
+                Text("Applications")
+                    .font(.system(size: 30, weight: .bold))
+                    .foregroundStyle(Theme.ink)
+
+                Spacer()
             }
-            .pickerStyle(.segmented)
-            .padding(.horizontal)
+            .padding(.horizontal, 16)
             .padding(.top, 10)
-            .padding(.bottom, 6)
+            .padding(.bottom, 12)
+
+            HStack(spacing: 8) {
+                applicationTab(
+                    title: "University Cases",
+                    index: 0,
+                    icon: "building.columns"
+                )
+
+                applicationTab(
+                    title: "Scholarships",
+                    index: 1,
+                    icon: "graduationcap"
+                )
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 10)
 
             if segment == 0 {
                 UniversityCasesView()
@@ -22,6 +40,39 @@ struct CasesHubView: View {
             }
         }
         .background(Theme.pageBackground)
+        .navigationBarHidden(true)
+    }
+
+    private func applicationTab(
+        title: String,
+        index: Int,
+        icon: String
+    ) -> some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.18)) {
+                segment = index
+            }
+        } label: {
+            Label(title, systemImage: icon)
+                .font(.caption.weight(.semibold))
+                .frame(maxWidth: .infinity)
+                .frame(height: 38)
+                .foregroundStyle(
+                    segment == index
+                        ? Theme.onAccent
+                        : Theme.ink
+                )
+                .background(
+                    segment == index
+                        ? Theme.ink
+                        : Theme.surfaceRaised
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 9))
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(
+            segment == index ? .isSelected : []
+        )
     }
 }
 

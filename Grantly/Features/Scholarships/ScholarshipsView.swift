@@ -626,47 +626,70 @@ struct PremiumScholarshipCard: View {
     }
 
     var body: some View {
-        HStack(alignment: .top, spacing: 13) {
-            ExploreUniversityLogo(
-                university: scholarship.university,
-                fallbackName: scholarship.provider,
-                size: 54
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 10) {
+                ExploreUniversityLogo(
+                    university: scholarship.university,
+                    fallbackName: scholarship.provider,
+                    size: 40
+                )
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(scholarship.provider)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.ink)
+                        .lineLimit(1)
+
+                    Text(countryLabel)
+                        .font(.caption2)
+                        .foregroundStyle(Theme.muted)
+                        .lineLimit(1)
+                }
+
+                Spacer()
+
+                if verified {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.blueSoft)
+                        .accessibilityHidden(true)
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 11)
+
+            UniversityPhoto(
+                seed: scholarship.provider + scholarship.title,
+                remoteURL: scholarship.university?.campusImageUrl,
+                height: 210
             )
+            .frame(maxWidth: .infinity)
+            .clipped()
+
+            HStack(spacing: 18) {
+                Image(systemName: "heart")
+                Image(systemName: "paperplane")
+                Image(systemName: "calendar")
+
+                Spacer()
+
+                Image(systemName: saved ? "bookmark.fill" : "bookmark")
+                    .foregroundStyle(saved ? Theme.orangeSoft : Theme.ink)
+            }
+            .font(.system(size: 19, weight: .medium))
+            .foregroundStyle(Theme.ink)
+            .padding(.horizontal, 14)
+            .padding(.top, 12)
 
             VStack(alignment: .leading, spacing: 8) {
-                HStack(alignment: .top, spacing: 8) {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(scholarship.title)
-                            .font(.headline.bold())
-                            .foregroundStyle(Theme.ink)
-                            .multilineTextAlignment(.leading)
-                            .lineLimit(2)
-
-                        Text(scholarship.provider)
-                            .font(.caption)
-                            .foregroundStyle(Theme.muted)
-                            .lineLimit(1)
-                    }
-
-                    Spacer(minLength: 4)
-
-                    Image(systemName: saved ? "bookmark.fill" : "bookmark")
-                        .font(.caption.bold())
-                        .foregroundStyle(
-                            saved ? Theme.orangeSoft : Theme.muted
-                        )
-                        .frame(width: 30, height: 30)
-                        .background(Theme.surfaceRaised)
-                        .clipShape(Circle())
-                }
+                Text(scholarship.title)
+                    .font(.headline.weight(.bold))
+                    .foregroundStyle(Theme.ink)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(3)
 
                 HStack(spacing: 7) {
                     FundingBadge(text: scholarship.fundingType)
-
-                    MetadataPill(
-                        icon: "mappin.and.ellipse",
-                        text: countryLabel
-                    )
 
                     MetadataPill(
                         icon: "graduationcap",
@@ -695,14 +718,12 @@ struct PremiumScholarshipCard: View {
                             .font(.caption2.weight(.semibold))
                             .foregroundStyle(Theme.muted)
                     }
-
-                    Image(systemName: "chevron.right")
-                        .font(.caption.bold())
-                        .foregroundStyle(Theme.muted)
                 }
             }
+            .padding(.horizontal, 14)
+            .padding(.top, 10)
+            .padding(.bottom, 14)
         }
-        .padding(14)
         .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(

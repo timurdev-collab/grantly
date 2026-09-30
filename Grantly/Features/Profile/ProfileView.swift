@@ -31,6 +31,7 @@ struct ProfileView: View {
     @State private var avatarURL: String?
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var uploadingPhoto = false
+    @State private var selectedProfileSection = 0
 
     private var displayName: String {
         let value = fullName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -58,58 +59,67 @@ struct ProfileView: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(spacing: 18) {
-                header
-                academicSnapshot
-                destinationCard
-                communityCard
-                settingsCard
+            VStack(spacing: 0) {
+                instagramProfileHeader
+                profileSectionTabs
 
-                if profile?.role == "student" {
-                    NavigationLink {
-                        AdvisorApplicationView(
-                            defaultName: profile?.fullName ?? ""
-                        )
-                    } label: {
-                        ProfileMenuRow(
-                            icon: "person.crop.circle.badge.checkmark",
-                            title: "Apply as an advisor",
-                            subtitle: "Create a counselor profile for admin review",
-                            tint: Theme.orangeSoft
-                        )
+                VStack(spacing: 16) {
+                    if selectedProfileSection == 0 {
+                        communityCard
+                    } else if selectedProfileSection == 1 {
+                        academicSnapshot
+                        destinationCard
+                    } else {
+                        settingsCard
+
+                        if profile?.role == "student" {
+                            NavigationLink {
+                                AdvisorApplicationView(
+                                    defaultName: profile?.fullName ?? ""
+                                )
+                            } label: {
+                                ProfileMenuRow(
+                                    icon: "person.crop.circle.badge.checkmark",
+                                    title: "Apply as an advisor",
+                                    subtitle: "Create a counselor profile for admin review",
+                                    tint: Theme.orangeSoft
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+
+                        if profile?.role == "admin" {
+                            NavigationLink {
+                                AdminView()
+                            } label: {
+                                ProfileMenuRow(
+                                    icon: "shield.lefthalf.filled",
+                                    title: "Admin dashboard",
+                                    subtitle: "Scholarship and safety administration",
+                                    tint: Theme.blueSoft
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+
+                        accountCard
                     }
-                    .buttonStyle(.plain)
-                }
 
-                if profile?.role == "admin" {
-                    NavigationLink {
-                        AdminView()
-                    } label: {
-                        ProfileMenuRow(
-                            icon: "shield.lefthalf.filled",
-                            title: "Admin dashboard",
-                            subtitle: "Scholarship and safety administration",
-                            tint: Theme.blueSoft
-                        )
+                    if !status.isEmpty {
+                        Text(status)
+                            .font(.caption)
+                            .foregroundStyle(
+                                status == L10n.string("Profile saved.")
+                                    ? Theme.green
+                                    : Theme.danger
+                            )
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .buttonStyle(.plain)
                 }
-
-                if !status.isEmpty {
-                    Text(status)
-                        .font(.caption)
-                        .foregroundStyle(
-                            status == L10n.string("Profile saved.")
-                                ? Theme.green
-                                : Theme.danger
-                        )
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-
-                accountCard
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+                .padding(.bottom, 32)
             }
-            .padding()
-            .padding(.bottom, 24)
         }
         .background(Theme.pageBackground)
         .navigationTitle(showsNavigationBar ? "Profile" : "")
@@ -133,30 +143,34 @@ struct ProfileView: View {
         }
     }
 
-    private var header: some View {
-        VStack(spacing: 14) {
-            HStack {
-                Text("Profile")
-                    .font(.system(size: 30, weight: .bold))
+    private var instagramProfileHeader: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 12) {
+                Text(displayName)
+                    .font(.headline.weight(.bold))
                     .foregroundStyle(Theme.ink)
+                    .lineLimit(1)
 
                 Spacer()
 
                 Button {
-                    showingEditProfile = true
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        selectedProfileSection = 2
+                    }
                 } label: {
-                    Label("Edit", systemImage: "pencil")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.blueSoft)
-                        .padding(.horizontal, 12)
-                        .frame(height: 38)
-                        .background(Theme.surface)
-                        .clipShape(Capsule())
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 19, weight: .semibold))
+                        .foregroundStyle(Theme.ink)
+                        .frame(width: 40, height: 40)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Settings")
             }
+            .padding(.horizontal, 16)
+            .padding(.top, 8)
+            .padding(.bottom, 12)
 
-            VStack(spacing: 12) {
+            HStack(alignment: .center, spacing: 20) {
                 ZStack {
                     Circle()
                         .fill(
@@ -187,45 +201,171 @@ struct ProfileView: View {
                             .foregroundStyle(Theme.ink)
                     }
                 }
-                .frame(width: 86, height: 86)
+                .frame(width: 92, height: 92)
                 .clipShape(Circle())
                 .overlay(
                     Circle()
                         .stroke(Theme.ink.opacity(0.12), lineWidth: 1)
                 )
 
-                Text(displayName)
-                    .font(.system(size: 25, weight: .bold))
-                    .foregroundStyle(Theme.ink)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(displayName)
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(Theme.ink)
+                        .lineLimit(2)
 
-                Text(
-                    [degreeLevel, intendedMajor, nationality]
-                        .filter {
-                            !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                        }
-                        .joined(separator: " · ")
-                )
-                .font(.subheadline)
-                .foregroundStyle(Theme.muted)
-                .multilineTextAlignment(.center)
+                    Text(
+                        [degreeLevel, intendedMajor, nationality]
+                            .filter {
+                                !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                            }
+                            .joined(separator: " · ")
+                    )
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(2)
 
-                HStack(spacing: 8) {
                     Label(
                         visible ? "Community visible" : "Community hidden",
                         systemImage: visible ? "eye.fill" : "eye.slash.fill"
                     )
-
-                    Label(
-                        "Private academic data",
-                        systemImage: "lock.fill"
-                    )
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(Theme.blueSoft)
                 }
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.blueSoft)
+
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 16)
+
+            let trimmedBio = bio.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmedBio.isEmpty {
+                Text(trimmedBio)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.ink)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .lineSpacing(3)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+            }
+
+            Button {
+                showingEditProfile = true
+            } label: {
+                Text("Edit")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 36)
+                    .background(Theme.surfaceRaised)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 16)
+            .padding(.top, 14)
+
+            HStack(spacing: 10) {
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Text("Academic profile")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.muted)
+
+                        Spacer()
+
+                        Text("\(profileCompletion)%")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(Theme.ink)
+                    }
+
+                    GeometryReader { geometry in
+                        ZStack(alignment: .leading) {
+                            Capsule()
+                                .fill(Theme.ink.opacity(0.08))
+
+                            Capsule()
+                                .fill(Theme.blueSoft)
+                                .frame(
+                                    width: geometry.size.width *
+                                        CGFloat(profileCompletion) / 100
+                                )
+                        }
+                    }
+                    .frame(height: 5)
+                }
+
+                Image(systemName: "lock.fill")
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                    .accessibilityLabel("Private academic data")
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 14)
+            .padding(.bottom, 16)
+        }
+        .background(Theme.surface)
+    }
+
+    private var profileSectionTabs: some View {
+        HStack(spacing: 0) {
+            profileSectionButton(
+                index: 0,
+                systemImage: "person.text.rectangle",
+                accessibilityLabel: "Community profile"
+            )
+            profileSectionButton(
+                index: 1,
+                systemImage: "graduationcap",
+                accessibilityLabel: "Academic profile"
+            )
+            profileSectionButton(
+                index: 2,
+                systemImage: "gearshape",
+                accessibilityLabel: "Settings"
+            )
+        }
+        .frame(height: 48)
+        .background(Theme.surface)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(Theme.ink.opacity(0.08))
+                .frame(height: 1)
+        }
+    }
+
+    private func profileSectionButton(
+        index: Int,
+        systemImage: String,
+        accessibilityLabel: String
+    ) -> some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.18)) {
+                selectedProfileSection = index
+            }
+        } label: {
+            VStack(spacing: 8) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(
+                        selectedProfileSection == index
+                            ? Theme.ink
+                            : Theme.muted
+                    )
+
+                Rectangle()
+                    .fill(
+                        selectedProfileSection == index
+                            ? Theme.ink
+                            : Color.clear
+                    )
+                    .frame(height: 1)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
         }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(accessibilityLabel))
+        .accessibilityAddTraits(
+            selectedProfileSection == index ? .isSelected : []
+        )
     }
 
     private var profileInitials: String {
@@ -355,19 +495,31 @@ struct ProfileView: View {
 
                 Spacer()
 
-                Circle()
-                    .fill(visible ? Theme.green : Theme.ink.opacity(0.25))
-                    .frame(width: 8, height: 8)
+                Label(
+                    visible ? "Community visible" : "Community hidden",
+                    systemImage: visible ? "eye.fill" : "eye.slash.fill"
+                )
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Theme.blueSoft)
             }
 
-            Text(
-                bio.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    ? "Add a short bio so other students know your study interests."
-                    : bio
+            ProfileSummaryLine(
+                icon: "graduationcap.fill",
+                label: "Degree",
+                value: degreeLevel
             )
-            .font(.subheadline)
-            .foregroundStyle(Theme.muted)
-            .lineSpacing(3)
+
+            ProfileSummaryLine(
+                icon: "books.vertical.fill",
+                label: "Major",
+                value: intendedMajor.isEmpty ? "Not set" : intendedMajor
+            )
+
+            ProfileSummaryLine(
+                icon: "globe",
+                label: "Countries",
+                value: targetCountries.isEmpty ? "Not set" : targetCountries
+            )
 
             Text("GPA, IELTS, income and residence details are never copied into your public community profile.")
                 .font(.caption)
@@ -376,9 +528,9 @@ struct ProfileView: View {
         }
         .padding(16)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 18)
                 .stroke(Theme.ink.opacity(0.05))
         )
     }
