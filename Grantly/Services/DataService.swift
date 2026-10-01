@@ -2234,6 +2234,210 @@ enum DataService {
         }
     }
 
+    static func socialEngagement(
+        postIds: [UUID]
+    ) async throws -> [UUID: SocialPostEngagement] {
+        guard !postIds.isEmpty else { return [:] }
+
+        let userId = try await supabase.auth.session.user.id
+        let values = postIds.map(\.uuidString)
+
+        struct LikeRow: Decodable {
+            let postId: UUID
+            let userId: UUID
+
+            enum CodingKeys: String, CodingKey {
+                case postId = "post_id"
+                case userId = "user_id"
+            }
+        }
+
+        struct CommentRow: Decodable {
+            let postId: UUID
+
+            enum CodingKeys: String, CodingKey {
+                case postId = "post_id"
+            }
+        }
+
+        async let likeRows: [LikeRow] = supabase
+            .from("social_post_likes")
+            .select("post_id,user_id")
+            .in("post_id", values: values)
+            .execute()
+            .value
+
+        async let commentRows: [CommentRow] = supabase
+            .from("social_post_comments")
+            .select("post_id")
+            .in("post_id", values: values)
+            .eq("is_active", value: true)
+            .execute()
+            .value
+
+        let (likes, comments) = try await (likeRows, commentRows)
+        var result = Dictionary(
+            uniqueKeysWithValues: postIds.map {
+                ($0, SocialPostEngagement())
+            }
+        )
+
+        for like in likes {
+            result[like.postId, default: SocialPostEngagement()]
+                .likeCount += 1
+
+            if like.userId == userId {
+                result[like.postId, default: SocialPostEngagement()]
+                    .likedByMe = true
+            }
+        }
+
+        for comment in comments {
+            result[comment.postId, default: SocialPostEngagement()]
+                .commentCount += 1
+        }
+
+        return result
+    }
+
+    static func setSocialPostLiked(
+        postId: UUID,
+        liked: Bool
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        if liked {
+            struct Row: Encodable {
+                let post_id: UUID
+                let user_id: UUID
+            }
+
+            try await supabase
+                .from("social_post_likes")
+                .upsert(
+                    Row(
+                        post_id: postId,
+                        user_id: userId
+                    ),
+                    onConflict: "post_id,user_id"
+                )
+                .execute()
+        } else {
+            try await supabase
+                .from("social_post_likes")
+                .delete()
+                .eq("post_id", value: postId.uuidString)
+                .eq("user_id", value: userId.uuidString)
+                .execute()
+        }
+    }
+
+    static func socialComments(
+        postId: UUID
+    ) async throws -> [SocialComment] {
+        let comments: [SocialComment] = try await supabase
+            .from("social_post_comments")
+            .select()
+            .eq("post_id", value: postId.uuidString)
+            .eq("is_active", value: true)
+            .order("created_at", ascending: true)
+            .limit(200)
+            .execute()
+            .value
+
+        guard !comments.isEmpty else { return [] }
+
+        let ids = Array(Set(comments.map(\.authorId)))
+        let profiles: [CommunityProfile] = try await supabase
+            .from("community_profiles")
+            .select()
+            .in("id", values: ids.map(\.uuidString))
+            .execute()
+            .value
+
+        let map = Dictionary(
+            uniqueKeysWithValues: profiles.map { ($0.id, $0) }
+        )
+
+        return comments.map { comment in
+            var value = comment
+            value.author = map[comment.authorId]
+            return value
+        }
+    }
+
+    static func addSocialComment(
+        postId: UUID,
+        body: String
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+        let trimmed = body.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+
+        guard !trimmed.isEmpty else { return }
+
+        struct Row: Encodable {
+            let post_id: UUID
+            let author_id: UUID
+            let body: String
+        }
+
+        try await supabase
+            .from("social_post_comments")
+            .insert(
+                Row(
+                    post_id: postId,
+                    author_id: userId,
+                    body: String(trimmed.prefix(1000))
+                )
+            )
+            .execute()
+    }
+
+    static func deleteSocialComment(
+        commentId: UUID
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        try await supabase
+            .from("social_post_comments")
+            .delete()
+            .eq("id", value: commentId.uuidString)
+            .eq("author_id", value: userId.uuidString)
+            .execute()
+    }
+
+    static func reportSocialPost(
+        post: SocialPost,
+        reason: String,
+        details: String
+    ) async throws {
+        let reporterId = try await supabase.auth.session.user.id
+
+        struct Row: Encodable {
+            let post_id: UUID
+            let reporter_id: UUID
+            let reported_user_id: UUID
+            let reason: String
+            let details: String
+        }
+
+        try await supabase
+            .from("social_post_reports")
+            .upsert(
+                Row(
+                    post_id: post.id,
+                    reporter_id: reporterId,
+                    reported_user_id: post.authorId,
+                    reason: reason,
+                    details: details
+                ),
+                onConflict: "post_id,reporter_id"
+            )
+            .execute()
+    }
+
     static func mySocialPosts(
         limit: Int = 100
     ) async throws -> [SocialPost] {
