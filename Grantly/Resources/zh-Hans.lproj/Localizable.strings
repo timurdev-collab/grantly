@@ -597,3 +597,24 @@
 "Write a caption..." = "写说明...";
 "Edit content" = "编辑内容";
 "Saving..." = "正在保存...";
+
+"Like" = "点赞";
+"Unlike post" = "取消点赞";
+"Like post" = "点赞帖子";
+"Comment" = "评论";
+"Report post" = "举报帖子";
+"Block student" = "屏蔽学生";
+"Submit report" = "提交举报";
+"Submitting..." = "正在提交...";
+"Spam or misleading" = "垃圾或误导内容";
+"Harassment or bullying" = "骚扰或欺凌";
+"Hate or abusive content" = "仇恨或辱骂内容";
+"Unsafe or inappropriate" = "不安全或不当内容";
+"Other" = "其他";
+"Add details (optional)" = "添加详情（可选）";
+"Comments" = "评论";
+"No comments yet" = "暂无评论";
+"Be the first to start the conversation." = "成为第一个发起讨论的人。";
+"Add a comment..." = "添加评论...";
+"Post comment" = "发布评论";
+"Delete comment" = "删除评论";
