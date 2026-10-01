@@ -18,6 +18,9 @@ struct SocialHomeFeedView: View {
     @State private var loading = true
     @State private var showingComposer = false
     @State private var selectedStory: SocialPost?
+    @State private var selectedCommentsPost: SocialPost?
+    @State private var reportingPost: SocialPost?
+    @State private var engagement: [UUID: SocialPostEngagement] = [:]
     @State private var errorMessage: String?
 
     var body: some View {
@@ -89,10 +92,29 @@ struct SocialHomeFeedView: View {
                     ForEach(posts) { post in
                         SocialPostCard(
                             post: post,
-                            canDelete: post.authorId == auth.userId,
+                            engagement:
+                                engagement[post.id] ??
+                                SocialPostEngagement(),
+                            isOwnPost: post.authorId == auth.userId,
+                            onToggleLike: {
+                                Task {
+                                    await toggleLike(post)
+                                }
+                            },
+                            onComments: {
+                                selectedCommentsPost = post
+                            },
                             onDelete: {
                                 Task {
                                     await delete(post)
+                                }
+                            },
+                            onReport: {
+                                reportingPost = post
+                            },
+                            onBlock: {
+                                Task {
+                                    await block(post)
                                 }
                             }
                         )
@@ -115,6 +137,19 @@ struct SocialHomeFeedView: View {
         }
         .sheet(item: $selectedStory) { story in
             SocialStoryViewer(story: story)
+        }
+        .sheet(item: $selectedCommentsPost) { post in
+            SocialCommentsView(
+                post: post,
+                onChanged: {
+                    await refreshEngagement()
+                }
+            )
+        }
+        .sheet(item: $reportingPost) { post in
+            SocialPostReportSheet(post: post) {
+                reportingPost = nil
+            }
         }
     }
 
@@ -208,9 +243,64 @@ struct SocialHomeFeedView: View {
             )
             stories = loadedStories
             posts = loadedPosts
+            engagement = try await DataService.socialEngagement(
+                postIds: loadedPosts.map(\.id)
+            )
             errorMessage = nil
         } catch is CancellationError {
             return
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func refreshEngagement() async {
+        do {
+            engagement = try await DataService.socialEngagement(
+                postIds: posts.map(\.id)
+            )
+        } catch is CancellationError {
+            return
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func toggleLike(_ post: SocialPost) async {
+        let previous =
+            engagement[post.id] ??
+            SocialPostEngagement()
+
+        var updated = previous
+        updated.likedByMe.toggle()
+        updated.likeCount = max(
+            0,
+            previous.likeCount +
+            (updated.likedByMe ? 1 : -1)
+        )
+        engagement[post.id] = updated
+
+        do {
+            try await DataService.setSocialPostLiked(
+                postId: post.id,
+                liked: updated.likedByMe
+            )
+        } catch {
+            engagement[post.id] = previous
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func block(_ post: SocialPost) async {
+        guard post.authorId != auth.userId else { return }
+
+        do {
+            try await DataService.blockUser(post.authorId)
+            await load()
+            await onChanged()
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -232,8 +322,13 @@ struct SocialHomeFeedView: View {
 
 private struct SocialPostCard: View {
     let post: SocialPost
-    let canDelete: Bool
+    let engagement: SocialPostEngagement
+    let isOwnPost: Bool
+    let onToggleLike: () -> Void
+    let onComments: () -> Void
     let onDelete: () -> Void
+    let onReport: () -> Void
+    let onBlock: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -251,7 +346,10 @@ private struct SocialPostCard: View {
 
                     HStack(spacing: 5) {
                         if post.kind == .short {
-                            Label("Short", systemImage: "play.rectangle.fill")
+                            Label(
+                                "Short",
+                                systemImage: "play.rectangle.fill"
+                            )
                         } else {
                             Text(relativeTime(post.createdAt))
                         }
@@ -262,16 +360,35 @@ private struct SocialPostCard: View {
 
                 Spacer()
 
-                if canDelete {
-                    Menu {
+                Menu {
+                    if isOwnPost {
                         Button("Delete", role: .destructive) {
                             onDelete()
                         }
-                    } label: {
-                        Image(systemName: "ellipsis")
-                            .foregroundStyle(Theme.muted)
-                            .frame(width: 34, height: 34)
+                    } else {
+                        Button {
+                            onReport()
+                        } label: {
+                            Label(
+                                "Report post",
+                                systemImage: "exclamationmark.bubble"
+                            )
+                        }
+
+                        Button(role: .destructive) {
+                            onBlock()
+                        } label: {
+                            Label(
+                                "Block student",
+                                systemImage:
+                                    "person.crop.circle.badge.xmark"
+                            )
+                        }
                     }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .foregroundStyle(Theme.muted)
+                        .frame(width: 34, height: 34)
                 }
             }
             .padding(12)
@@ -280,7 +397,12 @@ private struct SocialPostCard: View {
                let url = URL(string: mediaURL) {
                 if post.mediaType == "video" {
                     VideoPlayer(player: AVPlayer(url: url))
-                        .frame(height: post.kind == .short ? 360 : 260)
+                        .frame(
+                            height:
+                                post.kind == .short
+                                ? 360
+                                : 260
+                        )
                         .background(Color.black)
                 } else {
                     AsyncImage(url: url) { phase in
@@ -293,7 +415,10 @@ private struct SocialPostCard: View {
                             mediaPlaceholder
                         default:
                             ProgressView()
-                                .frame(maxWidth: .infinity, minHeight: 220)
+                                .frame(
+                                    maxWidth: .infinity,
+                                    minHeight: 220
+                                )
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -301,6 +426,48 @@ private struct SocialPostCard: View {
                     .clipped()
                 }
             }
+
+            HStack(spacing: 18) {
+                Button(action: onToggleLike) {
+                    Label(
+                        engagement.likeCount == 0
+                            ? L10n.string("Like")
+                            : "\(engagement.likeCount)",
+                        systemImage:
+                            engagement.likedByMe
+                            ? "heart.fill"
+                            : "heart"
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(
+                        engagement.likedByMe
+                            ? Theme.danger
+                            : Theme.ink
+                    )
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(
+                    engagement.likedByMe
+                        ? L10n.string("Unlike post")
+                        : L10n.string("Like post")
+                )
+
+                Button(action: onComments) {
+                    Label(
+                        engagement.commentCount == 0
+                            ? L10n.string("Comment")
+                            : "\(engagement.commentCount)",
+                        systemImage: "bubble.left"
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+                }
+                .buttonStyle(.plain)
+
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.top, 10)
 
             let caption = post.caption.trimmingCharacters(
                 in: .whitespacesAndNewlines
@@ -310,8 +477,14 @@ private struct SocialPostCard: View {
                 Text(caption)
                     .font(.subheadline)
                     .foregroundStyle(Theme.ink)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(
+                        maxWidth: .infinity,
+                        alignment: .leading
+                    )
                     .padding(12)
+            } else {
+                Spacer()
+                    .frame(height: 12)
             }
         }
         .background(Theme.surface)
@@ -337,6 +510,96 @@ private struct SocialPostCard: View {
 
         return RelativeDateTimeFormatter()
             .localizedString(for: date, relativeTo: Date())
+    }
+}
+
+private struct SocialPostReportSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let post: SocialPost
+    let onFinished: () -> Void
+
+    @State private var reason = "Spam or misleading"
+    @State private var details = ""
+    @State private var submitting = false
+    @State private var errorMessage: String?
+
+    private let reasons = [
+        "Spam or misleading",
+        "Harassment or bullying",
+        "Hate or abusive content",
+        "Unsafe or inappropriate",
+        "Other"
+    ]
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Reason") {
+                    Picker("Reason", selection: $reason) {
+                        ForEach(reasons, id: \.self) {
+                            Text(L10n.string($0))
+                        }
+                    }
+                }
+
+                Section("Details") {
+                    TextField(
+                        "Add details (optional)",
+                        text: $details,
+                        axis: .vertical
+                    )
+                    .lineLimit(3...7)
+                }
+
+                if let errorMessage {
+                    Section {
+                        Text(errorMessage)
+                            .foregroundStyle(Theme.danger)
+                    }
+                }
+            }
+            .navigationTitle("Report post")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(
+                        submitting
+                            ? L10n.string("Submitting...")
+                            : L10n.string("Submit report")
+                    ) {
+                        Task { await submit() }
+                    }
+                    .disabled(submitting)
+                }
+            }
+        }
+    }
+
+    @MainActor
+    private func submit() async {
+        submitting = true
+        defer { submitting = false }
+
+        do {
+            try await DataService.reportSocialPost(
+                post: post,
+                reason: reason,
+                details: details.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                )
+            )
+            onFinished()
+            dismiss()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 

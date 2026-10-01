@@ -597,3 +597,24 @@
 "Write a caption..." = "Escribe un texto...";
 "Edit content" = "Editar contenido";
 "Saving..." = "Guardando...";
+
+"Like" = "Me gusta";
+"Unlike post" = "Quitar Me gusta";
+"Like post" = "Dar Me gusta";
+"Comment" = "Comentar";
+"Report post" = "Reportar publicación";
+"Block student" = "Bloquear estudiante";
+"Submit report" = "Enviar reporte";
+"Submitting..." = "Enviando...";
+"Spam or misleading" = "Spam o contenido engañoso";
+"Harassment or bullying" = "Acoso o intimidación";
+"Hate or abusive content" = "Contenido de odio o abusivo";
+"Unsafe or inappropriate" = "Contenido inseguro o inapropiado";
+"Other" = "Otro";
+"Add details (optional)" = "Añadir detalles (opcional)";
+"Comments" = "Comentarios";
+"No comments yet" = "Aún no hay comentarios";
+"Be the first to start the conversation." = "Sé la primera persona en iniciar la conversación.";
+"Add a comment..." = "Añadir un comentario...";
+"Post comment" = "Publicar comentario";
+"Delete comment" = "Eliminar comentario";

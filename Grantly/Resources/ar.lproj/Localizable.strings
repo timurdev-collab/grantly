@@ -597,3 +597,24 @@
 "Write a caption..." = "اكتب تعليقًا...";
 "Edit content" = "تعديل المحتوى";
 "Saving..." = "جارٍ الحفظ...";
+
+"Like" = "إعجاب";
+"Unlike post" = "إلغاء الإعجاب بالمنشور";
+"Like post" = "الإعجاب بالمنشور";
+"Comment" = "تعليق";
+"Report post" = "الإبلاغ عن المنشور";
+"Block student" = "حظر الطالب";
+"Submit report" = "إرسال البلاغ";
+"Submitting..." = "جارٍ الإرسال...";
+"Spam or misleading" = "مزعج أو مضلل";
+"Harassment or bullying" = "مضايقة أو تنمر";
+"Hate or abusive content" = "محتوى كراهية أو مسيء";
+"Unsafe or inappropriate" = "غير آمن أو غير مناسب";
+"Other" = "أخرى";
+"Add details (optional)" = "أضف تفاصيل (اختياري)";
+"Comments" = "التعليقات";
+"No comments yet" = "لا توجد تعليقات بعد";
+"Be the first to start the conversation." = "كن أول من يبدأ المحادثة.";
+"Add a comment..." = "أضف تعليقًا...";
+"Post comment" = "نشر التعليق";
+"Delete comment" = "حذف التعليق";

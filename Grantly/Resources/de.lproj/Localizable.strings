@@ -597,3 +597,24 @@
 "Write a caption..." = "Text schreiben...";
 "Edit content" = "Inhalt bearbeiten";
 "Saving..." = "Wird gespeichert...";
+
+"Like" = "Gefällt mir";
+"Unlike post" = "Gefällt mir entfernen";
+"Like post" = "Beitrag liken";
+"Comment" = "Kommentieren";
+"Report post" = "Beitrag melden";
+"Block student" = "Studierenden blockieren";
+"Submit report" = "Meldung senden";
+"Submitting..." = "Wird gesendet...";
+"Spam or misleading" = "Spam oder irreführend";
+"Harassment or bullying" = "Belästigung oder Mobbing";
+"Hate or abusive content" = "Hassrede oder beleidigender Inhalt";
+"Unsafe or inappropriate" = "Unsicherer oder unangemessener Inhalt";
+"Other" = "Andere";
+"Add details (optional)" = "Details hinzufügen (optional)";
+"Comments" = "Kommentare";
+"No comments yet" = "Noch keine Kommentare";
+"Be the first to start the conversation." = "Starte die erste Unterhaltung.";
+"Add a comment..." = "Kommentar hinzufügen...";
+"Post comment" = "Kommentar posten";
+"Delete comment" = "Kommentar löschen";
