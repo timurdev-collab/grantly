@@ -597,3 +597,24 @@
 "Write a caption..." = "Viết chú thích...";
 "Edit content" = "Sửa nội dung";
 "Saving..." = "Đang lưu...";
+
+"Like" = "Thích";
+"Unlike post" = "Bỏ thích bài viết";
+"Like post" = "Thích bài viết";
+"Comment" = "Bình luận";
+"Report post" = "Báo cáo bài viết";
+"Block student" = "Chặn sinh viên";
+"Submit report" = "Gửi báo cáo";
+"Submitting..." = "Đang gửi...";
+"Spam or misleading" = "Spam hoặc gây hiểu lầm";
+"Harassment or bullying" = "Quấy rối hoặc bắt nạt";
+"Hate or abusive content" = "Nội dung thù ghét hoặc lăng mạ";
+"Unsafe or inappropriate" = "Không an toàn hoặc không phù hợp";
+"Other" = "Khác";
+"Add details (optional)" = "Thêm chi tiết (không bắt buộc)";
+"Comments" = "Bình luận";
+"No comments yet" = "Chưa có bình luận";
+"Be the first to start the conversation." = "Hãy là người đầu tiên bắt đầu cuộc trò chuyện.";
+"Add a comment..." = "Thêm bình luận...";
+"Post comment" = "Đăng bình luận";
+"Delete comment" = "Xóa bình luận";
