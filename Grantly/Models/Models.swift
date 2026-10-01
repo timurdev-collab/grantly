@@ -347,6 +347,30 @@ struct SocialPost: Codable, Identifiable, Hashable {
     }
 }
 
+struct SocialPostEngagement: Hashable {
+    var likeCount: Int = 0
+    var commentCount: Int = 0
+    var likedByMe: Bool = false
+}
+
+struct SocialComment: Codable, Identifiable, Hashable {
+    let id: UUID
+    let postId: UUID
+    let authorId: UUID
+    let body: String
+    let createdAt: String
+    let isActive: Bool
+    var author: CommunityProfile?
+
+    enum CodingKeys: String, CodingKey {
+        case id, body, author
+        case postId = "post_id"
+        case authorId = "author_id"
+        case createdAt = "created_at"
+        case isActive = "is_active"
+    }
+}
+
 struct CommunityProfile: Codable, Identifiable, Hashable {
     let id: UUID
     var displayName: String?
