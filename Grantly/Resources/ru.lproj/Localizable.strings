@@ -597,3 +597,24 @@
 "Write a caption..." = "Напишите подпись...";
 "Edit content" = "Редактировать контент";
 "Saving..." = "Сохранение...";
+
+"Like" = "Нравится";
+"Unlike post" = "Убрать отметку «Нравится»";
+"Like post" = "Отметить публикацию";
+"Comment" = "Комментарий";
+"Report post" = "Пожаловаться на публикацию";
+"Block student" = "Заблокировать студента";
+"Submit report" = "Отправить жалобу";
+"Submitting..." = "Отправка...";
+"Spam or misleading" = "Спам или вводящий в заблуждение контент";
+"Harassment or bullying" = "Оскорбления или травля";
+"Hate or abusive content" = "Ненавистнический или оскорбительный контент";
+"Unsafe or inappropriate" = "Опасный или неприемлемый контент";
+"Other" = "Другое";
+"Add details (optional)" = "Добавьте детали (необязательно)";
+"Comments" = "Комментарии";
+"No comments yet" = "Комментариев пока нет";
+"Be the first to start the conversation." = "Начните обсуждение первым.";
+"Add a comment..." = "Добавьте комментарий...";
+"Post comment" = "Опубликовать комментарий";
+"Delete comment" = "Удалить комментарий";
