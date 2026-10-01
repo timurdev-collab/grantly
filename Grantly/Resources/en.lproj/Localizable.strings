@@ -597,3 +597,24 @@
 "Write a caption..." = "Write a caption...";
 "Edit content" = "Edit content";
 "Saving..." = "Saving...";
+
+"Like" = "Like";
+"Unlike post" = "Unlike post";
+"Like post" = "Like post";
+"Comment" = "Comment";
+"Report post" = "Report post";
+"Block student" = "Block student";
+"Submit report" = "Submit report";
+"Submitting..." = "Submitting...";
+"Spam or misleading" = "Spam or misleading";
+"Harassment or bullying" = "Harassment or bullying";
+"Hate or abusive content" = "Hate or abusive content";
+"Unsafe or inappropriate" = "Unsafe or inappropriate";
+"Other" = "Other";
+"Add details (optional)" = "Add details (optional)";
+"Comments" = "Comments";
+"No comments yet" = "No comments yet";
+"Be the first to start the conversation." = "Be the first to start the conversation.";
+"Add a comment..." = "Add a comment...";
+"Post comment" = "Post comment";
+"Delete comment" = "Delete comment";
