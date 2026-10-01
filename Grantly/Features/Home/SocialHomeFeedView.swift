@@ -538,7 +538,7 @@ private struct SocialPostReportSheet: View {
                 Section("Reason") {
                     Picker("Reason", selection: $reason) {
                         ForEach(reasons, id: \.self) {
-                            Text($0)
+                            Text(L10n.string($0))
                         }
                     }
                 }
