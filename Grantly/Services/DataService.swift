@@ -2314,12 +2314,11 @@ enum DataService {
 
             try await supabase
                 .from("social_post_likes")
-                .upsert(
+                .insert(
                     Row(
                         post_id: postId,
                         user_id: userId
-                    ),
-                    onConflict: "post_id,user_id"
+                    )
                 )
                 .execute()
         } else {
@@ -2425,15 +2424,14 @@ enum DataService {
 
         try await supabase
             .from("social_post_reports")
-            .upsert(
+            .insert(
                 Row(
                     post_id: post.id,
                     reporter_id: reporterId,
                     reported_user_id: post.authorId,
                     reason: reason,
                     details: details
-                ),
-                onConflict: "post_id,reporter_id"
+                )
             )
             .execute()
     }
