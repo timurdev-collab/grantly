@@ -332,6 +332,104 @@ enum DataService {
             .execute()
     }
 
+    static func availableAdvisorServices(
+        advisorId: UUID
+    ) async throws -> [AdvisorService] {
+        struct Params: Encodable {
+            let p_advisor_id: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "available_advisor_services",
+                params: Params(p_advisor_id: advisorId)
+            )
+            .execute()
+            .value
+    }
+
+    static func submitAdvisorConsultationRequest(
+        advisorId: UUID,
+        serviceId: UUID,
+        contactEmail: String,
+        whatsappNumber: String,
+        preferredStart: Date?,
+        timezone: String,
+        topic: String,
+        notes: String
+    ) async throws {
+        struct Params: Encodable {
+            let p_advisor_id: UUID
+            let p_service_id: UUID
+            let p_contact_email: String
+            let p_whatsapp_number: String
+            let p_preferred_start: String?
+            let p_timezone: String
+            let p_topic: String
+            let p_notes: String
+        }
+
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [
+            .withInternetDateTime,
+            .withFractionalSeconds
+        ]
+
+        try await supabase
+            .rpc(
+                "submit_advisor_consultation_request",
+                params: Params(
+                    p_advisor_id: advisorId,
+                    p_service_id: serviceId,
+                    p_contact_email: contactEmail,
+                    p_whatsapp_number: whatsappNumber,
+                    p_preferred_start: preferredStart.map {
+                        formatter.string(from: $0)
+                    },
+                    p_timezone: timezone,
+                    p_topic: topic,
+                    p_notes: notes
+                )
+            )
+            .execute()
+    }
+
+    static func myAdvisorConsultationRequests()
+        async throws -> [AdvisorConsultationRequest] {
+        try await supabase
+            .rpc("my_advisor_consultation_requests")
+            .execute()
+            .value
+    }
+
+    static func advisorIncomingConsultationRequests()
+        async throws -> [AdvisorIncomingConsultationRequest] {
+        try await supabase
+            .rpc("advisor_consultation_requests_for_me")
+            .execute()
+            .value
+    }
+
+    static func advisorUpdateConsultationRequest(
+        requestId: UUID,
+        status: String
+    ) async throws {
+        struct Params: Encodable {
+            let p_request_id: UUID
+            let p_status: String
+        }
+
+        try await supabase
+            .rpc(
+                "advisor_update_consultation_request",
+                params: Params(
+                    p_request_id: requestId,
+                    p_status: status
+                )
+            )
+            .execute()
+    }
+
     static func myAdvisorRegistration() async throws -> AdvisorRegistration? {
         let rows: [AdvisorRegistration] = try await supabase
             .rpc("my_advisor_registration")
