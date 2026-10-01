@@ -1232,7 +1232,8 @@ struct AdvisorConsultationBookingView: View {
                 ),
                 notes: notes.trimmingCharacters(
                     in: .whitespacesAndNewlines
-                )
+                ),
+                contactConsent: consent
             )
             submitted = true
             errorMessage = nil
