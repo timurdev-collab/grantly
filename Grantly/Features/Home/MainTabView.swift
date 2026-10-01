@@ -567,6 +567,12 @@ private struct AdvisorPortalView: View {
         students.filter { $0.status == "active" }
     }
 
+    private var openConsultationCount: Int {
+        consultationRequests.filter {
+            !["completed", "cancelled"].contains($0.status)
+        }.count
+    }
+
     var body: some View {
         NavigationStack {
             List {
@@ -603,9 +609,7 @@ private struct AdvisorPortalView: View {
                             label: "Requests"
                         )
                         AdvisorPortalMetric(
-                            value: "\(consultationRequests.filter {
-                                !["completed", "cancelled"].contains($0.status)
-                            }.count)",
+                            value: "\(openConsultationCount)",
                             label: "Consultations"
                         )
                     }
