@@ -597,3 +597,24 @@
 "Write a caption..." = "Écrivez une légende...";
 "Edit content" = "Modifier le contenu";
 "Saving..." = "Enregistrement...";
+
+"Like" = "J’aime";
+"Unlike post" = "Retirer le J’aime";
+"Like post" = "Aimer la publication";
+"Comment" = "Commenter";
+"Report post" = "Signaler la publication";
+"Block student" = "Bloquer l’étudiant";
+"Submit report" = "Envoyer le signalement";
+"Submitting..." = "Envoi...";
+"Spam or misleading" = "Spam ou contenu trompeur";
+"Harassment or bullying" = "Harcèlement ou intimidation";
+"Hate or abusive content" = "Contenu haineux ou abusif";
+"Unsafe or inappropriate" = "Contenu dangereux ou inapproprié";
+"Other" = "Autre";
+"Add details (optional)" = "Ajouter des détails (facultatif)";
+"Comments" = "Commentaires";
+"No comments yet" = "Aucun commentaire pour le moment";
+"Be the first to start the conversation." = "Soyez la première personne à lancer la discussion.";
+"Add a comment..." = "Ajouter un commentaire...";
+"Post comment" = "Publier le commentaire";
+"Delete comment" = "Supprimer le commentaire";
