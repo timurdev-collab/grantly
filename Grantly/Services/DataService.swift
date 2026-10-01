@@ -356,7 +356,8 @@ enum DataService {
         preferredStart: Date?,
         timezone: String,
         topic: String,
-        notes: String
+        notes: String,
+        contactConsent: Bool
     ) async throws {
         struct Params: Encodable {
             let p_advisor_id: UUID
@@ -367,6 +368,7 @@ enum DataService {
             let p_timezone: String
             let p_topic: String
             let p_notes: String
+            let p_contact_consent: Bool
         }
 
         let formatter = ISO8601DateFormatter()
@@ -388,7 +390,8 @@ enum DataService {
                     },
                     p_timezone: timezone,
                     p_topic: topic,
-                    p_notes: notes
+                    p_notes: notes,
+                    p_contact_consent: contactConsent
                 )
             )
             .execute()
