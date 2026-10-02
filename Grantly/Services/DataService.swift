@@ -175,8 +175,8 @@ enum DataService {
         try await supabase.storage
             .from("advisor-media")
             .upload(
-                path: path,
-                file: imageData,
+                path,
+                data: imageData,
                 options: FileOptions(
                     cacheControl: "3600",
                     contentType: "image/jpeg",
@@ -1499,8 +1499,8 @@ enum DataService {
         try await supabase.storage
             .from("university-case-documents")
             .upload(
-                path: path,
-                file: data,
+                path,
+                data: data,
                 options: FileOptions(
                     cacheControl: "3600",
                     contentType: contentType,
@@ -1591,8 +1591,8 @@ enum DataService {
         try await supabase.storage
             .from("application-documents")
             .upload(
-                path: path,
-                file: data,
+                path,
+                data: data,
                 options: FileOptions(
                     cacheControl: "3600",
                     contentType: contentType,
@@ -2145,8 +2145,8 @@ enum DataService {
         try await supabase.storage
             .from("avatars")
             .upload(
-                path: path,
-                file: imageData,
+                path,
+                data: imageData,
                 options: FileOptions(
                     cacheControl: "3600",
                     contentType: "image/jpeg",
@@ -2276,8 +2276,8 @@ enum DataService {
                 try await supabase.storage
                     .from("social-media")
                     .upload(
-                        path: path,
-                        file: mediaData,
+                        path,
+                        data: mediaData,
                         options: FileOptions(
                             cacheControl: "3600",
                             contentType: mediaType,
