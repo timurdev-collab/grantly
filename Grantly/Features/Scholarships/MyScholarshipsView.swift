@@ -72,33 +72,37 @@ struct MyScholarshipsView: View {
                 } else {
                     LazyVStack(spacing: 10) {
                         ForEach(filteredItems) { item in
-                            ApplicationCard(
-                                item: item,
-                                statuses: statuses,
-                                onStatus: { status in
-                                    Task {
-                                        await updateStatus(
-                                            item: item,
-                                            status: status
-                                        )
-                                    }
-                                },
-                                onNote: {
-                                    editingItem = item
-                                    noteText = item.notes ?? ""
-                                },
-                                onTasks: {
-                                    taskItem = item
-                                },
-                                onWorkspace: {
-                                    workspaceItem = item
-                                },
-                                onRemove: {
+                            SwipeRevealDeleteRow(
+                                cornerRadius: 15,
+                                onDelete: {
                                     Task {
                                         await remove(item)
                                     }
                                 }
-                            )
+                            ) {
+                                ApplicationCard(
+                                    item: item,
+                                    statuses: statuses,
+                                    onStatus: { status in
+                                        Task {
+                                            await updateStatus(
+                                                item: item,
+                                                status: status
+                                            )
+                                        }
+                                    },
+                                    onNote: {
+                                        editingItem = item
+                                        noteText = item.notes ?? ""
+                                    },
+                                    onTasks: {
+                                        taskItem = item
+                                    },
+                                    onWorkspace: {
+                                        workspaceItem = item
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -485,7 +489,6 @@ private struct ApplicationCard: View {
     let onNote: () -> Void
     let onTasks: () -> Void
     let onWorkspace: () -> Void
-    let onRemove: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -509,17 +512,6 @@ private struct ApplicationCard: View {
                 }
 
                 Spacer(minLength: 4)
-
-                Button(role: .destructive, action: onRemove) {
-                    Image(systemName: "trash")
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(Theme.danger)
-                        .frame(width: 36, height: 36)
-                        .background(Theme.surfaceRaised)
-                        .clipShape(Circle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Delete")
             }
 
             HStack(spacing: 8) {
