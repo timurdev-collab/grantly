@@ -186,6 +186,94 @@ struct AdvisorReviewEvent: Codable, Identifiable {
     }
 }
 
+struct AdvisorService: Codable, Identifiable, Hashable {
+    let id: UUID
+    let advisorId: UUID
+    let title: String
+    let serviceType: String
+    let durationMinutes: Int
+    let priceCents: Int
+    let currency: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, title, currency
+        case advisorId = "advisor_id"
+        case serviceType = "service_type"
+        case durationMinutes = "duration_minutes"
+        case priceCents = "price_cents"
+    }
+}
+
+struct AdvisorConsultationRequest: Codable, Identifiable, Hashable {
+    let id: UUID
+    let studentId: UUID
+    let advisorId: UUID
+    let advisorName: String?
+    let serviceId: UUID
+    let serviceTitle: String
+    let durationMinutes: Int
+    let contactEmail: String
+    let whatsappNumber: String
+    let preferredStart: String?
+    let timezone: String
+    let topic: String
+    let notes: String
+    let quotedPriceCents: Int
+    let currency: String
+    let status: String
+    let createdAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, timezone, topic, notes, currency, status
+        case studentId = "student_id"
+        case advisorId = "advisor_id"
+        case advisorName = "advisor_name"
+        case serviceId = "service_id"
+        case serviceTitle = "service_title"
+        case durationMinutes = "duration_minutes"
+        case contactEmail = "contact_email"
+        case whatsappNumber = "whatsapp_number"
+        case preferredStart = "preferred_start"
+        case quotedPriceCents = "quoted_price_cents"
+        case createdAt = "created_at"
+    }
+}
+
+struct AdvisorIncomingConsultationRequest: Codable, Identifiable, Hashable {
+    let id: UUID
+    let studentId: UUID
+    let studentName: String
+    let advisorId: UUID
+    let serviceId: UUID
+    let serviceTitle: String
+    let durationMinutes: Int
+    let contactEmail: String
+    let whatsappNumber: String
+    let preferredStart: String?
+    let timezone: String
+    let topic: String
+    let notes: String
+    let quotedPriceCents: Int
+    let currency: String
+    let status: String
+    let createdAt: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, timezone, topic, notes, currency, status
+        case studentId = "student_id"
+        case studentName = "student_name"
+        case advisorId = "advisor_id"
+        case serviceId = "service_id"
+        case serviceTitle = "service_title"
+        case durationMinutes = "duration_minutes"
+        case contactEmail = "contact_email"
+        case whatsappNumber = "whatsapp_number"
+        case preferredStart = "preferred_start"
+        case quotedPriceCents = "quoted_price_cents"
+        case createdAt = "created_at"
+    }
+}
+
 struct AdvisorRegistration: Codable, Identifiable {
     let assignmentId: UUID
     let advisorId: UUID

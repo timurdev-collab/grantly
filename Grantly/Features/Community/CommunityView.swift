@@ -32,6 +32,39 @@ struct AdvisorsView: View {
                     currentRegistrationCard(registration)
                 }
 
+                NavigationLink {
+                    MyAdvisorConsultationsView()
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "calendar.badge.clock")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(Theme.accentSoft)
+                            .frame(width: 42, height: 42)
+                            .background(Theme.surfaceRaised)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("My consultations")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.ink)
+
+                            Text("Track live advisor consultation requests")
+                                .font(.caption)
+                                .foregroundStyle(Theme.muted)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .font(.caption.bold())
+                            .foregroundStyle(Theme.muted)
+                    }
+                    .padding(14)
+                    .background(Theme.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                }
+                .buttonStyle(.plain)
+
                 if loading && advisors.isEmpty {
                     ProgressView()
                         .tint(Theme.accent)
@@ -425,6 +458,44 @@ struct AdvisorDetailView: View {
                 expertiseSection
                 linksSection
 
+                NavigationLink {
+                    AdvisorConsultationBookingView(advisor: advisor)
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "calendar.badge.plus")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(Theme.onAccent)
+                            .frame(width: 42, height: 42)
+                            .background(Theme.orangeGradient)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Book a live consultation")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.ink)
+
+                            Text("One-to-one session · payment arranged after request")
+                                .font(.caption)
+                                .foregroundStyle(Theme.muted)
+                                .multilineTextAlignment(.leading)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .font(.caption.bold())
+                            .foregroundStyle(Theme.muted)
+                    }
+                    .padding(14)
+                    .background(Theme.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Theme.accent.opacity(0.18))
+                    )
+                }
+                .buttonStyle(.plain)
+
                 Button {
                     Task {
                         requesting = true
@@ -748,6 +819,570 @@ struct AdvisorDetailView: View {
             .clipShape(RoundedRectangle(cornerRadius: 20))
         }
     }
+}
+
+struct AdvisorConsultationBookingView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let advisor: AdvisorDirectoryProfile
+
+    @State private var services: [AdvisorService] = []
+    @State private var selectedServiceID: UUID?
+    @State private var contactEmail = ""
+    @State private var whatsappNumber = ""
+    @State private var preferredStart =
+        Date().addingTimeInterval(24 * 60 * 60)
+    @State private var topic = ""
+    @State private var notes = ""
+    @State private var consent = false
+    @State private var loading = true
+    @State private var submitting = false
+    @State private var submitted = false
+    @State private var errorMessage: String?
+
+    private var selectedService: AdvisorService? {
+        services.first { $0.id == selectedServiceID }
+    }
+
+    private var canSubmit: Bool {
+        selectedService != nil &&
+        contactEmail.contains("@") &&
+        whatsappNumber.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        ).count >= 7 &&
+        topic.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        ).count >= 3 &&
+        consent &&
+        !submitting
+    }
+
+    var body: some View {
+        Group {
+            if submitted {
+                successView
+            } else {
+                formView
+            }
+        }
+        .background(Theme.pageBackground)
+        .navigationTitle("Live consultation")
+        .navigationBarTitleDisplayMode(.inline)
+        .task { await load() }
+    }
+
+    private var formView: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(advisor.displayName ?? "Grantly Advisor")
+                        .font(.title3.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    Text(
+                        "Choose a real-time one-to-one session. After you submit the request, the advisor will contact you to confirm availability and arrange payment."
+                    )
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+                    .lineSpacing(3)
+                }
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Choose a service")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    if loading {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 18)
+                    } else if services.isEmpty {
+                        Text("No consultation services are available right now.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                    } else {
+                        ForEach(services) { service in
+                            Button {
+                                selectedServiceID = service.id
+                            } label: {
+                                serviceRow(service)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Contact details")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    TextField("Email address", text: $contactEmail)
+                        .textContentType(.emailAddress)
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .textFieldStyle(.roundedBorder)
+
+                    TextField(
+                        "WhatsApp number with country code",
+                        text: $whatsappNumber
+                    )
+                    .textContentType(.telephoneNumber)
+                    .keyboardType(.phonePad)
+                    .textFieldStyle(.roundedBorder)
+
+                    Text(
+                        "Example: +84 912 345 678. Your contact details are shared only with the selected advisor and Grantly administrators for this consultation."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                }
+                .padding(16)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Preferred time")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    DatePicker(
+                        "Date and time",
+                        selection: $preferredStart,
+                        in: Date().addingTimeInterval(15 * 60)...,
+                        displayedComponents: [.date, .hourAndMinute]
+                    )
+
+                    Text(
+                        L10n.format(
+                            "Time zone: %@",
+                            TimeZone.current.identifier
+                        )
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                }
+                .padding(16)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("What do you need help with?")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    TextField(
+                        "Example: scholarship application strategy",
+                        text: $topic,
+                        axis: .vertical
+                    )
+                    .lineLimit(2...4)
+                    .textFieldStyle(.roundedBorder)
+
+                    TextField(
+                        "Additional notes (optional)",
+                        text: $notes,
+                        axis: .vertical
+                    )
+                    .lineLimit(3...7)
+                    .textFieldStyle(.roundedBorder)
+                }
+                .padding(16)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                Toggle(isOn: $consent) {
+                    Text(
+                        "I agree that Grantly may use my email and WhatsApp number to coordinate this consultation."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.ink)
+                }
+                .tint(Theme.accent)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Label(
+                        "Payment is arranged after the advisor confirms the live session.",
+                        systemImage: "creditcard"
+                    )
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+
+                    Text(
+                        "This request does not charge you. You will receive payment instructions separately before the consultation is confirmed."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                }
+                .padding(14)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+
+                if let errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(Theme.danger)
+                }
+
+                Button {
+                    Task { await submit() }
+                } label: {
+                    HStack {
+                        Spacer()
+
+                        if submitting {
+                            ProgressView()
+                                .tint(Theme.onAccent)
+                        } else {
+                            Label(
+                                "Request consultation",
+                                systemImage: "calendar.badge.plus"
+                            )
+                        }
+
+                        Spacer()
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .frame(height: 50)
+                    .background(
+                        canSubmit
+                            ? Theme.orangeGradient
+                            : LinearGradient(
+                                colors: [
+                                    Theme.surfaceRaised,
+                                    Theme.surfaceRaised
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                    )
+                    .foregroundStyle(
+                        canSubmit ? Theme.onAccent : Theme.muted
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                }
+                .buttonStyle(.plain)
+                .disabled(!canSubmit)
+            }
+            .padding()
+            .padding(.bottom, 28)
+        }
+    }
+
+    private var successView: some View {
+        VStack(spacing: 18) {
+            Spacer()
+
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 58))
+                .foregroundStyle(Theme.accent)
+
+            Text("Consultation request sent")
+                .font(.title2.bold())
+                .foregroundStyle(Theme.ink)
+
+            if let service = selectedService {
+                Text(
+                    L10n.format(
+                        "%@ · %d min · %@",
+                        service.title,
+                        service.durationMinutes,
+                        priceText(service)
+                    )
+                )
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Theme.ink)
+            }
+
+            Text(
+                "The advisor will contact you using WhatsApp or email to confirm the time and arrange payment for the live one-to-one session."
+            )
+            .font(.subheadline)
+            .foregroundStyle(Theme.muted)
+            .multilineTextAlignment(.center)
+            .lineSpacing(3)
+
+            Button("Done") {
+                dismiss()
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Theme.accent)
+
+            Spacer()
+        }
+        .padding(28)
+    }
+
+    private func serviceRow(
+        _ service: AdvisorService
+    ) -> some View {
+        let selected = selectedServiceID == service.id
+
+        return HStack(spacing: 12) {
+            Image(
+                systemName:
+                    selected
+                    ? "checkmark.circle.fill"
+                    : "circle"
+            )
+            .font(.system(size: 20))
+            .foregroundStyle(
+                selected ? Theme.accent : Theme.muted
+            )
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L10n.string(service.title))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+
+                Text(
+                    L10n.format(
+                        "%d min live session",
+                        service.durationMinutes
+                    )
+                )
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+            }
+
+            Spacer()
+
+            Text(priceText(service))
+                .font(.subheadline.bold())
+                .foregroundStyle(Theme.ink)
+        }
+        .padding(14)
+        .background(
+            selected
+                ? Theme.surfaceRaised
+                : Theme.surface
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .overlay(
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(
+                    selected
+                        ? Theme.accent.opacity(0.4)
+                        : Theme.ink.opacity(0.05)
+                )
+        )
+    }
+
+    private func priceText(
+        _ service: AdvisorService
+    ) -> String {
+        let amount = Double(service.priceCents) / 100.0
+        return String(
+            format: "%@ %.2f",
+            service.currency,
+            amount
+        )
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            async let rows = DataService.availableAdvisorServices(
+                advisorId: advisor.id
+            )
+
+            if contactEmail.isEmpty {
+                contactEmail =
+                    (try? await supabase.auth.session.user.email) ?? ""
+            }
+
+            services = try await rows
+            if selectedServiceID == nil {
+                selectedServiceID = services.first?.id
+            }
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func submit() async {
+        guard let service = selectedService,
+              canSubmit else {
+            return
+        }
+
+        submitting = true
+        defer { submitting = false }
+
+        do {
+            try await DataService.submitAdvisorConsultationRequest(
+                advisorId: advisor.id,
+                serviceId: service.id,
+                contactEmail: contactEmail.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ),
+                whatsappNumber: whatsappNumber.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ),
+                preferredStart: preferredStart,
+                timezone: TimeZone.current.identifier,
+                topic: topic.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ),
+                notes: notes.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ),
+                contactConsent: consent
+            )
+            submitted = true
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+struct MyAdvisorConsultationsView: View {
+    @State private var requests: [AdvisorConsultationRequest] = []
+    @State private var loading = true
+    @State private var errorMessage: String?
+
+    var body: some View {
+        List {
+            if loading && requests.isEmpty {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                }
+            } else if requests.isEmpty {
+                ContentUnavailableView(
+                    "No consultation requests",
+                    systemImage: "calendar.badge.clock",
+                    description: Text(
+                        "Your live advisor consultation requests will appear here."
+                    )
+                )
+                .listRowBackground(Theme.pageBackground)
+            } else {
+                ForEach(requests) { request in
+                    VStack(alignment: .leading, spacing: 7) {
+                        HStack {
+                            Text(
+                                request.advisorName ??
+                                L10n.string("Grantly Advisor")
+                            )
+                            .font(.subheadline.weight(.semibold))
+
+                            Spacer()
+
+                            Text(
+                                L10n.string(
+                                    consultationStatusTitle(
+                                        request.status
+                                    )
+                                )
+                            )
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(Theme.accentSoft)
+                        }
+
+                        Text(L10n.string(request.serviceTitle))
+                            .font(.caption)
+                            .foregroundStyle(Theme.ink)
+
+                        Text(
+                            L10n.format(
+                                "%d min · %@",
+                                request.durationMinutes,
+                                consultationPrice(
+                                    cents: request.quotedPriceCents,
+                                    currency: request.currency
+                                )
+                            )
+                        )
+                        .font(.caption2)
+                        .foregroundStyle(Theme.muted)
+
+                        if let value = request.preferredStart {
+                            Text(
+                                L10n.format(
+                                    "Preferred: %@",
+                                    consultationDate(value)
+                                )
+                            )
+                            .font(.caption2)
+                            .foregroundStyle(Theme.muted)
+                        }
+                    }
+                    .padding(.vertical, 5)
+                }
+            }
+
+            if let errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundStyle(Theme.danger)
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(Theme.pageBackground)
+        .navigationTitle("My consultations")
+        .refreshable { await load() }
+        .task { await load() }
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            requests =
+                try await DataService.myAdvisorConsultationRequests()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+private func consultationStatusTitle(_ status: String) -> String {
+    switch status {
+    case "requested": return "Requested"
+    case "contacted": return "Contacted"
+    case "awaiting_payment": return "Awaiting payment"
+    case "paid": return "Paid"
+    case "confirmed": return "Confirmed"
+    case "completed": return "Completed"
+    case "cancelled": return "Cancelled"
+    default: return status.capitalized
+    }
+}
+
+private func consultationPrice(
+    cents: Int,
+    currency: String
+) -> String {
+    String(
+        format: "%@ %.2f",
+        currency,
+        Double(cents) / 100.0
+    )
+}
+
+private func consultationDate(_ value: String) -> String {
+    let formatter = ISO8601DateFormatter()
+    guard let date = formatter.date(from: value) else {
+        return String(value.prefix(16))
+    }
+
+    return DateFormatter.localizedString(
+        from: date,
+        dateStyle: .medium,
+        timeStyle: .short
+    )
 }
 
 private struct AdvisorTagWrap: View {

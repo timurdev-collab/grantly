@@ -552,6 +552,8 @@ private struct AdminAdvisorExperienceView: View {
 private struct AdvisorPortalView: View {
     @Binding var profile: StudentProfile?
     @State private var students: [AdvisorStudent] = []
+    @State private var consultationRequests:
+        [AdvisorIncomingConsultationRequest] = []
     @State private var loading = true
     @State private var errorMessage: String?
     @State private var chatDestination: AdvisorChatDestination?
@@ -563,6 +565,12 @@ private struct AdvisorPortalView: View {
 
     private var active: [AdvisorStudent] {
         students.filter { $0.status == "active" }
+    }
+
+    private var openConsultationCount: Int {
+        consultationRequests.filter {
+            !["completed", "cancelled"].contains($0.status)
+        }.count
     }
 
     var body: some View {
@@ -600,6 +608,28 @@ private struct AdvisorPortalView: View {
                             value: "\(pending.count)",
                             label: "Requests"
                         )
+                        AdvisorPortalMetric(
+                            value: "\(openConsultationCount)",
+                            label: "Consultations"
+                        )
+                    }
+                }
+
+                if !consultationRequests.isEmpty {
+                    Section("Consultation requests") {
+                        ForEach(consultationRequests) { request in
+                            AdvisorIncomingConsultationRow(
+                                request: request,
+                                onStatusChange: { status in
+                                    Task {
+                                        await updateConsultation(
+                                            request,
+                                            status: status
+                                        )
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
 
@@ -732,7 +762,12 @@ private struct AdvisorPortalView: View {
         defer { loading = false }
 
         do {
-            students = try await DataService.advisorMyStudents()
+            async let studentRows = DataService.advisorMyStudents()
+            async let consultationRows =
+                DataService.advisorIncomingConsultationRequests()
+
+            students = try await studentRows
+            consultationRequests = try await consultationRows
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -774,6 +809,25 @@ private struct AdvisorPortalView: View {
     }
 
     @MainActor
+    private func updateConsultation(
+        _ request: AdvisorIncomingConsultationRequest,
+        status: String
+    ) async {
+        do {
+            try await DataService.advisorUpdateConsultationRequest(
+                requestId: request.id,
+                status: status
+            )
+            consultationRequests =
+                try await DataService
+                    .advisorIncomingConsultationRequests()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
     private func manage(
         _ student: AdvisorStudent,
         action: String
@@ -788,6 +842,155 @@ private struct AdvisorPortalView: View {
             errorMessage = error.localizedDescription
         }
     }
+}
+
+private struct AdvisorIncomingConsultationRow: View {
+    let request: AdvisorIncomingConsultationRequest
+    let onStatusChange: (String) -> Void
+
+    private var whatsappURL: URL? {
+        let digits = request.whatsappNumber.filter(\.isNumber)
+        guard digits.count >= 7 else { return nil }
+        return URL(string: "https://wa.me/\(digits)")
+    }
+
+    private var emailURL: URL? {
+        let encoded = request.contactEmail
+            .addingPercentEncoding(
+                withAllowedCharacters: .urlQueryAllowed
+            ) ?? request.contactEmail
+        return URL(string: "mailto:\(encoded)")
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 9) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(request.studentName)
+                    .font(.subheadline.weight(.semibold))
+
+                Spacer()
+
+                Menu {
+                    statusButton("Contacted", value: "contacted")
+                    statusButton(
+                        "Awaiting payment",
+                        value: "awaiting_payment"
+                    )
+                    statusButton("Paid", value: "paid")
+                    statusButton("Confirmed", value: "confirmed")
+                    statusButton("Completed", value: "completed")
+                    statusButton(
+                        "Cancelled",
+                        value: "cancelled",
+                        destructive: true
+                    )
+                } label: {
+                    Label(
+                        advisorConsultationStatus(request.status),
+                        systemImage: "chevron.up.chevron.down"
+                    )
+                    .font(.caption2.weight(.semibold))
+                }
+            }
+
+            Text(L10n.string(request.serviceTitle))
+                .font(.caption)
+                .foregroundStyle(Theme.ink)
+
+            Text(
+                "\(request.durationMinutes) min · " +
+                String(
+                    format: "%@ %.2f",
+                    request.currency,
+                    Double(request.quotedPriceCents) / 100.0
+                )
+            )
+            .font(.caption2)
+            .foregroundStyle(Theme.muted)
+
+            Text(request.topic)
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+
+            if let preferred = request.preferredStart {
+                Text(
+                    "Preferred: " +
+                    advisorConsultationDate(preferred)
+                )
+                .font(.caption2)
+                .foregroundStyle(Theme.muted)
+            }
+
+            HStack(spacing: 8) {
+                if let whatsappURL {
+                    Link(destination: whatsappURL) {
+                        Label("WhatsApp", systemImage: "message.fill")
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+
+                if let emailURL {
+                    Link(destination: emailURL) {
+                        Label("Email", systemImage: "envelope.fill")
+                    }
+                    .buttonStyle(.bordered)
+                }
+            }
+
+            Text(
+                "Use these contact details only to coordinate this live consultation."
+            )
+            .font(.caption2)
+            .foregroundStyle(Theme.muted)
+        }
+        .padding(.vertical, 5)
+    }
+
+    @ViewBuilder
+    private func statusButton(
+        _ title: String,
+        value: String,
+        destructive: Bool = false
+    ) -> some View {
+        Button(
+            role: destructive ? .destructive : nil
+        ) {
+            onStatusChange(value)
+        } label: {
+            Text(L10n.string(title))
+        }
+    }
+}
+
+private func advisorConsultationStatus(
+    _ status: String
+) -> String {
+    switch status {
+    case "requested": return L10n.string("Requested")
+    case "contacted": return L10n.string("Contacted")
+    case "awaiting_payment":
+        return L10n.string("Awaiting payment")
+    case "paid": return L10n.string("Paid")
+    case "confirmed": return L10n.string("Confirmed")
+    case "completed": return L10n.string("Completed")
+    case "cancelled": return L10n.string("Cancelled")
+    default: return status.capitalized
+    }
+}
+
+private func advisorConsultationDate(
+    _ value: String
+) -> String {
+    let formatter = ISO8601DateFormatter()
+    guard let date = formatter.date(from: value) else {
+        return String(value.prefix(16))
+    }
+
+    return DateFormatter.localizedString(
+        from: date,
+        dateStyle: .medium,
+        timeStyle: .short
+    )
 }
 
 private struct AdvisorPortalMetric: View {
