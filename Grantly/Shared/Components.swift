@@ -571,3 +571,111 @@ struct RefreshButton: View {
         .accessibilityLabel(loading ? "Refreshing" : "Refresh")
     }
 }
+
+
+/// A compact trailing delete action that stays hidden until the row is swiped left.
+struct SwipeRevealDeleteRow<Content: View>: View {
+    let cornerRadius: CGFloat
+    let onDelete: () -> Void
+    @ViewBuilder let content: () -> Content
+
+    @State private var offset: CGFloat = 0
+    @State private var dragStartOffset: CGFloat = 0
+
+    private let actionWidth: CGFloat = 84
+
+    init(
+        cornerRadius: CGFloat = 16,
+        onDelete: @escaping () -> Void,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
+        self.cornerRadius = cornerRadius
+        self.onDelete = onDelete
+        self.content = content
+    }
+
+    var body: some View {
+        ZStack(alignment: .trailing) {
+            Button(role: .destructive) {
+                withAnimation(.easeOut(duration: 0.18)) {
+                    offset = 0
+                }
+                onDelete()
+            } label: {
+                VStack(spacing: 5) {
+                    Image(systemName: "trash.fill")
+                        .font(.system(size: 16, weight: .semibold))
+
+                    Text("Delete")
+                        .font(.caption2.weight(.semibold))
+                }
+                .foregroundStyle(.white)
+                .frame(width: actionWidth)
+                .frame(maxHeight: .infinity)
+                .background(Theme.danger)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Delete")
+
+            content()
+                .offset(x: offset)
+                .contentShape(Rectangle())
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 12)
+                        .onChanged { value in
+                            guard abs(value.translation.width) >
+                                    abs(value.translation.height)
+                            else {
+                                return
+                            }
+
+                            let proposed =
+                                dragStartOffset + value.translation.width
+
+                            offset = min(
+                                0,
+                                max(-actionWidth, proposed)
+                            )
+                        }
+                        .onEnded { value in
+                            guard abs(value.translation.width) >
+                                    abs(value.translation.height)
+                            else {
+                                dragStartOffset = offset
+                                return
+                            }
+
+                            let projected =
+                                dragStartOffset +
+                                value.predictedEndTranslation.width
+
+                            withAnimation(
+                                .spring(
+                                    response: 0.28,
+                                    dampingFraction: 0.86
+                                )
+                            ) {
+                                offset = projected < -(actionWidth * 0.42)
+                                    ? -actionWidth
+                                    : 0
+                            }
+
+                            dragStartOffset = offset
+                        }
+                )
+                .onTapGesture {
+                    guard offset != 0 else { return }
+                    withAnimation(.easeOut(duration: 0.18)) {
+                        offset = 0
+                        dragStartOffset = 0
+                    }
+                }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+        .onChange(of: offset) { _, newValue in
+            if newValue == 0 || newValue == -actionWidth {
+                dragStartOffset = newValue
+            }
+        }
+    }
+}
