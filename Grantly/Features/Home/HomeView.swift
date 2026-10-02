@@ -101,11 +101,7 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     nextStepCard
 
-                    SocialHomeFeedView(
-                        currentAvatarURL: avatarURL,
-                        currentName: profile?.fullName,
-                        onChanged: {}
-                    )
+                    communityConversationsCard
 
                     recommendationsSection
                     deadlinesSection
@@ -119,6 +115,45 @@ struct HomeView: View {
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await load() }
         .task { await load() }
+    }
+
+    private var communityConversationsCard: some View {
+        NavigationLink {
+            MessagesView()
+        } label: {
+            HStack(spacing: 13) {
+                Image(systemName: "bubble.left.and.bubble.right.fill")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(Theme.orangeSoft)
+                    .frame(width: 44, height: 44)
+                    .background(Theme.surfaceRaised)
+                    .clipShape(RoundedRectangle(cornerRadius: 13))
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Community")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    Text("Messages")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption.bold())
+                    .foregroundStyle(Theme.muted)
+            }
+            .padding(14)
+            .background(Theme.surface)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Theme.ink.opacity(0.05))
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     private var greetingHeader: some View {
