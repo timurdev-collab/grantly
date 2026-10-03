@@ -674,6 +674,8 @@ struct CreateUniversityCaseView: View {
 }
 
 struct UniversityCaseDetailView: View {
+    @Environment(\.dismiss) private var dismiss
+
     let caseId: UUID
 
     @State private var item: UniversityApplicationCase?
@@ -687,6 +689,8 @@ struct UniversityCaseDetailView: View {
     @State private var newRequirementCategory = "Other"
     @State private var newRequirementRequired = true
     @State private var errorMessage: String?
+    @State private var showingDeleteCase = false
+    @State private var deletingCase = false
 
     private let statuses = [
         "Planning",
@@ -793,6 +797,20 @@ struct UniversityCaseDetailView: View {
             addRequirementSheet
         }
         .alert(
+            "Delete this application?",
+            isPresented: $showingDeleteCase
+        ) {
+            Button("Delete", role: .destructive) {
+                Task { await deleteCase() }
+            }
+
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text(
+                "This removes the application case and its uploaded documents. This cannot be undone."
+            )
+        }
+        .alert(
             "Application Case",
             isPresented: Binding(
                 get: { errorMessage != nil },
@@ -802,6 +820,21 @@ struct UniversityCaseDetailView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(errorMessage ?? "")
+        }
+    }
+
+    @MainActor
+    private func deleteCase() async {
+        deletingCase = true
+        defer { deletingCase = false }
+
+        do {
+            try await DataService.deleteUniversityCase(
+                caseId: caseId
+            )
+            dismiss()
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 
@@ -844,6 +877,20 @@ struct UniversityCaseDetailView: View {
                             }
                         }
                     }
+
+                    Divider()
+
+                    Button(role: .destructive) {
+                        showingDeleteCase = true
+                    } label: {
+                        Label(
+                            deletingCase
+                                ? "Deleting…"
+                                : "Delete application",
+                            systemImage: "trash"
+                        )
+                    }
+                    .disabled(deletingCase)
                 } label: {
                     Label(
                         item.applicationStatus,
