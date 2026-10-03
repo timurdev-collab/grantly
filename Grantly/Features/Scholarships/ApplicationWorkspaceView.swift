@@ -938,7 +938,7 @@ struct ApplicationWorkspaceView: View {
     }
 
     private func displayDate(_ value: String) -> String {
-        if let date = ISO8601DateFormatter().date(from: value) {
+        if let date = AppDateParser.date(from: value) {
             return Self.displayDateFormatter.string(from: date)
         }
 
