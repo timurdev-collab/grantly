@@ -328,7 +328,7 @@ struct ChatView: View {
                         composerFocused = false
                         dismiss()
                     } label: {
-                        Label("Advisor", systemImage: "chevron.left")
+                        Label("Back", systemImage: "chevron.left")
                     }
                 }
             }
