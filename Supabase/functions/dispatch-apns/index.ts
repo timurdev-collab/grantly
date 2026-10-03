@@ -135,12 +135,6 @@ Deno.serve(async (req) => {
 
   const limit = Math.min(Math.max(body.limit ?? 50, 1), 100);
 
-  const admin = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    { auth: { persistSession: false } }
-  );
-
   const { data: notifications, error: notificationError } = await admin
     .from("app_notifications")
     .select("id,user_id,kind,title,body,scholarship_id,task_id")
