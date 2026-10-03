@@ -104,7 +104,7 @@ struct MessagesView: View {
             AnyAction.self,
             schema: "public",
             table: "messages",
-            filter: "conversation_id=eq.\(conversationId.uuidString)"
+            filter: .eq("conversation_id", value: conversationId.uuidString)
         )
 
         await channel.subscribe()
