@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail CI when Grantly localization coverage drifts."""
+"""Fail CI when EduT localization coverage drifts."""
 
 from pathlib import Path
 import re
@@ -10,7 +10,7 @@ RESOURCES = ROOT / "Grantly" / "Resources"
 SOURCE = ROOT / "Grantly"
 
 LOCALES = ["en", "ru", "vi", "ar", "zh-Hans", "fr", "es", "de"]
-KEY_RE = re.compile(r'^"((?:[^"\\]|\\.)*)"\\s*=\\s*"((?:[^"\\]|\\.)*)";\\s*$', re.MULTILINE)
+KEY_RE = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=\s*"((?:[^"\\]|\\.)*)";\s*$', re.MULTILINE)
 FORMAT_TOKEN_RE = re.compile(r'%(?:\d+\$)?[@df]')
 
 VISIBLE_PATTERNS = [
