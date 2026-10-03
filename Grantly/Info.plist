@@ -11,7 +11,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Grantly</string>
+	<string>EduT</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -38,9 +38,9 @@
 		</dict>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>Grantly uses your camera for advisor video calls.</string>
+	<string>EduT uses your camera for advisor video calls.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Grantly uses your microphone for advisor video calls.</string>
+	<string>EduT uses your microphone for advisor video calls.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
