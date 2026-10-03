@@ -252,7 +252,7 @@ private struct AdminPortalView: View {
                                 .font(.system(size: 32, weight: .bold))
                                 .foregroundStyle(Theme.ink)
 
-                            Text("Control students, advisors and Grantly operations")
+                            Text("Control students, advisors and EduT operations")
                                 .font(.subheadline)
                                 .foregroundStyle(Theme.muted)
                         }
@@ -263,7 +263,7 @@ private struct AdminPortalView: View {
                     }
 
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("View Grantly as")
+                        Text("View EduT as")
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(Theme.muted)
 
@@ -577,7 +577,7 @@ private struct AdminConsultationPaymentsView: View {
         List {
             Section {
                 Text(
-                    "Only Grantly admins can mark a consultation as paid. Advisor contact details stay locked until this step."
+                    "Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step."
                 )
                 .font(.caption)
                 .foregroundStyle(Theme.muted)
