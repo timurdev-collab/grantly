@@ -119,26 +119,18 @@ struct UniversityCasesView: View {
                 } else {
                     LazyVStack(spacing: 10) {
                         ForEach(cases) { item in
-                            HStack(spacing: 8) {
+                            SwipeRevealDeleteRow(
+                                cornerRadius: 16,
+                                onDelete: {
+                                    caseToDelete = item
+                                }
+                            ) {
                                 NavigationLink {
                                     UniversityCaseDetailView(caseId: item.id)
                                 } label: {
                                     UniversityCaseCard(item: item)
                                 }
                                 .buttonStyle(.plain)
-
-                                Button(role: .destructive) {
-                                    caseToDelete = item
-                                } label: {
-                                    Image(systemName: "trash")
-                                        .font(.system(size: 15, weight: .semibold))
-                                        .foregroundStyle(Theme.danger)
-                                        .frame(width: 40, height: 40)
-                                        .background(Theme.surface)
-                                        .clipShape(Circle())
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityLabel("Delete")
                             }
                         }
                     }
