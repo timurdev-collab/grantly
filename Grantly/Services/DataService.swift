@@ -208,13 +208,13 @@ enum DataService {
 
         if let path = profile.avatarStoragePath,
            !path.isEmpty {
-            profile.avatarUrl = try await signedAdvisorMediaURL(path: path)
+            profile.avatarUrl = try? await signedAdvisorMediaURL(path: path)
         }
 
         if let path = profile.introVideoStoragePath,
            !path.isEmpty {
             profile.introVideoUrl =
-                try await signedAdvisorMediaURL(path: path)
+                try? await signedAdvisorMediaURL(path: path)
         }
 
         return profile
