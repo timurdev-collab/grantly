@@ -236,6 +236,22 @@ enum DataService {
             .value
     }
 
+    static func ensureAdvisorDirectConversation(
+        advisorId: UUID
+    ) async throws -> UUID {
+        struct Params: Encodable {
+            let p_advisor_id: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "ensure_advisor_direct_conversation",
+                params: Params(p_advisor_id: advisorId)
+            )
+            .execute()
+            .value
+    }
+
     static func liveKitCallCredentials(
         callId: UUID
     ) async throws -> LiveKitCallCredentials {
