@@ -155,9 +155,7 @@ enum NotificationRegistration {
 
             for task in tasks where task.completedAt == nil {
                 guard let dueAt = task.dueAt,
-                      let dueDate = ISO8601DateFormatter().date(
-                        from: dueAt
-                      ),
+                      let dueDate = AppDateParser.date(from: dueAt),
                       dueDate > Date() else {
                     continue
                 }
@@ -203,7 +201,7 @@ enum NotificationRegistration {
             return date
         }
 
-        return ISO8601DateFormatter().date(from: value)
+        return AppDateParser.date(from: value)
     }
 }
 
