@@ -1,5 +1,5 @@
 import XCTest
-@testable import Grantly
+@testable import EduT
 
 final class ReleaseConfigurationTests: XCTestCase {
     func testAppEnvironmentValuesAreStable() {
