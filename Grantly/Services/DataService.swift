@@ -433,6 +433,33 @@ enum DataService {
             .execute()
     }
 
+    static func adminConsultationRequests()
+        async throws -> [AdminConsultationRequest] {
+        try await supabase
+            .rpc("admin_consultation_requests")
+            .execute()
+            .value
+    }
+
+    static func adminMarkConsultationPaid(
+        requestId: UUID
+    ) async throws {
+        struct Params: Encodable {
+            let p_request_id: UUID
+            let p_status: String
+        }
+
+        try await supabase
+            .rpc(
+                "advisor_update_consultation_request",
+                params: Params(
+                    p_request_id: requestId,
+                    p_status: "paid"
+                )
+            )
+            .execute()
+    }
+
     static func myAdvisorRegistration() async throws -> AdvisorRegistration? {
         let rows: [AdvisorRegistration] = try await supabase
             .rpc("my_advisor_registration")

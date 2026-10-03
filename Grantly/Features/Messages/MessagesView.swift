@@ -206,12 +206,14 @@ private struct ConversationRow: View {
 
 struct ChatView: View {
     @Environment(AuthStore.self) private var auth
+    @Environment(\.dismiss) private var dismiss
 
     private let pageSize = 40
 
     let conversationId: UUID
     let otherUserId: UUID?
     let title: String
+    var showsCloseButton = false
 
     @State private var messages: [Message] = []
     @State private var draft = ""
@@ -222,6 +224,7 @@ struct ChatView: View {
     @State private var reportingMessage: Message?
     @State private var errorMessage: String?
     @State private var blockedByMe = false
+    @FocusState private var composerFocused: Bool
 
     var body: some View {
         VStack(spacing: 0) {
@@ -293,6 +296,11 @@ struct ChatView: View {
                     }
                     .padding()
                 }
+                .scrollDismissesKeyboard(.interactively)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    composerFocused = false
+                }
                 .refreshable {
                     await loadLatest()
                 }
@@ -313,6 +321,25 @@ struct ChatView: View {
         .background(Theme.pageBackground)
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if showsCloseButton {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        composerFocused = false
+                        dismiss()
+                    } label: {
+                        Label("Back", systemImage: "chevron.left")
+                    }
+                }
+            }
+
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    composerFocused = false
+                }
+            }
+        }
         .task {
             await loadBlockState()
             await loadLatest()
@@ -351,6 +378,19 @@ struct ChatView: View {
                 axis: .vertical
             )
             .lineLimit(1...4)
+            .focused($composerFocused)
+            .submitLabel(.send)
+            .onSubmit {
+                guard !sending,
+                      !blockedByMe,
+                      !draft.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                      ).isEmpty else {
+                    return
+                }
+
+                Task { await send() }
+            }
             .padding(11)
             .background(Theme.surfaceRaised)
             .clipShape(RoundedRectangle(cornerRadius: 13))
@@ -483,6 +523,7 @@ struct ChatView: View {
             )
 
             draft = ""
+            composerFocused = false
         } catch {
             errorMessage = error.localizedDescription
         }

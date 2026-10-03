@@ -119,7 +119,8 @@ struct AdvisorsView: View {
                 ChatView(
                     conversationId: destination.conversationId,
                     otherUserId: destination.otherUserId,
-                    title: destination.title
+                    title: destination.title,
+                    showsCloseButton: true
                 )
             }
         }
@@ -880,7 +881,7 @@ struct AdvisorConsultationBookingView: View {
                         .foregroundStyle(Theme.ink)
 
                     Text(
-                        "Choose a real-time one-to-one session. After you submit the request, the advisor will contact you to confirm availability and arrange payment."
+                        "Choose a real-time one-to-one session. After you submit the request, Grantly will coordinate the payment step before your contact details are shared with the advisor."
                     )
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
@@ -933,7 +934,7 @@ struct AdvisorConsultationBookingView: View {
                     .textFieldStyle(.roundedBorder)
 
                     Text(
-                        "Example: +84 912 345 678. Your contact details are shared only with the selected advisor and Grantly administrators for this consultation."
+                        "Example: +84 912 345 678. Grantly stores these details securely and releases them to the selected advisor only after payment is recorded."
                     )
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
@@ -1003,14 +1004,14 @@ struct AdvisorConsultationBookingView: View {
 
                 VStack(alignment: .leading, spacing: 6) {
                     Label(
-                        "Payment is arranged after the advisor confirms the live session.",
+                        "Payment is arranged before direct contact is unlocked.",
                         systemImage: "creditcard"
                     )
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.ink)
 
                     Text(
-                        "This request does not charge you. You will receive payment instructions separately before the consultation is confirmed."
+                        "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded."
                     )
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
@@ -1096,7 +1097,7 @@ struct AdvisorConsultationBookingView: View {
             }
 
             Text(
-                "The advisor will contact you using WhatsApp or email to confirm the time and arrange payment for the live one-to-one session."
+                "Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded."
             )
             .font(.subheadline)
             .foregroundStyle(Theme.muted)
