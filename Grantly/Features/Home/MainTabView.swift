@@ -848,17 +848,32 @@ private struct AdvisorIncomingConsultationRow: View {
     let request: AdvisorIncomingConsultationRequest
     let onStatusChange: (String) -> Void
 
+    private var contactUnlocked: Bool {
+        ["paid", "confirmed", "completed"].contains(request.status)
+    }
+
     private var whatsappURL: URL? {
-        let digits = request.whatsappNumber.filter(\.isNumber)
+        guard contactUnlocked,
+              let number = request.whatsappNumber else {
+            return nil
+        }
+
+        let digits = number.filter(\.isNumber)
         guard digits.count >= 7 else { return nil }
         return URL(string: "https://wa.me/\(digits)")
     }
 
     private var emailURL: URL? {
-        let encoded = request.contactEmail
+        guard contactUnlocked,
+              let email = request.contactEmail,
+              !email.isEmpty else {
+            return nil
+        }
+
+        let encoded = email
             .addingPercentEncoding(
                 withAllowedCharacters: .urlQueryAllowed
-            ) ?? request.contactEmail
+            ) ?? email
         return URL(string: "mailto:\(encoded)")
     }
 
@@ -921,27 +936,37 @@ private struct AdvisorIncomingConsultationRow: View {
                 .foregroundStyle(Theme.muted)
             }
 
-            HStack(spacing: 8) {
-                if let whatsappURL {
-                    Link(destination: whatsappURL) {
-                        Label("WhatsApp", systemImage: "message.fill")
+            if contactUnlocked {
+                HStack(spacing: 8) {
+                    if let whatsappURL {
+                        Link(destination: whatsappURL) {
+                            Label("WhatsApp", systemImage: "message.fill")
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
-                    .buttonStyle(.borderedProminent)
+
+                    if let emailURL {
+                        Link(destination: emailURL) {
+                            Label("Email", systemImage: "envelope.fill")
+                        }
+                        .buttonStyle(.bordered)
+                    }
                 }
 
-                if let emailURL {
-                    Link(destination: emailURL) {
-                        Label("Email", systemImage: "envelope.fill")
-                    }
-                    .buttonStyle(.bordered)
-                }
+                Text(
+                    "Payment is recorded. Contact details are now available for consultation coordination."
+                )
+                .font(.caption2)
+                .foregroundStyle(Theme.muted)
+            } else {
+                Label(
+                    "Contact details unlock after payment is recorded.",
+                    systemImage: "lock.fill"
+                )
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(Theme.muted)
+                .padding(.top, 2)
             }
-
-            Text(
-                "Use these contact details only to coordinate this live consultation."
-            )
-            .font(.caption2)
-            .foregroundStyle(Theme.muted)
         }
         .padding(.vertical, 5)
     }
