@@ -213,13 +213,7 @@ struct AdvisorsView: View {
         return LazyVGrid(columns: columns, spacing: 10) {
             ForEach(advisors) { advisor in
                 NavigationLink {
-                    AdvisorDetailView(
-                        advisor: advisor,
-                        registration: registration,
-                        onRequest: {
-                            await request(advisor)
-                        }
-                    )
+                    AdvisorDetailView(advisor: advisor)
                 } label: {
                     advisorGridCard(advisor)
                 }
@@ -421,36 +415,10 @@ struct AdvisorsView: View {
 
 struct AdvisorDetailView: View {
     let advisor: AdvisorDirectoryProfile
-    let registration: AdvisorRegistration?
-    let onRequest: () async -> Void
 
-    @State private var requesting = false
-    @State private var requestSent = false
     @State private var openingChat = false
     @State private var chatDestination: AdvisorChatDestination?
     @State private var errorMessage: String?
-
-    private var requestStateTitle: String {
-        if requestSent ||
-            registration?.advisorId == advisor.id {
-            return registration?.status == "active"
-                ? L10n.string("Your advisor")
-                : L10n.string("Request sent")
-        }
-
-        if registration?.status == "active" {
-            return L10n.string("You already have an advisor")
-        }
-
-        return L10n.string("Request this advisor")
-    }
-
-    private var canRequest: Bool {
-        !requesting &&
-        !requestSent &&
-        registration?.advisorId != advisor.id &&
-        registration?.status != "active"
-    }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -542,44 +510,6 @@ struct AdvisorDetailView: View {
                     )
                 }
                 .buttonStyle(.plain)
-
-                Button {
-                    Task {
-                        requesting = true
-                        defer { requesting = false }
-
-                        await onRequest()
-                        requestSent = true
-                    }
-                } label: {
-                    Label(
-                        requesting
-                            ? L10n.string("Sending request…")
-                            : requestStateTitle,
-                        systemImage: "person.badge.plus"
-                    )
-                    .font(.subheadline.weight(.semibold))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(
-                        canRequest
-                            ? Theme.orangeGradient
-                            : LinearGradient(
-                                colors: [
-                                    Theme.surfaceRaised,
-                                    Theme.surfaceRaised
-                                ],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                    )
-                    .foregroundStyle(
-                        canRequest ? Theme.onAccent : Theme.muted
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                }
-                .buttonStyle(.plain)
-                .disabled(!canRequest)
 
                 if let errorMessage {
                     Text(errorMessage)
