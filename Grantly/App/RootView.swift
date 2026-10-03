@@ -6,7 +6,7 @@ struct RootView: View {
     var body: some View {
         Group {
             if auth.isLoading {
-                ProgressView("Opening Grantly…")
+                ProgressView("Opening EduT…")
             } else if auth.userId == nil {
                 WelcomeView()
             } else {
@@ -42,7 +42,7 @@ private struct PasswordResetView: View {
         NavigationStack {
             Form {
                 Section {
-                    Text("Choose a new password for your Grantly account.")
+                    Text("Choose a new password for your EduT account.")
                         .foregroundStyle(.secondary)
                 }
 

@@ -49,7 +49,7 @@
 "Recommended" = "推荐";
 "Deadline" = "截止日期";
 "Saved" = "已保存";
-"Choose a new password for your Grantly account." = "为你的 Grantly 账户设置新密码。";
+"Choose a new password for your EduT account." = "为你的 EduT 账户设置新密码。";
 "New password" = "新密码";
 "Passwords do not match." = "两次输入的密码不一致。";
 "Updating…" = "正在更新…";
@@ -83,7 +83,7 @@
 "Add Document Requirement" = "添加材料要求";
 "Please choose a file smaller than 6 MB." = "请选择小于 6 MB 的文件。";
 "Please choose a PDF or image file." = "请选择 PDF 或图片文件。";
-"Loading the Grantly community..." = "正在加载 Grantly 社区...";
+"Loading the EduT community..." = "正在加载 EduT 社区...";
 "No students found" = "未找到学生";
 "Students to connect with" = "可联系的学生";
 "Community" = "社区";
@@ -110,7 +110,7 @@
 "Notifications" = "通知";
 "Mark all read" = "全部标为已读";
 "Admin Portal" = "管理员门户";
-"Control students, advisors and Grantly operations" = "管理学生、顾问和 Grantly 运营";
+"Control students, advisors and EduT operations" = "管理学生、顾问和 EduT 运营";
 "Advisor Portal" = "顾问门户";
 "Overview" = "概览";
 "Registration requests" = "注册请求";
@@ -144,7 +144,7 @@
 "Current deadline" = "当前截止日期";
 "Deadline not yet confirmed" = "截止日期尚未确认";
 "Provider" = "提供方";
-"Apply & track in Grantly" = "在 Grantly 中申请并跟踪";
+"Apply & track in EduT" = "在 EduT 中申请并跟踪";
 "Finding trusted opportunities..." = "正在查找可信机会...";
 "Explore by study level" = "按学习阶段探索";
 "Clear" = "清除";
@@ -179,7 +179,7 @@
 
 
 /* Advisor marketplace and role experiences */
-"View Grantly as" = "以以下身份查看 Grantly";
+"View EduT as" = "以以下身份查看 EduT";
 "Student and Advisor views let you inspect the product without changing your real admin role." = "学生和顾问视图可用于检查产品，而不会改变你的真实管理员角色。";
 "Approve advisors, suspend accounts and manage people" = "审核顾问、暂停账号并管理用户";
 "Scholarships, safety, analytics, imports and system health" = "奖学金、安全、分析、导入和系统健康";
@@ -200,7 +200,7 @@
 "Your advisor" = "你的顾问";
 "Advisor request pending" = "顾问请求待处理";
 "The advisor can accept your registration from their Advisor Portal." = "顾问可以在顾问后台接受你的登记请求。";
-"Grantly Advisor" = "Grantly 顾问";
+"EduT Advisor" = "EduT 顾问";
 "Featured" = "精选";
 "New advisor" = "新顾问";
 "Coming soon" = "即将上线";
@@ -226,7 +226,7 @@
 "Continue" = "继续";
 "Submitting…" = "正在提交…";
 "Submit for review" = "提交审核";
-"Your profile stays private until a Grantly admin approves it." = "在 Grantly 管理员批准前，你的资料将保持私密。";
+"Your profile stays private until a EduT admin approves it." = "在 EduT 管理员批准前，你的资料将保持私密。";
 "Advisor Application" = "顾问申请";
 "Application submitted" = "申请已提交";
 "Your profile is now in the admin review queue. It will not appear to students until it is approved." = "你的资料现已进入管理员审核队列，批准前不会向学生显示。";
@@ -339,14 +339,14 @@
 "Discover scholarships, connect with a global community and take the next step in your journey." = "发现奖学金、连接全球社区，并迈出下一步。";
 "Document name" = "文件名称";
 "Email" = "邮箱";
-"Enter the email address used for your Grantly account." = "输入用于 Grantly 账号的邮箱地址。";
+"Enter the email address used for your EduT account." = "输入用于 EduT 账号的邮箱地址。";
 "Example: APP-2026-12345" = "示例：APP-2026-12345";
 "Files are stored in a private user-scoped bucket. PDF and image files only, up to 6 MB each." = "文件保存在用户专属的私有空间中。仅支持 PDF 和图片，每个最多 6 MB。";
 "Find a scholarship or university to get started." = "查找奖学金或大学以开始使用。";
 "Global opportunities for\nbrighter futures" = "全球机会\n点亮未来";
-"Grantly" = "Grantly";
-"Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status." = "Grantly 帮你跟踪进度。奖学金提供方仍是提交和录取结果的官方来源。";
-"Grantly will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case." = "Grantly 会创建包含护照、成绩单、学历证明、语言考试、文书和推荐信的初始清单。这些项目不会自动被视为大学官方要求。你可在申请档案中添加、删除并上传文件。";
+"EduT" = "EduT";
+"EduT tracks your progress. The scholarship provider remains the official source for submission and decision status." = "EduT 帮你跟踪进度。奖学金提供方仍是提交和录取结果的官方来源。";
+"EduT will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case." = "EduT 会创建包含护照、成绩单、学历证明、语言考试、文书和推荐信的初始清单。这些项目不会自动被视为大学官方要求。你可在申请档案中添加、删除并上传文件。";
 "I submitted my application" = "我已提交申请";
 "Intake, e.g. Fall 2027" = "入学季，例如 2027 秋季";
 "Keep transcripts, letters and supporting files together." = "集中保存成绩单、信件和支持文件。";
@@ -355,9 +355,9 @@
 "My target date" = "我的目标日期";
 "No checklist items yet." = "暂无清单项目。";
 "OK" = "确定";
-"Open it without leaving Grantly" = "无需离开 Grantly 即可打开";
+"Open it without leaving EduT" = "无需离开 EduT 即可打开";
 "Open profile" = "打开个人资料";
-"Open the password reset link on this iPhone. Grantly will open and ask you to choose a new password." = "在此 iPhone 上打开密码重置链接。Grantly 会启动并提示你设置新密码。";
+"Open the password reset link on this iPhone. EduT will open and ask you to choose a new password." = "在此 iPhone 上打开密码重置链接。EduT 会启动并提示你设置新密码。";
 "Plan your deadline" = "规划截止日期";
 "Private files for this application" = "此申请的私有文件";
 "Program / major" = "项目 / 专业";
@@ -372,14 +372,14 @@
 "Study level" = "学习阶段";
 "Task" = "任务";
 "The next dates worth checking" = "接下来值得关注的日期";
-"The official website handles the actual submission. Grantly keeps your preparation, files and progress organized around it." = "实际提交在官方网站完成。Grantly 帮你围绕申请整理准备事项、文件和进度。";
+"The official website handles the actual submission. EduT keeps your preparation, files and progress organized around it." = "实际提交在官方网站完成。EduT 帮你围绕申请整理准备事项、文件和进度。";
 "Track every university application separately" = "分别跟踪每一份大学申请";
 "Unable to load messages" = "无法加载消息";
 "Unable to update notifications" = "无法更新通知";
 "Unlock personalised matches" = "开启个性化匹配";
 "Upcoming Deadlines" = "即将到期";
 "Upload any additional application file that does not belong to a checklist item." = "上传不属于任何清单项目的其他申请文件。";
-"Your progress inside Grantly" = "你在 Grantly 中的进度";
+"Your progress inside EduT" = "你在 EduT 中的进度";
 
 
 /* Profile, community and scholarship flows */
@@ -391,7 +391,7 @@
 "Always confirm the current cycle, eligibility, documents and deadline on the official scholarship website before submitting." = "提交前，请务必在奖学金官方网站确认当前申请周期、资格、材料和截止日期。";
 "Application cycle" = "申请周期";
 "Application requirements evidence" = "申请要求依据";
-"Apply and track in Grantly" = "在 Grantly 中申请并跟踪";
+"Apply and track in EduT" = "在 EduT 中申请并跟踪";
 "Avoid sharing passwords, financial account details, identity documents or other sensitive information in messages." = "请勿在消息中分享密码、金融账户信息、身份证件或其他敏感信息。";
 "Benefits" = "资助内容";
 "Blocked Students" = "已屏蔽学生";
@@ -403,7 +403,7 @@
 "Country" = "国家";
 "Deadline notes" = "截止日期备注";
 "Delete Account" = "删除账号";
-"Delete your Grantly account?" = "删除你的 Grantly 账号？";
+"Delete your EduT account?" = "删除你的 EduT 账号？";
 "Description" = "说明";
 "Details" = "详情";
 "Detected" = "检测到";
@@ -416,7 +416,7 @@
 "GLOBAL COHORT" = "全球同伴";
 "GPA" = "GPA";
 "GPA, IELTS, income and residence details are never copied into your public community profile." = "GPA、IELTS、收入和居住信息不会复制到你的公开社区资料中。";
-"Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying." = "Grantly 帮助你发现并整理机会。申请前请务必在奖学金官方网站确认截止日期、资格和资助内容。";
+"EduT helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying." = "EduT 帮助你发现并整理机会。申请前请务必在奖学金官方网站确认截止日期、资格和资助内容。";
 "Health insurance" = "医疗保险";
 "IELTS" = "IELTS";
 "Intended major" = "意向专业";
@@ -433,7 +433,7 @@
 "Open application workspace" = "打开申请工作区";
 "Open evidence source" = "打开依据来源";
 "Open official source" = "打开官方来源";
-"Open the official form inside Grantly, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status." = "在 Grantly 中打开官方表单，将清单、确认编号、备注和进度集中管理，然后返回查看官方门户状态。";
+"Open the official form inside EduT, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status." = "在 EduT 中打开官方表单，将清单、确认编号、备注和进度集中管理，然后返回查看官方门户状态。";
 "Optional details" = "可选信息";
 "Preferences" = "偏好";
 "Private academic data" = "私密学术数据";
@@ -475,7 +475,7 @@
 "Use this value" = "使用此值";
 "Used privately for scholarship matching" = "仅用于私密奖学金匹配";
 "You are not applying\nalone." = "你的申请之路\n并不孤单。";
-"You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships." = "你可以从个人资料中永久删除 Grantly 账号。删除登录账号也会依据数据库关系删除关联资料和用户拥有的数据。";
+"You can permanently delete your EduT account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships." = "你可以从个人资料中永久删除 EduT 账号。删除登录账号也会依据数据库关系删除关联资料和用户拥有的数据。";
 "You can report a student or message and block a student whenever needed." = "你可以随时举报学生或消息，并屏蔽学生。";
 "Your Community profile is separate and can be hidden at any time from Profile." = "社区资料与其他资料分开，可随时从个人资料中隐藏。";
 "Your GPA, IELTS and family income remain private." = "你的 GPA、IELTS 和家庭收入保持私密。";
@@ -534,7 +534,7 @@
 "Targets: " = "目标：";
 "The automatic audit checks source availability, page specificity and possible deadline text. University media enrichment reads public metadata from provider websites and stores discovered icon and social-image URLs." = "自动审核检查来源可用性、页面针对性和可能的截止日期文本。大学媒体补全会读取机构网站的公开元数据，并保存发现的图标和社交图片 URL。";
 
-"Add your degree, field, GPA and destination goals so Grantly can rank scholarships around you." = "添加学位层级、学习领域、GPA 和目标地区，让 Grantly 为你排序奖学金。";
+"Add your degree, field, GPA and destination goals so EduT can rank scholarships around you." = "添加学位层级、学习领域、GPA 和目标地区，让 EduT 为你排序奖学金。";
 
 "Start a conversation with an advisor." = "与顾问开始对话。";
 "Conversation created. Open Messages." = "对话已创建。打开“消息”。";
@@ -630,14 +630,14 @@
 "Contact details" = "联系方式";
 "Email address" = "电子邮箱";
 "WhatsApp number with country code" = "带国家代码的 WhatsApp 号码";
-"Example: +84 912 345 678. Your contact details are shared only with the selected advisor and Grantly administrators for this consultation." = "示例：+84 912 345 678。你的联系方式仅会与所选顾问和 Grantly 管理员共享，用于本次咨询。";
+"Example: +84 912 345 678. Your contact details are shared only with the selected advisor and EduT administrators for this consultation." = "示例：+84 912 345 678。你的联系方式仅会与所选顾问和 EduT 管理员共享，用于本次咨询。";
 "Preferred time" = "首选时间";
 "Date and time" = "日期和时间";
 "Time zone: %@" = "时区：%@";
 "What do you need help with?" = "你需要什么帮助？";
 "Example: scholarship application strategy" = "例如：奖学金申请策略";
 "Additional notes (optional)" = "补充说明（可选）";
-"I agree that Grantly may use my email and WhatsApp number to coordinate this consultation." = "我同意 Grantly 使用我的邮箱和 WhatsApp 号码协调本次咨询。";
+"I agree that EduT may use my email and WhatsApp number to coordinate this consultation." = "我同意 EduT 使用我的邮箱和 WhatsApp 号码协调本次咨询。";
 "Payment is arranged after the advisor confirms the live session." = "顾问确认实时会话后再安排付款。";
 "This request does not charge you. You will receive payment instructions separately before the consultation is confirmed." = "提交此请求不会扣款。咨询确认前，你会单独收到付款说明。";
 "Request consultation" = "请求咨询";
@@ -670,15 +670,15 @@
 "Contact details unlock after payment is recorded." = "Contact details unlock after payment is recorded.";
 "Mark payment received" = "Mark payment received";
 "No consultation payments are waiting for verification." = "No consultation payments are waiting for verification.";
-"Only Grantly admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Only Grantly admins can mark a consultation as paid. Advisor contact details stay locked until this step.";
+"Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step.";
 "Payment is recorded. Contact details are now available for consultation coordination." = "Payment is recorded. Contact details are now available for consultation coordination.";
 "Pending payment verification" = "Pending payment verification";
-"Choose a real-time one-to-one session. After you submit the request, Grantly will coordinate the payment step before your contact details are shared with the advisor." = "Choose a real-time one-to-one session. After you submit the request, Grantly will coordinate the payment step before your contact details are shared with the advisor.";
-"Example: +84 912 345 678. Grantly stores these details securely and releases them to the selected advisor only after payment is recorded." = "Example: +84 912 345 678. Grantly stores these details securely and releases them to the selected advisor only after payment is recorded.";
+"Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor." = "Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor.";
+"Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded." = "Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded.";
 "Payment is arranged before direct contact is unlocked." = "Payment is arranged before direct contact is unlocked.";
 "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded.";
-"Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
+"Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
 
 "Opening chat…" = "正在打开聊天…";
 "Message advisor" = "联系顾问";
-"Start a private conversation in Grantly" = "在 Grantly 中开始私聊";
+"Start a private conversation in EduT" = "在 EduT 中开始私聊";

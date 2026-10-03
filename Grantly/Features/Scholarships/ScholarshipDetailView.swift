@@ -442,13 +442,13 @@ struct ScholarshipDetailView: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     Label(
-                        "Apply and track in Grantly",
+                        "Apply and track in EduT",
                         systemImage: "checklist.checked"
                     )
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.ink)
 
-                    Text("Open the official form inside Grantly, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status.")
+                    Text("Open the official form inside EduT, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status.")
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
                         .lineSpacing(3)
@@ -488,7 +488,7 @@ struct ScholarshipDetailView: View {
                 showingApplicationWorkspace = true
             } label: {
                 HStack(spacing: 8) {
-                    Text("Apply & track in Grantly")
+                    Text("Apply & track in EduT")
                     Image(systemName: "arrow.up.right.square")
                 }
                 .font(.headline.weight(.semibold))

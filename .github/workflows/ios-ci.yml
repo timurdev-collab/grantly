@@ -23,14 +23,14 @@ jobs:
         run: xcodegen generate
 
       - name: Resolve Swift packages
-        run: xcodebuild -resolvePackageDependencies -project Grantly.xcodeproj -scheme Grantly
+        run: xcodebuild -resolvePackageDependencies -project EduT.xcodeproj -scheme EduT
 
       - name: Build
         run: |
           set -o pipefail
           xcodebuild \
-            -project Grantly.xcodeproj \
-            -scheme Grantly \
+            -project EduT.xcodeproj \
+            -scheme EduT \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
@@ -50,8 +50,8 @@ jobs:
           raise SystemExit("No available iPhone simulator found")
           ')
           xcodebuild \
-            -project Grantly.xcodeproj \
-            -scheme Grantly \
+            -project EduT.xcodeproj \
+            -scheme EduT \
             -destination "platform=iOS Simulator,id=$DEVICE_ID" \
             CODE_SIGNING_ALLOWED=NO \
             test

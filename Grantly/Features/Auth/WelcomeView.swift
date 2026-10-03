@@ -23,9 +23,9 @@ struct WelcomeView: View {
                 VStack(spacing: 0) {
                     Spacer(minLength: 34)
 
-                    GrantlyMonogram(size: 64)
+                    EduTMonogram(size: 64)
 
-                    Text("Grantly")
+                    Text("EduT")
                         .font(.system(size: 36, weight: .bold))
                         .foregroundStyle(Theme.ink)
                         .padding(.top, 14)

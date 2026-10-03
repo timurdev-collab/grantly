@@ -36,7 +36,7 @@ struct ProfileView: View {
 
     private var displayName: String {
         let value = fullName.trimmingCharacters(in: .whitespacesAndNewlines)
-        return value.isEmpty ? "Your Grantly profile" : value
+        return value.isEmpty ? "Your EduT profile" : value
     }
 
     private var profileCompletion: Int {
@@ -100,7 +100,7 @@ struct ProfileView: View {
             settingsSheet
         }
         .alert(
-            "Delete your Grantly account?",
+            "Delete your EduT account?",
             isPresented: $showingDeleteAccount
         ) {
             Button("Delete Account", role: .destructive) {
@@ -1204,12 +1204,12 @@ private struct PrivacyAndSafetyView: View {
             }
 
             Section("Scholarship information") {
-                Text("Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying.")
+                Text("EduT helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying.")
                     .foregroundStyle(Theme.muted)
             }
 
             Section("Account control") {
-                Text("You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships.")
+                Text("You can permanently delete your EduT account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships.")
                     .foregroundStyle(Theme.muted)
             }
         }
@@ -1385,7 +1385,7 @@ private struct AdvisorApplicationView: View {
 
                 Section {
                     Label(
-                        "Your profile stays private until a Grantly admin approves it.",
+                        "Your profile stays private until a EduT admin approves it.",
                         systemImage: "lock.shield.fill"
                     )
                     .font(.caption)

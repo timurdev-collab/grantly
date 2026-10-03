@@ -587,7 +587,7 @@ struct CreateUniversityCaseView: View {
                     .font(.subheadline.bold())
                     .foregroundStyle(Theme.ink)
 
-                    Text("Grantly will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case.")
+                    Text("EduT will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case.")
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
                         .lineSpacing(3)

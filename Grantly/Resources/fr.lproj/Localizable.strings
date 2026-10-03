@@ -49,7 +49,7 @@
 "Recommended" = "Recommandé";
 "Deadline" = "Date limite";
 "Saved" = "Enregistré";
-"Choose a new password for your Grantly account." = "Choisissez un nouveau mot de passe pour votre compte Grantly.";
+"Choose a new password for your EduT account." = "Choisissez un nouveau mot de passe pour votre compte EduT.";
 "New password" = "Nouveau mot de passe";
 "Passwords do not match." = "Les mots de passe ne correspondent pas.";
 "Updating…" = "Mise à jour…";
@@ -83,7 +83,7 @@
 "Add Document Requirement" = "Ajouter une exigence documentaire";
 "Please choose a file smaller than 6 MB." = "Choisissez un fichier de moins de 6 Mo.";
 "Please choose a PDF or image file." = "Choisissez un fichier PDF ou une image.";
-"Loading the Grantly community..." = "Chargement de la communauté Grantly...";
+"Loading the EduT community..." = "Chargement de la communauté EduT...";
 "No students found" = "Aucun étudiant trouvé";
 "Students to connect with" = "Étudiants avec qui échanger";
 "Community" = "Communauté";
@@ -110,7 +110,7 @@
 "Notifications" = "Notifications";
 "Mark all read" = "Tout marquer comme lu";
 "Admin Portal" = "Portail administrateur";
-"Control students, advisors and Grantly operations" = "Gérer les étudiants, conseillers et opérations Grantly";
+"Control students, advisors and EduT operations" = "Gérer les étudiants, conseillers et opérations EduT";
 "Advisor Portal" = "Portail conseiller";
 "Overview" = "Aperçu";
 "Registration requests" = "Demandes d’inscription";
@@ -144,7 +144,7 @@
 "Current deadline" = "Échéance actuelle";
 "Deadline not yet confirmed" = "Échéance non confirmée";
 "Provider" = "Organisme";
-"Apply & track in Grantly" = "Candidater et suivre dans Grantly";
+"Apply & track in EduT" = "Candidater et suivre dans EduT";
 "Finding trusted opportunities..." = "Recherche d’opportunités fiables...";
 "Explore by study level" = "Explorer par niveau d’études";
 "Clear" = "Effacer";
@@ -179,7 +179,7 @@
 
 
 /* Advisor marketplace and role experiences */
-"View Grantly as" = "Voir Grantly en tant que";
+"View EduT as" = "Voir EduT en tant que";
 "Student and Advisor views let you inspect the product without changing your real admin role." = "Les vues Étudiant et Conseiller vous permettent de vérifier le produit sans modifier votre rôle administrateur réel.";
 "Approve advisors, suspend accounts and manage people" = "Approuvez les conseillers, suspendez des comptes et gérez les utilisateurs";
 "Scholarships, safety, analytics, imports and system health" = "Bourses, sécurité, analyses, imports et état du système";
@@ -200,7 +200,7 @@
 "Your advisor" = "Votre conseiller";
 "Advisor request pending" = "Demande de conseiller en attente";
 "The advisor can accept your registration from their Advisor Portal." = "Le conseiller peut accepter votre demande depuis son Portail Conseiller.";
-"Grantly Advisor" = "Conseiller Grantly";
+"EduT Advisor" = "Conseiller EduT";
 "Featured" = "À la une";
 "New advisor" = "Nouveau conseiller";
 "Coming soon" = "Bientôt disponible";
@@ -226,7 +226,7 @@
 "Continue" = "Continuer";
 "Submitting…" = "Envoi…";
 "Submit for review" = "Soumettre à la vérification";
-"Your profile stays private until a Grantly admin approves it." = "Votre profil reste privé jusqu’à son approbation par un administrateur Grantly.";
+"Your profile stays private until a EduT admin approves it." = "Votre profil reste privé jusqu’à son approbation par un administrateur EduT.";
 "Advisor Application" = "Candidature de conseiller";
 "Application submitted" = "Candidature envoyée";
 "Your profile is now in the admin review queue. It will not appear to students until it is approved." = "Votre profil est maintenant dans la file de vérification administrateur. Il ne sera pas visible par les étudiants avant son approbation.";
@@ -339,14 +339,14 @@
 "Discover scholarships, connect with a global community and take the next step in your journey." = "Découvrez des bourses, rejoignez une communauté internationale et avancez dans votre parcours.";
 "Document name" = "Nom du document";
 "Email" = "E-mail";
-"Enter the email address used for your Grantly account." = "Saisissez l’adresse e-mail utilisée pour votre compte Grantly.";
+"Enter the email address used for your EduT account." = "Saisissez l’adresse e-mail utilisée pour votre compte EduT.";
 "Example: APP-2026-12345" = "Exemple : APP-2026-12345";
 "Files are stored in a private user-scoped bucket. PDF and image files only, up to 6 MB each." = "Les fichiers sont stockés dans un espace privé propre à l’utilisateur. PDF et images uniquement, 6 Mo maximum par fichier.";
 "Find a scholarship or university to get started." = "Trouvez une bourse ou une université pour commencer.";
 "Global opportunities for\nbrighter futures" = "Des opportunités mondiales pour\nun avenir plus prometteur";
-"Grantly" = "Grantly";
-"Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status." = "Grantly suit votre progression. L’organisme de bourse reste la source officielle pour la soumission et la décision.";
-"Grantly will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case." = "Grantly crée une liste initiale pour le passeport, les relevés de notes, le diplôme, le test de langue, les essais et les recommandations. Ces éléments ne sont pas automatiquement considérés comme des exigences officielles. Vous pouvez les ajouter, les supprimer et téléverser des documents dans le dossier.";
+"EduT" = "EduT";
+"EduT tracks your progress. The scholarship provider remains the official source for submission and decision status." = "EduT suit votre progression. L’organisme de bourse reste la source officielle pour la soumission et la décision.";
+"EduT will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case." = "EduT crée une liste initiale pour le passeport, les relevés de notes, le diplôme, le test de langue, les essais et les recommandations. Ces éléments ne sont pas automatiquement considérés comme des exigences officielles. Vous pouvez les ajouter, les supprimer et téléverser des documents dans le dossier.";
 "I submitted my application" = "J’ai soumis ma candidature";
 "Intake, e.g. Fall 2027" = "Rentrée, ex. automne 2027";
 "Keep transcripts, letters and supporting files together." = "Regroupez relevés, lettres et pièces justificatives.";
@@ -355,9 +355,9 @@
 "My target date" = "Ma date cible";
 "No checklist items yet." = "Aucun élément dans la liste pour le moment.";
 "OK" = "OK";
-"Open it without leaving Grantly" = "Ouvrir sans quitter Grantly";
+"Open it without leaving EduT" = "Ouvrir sans quitter EduT";
 "Open profile" = "Ouvrir le profil";
-"Open the password reset link on this iPhone. Grantly will open and ask you to choose a new password." = "Ouvrez le lien de réinitialisation du mot de passe sur cet iPhone. Grantly s’ouvrira et vous demandera de choisir un nouveau mot de passe.";
+"Open the password reset link on this iPhone. EduT will open and ask you to choose a new password." = "Ouvrez le lien de réinitialisation du mot de passe sur cet iPhone. EduT s’ouvrira et vous demandera de choisir un nouveau mot de passe.";
 "Plan your deadline" = "Planifiez votre échéance";
 "Private files for this application" = "Fichiers privés de cette candidature";
 "Program / major" = "Programme / spécialité";
@@ -372,14 +372,14 @@
 "Study level" = "Niveau d’études";
 "Task" = "Tâche";
 "The next dates worth checking" = "Les prochaines dates à surveiller";
-"The official website handles the actual submission. Grantly keeps your preparation, files and progress organized around it." = "La soumission réelle se fait sur le site officiel. Grantly organise votre préparation, vos fichiers et votre progression.";
+"The official website handles the actual submission. EduT keeps your preparation, files and progress organized around it." = "La soumission réelle se fait sur le site officiel. EduT organise votre préparation, vos fichiers et votre progression.";
 "Track every university application separately" = "Suivez chaque candidature universitaire séparément";
 "Unable to load messages" = "Impossible de charger les messages";
 "Unable to update notifications" = "Impossible de mettre à jour les notifications";
 "Unlock personalised matches" = "Débloquer les recommandations personnalisées";
 "Upcoming Deadlines" = "Échéances à venir";
 "Upload any additional application file that does not belong to a checklist item." = "Téléversez tout fichier supplémentaire ne correspondant à aucun élément de la liste.";
-"Your progress inside Grantly" = "Votre progression dans Grantly";
+"Your progress inside EduT" = "Votre progression dans EduT";
 
 
 /* Profile, community and scholarship flows */
@@ -391,7 +391,7 @@
 "Always confirm the current cycle, eligibility, documents and deadline on the official scholarship website before submitting." = "Avant de soumettre, vérifiez toujours le cycle en cours, l’éligibilité, les documents et l’échéance sur le site officiel de la bourse.";
 "Application cycle" = "Cycle de candidature";
 "Application requirements evidence" = "Preuve des exigences de candidature";
-"Apply and track in Grantly" = "Postuler et suivre dans Grantly";
+"Apply and track in EduT" = "Postuler et suivre dans EduT";
 "Avoid sharing passwords, financial account details, identity documents or other sensitive information in messages." = "Évitez de partager des mots de passe, coordonnées financières, documents d’identité ou autres données sensibles dans les messages.";
 "Benefits" = "Avantages";
 "Blocked Students" = "Étudiants bloqués";
@@ -403,7 +403,7 @@
 "Country" = "Pays";
 "Deadline notes" = "Notes sur l’échéance";
 "Delete Account" = "Supprimer le compte";
-"Delete your Grantly account?" = "Supprimer votre compte Grantly ?";
+"Delete your EduT account?" = "Supprimer votre compte EduT ?";
 "Description" = "Description";
 "Details" = "Détails";
 "Detected" = "Détecté";
@@ -416,7 +416,7 @@
 "GLOBAL COHORT" = "COMMUNAUTÉ MONDIALE";
 "GPA" = "GPA";
 "GPA, IELTS, income and residence details are never copied into your public community profile." = "Le GPA, l’IELTS, le revenu et la résidence ne sont jamais copiés dans votre profil communautaire public.";
-"Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying." = "Grantly vous aide à découvrir et organiser des opportunités. Vérifiez toujours les échéances, l’éligibilité et les avantages sur le site officiel avant de postuler.";
+"EduT helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying." = "EduT vous aide à découvrir et organiser des opportunités. Vérifiez toujours les échéances, l’éligibilité et les avantages sur le site officiel avant de postuler.";
 "Health insurance" = "Assurance santé";
 "IELTS" = "IELTS";
 "Intended major" = "Spécialité envisagée";
@@ -433,7 +433,7 @@
 "Open application workspace" = "Ouvrir l’espace de candidature";
 "Open evidence source" = "Ouvrir la source de preuve";
 "Open official source" = "Ouvrir la source officielle";
-"Open the official form inside Grantly, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status." = "Ouvrez le formulaire officiel dans Grantly, gardez la liste, le numéro de confirmation, les notes et la progression ensemble, puis revenez vérifier le statut sur le portail officiel.";
+"Open the official form inside EduT, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status." = "Ouvrez le formulaire officiel dans EduT, gardez la liste, le numéro de confirmation, les notes et la progression ensemble, puis revenez vérifier le statut sur le portail officiel.";
 "Optional details" = "Détails facultatifs";
 "Preferences" = "Préférences";
 "Private academic data" = "Données académiques privées";
@@ -475,7 +475,7 @@
 "Use this value" = "Utiliser cette valeur";
 "Used privately for scholarship matching" = "Utilisé de façon privée pour la mise en correspondance des bourses";
 "You are not applying\nalone." = "Vous ne postulez\npas seul.";
-"You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships." = "Vous pouvez supprimer définitivement votre compte Grantly depuis Profil. La suppression du compte d’authentification supprime aussi le profil associé et les données utilisateur selon les relations de la base.";
+"You can permanently delete your EduT account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships." = "Vous pouvez supprimer définitivement votre compte EduT depuis Profil. La suppression du compte d’authentification supprime aussi le profil associé et les données utilisateur selon les relations de la base.";
 "You can report a student or message and block a student whenever needed." = "Vous pouvez signaler un étudiant ou un message et bloquer un étudiant à tout moment.";
 "Your Community profile is separate and can be hidden at any time from Profile." = "Votre profil Communauté est séparé et peut être masqué à tout moment depuis Profil.";
 "Your GPA, IELTS and family income remain private." = "Votre GPA, IELTS et revenu familial restent privés.";
@@ -534,7 +534,7 @@
 "Targets: " = "Objectifs : ";
 "The automatic audit checks source availability, page specificity and possible deadline text. University media enrichment reads public metadata from provider websites and stores discovered icon and social-image URLs." = "L’audit automatique vérifie la disponibilité de la source, la spécificité de la page et les éventuels textes d’échéance. L’enrichissement média des universités lit les métadonnées publiques des sites fournisseurs et stocke les icônes et URL d’images sociales détectées.";
 
-"Add your degree, field, GPA and destination goals so Grantly can rank scholarships around you." = "Ajoutez votre niveau de diplôme, domaine, GPA et objectifs de destination afin que Grantly classe les bourses selon votre profil.";
+"Add your degree, field, GPA and destination goals so EduT can rank scholarships around you." = "Ajoutez votre niveau de diplôme, domaine, GPA et objectifs de destination afin que EduT classe les bourses selon votre profil.";
 
 "Start a conversation with an advisor." = "Commencez une conversation avec un conseiller.";
 "Conversation created. Open Messages." = "Conversation créée. Ouvrez Messages.";
@@ -630,14 +630,14 @@
 "Contact details" = "Coordonnées";
 "Email address" = "Adresse e-mail";
 "WhatsApp number with country code" = "Numéro WhatsApp avec indicatif pays";
-"Example: +84 912 345 678. Your contact details are shared only with the selected advisor and Grantly administrators for this consultation." = "Exemple : +84 912 345 678. Vos coordonnées sont partagées uniquement avec le conseiller sélectionné et les administrateurs Grantly pour cette consultation.";
+"Example: +84 912 345 678. Your contact details are shared only with the selected advisor and EduT administrators for this consultation." = "Exemple : +84 912 345 678. Vos coordonnées sont partagées uniquement avec le conseiller sélectionné et les administrateurs EduT pour cette consultation.";
 "Preferred time" = "Horaire souhaité";
 "Date and time" = "Date et heure";
 "Time zone: %@" = "Fuseau horaire : %@";
 "What do you need help with?" = "De quelle aide avez-vous besoin ?";
 "Example: scholarship application strategy" = "Exemple : stratégie de candidature à une bourse";
 "Additional notes (optional)" = "Notes supplémentaires (facultatif)";
-"I agree that Grantly may use my email and WhatsApp number to coordinate this consultation." = "J'accepte que Grantly utilise mon e-mail et mon numéro WhatsApp pour coordonner cette consultation.";
+"I agree that EduT may use my email and WhatsApp number to coordinate this consultation." = "J'accepte que EduT utilise mon e-mail et mon numéro WhatsApp pour coordonner cette consultation.";
 "Payment is arranged after the advisor confirms the live session." = "Le paiement est organisé après confirmation de la session en direct par le conseiller.";
 "This request does not charge you. You will receive payment instructions separately before the consultation is confirmed." = "Cette demande ne vous facture rien. Vous recevrez séparément les instructions de paiement avant la confirmation de la consultation.";
 "Request consultation" = "Demander une consultation";
@@ -670,15 +670,15 @@
 "Contact details unlock after payment is recorded." = "Contact details unlock after payment is recorded.";
 "Mark payment received" = "Mark payment received";
 "No consultation payments are waiting for verification." = "No consultation payments are waiting for verification.";
-"Only Grantly admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Only Grantly admins can mark a consultation as paid. Advisor contact details stay locked until this step.";
+"Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step.";
 "Payment is recorded. Contact details are now available for consultation coordination." = "Payment is recorded. Contact details are now available for consultation coordination.";
 "Pending payment verification" = "Pending payment verification";
-"Choose a real-time one-to-one session. After you submit the request, Grantly will coordinate the payment step before your contact details are shared with the advisor." = "Choose a real-time one-to-one session. After you submit the request, Grantly will coordinate the payment step before your contact details are shared with the advisor.";
-"Example: +84 912 345 678. Grantly stores these details securely and releases them to the selected advisor only after payment is recorded." = "Example: +84 912 345 678. Grantly stores these details securely and releases them to the selected advisor only after payment is recorded.";
+"Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor." = "Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor.";
+"Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded." = "Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded.";
 "Payment is arranged before direct contact is unlocked." = "Payment is arranged before direct contact is unlocked.";
 "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded.";
-"Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
+"Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
 
 "Opening chat…" = "Ouverture du chat…";
 "Message advisor" = "Contacter le conseiller";
-"Start a private conversation in Grantly" = "Démarrer une conversation privée dans Grantly";
+"Start a private conversation in EduT" = "Démarrer une conversation privée dans EduT";
