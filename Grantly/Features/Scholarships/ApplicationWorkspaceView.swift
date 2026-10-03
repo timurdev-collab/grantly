@@ -203,7 +203,7 @@ struct ApplicationWorkspaceView: View {
                         .font(.headline.bold())
                         .foregroundStyle(Theme.ink)
 
-                    Text("Your progress inside Grantly")
+                    Text("Your progress inside EduT")
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
                 }
@@ -268,7 +268,7 @@ struct ApplicationWorkspaceView: View {
                 .buttonStyle(.plain)
             }
 
-            Text("Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status.")
+            Text("EduT tracks your progress. The scholarship provider remains the official source for submission and decision status.")
                 .font(.caption)
                 .foregroundStyle(Theme.muted)
                 .lineSpacing(3)
@@ -617,7 +617,7 @@ struct ApplicationWorkspaceView: View {
                         .font(.headline.bold())
                         .foregroundStyle(Theme.ink)
 
-                    Text("Open it without leaving Grantly")
+                    Text("Open it without leaving EduT")
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
                 }
@@ -653,7 +653,7 @@ struct ApplicationWorkspaceView: View {
             .buttonStyle(.plain)
             .disabled(portalURL == nil)
 
-            Text("The official website handles the actual submission. Grantly keeps your preparation, files and progress organized around it.")
+            Text("The official website handles the actual submission. EduT keeps your preparation, files and progress organized around it.")
                 .font(.caption2)
                 .foregroundStyle(Theme.muted)
                 .lineSpacing(3)
