@@ -666,18 +666,18 @@
 
 "Preferred: " = "Mong muốn: ";
 
-"Consultation Payments" = "Consultation Payments";
-"Contact details unlock after payment is recorded." = "Contact details unlock after payment is recorded.";
-"Mark payment received" = "Mark payment received";
-"No consultation payments are waiting for verification." = "No consultation payments are waiting for verification.";
-"Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step.";
-"Payment is recorded. Contact details are now available for consultation coordination." = "Payment is recorded. Contact details are now available for consultation coordination.";
-"Pending payment verification" = "Pending payment verification";
-"Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor." = "Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor.";
-"Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded." = "Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded.";
-"Payment is arranged before direct contact is unlocked." = "Payment is arranged before direct contact is unlocked.";
-"This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded.";
-"Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
+"Consultation Payments" = "Thanh toán tư vấn";
+"Contact details unlock after payment is recorded." = "Thông tin liên hệ sẽ được mở sau khi khoản thanh toán được xác nhận.";
+"Mark payment received" = "Xác nhận đã nhận thanh toán";
+"No consultation payments are waiting for verification." = "Không có khoản thanh toán tư vấn nào đang chờ xác nhận.";
+"Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Chỉ quản trị viên EduT mới có thể đánh dấu một buổi tư vấn là đã thanh toán. Thông tin liên hệ của cố vấn sẽ được khóa cho đến bước này.";
+"Payment is recorded. Contact details are now available for consultation coordination." = "Thanh toán đã được xác nhận. Thông tin liên hệ hiện đã sẵn sàng để điều phối buổi tư vấn.";
+"Pending payment verification" = "Đang chờ xác nhận thanh toán";
+"Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor." = "Chọn một buổi tư vấn riêng 1-1 theo thời gian thực. Sau khi bạn gửi yêu cầu, EduT sẽ phối hợp bước thanh toán trước khi thông tin liên hệ của bạn được chia sẻ với cố vấn.";
+"Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded." = "Ví dụ: +84 912 345 678. EduT lưu trữ an toàn các thông tin này và chỉ cung cấp cho cố vấn đã chọn sau khi khoản thanh toán được xác nhận.";
+"Payment is arranged before direct contact is unlocked." = "Thanh toán sẽ được sắp xếp trước khi mở liên hệ trực tiếp.";
+"This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "Yêu cầu này không tính phí bạn. Hướng dẫn thanh toán sẽ được cung cấp riêng, và cố vấn chỉ nhận được thông tin liên hệ của bạn sau khi khoản thanh toán được xác nhận.";
+"Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Yêu cầu của bạn đã được gửi. EduT sẽ phối hợp thanh toán trước; số WhatsApp và địa chỉ email của bạn sẽ được ẩn khỏi cố vấn cho đến khi khoản thanh toán được xác nhận.";
 
 "Opening chat…" = "Đang mở trò chuyện…";
 "Message advisor" = "Nhắn tin cho cố vấn";
