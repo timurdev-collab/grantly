@@ -329,6 +329,18 @@ private struct AdminPortalView: View {
                     .buttonStyle(.plain)
 
                     NavigationLink {
+                        AdminConsultationPaymentsView()
+                    } label: {
+                        portalCard(
+                            icon: "creditcard.fill",
+                            title: "Consultation Payments",
+                            subtitle:
+                                "Verify payments before advisor contact details unlock"
+                        )
+                    }
+                    .buttonStyle(.plain)
+
+                    NavigationLink {
                         ProfileView(profile: $profile, showsNavigationBar: true)
                     } label: {
                         portalCard(
@@ -542,6 +554,139 @@ private struct AdminAdvisorExperienceView: View {
 
         do {
             assignments = try await DataService.adminAdvisorAssignments()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+private struct AdminConsultationPaymentsView: View {
+    @State private var requests: [AdminConsultationRequest] = []
+    @State private var loading = true
+    @State private var workingRequestID: UUID?
+    @State private var errorMessage: String?
+
+    private var actionableRequests: [AdminConsultationRequest] {
+        requests.filter {
+            !["paid", "completed", "cancelled"].contains($0.status)
+        }
+    }
+
+    var body: some View {
+        List {
+            Section {
+                Text(
+                    "Only Grantly admins can mark a consultation as paid. Advisor contact details stay locked until this step."
+                )
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+            }
+
+            Section("Pending payment verification") {
+                if loading && requests.isEmpty {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                } else if actionableRequests.isEmpty {
+                    Text("No consultation payments are waiting for verification.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                } else {
+                    ForEach(actionableRequests) { request in
+                        VStack(alignment: .leading, spacing: 7) {
+                            HStack {
+                                Text(request.studentName)
+                                    .font(.subheadline.weight(.semibold))
+
+                                Spacer()
+
+                                Text(advisorConsultationStatus(request.status))
+                                    .font(.caption2.weight(.semibold))
+                                    .foregroundStyle(Theme.accentSoft)
+                            }
+
+                            Text(
+                                "\(request.serviceTitle) · \(request.durationMinutes) min"
+                            )
+                            .font(.caption)
+
+                            Text("Advisor: \(request.advisorName)")
+                                .font(.caption2)
+                                .foregroundStyle(Theme.muted)
+
+                            Text(
+                                String(
+                                    format: "%@ %.2f",
+                                    request.currency,
+                                    Double(request.quotedPriceCents) / 100.0
+                                )
+                            )
+                            .font(.caption.weight(.semibold))
+
+                            Button {
+                                Task {
+                                    await markPaid(request)
+                                }
+                            } label: {
+                                if workingRequestID == request.id {
+                                    ProgressView()
+                                } else {
+                                    Label(
+                                        "Mark payment received",
+                                        systemImage: "checkmark.seal.fill"
+                                    )
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(Theme.accent)
+                            .disabled(workingRequestID != nil)
+                        }
+                        .padding(.vertical, 5)
+                    }
+                }
+            }
+
+            if let errorMessage {
+                Section {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(Theme.danger)
+                }
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(Theme.pageBackground)
+        .navigationTitle("Consultation Payments")
+        .refreshable { await load() }
+        .task { await load() }
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            requests = try await DataService.adminConsultationRequests()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func markPaid(_ request: AdminConsultationRequest) async {
+        workingRequestID = request.id
+        defer { workingRequestID = nil }
+
+        do {
+            try await DataService.adminMarkConsultationPaid(
+                requestId: request.id
+            )
+            requests = try await DataService.adminConsultationRequests()
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -886,12 +1031,10 @@ private struct AdvisorIncomingConsultationRow: View {
                 Spacer()
 
                 Menu {
-                    statusButton("Contacted", value: "contacted")
                     statusButton(
                         "Awaiting payment",
                         value: "awaiting_payment"
                     )
-                    statusButton("Paid", value: "paid")
                     statusButton("Confirmed", value: "confirmed")
                     statusButton("Completed", value: "completed")
                     statusButton(
