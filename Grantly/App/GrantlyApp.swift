@@ -208,7 +208,7 @@ enum NotificationRegistration {
 }
 
 @main
-struct GrantlyApp: App {
+struct EduTApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self)
     private var appDelegate
 
