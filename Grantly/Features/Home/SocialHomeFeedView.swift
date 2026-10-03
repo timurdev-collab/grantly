@@ -1,4 +1,4 @@
-import AVFoundation
+@preconcurrency import AVFoundation
 import AVKit
 import CoreTransferable
 import PhotosUI
