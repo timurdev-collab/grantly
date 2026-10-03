@@ -159,7 +159,7 @@ struct HomeView: View {
     private var greetingHeader: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 12) {
-                Text("Grantly")
+                Text("EduT")
                     .font(.system(size: 26, weight: .bold, design: .rounded))
                     .foregroundStyle(Theme.ink)
 
@@ -350,7 +350,7 @@ struct HomeView: View {
             return HomeNextStep(
                 title: "Complete your profile",
                 message:
-                    "Add your study level, intended major and background so Grantly can improve your recommendations.",
+                    "Add your study level, intended major and background so EduT can improve your recommendations.",
                 buttonTitle: "Complete profile",
                 icon: "person.crop.circle.badge.plus",
                 action: openProfile
@@ -1168,7 +1168,7 @@ struct ProfileSetupCard: View {
                     .font(.headline.bold())
                     .foregroundStyle(Theme.ink)
 
-                Text("Add your degree, field, GPA and destination goals so Grantly can rank scholarships around you.")
+                Text("Add your degree, field, GPA and destination goals so EduT can rank scholarships around you.")
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
                     .lineSpacing(3)
