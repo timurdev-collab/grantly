@@ -678,3 +678,7 @@
 "Payment is arranged before direct contact is unlocked." = "Payment is arranged before direct contact is unlocked.";
 "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded.";
 "Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
+
+"Opening chat…" = "Đang mở trò chuyện…";
+"Message advisor" = "Nhắn tin cho cố vấn";
+"Start a private conversation in Grantly" = "Bắt đầu cuộc trò chuyện riêng trong Grantly";
