@@ -103,8 +103,7 @@ struct MessagesView: View {
         let changes = await channel.postgresChange(
             AnyAction.self,
             schema: "public",
-            table: "messages",
-            filter: .eq("conversation_id", value: conversationId.uuidString)
+            table: "messages"
         )
 
         await channel.subscribe()
@@ -581,7 +580,8 @@ struct ChatView: View {
         let changes = await channel.postgresChange(
             AnyAction.self,
             schema: "public",
-            table: "messages"
+            table: "messages",
+            filter: .eq("conversation_id", value: conversationId.uuidString)
         )
 
         await channel.subscribe()
