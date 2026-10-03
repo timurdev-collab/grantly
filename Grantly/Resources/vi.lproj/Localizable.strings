@@ -665,3 +665,16 @@
 "Use these contact details only to coordinate this live consultation." = "Chỉ sử dụng thông tin liên hệ này để điều phối buổi tư vấn trực tiếp.";
 
 "Preferred: " = "Mong muốn: ";
+
+"Consultation Payments" = "Consultation Payments";
+"Contact details unlock after payment is recorded." = "Contact details unlock after payment is recorded.";
+"Mark payment received" = "Mark payment received";
+"No consultation payments are waiting for verification." = "No consultation payments are waiting for verification.";
+"Only Grantly admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Only Grantly admins can mark a consultation as paid. Advisor contact details stay locked until this step.";
+"Payment is recorded. Contact details are now available for consultation coordination." = "Payment is recorded. Contact details are now available for consultation coordination.";
+"Pending payment verification" = "Pending payment verification";
+"Choose a real-time one-to-one session. After you submit the request, Grantly will coordinate the payment step before your contact details are shared with the advisor." = "Choose a real-time one-to-one session. After you submit the request, Grantly will coordinate the payment step before your contact details are shared with the advisor.";
+"Example: +84 912 345 678. Grantly stores these details securely and releases them to the selected advisor only after payment is recorded." = "Example: +84 912 345 678. Grantly stores these details securely and releases them to the selected advisor only after payment is recorded.";
+"Payment is arranged before direct contact is unlocked." = "Payment is arranged before direct contact is unlocked.";
+"This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded.";
+"Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
