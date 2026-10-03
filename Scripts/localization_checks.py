@@ -85,10 +85,12 @@ def main() -> int:
                     f"{english_tokens} != {localized_tokens}"
                 )
 
+            plain_words = re.sub(FORMAT_TOKEN_RE, "", english_value)
+
             if (
                 localized_value == english_value
-                and re.search(r"[A-Za-z]", english_value)
-                and len(english_value.split()) >= 4
+                and re.search(r"[A-Za-z]", plain_words)
+                and len(plain_words.split()) >= 4
             ):
                 failed = True
                 print(
