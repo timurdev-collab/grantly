@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "Running Grantly release checks..."
+echo "Running EduT release checks..."
 
 if grep -R --line-number --exclude-dir=.git   "SUPABASE_SERVICE_ROLE_KEY" Grantly 2>/dev/null; then
   echo "Service-role credentials must never be shipped in the iOS app."
@@ -15,6 +15,21 @@ fi
 
 if ! test -f Grantly/PrivacyInfo.xcprivacy; then
   echo "PrivacyInfo.xcprivacy is required for release builds."
+  exit 1
+fi
+
+if ! grep -q "CFBundleDisplayName" Grantly/Info.plist || ! grep -q "<string>EduT</string>" Grantly/Info.plist; then
+  echo "EduT display name is not configured in Info.plist."
+  exit 1
+fi
+
+if ! grep -q "APS_ENVIRONMENT: production" project.yml; then
+  echo "Production APNs environment is not configured."
+  exit 1
+fi
+
+if ! grep -q "aps-environment" Grantly/Grantly.entitlements; then
+  echo "Production push entitlement is missing."
   exit 1
 fi
 
