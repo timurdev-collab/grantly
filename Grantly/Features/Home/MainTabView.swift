@@ -891,7 +891,8 @@ private struct AdvisorPortalView: View {
                     ChatView(
                         conversationId: destination.conversationId,
                         otherUserId: destination.otherUserId,
-                        title: destination.title
+                        title: destination.title,
+                        showsCloseButton: true
                     )
                 }
             }
