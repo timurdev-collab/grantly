@@ -103,7 +103,8 @@ struct MessagesView: View {
         let changes = await channel.postgresChange(
             AnyAction.self,
             schema: "public",
-            table: "messages"
+            table: "messages",
+            filter: "conversation_id=eq.\(conversationId.uuidString)"
         )
 
         await channel.subscribe()
@@ -192,7 +193,7 @@ private struct ConversationRow: View {
     }
 
     private func relativeTime(_ value: String) -> String {
-        guard let date = ISO8601DateFormatter().date(from: value) else {
+        guard let date = AppDateParser.date(from: value) else {
             return String(value.prefix(10))
         }
 
@@ -442,8 +443,20 @@ struct ChatView: View {
                 limit: pageSize
             )
 
-            messages = rows
-            hasMore = rows.count == pageSize
+            if silently && !messages.isEmpty {
+                let latestIDs = Set(rows.map(\.id))
+                let olderMessages = messages.filter { !latestIDs.contains($0.id) }
+                messages = (olderMessages + rows).sorted {
+                    if $0.createdAt == $1.createdAt {
+                        return $0.id.uuidString < $1.id.uuidString
+                    }
+                    return $0.createdAt < $1.createdAt
+                }
+            } else {
+                messages = rows
+            }
+
+            hasMore = silently ? hasMore : rows.count == pageSize
 
             try? await DataService.markConversationRead(
                 conversationId: conversationId
