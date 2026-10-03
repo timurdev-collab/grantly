@@ -237,7 +237,7 @@ struct SocialCommentsView: View {
     private func relativeTime(
         _ value: String
     ) -> String {
-        guard let date = ISO8601DateFormatter().date(from: value) else {
+        guard let date = AppDateParser.date(from: value) else {
             return String(value.prefix(10))
         }
 
