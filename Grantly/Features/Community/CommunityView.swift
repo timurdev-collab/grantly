@@ -271,7 +271,7 @@ struct AdvisorsView: View {
 
             Text(
                 advisor.displayName ??
-                L10n.string("Grantly Advisor")
+                L10n.string("EduT Advisor")
             )
             .font(.caption.weight(.semibold))
             .foregroundStyle(Theme.ink)
@@ -445,7 +445,7 @@ struct AdvisorDetailView: View {
                                 .font(.subheadline.weight(.semibold))
                                 .foregroundStyle(Theme.ink)
 
-                            Text("Start a private conversation in Grantly")
+                            Text("Start a private conversation in EduT")
                                 .font(.caption)
                                 .foregroundStyle(Theme.muted)
                                 .multilineTextAlignment(.leading)
@@ -549,7 +549,7 @@ struct AdvisorDetailView: View {
             chatDestination = AdvisorChatDestination(
                 conversationId: conversationId,
                 otherUserId: advisor.id,
-                title: advisor.displayName ?? L10n.string("Grantly Advisor")
+                title: advisor.displayName ?? L10n.string("EduT Advisor")
             )
             errorMessage = nil
         } catch {
@@ -617,7 +617,7 @@ struct AdvisorDetailView: View {
             }
 
             VStack(alignment: .leading, spacing: 5) {
-                Text(advisor.displayName ?? "Grantly Advisor")
+                Text(advisor.displayName ?? "EduT Advisor")
                     .font(.title3.weight(.bold))
                     .foregroundStyle(Theme.ink)
 
@@ -884,12 +884,12 @@ struct AdvisorConsultationBookingView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 18) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(advisor.displayName ?? "Grantly Advisor")
+                    Text(advisor.displayName ?? "EduT Advisor")
                         .font(.title3.bold())
                         .foregroundStyle(Theme.ink)
 
                     Text(
-                        "Choose a real-time one-to-one session. After you submit the request, Grantly will coordinate the payment step before your contact details are shared with the advisor."
+                        "Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor."
                     )
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
@@ -942,7 +942,7 @@ struct AdvisorConsultationBookingView: View {
                     .textFieldStyle(.roundedBorder)
 
                     Text(
-                        "Example: +84 912 345 678. Grantly stores these details securely and releases them to the selected advisor only after payment is recorded."
+                        "Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded."
                     )
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
@@ -1003,7 +1003,7 @@ struct AdvisorConsultationBookingView: View {
 
                 Toggle(isOn: $consent) {
                     Text(
-                        "I agree that Grantly may use my email and WhatsApp number to coordinate this consultation."
+                        "I agree that EduT may use my email and WhatsApp number to coordinate this consultation."
                     )
                     .font(.caption)
                     .foregroundStyle(Theme.ink)
@@ -1105,7 +1105,7 @@ struct AdvisorConsultationBookingView: View {
             }
 
             Text(
-                "Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded."
+                "Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded."
             )
             .font(.subheadline)
             .foregroundStyle(Theme.muted)
@@ -1280,7 +1280,7 @@ struct MyAdvisorConsultationsView: View {
                         HStack {
                             Text(
                                 request.advisorName ??
-                                L10n.string("Grantly Advisor")
+                                L10n.string("EduT Advisor")
                             )
                             .font(.subheadline.weight(.semibold))
 
@@ -1788,7 +1788,7 @@ struct CommunityView: View {
                         ProgressView()
                             .tint(Theme.blue)
 
-                        Text("Loading the Grantly community...")
+                        Text("Loading the EduT community...")
                             .font(.caption)
                             .foregroundStyle(Theme.muted)
                     }
