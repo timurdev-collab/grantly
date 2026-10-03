@@ -320,13 +320,13 @@ enum DataService {
             if let path = advisor.avatarStoragePath,
                !path.isEmpty {
                 advisor.avatarUrl =
-                    try await signedAdvisorMediaURL(path: path)
+                    try? await signedAdvisorMediaURL(path: path)
             }
 
             if let path = advisor.introVideoStoragePath,
                !path.isEmpty {
                 advisor.introVideoUrl =
-                    try await signedAdvisorMediaURL(path: path)
+                    try? await signedAdvisorMediaURL(path: path)
             }
 
             resolved.append(advisor)
@@ -1424,7 +1424,7 @@ enum DataService {
         )
 
         if !documents.isEmpty {
-            try? await supabase.storage
+            try await supabase.storage
                 .from("university-case-documents")
                 .remove(paths: documents.map(\.storagePath))
         }
