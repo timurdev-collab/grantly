@@ -10,7 +10,7 @@ RESOURCES = ROOT / "Grantly" / "Resources"
 SOURCE = ROOT / "Grantly"
 
 LOCALES = ["en", "ru", "vi", "ar", "zh-Hans", "fr", "es", "de"]
-KEY_RE = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=\s*"((?:[^"\\]|\\.)*)";\s*
+KEY_RE = re.compile(r'^"((?:[^"\\]|\\.)*)"\\s*=\\s*"((?:[^"\\]|\\.)*)";\\s*$', re.MULTILINE)
 
 VISIBLE_PATTERNS = [
     re.compile(r'Text\(\s*"((?:[^"\\]|\\.)*)"'),
