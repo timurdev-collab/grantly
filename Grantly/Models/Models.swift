@@ -247,8 +247,8 @@ struct AdvisorIncomingConsultationRequest: Codable, Identifiable, Hashable {
     let serviceId: UUID
     let serviceTitle: String
     let durationMinutes: Int
-    let contactEmail: String
-    let whatsappNumber: String
+    let contactEmail: String?
+    let whatsappNumber: String?
     let preferredStart: String?
     let timezone: String
     let topic: String
