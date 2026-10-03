@@ -49,7 +49,7 @@
 "Recommended" = "Recommended";
 "Deadline" = "Deadline";
 "Saved" = "Saved";
-"Choose a new password for your Grantly account." = "Choose a new password for your Grantly account.";
+"Choose a new password for your EduT account." = "Choose a new password for your EduT account.";
 "New password" = "New password";
 "Passwords do not match." = "Passwords do not match.";
 "Updating…" = "Updating…";
@@ -83,7 +83,7 @@
 "Add Document Requirement" = "Add Document Requirement";
 "Please choose a file smaller than 6 MB." = "Please choose a file smaller than 6 MB.";
 "Please choose a PDF or image file." = "Please choose a PDF or image file.";
-"Loading the Grantly community..." = "Loading the Grantly community...";
+"Loading the EduT community..." = "Loading the EduT community...";
 "No students found" = "No students found";
 "Students to connect with" = "Students to connect with";
 "Community" = "Community";
@@ -110,7 +110,7 @@
 "Notifications" = "Notifications";
 "Mark all read" = "Mark all read";
 "Admin Portal" = "Admin Portal";
-"Control students, advisors and Grantly operations" = "Control students, advisors and Grantly operations";
+"Control students, advisors and EduT operations" = "Control students, advisors and EduT operations";
 "Advisor Portal" = "Advisor Portal";
 "Overview" = "Overview";
 "Registration requests" = "Registration requests";
@@ -144,7 +144,7 @@
 "Current deadline" = "Current deadline";
 "Deadline not yet confirmed" = "Deadline not yet confirmed";
 "Provider" = "Provider";
-"Apply & track in Grantly" = "Apply & track in Grantly";
+"Apply & track in EduT" = "Apply & track in EduT";
 "Finding trusted opportunities..." = "Finding trusted opportunities...";
 "Explore by study level" = "Explore by study level";
 "Clear" = "Clear";
@@ -179,7 +179,7 @@
 
 
 /* Advisor marketplace and role experiences */
-"View Grantly as" = "View Grantly as";
+"View EduT as" = "View EduT as";
 "Student and Advisor views let you inspect the product without changing your real admin role." = "Student and Advisor views let you inspect the product without changing your real admin role.";
 "Approve advisors, suspend accounts and manage people" = "Approve advisors, suspend accounts and manage people";
 "Scholarships, safety, analytics, imports and system health" = "Scholarships, safety, analytics, imports and system health";
@@ -200,7 +200,7 @@
 "Your advisor" = "Your advisor";
 "Advisor request pending" = "Advisor request pending";
 "The advisor can accept your registration from their Advisor Portal." = "The advisor can accept your registration from their Advisor Portal.";
-"Grantly Advisor" = "Grantly Advisor";
+"EduT Advisor" = "EduT Advisor";
 "Featured" = "Featured";
 "New advisor" = "New advisor";
 "Coming soon" = "Coming soon";
@@ -226,7 +226,7 @@
 "Continue" = "Continue";
 "Submitting…" = "Submitting…";
 "Submit for review" = "Submit for review";
-"Your profile stays private until a Grantly admin approves it." = "Your profile stays private until a Grantly admin approves it.";
+"Your profile stays private until a EduT admin approves it." = "Your profile stays private until a EduT admin approves it.";
 "Advisor Application" = "Advisor Application";
 "Application submitted" = "Application submitted";
 "Your profile is now in the admin review queue. It will not appear to students until it is approved." = "Your profile is now in the admin review queue. It will not appear to students until it is approved.";
@@ -339,14 +339,14 @@
 "Discover scholarships, connect with a global community and take the next step in your journey." = "Discover scholarships, connect with a global community and take the next step in your journey.";
 "Document name" = "Document name";
 "Email" = "Email";
-"Enter the email address used for your Grantly account." = "Enter the email address used for your Grantly account.";
+"Enter the email address used for your EduT account." = "Enter the email address used for your EduT account.";
 "Example: APP-2026-12345" = "Example: APP-2026-12345";
 "Files are stored in a private user-scoped bucket. PDF and image files only, up to 6 MB each." = "Files are stored in a private user-scoped bucket. PDF and image files only, up to 6 MB each.";
 "Find a scholarship or university to get started." = "Find a scholarship or university to get started.";
 "Global opportunities for\nbrighter futures" = "Global opportunities for\nbrighter futures";
-"Grantly" = "Grantly";
-"Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status." = "Grantly tracks your progress. The scholarship provider remains the official source for submission and decision status.";
-"Grantly will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case." = "Grantly will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case.";
+"EduT" = "EduT";
+"EduT tracks your progress. The scholarship provider remains the official source for submission and decision status." = "EduT tracks your progress. The scholarship provider remains the official source for submission and decision status.";
+"EduT will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case." = "EduT will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case.";
 "I submitted my application" = "I submitted my application";
 "Intake, e.g. Fall 2027" = "Intake, e.g. Fall 2027";
 "Keep transcripts, letters and supporting files together." = "Keep transcripts, letters and supporting files together.";
@@ -355,9 +355,9 @@
 "My target date" = "My target date";
 "No checklist items yet." = "No checklist items yet.";
 "OK" = "OK";
-"Open it without leaving Grantly" = "Open it without leaving Grantly";
+"Open it without leaving EduT" = "Open it without leaving EduT";
 "Open profile" = "Open profile";
-"Open the password reset link on this iPhone. Grantly will open and ask you to choose a new password." = "Open the password reset link on this iPhone. Grantly will open and ask you to choose a new password.";
+"Open the password reset link on this iPhone. EduT will open and ask you to choose a new password." = "Open the password reset link on this iPhone. EduT will open and ask you to choose a new password.";
 "Plan your deadline" = "Plan your deadline";
 "Private files for this application" = "Private files for this application";
 "Program / major" = "Program / major";
@@ -372,14 +372,14 @@
 "Study level" = "Study level";
 "Task" = "Task";
 "The next dates worth checking" = "The next dates worth checking";
-"The official website handles the actual submission. Grantly keeps your preparation, files and progress organized around it." = "The official website handles the actual submission. Grantly keeps your preparation, files and progress organized around it.";
+"The official website handles the actual submission. EduT keeps your preparation, files and progress organized around it." = "The official website handles the actual submission. EduT keeps your preparation, files and progress organized around it.";
 "Track every university application separately" = "Track every university application separately";
 "Unable to load messages" = "Unable to load messages";
 "Unable to update notifications" = "Unable to update notifications";
 "Unlock personalised matches" = "Unlock personalised matches";
 "Upcoming Deadlines" = "Upcoming Deadlines";
 "Upload any additional application file that does not belong to a checklist item." = "Upload any additional application file that does not belong to a checklist item.";
-"Your progress inside Grantly" = "Your progress inside Grantly";
+"Your progress inside EduT" = "Your progress inside EduT";
 
 
 /* Profile, community and scholarship flows */
@@ -391,7 +391,7 @@
 "Always confirm the current cycle, eligibility, documents and deadline on the official scholarship website before submitting." = "Always confirm the current cycle, eligibility, documents and deadline on the official scholarship website before submitting.";
 "Application cycle" = "Application cycle";
 "Application requirements evidence" = "Application requirements evidence";
-"Apply and track in Grantly" = "Apply and track in Grantly";
+"Apply and track in EduT" = "Apply and track in EduT";
 "Avoid sharing passwords, financial account details, identity documents or other sensitive information in messages." = "Avoid sharing passwords, financial account details, identity documents or other sensitive information in messages.";
 "Benefits" = "Benefits";
 "Blocked Students" = "Blocked Students";
@@ -403,7 +403,7 @@
 "Country" = "Country";
 "Deadline notes" = "Deadline notes";
 "Delete Account" = "Delete Account";
-"Delete your Grantly account?" = "Delete your Grantly account?";
+"Delete your EduT account?" = "Delete your EduT account?";
 "Description" = "Description";
 "Details" = "Details";
 "Detected" = "Detected";
@@ -416,7 +416,7 @@
 "GLOBAL COHORT" = "GLOBAL COHORT";
 "GPA" = "GPA";
 "GPA, IELTS, income and residence details are never copied into your public community profile." = "GPA, IELTS, income and residence details are never copied into your public community profile.";
-"Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying." = "Grantly helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying.";
+"EduT helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying." = "EduT helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying.";
 "Health insurance" = "Health insurance";
 "IELTS" = "IELTS";
 "Intended major" = "Intended major";
@@ -433,7 +433,7 @@
 "Open application workspace" = "Open application workspace";
 "Open evidence source" = "Open evidence source";
 "Open official source" = "Open official source";
-"Open the official form inside Grantly, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status." = "Open the official form inside Grantly, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status.";
+"Open the official form inside EduT, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status." = "Open the official form inside EduT, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status.";
 "Optional details" = "Optional details";
 "Preferences" = "Preferences";
 "Private academic data" = "Private academic data";
@@ -475,7 +475,7 @@
 "Use this value" = "Use this value";
 "Used privately for scholarship matching" = "Used privately for scholarship matching";
 "You are not applying\nalone." = "You are not applying\nalone.";
-"You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships." = "You can permanently delete your Grantly account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships.";
+"You can permanently delete your EduT account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships." = "You can permanently delete your EduT account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships.";
 "You can report a student or message and block a student whenever needed." = "You can report a student or message and block a student whenever needed.";
 "Your Community profile is separate and can be hidden at any time from Profile." = "Your Community profile is separate and can be hidden at any time from Profile.";
 "Your GPA, IELTS and family income remain private." = "Your GPA, IELTS and family income remain private.";
@@ -534,7 +534,7 @@
 "Targets: " = "Targets: ";
 "The automatic audit checks source availability, page specificity and possible deadline text. University media enrichment reads public metadata from provider websites and stores discovered icon and social-image URLs." = "The automatic audit checks source availability, page specificity and possible deadline text. University media enrichment reads public metadata from provider websites and stores discovered icon and social-image URLs.";
 
-"Add your degree, field, GPA and destination goals so Grantly can rank scholarships around you." = "Add your degree, field, GPA and destination goals so Grantly can rank scholarships around you.";
+"Add your degree, field, GPA and destination goals so EduT can rank scholarships around you." = "Add your degree, field, GPA and destination goals so EduT can rank scholarships around you.";
 
 "Start a conversation with an advisor." = "Start a conversation with an advisor.";
 "Conversation created. Open Messages." = "Conversation created. Open Messages.";
@@ -630,14 +630,14 @@
 "Contact details" = "Contact details";
 "Email address" = "Email address";
 "WhatsApp number with country code" = "WhatsApp number with country code";
-"Example: +84 912 345 678. Your contact details are shared only with the selected advisor and Grantly administrators for this consultation." = "Example: +84 912 345 678. Your contact details are shared only with the selected advisor and Grantly administrators for this consultation.";
+"Example: +84 912 345 678. Your contact details are shared only with the selected advisor and EduT administrators for this consultation." = "Example: +84 912 345 678. Your contact details are shared only with the selected advisor and EduT administrators for this consultation.";
 "Preferred time" = "Preferred time";
 "Date and time" = "Date and time";
 "Time zone: %@" = "Time zone: %@";
 "What do you need help with?" = "What do you need help with?";
 "Example: scholarship application strategy" = "Example: scholarship application strategy";
 "Additional notes (optional)" = "Additional notes (optional)";
-"I agree that Grantly may use my email and WhatsApp number to coordinate this consultation." = "I agree that Grantly may use my email and WhatsApp number to coordinate this consultation.";
+"I agree that EduT may use my email and WhatsApp number to coordinate this consultation." = "I agree that EduT may use my email and WhatsApp number to coordinate this consultation.";
 "Payment is arranged after the advisor confirms the live session." = "Payment is arranged after the advisor confirms the live session.";
 "This request does not charge you. You will receive payment instructions separately before the consultation is confirmed." = "This request does not charge you. You will receive payment instructions separately before the consultation is confirmed.";
 "Request consultation" = "Request consultation";
@@ -670,14 +670,14 @@
 "Contact details unlock after payment is recorded." = "Contact details unlock after payment is recorded.";
 "Mark payment received" = "Mark payment received";
 "No consultation payments are waiting for verification." = "No consultation payments are waiting for verification.";
-"Only Grantly admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Only Grantly admins can mark a consultation as paid. Advisor contact details stay locked until this step.";
+"Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step.";
 "Payment is recorded. Contact details are now available for consultation coordination." = "Payment is recorded. Contact details are now available for consultation coordination.";
 "Pending payment verification" = "Pending payment verification";
-"Choose a real-time one-to-one session. After you submit the request, Grantly will coordinate the payment step before your contact details are shared with the advisor." = "Choose a real-time one-to-one session. After you submit the request, Grantly will coordinate the payment step before your contact details are shared with the advisor.";
-"Example: +84 912 345 678. Grantly stores these details securely and releases them to the selected advisor only after payment is recorded." = "Example: +84 912 345 678. Grantly stores these details securely and releases them to the selected advisor only after payment is recorded.";
+"Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor." = "Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor.";
+"Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded." = "Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded.";
 "Payment is arranged before direct contact is unlocked." = "Payment is arranged before direct contact is unlocked.";
 "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded.";
-"Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. Grantly will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
+"Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
 "Opening chat…" = "Opening chat…";
 "Message advisor" = "Message advisor";
-"Start a private conversation in Grantly" = "Start a private conversation in Grantly";
+"Start a private conversation in EduT" = "Start a private conversation in EduT";
