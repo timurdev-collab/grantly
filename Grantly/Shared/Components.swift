@@ -156,7 +156,7 @@ struct ReportSheet: View {
 }
 
 
-struct GrantlyMonogram: View {
+struct EduTMonogram: View {
     var size: CGFloat = 44
     var dark: Bool = true
 
