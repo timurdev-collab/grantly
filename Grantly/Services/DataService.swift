@@ -2,6 +2,55 @@ import Foundation
 import Supabase
 
 enum DataService {
+    static func createScholarshipDraft(
+        slug: String,
+        title: String,
+        provider: String,
+        country: String,
+        region: String,
+        fundingType: String,
+        officialURL: String,
+        degreeLevels: [String],
+        fields: [String]
+    ) async throws {
+        struct Row: Encodable {
+            let slug: String
+            let title: String
+            let provider: String
+            let country: String
+            let region: String
+            let funding_type: String
+            let official_url: String
+            let status: String
+            let degree_levels: [String]
+            let fields: [String]
+            let eligible_nationalities: [String]
+            let verification_status: String
+            let link_status: String
+        }
+
+        _ = try await supabase
+            .from("scholarships")
+            .insert(
+                Row(
+                    slug: slug,
+                    title: title,
+                    provider: provider,
+                    country: country,
+                    region: region,
+                    funding_type: fundingType,
+                    official_url: officialURL,
+                    status: "draft",
+                    degree_levels: degreeLevels,
+                    fields: fields,
+                    eligible_nationalities: ["ALL"],
+                    verification_status: "needs_review",
+                    link_status: "unchecked"
+                )
+            )
+            .execute()
+    }
+
     static func trackProductEvent(
         _ eventName: String,
         scholarshipId: UUID? = nil,
