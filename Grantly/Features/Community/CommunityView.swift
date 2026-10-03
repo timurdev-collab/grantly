@@ -426,6 +426,8 @@ struct AdvisorDetailView: View {
 
     @State private var requesting = false
     @State private var requestSent = false
+    @State private var openingChat = false
+    @State private var chatDestination: AdvisorChatDestination?
     @State private var errorMessage: String?
 
     private var requestStateTitle: String {
@@ -458,6 +460,50 @@ struct AdvisorDetailView: View {
                 aboutSection
                 expertiseSection
                 linksSection
+
+                Button {
+                    Task { await openDirectConversation() }
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "bubble.left.fill")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundStyle(Theme.onAccent)
+                            .frame(width: 42, height: 42)
+                            .background(Theme.orangeGradient)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(openingChat ? "Opening chat…" : "Message advisor")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.ink)
+
+                            Text("Start a private conversation in Grantly")
+                                .font(.caption)
+                                .foregroundStyle(Theme.muted)
+                                .multilineTextAlignment(.leading)
+                        }
+
+                        Spacer()
+
+                        if openingChat {
+                            ProgressView()
+                                .tint(Theme.accent)
+                        } else {
+                            Image(systemName: "chevron.right")
+                                .font(.caption.bold())
+                                .foregroundStyle(Theme.muted)
+                        }
+                    }
+                    .padding(14)
+                    .background(Theme.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Theme.accent.opacity(0.18))
+                    )
+                }
+                .buttonStyle(.plain)
+                .disabled(openingChat)
 
                 NavigationLink {
                     AdvisorConsultationBookingView(advisor: advisor)
@@ -547,6 +593,38 @@ struct AdvisorDetailView: View {
         .background(Theme.pageBackground)
         .navigationTitle("Advisor")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $chatDestination) { destination in
+            NavigationStack {
+                ChatView(
+                    conversationId: destination.conversationId,
+                    otherUserId: destination.otherUserId,
+                    title: destination.title,
+                    showsCloseButton: true
+                )
+            }
+        }
+    }
+
+    @MainActor
+    private func openDirectConversation() async {
+        openingChat = true
+        defer { openingChat = false }
+
+        do {
+            let conversationId =
+                try await DataService.ensureAdvisorDirectConversation(
+                    advisorId: advisor.id
+                )
+
+            chatDestination = AdvisorChatDestination(
+                conversationId: conversationId,
+                otherUserId: advisor.id,
+                title: advisor.displayName ?? L10n.string("Grantly Advisor")
+            )
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     private var header: some View {
