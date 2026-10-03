@@ -1597,6 +1597,7 @@ struct AdvisorCallPreparationView: View {
     }
 }
 
+@MainActor
 private final class AdvisorCallController:
     NSObject,
     ObservableObject,
@@ -1612,7 +1613,6 @@ private final class AdvisorCallController:
 
     lazy var room = Room(delegate: self)
 
-    @MainActor
     func connect(
         _ credentials: LiveKitCallCredentials
     ) async throws {
@@ -1637,7 +1637,6 @@ private final class AdvisorCallController:
         }
     }
 
-    @MainActor
     func toggleCamera() async {
         do {
             let next = !cameraEnabled
@@ -1649,7 +1648,6 @@ private final class AdvisorCallController:
         }
     }
 
-    @MainActor
     func toggleMicrophone() async {
         do {
             let next = !microphoneEnabled
@@ -1661,7 +1659,6 @@ private final class AdvisorCallController:
         }
     }
 
-    @MainActor
     func toggleScreenShare() async {
         do {
             let next = !screenSharing
@@ -1673,23 +1670,22 @@ private final class AdvisorCallController:
         }
     }
 
-    func room(
+    nonisolated func room(
         _: Room,
         participant _: LocalParticipant,
         didPublishTrack publication: LocalTrackPublication
     ) {
-        guard let track = publication.track as? VideoTrack else {
+        guard let track = publication.track as? VideoTrack,
+              publication.source == .camera else {
             return
         }
 
-        DispatchQueue.main.async {
-            if publication.source == .camera {
-                self.localVideoTrack = track
-            }
+        Task { @MainActor [weak self] in
+            self?.localVideoTrack = track
         }
     }
 
-    func room(
+    nonisolated func room(
         _: Room,
         participant _: RemoteParticipant,
         didSubscribeTrack publication: RemoteTrackPublication
@@ -1698,12 +1694,12 @@ private final class AdvisorCallController:
             return
         }
 
-        DispatchQueue.main.async {
-            self.remoteVideoTrack = track
+        Task { @MainActor [weak self] in
+            self?.remoteVideoTrack = track
         }
     }
 
-    func room(
+    nonisolated func room(
         _: Room,
         participant _: RemoteParticipant,
         didUnsubscribeTrack publication: RemoteTrackPublication
@@ -1712,8 +1708,8 @@ private final class AdvisorCallController:
             return
         }
 
-        DispatchQueue.main.async {
-            self.remoteVideoTrack = nil
+        Task { @MainActor [weak self] in
+            self?.remoteVideoTrack = nil
         }
     }
 }

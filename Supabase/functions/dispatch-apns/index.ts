@@ -80,6 +80,39 @@ Deno.serve(async (req) => {
     });
   }
 
+  const serviceRole = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const url = Deno.env.get("SUPABASE_URL");
+
+  if (!serviceRole || !url) {
+    return new Response(JSON.stringify({ error: "Server configuration unavailable" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+
+  const admin = createClient(url, serviceRole, {
+    auth: { persistSession: false }
+  });
+
+  const providedToken = req.headers.get("x-edut-push-token");
+  const { data: dispatchConfig, error: dispatchConfigError } = await admin
+    .from("notification_dispatch_config")
+    .select("cron_token,enabled")
+    .eq("id", true)
+    .maybeSingle();
+
+  if (
+    dispatchConfigError ||
+    !dispatchConfig?.enabled ||
+    !providedToken ||
+    providedToken !== dispatchConfig.cron_token
+  ) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+
   const keyId = Deno.env.get("APNS_KEY_ID");
   const privateKey = Deno.env.get("APNS_PRIVATE_KEY");
   const teamId = Deno.env.get("APNS_TEAM_ID") ?? "M9L42LN3CG";
@@ -101,12 +134,6 @@ Deno.serve(async (req) => {
   } catch {}
 
   const limit = Math.min(Math.max(body.limit ?? 50, 1), 100);
-
-  const admin = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    { auth: { persistSession: false } }
-  );
 
   const { data: notifications, error: notificationError } = await admin
     .from("app_notifications")
