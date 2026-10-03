@@ -11,6 +11,7 @@ SOURCE = ROOT / "Grantly"
 
 LOCALES = ["en", "ru", "vi", "ar", "zh-Hans", "fr", "es", "de"]
 KEY_RE = re.compile(r'^"((?:[^"\\]|\\.)*)"\\s*=\\s*"((?:[^"\\]|\\.)*)";\\s*$', re.MULTILINE)
+FORMAT_TOKEN_RE = re.compile(r'%(?:\d+\$)?[@df]')
 
 VISIBLE_PATTERNS = [
     re.compile(r'Text\(\s*"((?:[^"\\]|\\.)*)"'),
@@ -136,8 +137,6 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-, re.MULTILINE)
-FORMAT_TOKEN_RE = re.compile(r'%(?:\d+\$)?[@df]')
 
 VISIBLE_PATTERNS = [
     re.compile(r'Text\(\s*"((?:[^"\\]|\\.)*)"'),
