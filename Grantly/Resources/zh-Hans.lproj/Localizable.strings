@@ -666,18 +666,18 @@
 
 "Preferred: " = "首选：";
 
-"Consultation Payments" = "Consultation Payments";
-"Contact details unlock after payment is recorded." = "Contact details unlock after payment is recorded.";
-"Mark payment received" = "Mark payment received";
-"No consultation payments are waiting for verification." = "No consultation payments are waiting for verification.";
-"Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step.";
-"Payment is recorded. Contact details are now available for consultation coordination." = "Payment is recorded. Contact details are now available for consultation coordination.";
-"Pending payment verification" = "Pending payment verification";
-"Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor." = "Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor.";
-"Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded." = "Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded.";
-"Payment is arranged before direct contact is unlocked." = "Payment is arranged before direct contact is unlocked.";
-"This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded.";
-"Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
+"Consultation Payments" = "咨询付款";
+"Contact details unlock after payment is recorded." = "付款确认后将解锁联系方式。";
+"Mark payment received" = "确认已收款";
+"No consultation payments are waiting for verification." = "目前没有等待确认的咨询付款。";
+"Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "只有 EduT 管理员可以将咨询标记为已付款。在完成此步骤之前，顾问的联系方式将保持锁定。";
+"Payment is recorded. Contact details are now available for consultation coordination." = "付款已确认。现在可使用联系方式来协调咨询安排。";
+"Pending payment verification" = "等待付款确认";
+"Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor." = "请选择实时一对一咨询。提交请求后，EduT 会先协调付款流程，确认后才会将您的联系方式提供给顾问。";
+"Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded." = "示例：+84 912 345 678。EduT 会安全保存这些信息，并仅在付款确认后向您选择的顾问提供。";
+"Payment is arranged before direct contact is unlocked." = "直接联系方式将在付款确认后开放。";
+"This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "提交此请求不会向您收费。付款说明将另行提供，只有在付款确认后，顾问才能获得您的联系方式。";
+"Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "您的请求已发送。EduT 会先协调付款；在付款确认之前，您的 WhatsApp 和电子邮箱将不会向顾问显示。";
 
 "Opening chat…" = "正在打开聊天…";
 "Message advisor" = "联系顾问";
