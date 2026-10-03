@@ -596,29 +596,9 @@ struct SwipeRevealDeleteRow<Content: View>: View {
 
     var body: some View {
         ZStack(alignment: .trailing) {
-            Button(role: .destructive) {
-                withAnimation(.easeOut(duration: 0.18)) {
-                    offset = 0
-                }
-                onDelete()
-            } label: {
-                VStack(spacing: 5) {
-                    Image(systemName: "trash.fill")
-                        .font(.system(size: 16, weight: .semibold))
-
-                    Text("Delete")
-                        .font(.caption2.weight(.semibold))
-                }
-                .foregroundStyle(.white)
-                .frame(width: actionWidth)
-                .frame(maxHeight: .infinity)
-                .background(Theme.danger)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Delete")
-
             content()
                 .offset(x: offset)
+                .zIndex(0)
                 .contentShape(Rectangle())
                 .simultaneousGesture(
                     DragGesture(minimumDistance: 12)
@@ -670,6 +650,30 @@ struct SwipeRevealDeleteRow<Content: View>: View {
                         dragStartOffset = 0
                     }
                 }
+
+            Button(role: .destructive) {
+                offset = 0
+                dragStartOffset = 0
+                onDelete()
+            } label: {
+                VStack(spacing: 5) {
+                    Image(systemName: "trash.fill")
+                        .font(.system(size: 16, weight: .semibold))
+
+                    Text("Delete")
+                        .font(.caption2.weight(.semibold))
+                }
+                .foregroundStyle(.white)
+                .frame(width: actionWidth)
+                .frame(maxHeight: .infinity)
+                .background(Theme.danger)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Delete")
+            .opacity(offset < 0 ? 1 : 0)
+            .allowsHitTesting(offset < -(actionWidth * 0.35))
+            .zIndex(1)
         }
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         .onChange(of: offset) { _, newValue in
