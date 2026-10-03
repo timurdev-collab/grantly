@@ -109,7 +109,7 @@ private struct ForgotPasswordView: View {
                         )
                         .font(.headline)
 
-                        Text("Open the password reset link on this iPhone. Grantly will open and ask you to choose a new password.")
+                        Text("Open the password reset link on this iPhone. EduT will open and ask you to choose a new password.")
                             .foregroundStyle(.secondary)
                     }
 
@@ -120,7 +120,7 @@ private struct ForgotPasswordView: View {
                     }
                 } else {
                     Section {
-                        Text("Enter the email address used for your Grantly account.")
+                        Text("Enter the email address used for your EduT account.")
                             .foregroundStyle(.secondary)
 
                         TextField("Email", text: $email)
