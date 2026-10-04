@@ -89,7 +89,7 @@ struct ReportSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    Text(L10n.format("Report %@", L10n.string(subject.capitalized)))
+                    Text(L10n.format("Report %@", subject))
                         .font(.headline)
                 }
 
