@@ -427,7 +427,6 @@ struct AdvisorDetailView: View {
                 header
                 introductionVideo
                 aboutSection
-                expertiseSection
                 pricingSection
                 linksSection
 
@@ -755,38 +754,6 @@ struct AdvisorDetailView: View {
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
                     .lineSpacing(3)
-            }
-        }
-        .padding(16)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
-    }
-
-    private var expertiseSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Expertise")
-                .font(.headline.bold())
-                .foregroundStyle(Theme.ink)
-
-            if !advisor.specialties.isEmpty {
-                AdvisorTagWrap(
-                    title: "Specialties",
-                    values: advisor.specialties
-                )
-            }
-
-            if !advisor.countries.isEmpty {
-                AdvisorTagWrap(
-                    title: "Countries",
-                    values: advisor.countries
-                )
-            }
-
-            if !advisor.languages.isEmpty {
-                AdvisorTagWrap(
-                    title: "Languages",
-                    values: advisor.languages
-                )
             }
         }
         .padding(16)
