@@ -87,17 +87,11 @@ struct ScholarshipsView: View {
             LazyVStack(spacing: 18) {
                 exploreHeader
 
-                trustBanner
-                    .padding(.horizontal)
-
                 SearchField(
                     text: $query,
                     prompt: "Search scholarships, universities, countries..."
                 )
                 .padding(.horizontal)
-
-                quickDiscovery
-                    .padding(.horizontal)
 
                 studyLevelSelector
                     .padding(.horizontal)
@@ -211,136 +205,6 @@ struct ScholarshipsView: View {
         }
         .padding(.horizontal)
         .padding(.top, 10)
-    }
-
-    private var trustBanner: some View {
-        HStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(Theme.trustTealSoft)
-                    .frame(width: 38, height: 38)
-
-                Image(systemName: "checkmark.shield.fill")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(Theme.trustTeal)
-            }
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Verified official sources")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
-
-                Text("Strongest verified opportunities are shown first")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.muted)
-            }
-
-            Spacer()
-
-            Image(systemName: "sparkles")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.sand)
-        }
-        .padding(.horizontal, 14)
-        .frame(minHeight: 64)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
-        .overlay(
-            RoundedRectangle(cornerRadius: 18)
-                .stroke(Theme.trustTeal.opacity(0.13))
-        )
-    }
-
-    private var quickDiscovery: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                quickDiscoveryButton(
-                    title: "Best verified",
-                    icon: "checkmark.seal.fill",
-                    active: sort == "Verified first"
-                ) {
-                    sort = "Verified first"
-                }
-
-                quickDiscoveryButton(
-                    title: "Fully funded",
-                    icon: "banknote.fill",
-                    active: funding == fullyFundedValue
-                ) {
-                    funding = fullyFundedValue
-                }
-
-                quickDiscoveryButton(
-                    title: "Deadline soon",
-                    icon: "calendar.badge.clock",
-                    active: sort == "Deadline"
-                ) {
-                    sort = "Deadline"
-                }
-            }
-        }
-    }
-
-    private func quickDiscoveryButton(
-        title: String,
-        icon: String,
-        active: Bool,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
-            Label(title, systemImage: icon)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(active ? Theme.onAccent : Theme.ink)
-                .padding(.horizontal, 12)
-                .frame(height: 38)
-                .background(active ? Theme.accent : Theme.surface)
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule()
-                        .stroke(
-                            active
-                                ? Theme.accent.opacity(0)
-                                : Theme.ink.opacity(0.06)
-                        )
-                )
-        }
-        .buttonStyle(.plain)
-    }
-
-    private var topVerifiedSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Top verified picks")
-                        .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
-
-                    Text("Official-source opportunities worth a closer look")
-                        .font(.caption)
-                        .foregroundStyle(Theme.muted)
-                }
-
-                Spacer()
-            }
-            .padding(.horizontal)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(topVerifiedPicks) { scholarship in
-                        NavigationLink {
-                            ScholarshipDetailView(
-                                scholarship: scholarship,
-                                match: nil
-                            )
-                        } label: {
-                            ExploreTopPickCard(scholarship: scholarship)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(.horizontal)
-            }
-        }
     }
 
     private var studyLevelSelector: some View {
