@@ -706,3 +706,7 @@
 "Simple pricing · no hidden fees" = "价格清晰 · 无隐藏费用";
 "Weekly check-ins for 6 months" = "连续 6 个月每周跟进";
 "Your accepted Terms, Privacy Policy and Cancellation & Refund Policy apply to this request." = "你已接受的《条款》《隐私政策》和《取消与退款政策》适用于此请求。";
+
+/* Advisor launch pricing */
+"Launch price" = "上线价格";
+"LAUNCH PRICE" = "上线价格";
