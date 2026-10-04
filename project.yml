@@ -3,6 +3,10 @@ options:
   bundleIdPrefix: com.grantly
   deploymentTarget:
     iOS: "17.0"
+configs:
+  Debug: debug
+  ProductionPreview: debug
+  Release: release
 settings:
   base:
     SWIFT_VERSION: 5.0
@@ -56,6 +60,12 @@ targets:
           APP_ENVIRONMENT: staging
           SUPABASE_URL: https://cbzriyarlvpmtfbjgede.supabase.co
           SUPABASE_PUBLISHABLE_KEY: sb_publishable_7DtXndOsfZ5WmTZs0RWG8w_EIQ3xZSe
+        ProductionPreview:
+          CODE_SIGN_ENTITLEMENTS: Grantly/GrantlyDebug.entitlements
+          APP_ENVIRONMENT: production
+          SUPABASE_URL: https://bvcabjwriszghmizbwji.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_8zllTlQ9y95acFTsw0uljg_XZ4nuli2
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG PRODUCTION_PREVIEW
         Release:
           CODE_SIGN_ENTITLEMENTS: Grantly/Grantly.entitlements
           APS_ENVIRONMENT: production
@@ -79,3 +89,36 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.grantly.tests
         GENERATE_INFOPLIST_FILE: YES
+
+
+schemes:
+  EduT:
+    build:
+      targets:
+        EduT: all
+        EduTTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - EduTTests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+
+  "EduT Production Preview":
+    build:
+      targets:
+        EduT: all
+    run:
+      config: ProductionPreview
+    profile:
+      config: ProductionPreview
+    analyze:
+      config: ProductionPreview
+    archive:
+      config: Release
