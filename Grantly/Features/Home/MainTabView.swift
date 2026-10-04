@@ -1150,8 +1150,7 @@ private func advisorConsultationStatus(
 private func advisorConsultationDate(
     _ value: String
 ) -> String {
-    let formatter = ISO8601DateFormatter()
-    guard let date = formatter.date(from: value) else {
+    guard let date = AppDateParser.date(from: value) else {
         return String(value.prefix(16))
     }
 
