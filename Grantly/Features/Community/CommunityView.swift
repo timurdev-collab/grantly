@@ -940,6 +940,90 @@ struct AdvisorDetailView: View {
     }
 }
 
+private enum AdvisorLegalDocument: String, Identifiable {
+    case terms
+    case privacy
+    case refunds
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .terms:
+            return "Terms & Conditions"
+        case .privacy:
+            return "Privacy Policy"
+        case .refunds:
+            return "Cancellation & Refund Policy"
+        }
+    }
+
+    var bodyText: String {
+        switch self {
+        case .terms:
+            return """
+            Advisor services are provided by independent advisors through EduT. A consultation request does not charge you and does not guarantee a booking until payment and scheduling are confirmed.
+
+            Prices, duration and included support are shown before you submit a request. The 6-month guidance package includes weekly one-to-one check-ins for six months and does not renew automatically.
+
+            Advisors provide educational guidance and application support. EduT and its advisors do not guarantee admission, scholarships, visas, employment, test scores or any other outcome.
+
+            You must provide accurate contact and scheduling information and use the service lawfully and respectfully. You may not misuse advisor contact details, recordings or materials.
+
+            Any non-waivable rights available to you under applicable consumer law continue to apply. Material changes to these terms will require a new acceptance before a future paid request.
+            """
+        case .privacy:
+            return """
+            EduT uses your account information, selected service, email address, WhatsApp number, preferred time, topic and notes to coordinate the consultation.
+
+            Your direct contact details stay hidden from the selected advisor until payment is recorded by EduT. EduT may retain booking, payment-status and consent records for customer support, fraud prevention, legal compliance and dispute handling.
+
+            Only information reasonably necessary to provide the requested service should be shared. Do not place passwords, financial account details or other unnecessary sensitive information in consultation notes.
+
+            You may exercise privacy rights available under applicable law. EduT will not treat acceptance of consultation terms as consent to unrelated marketing.
+            """
+        case .refunds:
+            return """
+            Sending a consultation request does not charge you. Payment instructions are provided separately after the request is reviewed.
+
+            If EduT or the advisor cannot provide a confirmed paid service, any payment collected for that service will be refunded.
+
+            For scheduled one-to-one sessions, cancellation or rescheduling requests should be made as early as possible. Eligibility for a refund can depend on how close the request is to the confirmed session time and whether the service has already started.
+
+            For multi-session packages, any legally required cancellation or withdrawal rights remain available. Services already delivered may affect the refundable amount where permitted by law.
+
+            Before payment, EduT will show or provide any service-specific cancellation terms that apply. Mandatory consumer rights in your jurisdiction override any conflicting policy term.
+            """
+        }
+    }
+}
+
+private struct AdvisorLegalDocumentView: View {
+    @Environment(\.dismiss) private var dismiss
+    let document: AdvisorLegalDocument
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                Text(document.bodyText)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.ink)
+                    .lineSpacing(4)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+            }
+            .background(Theme.pageBackground)
+            .navigationTitle(document.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+    }
+}
+
 struct AdvisorConsultationBookingView: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -954,10 +1038,18 @@ struct AdvisorConsultationBookingView: View {
     @State private var topic = ""
     @State private var notes = ""
     @State private var consent = false
+    @State private var legalAcknowledgement = false
+    @State private var termsAcceptanceID: UUID?
+    @State private var legalDocument: AdvisorLegalDocument?
+    @State private var acceptingTerms = false
     @State private var loading = true
     @State private var submitting = false
     @State private var submitted = false
     @State private var errorMessage: String?
+
+    private let termsVersion = "2026-10-04.v1"
+    private let privacyVersion = "2026-10-04.v1"
+    private let refundPolicyVersion = "2026-10-04.v1"
 
     private var selectedService: AdvisorService? {
         services.first { $0.id == selectedServiceID }
@@ -965,6 +1057,7 @@ struct AdvisorConsultationBookingView: View {
 
     private var canSubmit: Bool {
         selectedService != nil &&
+        termsAcceptanceID != nil &&
         contactEmail.contains("@") &&
         whatsappNumber.trimmingCharacters(
             in: .whitespacesAndNewlines
@@ -980,6 +1073,8 @@ struct AdvisorConsultationBookingView: View {
         Group {
             if submitted {
                 successView
+            } else if termsAcceptanceID == nil {
+                legalGateView
             } else {
                 formView
             }
@@ -988,6 +1083,201 @@ struct AdvisorConsultationBookingView: View {
         .navigationTitle("Advisor services")
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }
+        .sheet(item: $legalDocument) { document in
+            AdvisorLegalDocumentView(document: document)
+        }
+    }
+
+    private var legalGateView: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 7) {
+                    Label(
+                        "Before you choose a plan",
+                        systemImage: "checkmark.shield.fill"
+                    )
+                    .font(.title3.bold())
+                    .foregroundStyle(Theme.ink)
+
+                    Text(
+                        "Please review and accept the booking terms. This keeps pricing, privacy and cancellation rules clear before you select a service."
+                    )
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+                    .lineSpacing(3)
+                }
+
+                VStack(spacing: 0) {
+                    legalLink(.terms)
+                    Divider()
+                    legalLink(.privacy)
+                    Divider()
+                    legalLink(.refunds)
+                }
+                .padding(.horizontal, 14)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Label(
+                        "Important booking points",
+                        systemImage: "info.circle.fill"
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+
+                    legalPoint("Submitting a request does not charge you.")
+                    legalPoint("Prices are shown before you select and submit a plan.")
+                    legalPoint("Contact details remain hidden from the advisor until payment is recorded.")
+                    legalPoint("The 6-month package is a one-time purchase and does not auto-renew.")
+                    legalPoint("Admission, scholarship, visa or other outcomes are not guaranteed.")
+                }
+                .padding(14)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                Button {
+                    legalAcknowledgement.toggle()
+                } label: {
+                    HStack(alignment: .top, spacing: 11) {
+                        Image(
+                            systemName:
+                                legalAcknowledgement
+                                ? "checkmark.square.fill"
+                                : "square"
+                        )
+                        .font(.system(size: 22))
+                        .foregroundStyle(
+                            legalAcknowledgement
+                                ? Theme.accent
+                                : Theme.muted
+                        )
+
+                        Text(
+                            "I have read and agree to the Terms & Conditions and Cancellation & Refund Policy, and I acknowledge the Privacy Policy."
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Theme.ink)
+                        .multilineTextAlignment(.leading)
+
+                        Spacer(minLength: 0)
+                    }
+                }
+                .buttonStyle(.plain)
+
+                if let errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(Theme.danger)
+                }
+
+                Button {
+                    Task { await acceptTerms() }
+                } label: {
+                    HStack {
+                        Spacer()
+                        if acceptingTerms {
+                            ProgressView()
+                                .tint(Theme.onAccent)
+                        } else {
+                            Text("Accept & continue to plans")
+                                .font(.subheadline.weight(.semibold))
+                        }
+                        Spacer()
+                    }
+                    .frame(height: 50)
+                    .foregroundStyle(
+                        legalAcknowledgement
+                            ? Theme.onAccent
+                            : Theme.muted
+                    )
+                    .background(
+                        legalAcknowledgement
+                            ? Theme.orangeGradient
+                            : LinearGradient(
+                                colors: [
+                                    Theme.surfaceRaised,
+                                    Theme.surfaceRaised
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                }
+                .buttonStyle(.plain)
+                .disabled(!legalAcknowledgement || acceptingTerms)
+
+                Text(
+                    "Terms version: \(termsVersion). Your acceptance time and policy versions are recorded for the booking process."
+                )
+                .font(.caption2)
+                .foregroundStyle(Theme.muted)
+            }
+            .padding()
+            .padding(.bottom, 28)
+        }
+    }
+
+    private func legalLink(
+        _ document: AdvisorLegalDocument
+    ) -> some View {
+        Button {
+            legalDocument = document
+        } label: {
+            HStack {
+                Text(document.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+
+                Spacer()
+
+                Text("Read")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+
+                Image(systemName: "chevron.right")
+                    .font(.caption.bold())
+                    .foregroundStyle(Theme.muted)
+            }
+            .padding(.vertical, 14)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func legalPoint(_ text: String) -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.caption)
+                .foregroundStyle(Theme.accent)
+                .padding(.top, 2)
+
+            Text(text)
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+        }
+    }
+
+    @MainActor
+    private func acceptTerms() async {
+        guard legalAcknowledgement, !acceptingTerms else { return }
+
+        acceptingTerms = true
+        defer { acceptingTerms = false }
+
+        do {
+            termsAcceptanceID =
+                try await DataService.acceptAdvisorBookingTerms(
+                    advisorId: advisor.id,
+                    termsVersion: termsVersion,
+                    privacyVersion: privacyVersion,
+                    refundPolicyVersion: refundPolicyVersion
+                )
+            selectedServiceID = nil
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     private var formView: some View {
@@ -1110,6 +1400,43 @@ struct AdvisorConsultationBookingView: View {
                 .padding(16)
                 .background(Theme.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                if let service = selectedService {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Review before submitting")
+                            .font(.headline.bold())
+                            .foregroundStyle(Theme.ink)
+
+                        HStack {
+                            Text(service.title)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.ink)
+
+                            Spacer()
+
+                            Text(priceText(service))
+                                .font(.subheadline.bold())
+                                .foregroundStyle(Theme.accent)
+                        }
+
+                        Text(
+                            service.serviceType == "six_month_package"
+                                ? "One-time purchase · weekly check-ins for 6 months · no automatic renewal"
+                                : "\(service.durationMinutes)-minute one-to-one live session"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+
+                        Text(
+                            "Your accepted Terms, Privacy Policy and Cancellation & Refund Policy apply to this request."
+                        )
+                        .font(.caption2)
+                        .foregroundStyle(Theme.muted)
+                    }
+                    .padding(14)
+                    .background(Theme.surfaceRaised)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
 
                 Toggle(isOn: $consent) {
                     Text(
@@ -1359,9 +1686,6 @@ struct AdvisorConsultationBookingView: View {
             }
 
             services = try await rows
-            if selectedServiceID == nil {
-                selectedServiceID = services.first?.id
-            }
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
@@ -1396,7 +1720,11 @@ struct AdvisorConsultationBookingView: View {
                 notes: notes.trimmingCharacters(
                     in: .whitespacesAndNewlines
                 ),
-                contactConsent: consent
+                contactConsent: consent,
+                termsAcceptanceId: termsAcceptanceID!,
+                termsVersion: termsVersion,
+                privacyVersion: privacyVersion,
+                refundPolicyVersion: refundPolicyVersion
             )
             submitted = true
             errorMessage = nil
