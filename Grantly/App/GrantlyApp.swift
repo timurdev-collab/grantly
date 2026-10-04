@@ -205,6 +205,13 @@ enum NotificationRegistration {
         }
     }
 
+    static func unregisterDeviceLocally() async {
+        await MainActor.run {
+            UIApplication.shared.unregisterForRemoteNotifications()
+        }
+        UserDefaults.standard.removeObject(forKey: deviceTokenKey)
+    }
+
     static func clearScheduledApplicationReminders() async {
         let center = UNUserNotificationCenter.current()
         let existing = await center.pendingNotificationRequests()
