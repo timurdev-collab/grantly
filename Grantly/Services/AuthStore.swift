@@ -139,6 +139,7 @@ final class AuthStore {
 
             _ = try? await supabase.auth.signOut()
             await NotificationRegistration.clearScheduledApplicationReminders()
+            await NotificationRegistration.unregisterDeviceLocally()
             UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
             needsPasswordReset = false
             userId = nil
@@ -161,6 +162,7 @@ final class AuthStore {
         do {
             try await supabase.auth.signOut()
             await NotificationRegistration.clearScheduledApplicationReminders()
+            await NotificationRegistration.unregisterDeviceLocally()
             UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
             needsPasswordReset = false
             userId = nil
