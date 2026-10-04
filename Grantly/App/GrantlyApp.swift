@@ -83,6 +83,20 @@ enum NotificationRegistration {
 
         let center = UNUserNotificationCenter.current()
 
+        let existing = await center.pendingNotificationRequests()
+        let staleIdentifiers = existing
+            .map(\.identifier)
+            .filter {
+                $0.hasPrefix("deadline-") ||
+                $0.hasPrefix("task-")
+            }
+
+        if !staleIdentifiers.isEmpty {
+            center.removePendingNotificationRequests(
+                withIdentifiers: staleIdentifiers
+            )
+        }
+
         for item in items {
             let deadlineText =
                 item.personalDeadline ??
@@ -188,6 +202,23 @@ enum NotificationRegistration {
 
                 try? await center.add(request)
             }
+        }
+    }
+
+    static func clearScheduledApplicationReminders() async {
+        let center = UNUserNotificationCenter.current()
+        let existing = await center.pendingNotificationRequests()
+        let identifiers = existing
+            .map(\.identifier)
+            .filter {
+                $0.hasPrefix("deadline-") ||
+                $0.hasPrefix("task-")
+            }
+
+        if !identifiers.isEmpty {
+            center.removePendingNotificationRequests(
+                withIdentifiers: identifiers
+            )
         }
     }
 
