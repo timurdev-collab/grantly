@@ -312,7 +312,7 @@ struct ScholarshipsView: View {
                 .font(.headline.bold())
                 .foregroundStyle(Theme.ink)
 
-                Text("\(totalCount) opportunities")
+                Text(L10n.format("%d opportunities", totalCount))
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
             }
