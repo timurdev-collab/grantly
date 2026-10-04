@@ -5,6 +5,7 @@ options:
     iOS: "17.0"
 configs:
   Debug: debug
+  Staging: debug
   ProductionPreview: debug
   Release: release
 settings:
@@ -57,9 +58,15 @@ targets:
       configs:
         Debug:
           CODE_SIGN_ENTITLEMENTS: Grantly/GrantlyDebug.entitlements
+          APP_ENVIRONMENT: production
+          SUPABASE_URL: https://bvcabjwriszghmizbwji.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_8zllTlQ9y95acFTsw0uljg_XZ4nuli2
+        Staging:
+          CODE_SIGN_ENTITLEMENTS: Grantly/GrantlyDebug.entitlements
           APP_ENVIRONMENT: staging
           SUPABASE_URL: https://cbzriyarlvpmtfbjgede.supabase.co
           SUPABASE_PUBLISHABLE_KEY: sb_publishable_7DtXndOsfZ5WmTZs0RWG8w_EIQ3xZSe
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG STAGING
         ProductionPreview:
           CODE_SIGN_ENTITLEMENTS: Grantly/GrantlyDebug.entitlements
           APP_ENVIRONMENT: production
@@ -120,5 +127,24 @@ schemes:
       config: ProductionPreview
     analyze:
       config: ProductionPreview
+    archive:
+      config: Release
+
+
+  "EduT Staging":
+    build:
+      targets:
+        EduT: all
+        EduTTests: [test]
+    run:
+      config: Staging
+    test:
+      config: Staging
+      targets:
+        - EduTTests
+    profile:
+      config: Staging
+    analyze:
+      config: Staging
     archive:
       config: Release
