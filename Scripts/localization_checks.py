@@ -24,7 +24,14 @@ VISIBLE_PATTERNS = [
     re.compile(r'Picker\(\s*"((?:[^"\\]|\\.)*)"'),
     re.compile(r'Toggle\(\s*"((?:[^"\\]|\\.)*)"'),
     re.compile(r'ContentUnavailableView\(\s*"((?:[^"\\]|\\.)*)"'),
+    re.compile(r'\.accessibilityLabel\(\s*(?:Text\()?\s*"((?:[^"\\]|\\.)*)"'),
+    re.compile(r'\.accessibilityHint\(\s*(?:Text\()?\s*"((?:[^"\\]|\\.)*)"'),
+    re.compile(r'\.confirmationDialog\(\s*"((?:[^"\\]|\\.)*)"'),
 ]
+
+L10N_CALL_RE = re.compile(
+    r'L10n\.(?:string|format)\(\s*"((?:[^"\\]|\\.)*)"'
+)
 
 def parse_locale(locale: str):
     path = RESOURCES / f"{locale}.lproj" / "Localizable.strings"
@@ -102,6 +109,11 @@ def main() -> int:
 
     for path in SOURCE.rglob("*.swift"):
         text = path.read_text(encoding="utf-8")
+
+        for match in L10N_CALL_RE.finditer(text):
+            value = match.group(1)
+            if value not in english:
+                missing_source_keys.add((str(path.relative_to(ROOT)), value))
 
         for pattern in VISIBLE_PATTERNS:
             for match in pattern.finditer(text):
