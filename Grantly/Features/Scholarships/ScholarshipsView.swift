@@ -756,10 +756,37 @@ private struct ExploreUniversityLogo: View {
         return String(source.prefix(2)).uppercased()
     }
 
+    private var fallbackIcon: some View {
+        ZStack(alignment: .bottomTrailing) {
+            Image(systemName: "building.columns.fill")
+                .font(.system(size: size * 0.40, weight: .semibold))
+                .foregroundStyle(Theme.accent)
+
+            Text(initials)
+                .font(.system(size: size * 0.16, weight: .bold))
+                .foregroundStyle(Theme.onAccent)
+                .frame(width: size * 0.34, height: size * 0.34)
+                .background(Theme.accent)
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Theme.surface, lineWidth: 1.5)
+                )
+                .offset(x: size * 0.05, y: size * 0.05)
+        }
+        .accessibilityLabel(university?.name ?? fallbackName)
+    }
+
     var body: some View {
         ZStack {
             Circle()
-                .fill(Theme.surfaceRaised)
+                .fill(
+                    LinearGradient(
+                        colors: [Theme.surfaceRaised, Theme.sage],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
 
             if let logoURL = university?.logoUrl,
                let url = URL(string: logoURL) {
@@ -771,25 +798,11 @@ private struct ExploreUniversityLogo: View {
                             .scaledToFit()
                             .padding(size * 0.15)
                     default:
-                        Text(initials)
-                            .font(
-                                .system(
-                                    size: size * 0.25,
-                                    weight: .bold
-                                )
-                            )
-                            .foregroundStyle(Theme.ink)
+                        fallbackIcon
                     }
                 }
             } else {
-                Text(initials)
-                    .font(
-                        .system(
-                            size: size * 0.25,
-                            weight: .bold
-                        )
-                    )
-                    .foregroundStyle(Theme.ink)
+                fallbackIcon
             }
         }
         .frame(width: size, height: size)
