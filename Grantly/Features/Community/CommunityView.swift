@@ -812,12 +812,12 @@ struct AdvisorDetailView: View {
 
                 Spacer(minLength: 4)
 
-                Text("40% OFF")
-                    .font(.system(size: 9, weight: .bold))
-                    .foregroundStyle(Theme.onAccent)
+                Text("Launch offers")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(Theme.accent)
                     .padding(.horizontal, 7)
                     .padding(.vertical, 4)
-                    .background(Theme.orangeGradient)
+                    .background(Theme.surfaceRaised)
                     .clipShape(Capsule())
             }
 
@@ -860,6 +860,12 @@ struct AdvisorDetailView: View {
                             Text(priceText(cents: service.priceCents, currency: service.currency))
                                 .font(.caption.weight(.bold))
                                 .foregroundStyle(Theme.accent)
+
+                            if service.discountPercent == 40 {
+                                Text("40% off")
+                                    .font(.system(size: 8, weight: .bold))
+                                    .foregroundStyle(Theme.accent)
+                            }
                         }
                     }
 
@@ -986,7 +992,7 @@ struct AdvisorConsultationBookingView: View {
             }
         }
         .background(Theme.pageBackground)
-        .navigationTitle("Live consultation")
+        .navigationTitle("Advisor services")
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }
     }
@@ -1000,7 +1006,7 @@ struct AdvisorConsultationBookingView: View {
                         .foregroundStyle(Theme.ink)
 
                     Text(
-                        "Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor."
+                        "Choose a consultation or longer-term support package. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor."
                     )
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
