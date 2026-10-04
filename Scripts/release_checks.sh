@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "Running Grantly release checks..."
+echo "Running EduT release checks..."
 
 if grep -R --line-number --exclude-dir=.git   "SUPABASE_SERVICE_ROLE_KEY" Grantly 2>/dev/null; then
   echo "Service-role credentials must never be shipped in the iOS app."
