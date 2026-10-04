@@ -762,115 +762,124 @@ struct AdvisorDetailView: View {
     }
 
     private var pricingSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Consultation plans")
-                    .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .center, spacing: 10) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Consultation plans")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
 
-                Text("Introductory pricing available on selected plans")
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    Text("Simple pricing · no hidden fees")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.muted)
+                }
+
+                Spacer()
+
+                Text("LAUNCH OFFER")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundStyle(Theme.onAccent)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 5)
+                    .background(Theme.orangeGradient)
+                    .clipShape(Capsule())
             }
 
             if advisorServices.isEmpty {
                 Text("Consultation pricing will appear here when available.")
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
-                    .padding(.vertical, 6)
+                    .padding(.vertical, 4)
             } else {
-                ForEach(Array(advisorServices.enumerated()), id: \.element.id) { index, service in
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack(alignment: .top, spacing: 10) {
-                            VStack(alignment: .leading, spacing: 4) {
+                VStack(spacing: 8) {
+                    ForEach(advisorServices) { service in
+                        HStack(alignment: .center, spacing: 10) {
+                            VStack(alignment: .leading, spacing: 3) {
                                 Text(L10n.string(service.title))
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundStyle(Theme.ink)
-                                    .fixedSize(horizontal: false, vertical: true)
+                                    .lineLimit(2)
 
-                                if service.serviceType == "six_month_package" {
-                                    Text("Weekly check-ins for 6 months")
-                                        .font(.caption)
-                                        .foregroundStyle(Theme.muted)
-                                } else {
-                                    Text(
-                                        L10n.format(
+                                Text(
+                                    service.serviceType == "six_month_package"
+                                        ? "Weekly check-ins · 6 months"
+                                        : L10n.format(
                                             "%d min live session",
                                             service.durationMinutes
                                         )
+                                )
+                                .font(.caption2)
+                                .foregroundStyle(Theme.muted)
+                            }
+
+                            Spacer(minLength: 8)
+
+                            VStack(alignment: .trailing, spacing: 2) {
+                                if let listPrice = service.listPriceCents,
+                                   listPrice > service.priceCents {
+                                    Text(
+                                        priceText(
+                                            cents: listPrice,
+                                            currency: service.currency
+                                        )
                                     )
-                                    .font(.caption)
+                                    .font(.caption2)
                                     .foregroundStyle(Theme.muted)
+                                    .strikethrough()
                                 }
-                            }
 
-                            Spacer(minLength: 12)
-
-                            if service.discountPercent == 40 {
-                                Text("40% OFF")
-                                    .font(.system(size: 10, weight: .bold))
-                                    .foregroundStyle(Theme.onAccent)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 5)
-                                    .background(Theme.orangeGradient)
-                                    .clipShape(Capsule())
-                            }
-                        }
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            if let listPrice = service.listPriceCents,
-                               listPrice > service.priceCents {
                                 Text(
                                     priceText(
-                                        cents: listPrice,
+                                        cents: service.priceCents,
                                         currency: service.currency
                                     )
                                 )
-                                .font(.caption)
-                                .foregroundStyle(Theme.muted)
-                                .strikethrough()
+                                .font(.subheadline.bold())
+                                .foregroundStyle(Theme.accent)
+
+                                if service.discountPercent == 40 {
+                                    Text("40% OFF")
+                                        .font(.system(size: 8, weight: .bold))
+                                        .foregroundStyle(Theme.accent)
+                                }
                             }
-
-                            Text(
-                                priceText(
-                                    cents: service.priceCents,
-                                    currency: service.currency
-                                )
-                            )
-                            .font(.title3.bold())
-                            .foregroundStyle(Theme.accent)
                         }
-
-                        if index < advisorServices.count - 1 {
-                            Divider()
-                                .padding(.top, 2)
-                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                        .background(Theme.surfaceRaised.opacity(0.7))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
-                    .padding(.vertical, 2)
                 }
             }
 
             NavigationLink {
                 AdvisorConsultationBookingView(advisor: advisor)
             } label: {
-                HStack {
-                    Text("View all plans")
+                HStack(spacing: 8) {
+                    Text("Choose a plan")
                         .font(.subheadline.weight(.semibold))
 
                     Spacer()
 
-                    Image(systemName: "chevron.right")
+                    Image(systemName: "arrow.right")
                         .font(.caption.bold())
                 }
-                .foregroundStyle(Theme.accent)
-                .padding(.top, 2)
+                .foregroundStyle(Theme.onAccent)
+                .padding(.horizontal, 14)
+                .frame(height: 42)
+                .background(Theme.orangeGradient)
+                .clipShape(RoundedRectangle(cornerRadius: 13))
             }
             .buttonStyle(.plain)
         }
-        .padding(16)
+        .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(Theme.accent.opacity(0.10))
+        )
     }
 
     private func priceText(cents: Int, currency: String) -> String {
