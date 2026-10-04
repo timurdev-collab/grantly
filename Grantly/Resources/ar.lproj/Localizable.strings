@@ -682,3 +682,15 @@
 "Opening chat…" = "جارٍ فتح المحادثة…";
 "Message advisor" = "مراسلة المستشار";
 "Start a private conversation in EduT" = "ابدأ محادثة خاصة داخل EduT";
+
+// Release localization coverage
+"Use at least 8 characters." = "استخدم 8 أحرف على الأقل.";
+"Password is too long." = "كلمة المرور طويلة جدًا.";
+"Advisor: %@" = "المستشار: %@";
+"%d of %d preparation steps" = "%d من %d خطوات التحضير";
+"%d saved" = "تم حفظ %d";
+"%d opportunities" = "%d فرصة";
+"Last checked %@" = "آخر تحقق %@";
+"Checked %@" = "تم التحقق %@";
+"Report %@" = "الإبلاغ عن %@";
+"%d visible community profiles" = "%d ملفات مجتمع ظاهرة";
