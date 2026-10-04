@@ -427,7 +427,8 @@ struct AdvisorDetailView: View {
                 header
                 introductionVideo
                 aboutSection
-                expertiseAndPricingSection
+                expertiseSection
+                pricingSection
                 linksSection
 
                 Button {
@@ -761,16 +762,6 @@ struct AdvisorDetailView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 
-    private var expertiseAndPricingSection: some View {
-        HStack(alignment: .top, spacing: 12) {
-            expertiseSection
-                .frame(maxWidth: .infinity, alignment: .top)
-
-            pricingSection
-                .frame(maxWidth: .infinity, alignment: .top)
-        }
-    }
-
     private var expertiseSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Expertise")
@@ -804,87 +795,113 @@ struct AdvisorDetailView: View {
     }
 
     private var pricingSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 6) {
-                Text("Prices")
+        VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Consultation plans")
                     .font(.headline.bold())
                     .foregroundStyle(Theme.ink)
 
-                Spacer(minLength: 4)
-
-                Text("Launch offers")
-                    .font(.system(size: 9, weight: .semibold))
-                    .foregroundStyle(Theme.accent)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 4)
-                    .background(Theme.surfaceRaised)
-                    .clipShape(Capsule())
+                Text("Introductory pricing available on selected plans")
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
             }
 
             if advisorServices.isEmpty {
-                Text("Consultation pricing")
+                Text("Consultation pricing will appear here when available.")
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
+                    .padding(.vertical, 6)
             } else {
-                ForEach(advisorServices) { service in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(L10n.string(service.title))
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.ink)
-                            .fixedSize(horizontal: false, vertical: true)
+                ForEach(Array(advisorServices.enumerated()), id: \.element.id) { index, service in
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(alignment: .top, spacing: 10) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(L10n.string(service.title))
+                                    .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(Theme.ink)
+                                    .fixedSize(horizontal: false, vertical: true)
 
-                        if service.serviceType == "six_month_package" {
-                            Text("Weekly check-ups · 6 months")
-                                .font(.caption2)
-                                .foregroundStyle(Theme.muted)
-                        } else {
-                            Text(
-                                L10n.format(
-                                    "%d min live session",
-                                    service.durationMinutes
-                                )
-                            )
-                            .font(.caption2)
-                            .foregroundStyle(Theme.muted)
-                        }
-
-                        HStack(spacing: 5) {
-                            if let listPrice = service.listPriceCents,
-                               listPrice > service.priceCents {
-                                Text(priceText(cents: listPrice, currency: service.currency))
-                                    .font(.caption2)
+                                if service.serviceType == "six_month_package" {
+                                    Text("Weekly check-ins for 6 months")
+                                        .font(.caption)
+                                        .foregroundStyle(Theme.muted)
+                                } else {
+                                    Text(
+                                        L10n.format(
+                                            "%d min live session",
+                                            service.durationMinutes
+                                        )
+                                    )
+                                    .font(.caption)
                                     .foregroundStyle(Theme.muted)
-                                    .strikethrough()
+                                }
                             }
 
-                            Text(priceText(cents: service.priceCents, currency: service.currency))
-                                .font(.caption.weight(.bold))
-                                .foregroundStyle(Theme.accent)
+                            Spacer(minLength: 12)
 
                             if service.discountPercent == 40 {
-                                Text("40% off")
-                                    .font(.system(size: 8, weight: .bold))
-                                    .foregroundStyle(Theme.accent)
+                                Text("40% OFF")
+                                    .font(.system(size: 10, weight: .bold))
+                                    .foregroundStyle(Theme.onAccent)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 5)
+                                    .background(Theme.orangeGradient)
+                                    .clipShape(Capsule())
                             }
                         }
-                    }
 
-                    if service.id != advisorServices.last?.id {
-                        Divider()
+                        VStack(alignment: .leading, spacing: 2) {
+                            if let listPrice = service.listPriceCents,
+                               listPrice > service.priceCents {
+                                Text(
+                                    priceText(
+                                        cents: listPrice,
+                                        currency: service.currency
+                                    )
+                                )
+                                .font(.caption)
+                                .foregroundStyle(Theme.muted)
+                                .strikethrough()
+                            }
+
+                            Text(
+                                priceText(
+                                    cents: service.priceCents,
+                                    currency: service.currency
+                                )
+                            )
+                            .font(.title3.bold())
+                            .foregroundStyle(Theme.accent)
+                        }
+
+                        if index < advisorServices.count - 1 {
+                            Divider()
+                                .padding(.top, 2)
+                        }
                     }
+                    .padding(.vertical, 2)
                 }
             }
 
             NavigationLink {
                 AdvisorConsultationBookingView(advisor: advisor)
             } label: {
-                Text("View plans")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.accent)
+                HStack {
+                    Text("View all plans")
+                        .font(.subheadline.weight(.semibold))
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.caption.bold())
+                }
+                .foregroundStyle(Theme.accent)
+                .padding(.top, 2)
             }
             .buttonStyle(.plain)
         }
         .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 20))
     }
@@ -1006,7 +1023,7 @@ struct AdvisorConsultationBookingView: View {
                         .foregroundStyle(Theme.ink)
 
                     Text(
-                        "Choose a consultation or longer-term support package. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor."
+                        "Choose the support that fits you best. Introductory pricing is shown clearly before you send a request."
                     )
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
@@ -1014,7 +1031,7 @@ struct AdvisorConsultationBookingView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Choose a service")
+                    Text("Choose a plan")
                         .font(.headline.bold())
                         .foregroundStyle(Theme.ink)
 
@@ -1245,42 +1262,55 @@ struct AdvisorConsultationBookingView: View {
     ) -> some View {
         let selected = selectedServiceID == service.id
 
-        return HStack(spacing: 12) {
-            Image(
-                systemName:
-                    selected
-                    ? "checkmark.circle.fill"
-                    : "circle"
-            )
-            .font(.system(size: 20))
-            .foregroundStyle(
-                selected ? Theme.accent : Theme.muted
-            )
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(
+                    systemName:
+                        selected
+                        ? "checkmark.circle.fill"
+                        : "circle"
+                )
+                .font(.system(size: 21))
+                .foregroundStyle(
+                    selected ? Theme.accent : Theme.muted
+                )
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text(L10n.string(service.title))
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L10n.string(service.title))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.ink)
+                        .fixedSize(horizontal: false, vertical: true)
 
-                if service.serviceType == "six_month_package" {
-                    Text("Weekly check-ups for 6 months")
+                    if service.serviceType == "six_month_package" {
+                        Text("Weekly check-ins for 6 months")
+                            .font(.caption)
+                            .foregroundStyle(Theme.muted)
+                    } else {
+                        Text(
+                            L10n.format(
+                                "%d min live session",
+                                service.durationMinutes
+                            )
+                        )
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
-                } else {
-                    Text(
-                        L10n.format(
-                            "%d min live session",
-                            service.durationMinutes
-                        )
-                    )
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    }
+                }
+
+                Spacer(minLength: 8)
+
+                if service.discountPercent == 40 {
+                    Text("40% OFF")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(Theme.onAccent)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 5)
+                        .background(Theme.orangeGradient)
+                        .clipShape(Capsule())
                 }
             }
 
-            Spacer()
-
-            VStack(alignment: .trailing, spacing: 3) {
+            VStack(alignment: .leading, spacing: 2) {
                 if let listPrice = service.listPriceCents,
                    listPrice > service.priceCents {
                     Text(
@@ -1292,16 +1322,13 @@ struct AdvisorConsultationBookingView: View {
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
                     .strikethrough()
-
-                    Text("40% off")
-                        .font(.system(size: 9, weight: .bold))
-                        .foregroundStyle(Theme.accent)
                 }
 
                 Text(priceText(service))
-                    .font(.subheadline.bold())
+                    .font(.title3.bold())
                     .foregroundStyle(Theme.ink)
             }
+            .padding(.leading, 33)
         }
         .padding(14)
         .background(
@@ -1309,12 +1336,12 @@ struct AdvisorConsultationBookingView: View {
                 ? Theme.surfaceRaised
                 : Theme.surface
         )
-        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
-            RoundedRectangle(cornerRadius: 15)
+            RoundedRectangle(cornerRadius: 16)
                 .stroke(
                     selected
-                        ? Theme.accent.opacity(0.4)
+                        ? Theme.accent.opacity(0.45)
                         : Theme.ink.opacity(0.05)
                 )
         )
