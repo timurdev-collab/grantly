@@ -1968,6 +1968,19 @@ enum DataService {
             .execute()
     }
 
+    static func unregisterPushDevice(
+        token: String
+    ) async throws {
+        let userId = try await supabase.auth.session.user.id
+
+        try await supabase
+            .from("push_devices")
+            .delete()
+            .eq("token", value: token)
+            .eq("user_id", value: userId.uuidString)
+            .execute()
+    }
+
     static func communityProfiles() async throws -> [CommunityProfile] {
         try await supabase
             .from("community_profiles")
