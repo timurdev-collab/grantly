@@ -174,8 +174,8 @@ struct HomeView: View {
                         Image(
                             systemName:
                                 unreadNotifications > 0
-                                ? "heart.fill"
-                                : "heart"
+                                ? "bell.fill"
+                                : "bell"
                         )
                         .font(.system(size: 20, weight: .semibold))
                         .foregroundStyle(Theme.ink)
