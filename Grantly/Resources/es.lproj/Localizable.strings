@@ -682,3 +682,15 @@
 "Opening chat…" = "Abriendo chat…";
 "Message advisor" = "Enviar mensaje al asesor";
 "Start a private conversation in EduT" = "Inicia una conversación privada en EduT";
+
+// Release localization coverage
+"Use at least 8 characters." = "Usa al menos 8 caracteres.";
+"Password is too long." = "La contraseña es demasiado larga.";
+"Advisor: %@" = "Asesor: %@";
+"%d of %d preparation steps" = "%d de %d pasos de preparación";
+"%d saved" = "%d guardados";
+"%d opportunities" = "%d oportunidades";
+"Last checked %@" = "Última comprobación: %@";
+"Checked %@" = "Comprobado %@";
+"Report %@" = "Reportar %@";
+"%d visible community profiles" = "%d perfiles de la comunidad visibles";
