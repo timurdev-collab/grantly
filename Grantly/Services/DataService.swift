@@ -1090,7 +1090,7 @@ enum DataService {
                 .execute()
         }
 
-        try? await trackProductEvent(
+        _ = try? await trackProductEvent(
             saved ? "scholarship_save" : "scholarship_unsave",
             scholarshipId: scholarshipId
         )
@@ -1277,7 +1277,7 @@ enum DataService {
             )
             .execute()
 
-        try? await trackProductEvent(
+        _ = try? await trackProductEvent(
             "application_status_change",
             scholarshipId: scholarshipId,
             properties: ["status": status]
@@ -1673,7 +1673,7 @@ enum DataService {
             throw error
         }
 
-        try? await trackProductEvent(
+        _ = try? await trackProductEvent(
             "application_document_upload",
             scholarshipId: scholarshipId,
             properties: ["content_type": contentType]
