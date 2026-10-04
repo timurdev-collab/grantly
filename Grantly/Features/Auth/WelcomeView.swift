@@ -23,7 +23,11 @@ struct WelcomeView: View {
                 VStack(spacing: 0) {
                     Spacer(minLength: 34)
 
-                    EduTMonogram(size: 64)
+                    Image("EduTBrandIcon")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 72, height: 72)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
 
                     Text("EduT")
                         .font(.system(size: 36, weight: .bold))
@@ -82,13 +86,6 @@ struct WelcomeView: View {
                     }
                     .padding(.horizontal, 18)
                     .padding(.top, 22)
-
-                    HStack(spacing: 6) {
-                        Circle().fill(Theme.blue).frame(width: 7, height: 7)
-                        Circle().fill(Theme.ink.opacity(0.30)).frame(width: 6, height: 6)
-                        Circle().fill(Theme.ink.opacity(0.30)).frame(width: 6, height: 6)
-                    }
-                    .padding(.top, 10)
 
                     VStack(spacing: 12) {
                         Button("Get started") {
