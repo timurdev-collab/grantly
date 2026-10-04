@@ -93,6 +93,9 @@ struct ScholarshipsView: View {
                 )
                 .padding(.horizontal)
 
+                deadlineSoonQuickAction
+                    .padding(.horizontal)
+
                 studyLevelSelector
                     .padding(.horizontal)
 
@@ -205,6 +208,44 @@ struct ScholarshipsView: View {
         }
         .padding(.horizontal)
         .padding(.top, 10)
+    }
+
+    private var deadlineSoonQuickAction: some View {
+        HStack {
+            Button {
+                sort = "Deadline"
+            } label: {
+                Label(
+                    "Deadline soon",
+                    systemImage: "calendar.badge.clock"
+                )
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(
+                    sort == "Deadline"
+                        ? Theme.onAccent
+                        : Theme.ink
+                )
+                .padding(.horizontal, 13)
+                .frame(height: 38)
+                .background(
+                    sort == "Deadline"
+                        ? Theme.accent
+                        : Theme.surface
+                )
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(
+                            sort == "Deadline"
+                                ? Theme.accent.opacity(0)
+                                : Theme.ink.opacity(0.06)
+                        )
+                )
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
+        }
     }
 
     private var studyLevelSelector: some View {
