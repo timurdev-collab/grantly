@@ -178,7 +178,7 @@ struct MyScholarshipsView: View {
 
                 Spacer()
 
-                Text("\(items.count) saved")
+                Text(L10n.format("%d saved", items.count))
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.orangeSoft)
             }
