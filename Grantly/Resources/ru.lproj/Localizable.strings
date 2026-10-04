@@ -706,3 +706,7 @@
 "Simple pricing · no hidden fees" = "Понятная цена · без скрытых сборов";
 "Weekly check-ins for 6 months" = "Еженедельные встречи в течение 6 месяцев";
 "Your accepted Terms, Privacy Policy and Cancellation & Refund Policy apply to this request." = "К этому запросу применяются принятые вами Условия, Политика конфиденциальности и Политика отмены и возврата средств.";
+
+/* Advisor launch pricing */
+"Launch price" = "Стартовая цена";
+"LAUNCH PRICE" = "СТАРТОВАЯ ЦЕНА";
