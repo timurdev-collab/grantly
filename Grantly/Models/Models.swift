@@ -193,6 +193,8 @@ struct AdvisorService: Codable, Identifiable, Hashable {
     let serviceType: String
     let durationMinutes: Int
     let priceCents: Int
+    let listPriceCents: Int?
+    let discountPercent: Int?
     let currency: String
 
     enum CodingKeys: String, CodingKey {
@@ -201,6 +203,8 @@ struct AdvisorService: Codable, Identifiable, Hashable {
         case serviceType = "service_type"
         case durationMinutes = "duration_minutes"
         case priceCents = "price_cents"
+        case listPriceCents = "list_price_cents"
+        case discountPercent = "discount_percent"
     }
 }
 
