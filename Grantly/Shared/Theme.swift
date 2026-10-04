@@ -15,7 +15,7 @@ enum AppAppearance: String, CaseIterable, Identifiable {
 }
 
 enum Theme {
-    // Neutral-first palette: warm cream and white surfaces with forest green used as a focused accent.
+    // EduT palette: deep academic green + warm cream, with restrained gold and teal accents.
     private static func adaptive(
         light: UInt32,
         dark: (CGFloat, CGFloat, CGFloat),
@@ -42,40 +42,40 @@ enum Theme {
 
     // Core neutral surfaces
     static let navyDeep = adaptive(
-        light: 0xFBF8F1,
+        light: 0xF7F3E8,
         dark: (0.055, 0.071, 0.066)
     )
     static let navy = adaptive(
-        light: 0xF4EEE4,
+        light: 0xEFE8DA,
         dark: (0.075, 0.094, 0.086)
     )
     static let surface = adaptive(
-        light: 0xFFFFFF,
+        light: 0xFFFDF8,
         dark: (0.094, 0.114, 0.104)
     )
     static let surfaceRaised = adaptive(
-        light: 0xF2ECE2,
+        light: 0xF1EBDD,
         dark: (0.122, 0.145, 0.132)
     )
 
     // Typography
     static let ink = adaptive(
-        light: 0x24342E,
+        light: 0x1A1F1C,
         dark: (0.956, 0.941, 0.902)
     )
     static let muted = adaptive(
-        light: 0x6C756F,
+        light: 0x6F766F,
         dark: (0.956, 0.941, 0.902),
         darkAlpha: 0.68
     )
 
     // Brand accents
     static let accent = adaptive(
-        light: 0x244636,
+        light: 0x12372A,
         dark: (0.733, 0.824, 0.753)
     )
     static let accentSoft = adaptive(
-        light: 0x577261,
+        light: 0x2F6B4F,
         dark: (0.835, 0.875, 0.824)
     )
     static let onAccent = adaptive(
@@ -85,20 +85,28 @@ enum Theme {
 
     // Supporting tones
     static let green = adaptive(
-        light: 0x6B806F,
+        light: 0x2F6B4F,
         dark: (0.565, 0.714, 0.608)
     )
     static let sand = adaptive(
-        light: 0xC9AE7B,
+        light: 0xD79A36,
         dark: (0.765, 0.682, 0.514)
     )
     static let beige = adaptive(
-        light: 0xE8DDCD,
+        light: 0xE9E0D0,
         dark: (0.204, 0.220, 0.204)
     )
+    static let trustTeal = adaptive(
+        light: 0x2D7A6B,
+        dark: (0.40, 0.78, 0.68)
+    )
+    static let trustTealSoft = adaptive(
+        light: 0xE3F1EC,
+        dark: (0.12, 0.24, 0.21)
+    )
     static let danger = adaptive(
-        light: 0xB13A43,
-        dark: (1.0, 0.36, 0.40)
+        light: 0xC85A54,
+        dark: (1.0, 0.42, 0.42)
     )
 
     // Legacy aliases kept so the rest of the app inherits the refreshed palette.
@@ -110,7 +118,7 @@ enum Theme {
     )
     static let orange = sand
     static let orangeSoft = adaptive(
-        light: 0xA98955,
+        light: 0xB97C24,
         dark: (0.816, 0.719, 0.549)
     )
     static let white = ink
@@ -121,7 +129,7 @@ enum Theme {
     static let oxblood = danger
     static let forest = accent
     static let sage = adaptive(
-        light: 0xDDE6DF,
+        light: 0xDDEBE3,
         dark: (0.175, 0.220, 0.193)
     )
     static let mist = surfaceRaised
