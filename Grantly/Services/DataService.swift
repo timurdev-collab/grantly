@@ -1942,28 +1942,18 @@ enum DataService {
         token: String,
         environment: String
     ) async throws {
-        let userId = try await supabase.auth.session.user.id
-
-        struct Row: Encodable {
-            let user_id: UUID
-            let platform: String
-            let token: String
-            let environment: String
-            let updated_at: String
+        struct Params: Encodable {
+            let p_token: String
+            let p_environment: String
         }
 
         try await supabase
-            .from("push_devices")
-            .upsert(
-                Row(
-                    user_id: userId,
-                    platform: "ios",
-                    token: token,
-                    environment: environment,
-                    updated_at: ISO8601DateFormatter()
-                        .string(from: Date())
-                ),
-                onConflict: "token"
+            .rpc(
+                "register_push_device",
+                params: Params(
+                    p_token: token,
+                    p_environment: environment
+                )
             )
             .execute()
     }
