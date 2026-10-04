@@ -67,6 +67,25 @@ if ! grep -q "<key>aps-environment</key>" Grantly/Grantly.entitlements; then
   exit 1
 fi
 
+APP_ICON="Grantly/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
+if ! test -f "$APP_ICON"; then
+  echo "Production App Icon is missing."
+  exit 1
+fi
+
+ICON_WIDTH=$(sips -g pixelWidth "$APP_ICON" 2>/dev/null | awk '/pixelWidth/ {print $2}')
+ICON_HEIGHT=$(sips -g pixelHeight "$APP_ICON" 2>/dev/null | awk '/pixelHeight/ {print $2}')
+if [[ "$ICON_WIDTH" != "1024" || "$ICON_HEIGHT" != "1024" ]]; then
+  echo "Production App Icon must be exactly 1024x1024."
+  exit 1
+fi
+
+ICON_BYTES=$(stat -f%z "$APP_ICON")
+if [[ "$ICON_BYTES" -lt 50000 ]]; then
+  echo "Production App Icon is suspiciously small; replace the placeholder/broken asset."
+  exit 1
+fi
+
 python3 Scripts/localization_checks.py
 
 echo "Release checks passed."
