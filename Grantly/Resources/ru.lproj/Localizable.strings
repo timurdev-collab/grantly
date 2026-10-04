@@ -682,3 +682,15 @@
 "Opening chat…" = "Открываем чат…";
 "Message advisor" = "Написать консультанту";
 "Start a private conversation in EduT" = "Начните личный разговор в EduT";
+
+// Release localization coverage
+"Use at least 8 characters." = "Используйте не менее 8 символов.";
+"Password is too long." = "Пароль слишком длинный.";
+"Advisor: %@" = "Консультант: %@";
+"%d of %d preparation steps" = "%d из %d шагов подготовки";
+"%d saved" = "Сохранено: %d";
+"%d opportunities" = "Возможностей: %d";
+"Last checked %@" = "Последняя проверка: %@";
+"Checked %@" = "Проверено: %@";
+"Report %@" = "Пожаловаться на %@";
+"%d visible community profiles" = "Видимых профилей сообщества: %d";
