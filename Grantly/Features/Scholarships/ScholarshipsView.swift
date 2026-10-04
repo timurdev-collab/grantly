@@ -46,6 +46,20 @@ struct ScholarshipsView: View {
         scholarships.filter { $0.verificationStatus == "verified" }.count
     }
 
+    private var topVerifiedPicks: [Scholarship] {
+        Array(
+            scholarships
+                .filter { $0.verificationStatus == "verified" }
+                .prefix(3)
+        )
+    }
+
+    private var fullyFundedValue: String {
+        filterOptions.funding.first {
+            $0.lowercased().contains("fully")
+        } ?? "Fully funded"
+    }
+
     private var hasFilters: Bool {
         country != "All" ||
         degree != "All" ||
@@ -73,17 +87,30 @@ struct ScholarshipsView: View {
             LazyVStack(spacing: 18) {
                 exploreHeader
 
+                trustBanner
+                    .padding(.horizontal)
+
                 SearchField(
                     text: $query,
                     prompt: "Search scholarships, universities, countries..."
                 )
                 .padding(.horizontal)
 
+                quickDiscovery
+                    .padding(.horizontal)
+
                 studyLevelSelector
                     .padding(.horizontal)
 
                 filters
                     .padding(.horizontal)
+
+                if !loading &&
+                   query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+                   !hasFilters &&
+                   !topVerifiedPicks.isEmpty {
+                    topVerifiedSection
+                }
 
                 resultsHeader
 
@@ -165,13 +192,13 @@ struct ScholarshipsView: View {
     }
 
     private var exploreHeader: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: 14) {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Explore")
-                    .font(.system(size: 31, weight: .bold))
+                    .font(.system(size: 32, weight: .bold))
                     .foregroundStyle(Theme.ink)
 
-                Text("Trusted scholarships, one place")
+                Text("Find scholarships you can trust")
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
             }
@@ -183,7 +210,137 @@ struct ScholarshipsView: View {
             }
         }
         .padding(.horizontal)
-        .padding(.top, 8)
+        .padding(.top, 10)
+    }
+
+    private var trustBanner: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(Theme.trustTealSoft)
+                    .frame(width: 38, height: 38)
+
+                Image(systemName: "checkmark.shield.fill")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(Theme.trustTeal)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Verified official sources")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+
+                Text("Strongest verified opportunities are shown first")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.muted)
+            }
+
+            Spacer()
+
+            Image(systemName: "sparkles")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.sand)
+        }
+        .padding(.horizontal, 14)
+        .frame(minHeight: 64)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(Theme.trustTeal.opacity(0.13))
+        )
+    }
+
+    private var quickDiscovery: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                quickDiscoveryButton(
+                    title: "Best verified",
+                    icon: "checkmark.seal.fill",
+                    active: sort == "Verified first"
+                ) {
+                    sort = "Verified first"
+                }
+
+                quickDiscoveryButton(
+                    title: "Fully funded",
+                    icon: "banknote.fill",
+                    active: funding == fullyFundedValue
+                ) {
+                    funding = fullyFundedValue
+                }
+
+                quickDiscoveryButton(
+                    title: "Deadline soon",
+                    icon: "calendar.badge.clock",
+                    active: sort == "Deadline"
+                ) {
+                    sort = "Deadline"
+                }
+            }
+        }
+    }
+
+    private func quickDiscoveryButton(
+        title: String,
+        icon: String,
+        active: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: icon)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(active ? Theme.onAccent : Theme.ink)
+                .padding(.horizontal, 12)
+                .frame(height: 38)
+                .background(active ? Theme.accent : Theme.surface)
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(
+                            active
+                                ? Theme.accent.opacity(0)
+                                : Theme.ink.opacity(0.06)
+                        )
+                )
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var topVerifiedSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Top verified picks")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    Text("Official-source opportunities worth a closer look")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                }
+
+                Spacer()
+            }
+            .padding(.horizontal)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(topVerifiedPicks) { scholarship in
+                        NavigationLink {
+                            ScholarshipDetailView(
+                                scholarship: scholarship,
+                                match: nil
+                            )
+                        } label: {
+                            ExploreTopPickCard(scholarship: scholarship)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
     }
 
     private var studyLevelSelector: some View {
@@ -218,7 +375,7 @@ struct ScholarshipsView: View {
                             .frame(height: 38)
                             .background(
                                 selected
-                                    ? Theme.orange
+                                    ? Theme.accent
                                     : Theme.surfaceRaised
                             )
                             .clipShape(Capsule())
@@ -226,7 +383,7 @@ struct ScholarshipsView: View {
                                 Capsule()
                                     .stroke(
                                         selected
-                                            ? Theme.orangeSoft.opacity(0.35)
+                                            ? Theme.accentSoft.opacity(0.30)
                                             : Theme.ink.opacity(0.06)
                                     )
                             )
@@ -303,12 +460,12 @@ struct ScholarshipsView: View {
                 Text(
                     hasFilters || !query.isEmpty
                         ? "Search results"
-                        : "All scholarships"
+                        : "Scholarships for you"
                 )
                 .font(.headline.bold())
                 .foregroundStyle(Theme.ink)
 
-                Text("Verified and curated opportunities")
+                Text("Official-source opportunities, ranked by trust")
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
             }
@@ -316,11 +473,16 @@ struct ScholarshipsView: View {
             Spacer()
 
             Menu {
+                Button("Best verified") { sort = "Verified first" }
                 Button("Recommended") { sort = "Recommended" }
-                Button("Verified first") { sort = "Verified first" }
-                Button("Deadline") { sort = "Deadline" }
+                Button("Deadline soon") { sort = "Deadline" }
             } label: {
-                Label(sort, systemImage: "arrow.up.arrow.down")
+                Label(
+                    sort == "Verified first"
+                        ? "Best verified"
+                        : (sort == "Deadline" ? "Deadline soon" : sort),
+                    systemImage: "arrow.up.arrow.down"
+                )
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Theme.muted)
                     .padding(.horizontal, 11)
@@ -337,7 +499,7 @@ struct ScholarshipsView: View {
         VStack(spacing: 14) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 28, weight: .semibold))
-                .foregroundStyle(Theme.orangeSoft)
+                .foregroundStyle(Theme.sand)
                 .frame(width: 60, height: 60)
                 .background(Theme.surface)
                 .clipShape(Circle())
@@ -356,7 +518,7 @@ struct ScholarshipsView: View {
                     clearFilters()
                 }
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.orangeSoft)
+                .foregroundStyle(Theme.sand)
             }
         }
         .frame(maxWidth: .infinity)
@@ -375,7 +537,7 @@ struct ScholarshipsView: View {
                 .padding(.horizontal, 12)
                 .frame(height: 38)
                 .foregroundStyle(active ? .white : Theme.ink.opacity(0.72))
-                .background(active ? Theme.orange : Theme.surfaceRaised)
+                .background(active ? Theme.accent : Theme.surfaceRaised)
                 .clipShape(Capsule())
                 .overlay(
                     Capsule()
@@ -585,7 +747,7 @@ private struct ExploreTopPickCard: View {
 
                     Image(systemName: "arrow.up.right")
                         .font(.caption2.bold())
-                        .foregroundStyle(Theme.orangeSoft)
+                        .foregroundStyle(Theme.sand)
                 }
                 .font(.caption2)
                 .foregroundStyle(Theme.muted)
@@ -649,7 +811,7 @@ struct PremiumScholarshipCard: View {
                     Image(systemName: saved ? "bookmark.fill" : "bookmark")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(
-                            saved ? Theme.orangeSoft : Theme.muted
+                            saved ? Theme.sand : Theme.muted
                         )
                 }
 
@@ -664,8 +826,12 @@ struct PremiumScholarshipCard: View {
 
                 HStack(spacing: 6) {
                     if verified {
-                        Image(systemName: "checkmark.seal.fill")
-                            .foregroundStyle(Theme.blueSoft)
+                        Label(
+                            "Official source",
+                            systemImage: "checkmark.seal.fill"
+                        )
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(Theme.trustTeal)
                     }
 
                     Text(countryLabel)
@@ -678,7 +844,7 @@ struct PremiumScholarshipCard: View {
                             String(deadline.prefix(10)),
                             systemImage: "calendar"
                         )
-                        .foregroundStyle(Theme.orangeSoft)
+                        .foregroundStyle(Theme.sand)
                     }
                 }
                 .font(.caption2)
