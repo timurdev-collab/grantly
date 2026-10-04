@@ -46,14 +46,6 @@ struct ScholarshipsView: View {
         scholarships.filter { $0.verificationStatus == "verified" }.count
     }
 
-    private var topVerifiedPicks: [Scholarship] {
-        Array(
-            scholarships
-                .filter { $0.verificationStatus == "verified" }
-                .prefix(3)
-        )
-    }
-
     private var fullyFundedValue: String {
         filterOptions.funding.first {
             $0.lowercased().contains("fully")
@@ -101,13 +93,6 @@ struct ScholarshipsView: View {
 
                 filters
                     .padding(.horizontal)
-
-                if !loading &&
-                   query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-                   !hasFilters &&
-                   !topVerifiedPicks.isEmpty {
-                    topVerifiedSection
-                }
 
                 resultsHeader
 
@@ -245,42 +230,6 @@ struct ScholarshipsView: View {
             .buttonStyle(.plain)
 
             Spacer()
-        }
-    }
-
-    private var topVerifiedSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Top verified picks")
-                        .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
-
-                    Text("Official-source opportunities worth a closer look")
-                        .font(.caption)
-                        .foregroundStyle(Theme.muted)
-                }
-
-                Spacer()
-            }
-            .padding(.horizontal)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(topVerifiedPicks) { scholarship in
-                        NavigationLink {
-                            ScholarshipDetailView(
-                                scholarship: scholarship,
-                                match: nil
-                            )
-                        } label: {
-                            ExploreTopPickCard(scholarship: scholarship)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(.horizontal)
-            }
         }
     }
 
@@ -634,72 +583,6 @@ private struct ExploreSummary: View {
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .overlay(
             RoundedRectangle(cornerRadius: 14)
-                .stroke(Theme.ink.opacity(0.05))
-        )
-    }
-}
-
-private struct ExploreTopPickCard: View {
-    let scholarship: Scholarship
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ZStack(alignment: .topLeading) {
-                UniversityPhoto(
-                    seed: "top" + scholarship.provider + scholarship.title,
-                    remoteURL: scholarship.university?.campusImageUrl,
-                    height: 126
-                )
-
-                LinearGradient(
-                    colors: [Theme.navyDeep.opacity(0.10), Theme.navyDeep.opacity(0.64)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-
-                TrustSeal(
-                    verified: scholarship.verificationStatus == "verified"
-                )
-                .padding(10)
-            }
-
-            VStack(alignment: .leading, spacing: 7) {
-                FundingBadge(text: scholarship.fundingType)
-
-                Text(scholarship.title)
-                    .font(.subheadline.bold())
-                    .foregroundStyle(Theme.ink)
-                    .lineLimit(2)
-                    .frame(height: 38, alignment: .top)
-
-                Text(scholarship.provider)
-                    .font(.caption2)
-                    .foregroundStyle(Theme.muted)
-                    .lineLimit(1)
-
-                HStack {
-                    Label(
-                        scholarship.country,
-                        systemImage: "mappin.and.ellipse"
-                    )
-                    .lineLimit(1)
-
-                    Spacer()
-
-                    Image(systemName: "arrow.up.right")
-                        .font(.caption2.bold())
-                        .foregroundStyle(Theme.sand)
-                }
-                .font(.caption2)
-                .foregroundStyle(Theme.muted)
-            }
-            .padding(12)
-        }
-        .frame(width: 232)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 19))
-        .overlay(
-            RoundedRectangle(cornerRadius: 19)
                 .stroke(Theme.ink.opacity(0.05))
         )
     }
