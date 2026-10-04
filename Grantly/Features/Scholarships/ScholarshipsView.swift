@@ -19,7 +19,7 @@ struct ScholarshipsView: View {
     @State private var field = "All"
     @State private var funding = "All"
     @State private var source = "All"
-    @State private var sort = "Recommended"
+    @State private var sort = "Verified first"
 
     @State private var loading = true
     @State private var loadingMore = false
