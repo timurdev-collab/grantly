@@ -78,6 +78,14 @@ private struct PasswordResetView: View {
             }
             .navigationTitle("Reset Password")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        auth.cancelPasswordReset()
+                    }
+                    .disabled(busy)
+                }
+            }
         }
     }
 }
