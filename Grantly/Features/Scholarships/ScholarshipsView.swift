@@ -143,7 +143,7 @@ struct ScholarshipsView: View {
             await loadFilterOptions()
         }
         .task(id: searchKey) {
-            try? await Task.sleep(nanoseconds: 300_000_000)
+            _ = try? await Task.sleep(nanoseconds: 300_000_000)
 
             guard !Task.isCancelled else {
                 return
@@ -489,7 +489,7 @@ struct ScholarshipsView: View {
                     "result_count": String(page.totalCount)
                 ]
 
-                try? await DataService.trackProductEvent(
+                _ = try? await DataService.trackProductEvent(
                     page.totalCount == 0
                         ? "zero_result_search"
                         : "search",
