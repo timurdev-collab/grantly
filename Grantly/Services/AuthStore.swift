@@ -139,15 +139,16 @@ final class AuthStore {
     }
 
     func signOut() async {
+        errorMessage = nil
+
         do {
             try await supabase.auth.signOut()
+            UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
+            needsPasswordReset = false
+            userId = nil
         } catch {
             errorMessage = friendlyMessage(for: error)
         }
-
-        UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
-        needsPasswordReset = false
-        userId = nil
     }
 
     private func friendlyMessage(for error: Error) -> String {

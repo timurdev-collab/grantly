@@ -96,7 +96,7 @@ Deno.serve(async (req: Request) => {
       name:
         typeof user.user_metadata?.full_name === "string"
           ? user.user_metadata.full_name
-          : user.email ?? "Grantly user",
+          : user.email ?? "EduT user",
       ttl: "2h",
     },
   );

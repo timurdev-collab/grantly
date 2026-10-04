@@ -965,6 +965,55 @@ enum DataService {
             .value
     }
 
+    static func createScholarshipDraft(
+        slug: String,
+        title: String,
+        provider: String,
+        country: String,
+        region: String,
+        fundingType: String,
+        officialURL: String,
+        degreeLevels: [String],
+        fields: [String]
+    ) async throws {
+        struct Row: Encodable {
+            let slug: String
+            let title: String
+            let provider: String
+            let country: String
+            let region: String
+            let funding_type: String
+            let official_url: String
+            let status: String
+            let degree_levels: [String]
+            let fields: [String]
+            let eligible_nationalities: [String]
+            let verification_status: String
+            let link_status: String
+        }
+
+        _ = try await supabase
+            .from("scholarships")
+            .insert(
+                Row(
+                    slug: slug,
+                    title: title,
+                    provider: provider,
+                    country: country,
+                    region: region,
+                    funding_type: fundingType,
+                    official_url: officialURL,
+                    status: "draft",
+                    degree_levels: degreeLevels,
+                    fields: fields,
+                    eligible_nationalities: ["ALL"],
+                    verification_status: "needs_review",
+                    link_status: "unchecked"
+                )
+            )
+            .execute()
+    }
+
     static func currentProfile(userId: UUID) async throws -> StudentProfile {
         try await supabase
             .from("student_profiles")
@@ -1090,7 +1139,7 @@ enum DataService {
                 .execute()
         }
 
-        try? await trackProductEvent(
+        _ = try? await trackProductEvent(
             saved ? "scholarship_save" : "scholarship_unsave",
             scholarshipId: scholarshipId
         )
@@ -1277,7 +1326,7 @@ enum DataService {
             )
             .execute()
 
-        try? await trackProductEvent(
+        _ = try? await trackProductEvent(
             "application_status_change",
             scholarshipId: scholarshipId,
             properties: ["status": status]
@@ -1577,7 +1626,7 @@ enum DataService {
                 )
                 .execute()
         } catch {
-            try? await supabase.storage
+            _ = try? await supabase.storage
                 .from("university-case-documents")
                 .remove(paths: [path])
             throw error
@@ -1667,13 +1716,13 @@ enum DataService {
                 )
                 .execute()
         } catch {
-            try? await supabase.storage
+            _ = try? await supabase.storage
                 .from("application-documents")
                 .remove(paths: [path])
             throw error
         }
 
-        try? await trackProductEvent(
+        _ = try? await trackProductEvent(
             "application_document_upload",
             scholarshipId: scholarshipId,
             properties: ["content_type": contentType]
@@ -2297,7 +2346,7 @@ enum DataService {
         uploadProgress: @escaping @Sendable (Double) -> Void = { _ in }
     ) async throws {
         let userId = try await supabase.auth.session.user.id
-        var mediaURL: String?
+        let mediaURL: String? = nil
         var mediaPath: String?
 
         if let mediaType,
@@ -2370,7 +2419,7 @@ enum DataService {
                 .execute()
         } catch {
             if let mediaPath {
-                try? await supabase.storage
+                _ = try? await supabase.storage
                     .from("social-media")
                     .remove(paths: [mediaPath])
             }
@@ -2626,7 +2675,7 @@ enum DataService {
             .execute()
 
         if let mediaPath = post.mediaPath {
-            try? await supabase.storage
+            _ = try? await supabase.storage
                 .from("social-media")
                 .remove(paths: [mediaPath])
         }

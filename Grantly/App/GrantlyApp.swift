@@ -83,6 +83,20 @@ enum NotificationRegistration {
 
         let center = UNUserNotificationCenter.current()
 
+        let existing = await center.pendingNotificationRequests()
+        let staleIdentifiers = existing
+            .map(\.identifier)
+            .filter {
+                $0.hasPrefix("deadline-") ||
+                $0.hasPrefix("task-")
+            }
+
+        if !staleIdentifiers.isEmpty {
+            center.removePendingNotificationRequests(
+                withIdentifiers: staleIdentifiers
+            )
+        }
+
         for item in items {
             let deadlineText =
                 item.personalDeadline ??
@@ -155,9 +169,7 @@ enum NotificationRegistration {
 
             for task in tasks where task.completedAt == nil {
                 guard let dueAt = task.dueAt,
-                      let dueDate = ISO8601DateFormatter().date(
-                        from: dueAt
-                      ),
+                      let dueDate = AppDateParser.date(from: dueAt),
                       dueDate > Date() else {
                     continue
                 }
@@ -203,7 +215,7 @@ enum NotificationRegistration {
             return date
         }
 
-        return ISO8601DateFormatter().date(from: value)
+        return AppDateParser.date(from: value)
     }
 }
 
