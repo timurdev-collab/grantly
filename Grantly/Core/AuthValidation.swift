@@ -73,11 +73,11 @@ enum AuthValidation {
 
     static func passwordIssue(_ password: String) -> String? {
         if password.count < 8 {
-            return "Use at least 8 characters."
+            return L10n.string("Use at least 8 characters.")
         }
 
         if password.count > 128 {
-            return "Password is too long."
+            return L10n.string("Password is too long.")
         }
 
         return nil
