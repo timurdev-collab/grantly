@@ -729,15 +729,15 @@ private func countryFlag(for countryName: String) -> String {
         "hong kong": "HK"
     ]
 
-    let code: String? = aliases[normalized] ?? Locale.isoRegionCodes.first {
+    let code: String? = aliases[normalized] ?? Locale.Region.isoRegions.first {
         guard let name = Locale(identifier: "en_US")
-            .localizedString(forRegionCode: $0)?
+            .localizedString(forRegionCode: $0.identifier)?
             .lowercased() else {
             return false
         }
 
         return name == normalized
-    }
+    }?.identifier
 
     guard let code, code.count == 2 else {
         return ""
