@@ -96,17 +96,17 @@ struct MessagesView: View {
     }
 
     private func listenRealtime() async {
-        let channel = await supabase.channel(
+        let channel = supabase.channel(
             "messages-list-\(UUID().uuidString)"
         )
 
-        let changes = await channel.postgresChange(
+        let changes = channel.postgresChange(
             AnyAction.self,
             schema: "public",
             table: "messages"
         )
 
-        await channel.subscribe()
+        try? await channel.subscribeWithError()
 
         defer {
             Task {
@@ -572,19 +572,19 @@ struct ChatView: View {
     }
 
     private func listenRealtime() async {
-        let channel = await supabase.channel(
+        let channel = supabase.channel(
             "chat-\(conversationId.uuidString)-" +
             UUID().uuidString
         )
 
-        let changes = await channel.postgresChange(
+        let changes = channel.postgresChange(
             AnyAction.self,
             schema: "public",
             table: "messages",
             filter: .eq("conversation_id", value: conversationId.uuidString)
         )
 
-        await channel.subscribe()
+        try? await channel.subscribeWithError()
 
         defer {
             Task {
