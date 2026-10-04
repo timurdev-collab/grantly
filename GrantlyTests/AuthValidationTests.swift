@@ -26,6 +26,27 @@ final class AuthValidationTests: XCTestCase {
         XCTAssertFalse(
             AuthValidation.isValidEmail("user @example.com")
         )
+        XCTAssertFalse(
+            AuthValidation.isValidEmail("a@b@c.com")
+        )
+        XCTAssertFalse(
+            AuthValidation.isValidEmail(".user@example.com")
+        )
+        XCTAssertFalse(
+            AuthValidation.isValidEmail("user.@example.com")
+        )
+        XCTAssertFalse(
+            AuthValidation.isValidEmail("user..name@example.com")
+        )
+        XCTAssertFalse(
+            AuthValidation.isValidEmail("user@example..com")
+        )
+        XCTAssertFalse(
+            AuthValidation.isValidEmail("user@-example.com")
+        )
+        XCTAssertFalse(
+            AuthValidation.isValidEmail("user@example-.com")
+        )
     }
 
     func testPasswordLengthValidation() {
