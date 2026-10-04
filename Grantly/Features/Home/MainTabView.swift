@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 private enum MainTab: Hashable {
     case home
@@ -175,12 +176,26 @@ private struct StudentMainTabs: View {
                 AdvisorsView()
             }
             .tabItem {
-                Label(
-                    "Advisors",
-                    systemImage: selection == .advisors
-                        ? "person.2.fill"
-                        : "person.2"
-                )
+                Label {
+                    Text("Advisors")
+                } icon: {
+                    Image(
+                        uiImage: UIImage(
+                            systemName: selection == .advisors
+                                ? "person.2.fill"
+                                : "person.2"
+                        )!
+                        .withTintColor(
+                            UIColor(
+                                red: 0.20,
+                                green: 0.47,
+                                blue: 0.96,
+                                alpha: 1
+                            ),
+                            renderingMode: .alwaysOriginal
+                        )
+                    )
+                }
             }
             .tag(MainTab.advisors)
 
