@@ -706,3 +706,7 @@
 "Simple pricing · no hidden fees" = "Precios claros · sin cargos ocultos";
 "Weekly check-ins for 6 months" = "Seguimiento semanal durante 6 meses";
 "Your accepted Terms, Privacy Policy and Cancellation & Refund Policy apply to this request." = "Los Términos, la Política de Privacidad y la Política de Cancelación y Reembolso que aceptaste se aplican a esta solicitud.";
+
+/* Advisor launch pricing */
+"Launch price" = "Precio de lanzamiento";
+"LAUNCH PRICE" = "PRECIO DE LANZAMIENTO";
