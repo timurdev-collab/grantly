@@ -1024,6 +1024,14 @@ private struct SocialPickedVideo: Transferable {
     }
 }
 
+private final class SocialVideoExportSessionBox: @unchecked Sendable {
+    let exporter: AVAssetExportSession
+
+    init(_ exporter: AVAssetExportSession) {
+        self.exporter = exporter
+    }
+}
+
 private enum SocialVideoCompressor {
     static func compress(inputURL: URL) async throws -> URL {
         let asset = AVURLAsset(url: inputURL)
@@ -1051,10 +1059,12 @@ private enum SocialVideoCompressor {
         exporter.outputFileType = .mp4
         exporter.shouldOptimizeForNetworkUse = true
 
+        let exportBox = SocialVideoExportSessionBox(exporter)
+
         return try await withCheckedThrowingContinuation {
             continuation in
-            exporter.exportAsynchronously {
-                switch exporter.status {
+            exportBox.exporter.exportAsynchronously {
+                switch exportBox.exporter.status {
                 case .completed:
                     continuation.resume(returning: outputURL)
                 case .cancelled:
@@ -1064,7 +1074,7 @@ private enum SocialVideoCompressor {
                 default:
                     continuation.resume(
                         throwing:
-                            exporter.error ??
+                            exportBox.exporter.error ??
                             SocialVideoCompressionError.failed
                     )
                 }
