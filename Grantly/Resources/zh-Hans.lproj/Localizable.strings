@@ -682,3 +682,15 @@
 "Opening chat…" = "正在打开聊天…";
 "Message advisor" = "联系顾问";
 "Start a private conversation in EduT" = "在 EduT 中开始私聊";
+
+// Release localization coverage
+"Use at least 8 characters." = "请至少使用 8 个字符。";
+"Password is too long." = "密码过长。";
+"Advisor: %@" = "顾问：%@";
+"%d of %d preparation steps" = "%d/%d 个准备步骤";
+"%d saved" = "已保存 %d 个";
+"%d opportunities" = "%d 个机会";
+"Last checked %@" = "上次检查 %@";
+"Checked %@" = "已检查 %@";
+"Report %@" = "举报 %@";
+"%d visible community profiles" = "%d 个可见社区资料";
