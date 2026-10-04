@@ -36,6 +36,18 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build
 
+      - name: Build Release configuration
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project EduT.xcodeproj \
+            -scheme EduT \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
       - name: Run unit tests
         run: |
           set -o pipefail
