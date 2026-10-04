@@ -1090,7 +1090,7 @@ enum DataService {
                 .execute()
         }
 
-        try? await trackProductEvent(
+        _ = try? await trackProductEvent(
             saved ? "scholarship_save" : "scholarship_unsave",
             scholarshipId: scholarshipId
         )
@@ -1277,7 +1277,7 @@ enum DataService {
             )
             .execute()
 
-        try? await trackProductEvent(
+        _ = try? await trackProductEvent(
             "application_status_change",
             scholarshipId: scholarshipId,
             properties: ["status": status]
@@ -1577,7 +1577,7 @@ enum DataService {
                 )
                 .execute()
         } catch {
-            try? await supabase.storage
+            _ = try? await supabase.storage
                 .from("university-case-documents")
                 .remove(paths: [path])
             throw error
@@ -1667,13 +1667,13 @@ enum DataService {
                 )
                 .execute()
         } catch {
-            try? await supabase.storage
+            _ = try? await supabase.storage
                 .from("application-documents")
                 .remove(paths: [path])
             throw error
         }
 
-        try? await trackProductEvent(
+        _ = try? await trackProductEvent(
             "application_document_upload",
             scholarshipId: scholarshipId,
             properties: ["content_type": contentType]
@@ -2297,7 +2297,7 @@ enum DataService {
         uploadProgress: @escaping @Sendable (Double) -> Void = { _ in }
     ) async throws {
         let userId = try await supabase.auth.session.user.id
-        var mediaURL: String?
+        let mediaURL: String? = nil
         var mediaPath: String?
 
         if let mediaType,
@@ -2370,7 +2370,7 @@ enum DataService {
                 .execute()
         } catch {
             if let mediaPath {
-                try? await supabase.storage
+                _ = try? await supabase.storage
                     .from("social-media")
                     .remove(paths: [mediaPath])
             }
@@ -2626,7 +2626,7 @@ enum DataService {
             .execute()
 
         if let mediaPath = post.mediaPath {
-            try? await supabase.storage
+            _ = try? await supabase.storage
                 .from("social-media")
                 .remove(paths: [mediaPath])
         }
