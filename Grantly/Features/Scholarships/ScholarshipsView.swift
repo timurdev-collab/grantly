@@ -248,6 +248,42 @@ struct ScholarshipsView: View {
         }
     }
 
+    private var topVerifiedSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Top verified picks")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    Text("Official-source opportunities worth a closer look")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                }
+
+                Spacer()
+            }
+            .padding(.horizontal)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(topVerifiedPicks) { scholarship in
+                        NavigationLink {
+                            ScholarshipDetailView(
+                                scholarship: scholarship,
+                                match: nil
+                            )
+                        } label: {
+                            ExploreTopPickCard(scholarship: scholarship)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal)
+            }
+        }
+    }
+
     private var studyLevelSelector: some View {
         VStack(alignment: .leading, spacing: 9) {
             Text("Explore by study level")
