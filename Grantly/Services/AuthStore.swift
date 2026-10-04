@@ -61,11 +61,16 @@ final class AuthStore {
     func signUp(email: String, password: String) async -> Bool {
         errorMessage = nil
 
+        guard let redirectURL = URL(string: "grantly://login-callback") else {
+            errorMessage = L10n.string("Something went wrong. Please try again.")
+            return false
+        }
+
         do {
             _ = try await supabase.auth.signUp(
                 email: email,
                 password: password,
-                redirectTo: URL(string: "grantly://login-callback")!
+                redirectTo: redirectURL
             )
             return true
         } catch {
@@ -77,10 +82,15 @@ final class AuthStore {
     func requestPasswordReset(email: String) async -> Bool {
         errorMessage = nil
 
+        guard let redirectURL = URL(string: "grantly://login-callback") else {
+            errorMessage = L10n.string("Something went wrong. Please try again.")
+            return false
+        }
+
         do {
             try await supabase.auth.resetPasswordForEmail(
                 email,
-                redirectTo: URL(string: "grantly://login-callback")!
+                redirectTo: redirectURL
             )
             UserDefaults.standard.set(true, forKey: recoveryFlagKey)
             return true
@@ -127,7 +137,8 @@ final class AuthStore {
                 return false
             }
 
-            try? await supabase.auth.signOut()
+            _ = try? await supabase.auth.signOut()
+            await NotificationRegistration.clearScheduledApplicationReminders()
             UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
             needsPasswordReset = false
             userId = nil
@@ -139,15 +150,23 @@ final class AuthStore {
     }
 
     func signOut() async {
+        errorMessage = nil
+
+        if let token = UserDefaults.standard.string(
+            forKey: NotificationRegistration.deviceTokenKey
+        ) {
+            _ = try? await DataService.unregisterPushDevice(token: token)
+        }
+
         do {
             try await supabase.auth.signOut()
+            await NotificationRegistration.clearScheduledApplicationReminders()
+            UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
+            needsPasswordReset = false
+            userId = nil
         } catch {
             errorMessage = friendlyMessage(for: error)
         }
-
-        UserDefaults.standard.removeObject(forKey: recoveryFlagKey)
-        needsPasswordReset = false
-        userId = nil
     }
 
     private func friendlyMessage(for error: Error) -> String {
