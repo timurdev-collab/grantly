@@ -1,7 +1,7 @@
 -- Introductory advisor pricing and six-month support package.
 -- Scholarship consultation remains at its regular USD 25 price.
--- Application strategy and mock interview receive a 40% launch discount.
--- The six-month guidance package launches at its regular USD 399 price.
+-- Application strategy, mock interview, and the six-month guidance package
+-- receive a 40% introductory launch discount. Scholarship consultation stays at USD 25.
 
 alter table public.advisor_services
   add column if not exists list_price_cents integer,
