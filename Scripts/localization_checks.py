@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail CI when Grantly localization coverage drifts."""
+"""Fail CI when EduT localization coverage drifts."""
 
 from pathlib import Path
 import re
