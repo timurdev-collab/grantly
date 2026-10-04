@@ -1600,7 +1600,8 @@ struct AdvisorCallPreparationView: View {
 private final class AdvisorCallController:
     NSObject,
     ObservableObject,
-    RoomDelegate
+    RoomDelegate,
+    @unchecked Sendable
 {
     @Published var localVideoTrack: VideoTrack?
     @Published var remoteVideoTrack: VideoTrack?
