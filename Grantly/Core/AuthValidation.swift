@@ -13,7 +13,8 @@ enum AuthValidation {
         guard
             !email.isEmpty,
             email.count <= 254,
-            let atIndex = email.lastIndex(of: "@"),
+            email.filter({ $0 == "@" }).count == 1,
+            let atIndex = email.firstIndex(of: "@"),
             atIndex != email.startIndex
         else {
             return false
@@ -24,20 +25,50 @@ enum AuthValidation {
             return false
         }
 
-        let local = email[..<atIndex]
-        let domain = email[domainStart...]
+        let local = String(email[..<atIndex])
+        let domain = String(email[domainStart...])
 
         guard
-            !local.isEmpty,
+            local.count <= 64,
+            !local.hasPrefix("."),
+            !local.hasSuffix("."),
+            !local.contains(".."),
             domain.contains("."),
             !domain.hasPrefix("."),
             !domain.hasSuffix("."),
-            !email.contains(" ")
+            !domain.contains(".."),
+            !email.contains(where: { $0.isWhitespace })
         else {
             return false
         }
 
-        return true
+        let labels = domain.split(
+            separator: ".",
+            omittingEmptySubsequences: false
+        )
+
+        guard
+            labels.count >= 2,
+            labels.allSatisfy({ label in
+                !label.isEmpty &&
+                label.count <= 63 &&
+                label.first != "-" &&
+                label.last != "-" &&
+                label.allSatisfy { character in
+                    character.isLetter ||
+                    character.isNumber ||
+                    character == "-"
+                }
+            })
+        else {
+            return false
+        }
+
+        let localPattern = "^[A-Za-z0-9.!#$%&'*+/=?^_{|}~-]+$"
+        return local.range(
+            of: localPattern,
+            options: .regularExpression
+        ) != nil
     }
 
     static func passwordIssue(_ password: String) -> String? {
