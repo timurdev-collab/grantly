@@ -25,12 +25,13 @@ jobs:
       - name: Resolve Swift packages
         run: xcodebuild -resolvePackageDependencies -project EduT.xcodeproj -scheme EduT
 
-      - name: Build
+      - name: Build Release
         run: |
           set -o pipefail
           xcodebuild \
             -project EduT.xcodeproj \
             -scheme EduT \
+            -configuration Release \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
