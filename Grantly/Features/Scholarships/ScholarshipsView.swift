@@ -171,13 +171,9 @@ struct ScholarshipsView: View {
                     .font(.system(size: 31, weight: .bold))
                     .foregroundStyle(Theme.ink)
 
-                Text(
-                    totalCount > 0
-                        ? "\(totalCount) trusted opportunities"
-                        : "Trusted scholarships, one place"
-                )
-                .font(.subheadline)
-                .foregroundStyle(Theme.muted)
+                Text("Trusted scholarships, one place")
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
             }
 
             Spacer()
@@ -312,7 +308,7 @@ struct ScholarshipsView: View {
                 .font(.headline.bold())
                 .foregroundStyle(Theme.ink)
 
-                Text("\(totalCount) opportunities")
+                Text("Verified and curated opportunities")
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
             }
