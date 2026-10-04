@@ -364,6 +364,54 @@ enum DataService {
             .value
     }
 
+    static func acceptAdvisorBookingTerms(
+        advisorId: UUID,
+        termsVersion: String,
+        privacyVersion: String,
+        refundPolicyVersion: String
+    ) async throws -> UUID {
+        struct Params: Encodable {
+            let p_advisor_id: UUID
+            let p_terms_version: String
+            let p_privacy_version: String
+            let p_refund_policy_version: String
+        }
+
+        struct AcceptanceRow: Decodable {
+            let acceptanceId: UUID
+
+            enum CodingKeys: String, CodingKey {
+                case acceptanceId = "acceptance_id"
+            }
+        }
+
+        let rows: [AcceptanceRow] = try await supabase
+            .rpc(
+                "accept_advisor_booking_terms",
+                params: Params(
+                    p_advisor_id: advisorId,
+                    p_terms_version: termsVersion,
+                    p_privacy_version: privacyVersion,
+                    p_refund_policy_version: refundPolicyVersion
+                )
+            )
+            .execute()
+            .value
+
+        guard let id = rows.first?.acceptanceId else {
+            throw NSError(
+                domain: "EduT.AdvisorTerms",
+                code: 1,
+                userInfo: [
+                    NSLocalizedDescriptionKey:
+                        "Could not record your terms acceptance. Please try again."
+                ]
+            )
+        }
+
+        return id
+    }
+
     static func submitAdvisorConsultationRequest(
         advisorId: UUID,
         serviceId: UUID,
@@ -373,7 +421,11 @@ enum DataService {
         timezone: String,
         topic: String,
         notes: String,
-        contactConsent: Bool
+        contactConsent: Bool,
+        termsAcceptanceId: UUID,
+        termsVersion: String,
+        privacyVersion: String,
+        refundPolicyVersion: String
     ) async throws {
         struct Params: Encodable {
             let p_advisor_id: UUID
@@ -385,6 +437,10 @@ enum DataService {
             let p_topic: String
             let p_notes: String
             let p_contact_consent: Bool
+            let p_terms_acceptance_id: UUID
+            let p_terms_version: String
+            let p_privacy_version: String
+            let p_refund_policy_version: String
         }
 
         let formatter = ISO8601DateFormatter()
@@ -407,7 +463,11 @@ enum DataService {
                     p_timezone: timezone,
                     p_topic: topic,
                     p_notes: notes,
-                    p_contact_consent: contactConsent
+                    p_contact_consent: contactConsent,
+                    p_terms_acceptance_id: termsAcceptanceId,
+                    p_terms_version: termsVersion,
+                    p_privacy_version: privacyVersion,
+                    p_refund_policy_version: refundPolicyVersion
                 )
             )
             .execute()
