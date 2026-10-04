@@ -418,6 +418,7 @@ struct AdvisorDetailView: View {
 
     @State private var openingChat = false
     @State private var chatDestination: AdvisorChatDestination?
+    @State private var advisorServices: [AdvisorService] = []
     @State private var errorMessage: String?
 
     var body: some View {
@@ -426,7 +427,7 @@ struct AdvisorDetailView: View {
                 header
                 introductionVideo
                 aboutSection
-                expertiseSection
+                expertiseAndPricingSection
                 linksSection
 
                 Button {
@@ -523,6 +524,7 @@ struct AdvisorDetailView: View {
         .background(Theme.pageBackground)
         .navigationTitle("Advisor")
         .navigationBarTitleDisplayMode(.inline)
+        .task { await loadAdvisorServices() }
         .sheet(item: $chatDestination) { destination in
             NavigationStack {
                 ChatView(
@@ -759,6 +761,16 @@ struct AdvisorDetailView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 
+    private var expertiseAndPricingSection: some View {
+        HStack(alignment: .top, spacing: 12) {
+            expertiseSection
+                .frame(maxWidth: .infinity, alignment: .top)
+
+            pricingSection
+                .frame(maxWidth: .infinity, alignment: .top)
+        }
+    }
+
     private var expertiseSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Expertise")
@@ -789,6 +801,105 @@ struct AdvisorDetailView: View {
         .padding(16)
         .background(Theme.surface)
         .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+
+    private var pricingSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 6) {
+                Text("Prices")
+                    .font(.headline.bold())
+                    .foregroundStyle(Theme.ink)
+
+                Spacer(minLength: 4)
+
+                Text("40% OFF")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundStyle(Theme.onAccent)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 4)
+                    .background(Theme.orangeGradient)
+                    .clipShape(Capsule())
+            }
+
+            if advisorServices.isEmpty {
+                Text("Consultation pricing")
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+            } else {
+                ForEach(advisorServices) { service in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(L10n.string(service.title))
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        if service.serviceType == "six_month_package" {
+                            Text("Weekly check-ups · 6 months")
+                                .font(.caption2)
+                                .foregroundStyle(Theme.muted)
+                        } else {
+                            Text(
+                                L10n.format(
+                                    "%d min live session",
+                                    service.durationMinutes
+                                )
+                            )
+                            .font(.caption2)
+                            .foregroundStyle(Theme.muted)
+                        }
+
+                        HStack(spacing: 5) {
+                            if let listPrice = service.listPriceCents,
+                               listPrice > service.priceCents {
+                                Text(priceText(cents: listPrice, currency: service.currency))
+                                    .font(.caption2)
+                                    .foregroundStyle(Theme.muted)
+                                    .strikethrough()
+                            }
+
+                            Text(priceText(cents: service.priceCents, currency: service.currency))
+                                .font(.caption.weight(.bold))
+                                .foregroundStyle(Theme.accent)
+                        }
+                    }
+
+                    if service.id != advisorServices.last?.id {
+                        Divider()
+                    }
+                }
+            }
+
+            NavigationLink {
+                AdvisorConsultationBookingView(advisor: advisor)
+            } label: {
+                Text("View plans")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(16)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+
+    private func priceText(cents: Int, currency: String) -> String {
+        String(
+            format: "%@ %.2f",
+            currency,
+            Double(cents) / 100.0
+        )
+    }
+
+    @MainActor
+    private func loadAdvisorServices() async {
+        do {
+            advisorServices = try await DataService.availableAdvisorServices(
+                advisorId: advisor.id
+            )
+        } catch {
+            advisorServices = []
+        }
     }
 
     @ViewBuilder
@@ -1145,21 +1256,46 @@ struct AdvisorConsultationBookingView: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.ink)
 
-                Text(
-                    L10n.format(
-                        "%d min live session",
-                        service.durationMinutes
+                if service.serviceType == "six_month_package" {
+                    Text("Weekly check-ups for 6 months")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                } else {
+                    Text(
+                        L10n.format(
+                            "%d min live session",
+                            service.durationMinutes
+                        )
                     )
-                )
-                .font(.caption)
-                .foregroundStyle(Theme.muted)
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                }
             }
 
             Spacer()
 
-            Text(priceText(service))
-                .font(.subheadline.bold())
-                .foregroundStyle(Theme.ink)
+            VStack(alignment: .trailing, spacing: 3) {
+                if let listPrice = service.listPriceCents,
+                   listPrice > service.priceCents {
+                    Text(
+                        priceText(
+                            cents: listPrice,
+                            currency: service.currency
+                        )
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                    .strikethrough()
+
+                    Text("40% off")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundStyle(Theme.accent)
+                }
+
+                Text(priceText(service))
+                    .font(.subheadline.bold())
+                    .foregroundStyle(Theme.ink)
+            }
         }
         .padding(14)
         .background(
@@ -1181,11 +1317,20 @@ struct AdvisorConsultationBookingView: View {
     private func priceText(
         _ service: AdvisorService
     ) -> String {
-        let amount = Double(service.priceCents) / 100.0
-        return String(
+        priceText(
+            cents: service.priceCents,
+            currency: service.currency
+        )
+    }
+
+    private func priceText(
+        cents: Int,
+        currency: String
+    ) -> String {
+        String(
             format: "%@ %.2f",
-            service.currency,
-            amount
+            currency,
+            Double(cents) / 100.0
         )
     }
 
