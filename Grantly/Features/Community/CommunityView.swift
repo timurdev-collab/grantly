@@ -776,7 +776,7 @@ struct AdvisorDetailView: View {
 
                 Spacer()
 
-                Text("LAUNCH OFFER")
+                Text("LAUNCH PRICE")
                     .font(.system(size: 9, weight: .bold))
                     .foregroundStyle(Theme.onAccent)
                     .padding(.horizontal, 8)
@@ -838,7 +838,7 @@ struct AdvisorDetailView: View {
                                 .foregroundStyle(Theme.accent)
 
                                 if service.discountPercent == 40 {
-                                    Text("40% OFF")
+                                    Text("Launch price")
                                         .font(.system(size: 8, weight: .bold))
                                         .foregroundStyle(Theme.accent)
                                 }
@@ -1603,7 +1603,7 @@ struct AdvisorConsultationBookingView: View {
                 Spacer(minLength: 8)
 
                 if service.discountPercent == 40 {
-                    Text("40% OFF")
+                    Text("Launch price")
                         .font(.system(size: 10, weight: .bold))
                         .foregroundStyle(Theme.onAccent)
                         .padding(.horizontal, 8)
