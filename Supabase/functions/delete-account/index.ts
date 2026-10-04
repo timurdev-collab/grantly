@@ -1,6 +1,74 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+
+async function listUserObjects(
+  adminClient: ReturnType<typeof createClient>,
+  bucket: string,
+  prefix: string,
+): Promise<string[]> {
+  const paths: string[] = [];
+  const pageSize = 100;
+
+  async function walk(path: string) {
+    let offset = 0;
+
+    while (true) {
+      const { data, error } = await adminClient.storage
+        .from(bucket)
+        .list(path, {
+          limit: pageSize,
+          offset,
+          sortBy: { column: "name", order: "asc" },
+        });
+
+      if (error) throw error;
+      if (!data?.length) break;
+
+      for (const item of data) {
+        const childPath = path ? `${path}/${item.name}` : item.name;
+
+        if (item.id) {
+          paths.push(childPath);
+        } else {
+          await walk(childPath);
+        }
+      }
+
+      if (data.length < pageSize) break;
+      offset += pageSize;
+    }
+  }
+
+  await walk(prefix);
+  return paths;
+}
+
+async function deleteUserStorage(
+  adminClient: ReturnType<typeof createClient>,
+  userId: string,
+) {
+  const buckets = [
+    "advisor-media",
+    "application-documents",
+    "avatars",
+    "social-media",
+    "university-case-documents",
+  ];
+
+  for (const bucket of buckets) {
+    const paths = await listUserObjects(adminClient, bucket, userId);
+
+    for (let index = 0; index < paths.length; index += 100) {
+      const { error } = await adminClient.storage
+        .from(bucket)
+        .remove(paths.slice(index, index + 100));
+
+      if (error) throw error;
+    }
+  }
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method !== "POST") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
@@ -38,6 +106,16 @@ Deno.serve(async (req: Request) => {
   const adminClient = createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false },
   });
+
+  try {
+    await deleteUserStorage(adminClient, user.id);
+  } catch (storageError) {
+    console.error("delete-account storage cleanup failed", storageError);
+    return new Response(JSON.stringify({ error: "Unable to delete account data" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
   const { error: deleteError } = await adminClient.auth.admin.deleteUser(user.id);
 
