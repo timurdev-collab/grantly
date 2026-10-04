@@ -613,7 +613,7 @@ private struct AdminConsultationPaymentsView: View {
                             )
                             .font(.caption)
 
-                            Text("Advisor: \(request.advisorName)")
+                            Text(L10n.format("Advisor: %@", request.advisorName))
                                 .font(.caption2)
                                 .foregroundStyle(Theme.muted)
 
