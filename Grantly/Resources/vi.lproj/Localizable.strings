@@ -682,3 +682,15 @@
 "Opening chat…" = "Đang mở trò chuyện…";
 "Message advisor" = "Nhắn tin cho cố vấn";
 "Start a private conversation in EduT" = "Bắt đầu cuộc trò chuyện riêng trong EduT";
+
+// Release localization coverage
+"Use at least 8 characters." = "Sử dụng ít nhất 8 ký tự.";
+"Password is too long." = "Mật khẩu quá dài.";
+"Advisor: %@" = "Cố vấn: %@";
+"%d of %d preparation steps" = "%d trên %d bước chuẩn bị";
+"%d saved" = "Đã lưu %d";
+"%d opportunities" = "%d cơ hội";
+"Last checked %@" = "Kiểm tra lần cuối %@";
+"Checked %@" = "Đã kiểm tra %@";
+"Report %@" = "Báo cáo %@";
+"%d visible community profiles" = "%d hồ sơ cộng đồng hiển thị";
