@@ -666,19 +666,34 @@
 
 "Preferred: " = "Preferido: ";
 
-"Consultation Payments" = "Consultation Payments";
-"Contact details unlock after payment is recorded." = "Contact details unlock after payment is recorded.";
-"Mark payment received" = "Mark payment received";
-"No consultation payments are waiting for verification." = "No consultation payments are waiting for verification.";
-"Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step.";
-"Payment is recorded. Contact details are now available for consultation coordination." = "Payment is recorded. Contact details are now available for consultation coordination.";
-"Pending payment verification" = "Pending payment verification";
-"Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor." = "Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor.";
-"Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded." = "Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded.";
-"Payment is arranged before direct contact is unlocked." = "Payment is arranged before direct contact is unlocked.";
-"This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded.";
-"Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded.";
+"Consultation Payments" = "Pagos de consultas";
+"Contact details unlock after payment is recorded." = "Los datos de contacto se desbloquearán una vez confirmado el pago.";
+"Mark payment received" = "Confirmar pago recibido";
+"No consultation payments are waiting for verification." = "No hay pagos de consultas pendientes de verificación.";
+"Only EduT admins can mark a consultation as paid. Advisor contact details stay locked until this step." = "Solo los administradores de EduT pueden marcar una consulta como pagada. Los datos de contacto del asesor permanecerán bloqueados hasta completar este paso.";
+"Payment is recorded. Contact details are now available for consultation coordination." = "El pago ha sido confirmado. Los datos de contacto ya están disponibles para coordinar la consulta.";
+"Pending payment verification" = "Verificación de pago pendiente";
+"Choose a real-time one-to-one session. After you submit the request, EduT will coordinate the payment step before your contact details are shared with the advisor." = "Elige una sesión individual en tiempo real. Después de enviar la solicitud, EduT coordinará primero el pago antes de compartir tus datos de contacto con el asesor.";
+"Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded." = "Ejemplo: +84 912 345 678. EduT guarda estos datos de forma segura y solo los comparte con el asesor seleccionado después de confirmar el pago.";
+"Payment is arranged before direct contact is unlocked." = "El pago se coordina antes de habilitar el contacto directo.";
+"This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded." = "Esta solicitud no genera ningún cobro. Las instrucciones de pago se proporcionarán por separado y el asesor solo recibirá tus datos de contacto después de confirmar el pago.";
+"Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded." = "Tu solicitud ha sido enviada. EduT coordinará primero el pago; tu número de WhatsApp y tu correo electrónico permanecerán ocultos para el asesor hasta que se confirme el pago.";
 
 "Opening chat…" = "Abriendo chat…";
 "Message advisor" = "Enviar mensaje al asesor";
 "Start a private conversation in EduT" = "Inicia una conversación privada en EduT";
+
+// Release localization coverage
+"Use at least 8 characters." = "Usa al menos 8 caracteres.";
+"Password is too long." = "La contraseña es demasiado larga.";
+"Advisor: %@" = "Asesor: %@";
+"%d of %d preparation steps" = "%d de %d pasos de preparación";
+"%d saved" = "%d guardados";
+"%d opportunities" = "%d oportunidades";
+"Last checked %@" = "Última comprobación: %@";
+"Checked %@" = "Comprobado %@";
+"Report %@" = "Reportar %@";
+"%d visible community profiles" = "%d perfiles de la comunidad visibles";
+"Add a short bio so other students know your study interests." = "Añade una breve biografía para que otros estudiantes conozcan tus intereses académicos.";
+"System follows your device. Light uses cream and brown; dark uses navy and blue." = "El modo Sistema sigue la configuración de tu dispositivo. Claro usa crema y marrón; oscuro usa azul marino y azul.";
+"Save scholarships from Explore and manage each application here." = "Guarda becas desde Explorar y gestiona aquí cada solicitud.";

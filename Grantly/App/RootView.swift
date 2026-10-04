@@ -32,8 +32,12 @@ private struct PasswordResetView: View {
     @State private var confirmation = ""
     @State private var busy = false
 
+    private var passwordIssue: String? {
+        AuthValidation.passwordIssue(password)
+    }
+
     private var canSave: Bool {
-        password.count >= 8 &&
+        passwordIssue == nil &&
         password == confirmation &&
         !busy
     }
@@ -49,6 +53,13 @@ private struct PasswordResetView: View {
                 Section("New password") {
                     SecureField("At least 8 characters", text: $password)
                     SecureField("Confirm password", text: $confirmation)
+
+                    if !password.isEmpty,
+                       let passwordIssue {
+                        Text(passwordIssue)
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    }
 
                     if !confirmation.isEmpty && password != confirmation {
                         Text("Passwords do not match.")
@@ -78,6 +89,14 @@ private struct PasswordResetView: View {
             }
             .navigationTitle("Reset Password")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        auth.cancelPasswordReset()
+                    }
+                    .disabled(busy)
+                }
+            }
         }
     }
 }

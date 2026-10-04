@@ -239,7 +239,7 @@ struct ApplicationWorkspaceView: View {
                 .tint(Theme.orange)
 
             HStack {
-                Text("\(completedTasks) of \(tasks.count) preparation steps")
+                Text(L10n.format("%d of %d preparation steps", completedTasks, tasks.count))
                     .font(.caption2)
                     .foregroundStyle(Theme.muted)
 
@@ -629,7 +629,7 @@ struct ApplicationWorkspaceView: View {
             }
 
             if let checked = item?.portalLastCheckedAt {
-                Text("Last checked \(displayDate(checked))")
+                Text(L10n.format("Last checked %@", displayDate(checked)))
                     .font(.caption2)
                     .foregroundStyle(Theme.muted)
             }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail CI when Grantly localization coverage drifts."""
+"""Fail CI when EduT localization coverage drifts."""
 
 from pathlib import Path
 import re
@@ -11,6 +11,7 @@ SOURCE = ROOT / "Grantly"
 
 LOCALES = ["en", "ru", "vi", "ar", "zh-Hans", "fr", "es", "de"]
 KEY_RE = re.compile(r'^"((?:[^"\\]|\\.)*)"\s*=\s*"((?:[^"\\]|\\.)*)";\s*$', re.MULTILINE)
+FORMAT_TOKEN_RE = re.compile(r'%(?:\d+\$)?[@df]')
 
 VISIBLE_PATTERNS = [
     re.compile(r'Text\(\s*"((?:[^"\\]|\\.)*)"'),
@@ -23,7 +24,14 @@ VISIBLE_PATTERNS = [
     re.compile(r'Picker\(\s*"((?:[^"\\]|\\.)*)"'),
     re.compile(r'Toggle\(\s*"((?:[^"\\]|\\.)*)"'),
     re.compile(r'ContentUnavailableView\(\s*"((?:[^"\\]|\\.)*)"'),
+    re.compile(r'\.accessibilityLabel\(\s*(?:Text\()?\s*"((?:[^"\\]|\\.)*)"'),
+    re.compile(r'\.accessibilityHint\(\s*(?:Text\()?\s*"((?:[^"\\]|\\.)*)"'),
+    re.compile(r'\.confirmationDialog\(\s*"((?:[^"\\]|\\.)*)"'),
 ]
+
+L10N_CALL_RE = re.compile(
+    r'L10n\.(?:string|format)\(\s*"((?:[^"\\]|\\.)*)"'
+)
 
 def parse_locale(locale: str):
     path = RESOURCES / f"{locale}.lproj" / "Localizable.strings"
@@ -71,10 +79,41 @@ def main() -> int:
             for key in extra:
                 print(f"  + {key}")
 
+        for key in sorted(english & keys):
+            english_value = catalogs["en"][key]
+            localized_value = catalogs[locale][key]
+
+            english_tokens = sorted(FORMAT_TOKEN_RE.findall(english_value))
+            localized_tokens = sorted(FORMAT_TOKEN_RE.findall(localized_value))
+            if english_tokens != localized_tokens:
+                failed = True
+                print(
+                    f"{locale}: format placeholders differ for {key!r}: "
+                    f"{english_tokens} != {localized_tokens}"
+                )
+
+            plain_words = re.sub(FORMAT_TOKEN_RE, "", english_value)
+
+            if (
+                localized_value == english_value
+                and re.search(r"[A-Za-z]", plain_words)
+                and len(plain_words.split()) >= 4
+            ):
+                failed = True
+                print(
+                    f"{locale}: likely untranslated multi-word string: "
+                    f"{key!r}"
+                )
+
     missing_source_keys = set()
 
     for path in SOURCE.rglob("*.swift"):
         text = path.read_text(encoding="utf-8")
+
+        for match in L10N_CALL_RE.finditer(text):
+            value = match.group(1)
+            if value not in english:
+                missing_source_keys.add((str(path.relative_to(ROOT)), value))
 
         for pattern in VISIBLE_PATTERNS:
             for match in pattern.finditer(text):

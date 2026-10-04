@@ -1,4 +1,4 @@
-# Grantly Release Readiness
+# EduT Release Readiness
 
 ## Automated gates
 
@@ -19,13 +19,12 @@ The project supports separate Debug and Release environments through build setti
 - Debug: `APP_ENVIRONMENT=staging`
 - Release: `APP_ENVIRONMENT=production`
 
-Both currently point to the existing Supabase project so development remains functional. Before external beta testing, replace the Debug Supabase URL and publishable key with a dedicated staging project. Do not put a service-role key in the iOS app.
+Debug uses the dedicated staging Supabase project and Release uses production. Keep service-role credentials and APNs private keys out of the iOS target and repository.
 
 ## TestFlight checklist
 
 Before the first external TestFlight build:
 
-- create/configure a dedicated staging Supabase project for Debug builds
 - configure Apple Push Notification credentials in Supabase Edge Function secrets
 - enable leaked-password protection in Supabase Auth
 - confirm Sign in / Sign out / password-reset flows on a physical device
@@ -34,7 +33,7 @@ Before the first external TestFlight build:
 - test scholarship import, commit and rollback with a small batch
 - verify all production cron jobs are active
 - confirm PrivacyInfo.xcprivacy is included in the archive
-- add/verify the production App Icon asset and launch presentation
+- verify the production App Icon asset in the archive and on a clean physical-device install
 - complete App Store privacy disclosures based on actual data collection
 - configure App Store Connect app record, screenshots, support URL and privacy-policy URL
 - archive with Release configuration and upload to TestFlight

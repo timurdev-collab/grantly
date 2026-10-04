@@ -130,11 +130,11 @@ struct HomeView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 13))
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Community")
+                    Text("Messages")
                         .font(.headline.bold())
                         .foregroundStyle(Theme.ink)
 
-                    Text("Messages")
+                    Text("Advisors")
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
                 }
@@ -174,8 +174,8 @@ struct HomeView: View {
                         Image(
                             systemName:
                                 unreadNotifications > 0
-                                ? "heart.fill"
-                                : "heart"
+                                ? "bell.fill"
+                                : "bell"
                         )
                         .font(.system(size: 20, weight: .semibold))
                         .foregroundStyle(Theme.ink)

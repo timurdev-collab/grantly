@@ -88,6 +88,20 @@ Deno.serve(async (req: Request) => {
     return json({ error: "Call session not found or access denied" }, 404);
   }
 
+  if (["ended", "cancelled"].includes(call.status)) {
+    return json({ error: "Call session is no longer available" }, 409);
+  }
+
+  const { data: assignment, error: assignmentError } = await supabase
+    .from("advisor_student_assignments")
+    .select("id,status")
+    .eq("id", call.assignment_id)
+    .single();
+
+  if (assignmentError || !assignment || assignment.status !== "active") {
+    return json({ error: "Active advisor relationship required" }, 403);
+  }
+
   const token = new AccessToken(
     livekitApiKey,
     livekitApiSecret,
@@ -96,7 +110,7 @@ Deno.serve(async (req: Request) => {
       name:
         typeof user.user_metadata?.full_name === "string"
           ? user.user_metadata.full_name
-          : user.email ?? "Grantly user",
+          : user.email ?? "EduT user",
       ttl: "2h",
     },
   );

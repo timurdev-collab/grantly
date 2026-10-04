@@ -2133,49 +2133,20 @@ struct AddScholarshipView: View {
 
     @MainActor
     private func saveDraft() async {
-        struct Row: Encodable {
-            let slug: String
-            let title: String
-            let provider: String
-            let country: String
-            let region: String
-            let funding_type: String
-            let official_url: String
-            let status: String
-            let degree_levels: [String]
-            let fields: [String]
-            let eligible_nationalities: [String]
-            let verification_status: String
-            let link_status: String
-        }
-
-        let row = Row(
-            slug: slug,
-            title: title,
-            provider: provider,
-            country: country,
-            region: region,
-            funding_type: funding,
-            official_url: url,
-            status: "draft",
-            degree_levels: degreeLevels
-                .split(separator: ",")
-                .map {
-                    $0.trimmingCharacters(
-                        in: .whitespaces
-                    )
-                },
-            fields: fields
-                .split(separator: ",")
-                .map {
-                    $0.trimmingCharacters(
-                        in: .whitespaces
-                    )
-                },
-            eligible_nationalities: ["ALL"],
-            verification_status: "needs_review",
-            link_status: "unchecked"
-        )
+        let parsedDegreeLevels = degreeLevels
+            .split(separator: ",")
+            .map {
+                $0.trimmingCharacters(
+                    in: .whitespaces
+                )
+            }
+        let parsedFields = fields
+            .split(separator: ",")
+            .map {
+                $0.trimmingCharacters(
+                    in: .whitespaces
+                )
+            }
 
         do {
             let duplicates = try await DataService
@@ -2194,10 +2165,17 @@ struct AddScholarshipView: View {
                 return
             }
 
-            try await supabase
-                .from("scholarships")
-                .insert(row)
-                .execute()
+            try await DataService.createScholarshipDraft(
+                slug: slug,
+                title: title,
+                provider: provider,
+                country: country,
+                region: region,
+                fundingType: funding,
+                officialURL: url,
+                degreeLevels: parsedDegreeLevels,
+                fields: parsedFields
+            )
 
             onCreated()
             dismiss()

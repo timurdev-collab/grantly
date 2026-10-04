@@ -53,6 +53,7 @@ targets:
       configs:
         Debug:
           CODE_SIGN_ENTITLEMENTS: Grantly/GrantlyDebug.entitlements
+          APS_ENVIRONMENT: development
           APP_ENVIRONMENT: staging
           SUPABASE_URL: https://cbzriyarlvpmtfbjgede.supabase.co
           SUPABASE_PUBLISHABLE_KEY: sb_publishable_7DtXndOsfZ5WmTZs0RWG8w_EIQ3xZSe
