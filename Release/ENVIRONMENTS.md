@@ -1,6 +1,6 @@
 # Environment configuration
 
-Grantly reads backend configuration from Info.plist values populated by Xcode build settings.
+EduT reads backend configuration from Info.plist values populated by Xcode build settings.
 
 Required values:
 
