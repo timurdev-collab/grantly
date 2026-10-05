@@ -609,7 +609,7 @@ struct PremiumScholarshipCard: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            ExploreUniversityLogo(
+            UniversityLogo(
                 university: scholarship.university,
                 fallbackName: scholarship.provider,
                 size: 48
@@ -735,83 +735,6 @@ private func countryFlag(for countryName: String) -> String {
     }
 
     return String(String.UnicodeScalarView(scalars))
-}
-
-private struct ExploreUniversityLogo: View {
-    let university: University?
-    let fallbackName: String
-    var size: CGFloat = 54
-
-    private var initials: String {
-        let source = university?.name ?? fallbackName
-        let words = source.split(separator: " ")
-
-        if words.count >= 2 {
-            return (
-                String(words[0].prefix(1)) +
-                String(words[1].prefix(1))
-            ).uppercased()
-        }
-
-        return String(source.prefix(2)).uppercased()
-    }
-
-    private var fallbackIcon: some View {
-        ZStack(alignment: .bottomTrailing) {
-            Image(systemName: "building.columns.fill")
-                .font(.system(size: size * 0.40, weight: .semibold))
-                .foregroundStyle(Theme.accent)
-
-            Text(initials)
-                .font(.system(size: size * 0.16, weight: .bold))
-                .foregroundStyle(Theme.onAccent)
-                .frame(width: size * 0.34, height: size * 0.34)
-                .background(Theme.accent)
-                .clipShape(Circle())
-                .overlay(
-                    Circle()
-                        .stroke(Theme.surface, lineWidth: 1.5)
-                )
-                .offset(x: size * 0.05, y: size * 0.05)
-        }
-        .accessibilityLabel(university?.name ?? fallbackName)
-    }
-
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(
-                    LinearGradient(
-                        colors: [Theme.surfaceRaised, Theme.sage],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-
-            if let logoURL = university?.logoUrl,
-               let url = URL(string: logoURL) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .padding(size * 0.15)
-                    default:
-                        fallbackIcon
-                    }
-                }
-            } else {
-                fallbackIcon
-            }
-        }
-        .frame(width: size, height: size)
-        .clipShape(Circle())
-        .overlay(
-            Circle()
-                .stroke(Theme.orange.opacity(0.22))
-        )
-    }
 }
 
 struct ReliabilityBadge: View {
