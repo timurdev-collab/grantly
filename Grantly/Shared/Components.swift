@@ -466,54 +466,103 @@ struct UniversityLogo: View {
     let fallbackName: String
     var size: CGFloat = 40
 
+    private var displayName: String {
+        let candidate = university?.name
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return candidate.isEmpty ? fallbackName : candidate
+    }
+
     private var initials: String {
-        let source = university?.name ?? fallbackName
-        let words = source.split(separator: " ")
+        let ignored = Set(["of", "the", "and", "&"])
+        let words = displayName
+            .split(separator: " ")
+            .map(String.init)
+            .filter { !ignored.contains($0.lowercased()) }
 
         if words.count >= 2 {
-            return (
-                String(words[0].prefix(1)) +
-                String(words[1].prefix(1))
-            ).uppercased()
+            return (String(words[0].prefix(1)) + String(words[1].prefix(1)))
+                .uppercased()
         }
 
-        return String(source.prefix(2)).uppercased()
+        return String((words.first ?? displayName).prefix(2)).uppercased()
+    }
+
+    private var logoURL: URL? {
+        guard let raw = university?.logoUrl?
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+              !raw.isEmpty,
+              let url = URL(string: raw),
+              ["https", "http"].contains(url.scheme?.lowercased() ?? "")
+        else {
+            return nil
+        }
+        return url
     }
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: size * 0.28)
-                .fill(Theme.surfaceRaised)
+            Circle()
+                .fill(
+                    LinearGradient(
+                        colors: [Theme.surfaceRaised, Theme.sage],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
 
-            if let logoURL = university?.logoUrl,
-               let url = URL(string: logoURL) {
-                AsyncImage(url: url) { phase in
+            if let logoURL {
+                AsyncImage(
+                    url: logoURL,
+                    transaction: Transaction(animation: .easeOut(duration: 0.18))
+                ) { phase in
                     switch phase {
                     case .success(let image):
                         image
                             .resizable()
                             .scaledToFit()
-                            .padding(size * 0.12)
-                    default:
-                        Text(initials)
-                            .font(.system(size: size * 0.28, weight: .bold))
-                            .foregroundStyle(Theme.ink)
+                            .padding(size * 0.13)
+                    case .empty:
+                        ProgressView()
+                            .controlSize(.mini)
+                            .tint(Theme.muted)
+                    case .failure:
+                        generatedMark
+                    @unknown default:
+                        generatedMark
                     }
                 }
             } else {
-                Text(initials)
-                    .font(.system(size: size * 0.28, weight: .bold))
-                    .foregroundStyle(Theme.ink)
+                generatedMark
             }
         }
         .frame(width: size, height: size)
+        .clipShape(Circle())
         .overlay(
-            RoundedRectangle(cornerRadius: size * 0.28)
-                .stroke(Theme.blue.opacity(0.22))
+            Circle()
+                .stroke(Theme.orange.opacity(0.22), lineWidth: 1)
         )
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(displayName) university icon")
+    }
+
+    private var generatedMark: some View {
+        ZStack(alignment: .bottomTrailing) {
+            Image(systemName: "building.columns.fill")
+                .font(.system(size: size * 0.40, weight: .semibold))
+                .foregroundStyle(Theme.accent)
+
+            Text(initials)
+                .font(.system(size: size * 0.15, weight: .bold))
+                .foregroundStyle(Theme.onAccent)
+                .minimumScaleFactor(0.7)
+                .frame(width: size * 0.34, height: size * 0.34)
+                .background(Theme.accent)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(Theme.surface, lineWidth: 1.5))
+                .offset(x: size * 0.05, y: size * 0.05)
+        }
     }
 }
-
 
 struct OfflineBanner: View {
     var body: some View {
