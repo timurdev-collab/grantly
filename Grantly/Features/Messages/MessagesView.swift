@@ -226,6 +226,7 @@ struct ChatView: View {
     @State private var loadingOlder = false
     @State private var hasMore = true
     @State private var reportingMessage: Message?
+    @State private var reportingUser = false
     @State private var errorMessage: String?
     @State private var blockedByMe = false
     @FocusState private var composerFocused: Bool
@@ -337,6 +338,44 @@ struct ChatView: View {
                 }
             }
 
+            if otherUserId != nil {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button(role: .destructive) {
+                            reportingUser = true
+                        } label: {
+                            Label(
+                                "Report user",
+                                systemImage: "exclamationmark.triangle"
+                            )
+                        }
+
+                        if blockedByMe {
+                            Button {
+                                Task { await unblockCurrentUser() }
+                            } label: {
+                                Label(
+                                    "Unblock user",
+                                    systemImage: "person.crop.circle.badge.checkmark"
+                                )
+                            }
+                        } else {
+                            Button(role: .destructive) {
+                                Task { await blockCurrentUser() }
+                            } label: {
+                                Label(
+                                    "Block user",
+                                    systemImage: "person.crop.circle.badge.xmark"
+                                )
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                    }
+                    .accessibilityLabel("Safety options")
+                }
+            }
+
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
                 Button("Done") {
@@ -359,6 +398,17 @@ struct ChatView: View {
                 )
             }
         }
+        .sheet(isPresented: $reportingUser) {
+            if let otherUserId {
+                ReportSheet(subject: "user") { reason, details in
+                    try await DataService.submitSafetyReport(
+                        reportedUserId: otherUserId,
+                        reason: reason,
+                        details: details
+                    )
+                }
+            }
+        }
         .alert(
             "Messaging error",
             isPresented: Binding(
@@ -376,7 +426,7 @@ struct ChatView: View {
         HStack(spacing: 10) {
             TextField(
                 blockedByMe
-                    ? "Unblock this student to send messages"
+                    ? "Unblock this user to send messages"
                     : "Write a message…",
                 text: $draft,
                 axis: .vertical
@@ -552,8 +602,27 @@ struct ChatView: View {
             blockedByMe = true
             draft = ""
             errorMessage =
-                "This student is now blocked. New messages " +
+                "This user is now blocked. New messages " +
                 "between your accounts are disabled."
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func blockCurrentUser() async {
+        guard let otherUserId else { return }
+        await blockSender(otherUserId)
+    }
+
+    @MainActor
+    private func unblockCurrentUser() async {
+        guard let otherUserId else { return }
+
+        do {
+            try await DataService.unblockUser(otherUserId)
+            blockedByMe = false
+            errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
         }
