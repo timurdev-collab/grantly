@@ -198,8 +198,22 @@ private struct StudentMainTabs: View {
             }
             .tag(MainTab.profile)
         }
-        .tint(Theme.accent)
-        .toolbarBackground(.ultraThinMaterial, for: .tabBar)
+        .tint(
+            Color(
+                red: 18 / 255,
+                green: 55 / 255,
+                blue: 42 / 255
+            )
+        )
+        .toolbarColorScheme(.light, for: .tabBar)
+        .toolbarBackground(
+            Color(
+                red: 247 / 255,
+                green: 243 / 255,
+                blue: 232 / 255
+            ).opacity(0.94),
+            for: .tabBar
+        )
         .toolbarBackground(.visible, for: .tabBar)
         .overlay(alignment: .top) {
             if !networkMonitor.isOnline {
