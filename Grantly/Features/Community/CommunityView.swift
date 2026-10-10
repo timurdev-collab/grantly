@@ -2219,12 +2219,15 @@ private struct LiveKitTrackView: UIViewRepresentable {
 }
 
 struct CommunityView: View {
+    @Environment(AuthStore.self) private var auth
+
     @State private var profiles: [CommunityProfile] = []
     @State private var blockedUserIDs: Set<UUID> = []
     @State private var query = ""
     @State private var loading = false
     @State private var chatDestination: CommunityChatDestination?
     @State private var messagingProfileID: UUID?
+    @State private var addingFriendProfileID: UUID?
     @State private var messageError: String?
 
     private var visibleResults: [CommunityProfile] {
@@ -2362,10 +2365,44 @@ struct CommunityView: View {
 
                     LazyVStack(spacing: 12) {
                         ForEach(visibleResults) { profile in
-                            NavigationLink(value: profile) {
-                                CommunityRow(profile: profile)
+                            HStack(spacing: 10) {
+                                NavigationLink(value: profile) {
+                                    CommunityRow(profile: profile)
+                                }
+                                .buttonStyle(.plain)
+
+                                if profile.id != auth.userId {
+                                    Button {
+                                        Task {
+                                            await addFriend(from: profile)
+                                        }
+                                    } label: {
+                                        if addingFriendProfileID == profile.id {
+                                            ProgressView()
+                                                .frame(width: 40, height: 40)
+                                        } else {
+                                            Image(systemName: "person.badge.plus")
+                                                .font(
+                                                    .system(
+                                                        size: 15,
+                                                        weight: .semibold
+                                                    )
+                                                )
+                                                .foregroundStyle(Theme.blueSoft)
+                                                .frame(width: 40, height: 40)
+                                                .background(Theme.surface)
+                                                .clipShape(Circle())
+                                        }
+                                    }
+                                    .buttonStyle(.plain)
+                                    .disabled(addingFriendProfileID != nil)
+                                    .accessibilityLabel(
+                                        "Add " +
+                                        (profile.displayName ?? "student") +
+                                        " as friend"
+                                    )
+                                }
                             }
-                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -2546,6 +2583,28 @@ struct CommunityView: View {
     }
 
     @MainActor
+    private func addFriend(
+        from profile: CommunityProfile
+    ) async {
+        addingFriendProfileID = profile.id
+        defer { addingFriendProfileID = nil }
+
+        do {
+            let relation = try await DataService
+                .sendCommunityFriendRequest(to: profile.id)
+
+            switch relation {
+            case "friends":
+                messageError = nil
+            default:
+                messageError = nil
+            }
+        } catch {
+            messageError = error.localizedDescription
+        }
+    }
+
+    @MainActor
     private func runSearch() async {
         let trimmed = query.trimmingCharacters(
             in: .whitespacesAndNewlines
@@ -2719,7 +2778,7 @@ struct CommunityFriendRequestsView: View {
                     "No friend requests",
                     systemImage: "person.badge.plus",
                     description: Text(
-                        "Incoming requests will appear here."
+                        "This page is only for requests other students sent to you. To send a request, search a student in Community and tap the + person button."
                     )
                 )
             } else {
