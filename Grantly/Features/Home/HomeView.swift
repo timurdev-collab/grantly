@@ -199,7 +199,7 @@ struct HomeView: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(Theme.accentSoft)
 
-            Text("Find what could\nchange what comes next.")
+            Text(L10n.string("Find what could\nchange what comes next."))
                 .font(.system(size: 31, weight: .regular, design: .serif))
                 .foregroundStyle(Theme.ink)
                 .tracking(-0.5)
@@ -690,7 +690,7 @@ private struct HomeEmptyHero: View {
 
                 Spacer()
 
-                Text("Your next opportunity\nis waiting.")
+                Text(L10n.string("Your next opportunity\nis waiting."))
                     .font(.system(size: 26, weight: .regular, design: .serif))
                     .foregroundStyle(Theme.onAccent)
 
