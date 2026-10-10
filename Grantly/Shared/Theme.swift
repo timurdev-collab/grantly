@@ -15,6 +15,69 @@ enum AppAppearance: String, CaseIterable, Identifiable {
 }
 
 enum Theme {
+    // EduT premium palette. These fixed brand colors are used by the student
+    // experience so photography and Liquid Glass surfaces stay visually stable
+    // across device appearance settings.
+    static let premiumIvory = Color(
+        red: 246 / 255,
+        green: 241 / 255,
+        blue: 229 / 255
+    )
+    static let premiumIvoryRaised = Color(
+        red: 253 / 255,
+        green: 250 / 255,
+        blue: 243 / 255
+    )
+    static let premiumForest = Color(
+        red: 6 / 255,
+        green: 45 / 255,
+        blue: 36 / 255
+    )
+    static let premiumForestSoft = Color(
+        red: 14 / 255,
+        green: 76 / 255,
+        blue: 59 / 255
+    )
+    static let premiumInk = Color(
+        red: 16 / 255,
+        green: 23 / 255,
+        blue: 20 / 255
+    )
+    static let premiumMuted = Color(
+        red: 96 / 255,
+        green: 105 / 255,
+        blue: 98 / 255
+    )
+    static let premiumSage = Color(
+        red: 207 / 255,
+        green: 223 / 255,
+        blue: 212 / 255
+    )
+    static let premiumSageSoft = Color(
+        red: 232 / 255,
+        green: 239 / 255,
+        blue: 234 / 255
+    )
+    static let premiumBrass = Color(
+        red: 188 / 255,
+        green: 131 / 255,
+        blue: 66 / 255
+    )
+    static let premiumBlush = Color(
+        red: 203 / 255,
+        green: 96 / 255,
+        blue: 74 / 255
+    )
+
+    static let premiumHeroGradient = LinearGradient(
+        colors: [
+            premiumForestSoft.opacity(0.08),
+            premiumForest.opacity(0.92)
+        ],
+        startPoint: .top,
+        endPoint: .bottom
+    )
+
     // EduT palette: deep academic green + warm cream, with restrained gold and teal accents.
     private static func adaptive(
         light: UInt32,
