@@ -2528,6 +2528,12 @@ private struct CommunityAvatar: View {
     }
 }
 
+private struct CommunityChatDestination: Identifiable {
+    let id: UUID
+    let otherUserId: UUID
+    let title: String
+}
+
 struct CommunityProfileView: View {
     @Environment(AuthStore.self) private var auth
 
@@ -2538,6 +2544,7 @@ struct CommunityProfileView: View {
     @State private var showingReport = false
     @State private var isBlocked = false
     @State private var changingBlock = false
+    @State private var chatDestination: CommunityChatDestination?
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -2601,6 +2608,16 @@ struct CommunityProfileView: View {
                     reportedUserId: profile.id,
                     reason: reason,
                     details: details
+                )
+            }
+        }
+        .sheet(item: $chatDestination) { destination in
+            NavigationStack {
+                ChatView(
+                    conversationId: destination.id,
+                    otherUserId: destination.otherUserId,
+                    title: destination.title,
+                    showsCloseButton: true
                 )
             }
         }
@@ -2723,11 +2740,16 @@ struct CommunityProfileView: View {
         defer { openingConversation = false }
 
         do {
-            _ = try await DataService.startDirectConversation(
+            let conversationId = try await DataService.startDirectConversation(
                 otherUser: profile.id
             )
 
-            status = L10n.string("Conversation created. Open Messages.")
+            chatDestination = CommunityChatDestination(
+                id: conversationId,
+                otherUserId: profile.id,
+                title: profile.displayName ?? L10n.string("Student")
+            )
+            status = ""
         } catch {
             status = error.localizedDescription
         }
