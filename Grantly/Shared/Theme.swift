@@ -236,6 +236,6 @@ enum Theme {
         _ size: CGFloat,
         weight: Font.Weight = .semibold
     ) -> Font {
-        .system(size: size, weight: weight, design: .default)
+        .system(size: size, weight: weight, design: .serif)
     }
 }

@@ -295,45 +295,48 @@ struct UniversityPhoto: View {
     }
 
     var body: some View {
-        ZStack {
-            LinearGradient(
-                colors: [
-                    Theme.surfaceRaised,
-                    seedValue.isMultiple(of: 2)
-                        ? Theme.navy
-                        : Theme.orange.opacity(0.30)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+        GeometryReader { geometry in
+            ZStack {
+                LinearGradient(
+                    colors: [
+                        Theme.surfaceRaised,
+                        seedValue.isMultiple(of: 2)
+                            ? Theme.navy
+                            : Theme.orange.opacity(0.30)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
 
-            if let primaryURL {
-                AsyncImage(url: primaryURL) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .transition(.opacity)
-                    case .failure:
-                        stockImage
-                    default:
-                        placeholder
+                if let primaryURL {
+                    AsyncImage(url: primaryURL) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .transition(.opacity)
+                        case .failure:
+                            stockImage
+                        default:
+                            placeholder
+                        }
                     }
+                } else {
+                    stockImage
                 }
-            } else {
-                stockImage
-            }
 
-            LinearGradient(
-                colors: [.clear, Theme.navyDeep.opacity(0.20)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
+                LinearGradient(
+                    colors: [.clear, Theme.navyDeep.opacity(0.20)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .clipped()
         }
-        .frame(maxWidth: .infinity)
         .frame(height: height)
-        .clipped()
+        .accessibilityHidden(true)
     }
 
     @ViewBuilder
@@ -390,6 +393,7 @@ struct SearchField: View {
     @Binding var text: String
     var prompt: String = "Search scholarships..."
     @FocusState private var isFocused: Bool
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     var body: some View {
         HStack(spacing: 10) {
@@ -418,22 +422,34 @@ struct SearchField: View {
             if !text.isEmpty {
                 Button {
                     text = ""
-                    dismissKeyboard()
+                    isFocused = true
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(Theme.muted)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Clear search")
             }
         }
         .font(.subheadline)
-        .padding(.horizontal, 14)
-        .frame(height: 44)
-        .background(Theme.surfaceRaised)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(Theme.ink.opacity(0.05))
-        )
+        .padding(.leading, 16)
+        .padding(.trailing, text.isEmpty ? 16 : 4)
+        .padding(.vertical, 4)
+        .frame(minHeight: 52)
+        .background {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(reduceTransparency ? AnyShapeStyle(Theme.surface) : AnyShapeStyle(.regularMaterial))
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(
+                    isFocused ? Theme.accent : Theme.ink.opacity(0.10),
+                    lineWidth: isFocused ? 1.5 : 1
+                )
+        }
+        .shadow(color: Theme.ink.opacity(0.04), radius: 12, x: 0, y: 4)
     }
 
     private func dismissKeyboard() {
@@ -449,12 +465,14 @@ struct SearchField: View {
 
 
 struct CardPressButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .scaleEffect(configuration.isPressed ? 0.985 : 1)
+            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.985 : 1)
             .opacity(configuration.isPressed ? 0.92 : 1)
             .animation(
-                .easeOut(duration: 0.14),
+                reduceMotion ? nil : .easeOut(duration: 0.14),
                 value: configuration.isPressed
             )
     }
@@ -573,7 +591,8 @@ struct OfflineBanner: View {
         .font(.caption.weight(.semibold))
         .foregroundStyle(Theme.ink)
         .padding(.horizontal, 14)
-        .frame(height: 40)
+        .padding(.vertical, 12)
+        .fixedSize(horizontal: false, vertical: true)
         .background(.ultraThinMaterial)
         .background(Theme.navy.opacity(0.92))
         .clipShape(Capsule())
