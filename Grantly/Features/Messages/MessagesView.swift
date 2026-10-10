@@ -5,36 +5,78 @@ struct MessagesView: View {
     @State private var conversations: [ConversationSummaryRow] = []
     @State private var loading = true
     @State private var errorMessage: String?
+    @State private var search = ""
+
+    private var filteredConversations: [ConversationSummaryRow] {
+        let needle = search.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !needle.isEmpty else { return conversations }
+
+        return conversations.filter {
+            $0.displayName.localizedCaseInsensitiveContains(needle) ||
+            ($0.lastMessage?.localizedCaseInsensitiveContains(needle) ?? false)
+        }
+    }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(spacing: 0) {
-                HStack {
+            LazyVStack(spacing: 10) {
+                HStack(alignment: .center) {
                     Text("Messages")
-                        .font(.system(size: 30, weight: .bold))
-                        .foregroundStyle(Theme.ink)
+                        .font(.system(size: 34, weight: .regular, design: .serif))
+                        .tracking(-0.8)
+                        .foregroundStyle(Theme.premiumInk)
 
                     Spacer()
+
+                    Image(systemName: "bubble.left.and.bubble.right.fill")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Theme.premiumForest)
+                        .frame(width: 38, height: 38)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 10)
-                .padding(.bottom, 8)
+                .padding(.horizontal, 18)
+                .padding(.top, 12)
+                .padding(.bottom, 2)
+
+                HStack(spacing: 9) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Theme.premiumMuted)
+
+                    TextField(
+                        L10n.string("Search messages"),
+                        text: $search
+                    )
+                    .font(.subheadline)
+                    .textInputAutocapitalization(.never)
+                }
+                .padding(.horizontal, 14)
+                .frame(height: 46)
+                .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 17, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 17, style: .continuous)
+                        .stroke(Color.white.opacity(0.65), lineWidth: 1)
+                )
+                .padding(.horizontal, 18)
+                .padding(.bottom, 2)
 
                 if loading && conversations.isEmpty {
                     ProgressView()
-                        .tint(Theme.blue)
+                        .tint(Theme.premiumForest)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 56)
-                } else if conversations.isEmpty {
+                } else if filteredConversations.isEmpty {
                     EmptyState(
                         icon: "bubble.left.and.bubble.right",
                         title: "No messages yet",
                         text: "Start a conversation with an advisor."
                     )
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 18)
                     .padding(.vertical, 36)
                 } else {
-                    ForEach(conversations) { conversation in
+                    ForEach(filteredConversations) { conversation in
                         NavigationLink {
                             ChatView(
                                 conversationId: conversation.conversationId,
@@ -45,13 +87,14 @@ struct MessagesView: View {
                             ConversationRow(conversation: conversation)
                         }
                         .buttonStyle(.plain)
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 18)
                     }
                 }
             }
-            .padding(.bottom, 24)
+            .padding(.bottom, 28)
         }
-        .background(Theme.pageBackground)
+        .background(Theme.premiumIvoryRaised)
+        .preferredColorScheme(.light)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await load() }
@@ -129,30 +172,42 @@ private struct ConversationRow: View {
     let conversation: ConversationSummaryRow
 
     var body: some View {
-        HStack(spacing: 12) {
-            Text(conversation.displayName.prefix(2).uppercased())
-                .font(.caption.bold())
-                .frame(width: 50, height: 50)
-                .background(Theme.blue.opacity(0.14))
-                .foregroundStyle(Theme.blueSoft)
-                .clipShape(Circle())
-                .overlay(
-                    Circle()
-                        .stroke(Theme.ink.opacity(0.08), lineWidth: 1)
-                )
+        HStack(spacing: 13) {
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Theme.premiumSage,
+                                Theme.premiumSageSoft
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
 
-            VStack(alignment: .leading, spacing: 4) {
+                Text(conversation.displayName.prefix(2).uppercased())
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(Theme.premiumForest)
+            }
+            .frame(width: 52, height: 52)
+            .overlay(
+                Circle()
+                    .stroke(Color.white.opacity(0.7), lineWidth: 1)
+            )
+
+            VStack(alignment: .leading, spacing: 5) {
                 HStack {
                     Text(conversation.displayName)
-                        .font(.headline)
-                        .foregroundStyle(.primary)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.premiumInk)
 
                     Spacer()
 
                     if let date = conversation.lastMessageAt {
                         Text(relativeTime(date))
                             .font(.caption2)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Theme.premiumMuted)
                     }
                 }
 
@@ -164,8 +219,8 @@ private struct ConversationRow: View {
                     .font(.caption)
                     .foregroundStyle(
                         conversation.unreadCount > 0
-                            ? .primary
-                            : .secondary
+                            ? Theme.premiumInk
+                            : Theme.premiumMuted
                     )
                     .fontWeight(
                         conversation.unreadCount > 0
@@ -183,16 +238,22 @@ private struct ConversationRow: View {
                                 : "\(conversation.unreadCount)"
                         )
                         .font(.caption2.bold())
-                        .foregroundStyle(Theme.onAccent)
+                        .foregroundStyle(Theme.premiumIvory)
                         .padding(.horizontal, 7)
                         .frame(minHeight: 20)
-                        .background(Theme.blue)
+                        .background(Theme.premiumForest)
                         .clipShape(Capsule())
                     }
                 }
             }
         }
-        .padding(.vertical, 10)
+        .padding(12)
+        .background(Theme.premiumIvoryRaised)
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(Theme.premiumInk.opacity(0.05), lineWidth: 1)
+        )
     }
 
     private func relativeTime(_ value: String) -> String {
