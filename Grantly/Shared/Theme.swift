@@ -18,16 +18,18 @@ enum Theme {
     // EduT premium palette. These fixed brand colors are used by the student
     // experience so photography and Liquid Glass surfaces stay visually stable
     // across device appearance settings.
-    static let premiumIvory = Color(
-        red: 246 / 255,
-        green: 241 / 255,
-        blue: 229 / 255
-    )
-    static let premiumIvoryRaised = Color(
-        red: 253 / 255,
-        green: 250 / 255,
-        blue: 243 / 255
-    )
+    static let premiumIvory = Color(uiColor: UIColor { traits in
+        let rgb: (CGFloat, CGFloat, CGFloat) = traits.userInterfaceStyle == .dark
+            ? (244 / 255, 235 / 255, 224 / 255)
+            : (246 / 255, 241 / 255, 229 / 255)
+        return UIColor(red: rgb.0, green: rgb.1, blue: rgb.2, alpha: 1)
+    })
+    static let premiumIvoryRaised = Color(uiColor: UIColor { traits in
+        let rgb: (CGFloat, CGFloat, CGFloat) = traits.userInterfaceStyle == .dark
+            ? (10 / 255, 15 / 255, 15 / 255)
+            : (253 / 255, 250 / 255, 243 / 255)
+        return UIColor(red: rgb.0, green: rgb.1, blue: rgb.2, alpha: 1)
+    })
     static let premiumForest = Color(
         red: 6 / 255,
         green: 45 / 255,
@@ -38,26 +40,29 @@ enum Theme {
         green: 76 / 255,
         blue: 59 / 255
     )
-    static let premiumInk = Color(
-        red: 16 / 255,
-        green: 23 / 255,
-        blue: 20 / 255
-    )
-    static let premiumMuted = Color(
-        red: 96 / 255,
-        green: 105 / 255,
-        blue: 98 / 255
-    )
+    static let premiumInk = Color(uiColor: UIColor { traits in
+        let rgb: (CGFloat, CGFloat, CGFloat) = traits.userInterfaceStyle == .dark
+            ? (244 / 255, 235 / 255, 224 / 255)
+            : (16 / 255, 23 / 255, 20 / 255)
+        return UIColor(red: rgb.0, green: rgb.1, blue: rgb.2, alpha: 1)
+    })
+    static let premiumMuted = Color(uiColor: UIColor { traits in
+        let rgb: (CGFloat, CGFloat, CGFloat) = traits.userInterfaceStyle == .dark
+            ? (183 / 255, 190 / 255, 185 / 255)
+            : (96 / 255, 105 / 255, 98 / 255)
+        return UIColor(red: rgb.0, green: rgb.1, blue: rgb.2, alpha: 1)
+    })
     static let premiumSage = Color(
         red: 207 / 255,
         green: 223 / 255,
         blue: 212 / 255
     )
-    static let premiumSageSoft = Color(
-        red: 232 / 255,
-        green: 239 / 255,
-        blue: 234 / 255
-    )
+    static let premiumSageSoft = Color(uiColor: UIColor { traits in
+        let rgb: (CGFloat, CGFloat, CGFloat) = traits.userInterfaceStyle == .dark
+            ? (32 / 255, 40 / 255, 38 / 255)
+            : (232 / 255, 239 / 255, 234 / 255)
+        return UIColor(red: rgb.0, green: rgb.1, blue: rgb.2, alpha: 1)
+    })
     static let premiumBrass = Color(
         red: 188 / 255,
         green: 131 / 255,
