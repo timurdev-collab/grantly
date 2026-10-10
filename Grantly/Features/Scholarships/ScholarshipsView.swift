@@ -633,7 +633,7 @@ struct PremiumScholarshipCard: View {
                     .fill(Theme.premiumSageSoft)
                 Image(systemName: "graduationcap.fill")
                     .font(.system(size: 22, weight: .medium))
-                    .foregroundStyle(Theme.premiumForest)
+                    .foregroundStyle(Theme.accent)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 if verified {
                     Image(systemName: "checkmark.seal.fill")
@@ -670,7 +670,7 @@ struct PremiumScholarshipCard: View {
                 metadataLayout {
                     Text(scholarship.fundingType)
                         .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.premiumForest)
+                        .foregroundStyle(Theme.accent)
                         .padding(.horizontal, 9)
                         .padding(.vertical, 5)
                         .frame(minHeight: 26)
