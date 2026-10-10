@@ -2067,6 +2067,104 @@ enum DataService {
             .value
     }
 
+    static func communityFriendshipStatus(
+        with userId: UUID
+    ) async throws -> String {
+        struct Params: Encodable {
+            let other_user: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "community_friendship_status",
+                params: Params(other_user: userId)
+            )
+            .execute()
+            .value
+    }
+
+    static func sendCommunityFriendRequest(
+        to userId: UUID
+    ) async throws -> String {
+        struct Params: Encodable {
+            let other_user: UUID
+        }
+
+        return try await supabase
+            .rpc(
+                "send_community_friend_request",
+                params: Params(other_user: userId)
+            )
+            .execute()
+            .value
+    }
+
+    static func respondCommunityFriendRequest(
+        requestId: UUID,
+        accept: Bool
+    ) async throws {
+        struct Params: Encodable {
+            let request_id: UUID
+            let accept_request: Bool
+        }
+
+        try await supabase
+            .rpc(
+                "respond_community_friend_request",
+                params: Params(
+                    request_id: requestId,
+                    accept_request: accept
+                )
+            )
+            .execute()
+    }
+
+    static func cancelCommunityFriendRequest(
+        to userId: UUID
+    ) async throws {
+        struct Params: Encodable {
+            let other_user: UUID
+        }
+
+        try await supabase
+            .rpc(
+                "cancel_community_friend_request",
+                params: Params(other_user: userId)
+            )
+            .execute()
+    }
+
+    static func removeCommunityFriend(
+        _ userId: UUID
+    ) async throws {
+        struct Params: Encodable {
+            let other_user: UUID
+        }
+
+        try await supabase
+            .rpc(
+                "remove_community_friend",
+                params: Params(other_user: userId)
+            )
+            .execute()
+    }
+
+    static func communityFriendRequests()
+        async throws -> [CommunityFriendRequest] {
+        try await supabase
+            .rpc("my_community_friend_requests")
+            .execute()
+            .value
+    }
+
+    static func communityFriends()
+        async throws -> [CommunityFriend] {
+        try await supabase
+            .rpc("my_community_friends")
+            .execute()
+            .value
+    }
+
     static func conversationSummaries() async throws -> [ConversationSummaryRow] {
         try await supabase
             .rpc("get_my_conversation_summaries")
