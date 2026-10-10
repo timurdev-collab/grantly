@@ -205,7 +205,8 @@ struct AdvisorsView: View {
                         .tint(Theme.premiumForest)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 48)
-                } else if filteredAdvisors.isEmpty {
+                } else if filteredAdvisors.isEmpty &&
+                          !search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     EmptyState(
                         icon: "person.2",
                         title: "No advisors found",
