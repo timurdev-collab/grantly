@@ -502,6 +502,23 @@ struct ProfileView: View {
             .accessibilityHint(
                 "Browse student profiles, messages, and safety controls"
             )
+
+            NavigationLink {
+                MessagesView()
+            } label: {
+                Label(
+                    "Messages",
+                    systemImage: "bubble.left.and.bubble.right.fill"
+                )
+                .font(.subheadline.weight(.semibold))
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+                .background(Theme.surfaceRaised)
+                .foregroundStyle(Theme.ink)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint("Open your private conversations")
         }
         .padding(14)
         .background(Theme.surface)
