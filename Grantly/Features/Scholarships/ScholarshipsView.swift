@@ -143,7 +143,7 @@ struct ScholarshipsView: View {
             .padding(.bottom, 30)
         }
         .background(Theme.premiumIvoryRaised)
-        .preferredColorScheme(.light)
+        
         .navigationBarHidden(true)
         .scrollBounceBehavior(.always, axes: .vertical)
         .scrollDismissesKeyboard(.immediately)
