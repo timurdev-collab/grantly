@@ -2228,6 +2228,7 @@ struct CommunityView: View {
     @State private var chatDestination: CommunityChatDestination?
     @State private var messagingProfileID: UUID?
     @State private var addingFriendProfileID: UUID?
+    @State private var friendRequestSentIDs: Set<UUID> = []
     @State private var messageError: String?
 
     private var visibleResults: [CommunityProfile] {
@@ -2381,7 +2382,14 @@ struct CommunityView: View {
                                             ProgressView()
                                                 .frame(width: 40, height: 40)
                                         } else {
-                                            Image(systemName: "person.badge.plus")
+                                            Image(
+                                                systemName:
+                                                    friendRequestSentIDs.contains(
+                                                        profile.id
+                                                    )
+                                                    ? "checkmark.circle.fill"
+                                                    : "person.badge.plus"
+                                            )
                                                 .font(
                                                     .system(
                                                         size: 15,
@@ -2395,7 +2403,10 @@ struct CommunityView: View {
                                         }
                                     }
                                     .buttonStyle(.plain)
-                                    .disabled(addingFriendProfileID != nil)
+                                    .disabled(
+                                        addingFriendProfileID != nil ||
+                                        friendRequestSentIDs.contains(profile.id)
+                                    )
                                     .accessibilityLabel(
                                         "Add " +
                                         (profile.displayName ?? "student") +
@@ -2593,12 +2604,10 @@ struct CommunityView: View {
             let relation = try await DataService
                 .sendCommunityFriendRequest(to: profile.id)
 
-            switch relation {
-            case "friends":
-                messageError = nil
-            default:
-                messageError = nil
+            if relation == "outgoing" || relation == "friends" {
+                friendRequestSentIDs.insert(profile.id)
             }
+            messageError = nil
         } catch {
             messageError = error.localizedDescription
         }
