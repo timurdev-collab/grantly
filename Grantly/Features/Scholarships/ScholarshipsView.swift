@@ -177,12 +177,12 @@ struct ScholarshipsView: View {
     private var exploreHeader: some View {
         HStack(alignment: .center, spacing: 14) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Discover")
+                Text(L10n.string("Discover"))
                     .font(.system(size: 34, weight: .regular, design: .serif))
                     .tracking(-0.8)
                     .foregroundStyle(Theme.premiumInk)
 
-                Text("Curated, verified opportunities for your goals")
+                Text(L10n.string("Curated, verified opportunities for your goals"))
                     .font(.caption)
                     .foregroundStyle(Theme.premiumMuted)
             }
