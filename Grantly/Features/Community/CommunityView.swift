@@ -535,94 +535,61 @@ struct AdvisorDetailView: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 22) {
+            VStack(alignment: .leading, spacing: 18) {
                 header
                 introductionVideo
                 aboutSection
                 pricingSection
                 linksSection
 
-                Button {
-                    Task { await openDirectConversation() }
-                } label: {
-                    HStack(spacing: 12) {
-                        Image(systemName: "bubble.left.fill")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(Theme.onAccent)
-                            .frame(width: 42, height: 42)
-                            .background(Theme.orangeGradient)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(openingChat ? "Opening chat…" : "Message advisor")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.ink)
-
-                            Text("Start a private conversation in EduT")
-                                .font(.caption)
-                                .foregroundStyle(Theme.muted)
-                                .multilineTextAlignment(.leading)
+                HStack(spacing: 10) {
+                    Button {
+                        Task { await openDirectConversation() }
+                    } label: {
+                        HStack(spacing: 7) {
+                            Image(systemName: "bubble.left.fill")
+                            Text(
+                                openingChat
+                                    ? L10n.string("Opening chat…")
+                                    : L10n.string("Message")
+                            )
                         }
-
-                        Spacer()
-
-                        if openingChat {
-                            ProgressView()
-                                .tint(Theme.accent)
-                        } else {
-                            Image(systemName: "chevron.right")
-                                .font(.caption.bold())
-                                .foregroundStyle(Theme.muted)
-                        }
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Theme.premiumSageSoft)
+                        .foregroundStyle(Theme.premiumForest)
+                        .clipShape(
+                            RoundedRectangle(
+                                cornerRadius: 17,
+                                style: .continuous
+                            )
+                        )
                     }
-                    .padding(14)
-                    .background(Theme.surface)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Theme.accent.opacity(0.18))
-                    )
-                }
-                .buttonStyle(.plain)
-                .disabled(openingChat)
+                    .buttonStyle(.plain)
+                    .disabled(openingChat)
 
-                NavigationLink {
-                    AdvisorConsultationBookingView(advisor: advisor)
-                } label: {
-                    HStack(spacing: 12) {
-                        Image(systemName: "calendar.badge.plus")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(Theme.onAccent)
-                            .frame(width: 42, height: 42)
-                            .background(Theme.orangeGradient)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text("Book a live consultation")
-                                .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.ink)
-
-                            Text("One-to-one session · payment arranged after request")
-                                .font(.caption)
-                                .foregroundStyle(Theme.muted)
-                                .multilineTextAlignment(.leading)
+                    NavigationLink {
+                        AdvisorConsultationBookingView(advisor: advisor)
+                    } label: {
+                        HStack(spacing: 7) {
+                            Image(systemName: "calendar")
+                            Text(L10n.string("Book a session"))
                         }
-
-                        Spacer()
-
-                        Image(systemName: "chevron.right")
-                            .font(.caption.bold())
-                            .foregroundStyle(Theme.muted)
+                        .font(.subheadline.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Theme.premiumForest)
+                        .foregroundStyle(Theme.premiumIvory)
+                        .clipShape(
+                            RoundedRectangle(
+                                cornerRadius: 17,
+                                style: .continuous
+                            )
+                        )
                     }
-                    .padding(14)
-                    .background(Theme.surface)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Theme.accent.opacity(0.18))
-                    )
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
 
                 if let errorMessage {
                     Text(errorMessage)
@@ -630,12 +597,15 @@ struct AdvisorDetailView: View {
                         .foregroundStyle(Theme.danger)
                 }
             }
-            .padding()
-            .padding(.bottom, 28)
+            .padding(.horizontal, 18)
+            .padding(.top, 12)
+            .padding(.bottom, 32)
         }
-        .background(Theme.pageBackground)
-        .navigationTitle("Advisor")
+        .background(Theme.premiumIvoryRaised)
+        .preferredColorScheme(.light)
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .task { await loadAdvisorServices() }
         .sheet(item: $chatDestination) { destination in
             NavigationStack {
@@ -673,21 +643,10 @@ struct AdvisorDetailView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 16) {
-            HStack(alignment: .center, spacing: 18) {
+            HStack(alignment: .center, spacing: 16) {
                 ZStack {
                     Circle()
-                        .stroke(
-                            LinearGradient(
-                                colors: [Theme.orangeSoft, Theme.blueSoft],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 3
-                        )
-
-                    Circle()
-                        .fill(Theme.surfaceRaised)
-                        .padding(5)
+                        .fill(Theme.premiumSage)
 
                     if let value = advisor.avatarUrl,
                        let url = URL(string: value) {
@@ -700,76 +659,122 @@ struct AdvisorDetailView: View {
                             default:
                                 Image(systemName: "person.fill")
                                     .font(.system(size: 34))
-                                    .foregroundStyle(Theme.muted)
+                                    .foregroundStyle(Theme.premiumForest)
                             }
                         }
-                        .padding(7)
                     } else {
                         Image(systemName: "person.fill")
                             .font(.system(size: 34))
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumForest)
                     }
                 }
-                .frame(width: 104, height: 104)
+                .frame(width: 98, height: 98)
                 .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(
+                            Color.white.opacity(0.82),
+                            lineWidth: 2
+                        )
+                )
 
-                HStack(spacing: 18) {
-                    advisorStat(
-                        value: "\(advisor.specialties.count)",
-                        label: "Specialties"
-                    )
-                    advisorStat(
-                        value: "\(advisor.countries.count)",
-                        label: "Countries"
-                    )
-                    advisorStat(
-                        value: "\(advisor.languages.count)",
-                        label: "Languages"
-                    )
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack(spacing: 7) {
+                        Text(
+                            advisor.displayName ??
+                            L10n.string("EduT Advisor")
+                        )
+                        .font(
+                            .system(
+                                size: 25,
+                                weight: .regular,
+                                design: .serif
+                            )
+                        )
+                        .foregroundStyle(Theme.premiumInk)
+                        .lineLimit(2)
+
+                        if advisor.isFeatured {
+                            Image(systemName: "checkmark.seal.fill")
+                                .font(.caption)
+                                .foregroundStyle(Theme.premiumForest)
+                        }
+                    }
+
+                    if let title = advisor.title?.nonEmpty {
+                        Text(title)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Theme.premiumInk)
+                    }
+
+                    if let organization = advisor.organization?.nonEmpty {
+                        Text(organization)
+                            .font(.caption)
+                            .foregroundStyle(Theme.premiumMuted)
+                    }
+
+                    if let years = advisor.yearsExperience {
+                        Label(
+                            L10n.format(
+                                "%d years experience",
+                                years
+                            ),
+                            systemImage: "briefcase.fill"
+                        )
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.premiumForest)
+                    }
                 }
-                .frame(maxWidth: .infinity)
+
+                Spacer(minLength: 0)
             }
 
-            VStack(alignment: .leading, spacing: 5) {
-                Text(advisor.displayName ?? "EduT Advisor")
-                    .font(.title3.weight(.bold))
-                    .foregroundStyle(Theme.ink)
+            HStack(spacing: 8) {
+                advisorStat(
+                    value: "\(advisor.specialties.count)",
+                    label: "Specialties"
+                )
+                advisorStat(
+                    value: "\(advisor.countries.count)",
+                    label: "Countries"
+                )
+                advisorStat(
+                    value: "\(advisor.languages.count)",
+                    label: "Languages"
+                )
+            }
 
-                if let title = advisor.title?.nonEmpty {
-                    Text(title)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.ink)
-                }
-
-                if let organization = advisor.organization?.nonEmpty {
-                    Text(organization)
-                        .font(.caption)
-                        .foregroundStyle(Theme.muted)
-                }
-
-                if let shortBio = advisor.shortBio?.nonEmpty {
-                    Text(shortBio)
-                        .font(.subheadline)
-                        .foregroundStyle(Theme.ink)
-                        .lineSpacing(3)
-                }
-
-                if let years = advisor.yearsExperience {
-                    Label(
-                        L10n.format(
-                            "%d years experience",
-                            years
-                        ),
-                        systemImage: "briefcase.fill"
-                    )
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
-                }
+            if let shortBio = advisor.shortBio?.nonEmpty {
+                Text(shortBio)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.premiumMuted)
+                    .lineSpacing(3)
             }
         }
         .padding(16)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .background(Theme.premiumIvoryRaised)
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: 24,
+                style: .continuous
+            )
+        )
+        .overlay(
+            RoundedRectangle(
+                cornerRadius: 24,
+                style: .continuous
+            )
+            .stroke(
+                Theme.premiumInk.opacity(0.05),
+                lineWidth: 1
+            )
+        )
+        .shadow(
+            color: Color.black.opacity(0.035),
+            radius: 14,
+            x: 0,
+            y: 7
+        )
     }
 
     private func advisorStat(
@@ -779,11 +784,11 @@ struct AdvisorDetailView: View {
         VStack(spacing: 3) {
             Text(value)
                 .font(.headline.weight(.bold))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(Theme.premiumForest)
 
             Text(L10n.string(label))
                 .font(.caption2)
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(Theme.premiumMuted)
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
         }
@@ -797,7 +802,7 @@ struct AdvisorDetailView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Introduction")
                     .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                 if ["mp4", "mov", "m4v"]
                     .contains(url.pathExtension.lowercased()) {
@@ -814,17 +819,17 @@ struct AdvisorDetailView: View {
                             VStack(alignment: .leading, spacing: 3) {
                                 Text("Watch introduction")
                                     .font(.subheadline.weight(.semibold))
-                                    .foregroundStyle(Theme.ink)
+                                    .foregroundStyle(Theme.premiumInk)
 
                                 Text("Opens the advisor's video")
                                     .font(.caption)
-                                    .foregroundStyle(Theme.muted)
+                                    .foregroundStyle(Theme.premiumMuted)
                             }
 
                             Spacer()
 
                             Image(systemName: "arrow.up.right")
-                                .foregroundStyle(Theme.muted)
+                                .foregroundStyle(Theme.premiumMuted)
                         }
                         .padding(16)
                         .background(Theme.surface)
@@ -840,18 +845,18 @@ struct AdvisorDetailView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("About")
                 .font(.headline.bold())
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(Theme.premiumInk)
 
             if let shortBio = advisor.shortBio?.nonEmpty {
                 Text(shortBio)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
             }
 
             if let bio = advisor.bio?.nonEmpty {
                 Text(bio)
                     .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
                     .lineSpacing(3)
             }
 
@@ -860,17 +865,17 @@ struct AdvisorDetailView: View {
 
                 Text("How I help")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                 Text(approach)
                     .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
                     .lineSpacing(3)
             }
         }
         .padding(16)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .background(Theme.premiumIvoryRaised)
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 
     private var pricingSection: some View {
@@ -879,11 +884,11 @@ struct AdvisorDetailView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Consultation plans")
                         .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.premiumInk)
 
                     Text("Simple pricing · no hidden fees")
                         .font(.caption2)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(Theme.premiumMuted)
                 }
 
                 Spacer()
@@ -900,7 +905,7 @@ struct AdvisorDetailView: View {
             if advisorServices.isEmpty {
                 Text("Consultation pricing will appear here when available.")
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
                     .padding(.vertical, 4)
             } else {
                 VStack(spacing: 8) {
@@ -909,7 +914,7 @@ struct AdvisorDetailView: View {
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(L10n.string(service.title))
                                     .font(.subheadline.weight(.semibold))
-                                    .foregroundStyle(Theme.ink)
+                                    .foregroundStyle(Theme.premiumInk)
                                     .lineLimit(2)
 
                                 Text(
@@ -921,7 +926,7 @@ struct AdvisorDetailView: View {
                                         )
                                 )
                                 .font(.caption2)
-                                .foregroundStyle(Theme.muted)
+                                .foregroundStyle(Theme.premiumMuted)
                             }
 
                             Spacer(minLength: 8)
@@ -936,7 +941,7 @@ struct AdvisorDetailView: View {
                                         )
                                     )
                                     .font(.caption2)
-                                    .foregroundStyle(Theme.muted)
+                                    .foregroundStyle(Theme.premiumMuted)
                                     .strikethrough()
                                 }
 
@@ -1020,7 +1025,7 @@ struct AdvisorDetailView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Professional links")
                     .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                 if let value = advisor.linkedinUrl,
                    let url = URL(string: value) {
@@ -1119,7 +1124,7 @@ private struct AdvisorLegalDocumentView: View {
             ScrollView {
                 Text(document.bodyText)
                     .font(.subheadline)
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
                     .lineSpacing(4)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
@@ -1209,13 +1214,13 @@ struct AdvisorConsultationBookingView: View {
                         systemImage: "checkmark.shield.fill"
                     )
                     .font(.title3.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                     Text(
                         "Please review and accept the booking terms. This keeps pricing, privacy and cancellation rules clear before you select a service."
                     )
                     .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
                     .lineSpacing(3)
                 }
 
@@ -1236,7 +1241,7 @@ struct AdvisorConsultationBookingView: View {
                         systemImage: "info.circle.fill"
                     )
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                     legalPoint("Submitting a request does not charge you.")
                     legalPoint("Prices are shown before you select and submit a plan.")
@@ -1269,7 +1274,7 @@ struct AdvisorConsultationBookingView: View {
                             "I have read and agree to the Terms & Conditions and Cancellation & Refund Policy, and I acknowledge the Privacy Policy."
                         )
                         .font(.caption)
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.premiumInk)
                         .multilineTextAlignment(.leading)
 
                         Spacer(minLength: 0)
@@ -1324,7 +1329,7 @@ struct AdvisorConsultationBookingView: View {
                     "Terms version: \(termsVersion). Your acceptance time and policy versions are recorded for the booking process."
                 )
                 .font(.caption2)
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(Theme.premiumMuted)
             }
             .padding()
             .padding(.bottom, 28)
@@ -1340,7 +1345,7 @@ struct AdvisorConsultationBookingView: View {
             HStack {
                 Text(document.title)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                 Spacer()
 
@@ -1350,7 +1355,7 @@ struct AdvisorConsultationBookingView: View {
 
                 Image(systemName: "chevron.right")
                     .font(.caption.bold())
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
             }
             .padding(.vertical, 14)
         }
@@ -1366,7 +1371,7 @@ struct AdvisorConsultationBookingView: View {
 
             Text(text)
                 .font(.caption)
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(Theme.premiumMuted)
         }
     }
 
@@ -1398,20 +1403,20 @@ struct AdvisorConsultationBookingView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     Text(advisor.displayName ?? "EduT Advisor")
                         .font(.title3.bold())
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.premiumInk)
 
                     Text(
                         "Choose the support that fits you best. Introductory pricing is shown clearly before you send a request."
                     )
                     .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
                     .lineSpacing(3)
                 }
 
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Choose a plan")
                         .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.premiumInk)
 
                     if loading {
                         ProgressView()
@@ -1420,7 +1425,7 @@ struct AdvisorConsultationBookingView: View {
                     } else if services.isEmpty {
                         Text("No consultation services are available right now.")
                             .font(.subheadline)
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumMuted)
                     } else {
                         ForEach(services) { service in
                             Button {
@@ -1436,7 +1441,7 @@ struct AdvisorConsultationBookingView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Contact details")
                         .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.premiumInk)
 
                     TextField("Email address", text: $contactEmail)
                         .textContentType(.emailAddress)
@@ -1457,7 +1462,7 @@ struct AdvisorConsultationBookingView: View {
                         "Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded."
                     )
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
                 }
                 .padding(16)
                 .background(Theme.surface)
@@ -1466,7 +1471,7 @@ struct AdvisorConsultationBookingView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Preferred time")
                         .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.premiumInk)
 
                     DatePicker(
                         "Date and time",
@@ -1482,7 +1487,7 @@ struct AdvisorConsultationBookingView: View {
                         )
                     )
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
                 }
                 .padding(16)
                 .background(Theme.surface)
@@ -1491,7 +1496,7 @@ struct AdvisorConsultationBookingView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("What do you need help with?")
                         .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.premiumInk)
 
                     TextField(
                         "Example: scholarship application strategy",
@@ -1517,12 +1522,12 @@ struct AdvisorConsultationBookingView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Review before submitting")
                             .font(.headline.bold())
-                            .foregroundStyle(Theme.ink)
+                            .foregroundStyle(Theme.premiumInk)
 
                         HStack {
                             Text(service.title)
                                 .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.ink)
+                                .foregroundStyle(Theme.premiumInk)
 
                             Spacer()
 
@@ -1537,13 +1542,13 @@ struct AdvisorConsultationBookingView: View {
                                 : "\(service.durationMinutes)-minute one-to-one live session"
                         )
                         .font(.caption)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(Theme.premiumMuted)
 
                         Text(
                             "Your accepted Terms, Privacy Policy and Cancellation & Refund Policy apply to this request."
                         )
                         .font(.caption2)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(Theme.premiumMuted)
                     }
                     .padding(14)
                     .background(Theme.surfaceRaised)
@@ -1555,7 +1560,7 @@ struct AdvisorConsultationBookingView: View {
                         "I agree that EduT may use my email and WhatsApp number to coordinate this consultation."
                     )
                     .font(.caption)
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
                 }
                 .tint(Theme.accent)
 
@@ -1565,13 +1570,13 @@ struct AdvisorConsultationBookingView: View {
                         systemImage: "creditcard"
                     )
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                     Text(
                         "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded."
                     )
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
                 }
                 .padding(14)
                 .background(Theme.surfaceRaised)
@@ -1638,7 +1643,7 @@ struct AdvisorConsultationBookingView: View {
 
             Text("Consultation request sent")
                 .font(.title2.bold())
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(Theme.premiumInk)
 
             if let service = selectedService {
                 Text(
@@ -1650,14 +1655,14 @@ struct AdvisorConsultationBookingView: View {
                     )
                 )
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(Theme.premiumInk)
             }
 
             Text(
                 "Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded."
             )
             .font(.subheadline)
-            .foregroundStyle(Theme.muted)
+            .foregroundStyle(Theme.premiumMuted)
             .multilineTextAlignment(.center)
             .lineSpacing(3)
 
@@ -1693,13 +1698,13 @@ struct AdvisorConsultationBookingView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(L10n.string(service.title))
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(Theme.premiumInk)
                         .fixedSize(horizontal: false, vertical: true)
 
                     if service.serviceType == "six_month_package" {
                         Text("Weekly check-ins for 6 months")
                             .font(.caption)
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumMuted)
                     } else {
                         Text(
                             L10n.format(
@@ -1708,7 +1713,7 @@ struct AdvisorConsultationBookingView: View {
                             )
                         )
                         .font(.caption)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(Theme.premiumMuted)
                     }
                 }
 
@@ -1735,13 +1740,13 @@ struct AdvisorConsultationBookingView: View {
                         )
                     )
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
                     .strikethrough()
                 }
 
                 Text(priceText(service))
                     .font(.title3.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
             }
             .padding(.leading, 33)
         }
@@ -1893,7 +1898,7 @@ struct MyAdvisorConsultationsView: View {
 
                         Text(L10n.string(request.serviceTitle))
                             .font(.caption)
-                            .foregroundStyle(Theme.ink)
+                            .foregroundStyle(Theme.premiumInk)
 
                         Text(
                             L10n.format(
@@ -1906,7 +1911,7 @@ struct MyAdvisorConsultationsView: View {
                             )
                         )
                         .font(.caption2)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(Theme.premiumMuted)
 
                         if let value = request.preferredStart {
                             Text(
@@ -1916,7 +1921,7 @@ struct MyAdvisorConsultationsView: View {
                                 )
                             )
                             .font(.caption2)
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumMuted)
                         }
                     }
                     .padding(.vertical, 5)
@@ -1996,11 +2001,11 @@ private struct AdvisorTagWrap: View {
         VStack(alignment: .leading, spacing: 7) {
             Text(L10n.string(title))
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(Theme.premiumMuted)
 
             Text(values.prefix(8).joined(separator: " · "))
                 .font(.subheadline)
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(Theme.premiumInk)
         }
     }
 }
@@ -2045,7 +2050,7 @@ struct AdvisorCallPreparationView: View {
                                                 : "Preparing secure video call"
                                         )
                                         .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(Theme.ink)
+                                        .foregroundStyle(Theme.premiumInk)
                                     }
                                 }
                             }
@@ -2116,7 +2121,7 @@ struct AdvisorCallPreparationView: View {
                         "Recording requires explicit consent from both the student and advisor. Screen sharing uses the iOS system capture permission."
                     )
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
 
                     if let message = errorMessage ?? call.errorMessage {
                         Text(message)
@@ -2357,7 +2362,7 @@ struct CommunityView: View {
                         systemName:
                             "person.crop.circle.badge.magnifyingglass"
                     )
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
 
                     TextField(
                         "EduT ID or student name",
@@ -2367,7 +2372,7 @@ struct CommunityView: View {
                     .textInputAutocapitalization(.characters)
                     .autocorrectionDisabled()
                     .submitLabel(.search)
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                     if !query.isEmpty {
                         Button {
@@ -2375,7 +2380,7 @@ struct CommunityView: View {
                             profiles = []
                         } label: {
                             Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(Theme.muted)
+                                .foregroundStyle(Theme.premiumMuted)
                         }
                     }
                 }
@@ -2393,7 +2398,7 @@ struct CommunityView: View {
                     "Search by the full EduT ID, ID suffix, or student name."
                 )
                 .font(.caption2)
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(Theme.premiumMuted)
 
                 communityHero
 
@@ -2404,7 +2409,7 @@ struct CommunityView: View {
 
                         Text("Searching...")
                             .font(.caption)
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumMuted)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 42)
@@ -2424,14 +2429,14 @@ struct CommunityView: View {
 
                         Text("Find a student")
                             .font(.headline.bold())
-                            .foregroundStyle(Theme.ink)
+                            .foregroundStyle(Theme.premiumInk)
 
                         Text(
                             "Enter their EduT ID or name. " +
                             "Students are not listed publicly by default."
                         )
                         .font(.subheadline)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(Theme.premiumMuted)
                         .multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity)
@@ -2447,11 +2452,11 @@ struct CommunityView: View {
 
                         Text("No students found")
                             .font(.headline.bold())
-                            .foregroundStyle(Theme.ink)
+                            .foregroundStyle(Theme.premiumInk)
 
                         Text("Check the EduT ID or try the student's name.")
                             .font(.subheadline)
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumMuted)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 44)
@@ -2460,14 +2465,14 @@ struct CommunityView: View {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Search results")
                                 .font(.headline.bold())
-                                .foregroundStyle(Theme.ink)
+                                .foregroundStyle(Theme.premiumInk)
 
                             Text(
                                 "\(visibleResults.count) matching profile" +
                                 (visibleResults.count == 1 ? "" : "s")
                             )
                             .font(.caption)
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumMuted)
                         }
 
                         Spacer()
@@ -2583,11 +2588,11 @@ struct CommunityView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Community")
                     .font(.system(size: 30, weight: .bold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                 Text("Find students by EduT ID or name")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
             }
 
             Spacer()
@@ -2659,14 +2664,14 @@ struct CommunityView: View {
 
                 Text("Connect by ID.")
                     .font(.system(size: 25, weight: .bold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                 Text(
                     "Share your EduT ID with people you want to connect " +
                     "with. Your academic details stay private."
                 )
                 .font(.caption)
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(Theme.premiumMuted)
                 .lineSpacing(3)
                 .frame(maxWidth: 290, alignment: .leading)
 
@@ -2675,7 +2680,7 @@ struct CommunityView: View {
                     Label("Report & block", systemImage: "hand.raised.fill")
                 }
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(Theme.premiumMuted)
             }
             .padding(16)
         }
@@ -2780,7 +2785,7 @@ struct CommunityRow: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(profile.displayName ?? "Student")
                     .font(.subheadline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                 if let code = profile.communityCode {
                     Text(code)
@@ -2795,7 +2800,7 @@ struct CommunityRow: View {
                         .joined(separator: " · ")
                 )
                 .font(.caption)
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(Theme.premiumMuted)
                 .lineLimit(1)
 
                 Label(destinations, systemImage: "airplane")
@@ -2856,13 +2861,13 @@ private struct CommunityAvatar: View {
                     default:
                         Text(initials)
                             .font(.system(size: size * 0.27, weight: .bold))
-                            .foregroundStyle(Theme.ink)
+                            .foregroundStyle(Theme.premiumInk)
                     }
                 }
             } else {
                 Text(initials)
                     .font(.system(size: size * 0.27, weight: .bold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
             }
         }
         .frame(width: size, height: size)
@@ -3057,7 +3062,7 @@ struct CommunityFriendsView: View {
                                     .joined(separator: " · ")
                             )
                             .font(.caption2)
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumMuted)
                         }
 
                         Spacer()
@@ -3182,7 +3187,7 @@ struct CommunityProfileView: View {
                     ) {
                         Text(bio)
                             .font(.subheadline)
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumMuted)
                             .lineSpacing(4)
                     }
                 }
@@ -3212,7 +3217,7 @@ struct CommunityProfileView: View {
                 if !status.isEmpty {
                     Text(status)
                         .font(.caption)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(Theme.premiumMuted)
                         .multilineTextAlignment(.center)
                 }
             }
@@ -3259,7 +3264,7 @@ struct CommunityProfileView: View {
 
             Text(profile.displayName ?? "Student")
                 .font(.system(size: 27, weight: .bold))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(Theme.premiumInk)
 
             if let code = profile.communityCode {
                 Text(code)
@@ -3275,7 +3280,7 @@ struct CommunityProfileView: View {
                     .joined(separator: " · ")
             )
             .font(.subheadline)
-            .foregroundStyle(Theme.muted)
+            .foregroundStyle(Theme.premiumMuted)
 
             HStack(spacing: 8) {
                 Label("Community profile", systemImage: "person.2.fill")
@@ -3302,7 +3307,7 @@ struct CommunityProfileView: View {
                 if isBlocked {
                     Text("This student is blocked.")
                         .font(.caption)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(Theme.premiumMuted)
                 } else {
                     friendshipActions
                 }
@@ -3341,7 +3346,7 @@ struct CommunityProfileView: View {
             } else {
                 Text("This is your public community profile.")
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(Theme.premiumMuted)
             }
         }
     }
@@ -3370,7 +3375,7 @@ struct CommunityProfileView: View {
         case "outgoing":
             Label("Friend request sent", systemImage: "clock.fill")
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(Theme.premiumMuted)
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
                 .background(Theme.surfaceRaised)
@@ -3533,7 +3538,7 @@ private struct ProfileInfoCard<Content: View>: View {
             HStack {
                 Text(title)
                     .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(Theme.premiumInk)
 
                 Spacer()
 
