@@ -2038,6 +2038,35 @@ enum DataService {
             .value
     }
 
+    static func searchCommunityProfiles(
+        query: String,
+        limit: Int = 20
+    ) async throws -> [CommunityProfile] {
+        struct Params: Encodable {
+            let p_query: String
+            let p_limit: Int
+        }
+
+        let trimmed = query.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+
+        guard !trimmed.isEmpty else {
+            return []
+        }
+
+        return try await supabase
+            .rpc(
+                "search_community_profiles",
+                params: Params(
+                    p_query: trimmed,
+                    p_limit: limit
+                )
+            )
+            .execute()
+            .value
+    }
+
     static func conversationSummaries() async throws -> [ConversationSummaryRow] {
         try await supabase
             .rpc("get_my_conversation_summaries")
