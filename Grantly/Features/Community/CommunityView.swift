@@ -5,6 +5,10 @@ import UIKit
 import Combine
 
 struct AdvisorsView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    private var isDark: Bool { colorScheme == .dark }
+    private var textPrimary: Color { isDark ? Theme.editorialCream : Theme.premiumInk }
+    private var textSecondary: Color { isDark ? Theme.editorialSecondary : Theme.premiumMuted }
     @State private var advisors: [AdvisorDirectoryProfile] = []
     @State private var registration: AdvisorRegistration?
     @State private var loading = true
@@ -54,7 +58,7 @@ struct AdvisorsView: View {
                                 )
                             )
                             .tracking(-0.8)
-                            .foregroundStyle(Theme.premiumInk)
+                            .foregroundStyle(textPrimary)
 
                         Text(
                             L10n.string(
@@ -62,7 +66,7 @@ struct AdvisorsView: View {
                             )
                         )
                         .font(.caption)
-                        .foregroundStyle(Theme.premiumMuted)
+                        .foregroundStyle(textSecondary)
                     }
 
                     Spacer()
@@ -78,7 +82,7 @@ struct AdvisorsView: View {
                 HStack(spacing: 9) {
                     Image(systemName: "magnifyingglass")
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Theme.premiumMuted)
+                        .foregroundStyle(textSecondary)
 
                     TextField(
                         L10n.string("Search expertise or country"),
@@ -130,7 +134,7 @@ struct AdvisorsView: View {
                         VStack(alignment: .leading, spacing: 3) {
                             Text(L10n.string("My consultations"))
                                 .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.premiumInk)
+                                .foregroundStyle(textPrimary)
 
                             Text(
                                 L10n.string(
@@ -138,14 +142,14 @@ struct AdvisorsView: View {
                                 )
                             )
                             .font(.caption)
-                            .foregroundStyle(Theme.premiumMuted)
+                            .foregroundStyle(textSecondary)
                         }
 
                         Spacer()
 
                         Image(systemName: "chevron.right")
                             .font(.caption.bold())
-                            .foregroundStyle(Theme.premiumMuted)
+                            .foregroundStyle(textSecondary)
                     }
                     .padding(12)
                     .background(Theme.premiumIvoryRaised)
@@ -177,7 +181,7 @@ struct AdvisorsView: View {
                                 design: .serif
                             )
                         )
-                        .foregroundStyle(Theme.premiumInk)
+                        .foregroundStyle(textPrimary)
 
                     Spacer()
 
@@ -227,8 +231,7 @@ struct AdvisorsView: View {
             .padding(.top, 12)
             .padding(.bottom, 34)
         }
-        .background(Theme.premiumIvoryRaised)
-        .preferredColorScheme(.light)
+        .background(isDark ? Theme.editorialBackground : Theme.premiumIvoryRaised)
         .navigationBarHidden(true)
         .refreshable { await load() }
         .task { await load() }
@@ -263,13 +266,13 @@ struct AdvisorsView: View {
 
                     Text(registration.advisorName)
                         .font(.headline.weight(.semibold))
-                        .foregroundStyle(Theme.premiumInk)
+                        .foregroundStyle(textPrimary)
 
                     if let title = registration.advisorTitle,
                        !title.isEmpty {
                         Text(title)
                             .font(.caption)
-                            .foregroundStyle(Theme.premiumMuted)
+                            .foregroundStyle(textSecondary)
                     }
                 }
 
@@ -348,7 +351,7 @@ struct AdvisorsView: View {
         VStack(alignment: .leading, spacing: 9) {
             HStack(alignment: .top, spacing: 5) {
                 ZStack {
-                    Circle().fill(Theme.premiumSageSoft)
+                    Circle().fill(isDark ? Theme.editorialCard : Theme.premiumSageSoft)
                     if let value = advisor.avatarUrl,
                        let url = URL(string: value) {
                         AsyncImage(url: url) { phase in
@@ -370,7 +373,7 @@ struct AdvisorsView: View {
                 }
                 .frame(width: 62, height: 62)
                 .clipShape(Circle())
-                .overlay(Circle().stroke(.white.opacity(0.9), lineWidth: 2))
+                .overlay(Circle().stroke((isDark ? Theme.editorialCream : .white).opacity(0.45), lineWidth: 1))
 
                 Spacer(minLength: 0)
                 VStack(alignment: .trailing, spacing: 5) {
@@ -380,7 +383,7 @@ struct AdvisorsView: View {
                     if let years = advisor.yearsExperience {
                         Text("\(years)+ years")
                             .font(.system(size: 10))
-                            .foregroundStyle(Theme.premiumMuted)
+                            .foregroundStyle(textSecondary)
                     }
                 }
             }
@@ -391,15 +394,15 @@ struct AdvisorsView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(advisor.displayName ?? "EduT Advisor")
                         .font(.system(size: 15, weight: .semibold, design: .serif))
-                        .foregroundStyle(Theme.premiumInk)
+                        .foregroundStyle(textPrimary)
                         .lineLimit(2)
                     Text(advisor.title?.nonEmpty ?? "Study abroad advisor")
                         .font(.system(size: 11))
-                        .foregroundStyle(Theme.premiumMuted)
+                        .foregroundStyle(textSecondary)
                         .lineLimit(2)
                     Text(advisor.organization?.nonEmpty ?? "Education specialist")
                         .font(.system(size: 10))
-                        .foregroundStyle(Theme.premiumMuted)
+                        .foregroundStyle(textSecondary)
                         .lineLimit(1)
                 }
                 .frame(maxWidth: .infinity, minHeight: 67, alignment: .topLeading)
@@ -409,11 +412,11 @@ struct AdvisorsView: View {
             if let specialty = advisor.specialties.first {
                 Text(specialty)
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(Theme.premiumForest)
+                    .foregroundStyle((isDark ? Theme.editorialCream : Theme.premiumForest))
                     .lineLimit(1)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 5)
-                    .background(Theme.premiumSageSoft, in: Capsule())
+                    .background(isDark ? Theme.editorialCard : Theme.premiumSageSoft, in: Capsule())
             }
 
             NavigationLink {
@@ -421,18 +424,17 @@ struct AdvisorsView: View {
             } label: {
                 Label(L10n.string("Book consultation"), systemImage: "bubble.left.and.text.bubble.right")
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Theme.premiumInk)
                     .frame(maxWidth: .infinity)
                     .frame(height: 38)
-                    .background(Theme.premiumForest, in: Capsule())
+                    .background(Theme.editorialCream, in: Capsule())
             }
             .buttonStyle(.plain)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 22).stroke(.white.opacity(0.8), lineWidth: 1))
-        .shadow(color: Theme.premiumForest.opacity(0.07), radius: 12, y: 5)
+        .background(isDark ? Theme.editorialCard : Theme.premiumIvoryRaised, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22).stroke(isDark ? Theme.editorialCream.opacity(0.13) : Theme.premiumInk.opacity(0.06), lineWidth: 1))
     }
 
     private func advisorListCard(
@@ -480,7 +482,7 @@ struct AdvisorsView: View {
                         L10n.string("EduT Advisor")
                     )
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.premiumInk)
+                    .foregroundStyle(textPrimary)
                     .lineLimit(1)
 
                     if advisor.isFeatured {
@@ -493,7 +495,7 @@ struct AdvisorsView: View {
                 if let title = advisor.title?.nonEmpty {
                     Text(title)
                         .font(.caption)
-                        .foregroundStyle(Theme.premiumMuted)
+                        .foregroundStyle(textSecondary)
                         .lineLimit(1)
                 }
 
@@ -504,7 +506,7 @@ struct AdvisorsView: View {
                     ) { value in
                         Text(value)
                             .font(.system(size: 9, weight: .medium))
-                            .foregroundStyle(Theme.premiumMuted)
+                            .foregroundStyle(textSecondary)
                             .padding(.horizontal, 8)
                             .frame(height: 23)
                             .background(Theme.premiumSageSoft)
