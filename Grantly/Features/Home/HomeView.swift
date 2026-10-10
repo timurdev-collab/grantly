@@ -86,24 +86,32 @@ struct HomeView: View {
     }
 
     var body: some View {
-        ZStack {
-            Theme.pageBackground
-                .ignoresSafeArea()
+        GeometryReader { proxy in
+            ZStack {
+                HomeVisualStyle.cream
+                    .ignoresSafeArea()
 
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 16) {
-                    header
-                    editorialIntro
-                    searchButton
-                    categoryStrip
-                    bestMatchHero
-                    personalizedSection
-                    closingSoonSection
-                    advisorNudge
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        header
+                        editorialIntro
+                        searchButton
+                        categoryStrip
+                        bestMatchHero
+                        personalizedSection
+                        closingSoonSection
+                        advisorNudge
+                    }
+                    .frame(
+                        width: max(proxy.size.width - 36, 0),
+                        alignment: .leading
+                    )
+                    .padding(.horizontal, 18)
+                    .padding(.top, 8)
+                    .padding(.bottom, 112)
                 }
-                .padding(.horizontal, 18)
-                .padding(.top, 8)
-                .padding(.bottom, 112)
+                .frame(width: proxy.size.width)
+                .clipped()
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -115,7 +123,7 @@ struct HomeView: View {
         HStack(spacing: 10) {
             ZStack {
                 Circle()
-                    .fill(Theme.accent)
+                    .fill(HomeVisualStyle.forest)
 
                 Image(systemName: "graduationcap.fill")
                     .font(.system(size: 14, weight: .semibold))
@@ -124,14 +132,14 @@ struct HomeView: View {
             .frame(width: 32, height: 32)
             .overlay(alignment: .topTrailing) {
                 Circle()
-                    .fill(Theme.sand)
+                    .fill(HomeVisualStyle.sand)
                     .frame(width: 7, height: 7)
                     .offset(x: 1, y: -1)
             }
 
             Text(verbatim: "EduT")
                 .font(.system(size: 21, weight: .bold, design: .rounded))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(HomeVisualStyle.forest)
 
             Spacer()
 
@@ -143,7 +151,7 @@ struct HomeView: View {
                 ZStack(alignment: .topTrailing) {
                     Image(systemName: "bell")
                         .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(HomeVisualStyle.forest)
                         .frame(width: 38, height: 38)
                         .background(.ultraThinMaterial)
                         .clipShape(Circle())
@@ -172,11 +180,11 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 7) {
             Text(firstName.map { "Good afternoon, \($0)" } ?? "Good afternoon")
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.accentSoft)
+                .foregroundStyle(HomeVisualStyle.forest)
 
             Text(L10n.string("Scholarships picked\nfor your next chapter."))
                 .font(.system(size: 34, weight: .regular, design: .serif))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(HomeVisualStyle.ink)
                 .tracking(-0.8)
                 .lineSpacing(-2)
                 .fixedSize(horizontal: false, vertical: true)
@@ -188,11 +196,11 @@ struct HomeView: View {
             HStack(spacing: 10) {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
 
                 Text(L10n.string("Search scholarships, countries, majors"))
                     .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
 
                 Spacer(minLength: 8)
@@ -201,7 +209,7 @@ struct HomeView: View {
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(Theme.onAccent)
                     .frame(width: 32, height: 32)
-                    .background(Theme.accent)
+                    .background(HomeVisualStyle.forest)
                     .clipShape(Circle())
             }
             .padding(.leading, 15)
@@ -236,13 +244,14 @@ struct HomeView: View {
             .padding(.vertical, 1)
         }
         .contentMargins(.horizontal, 0, for: .scrollContent)
+        .frame(maxWidth: .infinity)
     }
 
     @ViewBuilder
     private var bestMatchHero: some View {
         if loading && matches.isEmpty && upcoming.isEmpty {
             RoundedRectangle(cornerRadius: 26, style: .continuous)
-                .fill(Theme.accent)
+                .fill(HomeVisualStyle.forest)
                 .frame(height: 180)
                 .overlay {
                     ProgressView()
@@ -356,6 +365,7 @@ struct HomeView: View {
                     }
                 }
                 .contentMargins(.horizontal, 0, for: .scrollContent)
+                .frame(maxWidth: .infinity)
             } else {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
@@ -376,6 +386,7 @@ struct HomeView: View {
                     }
                 }
                 .contentMargins(.horizontal, 0, for: .scrollContent)
+                .frame(maxWidth: .infinity)
             }
         }
     }
@@ -423,7 +434,7 @@ struct HomeView: View {
 
                     Image(systemName: "person.crop.circle.fill")
                         .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(Theme.accentSoft)
+                        .foregroundStyle(HomeVisualStyle.forest)
                 }
                 .frame(width: 38, height: 38)
 
@@ -441,13 +452,13 @@ struct HomeView: View {
 
                 Image(systemName: "arrow.right")
                     .font(.caption.bold())
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(HomeVisualStyle.forest)
                     .frame(width: 31, height: 31)
                     .background(Theme.onAccent)
                     .clipShape(Circle())
             }
             .padding(12)
-            .background(Theme.accent)
+            .background(HomeVisualStyle.forest)
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         }
         .buttonStyle(.plain)
@@ -534,6 +545,44 @@ struct HomeView: View {
 }
 
 
+private enum HomeVisualStyle {
+    static let cream = Color(
+        red: 247 / 255,
+        green: 243 / 255,
+        blue: 232 / 255
+    )
+
+    static let forest = Color(
+        red: 18 / 255,
+        green: 55 / 255,
+        blue: 42 / 255
+    )
+
+    static let ink = Color(
+        red: 26 / 255,
+        green: 31 / 255,
+        blue: 28 / 255
+    )
+
+    static let muted = Color(
+        red: 103 / 255,
+        green: 111 / 255,
+        blue: 104 / 255
+    )
+
+    static let sage = Color(
+        red: 221 / 255,
+        green: 235 / 255,
+        blue: 227 / 255
+    )
+
+    static let sand = Color(
+        red: 215 / 255,
+        green: 154 / 255,
+        blue: 54 / 255
+    )
+}
+
 private struct HomeFilterPill: View {
     let title: String
     let selected: Bool
@@ -543,7 +592,7 @@ private struct HomeFilterPill: View {
         Button(action: action) {
             Text(title)
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(selected ? Theme.onAccent : Theme.ink)
+                .foregroundStyle(selected ? Theme.onAccent : HomeVisualStyle.ink)
                 .padding(.horizontal, 15)
                 .frame(height: 38)
                 .background(selected ? Theme.accent : Theme.surface)
@@ -571,13 +620,13 @@ private struct HomeConceptSectionTitle: View {
         HStack(alignment: .firstTextBaseline) {
             Text(title)
                 .font(.system(size: 21, weight: .regular, design: .serif))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(HomeVisualStyle.ink)
 
             Spacer()
 
             Button(trailing, action: action)
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.accent)
+                .foregroundStyle(HomeVisualStyle.forest)
                 .buttonStyle(.plain)
         }
     }
@@ -612,7 +661,7 @@ private struct HomeEditorialHero: View {
                     Text(L10n.string("BEST MATCH"))
                         .font(.system(size: 10, weight: .bold))
                         .tracking(0.7)
-                        .foregroundStyle(Theme.accent)
+                        .foregroundStyle(HomeVisualStyle.forest)
                         .padding(.horizontal, 12)
                         .frame(height: 30)
                         .background(.ultraThinMaterial)
@@ -647,7 +696,7 @@ private struct HomeEditorialHero: View {
                 HStack {
                     Text(scholarship.fundingType)
                         .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(HomeVisualStyle.ink)
                         .padding(.horizontal, 11)
                         .frame(height: 30)
                         .background(Theme.onAccent)
@@ -657,7 +706,7 @@ private struct HomeEditorialHero: View {
 
                     Image(systemName: "arrow.up.right")
                         .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(HomeVisualStyle.ink)
                         .frame(width: 42, height: 42)
                         .background(.ultraThinMaterial)
                         .clipShape(Circle())
@@ -691,7 +740,7 @@ private struct HomeEmptyHero: View {
                 Text(L10n.string("START EXPLORING"))
                     .font(.system(size: 10, weight: .bold))
                     .tracking(0.5)
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(HomeVisualStyle.forest)
                     .padding(.horizontal, 11)
                     .padding(.vertical, 6)
                     .background(Theme.onAccent)
@@ -729,7 +778,7 @@ private struct HomeExploreShortcut: View {
 
                 Text(title)
                     .font(.system(size: 10.5, weight: .semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .multilineTextAlignment(.leading)
                     .lineLimit(2)
 
@@ -777,7 +826,7 @@ private struct HomeRecommendationTile: View {
                     if let score {
                         Text("\(score)% match")
                             .font(.caption2.weight(.bold))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(HomeVisualStyle.forest)
                             .padding(.horizontal, 10)
                             .frame(height: 27)
                             .background(.ultraThinMaterial)
@@ -849,29 +898,29 @@ private struct HomeClosingRow: View {
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(Theme.trustTeal)
                 .frame(width: 38, height: 38)
-                .background(Theme.sage)
+                .background(HomeVisualStyle.sage)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(scholarship.title)
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(1)
 
                 Text(scholarship.country)
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
             }
 
             Spacer(minLength: 6)
 
             Text(urgencyText)
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(isUrgent ? Theme.danger : Theme.accent)
+                .foregroundStyle(isUrgent ? Theme.danger : HomeVisualStyle.forest)
                 .padding(.horizontal, 10)
                 .frame(height: 28)
                 .background(
-                    (isUrgent ? Theme.danger : Theme.sage)
+                    (isUrgent ? Theme.danger : HomeVisualStyle.sage)
                         .opacity(isUrgent ? 0.12 : 1)
                 )
                 .clipShape(Capsule())
@@ -928,7 +977,7 @@ private struct HomeQuickAction: View {
                 } else if let systemImage {
                     Image(systemName: systemImage)
                         .font(.system(size: 21, weight: .semibold))
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(HomeVisualStyle.ink)
                 } else {
                     quickFallback
                 }
@@ -936,7 +985,7 @@ private struct HomeQuickAction: View {
 
             Text(title)
                 .font(.caption2)
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(HomeVisualStyle.ink)
                 .lineLimit(1)
                 .frame(width: 72)
         }
@@ -947,11 +996,11 @@ private struct HomeQuickAction: View {
         if let fallback, !fallback.isEmpty {
             Text(fallback.uppercased())
                 .font(.headline.bold())
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(HomeVisualStyle.ink)
         } else {
             Image(systemName: "person.fill")
                 .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
         }
     }
 }
@@ -983,11 +1032,11 @@ private struct HomeSectionHeader: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
 
                 Text(subtitle)
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
             }
 
             Spacer()
@@ -1017,12 +1066,12 @@ private struct HomeApplicationRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(preview.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(1)
 
                 Text(preview.subtitle)
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
 
                 HStack(spacing: 7) {
@@ -1032,14 +1081,14 @@ private struct HomeApplicationRow: View {
 
                     if let deadline = preview.deadline {
                         Text("·")
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(HomeVisualStyle.muted)
 
                         Label(
                             String(deadline.prefix(10)),
                             systemImage: "calendar"
                         )
                         .font(.caption2)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(HomeVisualStyle.muted)
                     }
                 }
             }
@@ -1048,7 +1097,7 @@ private struct HomeApplicationRow: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption.bold())
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
         }
         .padding(13)
         .background(Theme.surface)
@@ -1110,12 +1159,12 @@ private struct UpcomingDeadlinesView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(2)
 
                 Text(item.status)
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
             }
 
@@ -1145,12 +1194,12 @@ private struct HomeDeadlineRow: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(1)
 
                 Text(status)
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
             }
 
@@ -1181,11 +1230,11 @@ private struct HomeStat: View {
 
             Text(value)
                 .font(.system(size: 19, weight: .bold))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(HomeVisualStyle.ink)
 
             Text(label)
                 .font(.caption2)
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
         }
         .padding(13)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1238,12 +1287,12 @@ private struct HomeMatchCard: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(match.scholarship.title)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(2)
 
                 Text(match.scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
 
                 HStack(spacing: 7) {
@@ -1259,7 +1308,7 @@ private struct HomeMatchCard: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption.weight(.bold))
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
         }
         .padding(12)
         .background(Theme.surface)
@@ -1285,12 +1334,12 @@ private struct FeaturedScholarshipCard: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(scholarship.title)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(2)
 
                 Text(scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
 
                 HStack(spacing: 7) {
@@ -1301,7 +1350,7 @@ private struct FeaturedScholarshipCard: View {
                         systemImage: "mappin.and.ellipse"
                     )
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
                 }
             }
@@ -1310,7 +1359,7 @@ private struct FeaturedScholarshipCard: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption.weight(.bold))
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
         }
         .padding(12)
         .background(Theme.surface)
@@ -1336,13 +1385,13 @@ struct UpcomingDeadlineCard: View {
             VStack(alignment: .leading, spacing: 7) {
                 Text(scholarship.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(2)
                     .frame(height: 38, alignment: .top)
 
                 Text(scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
 
                 if let deadline = scholarship.deadline {
@@ -1378,16 +1427,16 @@ struct ProfileSetupCard: View {
 
                     Text("1 min")
                         .font(.caption2.bold())
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(HomeVisualStyle.muted)
                 }
 
                 Text("Unlock personalised matches")
                     .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
 
                 Text("Add your degree, field, GPA and destination goals so EduT can rank scholarships around you.")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineSpacing(3)
 
                 Button("Complete my profile", action: openProfile)
@@ -1406,7 +1455,7 @@ struct ProfileSnapshot: View {
                 HStack {
                     Text("Academic snapshot")
                         .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(HomeVisualStyle.ink)
 
                     Spacer()
 
@@ -1416,7 +1465,7 @@ struct ProfileSnapshot: View {
 
                 Text(profile.intendedMajor ?? "Your study plan")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
 
                 HStack(spacing: 0) {
                     SnapshotMetric(
@@ -1448,11 +1497,11 @@ struct SnapshotMetric: View {
             Text(label)
                 .font(.system(size: 9, weight: .bold))
                 .tracking(0.8)
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
 
             Text(value)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(HomeVisualStyle.ink)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1475,12 +1524,12 @@ struct MatchCard: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(match.scholarship.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(2)
 
                 Text(match.scholarship.country)
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
 
                 HStack {
                     FundingBadge(text: match.scholarship.fundingType)
@@ -1585,7 +1634,7 @@ struct NotificationInboxView: View {
                                     HStack {
                                         Text(notification.title)
                                             .font(.subheadline.weight(.semibold))
-                                            .foregroundStyle(Theme.ink)
+                                            .foregroundStyle(HomeVisualStyle.ink)
 
                                         Spacer()
 
@@ -1598,7 +1647,7 @@ struct NotificationInboxView: View {
 
                                     Text(notification.body)
                                         .font(.caption)
-                                        .foregroundStyle(Theme.muted)
+                                        .foregroundStyle(HomeVisualStyle.muted)
                                         .multilineTextAlignment(.leading)
                                         .lineLimit(3)
 
