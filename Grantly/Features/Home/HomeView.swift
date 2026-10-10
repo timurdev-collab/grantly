@@ -154,7 +154,7 @@ struct HomeView: View {
                     .offset(x: 1, y: -1)
             }
 
-            Text("EduT")
+            Text(verbatim: "EduT")
                 .font(.system(size: 21, weight: .bold, design: .rounded))
                 .foregroundStyle(Theme.accent)
 
@@ -215,7 +215,7 @@ struct HomeView: View {
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(Theme.muted)
 
-                Text("Search scholarships, countries, majors")
+                Text(L10n.string("Search scholarships, countries, majors"))
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
                     .lineLimit(1)
@@ -438,11 +438,11 @@ struct HomeView: View {
                 .frame(width: 38, height: 38)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Need help choosing?")
+                    Text(L10n.string("Need help choosing?"))
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.onAccent)
 
-                    Text("Ask your advisor about your next move")
+                    Text(L10n.string("Ask your advisor about your next move"))
                         .font(.caption2)
                         .foregroundStyle(Theme.onAccent.opacity(0.72))
                 }
@@ -599,7 +599,7 @@ private struct HomeEditorialHero: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 HStack(alignment: .top) {
-                    Text("BEST MATCH")
+                    Text(L10n.string("BEST MATCH"))
                         .font(.system(size: 10, weight: .bold))
                         .tracking(0.5)
                         .foregroundStyle(Theme.accent)
@@ -679,7 +679,7 @@ private struct HomeEmptyHero: View {
                 .offset(x: 245, y: -45)
 
             VStack(alignment: .leading, spacing: 7) {
-                Text("START EXPLORING")
+                Text(L10n.string("START EXPLORING"))
                     .font(.system(size: 10, weight: .bold))
                     .tracking(0.5)
                     .foregroundStyle(Theme.accent)
@@ -694,7 +694,7 @@ private struct HomeEmptyHero: View {
                     .font(.system(size: 26, weight: .regular, design: .serif))
                     .foregroundStyle(Theme.onAccent)
 
-                Text("Browse verified scholarships from around the world.")
+                Text(L10n.string("Browse verified scholarships from around the world."))
                     .font(.caption)
                     .foregroundStyle(Theme.onAccent.opacity(0.75))
             }
