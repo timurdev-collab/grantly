@@ -2238,10 +2238,11 @@ struct CommunityView: View {
                 .lowercased()
 
             guard !q.isEmpty else {
-                return true
+                return false
             }
 
             let searchableText =
+                "\(profile.communityCode ?? "") " +
                 "\(profile.displayName ?? "") " +
                 "\(profile.nationality ?? "") " +
                 "\(profile.major ?? "") " +
@@ -2264,7 +2265,7 @@ struct CommunityView: View {
 
                 SearchField(
                     text: $query,
-                    prompt: "Search students, countries or fields..."
+                    prompt: "Search EduT ID or student name..."
                 )
 
                 communityHero
@@ -2280,6 +2281,26 @@ struct CommunityView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 50)
+                } else if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    VStack(spacing: 14) {
+                        Image(systemName: "person.crop.circle.badge.magnifyingglass")
+                            .font(.system(size: 28, weight: .semibold))
+                            .foregroundStyle(Theme.blueSoft)
+                            .frame(width: 62, height: 62)
+                            .background(Theme.surface)
+                            .clipShape(Circle())
+
+                        Text("Find a student")
+                            .font(.headline.bold())
+                            .foregroundStyle(Theme.ink)
+
+                        Text("Enter their unique EduT ID, such as EDU-1A2B3C4D5E, or search by name.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                            .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 44)
                 } else if filtered.isEmpty {
                     VStack(spacing: 14) {
                         Image(systemName: "person.3")
@@ -2293,7 +2314,7 @@ struct CommunityView: View {
                             .font(.headline.bold())
                             .foregroundStyle(Theme.ink)
 
-                        Text("Try another name, country or study field.")
+                        Text("Check the EduT ID or try the student's name.")
                             .font(.subheadline)
                             .foregroundStyle(Theme.muted)
                     }
@@ -2302,11 +2323,11 @@ struct CommunityView: View {
                 } else {
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Students to connect with")
+                            Text("Search results")
                                 .font(.headline.bold())
                                 .foregroundStyle(Theme.ink)
 
-                            Text("\(filtered.count) visible community profiles")
+                            Text("\(filtered.count) matching profile\(filtered.count == 1 ? "" : "s")")
                                 .font(.caption)
                                 .foregroundStyle(Theme.muted)
                         }
@@ -2523,6 +2544,12 @@ struct CommunityRow: View {
                     .font(.subheadline.bold())
                     .foregroundStyle(Theme.ink)
 
+                if let code = profile.communityCode {
+                    Text(code)
+                        .font(.caption2.monospaced().weight(.semibold))
+                        .foregroundStyle(Theme.blueSoft)
+                }
+
                 Text(
                     [profile.nationality, profile.major]
                         .compactMap { $0 }
@@ -2716,6 +2743,13 @@ struct CommunityProfileView: View {
             Text(profile.displayName ?? "Student")
                 .font(.system(size: 27, weight: .bold))
                 .foregroundStyle(Theme.ink)
+
+            if let code = profile.communityCode {
+                Text(code)
+                    .font(.caption.monospaced().weight(.semibold))
+                    .foregroundStyle(Theme.blueSoft)
+                    .textSelection(.enabled)
+            }
 
             Text(
                 [profile.nationality, profile.major]
