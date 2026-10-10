@@ -2222,52 +2222,13 @@ struct CommunityView: View {
     @State private var profiles: [CommunityProfile] = []
     @State private var blockedUserIDs: Set<UUID> = []
     @State private var query = ""
-    @State private var loading = true
+    @State private var loading = false
     @State private var chatDestination: CommunityChatDestination?
     @State private var messagingProfileID: UUID?
     @State private var messageError: String?
 
-    private var filtered: [CommunityProfile] {
-        profiles.filter { profile in
-            guard !blockedUserIDs.contains(profile.id) else {
-                return false
-            }
-
-            let q = query
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .lowercased()
-
-            guard !q.isEmpty else {
-                return false
-            }
-
-            let searchableText =
-                "\(profile.displayName ?? "") " +
-                "\(profile.nationality ?? "") " +
-                "\(profile.major ?? "") " +
-                "\(profile.targetCountries?.joined(separator: " ") ?? "")"
-
-            let normalizedQuery = q
-                .replacingOccurrences(of: "edu-", with: "")
-                .replacingOccurrences(of: "edu", with: "")
-                .replacingOccurrences(of: "-", with: "")
-                .replacingOccurrences(of: " ", with: "")
-
-            let normalizedCode = (profile.communityCode ?? "")
-                .lowercased()
-                .replacingOccurrences(of: "edu-", with: "")
-                .replacingOccurrences(of: "-", with: "")
-
-            return searchableText
-                .lowercased()
-                .contains(q) ||
-                (!normalizedQuery.isEmpty &&
-                 normalizedCode.contains(normalizedQuery))
-        }
-    }
-
-    private var featured: [CommunityProfile] {
-        Array(filtered.prefix(8))
+    private var visibleResults: [CommunityProfile] {
+        profiles.filter { !blockedUserIDs.contains($0.id) }
     }
 
     var body: some View {
@@ -2276,8 +2237,11 @@ struct CommunityView: View {
                 header
 
                 HStack(spacing: 10) {
-                    Image(systemName: "person.crop.circle.badge.magnifyingglass")
-                        .foregroundStyle(Theme.muted)
+                    Image(
+                        systemName:
+                            "person.crop.circle.badge.magnifyingglass"
+                    )
+                    .foregroundStyle(Theme.muted)
 
                     TextField(
                         "EduT ID or student name",
@@ -2292,6 +2256,7 @@ struct CommunityView: View {
                     if !query.isEmpty {
                         Button {
                             query = ""
+                            profiles = []
                         } label: {
                             Image(systemName: "xmark.circle.fill")
                                 .foregroundStyle(Theme.muted)
@@ -2308,9 +2273,11 @@ struct CommunityView: View {
                         .stroke(Theme.ink.opacity(0.05))
                 )
 
-                Text("You can enter the full ID (EDU-1A2B3C4D5E) or just 1A2B3C4D5E.")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                Text(
+                    "Search by the full EduT ID, ID suffix, or student name."
+                )
+                .font(.caption2)
+                .foregroundStyle(Theme.muted)
 
                 communityHero
 
@@ -2319,33 +2286,41 @@ struct CommunityView: View {
                         ProgressView()
                             .tint(Theme.blue)
 
-                        Text("Loading the EduT community...")
+                        Text("Searching...")
                             .font(.caption)
                             .foregroundStyle(Theme.muted)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 50)
-                } else if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    .padding(.vertical, 42)
+                } else if query
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .isEmpty {
                     VStack(spacing: 14) {
-                        Image(systemName: "person.crop.circle.badge.magnifyingglass")
-                            .font(.system(size: 28, weight: .semibold))
-                            .foregroundStyle(Theme.blueSoft)
-                            .frame(width: 62, height: 62)
-                            .background(Theme.surface)
-                            .clipShape(Circle())
+                        Image(
+                            systemName:
+                                "person.crop.circle.badge.magnifyingglass"
+                        )
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundStyle(Theme.blueSoft)
+                        .frame(width: 62, height: 62)
+                        .background(Theme.surface)
+                        .clipShape(Circle())
 
                         Text("Find a student")
                             .font(.headline.bold())
                             .foregroundStyle(Theme.ink)
 
-                        Text("Enter their unique EduT ID, such as EDU-1A2B3C4D5E, or search by name.")
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.muted)
-                            .multilineTextAlignment(.center)
+                        Text(
+                            "Enter their EduT ID or name. " +
+                            "Students are not listed publicly by default."
+                        )
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.muted)
+                        .multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 44)
-                } else if filtered.isEmpty {
+                } else if visibleResults.isEmpty {
                     VStack(spacing: 14) {
                         Image(systemName: "person.3")
                             .font(.system(size: 28, weight: .semibold))
@@ -2371,9 +2346,12 @@ struct CommunityView: View {
                                 .font(.headline.bold())
                                 .foregroundStyle(Theme.ink)
 
-                            Text("\(filtered.count) matching profile\(filtered.count == 1 ? "" : "s")")
-                                .font(.caption)
-                                .foregroundStyle(Theme.muted)
+                            Text(
+                                "\(visibleResults.count) matching profile" +
+                                (visibleResults.count == 1 ? "" : "s")
+                            )
+                            .font(.caption)
+                            .foregroundStyle(Theme.muted)
                         }
 
                         Spacer()
@@ -2383,7 +2361,7 @@ struct CommunityView: View {
                     }
 
                     LazyVStack(spacing: 12) {
-                        ForEach(featured) { profile in
+                        ForEach(visibleResults) { profile in
                             HStack(spacing: 10) {
                                 NavigationLink(value: profile) {
                                     CommunityRow(profile: profile)
@@ -2401,7 +2379,12 @@ struct CommunityView: View {
                                             .frame(width: 40, height: 40)
                                     } else {
                                         Image(systemName: "message.fill")
-                                            .font(.system(size: 15, weight: .semibold))
+                                            .font(
+                                                .system(
+                                                    size: 15,
+                                                    weight: .semibold
+                                                )
+                                            )
                                             .foregroundStyle(Theme.blueSoft)
                                             .frame(width: 40, height: 40)
                                             .background(Theme.surface)
@@ -2411,7 +2394,8 @@ struct CommunityView: View {
                                 .buttonStyle(.plain)
                                 .disabled(messagingProfileID != nil)
                                 .accessibilityLabel(
-                                    "Message \(profile.displayName ?? "student")"
+                                    "Message " +
+                                    (profile.displayName ?? "student")
                                 )
                             }
                         }
@@ -2447,8 +2431,23 @@ struct CommunityView: View {
         } message: {
             Text(messageError ?? "")
         }
-        .refreshable { await load() }
-        .task { await load() }
+        .task {
+            await loadBlockedUsers()
+        }
+        .task(id: query) {
+            do {
+                try await Task.sleep(for: .milliseconds(300))
+            } catch {
+                return
+            }
+
+            guard !Task.isCancelled else { return }
+            await runSearch()
+        }
+        .refreshable {
+            await loadBlockedUsers()
+            await runSearch()
+        }
     }
 
     private var header: some View {
@@ -2458,7 +2457,7 @@ struct CommunityView: View {
                     .font(.system(size: 30, weight: .bold))
                     .foregroundStyle(Theme.ink)
 
-                Text("Meet students pursuing opportunities worldwide")
+                Text("Find students by EduT ID or name")
                     .font(.subheadline)
                     .foregroundStyle(Theme.muted)
             }
@@ -2468,12 +2467,15 @@ struct CommunityView: View {
             NavigationLink {
                 MessagesView()
             } label: {
-                Image(systemName: "bubble.left.and.bubble.right.fill")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Theme.blueSoft)
-                    .frame(width: 42, height: 42)
-                    .background(Theme.surface)
-                    .clipShape(RoundedRectangle(cornerRadius: 13))
+                Image(
+                    systemName:
+                        "bubble.left.and.bubble.right.fill"
+                )
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(Theme.blueSoft)
+                .frame(width: 42, height: 42)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 13))
             }
             .accessibilityLabel("Messages")
         }
@@ -2481,7 +2483,10 @@ struct CommunityView: View {
 
     private var communityHero: some View {
         ZStack(alignment: .bottomLeading) {
-            UniversityPhoto(seed: "international students university community", height: 190)
+            UniversityPhoto(
+                seed: "international students university community",
+                height: 190
+            )
 
             LinearGradient(
                 colors: [
@@ -2498,15 +2503,18 @@ struct CommunityView: View {
                     .tracking(1.5)
                     .foregroundStyle(Theme.blueSoft)
 
-                Text("You are not applying\nalone.")
+                Text("Connect by ID.")
                     .font(.system(size: 25, weight: .bold))
                     .foregroundStyle(Theme.ink)
 
-                Text("Connect around study goals, countries and universities while keeping sensitive academic details private.")
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
-                    .lineSpacing(3)
-                    .frame(maxWidth: 290, alignment: .leading)
+                Text(
+                    "Share your EduT ID with people you want to connect " +
+                    "with. Your academic details stay private."
+                )
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+                .lineSpacing(3)
+                .frame(maxWidth: 290, alignment: .leading)
 
                 HStack(spacing: 14) {
                     Label("Private profile", systemImage: "lock.fill")
@@ -2544,23 +2552,35 @@ struct CommunityView: View {
     }
 
     @MainActor
-    private func load() async {
-        loading = profiles.isEmpty
+    private func runSearch() async {
+        let trimmed = query.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+
+        guard !trimmed.isEmpty else {
+            profiles = []
+            loading = false
+            return
+        }
+
+        loading = true
         defer { loading = false }
 
         do {
-            let latestProfiles = try await DataService.communityProfiles()
-            profiles = latestProfiles
+            profiles = try await DataService.searchCommunityProfiles(
+                query: trimmed
+            )
         } catch {
-            if profiles.isEmpty {
-                messageError = error.localizedDescription
-            }
+            messageError = error.localizedDescription
         }
+    }
 
+    @MainActor
+    private func loadBlockedUsers() async {
         do {
             blockedUserIDs = try await DataService.blockedUserIDs()
         } catch {
-            // Keep the previous block list on a transient refresh failure.
+            // Keep the previous block state on a transient failure.
         }
     }
 }
