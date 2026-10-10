@@ -10,8 +10,7 @@ struct HomeView: View {
 
     @State private var matches: [ScholarshipMatch] = []
     @State private var upcoming: [Scholarship] = []
-    @State private var universityApplications: [UniversityApplicationCase] = []
-    @State private var scholarshipApplications: [SavedScholarshipItem] = []
+    @State private var hasLoadError = false
     @State private var loading = true
     @State private var unreadNotifications = 0
 
@@ -38,55 +37,6 @@ struct HomeView: View {
         }
     }
 
-    private var applicationPreviews: [HomeApplicationPreview] {
-        let universityRows = universityApplications.map {
-            HomeApplicationPreview(
-                id: "university-\($0.id.uuidString)",
-                title: $0.university.name,
-                subtitle: $0.programName.isEmpty
-                    ? ($0.degreeLevel ?? "University application")
-                    : $0.programName,
-                status: $0.applicationStatus,
-                deadline: $0.deadline
-            )
-        }
-
-        let activeStatuses = Set([
-            "preparing",
-            "applied",
-            "submitted",
-            "interview",
-            "offer",
-            "rejected",
-            "withdrawn"
-        ])
-
-        let scholarshipRows = scholarshipApplications
-            .filter {
-                activeStatuses.contains(
-                    $0.applicationStatus.lowercased()
-                )
-            }
-            .map {
-                HomeApplicationPreview(
-                    id: "scholarship-\($0.scholarshipId.uuidString)",
-                    title: $0.scholarship.title,
-                    subtitle: $0.scholarship.provider,
-                    status: $0.applicationStatus,
-                    deadline:
-                        $0.personalDeadline ??
-                        $0.applicationDeadline ??
-                        $0.scholarship.deadline
-                )
-            }
-
-        return (universityRows + scholarshipRows)
-            .sorted {
-                ($0.deadline ?? "9999-12-31") <
-                ($1.deadline ?? "9999-12-31")
-            }
-    }
-
     var body: some View {
         GeometryReader { proxy in
             ZStack {
@@ -99,6 +49,7 @@ struct HomeView: View {
                         editorialIntro
                         searchButton
                         categoryStrip
+                        if hasLoadError { refreshError }
                         bestMatchHero
                         personalizedSection
                         closingSoonSection
@@ -238,15 +189,36 @@ struct HomeView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 9) {
                 HomeFilterPill(title: "For you", selected: true, action: openExplore)
-                HomeFilterPill(title: "Europe", selected: false, action: openExplore)
-                HomeFilterPill(title: "Asia", selected: false, action: openExplore)
-                HomeFilterPill(title: "Bachelor", selected: false, action: openExplore)
-                HomeFilterPill(title: "Master", selected: false, action: openExplore)
+                HomeFilterPill(title: "Applications", selected: false, action: openApplications)
+                NavigationLink {
+                    AdvisorsView()
+                } label: {
+                    HomePillLabel(title: "Advisors", selected: false)
+                }
+                .buttonStyle(CardPressButtonStyle())
+                HomeFilterPill(title: "Profile", selected: false, action: openProfile)
             }
             .padding(.vertical, 1)
         }
         .contentMargins(.horizontal, 0, for: .scrollContent)
         .frame(maxWidth: .infinity)
+    }
+
+    private var refreshError: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Unable to refresh", systemImage: "wifi.exclamationmark")
+                .font(.subheadline.weight(.medium))
+            Button("Try again") {
+                Task { await load() }
+            }
+            .font(.subheadline.weight(.semibold))
+            .frame(minHeight: 44)
+            .disabled(loading)
+        }
+        .foregroundStyle(HomeVisualStyle.forest)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(HomeVisualStyle.sage, in: RoundedRectangle(cornerRadius: 18))
     }
 
     @ViewBuilder
@@ -490,13 +462,8 @@ struct HomeView: View {
     @MainActor
     private func load() async {
         loading = true
+        hasLoadError = false
         defer { loading = false }
-
-        async let caseRows = DataService.universityApplicationCases()
-        async let savedRows = DataService.savedScholarshipItems()
-
-        universityApplications = (try? await caseRows) ?? []
-        scholarshipApplications = (try? await savedRows) ?? []
 
         if let notifications = try? await DataService.appNotifications(
             limit: 100
@@ -544,8 +511,8 @@ struct HomeView: View {
                 )
             }
         } catch {
-            matches = []
-            upcoming = []
+            // Keep the last successful content visible during a failed refresh.
+            hasLoadError = true
         }
     }
 }
@@ -596,24 +563,28 @@ private struct HomeFilterPill: View {
 
     var body: some View {
         Button(action: action) {
-            Text(title)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(selected ? Theme.onAccent : HomeVisualStyle.ink)
-                .padding(.horizontal, 15)
-                .frame(height: 38)
-                .background(selected ? Theme.accent : Theme.surface)
-                .clipShape(Capsule())
-                .overlay(
-                    Capsule()
-                        .stroke(
-                            selected
-                                ? Color.clear
-                                : Theme.ink.opacity(0.07),
-                            lineWidth: 1
-                        )
-                )
+            HomePillLabel(title: title, selected: selected)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(CardPressButtonStyle())
+    }
+}
+
+private struct HomePillLabel: View {
+    let title: String
+    let selected: Bool
+
+    var body: some View {
+        Text(L10n.string(title))
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(selected ? Theme.onAccent : HomeVisualStyle.ink)
+            .padding(.horizontal, 15)
+            .padding(.vertical, 10)
+            .frame(minHeight: 44)
+            .background(selected ? Theme.accent : Theme.surface, in: Capsule())
+            .overlay {
+                Capsule()
+                    .strokeBorder(selected ? Color.clear : Theme.ink.opacity(0.07), lineWidth: 1)
+            }
     }
 }
 
