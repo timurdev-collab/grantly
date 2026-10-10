@@ -221,6 +221,11 @@ struct AdvisorsView: View {
                         ForEach(filteredAdvisors) { advisor in
                             advisorGridCard(advisor)
                         }
+                        if search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            ForEach(0..<2, id: \.self) { _ in
+                                upcomingAdvisorCard
+                            }
+                        }
                     }
                 }
 
@@ -348,6 +353,47 @@ struct AdvisorsView: View {
                 style: .continuous
             )
         )
+    }
+
+    private var upcomingAdvisorCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Image(systemName: "person.crop.circle.badge.plus")
+                .font(.system(size: 37, weight: .ultraLight))
+                .foregroundStyle(isDark ? Theme.editorialSecondary : Theme.premiumMuted)
+                .frame(width: 62, height: 62)
+                .accessibilityHidden(true)
+
+            Spacer(minLength: 0)
+
+            Text(L10n.string("Advisors"))
+                .font(.system(size: 15, weight: .semibold, design: .serif))
+                .foregroundStyle(textPrimary)
+
+            Text(L10n.string("Coming soon"))
+                .font(.system(size: 12, weight: .medium))
+                .foregroundStyle(textSecondary)
+
+            Spacer(minLength: 0)
+
+            HStack {
+                Image(systemName: "clock")
+                Text(L10n.string("Coming soon"))
+            }
+            .font(.system(size: 11, weight: .medium))
+            .foregroundStyle(textSecondary)
+            .frame(maxWidth: .infinity)
+            .frame(height: 38)
+            .background(isDark ? Theme.editorialBackground : Theme.premiumSageSoft, in: Capsule())
+        }
+        .frame(maxWidth: .infinity, minHeight: 235, alignment: .leading)
+        .padding(12)
+        .background(isDark ? Theme.editorialCard : Theme.premiumIvoryRaised,
+                    in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .strokeBorder(textSecondary.opacity(0.24), style: StrokeStyle(lineWidth: 1, dash: [5, 5]))
+        }
+        .accessibilityElement(children: .combine)
     }
 
     private func advisorGridCard(_ advisor: AdvisorDirectoryProfile) -> some View {
