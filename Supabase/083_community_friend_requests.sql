@@ -226,3 +226,111 @@ as $$
     and (f.requester_id = auth.uid() or f.addressee_id = auth.uid())
   order by lower(coalesce(cp.display_name, ''));
 $$;
+
+
+create index if not exists community_friendships_requester_idx
+  on public.community_friendships(requester_id, status);
+create index if not exists community_friendships_addressee_idx
+  on public.community_friendships(addressee_id, status);
+
+create or replace function public.start_direct_conversation(other_user uuid)
+returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  me uuid := auth.uid();
+  existing_id uuid;
+  new_id uuid;
+begin
+  if me is null then raise exception 'Not authenticated'; end if;
+  if other_user = me then raise exception 'Cannot message yourself'; end if;
+
+  if exists (
+    select 1
+    from public.user_blocks
+    where (blocker_id = me and blocked_id = other_user)
+       or (blocker_id = other_user and blocked_id = me)
+  ) then
+    raise exception 'Messaging is unavailable between these accounts';
+  end if;
+
+  if not exists (
+    select 1
+    from public.community_friendships f
+    where f.status = 'accepted'
+      and (
+        (f.requester_id = me and f.addressee_id = other_user)
+        or (f.requester_id = other_user and f.addressee_id = me)
+      )
+  ) then
+    raise exception 'Add this student as a friend before messaging';
+  end if;
+
+  if not exists(
+    select 1 from public.community_profiles
+    where id = other_user and is_visible = true
+  ) then
+    raise exception 'User is not available for community messaging';
+  end if;
+
+  select c.id into existing_id
+  from public.conversations c
+  where c.is_direct = true
+    and exists(
+      select 1 from public.conversation_members cm
+      where cm.conversation_id=c.id and cm.user_id=me
+    )
+    and exists(
+      select 1 from public.conversation_members cm
+      where cm.conversation_id=c.id and cm.user_id=other_user
+    )
+    and 2 = (
+      select count(*) from public.conversation_members cm
+      where cm.conversation_id=c.id
+    )
+  limit 1;
+
+  if existing_id is not null then return existing_id; end if;
+
+  insert into public.conversations(is_direct)
+  values(true)
+  returning id into new_id;
+
+  insert into public.conversation_members(conversation_id,user_id)
+  values(new_id,me),(new_id,other_user);
+
+  return new_id;
+end;
+$$;
+
+revoke execute on function public.community_friendship_status(uuid)
+  from public, anon;
+revoke execute on function public.send_community_friend_request(uuid)
+  from public, anon;
+revoke execute on function public.respond_community_friend_request(uuid, boolean)
+  from public, anon;
+revoke execute on function public.cancel_community_friend_request(uuid)
+  from public, anon;
+revoke execute on function public.remove_community_friend(uuid)
+  from public, anon;
+revoke execute on function public.my_community_friend_requests()
+  from public, anon;
+revoke execute on function public.my_community_friends()
+  from public, anon;
+
+grant execute on function public.community_friendship_status(uuid)
+  to authenticated;
+grant execute on function public.send_community_friend_request(uuid)
+  to authenticated;
+grant execute on function public.respond_community_friend_request(uuid, boolean)
+  to authenticated;
+grant execute on function public.cancel_community_friend_request(uuid)
+  to authenticated;
+grant execute on function public.remove_community_friend(uuid)
+  to authenticated;
+grant execute on function public.my_community_friend_requests()
+  to authenticated;
+grant execute on function public.my_community_friends()
+  to authenticated;
