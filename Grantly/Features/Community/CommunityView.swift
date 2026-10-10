@@ -343,28 +343,6 @@ struct AdvisorsView: View {
     }
 
     @MainActor
-    private func openConversation(
-        for profile: CommunityProfile
-    ) async {
-        messagingProfileID = profile.id
-        defer { messagingProfileID = nil }
-
-        do {
-            let conversationId = try await DataService
-                .startDirectConversation(otherUser: profile.id)
-
-            chatDestination = CommunityChatDestination(
-                id: conversationId,
-                otherUserId: profile.id,
-                title: profile.displayName ?? L10n.string("Student")
-            )
-            messageError = nil
-        } catch {
-            messageError = error.localizedDescription
-        }
-    }
-
-    @MainActor
     private func load() async {
         loading = true
         defer { loading = false }
@@ -2476,6 +2454,28 @@ struct CommunityView: View {
         }
         .frame(height: 190)
         .clipShape(RoundedRectangle(cornerRadius: 22))
+    }
+
+    @MainActor
+    private func openConversation(
+        for profile: CommunityProfile
+    ) async {
+        messagingProfileID = profile.id
+        defer { messagingProfileID = nil }
+
+        do {
+            let conversationId = try await DataService
+                .startDirectConversation(otherUser: profile.id)
+
+            chatDestination = CommunityChatDestination(
+                id: conversationId,
+                otherUserId: profile.id,
+                title: profile.displayName ?? L10n.string("Student")
+            )
+            messageError = nil
+        } catch {
+            messageError = error.localizedDescription
+        }
     }
 
     @MainActor
