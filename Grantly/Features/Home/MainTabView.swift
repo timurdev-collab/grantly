@@ -198,13 +198,8 @@ private struct StudentMainTabs: View {
             }
             .tag(MainTab.profile)
         }
-        .tint(
-            Color(
-                red: 18 / 255,
-                green: 55 / 255,
-                blue: 42 / 255
-            )
-        )
+        .preferredColorScheme(.light)
+        .tint(Theme.premiumForest)
         .toolbarColorScheme(.light, for: .tabBar)
         .toolbarBackground(
             Color(
