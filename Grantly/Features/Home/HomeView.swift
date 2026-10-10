@@ -425,7 +425,7 @@ struct HomeView: View {
 
     private var advisorNudge: some View {
         NavigationLink {
-            MessagesView()
+            AdvisorsView()
         } label: {
             HStack(spacing: 12) {
                 ZStack {
