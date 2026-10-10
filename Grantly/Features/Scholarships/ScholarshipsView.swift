@@ -631,10 +631,25 @@ struct PremiumScholarshipCard: View {
             ZStack(alignment: .bottomTrailing) {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(Theme.premiumSageSoft)
-                Image(systemName: "graduationcap.fill")
-                    .font(.system(size: 22, weight: .medium))
-                    .foregroundStyle(Theme.accent)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                if let logoString = scholarship.university?.logoUrl,
+                   let logoURL = URL(string: logoString) {
+                    AsyncImage(url: logoURL) { phase in
+                        if case .success(let image) = phase {
+                            image.resizable().scaledToFit().padding(7)
+                        } else {
+                            Image(systemName: "building.columns.fill")
+                                .font(.system(size: 22, weight: .medium))
+                                .foregroundStyle(Theme.accent)
+                        }
+                    }
+                    .frame(width: 54, height: 54)
+                } else {
+                    Image(systemName: scholarship.universityId == nil
+                          ? "graduationcap.fill" : "building.columns.fill")
+                        .font(.system(size: 22, weight: .medium))
+                        .foregroundStyle(Theme.accent)
+                        .frame(width: 54, height: 54)
+                }
                 if verified {
                     Image(systemName: "checkmark.seal.fill")
                         .font(.system(size: 12))
