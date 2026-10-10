@@ -68,7 +68,7 @@ struct MainTabView: View {
                         )
                     }
                 case "advisor":
-                    AdvisorPortalView(profile: $profile)
+                    AdvisorMessagesHomeView(profile: $profile)
                 default:
                     StudentMainTabs(profile: $profile)
                 }
@@ -701,6 +701,27 @@ private struct AdminConsultationPaymentsView: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+private struct AdvisorMessagesHomeView: View {
+    @Binding var profile: StudentProfile?
+
+    var body: some View {
+        TabView {
+            NavigationStack {
+                MessagesView()
+            }
+            .tabItem {
+                Label("Messages", systemImage: "bubble.left.and.bubble.right.fill")
+            }
+
+            AdvisorPortalView(profile: $profile)
+                .tabItem {
+                    Label("Advisor tools", systemImage: "person.crop.rectangle.stack")
+                }
+        }
+        .tint(Theme.ink)
     }
 }
 
