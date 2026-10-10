@@ -129,6 +129,7 @@ struct MainTabView: View {
 }
 
 private struct StudentMainTabs: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Binding var profile: StudentProfile?
     var adminReturnAction: (() -> Void)? = nil
 
@@ -198,15 +199,12 @@ private struct StudentMainTabs: View {
             }
             .tag(MainTab.profile)
         }
-        .preferredColorScheme(.light)
-        .tint(Theme.premiumForest)
-        .toolbarColorScheme(.light, for: .tabBar)
+        .tint(colorScheme == .dark ? Theme.editorialCream : Theme.premiumForest)
+        .toolbarColorScheme(colorScheme, for: .tabBar)
         .toolbarBackground(
-            Color(
-                red: 247 / 255,
-                green: 243 / 255,
-                blue: 232 / 255
-            ).opacity(0.94),
+            colorScheme == .dark
+                ? Theme.editorialBackground.opacity(0.97)
+                : Theme.premiumIvory.opacity(0.94),
             for: .tabBar
         )
         .toolbarBackground(.visible, for: .tabBar)
