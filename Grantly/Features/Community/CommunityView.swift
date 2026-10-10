@@ -2242,15 +2242,27 @@ struct CommunityView: View {
             }
 
             let searchableText =
-                "\(profile.communityCode ?? "") " +
                 "\(profile.displayName ?? "") " +
                 "\(profile.nationality ?? "") " +
                 "\(profile.major ?? "") " +
                 "\(profile.targetCountries?.joined(separator: " ") ?? "")"
 
+            let normalizedQuery = q
+                .replacingOccurrences(of: "edu-", with: "")
+                .replacingOccurrences(of: "edu", with: "")
+                .replacingOccurrences(of: "-", with: "")
+                .replacingOccurrences(of: " ", with: "")
+
+            let normalizedCode = (profile.communityCode ?? "")
+                .lowercased()
+                .replacingOccurrences(of: "edu-", with: "")
+                .replacingOccurrences(of: "-", with: "")
+
             return searchableText
                 .lowercased()
-                .contains(q)
+                .contains(q) ||
+                (!normalizedQuery.isEmpty &&
+                 normalizedCode.contains(normalizedQuery))
         }
     }
 
@@ -2263,10 +2275,42 @@ struct CommunityView: View {
             VStack(alignment: .leading, spacing: 20) {
                 header
 
-                SearchField(
-                    text: $query,
-                    prompt: "Search EduT ID or student name..."
+                HStack(spacing: 10) {
+                    Image(systemName: "person.crop.circle.badge.magnifyingglass")
+                        .foregroundStyle(Theme.muted)
+
+                    TextField(
+                        "EduT ID or student name",
+                        text: $query
+                    )
+                    .keyboardType(.asciiCapable)
+                    .textInputAutocapitalization(.characters)
+                    .autocorrectionDisabled()
+                    .submitLabel(.search)
+                    .foregroundStyle(Theme.ink)
+
+                    if !query.isEmpty {
+                        Button {
+                            query = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(Theme.muted)
+                        }
+                    }
+                }
+                .font(.subheadline)
+                .padding(.horizontal, 14)
+                .frame(height: 46)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(Theme.ink.opacity(0.05))
                 )
+
+                Text("You can enter the full ID (EDU-1A2B3C4D5E) or just 1A2B3C4D5E.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.muted)
 
                 communityHero
 
