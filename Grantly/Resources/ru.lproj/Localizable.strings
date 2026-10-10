@@ -714,3 +714,9 @@
 "Clear search" = "Очистить поиск";
 
 "Page %lld of %lld" = "Страница %lld из %lld";
+
+"Search messages" = "Поиск сообщений";
+
+"No matching conversations" = "Подходящих бесед нет";
+
+"Try another name or clear your search." = "Попробуйте другое имя или очистите поиск.";

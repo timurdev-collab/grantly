@@ -337,11 +337,11 @@ struct PremiumPrimaryButtonStyle: ButtonStyle {
             .padding(.vertical, 14)
             .frame(minHeight: 54)
             .background(
-                Theme.premiumIvory.opacity(
+                Theme.premiumForest.opacity(
                     configuration.isPressed ? 0.84 : 1
                 )
             )
-            .foregroundStyle(Theme.premiumForest)
+            .foregroundStyle(Theme.premiumIvory)
             .clipShape(
                 RoundedRectangle(
                     cornerRadius: 19,
@@ -365,7 +365,7 @@ struct PremiumSecondaryButtonStyle: ButtonStyle {
             .padding(.vertical, 12)
             .frame(minHeight: 48)
             .background(.ultraThinMaterial)
-            .foregroundStyle(Theme.premiumIvory)
+            .foregroundStyle(Theme.premiumForest)
             .clipShape(
                 RoundedRectangle(
                     cornerRadius: 17,
@@ -378,7 +378,7 @@ struct PremiumSecondaryButtonStyle: ButtonStyle {
                     style: .continuous
                 )
                 .stroke(
-                    Color.white.opacity(0.36),
+                    Theme.premiumForest.opacity(0.15),
                     lineWidth: 1
                 )
             )
@@ -389,14 +389,12 @@ struct PremiumSecondaryButtonStyle: ButtonStyle {
 // Kept as aliases for older screens that still use the shared button styles.
 struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .buttonStyle(PremiumPrimaryButtonStyle())
+        PremiumPrimaryButtonStyle().makeBody(configuration: configuration)
     }
 }
 
 struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .buttonStyle(PremiumSecondaryButtonStyle())
+        PremiumSecondaryButtonStyle().makeBody(configuration: configuration)
     }
 }

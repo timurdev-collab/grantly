@@ -2,6 +2,7 @@ import SwiftUI
 import Supabase
 
 struct MessagesView: View {
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 34
     @State private var conversations: [ConversationSummaryRow] = []
     @State private var loading = true
     @State private var errorMessage: String?
@@ -22,7 +23,7 @@ struct MessagesView: View {
             LazyVStack(spacing: 10) {
                 HStack(alignment: .center) {
                     Text("Messages")
-                        .font(.system(size: 34, weight: .regular, design: .serif))
+                        .font(.system(size: titleSize, weight: .regular, design: .serif))
                         .tracking(-0.8)
                         .foregroundStyle(Theme.premiumInk)
 
@@ -39,28 +40,9 @@ struct MessagesView: View {
                 .padding(.top, 12)
                 .padding(.bottom, 2)
 
-                HStack(spacing: 9) {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(Theme.premiumMuted)
-
-                    TextField(
-                        L10n.string("Search messages"),
-                        text: $search
-                    )
-                    .font(.subheadline)
-                    .textInputAutocapitalization(.never)
-                }
-                .padding(.horizontal, 14)
-                .frame(height: 46)
-                .background(.ultraThinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 17, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 17, style: .continuous)
-                        .stroke(Color.white.opacity(0.65), lineWidth: 1)
-                )
-                .padding(.horizontal, 18)
-                .padding(.bottom, 2)
+                SearchField(text: $search, prompt: L10n.string("Search messages"))
+                    .padding(.horizontal, 18)
+                    .padding(.bottom, 2)
 
                 if loading && conversations.isEmpty {
                     ProgressView()
@@ -70,8 +52,12 @@ struct MessagesView: View {
                 } else if filteredConversations.isEmpty {
                     EmptyState(
                         icon: "bubble.left.and.bubble.right",
-                        title: "No messages yet",
-                        text: "Start a conversation with an advisor."
+                        title: search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                            ? L10n.string("No messages yet")
+                            : L10n.string("No matching conversations"),
+                        text: search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                            ? L10n.string("Start a conversation with an advisor.")
+                            : L10n.string("Try another name or clear your search.")
                     )
                     .padding(.horizontal, 18)
                     .padding(.vertical, 36)
@@ -97,6 +83,7 @@ struct MessagesView: View {
         .preferredColorScheme(.light)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .scrollDismissesKeyboard(.interactively)
         .refreshable { await load() }
         .task {
             await load()

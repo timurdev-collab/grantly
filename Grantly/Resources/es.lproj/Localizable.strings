@@ -714,3 +714,9 @@
 "Clear search" = "Borrar búsqueda";
 
 "Page %lld of %lld" = "Página %lld de %lld";
+
+"Search messages" = "Buscar mensajes";
+
+"No matching conversations" = "No hay conversaciones coincidentes";
+
+"Try another name or clear your search." = "Prueba otro nombre o borra la búsqueda.";

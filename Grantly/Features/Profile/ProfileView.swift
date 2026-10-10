@@ -3,6 +3,7 @@ import SwiftUI
 import UIKit
 
 struct ProfileView: View {
+    @ScaledMetric(relativeTo: .title2) private var profileNameSize: CGFloat = 24
     @Environment(AuthStore.self) private var auth
     @Binding var profile: StudentProfile?
     var showsNavigationBar = false
@@ -110,156 +111,153 @@ struct ProfileView: View {
     }
 
     private var instagramProfileHeader: some View {
-        ZStack(alignment: .bottom) {
+        VStack(spacing: 0) {
+            HStack {
+                Text("Profile")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(Theme.premiumIvory)
+
+                Spacer()
+
+                Button {
+                    showingSettings = true
+                } label: {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(Theme.premiumIvory)
+                        .frame(width: 44, height: 44)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Settings")
+            }
+            .padding(.horizontal, 18)
+            .padding(.top, 12)
+
+            HStack(spacing: 15) {
+                ZStack {
+                    Circle()
+                        .fill(Theme.premiumIvory)
+
+                    if let avatarURL,
+                       let url = URL(string: avatarURL) {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            default:
+                                Text(profileInitials)
+                                    .font(.system(size: 27, weight: .bold))
+                                    .foregroundStyle(Theme.premiumForest)
+                            }
+                        }
+                    } else {
+                        Text(profileInitials)
+                            .font(.system(size: 27, weight: .bold))
+                            .foregroundStyle(Theme.premiumForest)
+                    }
+                }
+                .frame(width: 88, height: 88)
+                .clipShape(Circle())
+                .overlay(
+                    Circle()
+                        .stroke(Color.white.opacity(0.72), lineWidth: 2)
+                )
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(displayName)
+                        .font(.system(size: profileNameSize, weight: .regular, design: .serif))
+                        .foregroundStyle(Theme.premiumIvory)
+                        .lineLimit(2)
+
+                    Text(
+                        [degreeLevel, intendedMajor]
+                            .filter {
+                                !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                            }
+                            .joined(separator: " · ")
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.premiumIvory.opacity(0.72))
+                    .lineLimit(2)
+
+                    Button {
+                        showingEditProfile = true
+                    } label: {
+                        HStack(spacing: 5) {
+                            Text("Edit Profile")
+                            Image(systemName: "chevron.right")
+                        }
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.premiumIvory)
+                        .frame(minHeight: 44)
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                Spacer()
+            }
+            .padding(.horizontal, 18)
+            .padding(.top, 20)
+
+            VStack(alignment: .leading, spacing: 9) {
+                HStack {
+                    Text(L10n.string("Profile completeness"))
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.premiumInk)
+
+                    Spacer()
+
+                    Text("\(profileCompletion)%")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(Theme.premiumForest)
+                }
+
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Theme.premiumInk.opacity(0.08))
+
+                        Capsule()
+                            .fill(Theme.premiumForest)
+                            .frame(
+                                width: geometry.size.width *
+                                    CGFloat(profileCompletion) / 100
+                            )
+                    }
+                }
+                .frame(height: 6)
+            }
+            .padding(14)
+            .background(Theme.premiumIvoryRaised)
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .shadow(
+                color: Color.black.opacity(0.08),
+                radius: 16,
+                x: 0,
+                y: 8
+            )
+            .padding(.horizontal, 18)
+            .padding(.top, 20)
+        }
+        .padding(.bottom, 18)
+        .background {
             LinearGradient(
-                colors: [
-                    Theme.premiumForest,
-                    Theme.premiumForestSoft
-                ],
+                colors: [Theme.premiumForest, Theme.premiumForestSoft],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-            .frame(height: 260)
             .overlay(alignment: .topTrailing) {
                 Circle()
-                    .fill(Color.white.opacity(0.10))
+                    .fill(Color.white.opacity(0.08))
                     .frame(width: 170, height: 170)
                     .offset(x: 44, y: -56)
             }
-
-            VStack(spacing: 0) {
-                HStack {
-                    Text("Profile")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(Theme.premiumIvory)
-
-                    Spacer()
-
-                    Button {
-                        showingSettings = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Theme.premiumIvory)
-                            .frame(width: 38, height: 38)
-                            .background(.ultraThinMaterial)
-                            .clipShape(Circle())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel("Settings")
-                }
-                .padding(.horizontal, 18)
-                .padding(.top, 12)
-
-                HStack(spacing: 15) {
-                    ZStack {
-                        Circle()
-                            .fill(Theme.premiumIvory)
-
-                        if let avatarURL,
-                           let url = URL(string: avatarURL) {
-                            AsyncImage(url: url) { phase in
-                                switch phase {
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                default:
-                                    Text(profileInitials)
-                                        .font(.system(size: 27, weight: .bold))
-                                        .foregroundStyle(Theme.premiumForest)
-                                }
-                            }
-                        } else {
-                            Text(profileInitials)
-                                .font(.system(size: 27, weight: .bold))
-                                .foregroundStyle(Theme.premiumForest)
-                        }
-                    }
-                    .frame(width: 88, height: 88)
-                    .clipShape(Circle())
-                    .overlay(
-                        Circle()
-                            .stroke(Color.white.opacity(0.72), lineWidth: 2)
-                    )
-
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text(displayName)
-                            .font(.system(size: 24, weight: .regular, design: .serif))
-                            .foregroundStyle(Theme.premiumIvory)
-                            .lineLimit(2)
-
-                        Text(
-                            [degreeLevel, intendedMajor]
-                                .filter {
-                                    !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                }
-                                .joined(separator: " · ")
-                        )
-                        .font(.caption)
-                        .foregroundStyle(Theme.premiumIvory.opacity(0.72))
-                        .lineLimit(2)
-
-                        Button {
-                            showingEditProfile = true
-                        } label: {
-                            HStack(spacing: 5) {
-                                Text("Edit Profile")
-                                Image(systemName: "chevron.right")
-                            }
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.premiumIvory)
-                        }
-                        .buttonStyle(.plain)
-                    }
-
-                    Spacer()
-                }
-                .padding(.horizontal, 18)
-                .padding(.top, 20)
-
-                VStack(alignment: .leading, spacing: 9) {
-                    HStack {
-                        Text(L10n.string("Profile completeness"))
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.premiumInk)
-
-                        Spacer()
-
-                        Text("\(profileCompletion)%")
-                            .font(.caption.weight(.bold))
-                            .foregroundStyle(Theme.premiumForest)
-                    }
-
-                    GeometryReader { geometry in
-                        ZStack(alignment: .leading) {
-                            Capsule()
-                                .fill(Theme.premiumInk.opacity(0.08))
-
-                            Capsule()
-                                .fill(Theme.premiumForest)
-                                .frame(
-                                    width: geometry.size.width *
-                                        CGFloat(profileCompletion) / 100
-                                )
-                        }
-                    }
-                    .frame(height: 6)
-                }
-                .padding(14)
-                .background(Theme.premiumIvoryRaised)
-                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                .shadow(
-                    color: Color.black.opacity(0.08),
-                    radius: 16,
-                    x: 0,
-                    y: 8
-                )
-                .padding(.horizontal, 18)
-                .offset(y: 24)
-            }
+            .clipped()
         }
-        .frame(height: 284)
     }
 
     private var profileSectionTabs: some View {

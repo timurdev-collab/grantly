@@ -714,3 +714,9 @@
 "Clear search" = "Xóa tìm kiếm";
 
 "Page %lld of %lld" = "Trang %lld trên %lld";
+
+"Search messages" = "Tìm kiếm tin nhắn";
+
+"No matching conversations" = "Không có cuộc trò chuyện phù hợp";
+
+"Try another name or clear your search." = "Thử tên khác hoặc xóa tìm kiếm.";
