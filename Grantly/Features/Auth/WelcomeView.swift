@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct WelcomeView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var showingLogin = false
     @State private var showingSignup = false
@@ -55,6 +56,7 @@ struct WelcomeView: View {
                         .padding(.horizontal, 22)
                         .padding(.top, 8)
                         .padding(.bottom, 12)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     TabView(selection: $page) {
                         ForEach(Array(pages.enumerated()), id: \.offset) { index, item in
@@ -63,16 +65,18 @@ struct WelcomeView: View {
                         }
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
+                    .clipped()
 
                     controls
                         .padding(.horizontal, 22)
                         .padding(.top, 16)
                         .padding(.bottom, 12)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .frame(width: geometry.size.width, height: geometry.size.height)
             }
         }
-        .preferredColorScheme(.light)
+        .preferredColorScheme(isLightPage ? .light : .dark)
         .sheet(isPresented: $showingLogin) {
             LoginView().preferredColorScheme(.light)
         }
@@ -135,9 +139,11 @@ struct WelcomeView: View {
             } label: {
                 HStack(spacing: 10) {
                     Text(L10n.string(page < pages.count - 1 ? "Continue" : "Get started"))
-                    Spacer(minLength: 8)
-                    Image(systemName: "arrow.right")
-                        .accessibilityHidden(true)
+                    if !dynamicTypeSize.isAccessibilitySize {
+                        Spacer(minLength: 8)
+                        Image(systemName: "arrow.right")
+                            .accessibilityHidden(true)
+                    }
                 }
                 .font(.headline)
                 .padding(.horizontal, 20)
@@ -152,7 +158,7 @@ struct WelcomeView: View {
             Button {
                 showingLogin = true
             } label: {
-                Text(L10n.string("I already have an account"))
+                Text(L10n.string(dynamicTypeSize.isAccessibilitySize ? "Sign in" : "I already have an account"))
                     .font(.subheadline.weight(.medium))
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity, minHeight: 44)

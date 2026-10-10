@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct ScholarshipDetailView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @ScaledMetric(relativeTo: .title) private var heroHeight: CGFloat = 310
+    @ScaledMetric(relativeTo: .title) private var titleSize: CGFloat = 30
     let scholarship: Scholarship
     let match: ScholarshipMatch?
 
@@ -61,6 +64,7 @@ struct ScholarshipDetailView: View {
                         .foregroundStyle(saved ? Theme.orangeSoft : Theme.ink)
                 }
                 .disabled(busy)
+                .accessibilityLabel(L10n.string(saved ? "Remove" : "Save"))
             }
         }
         .safeAreaInset(edge: .bottom) {
@@ -102,7 +106,7 @@ struct ScholarshipDetailView: View {
             UniversityPhoto(
                 seed: scholarship.provider + scholarship.title + scholarship.country,
                 remoteURL: scholarship.university?.campusImageUrl,
-                height: 310
+                height: heroHeight
             )
 
             LinearGradient(
@@ -141,7 +145,7 @@ struct ScholarshipDetailView: View {
                 Spacer()
 
                 Text(scholarship.title)
-                    .font(.system(size: 30, weight: .regular, design: .serif))
+                    .font(.system(size: titleSize, weight: .regular, design: .serif))
                     .tracking(-0.7)
                     .foregroundStyle(.white)
                     .multilineTextAlignment(.leading)
@@ -154,7 +158,7 @@ struct ScholarshipDetailView: View {
             }
             .padding(18)
         }
-        .frame(height: 310)
+        .frame(height: heroHeight)
         .clipped()
     }
 
@@ -263,7 +267,7 @@ struct ScholarshipDetailView: View {
             HStack(spacing: 8) {
                 ForEach(tabs, id: \.self) { tab in
                     Button {
-                        withAnimation(.easeInOut(duration: 0.18)) {
+                        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.18)) {
                             selectedTab = tab
                         }
                     } label: {
@@ -271,11 +275,13 @@ struct ScholarshipDetailView: View {
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(selectedTab == tab ? .white : Theme.ink.opacity(0.56))
                             .padding(.horizontal, 13)
-                            .frame(height: 36)
+                            .padding(.vertical, 10)
+                            .frame(minHeight: 44)
                             .background(selectedTab == tab ? Theme.blue : Theme.surface)
                             .clipShape(Capsule())
                     }
                     .buttonStyle(.plain)
+                    .accessibilityAddTraits(selectedTab == tab ? .isSelected : [])
                 }
             }
             .padding(.horizontal)
@@ -490,6 +496,7 @@ struct ScholarshipDetailView: View {
             }
             .buttonStyle(.plain)
             .disabled(busy)
+            .accessibilityLabel(L10n.string(saved ? "Remove" : "Save"))
 
             Button {
                 showingApplicationWorkspace = true
@@ -500,7 +507,11 @@ struct ScholarshipDetailView: View {
                 }
                 .font(.headline.weight(.semibold))
                 .frame(maxWidth: .infinity)
-                .frame(height: 50)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 13)
+                .frame(minHeight: 50)
                 .background(Theme.premiumForest)
                 .foregroundStyle(Theme.premiumIvory)
                 .clipShape(RoundedRectangle(cornerRadius: 17, style: .continuous))

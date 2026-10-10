@@ -23,7 +23,7 @@ final class OnboardingLayoutTests: XCTestCase {
         }
 
         signIn.tap()
-        XCTAssertFalse(primary.isHittable, "Sign in should open above onboarding")
+        XCTAssertTrue(app.staticTexts["auth.login.title"].waitForExistence(timeout: 10))
         capture("Sign-in")
     }
 
@@ -40,7 +40,10 @@ final class OnboardingLayoutTests: XCTestCase {
         XCTAssertTrue(primary.waitForExistence(timeout: 20))
         for page in 1...3 {
             XCTAssertTrue(primary.isHittable)
-            XCTAssertTrue(app.buttons["onboarding.signIn"].isHittable)
+            let signIn = app.buttons["onboarding.signIn"]
+            XCTAssertTrue(signIn.isHittable)
+            XCTAssertTrue(app.windows.firstMatch.frame.contains(signIn.frame), "The complete sign-in control must fit on screen")
+            XCTAssertTrue(app.windows.firstMatch.frame.contains(primary.frame), "The complete primary control must fit on screen")
             capture("Onboarding-large-text-\(page)")
             if page < 3 { primary.tap() }
         }

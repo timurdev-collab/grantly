@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SignupView: View {
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 36
     @Environment(AuthStore.self) private var auth
     @Environment(\.dismiss) private var dismiss
 
@@ -39,6 +40,7 @@ struct SignupView: View {
                     .padding(.top, 34)
                     .padding(.bottom, 30)
                 }
+                .scrollDismissesKeyboard(.interactively)
             }
             .preferredColorScheme(.light)
             .navigationTitle("")
@@ -51,11 +53,12 @@ struct SignupView: View {
                         Image(systemName: "xmark")
                             .font(.caption.bold())
                             .foregroundStyle(Theme.premiumForest)
-                            .frame(width: 34, height: 34)
+                            .frame(width: 44, height: 44)
                             .background(.ultraThinMaterial)
                             .clipShape(Circle())
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(L10n.string("Close"))
                 }
             }
         }
@@ -67,7 +70,7 @@ struct SignupView: View {
                 Text(L10n.string("Create your account"))
                     .font(
                         .system(
-                            size: 36,
+                            size: titleSize,
                             weight: .regular,
                             design: .serif
                         )
@@ -96,6 +99,8 @@ struct SignupView: View {
                     )
                     .textInputAutocapitalization(.never)
                     .keyboardType(.emailAddress)
+                                .textContentType(.emailAddress)
+                                .autocorrectionDisabled()
                 }
                 .premiumSignupField()
 
@@ -109,6 +114,7 @@ struct SignupView: View {
                         ),
                         text: $password
                     )
+                    .textContentType(.newPassword)
                 }
                 .premiumSignupField()
 
@@ -258,7 +264,8 @@ private extension View {
     func premiumSignupField() -> some View {
         self
             .padding(.horizontal, 14)
-            .frame(height: 54)
+            .padding(.vertical, 14)
+            .frame(minHeight: 54)
             .background(Theme.premiumIvoryRaised)
             .clipShape(
                 RoundedRectangle(

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ScholarshipsView: View {
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 34
     private let pageSize = 20
 
     @State private var scholarships: [Scholarship] = []
@@ -178,7 +179,7 @@ struct ScholarshipsView: View {
         HStack(alignment: .center, spacing: 14) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(L10n.string("Discover"))
-                    .font(.system(size: 34, weight: .regular, design: .serif))
+                    .font(.system(size: titleSize, weight: .regular, design: .serif))
                     .tracking(-0.8)
                     .foregroundStyle(Theme.premiumInk)
 
@@ -591,6 +592,7 @@ private struct ExploreSummary: View {
 }
 
 struct PremiumScholarshipCard: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let scholarship: Scholarship
     var saved: Bool = false
 
@@ -609,14 +611,26 @@ struct PremiumScholarshipCard: View {
             : "\(flag) \(scholarship.country)"
     }
 
+    private var cardLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
+            : AnyLayout(HStackLayout(spacing: 12))
+    }
+
+    private var metadataLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6))
+            : AnyLayout(HStackLayout(spacing: 6))
+    }
+
     var body: some View {
-        HStack(spacing: 12) {
+        cardLayout {
             UniversityPhoto(
                 seed: scholarship.provider + scholarship.title,
                 remoteURL: scholarship.university?.campusImageUrl,
                 height: 108
             )
-            .frame(width: 92, height: 108)
+            .frame(width: dynamicTypeSize.isAccessibilitySize ? nil : 92, height: 108)
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             .overlay(alignment: .topLeading) {
                 if verified {
@@ -636,7 +650,7 @@ struct PremiumScholarshipCard: View {
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Theme.premiumInk)
                         .multilineTextAlignment(.leading)
-                        .lineLimit(2)
+                        .lineLimit(dynamicTypeSize.isAccessibilitySize ? nil : 2)
 
                     Spacer(minLength: 4)
 
@@ -652,12 +666,13 @@ struct PremiumScholarshipCard: View {
                     .foregroundStyle(Theme.premiumMuted)
                     .lineLimit(1)
 
-                HStack(spacing: 6) {
+                metadataLayout {
                     Text(scholarship.fundingType)
                         .font(.caption2.weight(.semibold))
                         .foregroundStyle(Theme.premiumForest)
                         .padding(.horizontal, 9)
-                        .frame(height: 26)
+                        .padding(.vertical, 5)
+                        .frame(minHeight: 26)
                         .background(Theme.premiumSageSoft)
                         .clipShape(Capsule())
 
@@ -667,13 +682,13 @@ struct PremiumScholarshipCard: View {
                         .lineLimit(1)
                 }
 
-                HStack(spacing: 6) {
+                metadataLayout {
                     Text(countryLabel)
                         .font(.caption2)
                         .foregroundStyle(Theme.premiumMuted)
                         .lineLimit(1)
 
-                    Spacer()
+                    if !dynamicTypeSize.isAccessibilitySize { Spacer() }
 
                     if let deadline = scholarship.deadline {
                         Label(

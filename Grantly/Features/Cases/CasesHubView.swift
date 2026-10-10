@@ -2,13 +2,16 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct CasesHubView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 34
     @State private var segment = 0
 
     var body: some View {
         VStack(spacing: 0) {
             HStack {
                 Text("Applications")
-                    .font(.system(size: 34, weight: .regular, design: .serif))
+                    .font(.system(size: titleSize, weight: .regular, design: .serif))
                     .tracking(-0.8)
                     .foregroundStyle(Theme.premiumInk)
 
@@ -18,7 +21,7 @@ struct CasesHubView: View {
             .padding(.top, 10)
             .padding(.bottom, 12)
 
-            HStack(spacing: 8) {
+            segmentLayout {
                 applicationTab(
                     title: "University applications",
                     index: 0,
@@ -45,20 +48,30 @@ struct CasesHubView: View {
         .navigationBarHidden(true)
     }
 
+    private var segmentLayout: AnyLayout {
+        dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 8))
+    }
+
     private func applicationTab(
         title: String,
         index: Int,
         icon: String
     ) -> some View {
         Button {
-            withAnimation(.easeInOut(duration: 0.18)) {
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.18)) {
                 segment = index
             }
         } label: {
             Label(title, systemImage: icon)
                 .font(.caption.weight(.semibold))
                 .frame(maxWidth: .infinity)
-                .frame(height: 38)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 10)
+                .frame(minHeight: 44)
                 .foregroundStyle(
                     segment == index
                         ? Theme.premiumIvory
