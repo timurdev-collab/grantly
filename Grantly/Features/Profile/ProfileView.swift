@@ -83,7 +83,8 @@ struct ProfileView: View {
                 .padding(.bottom, 32)
             }
         }
-        .background(Theme.pageBackground)
+        .background(Theme.premiumIvoryRaised)
+        .preferredColorScheme(.light)
         .navigationTitle(showsNavigationBar ? "Profile" : "")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(!showsNavigationBar)
@@ -109,152 +110,156 @@ struct ProfileView: View {
     }
 
     private var instagramProfileHeader: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 12) {
-                Text(displayName)
-                    .font(.headline.weight(.bold))
-                    .foregroundStyle(Theme.ink)
-                    .lineLimit(1)
-
-                Spacer()
-
-                Button {
-                    showingSettings = true
-                } label: {
-                    Image(systemName: "gearshape")
-                        .font(.system(size: 19, weight: .semibold))
-                        .foregroundStyle(Theme.ink)
-                        .frame(width: 40, height: 40)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Settings")
+        ZStack(alignment: .bottom) {
+            LinearGradient(
+                colors: [
+                    Theme.premiumForest,
+                    Theme.premiumForestSoft
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .frame(height: 260)
+            .overlay(alignment: .topTrailing) {
+                Circle()
+                    .fill(Color.white.opacity(0.10))
+                    .frame(width: 170, height: 170)
+                    .offset(x: 44, y: -56)
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 8)
-            .padding(.bottom, 12)
 
-            HStack(alignment: .center, spacing: 20) {
-                ZStack {
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [Theme.blueSoft, Theme.blue],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
+            VStack(spacing: 0) {
+                HStack {
+                    Text("Profile")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(Theme.premiumIvory)
 
-                    if let avatarURL,
-                       let url = URL(string: avatarURL) {
-                        AsyncImage(url: url) { phase in
-                            switch phase {
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                            default:
-                                Text(profileInitials)
-                                    .font(.system(size: 26, weight: .bold))
-                                    .foregroundStyle(Theme.ink)
-                            }
-                        }
-                    } else {
-                        Text(profileInitials)
-                            .font(.system(size: 26, weight: .bold))
-                            .foregroundStyle(Theme.ink)
+                    Spacer()
+
+                    Button {
+                        showingSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Theme.premiumIvory)
+                            .frame(width: 38, height: 38)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
                     }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Settings")
                 }
-                .frame(width: 92, height: 92)
-                .clipShape(Circle())
-                .overlay(
-                    Circle()
-                        .stroke(Theme.ink.opacity(0.12), lineWidth: 1)
-                )
+                .padding(.horizontal, 18)
+                .padding(.top, 12)
 
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(displayName)
-                        .font(.title3.weight(.bold))
-                        .foregroundStyle(Theme.ink)
+                HStack(spacing: 15) {
+                    ZStack {
+                        Circle()
+                            .fill(Theme.premiumIvory)
+
+                        if let avatarURL,
+                           let url = URL(string: avatarURL) {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                default:
+                                    Text(profileInitials)
+                                        .font(.system(size: 27, weight: .bold))
+                                        .foregroundStyle(Theme.premiumForest)
+                                }
+                            }
+                        } else {
+                            Text(profileInitials)
+                                .font(.system(size: 27, weight: .bold))
+                                .foregroundStyle(Theme.premiumForest)
+                        }
+                    }
+                    .frame(width: 88, height: 88)
+                    .clipShape(Circle())
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white.opacity(0.72), lineWidth: 2)
+                    )
+
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(displayName)
+                            .font(.system(size: 24, weight: .regular, design: .serif))
+                            .foregroundStyle(Theme.premiumIvory)
+                            .lineLimit(2)
+
+                        Text(
+                            [degreeLevel, intendedMajor]
+                                .filter {
+                                    !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                }
+                                .joined(separator: " · ")
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Theme.premiumIvory.opacity(0.72))
                         .lineLimit(2)
 
-                    Text(
-                        [degreeLevel, intendedMajor, nationality]
-                            .filter {
-                                !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        Button {
+                            showingEditProfile = true
+                        } label: {
+                            HStack(spacing: 5) {
+                                Text("Edit Profile")
+                                Image(systemName: "chevron.right")
                             }
-                            .joined(separator: " · ")
-                    )
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
-                    .lineLimit(2)
-
-                    Label(
-                        "Private student profile",
-                        systemImage: "lock.fill"
-                    )
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(Theme.blueSoft)
-                }
-
-                Spacer(minLength: 0)
-            }
-            .padding(.horizontal, 16)
-
-            Button {
-                showingEditProfile = true
-            } label: {
-                Text("Edit")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 36)
-                    .background(Theme.surfaceRaised)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-            }
-            .buttonStyle(.plain)
-            .padding(.horizontal, 16)
-            .padding(.top, 14)
-
-            HStack(spacing: 10) {
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text("Academic profile")
                             .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumIvory)
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    Spacer()
+                }
+                .padding(.horizontal, 18)
+                .padding(.top, 20)
+
+                VStack(alignment: .leading, spacing: 9) {
+                    HStack {
+                        Text("Profile completeness")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.premiumInk)
 
                         Spacer()
 
                         Text("\(profileCompletion)%")
                             .font(.caption.weight(.bold))
-                            .foregroundStyle(Theme.ink)
+                            .foregroundStyle(Theme.premiumForest)
                     }
 
                     GeometryReader { geometry in
                         ZStack(alignment: .leading) {
                             Capsule()
-                                .fill(Theme.ink.opacity(0.08))
+                                .fill(Theme.premiumInk.opacity(0.08))
 
                             Capsule()
-                                .fill(Theme.blueSoft)
+                                .fill(Theme.premiumForest)
                                 .frame(
                                     width: geometry.size.width *
                                         CGFloat(profileCompletion) / 100
                                 )
                         }
                     }
-                    .frame(height: 5)
+                    .frame(height: 6)
                 }
-
-                Image(systemName: "lock.fill")
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
-                    .accessibilityLabel("Private academic data")
+                .padding(14)
+                .background(Theme.premiumIvoryRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .shadow(
+                    color: Color.black.opacity(0.08),
+                    radius: 16,
+                    x: 0,
+                    y: 8
+                )
+                .padding(.horizontal, 18)
+                .offset(y: 24)
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 14)
-            .padding(.bottom, 16)
         }
-        .background(Theme.surface)
+        .frame(height: 284)
     }
 
     private var profileSectionTabs: some View {
@@ -385,11 +390,17 @@ struct ProfileView: View {
             }
         }
         .padding(16)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .background(Theme.premiumIvoryRaised)
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(Theme.ink.opacity(0.05))
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .stroke(Theme.premiumInk.opacity(0.05), lineWidth: 1)
+        )
+        .shadow(
+            color: Color.black.opacity(0.035),
+            radius: 12,
+            x: 0,
+            y: 6
         )
     }
 
