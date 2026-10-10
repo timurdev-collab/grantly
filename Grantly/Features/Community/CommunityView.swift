@@ -469,7 +469,7 @@ struct AdvisorsView: View {
             }
 
             NavigationLink {
-                AdvisorConsultationBookingView(advisor: advisor)
+                AdvisorDetailView(advisor: advisor)
             } label: {
                 Label(L10n.string("Book consultation"), systemImage: "bubble.left.and.text.bubble.right")
                     .font(.system(size: 11, weight: .semibold))
