@@ -521,12 +521,7 @@ struct HomeView: View {
 
 
 private enum HomeVisualStyle {
-    static let cream = Color(uiColor: UIColor { traits in
-        let rgb: (CGFloat, CGFloat, CGFloat) = traits.userInterfaceStyle == .dark
-            ? (13 / 255, 31 / 255, 25 / 255)
-            : (247 / 255, 243 / 255, 232 / 255)
-        return UIColor(red: rgb.0, green: rgb.1, blue: rgb.2, alpha: 1)
-    })
+    static let cream = Color(uiColor: UIColor { traits in traits.userInterfaceStyle == .dark ? UIColor(red: 0.051, green: 0.122, blue: 0.098, alpha: 1) : UIColor(red: 0.969, green: 0.953, blue: 0.910, alpha: 1) })
 
     static let forest = Color(
         red: 18 / 255,
@@ -534,26 +529,11 @@ private enum HomeVisualStyle {
         blue: 42 / 255
     )
 
-    static let ink = Color(uiColor: UIColor { traits in
-        let rgb: (CGFloat, CGFloat, CGFloat) = traits.userInterfaceStyle == .dark
-            ? (244 / 255, 235 / 255, 224 / 255)
-            : (26 / 255, 31 / 255, 28 / 255)
-        return UIColor(red: rgb.0, green: rgb.1, blue: rgb.2, alpha: 1)
-    })
+    static let ink = Theme.premiumInk
 
-    static let muted = Color(uiColor: UIColor { traits in
-        let rgb: (CGFloat, CGFloat, CGFloat) = traits.userInterfaceStyle == .dark
-            ? (183 / 255, 190 / 255, 185 / 255)
-            : (103 / 255, 111 / 255, 104 / 255)
-        return UIColor(red: rgb.0, green: rgb.1, blue: rgb.2, alpha: 1)
-    })
+    static let muted = Theme.premiumMuted
 
-    static let sage = Color(uiColor: UIColor { traits in
-        let rgb: (CGFloat, CGFloat, CGFloat) = traits.userInterfaceStyle == .dark
-            ? (32 / 255, 40 / 255, 38 / 255)
-            : (221 / 255, 235 / 255, 227 / 255)
-        return UIColor(red: rgb.0, green: rgb.1, blue: rgb.2, alpha: 1)
-    })
+    static let sage = Theme.premiumSageSoft
 
     static let sand = Color(
         red: 215 / 255,
