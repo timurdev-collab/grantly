@@ -614,7 +614,7 @@ struct PremiumScholarshipCard: View {
     private var cardLayout: AnyLayout {
         dynamicTypeSize.isAccessibilitySize
             ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
-            : AnyLayout(HStackLayout(spacing: 12))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: 12))
     }
 
     private var metadataLayout: AnyLayout {
@@ -625,24 +625,22 @@ struct PremiumScholarshipCard: View {
 
     var body: some View {
         cardLayout {
-            UniversityPhoto(
-                seed: scholarship.provider + scholarship.title,
-                remoteURL: scholarship.university?.campusImageUrl,
-                height: 108
-            )
-            .frame(width: dynamicTypeSize.isAccessibilitySize ? nil : 92, height: 108)
-            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-            .overlay(alignment: .topLeading) {
+            ZStack(alignment: .bottomTrailing) {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Theme.premiumSageSoft)
+                Image(systemName: "graduationcap.fill")
+                    .font(.system(size: 22, weight: .medium))
+                    .foregroundStyle(Theme.premiumForest)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 if verified {
                     Image(systemName: "checkmark.seal.fill")
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(Theme.premiumForest)
-                        .frame(width: 24, height: 24)
-                        .background(.ultraThinMaterial)
-                        .clipShape(Circle())
-                        .padding(7)
+                        .font(.system(size: 12))
+                        .foregroundStyle(Theme.premiumForestSoft)
+                        .padding(5)
                 }
             }
+            .frame(width: 54, height: 54)
+            .accessibilityLabel(verified ? "Verified scholarship" : "Scholarship")
 
             VStack(alignment: .leading, spacing: 7) {
                 HStack(alignment: .top, spacing: 6) {
