@@ -105,7 +105,7 @@ struct ProfileView: View {
 
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("This permanently deletes your account, profile, saved scholarships, applications and messages. This cannot be undone.")
+            Text(L10n.string("This permanently deletes your account, profile, saved scholarships, applications and messages. This cannot be undone."))
         }
     }
 
@@ -220,7 +220,7 @@ struct ProfileView: View {
 
                 VStack(alignment: .leading, spacing: 9) {
                     HStack {
-                        Text("Profile completeness")
+                        Text(L10n.string("Profile completeness"))
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(Theme.premiumInk)
 
