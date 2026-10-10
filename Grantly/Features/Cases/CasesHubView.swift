@@ -8,8 +8,9 @@ struct CasesHubView: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Applications")
-                    .font(.system(size: 30, weight: .bold))
-                    .foregroundStyle(Theme.ink)
+                    .font(.system(size: 34, weight: .regular, design: .serif))
+                    .tracking(-0.8)
+                    .foregroundStyle(Theme.premiumInk)
 
                 Spacer()
             }
@@ -39,7 +40,8 @@ struct CasesHubView: View {
                 MyScholarshipsView()
             }
         }
-        .background(Theme.pageBackground)
+        .background(Theme.premiumIvoryRaised)
+        .preferredColorScheme(.light)
         .navigationBarHidden(true)
     }
 
@@ -59,15 +61,15 @@ struct CasesHubView: View {
                 .frame(height: 38)
                 .foregroundStyle(
                     segment == index
-                        ? Theme.onAccent
-                        : Theme.ink
+                        ? Theme.premiumIvory
+                        : Theme.premiumMuted
                 )
                 .background(
                     segment == index
-                        ? Theme.ink
-                        : Theme.surfaceRaised
+                        ? Theme.premiumForest
+                        : Theme.premiumSageSoft
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 9))
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(
@@ -315,17 +317,19 @@ private struct UniversityCaseCard: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            UniversityLogo(
-                university: item.university,
-                fallbackName: item.university.name,
-                size: 52
+            UniversityPhoto(
+                seed: item.university.name + item.programName,
+                remoteURL: item.university.campusImageUrl,
+                height: 92
             )
+            .frame(width: 76, height: 92)
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
 
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 7) {
                 HStack(alignment: .top) {
                     Text(item.university.name)
-                        .font(.subheadline.bold())
-                        .foregroundStyle(Theme.ink)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.premiumInk)
                         .lineLimit(2)
 
                     Spacer()
@@ -333,8 +337,8 @@ private struct UniversityCaseCard: View {
                     Text(item.applicationStatus)
                         .font(.caption2.weight(.semibold))
                         .foregroundStyle(statusColor)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 5)
+                        .padding(.horizontal, 9)
+                        .frame(height: 25)
                         .background(statusColor.opacity(0.12))
                         .clipShape(Capsule())
                 }
@@ -342,11 +346,11 @@ private struct UniversityCaseCard: View {
                 if !item.programName.isEmpty {
                     Text(item.programName)
                         .font(.caption)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(Theme.premiumMuted)
                         .lineLimit(1)
                 }
 
-                HStack(spacing: 10) {
+                HStack(spacing: 9) {
                     if let degree = item.degreeLevel {
                         Label(degree, systemImage: "graduationcap")
                     }
@@ -356,28 +360,34 @@ private struct UniversityCaseCard: View {
                     }
                 }
                 .font(.caption2)
-                .foregroundStyle(Theme.orangeSoft)
+                .foregroundStyle(Theme.premiumBrass)
             }
         }
-        .padding(13)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .padding(10)
+        .background(Theme.premiumIvoryRaised)
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 18)
-                .stroke(Theme.ink.opacity(0.05))
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .stroke(Theme.premiumInk.opacity(0.05), lineWidth: 1)
+        )
+        .shadow(
+            color: Color.black.opacity(0.04),
+            radius: 12,
+            x: 0,
+            y: 6
         )
     }
 
     private var statusColor: Color {
         switch item.applicationStatus {
         case "Offer":
-            return Theme.green
+            return Theme.premiumForestSoft
         case "Rejected":
-            return .orange
+            return Theme.premiumBlush
         case "Submitted", "Interview":
-            return Theme.orangeSoft
+            return Theme.premiumBrass
         default:
-            return .white.opacity(0.62)
+            return Theme.premiumMuted
         }
     }
 }
