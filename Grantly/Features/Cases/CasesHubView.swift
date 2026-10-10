@@ -44,7 +44,7 @@ struct CasesHubView: View {
             }
         }
         .background(Theme.premiumIvoryRaised)
-        .preferredColorScheme(.light)
+        
         .navigationBarHidden(true)
     }
 
