@@ -151,13 +151,13 @@ struct ProfileView: View {
                             default:
                                 Text(profileInitials)
                                     .font(.system(size: 27, weight: .bold))
-                                    .foregroundStyle(Theme.premiumForest)
+                                    .foregroundStyle(Theme.accent)
                             }
                         }
                     } else {
                         Text(profileInitials)
                             .font(.system(size: 27, weight: .bold))
-                            .foregroundStyle(Theme.premiumForest)
+                            .foregroundStyle(Theme.accent)
                     }
                 }
                 .frame(width: 88, height: 88)
@@ -213,7 +213,7 @@ struct ProfileView: View {
 
                     Text("\(profileCompletion)%")
                         .font(.caption.weight(.bold))
-                        .foregroundStyle(Theme.premiumForest)
+                        .foregroundStyle(Theme.accent)
                 }
 
                 GeometryReader { geometry in
