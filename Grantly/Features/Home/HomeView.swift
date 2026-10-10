@@ -90,50 +90,25 @@ struct HomeView: View {
             Theme.pageBackground
                 .ignoresSafeArea()
 
-            organicBackground
-
             ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 16) {
                     header
                     editorialIntro
                     searchButton
+                    categoryStrip
                     bestMatchHero
-                    exploreSection
                     personalizedSection
                     closingSoonSection
                     advisorNudge
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 18)
                 .padding(.top, 8)
-                .padding(.bottom, 110)
+                .padding(.bottom, 112)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await load() }
         .task { await load() }
-    }
-
-    private var organicBackground: some View {
-        GeometryReader { proxy in
-            ZStack {
-                Circle()
-                    .fill(Theme.sage.opacity(0.55))
-                    .frame(width: 250, height: 250)
-                    .offset(
-                        x: proxy.size.width * 0.43,
-                        y: -proxy.size.height * 0.54
-                    )
-
-                Circle()
-                    .fill(Theme.sage.opacity(0.34))
-                    .frame(width: 180, height: 180)
-                    .offset(
-                        x: -proxy.size.width * 0.46,
-                        y: proxy.size.height * 0.19
-                    )
-            }
-            .allowsHitTesting(false)
-        }
     }
 
     private var header: some View {
@@ -194,15 +169,15 @@ struct HomeView: View {
     }
 
     private var editorialIntro: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 7) {
             Text(firstName.map { "Good afternoon, \($0)" } ?? "Good afternoon")
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(Theme.accentSoft)
 
-            Text(L10n.string("Find what could\nchange what comes next."))
-                .font(.system(size: 31, weight: .regular, design: .serif))
+            Text(L10n.string("Scholarships picked\nfor your next chapter."))
+                .font(.system(size: 34, weight: .regular, design: .serif))
                 .foregroundStyle(Theme.ink)
-                .tracking(-0.5)
+                .tracking(-0.8)
                 .lineSpacing(-2)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -246,6 +221,21 @@ struct HomeView: View {
             )
         }
         .buttonStyle(.plain)
+    }
+
+
+    private var categoryStrip: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 9) {
+                HomeFilterPill(title: "For you", selected: true, action: openExplore)
+                HomeFilterPill(title: "Europe", selected: false, action: openExplore)
+                HomeFilterPill(title: "Asia", selected: false, action: openExplore)
+                HomeFilterPill(title: "Bachelor", selected: false, action: openExplore)
+                HomeFilterPill(title: "Master", selected: false, action: openExplore)
+            }
+            .padding(.vertical, 1)
+        }
+        .contentMargins(.horizontal, 0, for: .scrollContent)
     }
 
     @ViewBuilder
@@ -543,6 +533,35 @@ struct HomeView: View {
     }
 }
 
+
+private struct HomeFilterPill: View {
+    let title: String
+    let selected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(selected ? Theme.onAccent : Theme.ink)
+                .padding(.horizontal, 15)
+                .frame(height: 38)
+                .background(selected ? Theme.accent : Theme.surface)
+                .clipShape(Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(
+                            selected
+                                ? Color.clear
+                                : Theme.ink.opacity(0.07),
+                            lineWidth: 1
+                        )
+                )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
 private struct HomeConceptSectionTitle: View {
     let title: String
     let trailing: String
@@ -569,78 +588,68 @@ private struct HomeEditorialHero: View {
     let score: Int?
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
+        ZStack(alignment: .bottomLeading) {
             UniversityPhoto(
                 seed: scholarship.provider + scholarship.title,
                 remoteURL: scholarship.university?.campusImageUrl,
-                height: 180
+                height: 318
             )
             .frame(maxWidth: .infinity)
             .overlay {
                 LinearGradient(
                     colors: [
-                        Theme.accent.opacity(0.50),
-                        Theme.accent.opacity(0.92)
+                        Color.black.opacity(0.04),
+                        Color.black.opacity(0.18),
+                        Theme.accent.opacity(0.86)
                     ],
-                    startPoint: .topTrailing,
-                    endPoint: .bottomLeading
+                    startPoint: .top,
+                    endPoint: .bottom
                 )
             }
 
-            Circle()
-                .fill(Theme.trustTeal.opacity(0.34))
-                .frame(width: 170, height: 170)
-                .offset(x: 235, y: -58)
-
-            Circle()
-                .fill(Theme.sand.opacity(0.28))
-                .frame(width: 112, height: 112)
-                .offset(x: 282, y: 89)
-
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 11) {
+                HStack {
                     Text(L10n.string("BEST MATCH"))
                         .font(.system(size: 10, weight: .bold))
-                        .tracking(0.5)
+                        .tracking(0.7)
                         .foregroundStyle(Theme.accent)
-                        .padding(.horizontal, 11)
-                        .padding(.vertical, 6)
-                        .background(Theme.onAccent)
+                        .padding(.horizontal, 12)
+                        .frame(height: 30)
+                        .background(.ultraThinMaterial)
                         .clipShape(Capsule())
 
                     Spacer()
 
                     if let score {
-                        HStack(alignment: .firstTextBaseline, spacing: 1) {
-                            Text("\(score)")
-                                .font(.system(size: 48, weight: .regular, design: .serif))
-
-                            Text("%")
-                                .font(.caption.weight(.bold))
-                        }
-                        .foregroundStyle(Theme.onAccent)
+                        Text("\(score)%")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 12)
+                            .frame(height: 30)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
                     }
                 }
 
-                Spacer(minLength: 0)
+                Spacer()
 
                 Text(scholarship.title)
-                    .font(.system(size: 25, weight: .regular, design: .serif))
-                    .foregroundStyle(Theme.onAccent)
-                    .lineLimit(2)
+                    .font(.system(size: 29, weight: .regular, design: .serif))
+                    .foregroundStyle(.white)
+                    .lineLimit(3)
                     .lineSpacing(-1)
 
                 Text("\(scholarship.provider) · \(scholarship.country)")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.onAccent.opacity(0.78))
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.82))
                     .lineLimit(1)
 
-                HStack(spacing: 7) {
+                HStack {
                     Text(scholarship.fundingType)
                         .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.accent)
-                        .padding(.horizontal, 10)
-                        .frame(height: 28)
+                        .foregroundStyle(Theme.ink)
+                        .padding(.horizontal, 11)
+                        .frame(height: 30)
                         .background(Theme.onAccent)
                         .clipShape(Capsule())
 
@@ -648,20 +657,20 @@ private struct HomeEditorialHero: View {
 
                     Image(systemName: "arrow.up.right")
                         .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(Theme.accent)
-                        .frame(width: 38, height: 38)
-                        .background(Theme.onAccent)
+                        .foregroundStyle(Theme.ink)
+                        .frame(width: 42, height: 42)
+                        .background(.ultraThinMaterial)
                         .clipShape(Circle())
                 }
             }
-            .padding(16)
+            .padding(18)
         }
-        .frame(height: 180)
-        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
-        .contentShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .frame(height: 318)
+        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
         .shadow(
-            color: Theme.accent.opacity(0.18),
-            radius: 22,
+            color: Color.black.opacity(0.10),
+            radius: 18,
             x: 0,
             y: 10
         )
@@ -744,53 +753,61 @@ private struct HomeRecommendationTile: View {
     let score: Int?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ZStack(alignment: .topTrailing) {
-                UniversityPhoto(
-                    seed: scholarship.provider,
-                    remoteURL: scholarship.university?.campusImageUrl,
-                    height: 46
+        ZStack(alignment: .bottomLeading) {
+            UniversityPhoto(
+                seed: scholarship.provider,
+                remoteURL: scholarship.university?.campusImageUrl,
+                height: 224
+            )
+            .frame(width: 270, height: 224)
+            .overlay {
+                LinearGradient(
+                    colors: [
+                        Color.clear,
+                        Color.black.opacity(0.16),
+                        Theme.accent.opacity(0.80)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
                 )
-
-                if let score {
-                    Text("\(score)%")
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(Theme.onAccent)
-                        .padding(.horizontal, 9)
-                        .frame(height: 24)
-                        .background(Theme.accent)
-                        .clipShape(Capsule())
-                        .padding(8)
-                }
             }
-            .frame(height: 46)
-            .clipped()
 
-            VStack(alignment: .leading, spacing: 5) {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    if let score {
+                        Text("\(score)% match")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(Theme.accent)
+                            .padding(.horizontal, 10)
+                            .frame(height: 27)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                    }
+
+                    Spacer()
+                }
+
+                Spacer()
+
                 Text(scholarship.title)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .font(.system(size: 20, weight: .regular, design: .serif))
+                    .foregroundStyle(.white)
                     .lineLimit(2)
 
                 Text("\(scholarship.country) · \(scholarship.fundingType)")
-                    .font(.system(size: 9.5))
-                    .foregroundStyle(Theme.muted)
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.78))
                     .lineLimit(1)
             }
-            .padding(11)
+            .padding(14)
         }
-        .frame(width: 172, height: 108, alignment: .top)
-        .background(Theme.surface.opacity(0.92))
-        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .stroke(Color.white.opacity(0.75), lineWidth: 1)
-        )
+        .frame(width: 270, height: 224)
+        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
         .shadow(
-            color: Theme.accent.opacity(0.07),
-            radius: 12,
+            color: Color.black.opacity(0.08),
+            radius: 14,
             x: 0,
-            y: 5
+            y: 8
         )
     }
 }
