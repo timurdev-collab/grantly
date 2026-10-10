@@ -12,21 +12,100 @@ struct AdvisorsView: View {
     @State private var errorMessage: String?
     @State private var chatDestination: AdvisorChatDestination?
     @State private var callSession: AdvisorCallSession?
+    @State private var search = ""
+
+    private var filteredAdvisors: [AdvisorDirectoryProfile] {
+        let needle = search
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !needle.isEmpty else { return advisors }
+
+        return advisors.filter { advisor in
+            [
+                advisor.displayName,
+                advisor.title,
+                advisor.organization,
+                advisor.shortBio
+            ]
+            .compactMap { $0 }
+            .contains {
+                $0.localizedCaseInsensitiveContains(needle)
+            } ||
+            advisor.specialties.contains {
+                $0.localizedCaseInsensitiveContains(needle)
+            } ||
+            advisor.countries.contains {
+                $0.localizedCaseInsensitiveContains(needle)
+            }
+        }
+    }
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 20) {
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("Advisors")
-                        .font(.system(size: 30, weight: .bold))
-                        .foregroundStyle(Theme.ink)
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .center) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(L10n.string("Find an advisor"))
+                            .font(
+                                .system(
+                                    size: 34,
+                                    weight: .regular,
+                                    design: .serif
+                                )
+                            )
+                            .tracking(-0.8)
+                            .foregroundStyle(Theme.premiumInk)
 
-                    Text(
-                        "Choose a verified advisor to support your study plans"
+                        Text(
+                            L10n.string(
+                                "Verified experts for applications, scholarships and study plans"
+                            )
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Theme.premiumMuted)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "person.2.fill")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Theme.premiumForest)
+                        .frame(width: 38, height: 38)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
+                }
+
+                HStack(spacing: 9) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Theme.premiumMuted)
+
+                    TextField(
+                        L10n.string("Search expertise or country"),
+                        text: $search
                     )
                     .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    .textInputAutocapitalization(.never)
                 }
+                .padding(.horizontal, 14)
+                .frame(height: 48)
+                .background(.ultraThinMaterial)
+                .clipShape(
+                    RoundedRectangle(
+                        cornerRadius: 17,
+                        style: .continuous
+                    )
+                )
+                .overlay(
+                    RoundedRectangle(
+                        cornerRadius: 17,
+                        style: .continuous
+                    )
+                    .stroke(
+                        Color.white.opacity(0.68),
+                        lineWidth: 1
+                    )
+                )
 
                 if let registration {
                     currentRegistrationCard(registration)
@@ -37,80 +116,120 @@ struct AdvisorsView: View {
                 } label: {
                     HStack(spacing: 12) {
                         Image(systemName: "calendar.badge.clock")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(Theme.accentSoft)
-                            .frame(width: 42, height: 42)
-                            .background(Theme.surfaceRaised)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Theme.premiumForest)
+                            .frame(width: 40, height: 40)
+                            .background(Theme.premiumSageSoft)
+                            .clipShape(
+                                RoundedRectangle(
+                                    cornerRadius: 13,
+                                    style: .continuous
+                                )
+                            )
 
                         VStack(alignment: .leading, spacing: 3) {
-                            Text("My consultations")
+                            Text(L10n.string("My consultations"))
                                 .font(.subheadline.weight(.semibold))
-                                .foregroundStyle(Theme.ink)
+                                .foregroundStyle(Theme.premiumInk)
 
-                            Text("Track live advisor consultation requests")
-                                .font(.caption)
-                                .foregroundStyle(Theme.muted)
+                            Text(
+                                L10n.string(
+                                    "Track upcoming advisor sessions"
+                                )
+                            )
+                            .font(.caption)
+                            .foregroundStyle(Theme.premiumMuted)
                         }
 
                         Spacer()
 
                         Image(systemName: "chevron.right")
                             .font(.caption.bold())
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(Theme.premiumMuted)
                     }
-                    .padding(14)
-                    .background(Theme.surface)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .padding(12)
+                    .background(Theme.premiumIvoryRaised)
+                    .clipShape(
+                        RoundedRectangle(
+                            cornerRadius: 20,
+                            style: .continuous
+                        )
+                    )
+                    .overlay(
+                        RoundedRectangle(
+                            cornerRadius: 20,
+                            style: .continuous
+                        )
+                        .stroke(
+                            Theme.premiumInk.opacity(0.05),
+                            lineWidth: 1
+                        )
+                    )
                 }
                 .buttonStyle(.plain)
 
+                HStack(alignment: .firstTextBaseline) {
+                    Text(L10n.string("Experts for your goals"))
+                        .font(
+                            .system(
+                                size: 20,
+                                weight: .regular,
+                                design: .serif
+                            )
+                        )
+                        .foregroundStyle(Theme.premiumInk)
+
+                    Spacer()
+
+                    if !advisors.isEmpty {
+                        Text(
+                            L10n.format(
+                                "%d available",
+                                filteredAdvisors.count
+                            )
+                        )
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.premiumForest)
+                    }
+                }
+
                 if loading && advisors.isEmpty {
                     ProgressView()
-                        .tint(Theme.accent)
+                        .tint(Theme.premiumForest)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 44)
+                        .padding(.vertical, 48)
+                } else if filteredAdvisors.isEmpty {
+                    EmptyState(
+                        icon: "person.2",
+                        title: "No advisors found",
+                        text: "Try a different expertise or country."
+                    )
+                    .padding(.vertical, 30)
                 } else {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(alignment: .firstTextBaseline) {
-                            Text("Meet our advisors")
-                                .font(.headline.bold())
-                                .foregroundStyle(Theme.ink)
-
-                            Spacer()
-
-                            if !advisors.isEmpty {
-                                Text(
-                                    L10n.format(
-                                        "%d available",
-                                        advisors.count
-                                    )
-                                )
-                                    .font(.caption)
-                                    .foregroundStyle(Theme.muted)
+                    LazyVStack(spacing: 10) {
+                        ForEach(filteredAdvisors) { advisor in
+                            NavigationLink {
+                                AdvisorDetailView(advisor: advisor)
+                            } label: {
+                                advisorListCard(advisor)
                             }
+                            .buttonStyle(.plain)
                         }
-
-                        Text(
-                            "Open a profile to watch an introduction and learn how each advisor can help."
-                        )
-                        .font(.caption)
-                        .foregroundStyle(Theme.muted)
-
-                        advisorGrid
                     }
                 }
 
                 if let errorMessage {
                     Text(errorMessage)
                         .font(.caption)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(Theme.danger)
                 }
             }
-            .padding()
-            .padding(.bottom, 24)
+            .padding(.horizontal, 18)
+            .padding(.top, 12)
+            .padding(.bottom, 34)
         }
-        .background(Theme.pageBackground)
+        .background(Theme.premiumIvoryRaised)
+        .preferredColorScheme(.light)
         .navigationBarHidden(true)
         .refreshable { await load() }
         .task { await load() }
@@ -132,43 +251,62 @@ struct AdvisorsView: View {
     private func currentRegistrationCard(
         _ registration: AdvisorRegistration
     ) -> some View {
-        VStack(alignment: .leading, spacing: 9) {
-            Text(
-                registration.status == "active"
-                    ? L10n.string("Your advisor")
-                    : L10n.string("Advisor request pending")
-            )
-            .font(.caption.weight(.semibold))
-            .foregroundStyle(Theme.accentSoft)
+        VStack(alignment: .leading, spacing: 11) {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(
+                        registration.status == "active"
+                            ? L10n.string("Your advisor")
+                            : L10n.string("Advisor request pending")
+                    )
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.premiumForest)
 
-            Text(registration.advisorName)
-                .font(.headline.bold())
-                .foregroundStyle(Theme.ink)
+                    Text(registration.advisorName)
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(Theme.premiumInk)
 
-            if let title = registration.advisorTitle,
-               !title.isEmpty {
-                Text(title)
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    if let title = registration.advisorTitle,
+                       !title.isEmpty {
+                        Text(title)
+                            .font(.caption)
+                            .foregroundStyle(Theme.premiumMuted)
+                    }
+                }
+
+                Spacer()
+
+                Image(
+                    systemName:
+                        registration.status == "active"
+                            ? "checkmark.seal.fill"
+                            : "clock.fill"
+                )
+                .foregroundStyle(Theme.premiumForest)
             }
 
             if registration.status == "active" {
-                HStack(spacing: 10) {
+                HStack(spacing: 9) {
                     Button {
                         Task {
                             await openConversation(registration)
                         }
                     } label: {
                         Label(
-                            "Message",
+                            L10n.string("Message"),
                             systemImage: "bubble.left.fill"
                         )
-                        .font(.subheadline.weight(.semibold))
+                        .font(.caption.weight(.semibold))
                         .frame(maxWidth: .infinity)
-                        .frame(height: 44)
-                        .background(Theme.orangeGradient)
-                        .foregroundStyle(Theme.onAccent)
-                        .clipShape(RoundedRectangle(cornerRadius: 13))
+                        .frame(height: 40)
+                        .background(Theme.premiumForest)
+                        .foregroundStyle(Theme.premiumIvory)
+                        .clipShape(
+                            RoundedRectangle(
+                                cornerRadius: 13,
+                                style: .continuous
+                            )
+                        )
                     }
                     .buttonStyle(.plain)
 
@@ -178,73 +316,42 @@ struct AdvisorsView: View {
                         }
                     } label: {
                         Label(
-                            "Video",
+                            L10n.string("Video"),
                             systemImage: "video.fill"
                         )
-                        .font(.subheadline.weight(.semibold))
+                        .font(.caption.weight(.semibold))
                         .frame(maxWidth: .infinity)
-                        .frame(height: 44)
-                        .background(Theme.surface)
-                        .foregroundStyle(Theme.ink)
-                        .clipShape(RoundedRectangle(cornerRadius: 13))
+                        .frame(height: 40)
+                        .background(Theme.premiumSageSoft)
+                        .foregroundStyle(Theme.premiumForest)
+                        .clipShape(
+                            RoundedRectangle(
+                                cornerRadius: 13,
+                                style: .continuous
+                            )
+                        )
                     }
                     .buttonStyle(.plain)
                 }
-            } else {
-                Text(
-                    "The advisor can accept your registration from their Advisor Portal."
-                )
-                .font(.caption)
-                .foregroundStyle(Theme.muted)
             }
         }
-        .padding(16)
-        .background(Theme.surfaceRaised)
-        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .padding(14)
+        .background(Theme.premiumSageSoft)
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: 20,
+                style: .continuous
+            )
+        )
     }
 
-    private var advisorGrid: some View {
-        let placeholderCount = max(0, 5 - advisors.count)
-        let columns = [
-            GridItem(.flexible(), spacing: 10),
-            GridItem(.flexible(), spacing: 10)
-        ]
-
-        return LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(advisors) { advisor in
-                NavigationLink {
-                    AdvisorDetailView(advisor: advisor)
-                } label: {
-                    advisorGridCard(advisor)
-                }
-                .buttonStyle(.plain)
-            }
-
-            ForEach(0..<placeholderCount, id: \.self) { _ in
-                advisorPlaceholderCard
-            }
-        }
-    }
-
-    private func advisorGridCard(
+    private func advisorListCard(
         _ advisor: AdvisorDirectoryProfile
     ) -> some View {
-        VStack(spacing: 7) {
+        HStack(spacing: 13) {
             ZStack {
                 Circle()
-                    .stroke(
-                        LinearGradient(
-                            colors: [Theme.orangeSoft, Theme.blueSoft],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 2
-                    )
-                    .frame(width: 60, height: 60)
-
-                Circle()
-                    .fill(Theme.surfaceRaised)
-                    .frame(width: 54, height: 54)
+                    .fill(Theme.premiumSage)
 
                 if let value = advisor.avatarUrl,
                    let url = URL(string: value) {
@@ -256,89 +363,95 @@ struct AdvisorsView: View {
                                 .scaledToFill()
                         default:
                             Image(systemName: "person.fill")
-                                .font(.system(size: 19))
-                                .foregroundStyle(Theme.muted)
+                                .font(.system(size: 20))
+                                .foregroundStyle(Theme.premiumForest)
                         }
                     }
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
                 } else {
                     Image(systemName: "person.fill")
-                        .font(.system(size: 19))
-                        .foregroundStyle(Theme.muted)
+                        .font(.system(size: 20))
+                        .foregroundStyle(Theme.premiumForest)
                 }
             }
-
-            Text(
-                advisor.displayName ??
-                L10n.string("EduT Advisor")
+            .frame(width: 58, height: 58)
+            .clipShape(Circle())
+            .overlay(
+                Circle()
+                    .stroke(
+                        Color.white.opacity(0.8),
+                        lineWidth: 1
+                    )
             )
-            .font(.caption.weight(.semibold))
-            .foregroundStyle(Theme.ink)
-            .multilineTextAlignment(.center)
-            .lineLimit(1)
 
-            if let title = advisor.title,
-               !title.isEmpty {
-                Text(title)
-                    .font(.caption2)
-                    .foregroundStyle(Theme.muted)
-                    .multilineTextAlignment(.center)
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(spacing: 5) {
+                    Text(
+                        advisor.displayName ??
+                        L10n.string("EduT Advisor")
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.premiumInk)
                     .lineLimit(1)
-            }
 
-            if advisor.isFeatured {
-                Image(systemName: "star.fill")
-                    .font(.caption2)
-                    .foregroundStyle(Theme.accentSoft)
-                    .accessibilityLabel("Featured")
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .frame(minHeight: 124)
-        .padding(10)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .overlay(
-            RoundedRectangle(cornerRadius: 15)
-                .stroke(Theme.ink.opacity(0.05))
-        )
-    }
-
-    private var advisorPlaceholderCard: some View {
-        VStack(spacing: 7) {
-            Circle()
-                .fill(Theme.surfaceRaised)
-                .frame(width: 54, height: 54)
-                .overlay {
-                    Image(systemName: "person.crop.circle.badge.plus")
-                        .font(.system(size: 19, weight: .medium))
-                        .foregroundStyle(Theme.muted.opacity(0.55))
+                    if advisor.isFeatured {
+                        Image(systemName: "star.fill")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.premiumBrass)
+                    }
                 }
 
-            Text("New advisor")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(Theme.muted)
+                if let title = advisor.title?.nonEmpty {
+                    Text(title)
+                        .font(.caption)
+                        .foregroundStyle(Theme.premiumMuted)
+                        .lineLimit(1)
+                }
 
-            Text("Coming soon")
-                .font(.caption2)
-                .foregroundStyle(Theme.muted.opacity(0.75))
+                HStack(spacing: 5) {
+                    ForEach(
+                        Array(advisor.specialties.prefix(2)),
+                        id: \.self
+                    ) { value in
+                        Text(value)
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundStyle(Theme.premiumMuted)
+                            .padding(.horizontal, 8)
+                            .frame(height: 23)
+                            .background(Theme.premiumSageSoft)
+                            .clipShape(Capsule())
+                    }
+                }
+            }
+
+            Spacer(minLength: 6)
+
+            Image(systemName: "chevron.right")
+                .font(.caption.bold())
+                .foregroundStyle(Theme.premiumForest)
         }
-        .frame(maxWidth: .infinity)
-        .frame(minHeight: 124)
-        .padding(10)
-        .background(Theme.surfaceRaised.opacity(0.7))
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .overlay(
-            RoundedRectangle(cornerRadius: 15)
-                .stroke(
-                    Theme.ink.opacity(0.06),
-                    style: StrokeStyle(lineWidth: 1, dash: [4, 4])
-                )
+        .padding(12)
+        .background(Theme.premiumIvoryRaised)
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: 22,
+                style: .continuous
+            )
         )
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(
-            L10n.string("Advisor coming soon")
+        .overlay(
+            RoundedRectangle(
+                cornerRadius: 22,
+                style: .continuous
+            )
+            .stroke(
+                Theme.premiumInk.opacity(0.05),
+                lineWidth: 1
+            )
+        )
+        .shadow(
+            color: Color.black.opacity(0.035),
+            radius: 12,
+            x: 0,
+            y: 6
         )
     }
 
@@ -411,7 +524,6 @@ struct AdvisorsView: View {
         }
     }
 }
-
 
 struct AdvisorDetailView: View {
     let advisor: AdvisorDirectoryProfile
