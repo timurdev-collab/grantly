@@ -5,6 +5,9 @@ import UIKit
 import Combine
 
 struct AdvisorsView: View {
+    @Environment(\.colorScheme) private var editorialScheme
+    private var actionInk: Color { editorialScheme == .dark ? Theme.editorialCream : Theme.premiumForest }
+
     @Environment(\.colorScheme) private var colorScheme
     private var isDark: Bool { colorScheme == .dark }
     private var textPrimary: Color { isDark ? Theme.editorialCream : Theme.premiumInk }
@@ -73,7 +76,7 @@ struct AdvisorsView: View {
 
                     Image(systemName: "person.2.fill")
                         .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(Theme.premiumForest)
+                        .foregroundStyle(actionInk)
                         .frame(width: 38, height: 38)
                         .background(.ultraThinMaterial)
                         .clipShape(Circle())
@@ -121,7 +124,7 @@ struct AdvisorsView: View {
                     HStack(spacing: 12) {
                         Image(systemName: "calendar.badge.clock")
                             .font(.system(size: 16, weight: .semibold))
-                            .foregroundStyle(Theme.premiumForest)
+                            .foregroundStyle(actionInk)
                             .frame(width: 40, height: 40)
                             .background(Theme.premiumSageSoft)
                             .clipShape(
@@ -193,7 +196,7 @@ struct AdvisorsView: View {
                             )
                         )
                         .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.premiumForest)
+                        .foregroundStyle(actionInk)
                     }
                 }
 
@@ -262,7 +265,7 @@ struct AdvisorsView: View {
                             : L10n.string("Advisor request pending")
                     )
                     .font(.caption.weight(.semibold))
-                    .foregroundStyle(Theme.premiumForest)
+                    .foregroundStyle(actionInk)
 
                     Text(registration.advisorName)
                         .font(.headline.weight(.semibold))
@@ -284,7 +287,7 @@ struct AdvisorsView: View {
                             ? "checkmark.seal.fill"
                             : "clock.fill"
                 )
-                .foregroundStyle(Theme.premiumForest)
+                .foregroundStyle(actionInk)
             }
 
             if registration.status == "active" {
@@ -325,7 +328,7 @@ struct AdvisorsView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 40)
                         .background(Theme.premiumSageSoft)
-                        .foregroundStyle(Theme.premiumForest)
+                        .foregroundStyle(actionInk)
                         .clipShape(
                             RoundedRectangle(
                                 cornerRadius: 13,
@@ -360,14 +363,14 @@ struct AdvisorsView: View {
                             } else {
                                 Image(systemName: "person.crop.circle.fill")
                                     .resizable().scaledToFit()
-                                    .foregroundStyle(Theme.premiumForest)
+                                    .foregroundStyle(actionInk)
                                     .padding(18)
                             }
                         }
                     } else {
                         Image(systemName: "person.crop.circle.fill")
                             .resizable().scaledToFit()
-                            .foregroundStyle(Theme.premiumForest)
+                            .foregroundStyle(actionInk)
                             .padding(18)
                     }
                 }
@@ -379,7 +382,7 @@ struct AdvisorsView: View {
                 VStack(alignment: .trailing, spacing: 5) {
                     Label(L10n.string("Verified"), systemImage: "checkmark.seal.fill")
                         .font(.system(size: 9, weight: .semibold))
-                        .foregroundStyle(Theme.premiumForest)
+                        .foregroundStyle(actionInk)
                     if let years = advisor.yearsExperience {
                         Text("\(years)+ years")
                             .font(.system(size: 10))
@@ -456,13 +459,13 @@ struct AdvisorsView: View {
                         default:
                             Image(systemName: "person.fill")
                                 .font(.system(size: 20))
-                                .foregroundStyle(Theme.premiumForest)
+                                .foregroundStyle(actionInk)
                         }
                     }
                 } else {
                     Image(systemName: "person.fill")
                         .font(.system(size: 20))
-                        .foregroundStyle(Theme.premiumForest)
+                        .foregroundStyle(actionInk)
                 }
             }
             .frame(width: 58, height: 58)
@@ -519,7 +522,7 @@ struct AdvisorsView: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption.bold())
-                .foregroundStyle(Theme.premiumForest)
+                .foregroundStyle(actionInk)
         }
         .padding(12)
         .background(Theme.premiumIvoryRaised)
