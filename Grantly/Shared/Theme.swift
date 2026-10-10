@@ -69,6 +69,12 @@ enum Theme {
         blue: 74 / 255
     )
 
+    // Restrained editorial dark surfaces: near-black, graphite and neutral cream.
+    static let editorialBackground = Color(red: 10 / 255, green: 15 / 255, blue: 15 / 255)
+    static let editorialCard = Color(red: 22 / 255, green: 28 / 255, blue: 27 / 255)
+    static let editorialCream = Color(red: 244 / 255, green: 235 / 255, blue: 224 / 255)
+    static let editorialSecondary = Color(red: 183 / 255, green: 190 / 255, blue: 185 / 255)
+
     static let premiumHeroGradient = LinearGradient(
         colors: [
             premiumForestSoft.opacity(0.08),
