@@ -653,7 +653,7 @@ struct AdvisorDetailView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                         .background(Theme.premiumSageSoft)
-                        .foregroundStyle(Theme.premiumForest)
+                        .foregroundStyle(Theme.accent)
                         .clipShape(
                             RoundedRectangle(
                                 cornerRadius: 17,
@@ -754,13 +754,13 @@ struct AdvisorDetailView: View {
                             default:
                                 Image(systemName: "person.fill")
                                     .font(.system(size: 34))
-                                    .foregroundStyle(Theme.premiumForest)
+                                    .foregroundStyle(Theme.accent)
                             }
                         }
                     } else {
                         Image(systemName: "person.fill")
                             .font(.system(size: 34))
-                            .foregroundStyle(Theme.premiumForest)
+                            .foregroundStyle(Theme.accent)
                     }
                 }
                 .frame(width: 98, height: 98)
@@ -792,7 +792,7 @@ struct AdvisorDetailView: View {
                         if advisor.isFeatured {
                             Image(systemName: "checkmark.seal.fill")
                                 .font(.caption)
-                                .foregroundStyle(Theme.premiumForest)
+                                .foregroundStyle(Theme.accent)
                         }
                     }
 
@@ -817,7 +817,7 @@ struct AdvisorDetailView: View {
                             systemImage: "briefcase.fill"
                         )
                         .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Theme.premiumForest)
+                        .foregroundStyle(Theme.accent)
                     }
                 }
 
@@ -879,7 +879,7 @@ struct AdvisorDetailView: View {
         VStack(spacing: 3) {
             Text(value)
                 .font(.headline.weight(.bold))
-                .foregroundStyle(Theme.premiumForest)
+                .foregroundStyle(Theme.accent)
 
             Text(L10n.string(label))
                 .font(.caption2)
