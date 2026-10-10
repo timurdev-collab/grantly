@@ -8,7 +8,7 @@ struct HomeView: View {
     let openExplore: () -> Void
     let openApplications: () -> Void
 
-    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 34
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 27
 
     @State private var matches: [ScholarshipMatch] = []
     @State private var upcoming: [Scholarship] = []
@@ -46,7 +46,7 @@ struct HomeView: View {
                     .ignoresSafeArea()
 
                 ScrollView(showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 12) {
                         header
                         editorialIntro
                         searchButton
@@ -523,7 +523,7 @@ struct HomeView: View {
 private enum HomeVisualStyle {
     static let cream = Color(uiColor: UIColor { traits in
         let rgb: (CGFloat, CGFloat, CGFloat) = traits.userInterfaceStyle == .dark
-            ? (10 / 255, 15 / 255, 15 / 255)
+            ? (13 / 255, 31 / 255, 25 / 255)
             : (247 / 255, 243 / 255, 232 / 255)
         return UIColor(red: rgb.0, green: rgb.1, blue: rgb.2, alpha: 1)
     })
@@ -616,8 +616,8 @@ private struct HomeConceptSectionTitle: View {
 }
 
 private struct HomeEditorialHero: View {
-    @ScaledMetric(relativeTo: .title) private var heroHeight: CGFloat = 318
-    @ScaledMetric(relativeTo: .title) private var titleSize: CGFloat = 29
+    @ScaledMetric(relativeTo: .title) private var heroHeight: CGFloat = 186
+    @ScaledMetric(relativeTo: .title) private var titleSize: CGFloat = 20
     let scholarship: Scholarship
     let score: Int?
 
@@ -697,11 +697,11 @@ private struct HomeEditorialHero: View {
                         .clipShape(Circle())
                 }
             }
-            .padding(18)
+            .padding(13)
         }
         .frame(height: heroHeight)
-        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
-        .contentShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .shadow(
             color: Color.black.opacity(0.10),
             radius: 18,
@@ -791,9 +791,9 @@ private struct HomeRecommendationTile: View {
             UniversityPhoto(
                 seed: scholarship.provider,
                 remoteURL: scholarship.university?.campusImageUrl,
-                height: 224
+                height: 132
             )
-            .frame(width: 270, height: 224)
+            .frame(width: 270, height: 132)
             .overlay {
                 LinearGradient(
                     colors: [
@@ -824,7 +824,7 @@ private struct HomeRecommendationTile: View {
                 Spacer()
 
                 Text(scholarship.title)
-                    .font(.system(size: 20, weight: .regular, design: .serif))
+                    .font(.system(size: 15, weight: .regular, design: .serif))
                     .foregroundStyle(.white)
                     .lineLimit(2)
 
@@ -835,7 +835,7 @@ private struct HomeRecommendationTile: View {
             }
             .padding(14)
         }
-        .frame(width: 270, height: 224)
+        .frame(width: 270, height: 132)
         .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
         .shadow(
             color: Color.black.opacity(0.08),
