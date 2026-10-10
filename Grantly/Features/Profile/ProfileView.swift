@@ -189,8 +189,8 @@ struct ProfileView: View {
                     .lineLimit(2)
 
                     Label(
-                        visible ? "Community visible" : "Community hidden",
-                        systemImage: visible ? "eye.fill" : "eye.slash.fill"
+                        "Private student profile",
+                        systemImage: "lock.fill"
                     )
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(Theme.blueSoft)
@@ -199,17 +199,6 @@ struct ProfileView: View {
                 Spacer(minLength: 0)
             }
             .padding(.horizontal, 16)
-
-            let trimmedBio = bio.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !trimmedBio.isEmpty {
-                Text(trimmedBio)
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.ink)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .lineSpacing(3)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 12)
-            }
 
             Button {
                 showingEditProfile = true
@@ -767,23 +756,6 @@ struct ProfileView: View {
                     Task { await uploadSelectedPhoto() }
                 }
 
-                Section("Community") {
-                    TextField(
-                        "Short bio",
-                        text: $bio,
-                        axis: .vertical
-                    )
-                    .lineLimit(3...6)
-
-                    Toggle(
-                        "Show my community profile",
-                        isOn: $visible
-                    )
-
-                    Text("Your GPA, IELTS and family income remain private.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
             }
             .scrollContentBackground(.hidden)
             .background(Theme.pageBackground)
@@ -992,8 +964,8 @@ struct ProfileView: View {
                 major: intendedMajor.trimmingCharacters(in: .whitespacesAndNewlines),
                 targetRegions: csv(targetRegions),
                 targetCountries: csv(targetCountries),
-                bio: bio.trimmingCharacters(in: .whitespacesAndNewlines),
-                isVisible: visible
+                bio: "",
+                isVisible: false
             )
 
             profile = try await DataService.currentProfile(userId: userId)
