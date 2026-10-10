@@ -525,6 +525,45 @@ struct CommunityProfile: Codable, Identifiable, Hashable {
     }
 }
 
+struct CommunityFriendRequest: Codable, Identifiable, Hashable {
+    let requestId: UUID
+    let userId: UUID
+    let displayName: String?
+    let communityCode: String?
+    let avatarUrl: String?
+    let createdAt: String
+
+    var id: UUID { requestId }
+
+    enum CodingKeys: String, CodingKey {
+        case requestId = "request_id"
+        case userId = "user_id"
+        case displayName = "display_name"
+        case communityCode = "community_code"
+        case avatarUrl = "avatar_url"
+        case createdAt = "created_at"
+    }
+}
+
+struct CommunityFriend: Codable, Identifiable, Hashable {
+    let userId: UUID
+    let displayName: String?
+    let communityCode: String?
+    let avatarUrl: String?
+    let nationality: String?
+    let major: String?
+
+    var id: UUID { userId }
+
+    enum CodingKeys: String, CodingKey {
+        case userId = "user_id"
+        case displayName = "display_name"
+        case communityCode = "community_code"
+        case avatarUrl = "avatar_url"
+        case nationality, major
+    }
+}
+
 struct University: Codable, Identifiable, Hashable {
     let id: UUID
     var name: String
