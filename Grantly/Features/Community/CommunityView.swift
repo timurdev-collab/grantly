@@ -2480,14 +2480,23 @@ struct CommunityView: View {
 
     @MainActor
     private func load() async {
-        loading = true
+        loading = profiles.isEmpty
         defer { loading = false }
 
-        async let profileRows = DataService.communityProfiles()
-        async let blockedRows = DataService.blockedUserIDs()
+        do {
+            let latestProfiles = try await DataService.communityProfiles()
+            profiles = latestProfiles
+        } catch {
+            if profiles.isEmpty {
+                messageError = error.localizedDescription
+            }
+        }
 
-        profiles = (try? await profileRows) ?? []
-        blockedUserIDs = (try? await blockedRows) ?? []
+        do {
+            blockedUserIDs = try await DataService.blockedUserIDs()
+        } catch {
+            // Keep the previous block list on a transient refresh failure.
+        }
     }
 }
 
