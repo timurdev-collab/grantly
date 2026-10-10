@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C120D4EA921A4D93A7C3F011 /* SocialMediaUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C120D4EA921A4D93A7C3F012 /* SocialMediaUploader.swift */; };
 		A7B8C9D0E1F2030405060708 /* LiveKit in Frameworks */ = {isa = PBXBuildFile; productRef = B7B8C9D0E1F2030405060708 /* LiveKit */; };
 		0C85559ABE9B6503D5421022 /* GrantlyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9C3691CEE37F967931AACA /* GrantlyApp.swift */; };
 		105E8C5BF134090BD3B2C854 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE633CF6447197A677DE1B05 /* MessagesView.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C120D4EA921A4D93A7C3F012 /* SocialMediaUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMediaUploader.swift; sourceTree = "<group>"; };
 		04886BF2D8D7D660040D8E9E /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		0722E0A71251796858C8AAD0 /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
 		074E3F865FF9D76E950BD608 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				B4A4E48530678C3000A853A0 /* SavedScholarshipItem.swift */,
 				AA53FCD05728DE6A6DAB3C52 /* AuthStore.swift */,
 				9B69CF2D270E09EE330E4AC7 /* DataService.swift */,
+				C120D4EA921A4D93A7C3F012 /* SocialMediaUploader.swift */,
 				BF46B5C554E6344CAAA62F06 /* MatchingService.swift */,
 			);
 			path = Services;
@@ -292,6 +295,7 @@
 				37F27C688E76A04CD52688E3 /* CommunityView.swift in Sources */,
 				A0F486E503A18834C9DAFCD8 /* Components.swift in Sources */,
 				93B3EB1A37E37E69688927BA /* DataService.swift in Sources */,
+				C120D4EA921A4D93A7C3F011 /* SocialMediaUploader.swift in Sources */,
 				0C85559ABE9B6503D5421022 /* GrantlyApp.swift in Sources */,
 				A0318D2494095F8FCEBDA44B /* HomeView.swift in Sources */,
 				F64175F42910546CFFAD8827 /* LoginView.swift in Sources */,
