@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct HomeView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    private var editorialAccent: Color { colorScheme == .dark ? Theme.editorialCream : HomeVisualStyle.forest }
     @Binding var profile: StudentProfile?
     let openProfile: () -> Void
     let openExplore: () -> Void
@@ -92,7 +94,7 @@ struct HomeView: View {
 
             Text(verbatim: "EduT")
                 .font(.system(size: 21, weight: .bold, design: .rounded))
-                .foregroundStyle(HomeVisualStyle.forest)
+                .foregroundStyle(editorialAccent)
 
             Spacer()
 
@@ -104,7 +106,7 @@ struct HomeView: View {
                 ZStack(alignment: .topTrailing) {
                     Image(systemName: "bell")
                         .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(HomeVisualStyle.forest)
+                        .foregroundStyle(editorialAccent)
                         .frame(width: 44, height: 44)
                         .background(.ultraThinMaterial)
                         .clipShape(Circle())
@@ -133,7 +135,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 7) {
             Text(firstName.map { "Good afternoon, \($0)" } ?? "Good afternoon")
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(HomeVisualStyle.forest)
+                .foregroundStyle(editorialAccent)
 
             Text(L10n.string("Scholarships picked\nfor your next chapter."))
                 .font(.system(size: titleSize, weight: .regular, design: .serif))
@@ -215,7 +217,7 @@ struct HomeView: View {
             .frame(minHeight: 44)
             .disabled(loading)
         }
-        .foregroundStyle(HomeVisualStyle.forest)
+        .foregroundStyle(editorialAccent)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
         .background(HomeVisualStyle.sage, in: RoundedRectangle(cornerRadius: 18))
@@ -412,7 +414,7 @@ struct HomeView: View {
 
                     Image(systemName: "person.crop.circle.fill")
                         .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(HomeVisualStyle.forest)
+                        .foregroundStyle(editorialAccent)
                 }
                 .frame(width: 38, height: 38)
 
@@ -430,7 +432,7 @@ struct HomeView: View {
 
                 Image(systemName: "arrow.right")
                     .font(.caption.bold())
-                    .foregroundStyle(HomeVisualStyle.forest)
+                    .foregroundStyle(editorialAccent)
                     .frame(width: 31, height: 31)
                     .background(Theme.onAccent)
                     .clipShape(Circle())
