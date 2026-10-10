@@ -868,24 +868,47 @@ struct AdminView: View {
 
                                 Spacer()
 
-                                Menu("Update status") {
-                                    ForEach(
-                                        [
-                                            "open",
-                                            "reviewing",
-                                            "resolved",
-                                            "dismissed"
-                                        ],
-                                        id: \.self
-                                    ) { status in
-                                        Button(status.capitalized) {
+                                HStack(spacing: 8) {
+                                    Button("Review") {
+                                        Task {
+                                            await update(
+                                                report: report,
+                                                status: "reviewing"
+                                            )
+                                        }
+                                    }
+                                    .buttonStyle(.bordered)
+
+                                    Button("Resolve") {
+                                        Task {
+                                            await update(
+                                                report: report,
+                                                status: "resolved"
+                                            )
+                                        }
+                                    }
+                                    .buttonStyle(.borderedProminent)
+
+                                    Menu {
+                                        Button("Open") {
                                             Task {
                                                 await update(
                                                     report: report,
-                                                    status: status
+                                                    status: "open"
                                                 )
                                             }
                                         }
+
+                                        Button("Dismiss", role: .destructive) {
+                                            Task {
+                                                await update(
+                                                    report: report,
+                                                    status: "dismissed"
+                                                )
+                                            }
+                                        }
+                                    } label: {
+                                        Image(systemName: "ellipsis.circle")
                                     }
                                 }
                                 .font(.caption)
