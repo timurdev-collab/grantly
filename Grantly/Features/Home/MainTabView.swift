@@ -177,12 +177,15 @@ private struct StudentMainTabs: View {
                 AdvisorsView()
             }
             .tabItem {
-                Label(
-                    "Advisors",
-                    systemImage: selection == .advisors
-                        ? "person.2.fill"
-                        : "person.2"
-                )
+                Label {
+                    Text("Advisors")
+                } icon: {
+                    Image(
+                        uiImage: UIImage(systemName: "person.2.fill")?
+                            .withTintColor(.systemBlue, renderingMode: .alwaysOriginal)
+                            ?? UIImage()
+                    )
+                }
             }
             .tag(MainTab.advisors)
 
