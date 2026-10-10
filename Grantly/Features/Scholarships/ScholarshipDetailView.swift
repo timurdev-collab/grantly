@@ -126,7 +126,7 @@ struct ScholarshipDetailView: View {
                             .background(.ultraThinMaterial)
                             .clipShape(Capsule())
                     } else if verified {
-                        Text("Verified")
+                        Text(L10n.string("Verified"))
                             .font(.caption2.weight(.bold))
                             .foregroundStyle(Theme.premiumForest)
                             .padding(.horizontal, 11)
