@@ -406,7 +406,7 @@ struct ChatView: View {
                             reportingUser = true
                         } label: {
                             Label(
-                                "Report user",
+                                L10n.string("Report user"),
                                 systemImage: "exclamationmark.triangle"
                             )
                         }
@@ -416,7 +416,7 @@ struct ChatView: View {
                                 Task { await unblockCurrentUser() }
                             } label: {
                                 Label(
-                                    "Unblock user",
+                                    L10n.string("Unblock user"),
                                     systemImage: "person.crop.circle.badge.checkmark"
                                 )
                             }
@@ -425,7 +425,7 @@ struct ChatView: View {
                                 Task { await blockCurrentUser() }
                             } label: {
                                 Label(
-                                    "Block user",
+                                    L10n.string("Block user"),
                                     systemImage: "person.crop.circle.badge.xmark"
                                 )
                             }
@@ -433,7 +433,7 @@ struct ChatView: View {
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
-                    .accessibilityLabel("Safety options")
+                    .accessibilityLabel(L10n.string("Safety options"))
                 }
             }
 
