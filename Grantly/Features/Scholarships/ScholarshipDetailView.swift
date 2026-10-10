@@ -48,10 +48,10 @@ struct ScholarshipDetailView: View {
                 .clipped()
             }
         }
-        .background(Theme.pageBackground)
+        .background(Theme.premiumIvoryRaised)
+        .preferredColorScheme(.light)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(Theme.navyDeep.opacity(0.94), for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -98,60 +98,64 @@ struct ScholarshipDetailView: View {
     }
 
     private var hero: some View {
-        ZStack(alignment: .bottom) {
+        ZStack(alignment: .bottomLeading) {
             UniversityPhoto(
                 seed: scholarship.provider + scholarship.title + scholarship.country,
                 remoteURL: scholarship.university?.campusImageUrl,
-                height: 268
+                height: 310
             )
 
             LinearGradient(
                 colors: [
-                    Theme.navyDeep.opacity(0.05),
-                    Theme.navyDeep.opacity(0.32),
-                    Theme.navyDeep
+                    Color.black.opacity(0.02),
+                    Color.black.opacity(0.16),
+                    Theme.premiumForest.opacity(0.90)
                 ],
                 startPoint: .top,
                 endPoint: .bottom
             )
 
-            VStack {
+            VStack(alignment: .leading, spacing: 10) {
                 HStack {
-                    TrustSeal(verified: verified)
+                    if let match {
+                        Text("\(match.score)% match")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(Theme.premiumForest)
+                            .padding(.horizontal, 11)
+                            .frame(height: 29)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                    } else if verified {
+                        Text("Verified")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(Theme.premiumForest)
+                            .padding(.horizontal, 11)
+                            .frame(height: 29)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                    }
 
                     Spacer()
-
-                    FundingBadge(text: scholarship.fundingType)
                 }
 
                 Spacer()
 
-                HStack(alignment: .bottom) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("SCHOLARSHIP")
-                            .font(.system(size: 9, weight: .bold))
-                            .tracking(1.6)
-                            .foregroundStyle(Theme.orangeSoft)
+                Text(scholarship.title)
+                    .font(.system(size: 30, weight: .regular, design: .serif))
+                    .tracking(-0.7)
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(3)
 
-                        Text(scholarship.title)
-                            .font(.system(size: 28, weight: .bold))
-                            .tracking(-0.5)
-                            .foregroundStyle(Theme.ink)
-                            .multilineTextAlignment(.leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(
-                                maxWidth: .infinity,
-                                alignment: .leading
-                            )
-                            .lineLimit(3)
-                    }
-
-                    Spacer(minLength: 12)
-                }
+                Text(scholarship.university?.name ?? scholarship.provider)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(.white.opacity(0.82))
+                    .lineLimit(1)
             }
-            .padding(16)
+            .padding(18)
         }
-        .frame(height: 268)
+        .frame(height: 310)
+        .clipped()
     }
 
     private var identity: some View {
@@ -247,10 +251,11 @@ struct ScholarshipDetailView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 16))
             }
         }
-        .padding(.horizontal)
-        .padding(.top, 14)
-        .padding(.bottom, 10)
+        .padding(.horizontal, 18)
+        .padding(.top, 18)
+        .padding(.bottom, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Theme.premiumIvoryRaised)
     }
 
     private var tabsBar: some View {
@@ -476,10 +481,12 @@ struct ScholarshipDetailView: View {
             } label: {
                 Image(systemName: saved ? "bookmark.fill" : "bookmark")
                     .font(.headline)
-                    .frame(width: 52, height: 52)
-                    .background(Theme.surfaceRaised)
-                    .foregroundStyle(saved ? Theme.orangeSoft : Theme.ink)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .frame(width: 50, height: 50)
+                    .background(.ultraThinMaterial)
+                    .foregroundStyle(
+                        saved ? Theme.premiumBrass : Theme.premiumForest
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 17, style: .continuous))
             }
             .buttonStyle(.plain)
             .disabled(busy)
@@ -489,23 +496,23 @@ struct ScholarshipDetailView: View {
             } label: {
                 HStack(spacing: 8) {
                     Text("Apply & track in EduT")
-                    Image(systemName: "arrow.up.right.square")
+                    Image(systemName: "arrow.up.right")
                 }
                 .font(.headline.weight(.semibold))
                 .frame(maxWidth: .infinity)
-                .frame(height: 52)
-                .background(Theme.orangeGradient)
-                .foregroundStyle(Theme.onAccent)
-                .clipShape(RoundedRectangle(cornerRadius: 15))
+                .frame(height: 50)
+                .background(Theme.premiumForest)
+                .foregroundStyle(Theme.premiumIvory)
+                .clipShape(RoundedRectangle(cornerRadius: 17, style: .continuous))
             }
             .buttonStyle(.plain)
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 16)
         .padding(.vertical, 10)
-        .background(Theme.navyDeep.opacity(0.96))
+        .background(.ultraThinMaterial)
         .overlay(alignment: .top) {
             Rectangle()
-                .fill(Theme.ink.opacity(0.06))
+                .fill(Theme.premiumInk.opacity(0.05))
                 .frame(height: 1)
         }
     }
