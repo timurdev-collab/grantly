@@ -62,15 +62,10 @@ struct ProfileView: View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 0) {
                 instagramProfileHeader
-                profileSectionTabs
 
                 VStack(spacing: 16) {
-                    if selectedProfileSection == 0 {
-                        communityCard
-                    } else {
-                        academicSnapshot
-                        destinationCard
-                    }
+                    academicSnapshot
+                    destinationCard
 
                     if !status.isEmpty {
                         Text(status)
@@ -109,7 +104,7 @@ struct ProfileView: View {
 
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("This permanently deletes your account, profile, saved scholarships and messages. This cannot be undone.")
+            Text("This permanently deletes your account, profile, saved scholarships, applications and messages. This cannot be undone.")
         }
     }
 
@@ -1209,11 +1204,6 @@ private struct PrivacyAndSafetyView: View {
                 Label(
                     "Your academic profile and family income are private to your account.",
                     systemImage: "lock.shield"
-                )
-
-                Label(
-                    "Your Community profile is separate and can be hidden at any time from Profile.",
-                    systemImage: "person.3"
                 )
 
                 Label(
