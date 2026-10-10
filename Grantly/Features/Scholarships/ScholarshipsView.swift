@@ -141,7 +141,8 @@ struct ScholarshipsView: View {
             }
             .padding(.bottom, 30)
         }
-        .background(Theme.pageBackground)
+        .background(Theme.premiumIvoryRaised)
+        .preferredColorScheme(.light)
         .navigationBarHidden(true)
         .scrollBounceBehavior(.always, axes: .vertical)
         .scrollDismissesKeyboard(.immediately)
@@ -175,14 +176,15 @@ struct ScholarshipsView: View {
 
     private var exploreHeader: some View {
         HStack(alignment: .center, spacing: 14) {
-            VStack(alignment: .leading, spacing: 5) {
-                Text("Explore")
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(Theme.ink)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Discover")
+                    .font(.system(size: 34, weight: .regular, design: .serif))
+                    .tracking(-0.8)
+                    .foregroundStyle(Theme.premiumInk)
 
-                Text("Find scholarships you can trust")
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                Text("Curated, verified opportunities for your goals")
+                    .font(.caption)
+                    .foregroundStyle(Theme.premiumMuted)
             }
 
             Spacer()
@@ -191,8 +193,8 @@ struct ScholarshipsView: View {
                 await refresh()
             }
         }
-        .padding(.horizontal)
-        .padding(.top, 10)
+        .padding(.horizontal, 18)
+        .padding(.top, 12)
     }
 
     private var deadlineSoonQuickAction: some View {
@@ -608,57 +610,67 @@ struct PremiumScholarshipCard: View {
     }
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            UniversityLogo(
-                university: scholarship.university,
-                fallbackName: scholarship.provider,
-                size: 48
+        HStack(spacing: 12) {
+            UniversityPhoto(
+                seed: scholarship.provider + scholarship.title,
+                remoteURL: scholarship.university?.campusImageUrl,
+                height: 108
             )
+            .frame(width: 92, height: 108)
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay(alignment: .topLeading) {
+                if verified {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(Theme.premiumForest)
+                        .frame(width: 24, height: 24)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
+                        .padding(7)
+                }
+            }
 
-            VStack(alignment: .leading, spacing: 6) {
-                HStack(alignment: .top, spacing: 8) {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(scholarship.title)
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Theme.ink)
-                            .multilineTextAlignment(.leading)
-                            .lineLimit(2)
-
-                        Text(scholarship.provider)
-                            .font(.caption2)
-                            .foregroundStyle(Theme.muted)
-                            .lineLimit(1)
-                    }
+            VStack(alignment: .leading, spacing: 7) {
+                HStack(alignment: .top, spacing: 6) {
+                    Text(scholarship.title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.premiumInk)
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(2)
 
                     Spacer(minLength: 4)
 
                     Image(systemName: saved ? "bookmark.fill" : "bookmark")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(
-                            saved ? Theme.sand : Theme.muted
+                            saved ? Theme.premiumBrass : Theme.premiumMuted
                         )
                 }
 
-                HStack(spacing: 7) {
-                    FundingBadge(text: scholarship.fundingType)
+                Text(scholarship.provider)
+                    .font(.caption2)
+                    .foregroundStyle(Theme.premiumMuted)
+                    .lineLimit(1)
 
-                    MetadataPill(
-                        icon: "graduationcap",
-                        text: primaryDegree
-                    )
+                HStack(spacing: 6) {
+                    Text(scholarship.fundingType)
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.premiumForest)
+                        .padding(.horizontal, 9)
+                        .frame(height: 26)
+                        .background(Theme.premiumSageSoft)
+                        .clipShape(Capsule())
+
+                    Text(primaryDegree)
+                        .font(.caption2.weight(.medium))
+                        .foregroundStyle(Theme.premiumMuted)
+                        .lineLimit(1)
                 }
 
                 HStack(spacing: 6) {
-                    if verified {
-                        Label(
-                            "Official source",
-                            systemImage: "checkmark.seal.fill"
-                        )
-                        .font(.system(size: 9, weight: .semibold))
-                        .foregroundStyle(Theme.trustTeal)
-                    }
-
                     Text(countryLabel)
+                        .font(.caption2)
+                        .foregroundStyle(Theme.premiumMuted)
                         .lineLimit(1)
 
                     Spacer()
@@ -668,24 +680,24 @@ struct PremiumScholarshipCard: View {
                             String(deadline.prefix(10)),
                             systemImage: "calendar"
                         )
-                        .foregroundStyle(Theme.sand)
+                        .font(.caption2)
+                        .foregroundStyle(Theme.premiumBrass)
                     }
                 }
-                .font(.caption2)
-                .foregroundStyle(Theme.muted)
             }
-
-            Image(systemName: "chevron.right")
-                .font(.caption.weight(.bold))
-                .foregroundStyle(Theme.muted)
-                .padding(.top, 15)
         }
-        .padding(12)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
+        .padding(10)
+        .background(Theme.premiumIvoryRaised)
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 15)
-                .stroke(Theme.ink.opacity(0.05))
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .stroke(Theme.premiumInk.opacity(0.05), lineWidth: 1)
+        )
+        .shadow(
+            color: Color.black.opacity(0.045),
+            radius: 14,
+            x: 0,
+            y: 7
         )
     }
 }
