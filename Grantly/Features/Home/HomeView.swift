@@ -609,7 +609,7 @@ private struct HomeConceptSectionTitle: View {
 
             Button(trailing, action: action)
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(HomeVisualStyle.forest)
+                .foregroundStyle(Theme.accent)
                 .buttonStyle(.plain)
         }
     }
@@ -646,7 +646,7 @@ private struct HomeEditorialHero: View {
                     Text(L10n.string("BEST MATCH"))
                         .font(.system(size: 10, weight: .bold))
                         .tracking(0.7)
-                        .foregroundStyle(HomeVisualStyle.forest)
+                        .foregroundStyle(Theme.accent)
                         .padding(.horizontal, 12)
                         .frame(height: 30)
                         .background(.ultraThinMaterial)
@@ -725,7 +725,7 @@ private struct HomeEmptyHero: View {
                 Text(L10n.string("START EXPLORING"))
                     .font(.system(size: 10, weight: .bold))
                     .tracking(0.5)
-                    .foregroundStyle(HomeVisualStyle.forest)
+                    .foregroundStyle(Theme.accent)
                     .padding(.horizontal, 11)
                     .padding(.vertical, 6)
                     .background(Theme.onAccent)
@@ -811,7 +811,7 @@ private struct HomeRecommendationTile: View {
                     if let score {
                         Text("\(score)% match")
                             .font(.caption2.weight(.bold))
-                            .foregroundStyle(HomeVisualStyle.forest)
+                            .foregroundStyle(Theme.accent)
                             .padding(.horizontal, 10)
                             .frame(height: 27)
                             .background(.ultraThinMaterial)
