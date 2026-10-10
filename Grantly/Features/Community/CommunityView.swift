@@ -855,18 +855,1671 @@ struct AdvisorDetailView: View {
             NavigationLink {
                 AdvisorConsultationBookingView(advisor: advisor)
             } label: {
-                NavigationLink {
-                CommunityConnectionsView()
-            } label: {
-                Image(systemName: "person.2.fill")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Theme.blueSoft)
-                    .frame(width: 42, height: 42)
-                    .background(Theme.surface)
-                    .clipShape(RoundedRectangle(cornerRadius: 13))
-            }
-            .accessibilityLabel("Friends")
+                HStack(spacing: 8) {
+                    Text("Choose a plan")
+                        .font(.subheadline.weight(.semibold))
 
+                    Spacer()
+
+                    Image(systemName: "arrow.right")
+                        .font(.caption.bold())
+                }
+                .foregroundStyle(Theme.onAccent)
+                .padding(.horizontal, 14)
+                .frame(height: 42)
+                .background(Theme.orangeGradient)
+                .clipShape(RoundedRectangle(cornerRadius: 13))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Theme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(Theme.accent.opacity(0.10))
+        )
+    }
+
+    private func priceText(cents: Int, currency: String) -> String {
+        String(
+            format: "%@ %.2f",
+            currency,
+            Double(cents) / 100.0
+        )
+    }
+
+    @MainActor
+    private func loadAdvisorServices() async {
+        do {
+            advisorServices = try await DataService.availableAdvisorServices(
+                advisorId: advisor.id
+            )
+        } catch {
+            advisorServices = []
+        }
+    }
+
+    @ViewBuilder
+    private var linksSection: some View {
+        if advisor.linkedinUrl?.nonEmpty != nil ||
+            advisor.websiteUrl?.nonEmpty != nil {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Professional links")
+                    .font(.headline.bold())
+                    .foregroundStyle(Theme.ink)
+
+                if let value = advisor.linkedinUrl,
+                   let url = URL(string: value) {
+                    Link(destination: url) {
+                        Label(
+                            "LinkedIn",
+                            systemImage: "person.text.rectangle"
+                        )
+                    }
+                }
+
+                if let value = advisor.websiteUrl,
+                   let url = URL(string: value) {
+                    Link(destination: url) {
+                        Label(
+                            "Website",
+                            systemImage: "globe"
+                        )
+                    }
+                }
+            }
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(Theme.accent)
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Theme.surface)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+        }
+    }
+}
+
+private enum AdvisorLegalDocument: String, Identifiable {
+    case terms
+    case privacy
+    case refunds
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .terms:
+            return "Terms & Conditions"
+        case .privacy:
+            return "Privacy Policy"
+        case .refunds:
+            return "Cancellation & Refund Policy"
+        }
+    }
+
+    var bodyText: String {
+        switch self {
+        case .terms:
+            return """
+            Advisor services are provided by independent advisors through EduT. A consultation request does not charge you and does not guarantee a booking until payment and scheduling are confirmed.
+
+            Prices, duration and included support are shown before you submit a request. The 6-month guidance package includes weekly one-to-one check-ins for six months and does not renew automatically.
+
+            Advisors provide educational guidance and application support. EduT and its advisors do not guarantee admission, scholarships, visas, employment, test scores or any other outcome.
+
+            You must provide accurate contact and scheduling information and use the service lawfully and respectfully. You may not misuse advisor contact details, recordings or materials.
+
+            Any non-waivable rights available to you under applicable consumer law continue to apply. Material changes to these terms will require a new acceptance before a future paid request.
+            """
+        case .privacy:
+            return """
+            EduT uses your account information, selected service, email address, WhatsApp number, preferred time, topic and notes to coordinate the consultation.
+
+            Your direct contact details stay hidden from the selected advisor until payment is recorded by EduT. EduT may retain booking, payment-status and consent records for customer support, fraud prevention, legal compliance and dispute handling.
+
+            Only information reasonably necessary to provide the requested service should be shared. Do not place passwords, financial account details or other unnecessary sensitive information in consultation notes.
+
+            You may exercise privacy rights available under applicable law. EduT will not treat acceptance of consultation terms as consent to unrelated marketing.
+            """
+        case .refunds:
+            return """
+            Sending a consultation request does not charge you. Payment instructions are provided separately after the request is reviewed.
+
+            If EduT or the advisor cannot provide a confirmed paid service, any payment collected for that service will be refunded.
+
+            For scheduled one-to-one sessions, cancellation or rescheduling requests should be made as early as possible. Eligibility for a refund can depend on how close the request is to the confirmed session time and whether the service has already started.
+
+            For multi-session packages, any legally required cancellation or withdrawal rights remain available. Services already delivered may affect the refundable amount where permitted by law.
+
+            Before payment, EduT will show or provide any service-specific cancellation terms that apply. Mandatory consumer rights in your jurisdiction override any conflicting policy term.
+            """
+        }
+    }
+}
+
+private struct AdvisorLegalDocumentView: View {
+    @Environment(\.dismiss) private var dismiss
+    let document: AdvisorLegalDocument
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                Text(document.bodyText)
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.ink)
+                    .lineSpacing(4)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+            }
+            .background(Theme.pageBackground)
+            .navigationTitle(document.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+    }
+}
+
+struct AdvisorConsultationBookingView: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let advisor: AdvisorDirectoryProfile
+
+    @State private var services: [AdvisorService] = []
+    @State private var selectedServiceID: UUID?
+    @State private var contactEmail = ""
+    @State private var whatsappNumber = ""
+    @State private var preferredStart =
+        Date().addingTimeInterval(24 * 60 * 60)
+    @State private var topic = ""
+    @State private var notes = ""
+    @State private var consent = false
+    @State private var legalAcknowledgement = false
+    @State private var termsAcceptanceID: UUID?
+    @State private var legalDocument: AdvisorLegalDocument?
+    @State private var acceptingTerms = false
+    @State private var loading = true
+    @State private var submitting = false
+    @State private var submitted = false
+    @State private var errorMessage: String?
+
+    private let termsVersion = "2026-10-04.v1"
+    private let privacyVersion = "2026-10-04.v1"
+    private let refundPolicyVersion = "2026-10-04.v1"
+
+    private var selectedService: AdvisorService? {
+        services.first { $0.id == selectedServiceID }
+    }
+
+    private var canSubmit: Bool {
+        selectedService != nil &&
+        termsAcceptanceID != nil &&
+        contactEmail.contains("@") &&
+        whatsappNumber.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        ).count >= 7 &&
+        topic.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        ).count >= 3 &&
+        consent &&
+        !submitting
+    }
+
+    var body: some View {
+        Group {
+            if submitted {
+                successView
+            } else if termsAcceptanceID == nil {
+                legalGateView
+            } else {
+                formView
+            }
+        }
+        .background(Theme.pageBackground)
+        .navigationTitle("Advisor services")
+        .navigationBarTitleDisplayMode(.inline)
+        .task { await load() }
+        .sheet(item: $legalDocument) { document in
+            AdvisorLegalDocumentView(document: document)
+        }
+    }
+
+    private var legalGateView: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 7) {
+                    Label(
+                        "Before you choose a plan",
+                        systemImage: "checkmark.shield.fill"
+                    )
+                    .font(.title3.bold())
+                    .foregroundStyle(Theme.ink)
+
+                    Text(
+                        "Please review and accept the booking terms. This keeps pricing, privacy and cancellation rules clear before you select a service."
+                    )
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+                    .lineSpacing(3)
+                }
+
+                VStack(spacing: 0) {
+                    legalLink(.terms)
+                    Divider()
+                    legalLink(.privacy)
+                    Divider()
+                    legalLink(.refunds)
+                }
+                .padding(.horizontal, 14)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Label(
+                        "Important booking points",
+                        systemImage: "info.circle.fill"
+                    )
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+
+                    legalPoint("Submitting a request does not charge you.")
+                    legalPoint("Prices are shown before you select and submit a plan.")
+                    legalPoint("Contact details remain hidden from the advisor until payment is recorded.")
+                    legalPoint("The 6-month package is a one-time purchase and does not auto-renew.")
+                    legalPoint("Admission, scholarship, visa or other outcomes are not guaranteed.")
+                }
+                .padding(14)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                Button {
+                    legalAcknowledgement.toggle()
+                } label: {
+                    HStack(alignment: .top, spacing: 11) {
+                        Image(
+                            systemName:
+                                legalAcknowledgement
+                                ? "checkmark.square.fill"
+                                : "square"
+                        )
+                        .font(.system(size: 22))
+                        .foregroundStyle(
+                            legalAcknowledgement
+                                ? Theme.accent
+                                : Theme.muted
+                        )
+
+                        Text(
+                            "I have read and agree to the Terms & Conditions and Cancellation & Refund Policy, and I acknowledge the Privacy Policy."
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Theme.ink)
+                        .multilineTextAlignment(.leading)
+
+                        Spacer(minLength: 0)
+                    }
+                }
+                .buttonStyle(.plain)
+
+                if let errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(Theme.danger)
+                }
+
+                Button {
+                    Task { await acceptTerms() }
+                } label: {
+                    HStack {
+                        Spacer()
+                        if acceptingTerms {
+                            ProgressView()
+                                .tint(Theme.onAccent)
+                        } else {
+                            Text("Accept & continue to plans")
+                                .font(.subheadline.weight(.semibold))
+                        }
+                        Spacer()
+                    }
+                    .frame(height: 50)
+                    .foregroundStyle(
+                        legalAcknowledgement
+                            ? Theme.onAccent
+                            : Theme.muted
+                    )
+                    .background(
+                        legalAcknowledgement
+                            ? Theme.orangeGradient
+                            : LinearGradient(
+                                colors: [
+                                    Theme.surfaceRaised,
+                                    Theme.surfaceRaised
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                }
+                .buttonStyle(.plain)
+                .disabled(!legalAcknowledgement || acceptingTerms)
+
+                Text(
+                    "Terms version: \(termsVersion). Your acceptance time and policy versions are recorded for the booking process."
+                )
+                .font(.caption2)
+                .foregroundStyle(Theme.muted)
+            }
+            .padding()
+            .padding(.bottom, 28)
+        }
+    }
+
+    private func legalLink(
+        _ document: AdvisorLegalDocument
+    ) -> some View {
+        Button {
+            legalDocument = document
+        } label: {
+            HStack {
+                Text(document.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+
+                Spacer()
+
+                Text("Read")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+
+                Image(systemName: "chevron.right")
+                    .font(.caption.bold())
+                    .foregroundStyle(Theme.muted)
+            }
+            .padding(.vertical, 14)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func legalPoint(_ text: String) -> some View {
+        HStack(alignment: .top, spacing: 8) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.caption)
+                .foregroundStyle(Theme.accent)
+                .padding(.top, 2)
+
+            Text(text)
+                .font(.caption)
+                .foregroundStyle(Theme.muted)
+        }
+    }
+
+    @MainActor
+    private func acceptTerms() async {
+        guard legalAcknowledgement, !acceptingTerms else { return }
+
+        acceptingTerms = true
+        defer { acceptingTerms = false }
+
+        do {
+            termsAcceptanceID =
+                try await DataService.acceptAdvisorBookingTerms(
+                    advisorId: advisor.id,
+                    termsVersion: termsVersion,
+                    privacyVersion: privacyVersion,
+                    refundPolicyVersion: refundPolicyVersion
+                )
+            selectedServiceID = nil
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private var formView: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(advisor.displayName ?? "EduT Advisor")
+                        .font(.title3.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    Text(
+                        "Choose the support that fits you best. Introductory pricing is shown clearly before you send a request."
+                    )
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+                    .lineSpacing(3)
+                }
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Choose a plan")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    if loading {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 18)
+                    } else if services.isEmpty {
+                        Text("No consultation services are available right now.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                    } else {
+                        ForEach(services) { service in
+                            Button {
+                                selectedServiceID = service.id
+                            } label: {
+                                serviceRow(service)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Contact details")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    TextField("Email address", text: $contactEmail)
+                        .textContentType(.emailAddress)
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .textFieldStyle(.roundedBorder)
+
+                    TextField(
+                        "WhatsApp number with country code",
+                        text: $whatsappNumber
+                    )
+                    .textContentType(.telephoneNumber)
+                    .keyboardType(.phonePad)
+                    .textFieldStyle(.roundedBorder)
+
+                    Text(
+                        "Example: +84 912 345 678. EduT stores these details securely and releases them to the selected advisor only after payment is recorded."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                }
+                .padding(16)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Preferred time")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    DatePicker(
+                        "Date and time",
+                        selection: $preferredStart,
+                        in: Date().addingTimeInterval(15 * 60)...,
+                        displayedComponents: [.date, .hourAndMinute]
+                    )
+
+                    Text(
+                        L10n.format(
+                            "Time zone: %@",
+                            TimeZone.current.identifier
+                        )
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                }
+                .padding(16)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("What do you need help with?")
+                        .font(.headline.bold())
+                        .foregroundStyle(Theme.ink)
+
+                    TextField(
+                        "Example: scholarship application strategy",
+                        text: $topic,
+                        axis: .vertical
+                    )
+                    .lineLimit(2...4)
+                    .textFieldStyle(.roundedBorder)
+
+                    TextField(
+                        "Additional notes (optional)",
+                        text: $notes,
+                        axis: .vertical
+                    )
+                    .lineLimit(3...7)
+                    .textFieldStyle(.roundedBorder)
+                }
+                .padding(16)
+                .background(Theme.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+
+                if let service = selectedService {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Review before submitting")
+                            .font(.headline.bold())
+                            .foregroundStyle(Theme.ink)
+
+                        HStack {
+                            Text(service.title)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(Theme.ink)
+
+                            Spacer()
+
+                            Text(priceText(service))
+                                .font(.subheadline.bold())
+                                .foregroundStyle(Theme.accent)
+                        }
+
+                        Text(
+                            service.serviceType == "six_month_package"
+                                ? "One-time purchase · weekly check-ins for 6 months · no automatic renewal"
+                                : "\(service.durationMinutes)-minute one-to-one live session"
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+
+                        Text(
+                            "Your accepted Terms, Privacy Policy and Cancellation & Refund Policy apply to this request."
+                        )
+                        .font(.caption2)
+                        .foregroundStyle(Theme.muted)
+                    }
+                    .padding(14)
+                    .background(Theme.surfaceRaised)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
+
+                Toggle(isOn: $consent) {
+                    Text(
+                        "I agree that EduT may use my email and WhatsApp number to coordinate this consultation."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.ink)
+                }
+                .tint(Theme.accent)
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Label(
+                        "Payment is arranged before direct contact is unlocked.",
+                        systemImage: "creditcard"
+                    )
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.ink)
+
+                    Text(
+                        "This request does not charge you. Payment instructions will be provided separately, and the advisor will receive your contact details only after payment is recorded."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                }
+                .padding(14)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+
+                if let errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(Theme.danger)
+                }
+
+                Button {
+                    Task { await submit() }
+                } label: {
+                    HStack {
+                        Spacer()
+
+                        if submitting {
+                            ProgressView()
+                                .tint(Theme.onAccent)
+                        } else {
+                            Label(
+                                "Request consultation",
+                                systemImage: "calendar.badge.plus"
+                            )
+                        }
+
+                        Spacer()
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .frame(height: 50)
+                    .background(
+                        canSubmit
+                            ? Theme.orangeGradient
+                            : LinearGradient(
+                                colors: [
+                                    Theme.surfaceRaised,
+                                    Theme.surfaceRaised
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                    )
+                    .foregroundStyle(
+                        canSubmit ? Theme.onAccent : Theme.muted
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                }
+                .buttonStyle(.plain)
+                .disabled(!canSubmit)
+            }
+            .padding()
+            .padding(.bottom, 28)
+        }
+    }
+
+    private var successView: some View {
+        VStack(spacing: 18) {
+            Spacer()
+
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 58))
+                .foregroundStyle(Theme.accent)
+
+            Text("Consultation request sent")
+                .font(.title2.bold())
+                .foregroundStyle(Theme.ink)
+
+            if let service = selectedService {
+                Text(
+                    L10n.format(
+                        "%@ · %d min · %@",
+                        service.title,
+                        service.durationMinutes,
+                        priceText(service)
+                    )
+                )
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Theme.ink)
+            }
+
+            Text(
+                "Your request has been sent. EduT will coordinate payment first; WhatsApp and email contact details stay hidden from the advisor until payment is recorded."
+            )
+            .font(.subheadline)
+            .foregroundStyle(Theme.muted)
+            .multilineTextAlignment(.center)
+            .lineSpacing(3)
+
+            Button("Done") {
+                dismiss()
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Theme.accent)
+
+            Spacer()
+        }
+        .padding(28)
+    }
+
+    private func serviceRow(
+        _ service: AdvisorService
+    ) -> some View {
+        let selected = selectedServiceID == service.id
+
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(
+                    systemName:
+                        selected
+                        ? "checkmark.circle.fill"
+                        : "circle"
+                )
+                .font(.system(size: 21))
+                .foregroundStyle(
+                    selected ? Theme.accent : Theme.muted
+                )
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L10n.string(service.title))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    if service.serviceType == "six_month_package" {
+                        Text("Weekly check-ins for 6 months")
+                            .font(.caption)
+                            .foregroundStyle(Theme.muted)
+                    } else {
+                        Text(
+                            L10n.format(
+                                "%d min live session",
+                                service.durationMinutes
+                            )
+                        )
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                    }
+                }
+
+                Spacer(minLength: 8)
+
+                if service.discountPercent == 40 {
+                    Text("Launch price")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(Theme.onAccent)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 5)
+                        .background(Theme.orangeGradient)
+                        .clipShape(Capsule())
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                if let listPrice = service.listPriceCents,
+                   listPrice > service.priceCents {
+                    Text(
+                        priceText(
+                            cents: listPrice,
+                            currency: service.currency
+                        )
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                    .strikethrough()
+                }
+
+                Text(priceText(service))
+                    .font(.title3.bold())
+                    .foregroundStyle(Theme.ink)
+            }
+            .padding(.leading, 33)
+        }
+        .padding(14)
+        .background(
+            selected
+                ? Theme.surfaceRaised
+                : Theme.surface
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(
+                    selected
+                        ? Theme.accent.opacity(0.45)
+                        : Theme.ink.opacity(0.05)
+                )
+        )
+    }
+
+    private func priceText(
+        _ service: AdvisorService
+    ) -> String {
+        priceText(
+            cents: service.priceCents,
+            currency: service.currency
+        )
+    }
+
+    private func priceText(
+        cents: Int,
+        currency: String
+    ) -> String {
+        String(
+            format: "%@ %.2f",
+            currency,
+            Double(cents) / 100.0
+        )
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            async let rows = DataService.availableAdvisorServices(
+                advisorId: advisor.id
+            )
+
+            if contactEmail.isEmpty {
+                contactEmail =
+                    (try? await supabase.auth.session.user.email) ?? ""
+            }
+
+            services = try await rows
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func submit() async {
+        guard let service = selectedService,
+              canSubmit else {
+            return
+        }
+
+        submitting = true
+        defer { submitting = false }
+
+        do {
+            try await DataService.submitAdvisorConsultationRequest(
+                advisorId: advisor.id,
+                serviceId: service.id,
+                contactEmail: contactEmail.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ),
+                whatsappNumber: whatsappNumber.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ),
+                preferredStart: preferredStart,
+                timezone: TimeZone.current.identifier,
+                topic: topic.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ),
+                notes: notes.trimmingCharacters(
+                    in: .whitespacesAndNewlines
+                ),
+                contactConsent: consent,
+                termsAcceptanceId: termsAcceptanceID!,
+                termsVersion: termsVersion,
+                privacyVersion: privacyVersion,
+                refundPolicyVersion: refundPolicyVersion
+            )
+            submitted = true
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+struct MyAdvisorConsultationsView: View {
+    @State private var requests: [AdvisorConsultationRequest] = []
+    @State private var loading = true
+    @State private var errorMessage: String?
+
+    var body: some View {
+        List {
+            if loading && requests.isEmpty {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                }
+            } else if requests.isEmpty {
+                ContentUnavailableView(
+                    "No consultation requests",
+                    systemImage: "calendar.badge.clock",
+                    description: Text(
+                        "Your live advisor consultation requests will appear here."
+                    )
+                )
+                .listRowBackground(Theme.pageBackground)
+            } else {
+                ForEach(requests) { request in
+                    VStack(alignment: .leading, spacing: 7) {
+                        HStack {
+                            Text(
+                                request.advisorName ??
+                                L10n.string("EduT Advisor")
+                            )
+                            .font(.subheadline.weight(.semibold))
+
+                            Spacer()
+
+                            Text(
+                                L10n.string(
+                                    consultationStatusTitle(
+                                        request.status
+                                    )
+                                )
+                            )
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(Theme.accentSoft)
+                        }
+
+                        Text(L10n.string(request.serviceTitle))
+                            .font(.caption)
+                            .foregroundStyle(Theme.ink)
+
+                        Text(
+                            L10n.format(
+                                "%d min · %@",
+                                request.durationMinutes,
+                                consultationPrice(
+                                    cents: request.quotedPriceCents,
+                                    currency: request.currency
+                                )
+                            )
+                        )
+                        .font(.caption2)
+                        .foregroundStyle(Theme.muted)
+
+                        if let value = request.preferredStart {
+                            Text(
+                                L10n.format(
+                                    "Preferred: %@",
+                                    consultationDate(value)
+                                )
+                            )
+                            .font(.caption2)
+                            .foregroundStyle(Theme.muted)
+                        }
+                    }
+                    .padding(.vertical, 5)
+                }
+            }
+
+            if let errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundStyle(Theme.danger)
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(Theme.pageBackground)
+        .navigationTitle("My consultations")
+        .refreshable { await load() }
+        .task { await load() }
+    }
+
+    @MainActor
+    private func load() async {
+        loading = true
+        defer { loading = false }
+
+        do {
+            requests =
+                try await DataService.myAdvisorConsultationRequests()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+private func consultationStatusTitle(_ status: String) -> String {
+    switch status {
+    case "requested": return "Requested"
+    case "contacted": return "Contacted"
+    case "awaiting_payment": return "Awaiting payment"
+    case "paid": return "Paid"
+    case "confirmed": return "Confirmed"
+    case "completed": return "Completed"
+    case "cancelled": return "Cancelled"
+    default: return status.capitalized
+    }
+}
+
+private func consultationPrice(
+    cents: Int,
+    currency: String
+) -> String {
+    String(
+        format: "%@ %.2f",
+        currency,
+        Double(cents) / 100.0
+    )
+}
+
+private func consultationDate(_ value: String) -> String {
+    let formatter = ISO8601DateFormatter()
+    guard let date = formatter.date(from: value) else {
+        return String(value.prefix(16))
+    }
+
+    return DateFormatter.localizedString(
+        from: date,
+        dateStyle: .medium,
+        timeStyle: .short
+    )
+}
+
+private struct AdvisorTagWrap: View {
+    let title: String
+    let values: [String]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            Text(L10n.string(title))
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.muted)
+
+            Text(values.prefix(8).joined(separator: " · "))
+                .font(.subheadline)
+                .foregroundStyle(Theme.ink)
+        }
+    }
+}
+
+struct AdvisorChatDestination: Identifiable {
+    let conversationId: UUID
+    let otherUserId: UUID
+    let title: String
+
+    var id: UUID { conversationId }
+}
+
+struct AdvisorCallPreparationView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State var session: AdvisorCallSession
+    @StateObject private var call = AdvisorCallController()
+    @State private var recordingConsent = false
+    @State private var savingConsent = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Theme.pageBackground
+                    .ignoresSafeArea()
+
+                VStack(spacing: 16) {
+                    ZStack(alignment: .bottomTrailing) {
+                        LiveKitTrackView(track: call.remoteVideoTrack)
+                            .background(Theme.surface)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .overlay {
+                                if call.remoteVideoTrack == nil {
+                                    VStack(spacing: 10) {
+                                        Image(systemName: "video.fill")
+                                            .font(.system(size: 28))
+                                            .foregroundStyle(Theme.accentSoft)
+
+                                        Text(
+                                            call.connected
+                                                ? "Waiting for the other participant"
+                                                : "Preparing secure video call"
+                                        )
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(Theme.ink)
+                                    }
+                                }
+                            }
+
+                        LiveKitTrackView(track: call.localVideoTrack)
+                            .frame(width: 112, height: 154)
+                            .background(Theme.surfaceRaised)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(
+                                        Theme.ink.opacity(0.08),
+                                        lineWidth: 1
+                                    )
+                            )
+                            .padding(12)
+                    }
+                    .frame(maxHeight: .infinity)
+
+                    HStack(spacing: 12) {
+                        callControl(
+                            icon: call.microphoneEnabled
+                                ? "mic.fill"
+                                : "mic.slash.fill",
+                            active: call.microphoneEnabled
+                        ) {
+                            Task { await call.toggleMicrophone() }
+                        }
+
+                        callControl(
+                            icon: call.cameraEnabled
+                                ? "video.fill"
+                                : "video.slash.fill",
+                            active: call.cameraEnabled
+                        ) {
+                            Task { await call.toggleCamera() }
+                        }
+
+                        callControl(
+                            icon: "rectangle.on.rectangle",
+                            active: call.screenSharing
+                        ) {
+                            Task { await call.toggleScreenShare() }
+                        }
+
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "phone.down.fill")
+                                .font(.system(size: 18, weight: .bold))
+                                .frame(width: 52, height: 52)
+                                .background(Color.red)
+                                .foregroundStyle(.white)
+                                .clipShape(Circle())
+                        }
+                    }
+
+                    Toggle(
+                        "Allow session recording",
+                        isOn: $recordingConsent
+                    )
+                    .tint(Theme.accent)
+                    .onChange(of: recordingConsent) {
+                        Task { await updateRecordingConsent() }
+                    }
+
+                    Text(
+                        "Recording requires explicit consent from both the student and advisor. Screen sharing uses the iOS system capture permission."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+
+                    if let message = errorMessage ?? call.errorMessage {
+                        Text(message)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("Advisor Video Call")
+            .navigationBarTitleDisplayMode(.inline)
+            .task {
+                await connect()
+            }
+        }
+    }
+
+    private func callControl(
+        icon: String,
+        active: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.system(size: 17, weight: .semibold))
+                .frame(width: 52, height: 52)
+                .background(
+                    active
+                        ? Theme.accent
+                        : Theme.surfaceRaised
+                )
+                .foregroundStyle(
+                    active
+                        ? Theme.onAccent
+                        : Theme.ink
+                )
+                .clipShape(Circle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    @MainActor
+    private func connect() async {
+        do {
+            let credentials =
+                try await DataService.liveKitCallCredentials(
+                    callId: session.id
+                )
+            try await call.connect(credentials)
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func updateRecordingConsent() async {
+        savingConsent = true
+        defer { savingConsent = false }
+
+        do {
+            session =
+                try await DataService
+                    .setAdvisorCallRecordingConsent(
+                        callId: session.id,
+                        consent: recordingConsent
+                    )
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+private final class AdvisorCallController:
+    NSObject,
+    ObservableObject,
+    RoomDelegate,
+    @unchecked Sendable
+{
+    @Published var localVideoTrack: VideoTrack?
+    @Published var remoteVideoTrack: VideoTrack?
+    @Published var connected = false
+    @Published var cameraEnabled = false
+    @Published var microphoneEnabled = false
+    @Published var screenSharing = false
+    @Published var errorMessage: String?
+
+    lazy var room = Room(delegate: self)
+
+    @MainActor
+    func connect(
+        _ credentials: LiveKitCallCredentials
+    ) async throws {
+        do {
+            try await room.connect(
+                url: credentials.url,
+                token: credentials.token
+            )
+
+            try await room.localParticipant
+                .setCamera(enabled: true)
+            try await room.localParticipant
+                .setMicrophone(enabled: true)
+
+            connected = true
+            cameraEnabled = true
+            microphoneEnabled = true
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+            throw error
+        }
+    }
+
+    @MainActor
+    func toggleCamera() async {
+        do {
+            let next = !cameraEnabled
+            try await room.localParticipant
+                .setCamera(enabled: next)
+            cameraEnabled = next
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    func toggleMicrophone() async {
+        do {
+            let next = !microphoneEnabled
+            try await room.localParticipant
+                .setMicrophone(enabled: next)
+            microphoneEnabled = next
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    func toggleScreenShare() async {
+        do {
+            let next = !screenSharing
+            try await room.localParticipant
+                .setScreenShare(enabled: next)
+            screenSharing = next
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func room(
+        _: Room,
+        participant _: LocalParticipant,
+        didPublishTrack publication: LocalTrackPublication
+    ) {
+        guard let track = publication.track as? VideoTrack else {
+            return
+        }
+
+        DispatchQueue.main.async {
+            if publication.source == .camera {
+                self.localVideoTrack = track
+            }
+        }
+    }
+
+    func room(
+        _: Room,
+        participant _: RemoteParticipant,
+        didSubscribeTrack publication: RemoteTrackPublication
+    ) {
+        guard let track = publication.track as? VideoTrack else {
+            return
+        }
+
+        DispatchQueue.main.async {
+            self.remoteVideoTrack = track
+        }
+    }
+
+    func room(
+        _: Room,
+        participant _: RemoteParticipant,
+        didUnsubscribeTrack publication: RemoteTrackPublication
+    ) {
+        guard publication.track is VideoTrack else {
+            return
+        }
+
+        DispatchQueue.main.async {
+            self.remoteVideoTrack = nil
+        }
+    }
+}
+
+private struct LiveKitTrackView: UIViewRepresentable {
+    let track: VideoTrack?
+
+    func makeUIView(context: Context) -> VideoView {
+        let view = VideoView()
+        view.clipsToBounds = true
+        return view
+    }
+
+    func updateUIView(
+        _ uiView: VideoView,
+        context: Context
+    ) {
+        uiView.track = track
+    }
+}
+
+struct CommunityView: View {
+    @Environment(AuthStore.self) private var auth
+
+    @State private var profiles: [CommunityProfile] = []
+    @State private var blockedUserIDs: Set<UUID> = []
+    @State private var query = ""
+    @State private var loading = false
+    @State private var chatDestination: CommunityChatDestination?
+    @State private var messagingProfileID: UUID?
+    @State private var addingFriendProfileID: UUID?
+    @State private var friendRequestSentIDs: Set<UUID> = []
+    @State private var messageError: String?
+
+    private var visibleResults: [CommunityProfile] {
+        profiles.filter { !blockedUserIDs.contains($0.id) }
+    }
+
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 20) {
+                header
+
+                HStack(spacing: 10) {
+                    Image(
+                        systemName:
+                            "person.crop.circle.badge.magnifyingglass"
+                    )
+                    .foregroundStyle(Theme.muted)
+
+                    TextField(
+                        "EduT ID or student name",
+                        text: $query
+                    )
+                    .keyboardType(.asciiCapable)
+                    .textInputAutocapitalization(.characters)
+                    .autocorrectionDisabled()
+                    .submitLabel(.search)
+                    .foregroundStyle(Theme.ink)
+
+                    if !query.isEmpty {
+                        Button {
+                            query = ""
+                            profiles = []
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(Theme.muted)
+                        }
+                    }
+                }
+                .font(.subheadline)
+                .padding(.horizontal, 14)
+                .frame(height: 46)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(Theme.ink.opacity(0.05))
+                )
+
+                Text(
+                    "Search by the full EduT ID, ID suffix, or student name."
+                )
+                .font(.caption2)
+                .foregroundStyle(Theme.muted)
+
+                communityHero
+
+                if loading {
+                    VStack(spacing: 12) {
+                        ProgressView()
+                            .tint(Theme.blue)
+
+                        Text("Searching...")
+                            .font(.caption)
+                            .foregroundStyle(Theme.muted)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 42)
+                } else if query
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .isEmpty {
+                    VStack(spacing: 14) {
+                        Image(
+                            systemName:
+                                "person.crop.circle.badge.magnifyingglass"
+                        )
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundStyle(Theme.blueSoft)
+                        .frame(width: 62, height: 62)
+                        .background(Theme.surface)
+                        .clipShape(Circle())
+
+                        Text("Find a student")
+                            .font(.headline.bold())
+                            .foregroundStyle(Theme.ink)
+
+                        Text(
+                            "Enter their EduT ID or name. " +
+                            "Students are not listed publicly by default."
+                        )
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.muted)
+                        .multilineTextAlignment(.center)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 44)
+                } else if visibleResults.isEmpty {
+                    VStack(spacing: 14) {
+                        Image(systemName: "person.3")
+                            .font(.system(size: 28, weight: .semibold))
+                            .foregroundStyle(Theme.blueSoft)
+                            .frame(width: 62, height: 62)
+                            .background(Theme.surface)
+                            .clipShape(Circle())
+
+                        Text("No students found")
+                            .font(.headline.bold())
+                            .foregroundStyle(Theme.ink)
+
+                        Text("Check the EduT ID or try the student's name.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 44)
+                } else {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Search results")
+                                .font(.headline.bold())
+                                .foregroundStyle(Theme.ink)
+
+                            Text(
+                                "\(visibleResults.count) matching profile" +
+                                (visibleResults.count == 1 ? "" : "s")
+                            )
+                            .font(.caption)
+                            .foregroundStyle(Theme.muted)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "globe.americas.fill")
+                            .foregroundStyle(Theme.blueSoft)
+                    }
+
+                    LazyVStack(spacing: 12) {
+                        ForEach(visibleResults) { profile in
+                            HStack(spacing: 10) {
+                                NavigationLink(value: profile) {
+                                    CommunityRow(profile: profile)
+                                }
+                                .buttonStyle(.plain)
+
+                                if profile.id != auth.userId {
+                                    Button {
+                                        Task {
+                                            await addFriend(from: profile)
+                                        }
+                                    } label: {
+                                        if addingFriendProfileID == profile.id {
+                                            ProgressView()
+                                                .frame(width: 40, height: 40)
+                                        } else {
+                                            Image(
+                                                systemName:
+                                                    friendRequestSentIDs.contains(
+                                                        profile.id
+                                                    )
+                                                    ? "checkmark.circle.fill"
+                                                    : "person.badge.plus"
+                                            )
+                                                .font(
+                                                    .system(
+                                                        size: 15,
+                                                        weight: .semibold
+                                                    )
+                                                )
+                                                .foregroundStyle(Theme.blueSoft)
+                                                .frame(width: 40, height: 40)
+                                                .background(Theme.surface)
+                                                .clipShape(Circle())
+                                        }
+                                    }
+                                    .buttonStyle(.plain)
+                                    .disabled(
+                                        addingFriendProfileID != nil ||
+                                        friendRequestSentIDs.contains(profile.id)
+                                    )
+                                    .accessibilityLabel(
+                                        "Add " +
+                                        (profile.displayName ?? "student") +
+                                        " as friend"
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .padding()
+            .padding(.bottom, 24)
+        }
+        .background(Theme.pageBackground)
+        .navigationBarHidden(true)
+        .navigationDestination(for: CommunityProfile.self) { profile in
+            CommunityProfileView(profile: profile)
+        }
+        .sheet(item: $chatDestination) { destination in
+            NavigationStack {
+                ChatView(
+                    conversationId: destination.id,
+                    otherUserId: destination.otherUserId,
+                    title: destination.title,
+                    showsCloseButton: true
+                )
+            }
+        }
+        .alert(
+            "Unable to start conversation",
+            isPresented: Binding(
+                get: { messageError != nil },
+                set: { if !$0 { messageError = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(messageError ?? "")
+        }
+        .task {
+            await loadBlockedUsers()
+        }
+        .task(id: query) {
+            do {
+                try await Task.sleep(for: .milliseconds(300))
+            } catch {
+                return
+            }
+
+            guard !Task.isCancelled else { return }
+            await runSearch()
+        }
+        .refreshable {
+            await loadBlockedUsers()
+            await runSearch()
+        }
+    }
+
+    private var header: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Community")
+                    .font(.system(size: 30, weight: .bold))
+                    .foregroundStyle(Theme.ink)
+
+                Text("Find students by EduT ID or name")
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.muted)
+            }
+
+            Spacer()
+
+            HStack(spacing: 8) {
+                NavigationLink {
+                    CommunityFriendsView()
+                } label: {
+                    Image(systemName: "person.2.fill")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Theme.blueSoft)
+                        .frame(width: 40, height: 40)
+                        .background(Theme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .accessibilityLabel("Friends")
+
+                NavigationLink {
+                    CommunityFriendRequestsView()
+                } label: {
+                    Image(systemName: "person.badge.plus")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Theme.blueSoft)
+                        .frame(width: 40, height: 40)
+                        .background(Theme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .accessibilityLabel("Friend requests")
+
+                NavigationLink {
+                    MessagesView()
+                } label: {
+                    Image(
+                        systemName:
+                            "bubble.left.and.bubble.right.fill"
+                    )
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Theme.blueSoft)
+                    .frame(width: 40, height: 40)
+                    .background(Theme.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .accessibilityLabel("Messages")
+            }
         }
     }
 
@@ -976,29 +2629,11 @@ struct AdvisorDetailView: View {
         defer { loading = false }
 
         do {
-            let results = try await DataService.searchCommunityProfiles(
+            profiles = try await DataService.searchCommunityProfiles(
                 query: trimmed
             )
-
-            guard !Task.isCancelled else { return }
-
-            let currentQuery = query.trimmingCharacters(
-                in: .whitespacesAndNewlines
-            )
-
-            guard currentQuery == trimmed else { return }
-
-            profiles = results
-        } catch is CancellationError {
-            return
         } catch {
-            // Live search runs while the user types. A transient or
-            // superseded request should never interrupt typing with an alert.
-            guard query.trimmingCharacters(
-                in: .whitespacesAndNewlines
-            ) == trimmed else { return }
-
-            profiles = []
+            messageError = error.localizedDescription
         }
     }
 
@@ -1131,168 +2766,6 @@ private struct CommunityChatDestination: Identifiable {
     let id: UUID
     let otherUserId: UUID
     let title: String
-}
-
-struct CommunityConnectionsView: View {
-    @State private var requests: [CommunityFriendRequest] = []
-    @State private var friends: [CommunityFriend] = []
-    @State private var loading = true
-    @State private var workingID: UUID?
-    @State private var chatDestination: CommunityChatDestination?
-    @State private var errorMessage: String?
-
-    var body: some View {
-        List {
-            if loading && requests.isEmpty && friends.isEmpty {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
-                }
-            }
-
-            if !requests.isEmpty {
-                Section("Requests") {
-                    ForEach(requests) { request in
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text(request.displayName ?? "Student")
-                                .font(.subheadline.bold())
-
-                            if let code = request.communityCode {
-                                Text(code)
-                                    .font(.caption2.monospaced())
-                                    .foregroundStyle(Theme.blueSoft)
-                            }
-
-                            HStack {
-                                Button("Accept") {
-                                    Task { await respond(request, accept: true) }
-                                }
-                                .buttonStyle(.borderedProminent)
-
-                                Button("Decline", role: .destructive) {
-                                    Task { await respond(request, accept: false) }
-                                }
-                                .buttonStyle(.bordered)
-                            }
-                        }
-                    }
-                }
-            }
-
-            Section("Friends") {
-                if friends.isEmpty {
-                    Text(
-                        requests.isEmpty
-                            ? "No friends yet. Search a student and tap Add."
-                            : "Accepted friends will appear here."
-                    )
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
-                } else {
-                    ForEach(friends) { friend in
-                        HStack {
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(friend.displayName ?? "Student")
-                                    .font(.subheadline.bold())
-
-                                if let code = friend.communityCode {
-                                    Text(code)
-                                        .font(.caption2.monospaced())
-                                        .foregroundStyle(Theme.blueSoft)
-                                }
-                            }
-
-                            Spacer()
-
-                            Button("Message") {
-                                Task { await message(friend) }
-                            }
-                            .buttonStyle(.bordered)
-                            .disabled(workingID != nil)
-                        }
-                    }
-                }
-            }
-        }
-        .navigationTitle("Friends")
-        .refreshable { await load() }
-        .task { await load() }
-        .sheet(item: $chatDestination) { destination in
-            NavigationStack {
-                ChatView(
-                    conversationId: destination.id,
-                    otherUserId: destination.otherUserId,
-                    title: destination.title,
-                    showsCloseButton: true
-                )
-            }
-        }
-        .alert(
-            "Community error",
-            isPresented: Binding(
-                get: { errorMessage != nil },
-                set: { if !$0 { errorMessage = nil } }
-            )
-        ) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(errorMessage ?? "")
-        }
-    }
-
-    @MainActor
-    private func load() async {
-        loading = requests.isEmpty && friends.isEmpty
-        defer { loading = false }
-
-        do {
-            async let requestRows = DataService.communityFriendRequests()
-            async let friendRows = DataService.communityFriends()
-            requests = try await requestRows
-            friends = try await friendRows
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    @MainActor
-    private func respond(
-        _ request: CommunityFriendRequest,
-        accept: Bool
-    ) async {
-        workingID = request.id
-        defer { workingID = nil }
-
-        do {
-            try await DataService.respondCommunityFriendRequest(
-                requestId: request.id,
-                accept: accept
-            )
-            await load()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    @MainActor
-    private func message(_ friend: CommunityFriend) async {
-        workingID = friend.id
-        defer { workingID = nil }
-
-        do {
-            let conversationId = try await DataService
-                .startDirectConversation(otherUser: friend.userId)
-            chatDestination = CommunityChatDestination(
-                id: conversationId,
-                otherUserId: friend.userId,
-                title: friend.displayName ?? "Student"
-            )
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
 }
 
 struct CommunityFriendRequestsView: View {
