@@ -2365,7 +2365,7 @@ struct CommunityView: View {
                     .foregroundStyle(Theme.premiumMuted)
 
                     TextField(
-                        "EduT ID or student name",
+                        L10n.string("EduT ID or student name"),
                         text: $query
                     )
                     .keyboardType(.asciiCapable)
@@ -2395,7 +2395,7 @@ struct CommunityView: View {
                 )
 
                 Text(
-                    "Search by the full EduT ID, ID suffix, or student name."
+                    L10n.string("Search by the full EduT ID, ID suffix, or student name.")
                 )
                 .font(.caption2)
                 .foregroundStyle(Theme.premiumMuted)
@@ -2407,7 +2407,7 @@ struct CommunityView: View {
                         ProgressView()
                             .tint(Theme.blue)
 
-                        Text("Searching...")
+                        Text(L10n.string("Searching..."))
                             .font(.caption)
                             .foregroundStyle(Theme.premiumMuted)
                     }
@@ -2427,12 +2427,12 @@ struct CommunityView: View {
                         .background(Theme.surface)
                         .clipShape(Circle())
 
-                        Text("Find a student")
+                        Text(L10n.string("Find a student"))
                             .font(.headline.bold())
                             .foregroundStyle(Theme.premiumInk)
 
                         Text(
-                            "Enter their EduT ID or name. " +
+                            L10n.string("Enter their EduT ID or name. ") +
                             "Students are not listed publicly by default."
                         )
                         .font(.subheadline)
@@ -2454,7 +2454,7 @@ struct CommunityView: View {
                             .font(.headline.bold())
                             .foregroundStyle(Theme.premiumInk)
 
-                        Text("Check the EduT ID or try the student's name.")
+                        Text(L10n.string("Check the EduT ID or try the student's name."))
                             .font(.subheadline)
                             .foregroundStyle(Theme.premiumMuted)
                     }
@@ -2463,7 +2463,7 @@ struct CommunityView: View {
                 } else {
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Search results")
+                            Text(L10n.string("Search results"))
                                 .font(.headline.bold())
                                 .foregroundStyle(Theme.premiumInk)
 
@@ -2525,7 +2525,7 @@ struct CommunityView: View {
                                         friendRequestSentIDs.contains(profile.id)
                                     )
                                     .accessibilityLabel(
-                                        "Add " +
+                                        L10n.string("Add ") +
                                         (profile.displayName ?? "student") +
                                         " as friend"
                                     )
@@ -2554,7 +2554,7 @@ struct CommunityView: View {
             }
         }
         .alert(
-            "Unable to start conversation",
+            L10n.string("Unable to start conversation"),
             isPresented: Binding(
                 get: { messageError != nil },
                 set: { if !$0 { messageError = nil } }
@@ -2590,7 +2590,7 @@ struct CommunityView: View {
                     .font(.system(size: 30, weight: .bold))
                     .foregroundStyle(Theme.premiumInk)
 
-                Text("Find students by EduT ID or name")
+                Text(L10n.string("Find students by EduT ID or name"))
                     .font(.subheadline)
                     .foregroundStyle(Theme.premiumMuted)
             }
@@ -2608,7 +2608,7 @@ struct CommunityView: View {
                         .background(Theme.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
-                .accessibilityLabel("Friends")
+                .accessibilityLabel(L10n.string("Friends"))
 
                 NavigationLink {
                     CommunityFriendRequestsView()
@@ -2620,7 +2620,7 @@ struct CommunityView: View {
                         .background(Theme.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
-                .accessibilityLabel("Friend requests")
+                .accessibilityLabel(L10n.string("Friend requests"))
 
                 NavigationLink {
                     MessagesView()
@@ -2662,12 +2662,12 @@ struct CommunityView: View {
                     .tracking(1.5)
                     .foregroundStyle(Theme.blueSoft)
 
-                Text("Connect by ID.")
+                Text(L10n.string("Connect by ID."))
                     .font(.system(size: 25, weight: .bold))
                     .foregroundStyle(Theme.premiumInk)
 
                 Text(
-                    "Share your EduT ID with people you want to connect " +
+                    L10n.string("Share your EduT ID with people you want to connect ") +
                     "with. Your academic details stay private."
                 )
                 .font(.caption)
@@ -2901,10 +2901,10 @@ struct CommunityFriendRequestsView: View {
                 }
             } else if rows.isEmpty {
                 ContentUnavailableView(
-                    "No friend requests",
+                    L10n.string("No friend requests"),
                     systemImage: "person.badge.plus",
                     description: Text(
-                        "This page is only for requests other students sent to you. To send a request, search a student in Community and tap the + person button."
+                        L10n.string("This page is only for requests other students sent to you. To send a request, search a student in Community and tap the + person button.")
                     )
                 )
             } else {
@@ -2961,11 +2961,11 @@ struct CommunityFriendRequestsView: View {
                 }
             }
         }
-        .navigationTitle("Friend Requests")
+        .navigationTitle(L10n.string("Friend Requests"))
         .refreshable { await load() }
         .task { await load() }
         .alert(
-            "Unable to update request",
+            L10n.string("Unable to update request"),
             isPresented: Binding(
                 get: { errorMessage != nil },
                 set: { if !$0 { errorMessage = nil } }
@@ -3027,10 +3027,10 @@ struct CommunityFriendsView: View {
                 }
             } else if rows.isEmpty {
                 ContentUnavailableView(
-                    "No friends yet",
+                    L10n.string("No friends yet"),
                     systemImage: "person.2",
                     description: Text(
-                        "Search by EduT ID and send a friend request."
+                        L10n.string("Search by EduT ID and send a friend request.")
                     )
                 )
             } else {
@@ -3076,7 +3076,7 @@ struct CommunityFriendsView: View {
                         .disabled(workingID != nil)
 
                         Menu {
-                            Button("Remove friend", role: .destructive) {
+                            Button(L10n.string("Remove friend"), role: .destructive) {
                                 Task { await remove(friend) }
                             }
                         } label: {
@@ -3086,7 +3086,7 @@ struct CommunityFriendsView: View {
                 }
             }
         }
-        .navigationTitle("Friends")
+        .navigationTitle(L10n.string("Friends"))
         .refreshable { await load() }
         .task { await load() }
         .sheet(item: $chatDestination) { destination in
@@ -3100,7 +3100,7 @@ struct CommunityFriendsView: View {
             }
         }
         .alert(
-            "Community error",
+            L10n.string("Community error"),
             isPresented: Binding(
                 get: { errorMessage != nil },
                 set: { if !$0 { errorMessage = nil } }
@@ -3305,7 +3305,7 @@ struct CommunityProfileView: View {
         VStack(spacing: 10) {
             if profile.id != auth.userId {
                 if isBlocked {
-                    Text("This student is blocked.")
+                    Text(L10n.string("This student is blocked."))
                         .font(.caption)
                         .foregroundStyle(Theme.premiumMuted)
                 } else {
@@ -3366,14 +3366,14 @@ struct CommunityProfileView: View {
             .buttonStyle(PrimaryButtonStyle())
             .disabled(openingConversation)
 
-            Button("Remove friend", role: .destructive) {
+            Button(L10n.string("Remove friend"), role: .destructive) {
                 Task { await removeFriend() }
             }
             .buttonStyle(SecondaryButtonStyle())
             .disabled(changingFriendship)
 
         case "outgoing":
-            Label("Friend request sent", systemImage: "clock.fill")
+            Label(L10n.string("Friend request sent"), systemImage: "clock.fill")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Theme.premiumMuted)
                 .frame(maxWidth: .infinity)
@@ -3381,7 +3381,7 @@ struct CommunityProfileView: View {
                 .background(Theme.surfaceRaised)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
-            Button("Cancel request") {
+            Button(L10n.string("Cancel request")) {
                 Task { await cancelFriendRequest() }
             }
             .buttonStyle(SecondaryButtonStyle())
@@ -3391,7 +3391,7 @@ struct CommunityProfileView: View {
             Button {
                 Task { await sendFriendRequest() }
             } label: {
-                Label("Accept friend request", systemImage: "person.badge.plus")
+                Label(L10n.string("Accept friend request"), systemImage: "person.badge.plus")
             }
             .buttonStyle(PrimaryButtonStyle())
             .disabled(changingFriendship)
