@@ -85,7 +85,7 @@ struct ProfileView: View {
             }
         }
         .background(Theme.premiumIvoryRaised)
-        .preferredColorScheme(.light)
+        
         .navigationTitle(showsNavigationBar ? "Profile" : "")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(!showsNavigationBar)
