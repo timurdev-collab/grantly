@@ -343,6 +343,28 @@ struct AdvisorsView: View {
     }
 
     @MainActor
+    private func openConversation(
+        for profile: CommunityProfile
+    ) async {
+        messagingProfileID = profile.id
+        defer { messagingProfileID = nil }
+
+        do {
+            let conversationId = try await DataService
+                .startDirectConversation(otherUser: profile.id)
+
+            chatDestination = CommunityChatDestination(
+                id: conversationId,
+                otherUserId: profile.id,
+                title: profile.displayName ?? L10n.string("Student")
+            )
+            messageError = nil
+        } catch {
+            messageError = error.localizedDescription
+        }
+    }
+
+    @MainActor
     private func load() async {
         loading = true
         defer { loading = false }
@@ -2223,6 +2245,9 @@ struct CommunityView: View {
     @State private var blockedUserIDs: Set<UUID> = []
     @State private var query = ""
     @State private var loading = true
+    @State private var chatDestination: CommunityChatDestination?
+    @State private var messagingProfileID: UUID?
+    @State private var messageError: String?
 
     private var filtered: [CommunityProfile] {
         profiles.filter { profile in
@@ -2316,10 +2341,36 @@ struct CommunityView: View {
 
                     LazyVStack(spacing: 12) {
                         ForEach(featured) { profile in
-                            NavigationLink(value: profile) {
-                                CommunityRow(profile: profile)
+                            HStack(spacing: 10) {
+                                NavigationLink(value: profile) {
+                                    CommunityRow(profile: profile)
+                                }
+                                .buttonStyle(.plain)
+
+                                Button {
+                                    Task {
+                                        await openConversation(for: profile)
+                                    }
+                                } label: {
+                                    if messagingProfileID == profile.id {
+                                        ProgressView()
+                                            .tint(Theme.blueSoft)
+                                            .frame(width: 40, height: 40)
+                                    } else {
+                                        Image(systemName: "message.fill")
+                                            .font(.system(size: 15, weight: .semibold))
+                                            .foregroundStyle(Theme.blueSoft)
+                                            .frame(width: 40, height: 40)
+                                            .background(Theme.surface)
+                                            .clipShape(Circle())
+                                    }
+                                }
+                                .buttonStyle(.plain)
+                                .disabled(messagingProfileID != nil)
+                                .accessibilityLabel(
+                                    "Message \(profile.displayName ?? "student")"
+                                )
                             }
-                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -2331,6 +2382,27 @@ struct CommunityView: View {
         .navigationBarHidden(true)
         .navigationDestination(for: CommunityProfile.self) { profile in
             CommunityProfileView(profile: profile)
+        }
+        .sheet(item: $chatDestination) { destination in
+            NavigationStack {
+                ChatView(
+                    conversationId: destination.id,
+                    otherUserId: destination.otherUserId,
+                    title: destination.title,
+                    showsCloseButton: true
+                )
+            }
+        }
+        .alert(
+            "Unable to start conversation",
+            isPresented: Binding(
+                get: { messageError != nil },
+                set: { if !$0 { messageError = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(messageError ?? "")
         }
         .refreshable { await load() }
         .task { await load() }
