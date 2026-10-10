@@ -712,3 +712,5 @@
 "LAUNCH PRICE" = "上线价格";
 
 "Clear search" = "清除搜索";
+
+"Page %lld of %lld" = "第 %lld 页，共 %lld 页";

@@ -712,3 +712,5 @@
 "LAUNCH PRICE" = "سعر الإطلاق";
 
 "Clear search" = "مسح البحث";
+
+"Page %lld of %lld" = "الصفحة %lld من %lld";

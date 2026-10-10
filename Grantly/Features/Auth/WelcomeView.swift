@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct WelcomeView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var showingLogin = false
     @State private var showingSignup = false
     @State private var page = 0
@@ -38,140 +39,127 @@ struct WelcomeView: View {
         )
     ]
 
+    private var isLightPage: Bool { page == 1 }
+    private var foreground: Color {
+        isLightPage ? Theme.premiumForest : Theme.premiumIvory
+    }
+
     var body: some View {
-        ZStack {
-            Theme.premiumIvory
-                .ignoresSafeArea()
+        GeometryReader { geometry in
+            ZStack {
+                (isLightPage ? Theme.premiumIvory : Theme.premiumForest)
+                    .ignoresSafeArea()
 
-            TabView(selection: $page) {
-                ForEach(Array(pages.enumerated()), id: \.offset) {
-                    index,
-                    item in
-                    WelcomeEditorialPage(
-                        item: item,
-                        pageIndex: index
-                    )
-                    .tag(index)
+                VStack(spacing: 0) {
+                    header
+                        .padding(.horizontal, 22)
+                        .padding(.top, 8)
+                        .padding(.bottom, 12)
+
+                    TabView(selection: $page) {
+                        ForEach(Array(pages.enumerated()), id: \.offset) { index, item in
+                            WelcomeEditorialPage(item: item, pageIndex: index)
+                                .tag(index)
+                        }
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
+
+                    controls
+                        .padding(.horizontal, 22)
+                        .padding(.top, 16)
+                        .padding(.bottom, 12)
                 }
-            }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .ignoresSafeArea()
-
-            VStack {
-                HStack {
-                    HStack(spacing: 8) {
-                        ZStack {
-                            Circle()
-                                .fill(Theme.premiumForest)
-
-                            Image(systemName: "graduationcap.fill")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundStyle(Theme.premiumIvory)
-                        }
-                        .frame(width: 32, height: 32)
-
-                        Text(verbatim: "EduT")
-                            .font(
-                                .system(
-                                    size: 20,
-                                    weight: .bold,
-                                    design: .rounded
-                                )
-                            )
-                            .foregroundStyle(Theme.premiumForest)
-                    }
-
-                    Spacer()
-
-                    if page < pages.count - 1 {
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.28)) {
-                                page = pages.count - 1
-                            }
-                        } label: {
-                            Text(L10n.string("Skip"))
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(
-                                    page == 2
-                                        ? Theme.premiumIvory
-                                        : Theme.premiumForest
-                                )
-                                .padding(.horizontal, 12)
-                                .frame(height: 34)
-                                .background(.ultraThinMaterial)
-                                .clipShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 10)
-
-                Spacer()
-
-                VStack(spacing: 16) {
-                    HStack(spacing: 6) {
-                        ForEach(pages.indices, id: \.self) { index in
-                            Capsule()
-                                .fill(
-                                    index == page
-                                        ? Theme.premiumForest
-                                        : Theme.premiumMuted.opacity(0.26)
-                                )
-                                .frame(
-                                    width: index == page ? 22 : 6,
-                                    height: 6
-                                )
-                                .animation(
-                                    .easeInOut(duration: 0.22),
-                                    value: page
-                                )
-                        }
-                    }
-
-                    if page < pages.count - 1 {
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.28)) {
-                                page += 1
-                            }
-                        } label: {
-                            HStack(spacing: 8) {
-                                Text(L10n.string("Continue"))
-                                Image(systemName: "arrow.right")
-                            }
-                        }
-                        .buttonStyle(PremiumPrimaryButtonStyle())
-                    } else {
-                        Button {
-                            showingSignup = true
-                        } label: {
-                            HStack(spacing: 8) {
-                                Text(L10n.string("Get started"))
-                                Image(systemName: "arrow.right")
-                            }
-                        }
-                        .buttonStyle(PremiumPrimaryButtonStyle())
-
-                        Button {
-                            showingLogin = true
-                        } label: {
-                            Text(L10n.string("I already have an account"))
-                        }
-                        .buttonStyle(PremiumSecondaryButtonStyle())
-                    }
-                }
-                .padding(.horizontal, 22)
-                .padding(.bottom, 18)
+                .frame(width: geometry.size.width, height: geometry.size.height)
             }
         }
         .preferredColorScheme(.light)
         .sheet(isPresented: $showingLogin) {
-            LoginView()
-                .preferredColorScheme(.light)
+            LoginView().preferredColorScheme(.light)
         }
         .sheet(isPresented: $showingSignup) {
-            SignupView()
-                .preferredColorScheme(.light)
+            SignupView().preferredColorScheme(.light)
+        }
+    }
+
+    private var header: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "graduationcap.fill")
+                .font(.system(size: 18, weight: .semibold))
+                .frame(width: 38, height: 38)
+                .background(foreground.opacity(0.10), in: RoundedRectangle(cornerRadius: 13))
+                .accessibilityHidden(true)
+
+            Text(verbatim: "EduT")
+                .font(.system(size: 23, weight: .semibold, design: .serif))
+
+            Spacer()
+
+            if page < pages.count - 1 {
+                Button {
+                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.28)) {
+                        page = pages.count - 1
+                    }
+                } label: {
+                    Text(L10n.string("Skip"))
+                        .font(.subheadline.weight(.medium))
+                        .padding(.horizontal, 12)
+                        .frame(minHeight: 44)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .foregroundStyle(foreground)
+    }
+
+    private var controls: some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 7) {
+                ForEach(pages.indices, id: \.self) { index in
+                    Capsule()
+                        .fill(foreground.opacity(index == page ? 1 : 0.30))
+                        .frame(width: index == page ? 24 : 6, height: 6)
+                }
+            }
+            .padding(.bottom, 6)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("Page \(page + 1) of \(pages.count)"))
+
+            Button {
+                if page < pages.count - 1 {
+                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.28)) {
+                        page += 1
+                    }
+                } else {
+                    showingSignup = true
+                }
+            } label: {
+                HStack(spacing: 10) {
+                    Text(L10n.string(page < pages.count - 1 ? "Continue" : "Get started"))
+                    Spacer(minLength: 8)
+                    Image(systemName: "arrow.right")
+                        .accessibilityHidden(true)
+                }
+                .font(.headline)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
+                .frame(maxWidth: .infinity, minHeight: 54)
+                .foregroundStyle(isLightPage ? Theme.premiumIvory : Theme.premiumForest)
+                .background(foreground, in: RoundedRectangle(cornerRadius: 19, style: .continuous))
+            }
+            .buttonStyle(CardPressButtonStyle())
+            .accessibilityIdentifier("onboarding.primary")
+
+            Button {
+                showingLogin = true
+            } label: {
+                Text(L10n.string("I already have an account"))
+                    .font(.subheadline.weight(.medium))
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                    .foregroundStyle(foreground.opacity(0.85))
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("onboarding.signIn")
         }
     }
 }
@@ -185,105 +173,159 @@ private struct WelcomePage {
 }
 
 private struct WelcomeEditorialPage: View {
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 36
     let item: WelcomePage
     let pageIndex: Int
 
+    private var isLightPage: Bool { pageIndex == 1 }
+    private var foreground: Color {
+        isLightPage ? Theme.premiumForest : Theme.premiumIvory
+    }
+
     var body: some View {
-        GeometryReader { proxy in
-            ZStack {
-                AsyncImage(url: item.imageURL) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    default:
-                        LinearGradient(
-                            colors: [
-                                Theme.premiumSage,
-                                Theme.premiumForestSoft
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                        .overlay {
-                            Image(systemName: item.symbol)
-                                .font(.system(size: 100, weight: .thin))
-                                .foregroundStyle(
-                                    Theme.premiumIvory.opacity(0.44)
-                                )
-                        }
+        GeometryReader { geometry in
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 22) {
+                    if pageIndex == 0 {
+                        landscape(height: max(160, geometry.size.height * 0.47))
+                    }
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(L10n.string(item.eyebrow))
+                            .font(.caption2.weight(.bold))
+                            .tracking(2)
+                            .foregroundStyle(foreground.opacity(0.65))
+
+                        Text(L10n.string(item.title))
+                            .font(.system(size: titleSize, weight: .regular, design: .serif))
+                            .tracking(-0.8)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .accessibilityAddTraits(.isHeader)
+
+                        Text(L10n.string(item.body))
+                            .font(.subheadline)
+                            .lineSpacing(4)
+                            .foregroundStyle(foreground.opacity(0.78))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    if pageIndex == 1 {
+                        discoveryIllustration
+                    } else if pageIndex == 2 {
+                        guidanceServices
                     }
                 }
-                .frame(
-                    width: proxy.size.width,
-                    height: proxy.size.height
-                )
-                .clipped()
-
-                LinearGradient(
-                    colors: [
-                        Theme.premiumIvory.opacity(0.10),
-                        Color.clear,
-                        Theme.premiumForest.opacity(0.35),
-                        Theme.premiumForest.opacity(0.96)
-                    ],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-
-                if pageIndex == 1 {
-                    Circle()
-                        .stroke(
-                            Theme.premiumIvory.opacity(0.55),
-                            lineWidth: 1
-                        )
-                        .frame(width: 230, height: 230)
-                        .offset(x: 100, y: 40)
-
-                    Circle()
-                        .fill(Theme.premiumBrass.opacity(0.26))
-                        .frame(width: 72, height: 72)
-                        .offset(x: 125, y: 15)
-                }
-
-                VStack(alignment: .leading, spacing: 10) {
-                    Spacer()
-
-                    Text(L10n.string(item.eyebrow))
-                        .font(.system(size: 10, weight: .bold))
-                        .tracking(1.7)
-                        .foregroundStyle(
-                            Theme.premiumIvory.opacity(0.78)
-                        )
-
-                    Text(L10n.string(item.title))
-                        .font(
-                            .system(
-                                size: 39,
-                                weight: .regular,
-                                design: .serif
-                            )
-                        )
-                        .tracking(-1.0)
-                        .lineSpacing(-2)
-                        .foregroundStyle(Theme.premiumIvory)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    Text(L10n.string(item.body))
-                        .font(.subheadline)
-                        .lineSpacing(3)
-                        .foregroundStyle(
-                            Theme.premiumIvory.opacity(0.78)
-                        )
-                        .frame(maxWidth: 330, alignment: .leading)
-
-                    Spacer()
-                        .frame(height: pageIndex == 2 ? 174 : 116)
-                }
+                .foregroundStyle(foreground)
                 .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+        }
+    }
+
+    private func landscape(height: CGFloat) -> some View {
+        GeometryReader { geometry in
+            AsyncImage(url: item.imageURL) { phase in
+                if let image = phase.image {
+                    image.resizable().scaledToFill()
+                } else {
+                    LinearGradient(
+                        colors: [Theme.premiumSage, Theme.premiumForestSoft],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                    .overlay {
+                        Image(systemName: "mountain.2.fill")
+                            .font(.system(size: 70, weight: .thin))
+                            .foregroundStyle(Theme.premiumIvory.opacity(0.6))
+                    }
+                }
+            }
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .clipped()
+        }
+        .frame(height: height)
+        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 30, style: .continuous)
+                .strokeBorder(Theme.premiumIvory.opacity(0.12), lineWidth: 1)
+        }
+        .accessibilityHidden(true)
+    }
+
+    private var discoveryIllustration: some View {
+        VStack(spacing: 18) {
+            ZStack {
+                Circle()
+                    .fill(Theme.premiumSageSoft)
+                    .frame(width: 180, height: 180)
+                Circle()
+                    .strokeBorder(Theme.premiumForest.opacity(0.12), lineWidth: 1)
+                    .frame(width: 210, height: 210)
+                Image(systemName: "globe.europe.africa.fill")
+                    .font(.system(size: 130, weight: .ultraLight))
+                    .foregroundStyle(Theme.premiumForestSoft)
+                Image(systemName: "mappin.circle.fill")
+                    .font(.system(size: 42))
+                    .foregroundStyle(Theme.premiumBrass, Theme.premiumIvory)
+                    .offset(x: 60, y: -50)
+            }
+            .accessibilityHidden(true)
+
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) { discoveryLabels }
+                VStack(spacing: 8) { discoveryLabels }
             }
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 8)
+    }
+
+    @ViewBuilder
+    private var discoveryLabels: some View {
+        discoveryPill("Scholarships", icon: "graduationcap")
+        discoveryPill("Universities", icon: "building.columns")
+        discoveryPill("Programs", icon: "books.vertical")
+    }
+
+    private func discoveryPill(_ title: String, icon: String) -> some View {
+        Label(L10n.string(title), systemImage: icon)
+            .font(.caption.weight(.medium))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(Theme.premiumSageSoft, in: Capsule())
+    }
+
+    private var guidanceServices: some View {
+        VStack(spacing: 0) {
+            guidanceRow("Application guidance", icon: "doc.text.magnifyingglass")
+            Divider().overlay(Theme.premiumIvory.opacity(0.12))
+            guidanceRow("Document review", icon: "doc.text")
+            Divider().overlay(Theme.premiumIvory.opacity(0.12))
+            guidanceRow("Interview preparation", icon: "bubble.left.and.bubble.right")
+        }
+        .padding(.horizontal, 18)
+        .background(Theme.premiumIvory.opacity(0.06), in: RoundedRectangle(cornerRadius: 24))
+        .overlay {
+            RoundedRectangle(cornerRadius: 24)
+                .strokeBorder(Theme.premiumIvory.opacity(0.10), lineWidth: 1)
+        }
+    }
+
+    private func guidanceRow(_ title: String, icon: String) -> some View {
+        HStack(spacing: 14) {
+            Image(systemName: icon)
+                .font(.system(size: 20, weight: .regular))
+                .frame(width: 42, height: 42)
+                .background(Theme.premiumIvory.opacity(0.08), in: RoundedRectangle(cornerRadius: 13))
+                .accessibilityHidden(true)
+            Text(L10n.string(title))
+                .font(.subheadline.weight(.medium))
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 16)
     }
 }
 
@@ -292,7 +334,8 @@ struct PremiumPrimaryButtonStyle: ButtonStyle {
         configuration.label
             .font(.headline.weight(.semibold))
             .frame(maxWidth: .infinity)
-            .frame(height: 54)
+            .padding(.vertical, 14)
+            .frame(minHeight: 54)
             .background(
                 Theme.premiumIvory.opacity(
                     configuration.isPressed ? 0.84 : 1
@@ -319,7 +362,8 @@ struct PremiumSecondaryButtonStyle: ButtonStyle {
         configuration.label
             .font(.subheadline.weight(.semibold))
             .frame(maxWidth: .infinity)
-            .frame(height: 48)
+            .padding(.vertical, 12)
+            .frame(minHeight: 48)
             .background(.ultraThinMaterial)
             .foregroundStyle(Theme.premiumIvory)
             .clipShape(

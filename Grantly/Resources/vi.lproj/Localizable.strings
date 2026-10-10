@@ -712,3 +712,5 @@
 "LAUNCH PRICE" = "GIÁ RA MẮT";
 
 "Clear search" = "Xóa tìm kiếm";
+
+"Page %lld of %lld" = "Trang %lld trên %lld";

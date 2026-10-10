@@ -711,3 +711,5 @@
 "LAUNCH PRICE" = "LAUNCH PRICE";
 
 "Clear search" = "Clear search";
+
+"Page %lld of %lld" = "Page %lld of %lld";

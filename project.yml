@@ -103,6 +103,17 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.grantly.tests
         GENERATE_INFOPLIST_FILE: YES
 
+  EduTUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - GrantlyUITests
+    dependencies:
+      - target: EduT
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.grantly.uitests
+        GENERATE_INFOPLIST_FILE: YES
 
 schemes:
   EduT:
@@ -110,12 +121,14 @@ schemes:
       targets:
         EduT: all
         EduTTests: [test]
+        EduTUITests: [test]
     run:
       config: Debug
     test:
       config: Debug
       targets:
         - EduTTests
+        - EduTUITests
     profile:
       config: Release
     analyze:

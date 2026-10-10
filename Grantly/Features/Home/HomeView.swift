@@ -6,6 +6,8 @@ struct HomeView: View {
     let openExplore: () -> Void
     let openApplications: () -> Void
 
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 34
+
     @State private var matches: [ScholarshipMatch] = []
     @State private var upcoming: [Scholarship] = []
     @State private var universityApplications: [UniversityApplicationCase] = []
@@ -152,7 +154,7 @@ struct HomeView: View {
                     Image(systemName: "bell")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(HomeVisualStyle.forest)
-                        .frame(width: 38, height: 38)
+                        .frame(width: 44, height: 44)
                         .background(.ultraThinMaterial)
                         .clipShape(Circle())
                         .overlay(
@@ -183,7 +185,7 @@ struct HomeView: View {
                 .foregroundStyle(HomeVisualStyle.forest)
 
             Text(L10n.string("Scholarships picked\nfor your next chapter."))
-                .font(.system(size: 34, weight: .regular, design: .serif))
+                .font(.system(size: titleSize, weight: .regular, design: .serif))
                 .foregroundStyle(HomeVisualStyle.ink)
                 .tracking(-0.8)
                 .lineSpacing(-2)
@@ -341,10 +343,14 @@ struct HomeView: View {
             )
 
             if loading && matches.isEmpty {
-                HStack(spacing: 10) {
-                    HomeRecommendationSkeleton()
-                    HomeRecommendationSkeleton()
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        HomeRecommendationSkeleton()
+                        HomeRecommendationSkeleton()
+                    }
                 }
+                .scrollDisabled(true)
+                .accessibilityHidden(true)
             } else if !matches.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
@@ -633,6 +639,8 @@ private struct HomeConceptSectionTitle: View {
 }
 
 private struct HomeEditorialHero: View {
+    @ScaledMetric(relativeTo: .title) private var heroHeight: CGFloat = 318
+    @ScaledMetric(relativeTo: .title) private var titleSize: CGFloat = 29
     let scholarship: Scholarship
     let score: Int?
 
@@ -641,7 +649,7 @@ private struct HomeEditorialHero: View {
             UniversityPhoto(
                 seed: scholarship.provider + scholarship.title,
                 remoteURL: scholarship.university?.campusImageUrl,
-                height: 318
+                height: heroHeight
             )
             .frame(maxWidth: .infinity)
             .overlay {
@@ -683,7 +691,7 @@ private struct HomeEditorialHero: View {
                 Spacer()
 
                 Text(scholarship.title)
-                    .font(.system(size: 29, weight: .regular, design: .serif))
+                    .font(.system(size: titleSize, weight: .regular, design: .serif))
                     .foregroundStyle(.white)
                     .lineLimit(3)
                     .lineSpacing(-1)
@@ -714,7 +722,7 @@ private struct HomeEditorialHero: View {
             }
             .padding(18)
         }
-        .frame(height: 318)
+        .frame(height: heroHeight)
         .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
         .contentShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
         .shadow(

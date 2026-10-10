@@ -712,3 +712,5 @@
 "LAUNCH PRICE" = "СТАРТОВАЯ ЦЕНА";
 
 "Clear search" = "Очистить поиск";
+
+"Page %lld of %lld" = "Страница %lld из %lld";

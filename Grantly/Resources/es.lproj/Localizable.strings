@@ -712,3 +712,5 @@
 "LAUNCH PRICE" = "PRECIO DE LANZAMIENTO";
 
 "Clear search" = "Borrar búsqueda";
+
+"Page %lld of %lld" = "Página %lld de %lld";
