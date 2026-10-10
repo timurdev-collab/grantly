@@ -793,7 +793,7 @@ private struct HomeRecommendationTile: View {
                 remoteURL: scholarship.university?.campusImageUrl,
                 height: 132
             )
-            .frame(width: 270, height: 132)
+            .frame(width: 206, height: 132)
             .overlay {
                 LinearGradient(
                     colors: [
@@ -835,7 +835,7 @@ private struct HomeRecommendationTile: View {
             }
             .padding(14)
         }
-        .frame(width: 270, height: 132)
+        .frame(width: 206, height: 132)
         .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
         .shadow(
             color: Color.black.opacity(0.08),
