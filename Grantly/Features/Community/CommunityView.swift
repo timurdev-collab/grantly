@@ -374,7 +374,7 @@ struct AdvisorsView: View {
 
                 Spacer(minLength: 0)
                 VStack(alignment: .trailing, spacing: 5) {
-                    Label("Verified", systemImage: "checkmark.seal.fill")
+                    Label(L10n.string("Verified"), systemImage: "checkmark.seal.fill")
                         .font(.system(size: 9, weight: .semibold))
                         .foregroundStyle(Theme.premiumForest)
                     if let years = advisor.yearsExperience {
@@ -419,7 +419,7 @@ struct AdvisorsView: View {
             NavigationLink {
                 AdvisorConsultationBookingView(advisor: advisor)
             } label: {
-                Label("Book consultation", systemImage: "bubble.left.and.text.bubble.right")
+                Label(L10n.string("Book consultation"), systemImage: "bubble.left.and.text.bubble.right")
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
