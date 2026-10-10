@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct ScholarshipsView: View {
+    @Environment(\.colorScheme) private var editorialScheme
+    private var actionInk: Color { editorialScheme == .dark ? Theme.editorialCream : Theme.premiumForest }
+
     @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 34
     private let pageSize = 20
 
