@@ -976,11 +976,29 @@ struct AdvisorDetailView: View {
         defer { loading = false }
 
         do {
-            profiles = try await DataService.searchCommunityProfiles(
+            let results = try await DataService.searchCommunityProfiles(
                 query: trimmed
             )
+
+            guard !Task.isCancelled else { return }
+
+            let currentQuery = query.trimmingCharacters(
+                in: .whitespacesAndNewlines
+            )
+
+            guard currentQuery == trimmed else { return }
+
+            profiles = results
+        } catch is CancellationError {
+            return
         } catch {
-            messageError = error.localizedDescription
+            // Live search runs while the user types. A transient or
+            // superseded request should never interrupt typing with an alert.
+            guard query.trimmingCharacters(
+                in: .whitespacesAndNewlines
+            ) == trimmed else { return }
+
+            profiles = []
         }
     }
 
