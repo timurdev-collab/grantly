@@ -206,14 +206,13 @@ struct AdvisorsView: View {
                     )
                     .padding(.vertical, 30)
                 } else {
-                    LazyVStack(spacing: 10) {
+                    LazyVGrid(
+                        columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)],
+                        alignment: .center,
+                        spacing: 10
+                    ) {
                         ForEach(filteredAdvisors) { advisor in
-                            NavigationLink {
-                                AdvisorDetailView(advisor: advisor)
-                            } label: {
-                                advisorListCard(advisor)
-                            }
-                            .buttonStyle(.plain)
+                            advisorGridCard(advisor)
                         }
                     }
                 }
@@ -343,6 +342,97 @@ struct AdvisorsView: View {
                 style: .continuous
             )
         )
+    }
+
+    private func advisorGridCard(_ advisor: AdvisorDirectoryProfile) -> some View {
+        VStack(alignment: .leading, spacing: 9) {
+            HStack(alignment: .top, spacing: 5) {
+                ZStack {
+                    Circle().fill(Theme.premiumSageSoft)
+                    if let value = advisor.avatarUrl,
+                       let url = URL(string: value) {
+                        AsyncImage(url: url) { phase in
+                            if case .success(let image) = phase {
+                                image.resizable().scaledToFill()
+                            } else {
+                                Image(systemName: "person.crop.circle.fill")
+                                    .resizable().scaledToFit()
+                                    .foregroundStyle(Theme.premiumForest)
+                                    .padding(18)
+                            }
+                        }
+                    } else {
+                        Image(systemName: "person.crop.circle.fill")
+                            .resizable().scaledToFit()
+                            .foregroundStyle(Theme.premiumForest)
+                            .padding(18)
+                    }
+                }
+                .frame(width: 62, height: 62)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(.white.opacity(0.9), lineWidth: 2))
+
+                Spacer(minLength: 0)
+                VStack(alignment: .trailing, spacing: 5) {
+                    Label("Verified", systemImage: "checkmark.seal.fill")
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(Theme.premiumForest)
+                    if let years = advisor.yearsExperience {
+                        Text("\(years)+ years")
+                            .font(.system(size: 10))
+                            .foregroundStyle(Theme.premiumMuted)
+                    }
+                }
+            }
+
+            NavigationLink {
+                AdvisorDetailView(advisor: advisor)
+            } label: {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(advisor.displayName ?? "EduT Advisor")
+                        .font(.system(size: 15, weight: .semibold, design: .serif))
+                        .foregroundStyle(Theme.premiumInk)
+                        .lineLimit(2)
+                    Text(advisor.title?.nonEmpty ?? "Study abroad advisor")
+                        .font(.system(size: 11))
+                        .foregroundStyle(Theme.premiumMuted)
+                        .lineLimit(2)
+                    Text(advisor.organization?.nonEmpty ?? "Education specialist")
+                        .font(.system(size: 10))
+                        .foregroundStyle(Theme.premiumMuted)
+                        .lineLimit(1)
+                }
+                .frame(maxWidth: .infinity, minHeight: 67, alignment: .topLeading)
+            }
+            .buttonStyle(.plain)
+
+            if let specialty = advisor.specialties.first {
+                Text(specialty)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(Theme.premiumForest)
+                    .lineLimit(1)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 5)
+                    .background(Theme.premiumSageSoft, in: Capsule())
+            }
+
+            NavigationLink {
+                AdvisorConsultationBookingView(advisor: advisor)
+            } label: {
+                Label("Book consultation", systemImage: "bubble.left.and.text.bubble.right")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 38)
+                    .background(Theme.premiumForest, in: Capsule())
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 22).stroke(.white.opacity(0.8), lineWidth: 1))
+        .shadow(color: Theme.premiumForest.opacity(0.07), radius: 12, y: 5)
     }
 
     private func advisorListCard(
