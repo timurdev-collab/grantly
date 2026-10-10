@@ -483,6 +483,25 @@ struct ProfileView: View {
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
             }
+
+            NavigationLink {
+                CommunityView()
+            } label: {
+                Label(
+                    "Open Student Community",
+                    systemImage: "person.3.fill"
+                )
+                .font(.subheadline.weight(.semibold))
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+                .background(Theme.surfaceRaised)
+                .foregroundStyle(Theme.ink)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint(
+                "Browse student profiles, messages, and safety controls"
+            )
         }
         .padding(14)
         .background(Theme.surface)
