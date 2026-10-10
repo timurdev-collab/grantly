@@ -483,7 +483,7 @@ struct ProfileView: View {
                 CommunityView()
             } label: {
                 Label(
-                    "Open Student Community",
+                    L10n.string("Open Student Community"),
                     systemImage: "person.3.fill"
                 )
                 .font(.subheadline.weight(.semibold))
