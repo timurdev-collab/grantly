@@ -3,6 +3,7 @@ import SwiftUI
 import UIKit
 
 struct ProfileView: View {
+    @ScaledMetric(relativeTo: .title2) private var profileNameSize: CGFloat = 24
     @Environment(AuthStore.self) private var auth
     @Binding var profile: StudentProfile?
     var showsNavigationBar = false
@@ -83,7 +84,8 @@ struct ProfileView: View {
                 .padding(.bottom, 32)
             }
         }
-        .background(Theme.pageBackground)
+        .background(Theme.premiumIvoryRaised)
+        .preferredColorScheme(.light)
         .navigationTitle(showsNavigationBar ? "Profile" : "")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarHidden(!showsNavigationBar)
@@ -104,17 +106,16 @@ struct ProfileView: View {
 
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("This permanently deletes your account, profile, saved scholarships, applications and messages. This cannot be undone.")
+            Text(L10n.string("This permanently deletes your account, profile, saved scholarships, applications and messages. This cannot be undone."))
         }
     }
 
     private var instagramProfileHeader: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 12) {
-                Text(displayName)
-                    .font(.headline.weight(.bold))
-                    .foregroundStyle(Theme.ink)
-                    .lineLimit(1)
+            HStack {
+                Text("Profile")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(Theme.premiumIvory)
 
                 Spacer()
 
@@ -122,27 +123,22 @@ struct ProfileView: View {
                     showingSettings = true
                 } label: {
                     Image(systemName: "gearshape")
-                        .font(.system(size: 19, weight: .semibold))
-                        .foregroundStyle(Theme.ink)
-                        .frame(width: 40, height: 40)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(Theme.premiumIvory)
+                        .frame(width: 44, height: 44)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Settings")
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 8)
-            .padding(.bottom, 12)
+            .padding(.horizontal, 18)
+            .padding(.top, 12)
 
-            HStack(alignment: .center, spacing: 20) {
+            HStack(spacing: 15) {
                 ZStack {
                     Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [Theme.blueSoft, Theme.blue],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
+                        .fill(Theme.premiumIvory)
 
                     if let avatarURL,
                        let url = URL(string: avatarURL) {
@@ -154,107 +150,114 @@ struct ProfileView: View {
                                     .scaledToFill()
                             default:
                                 Text(profileInitials)
-                                    .font(.system(size: 26, weight: .bold))
-                                    .foregroundStyle(Theme.ink)
+                                    .font(.system(size: 27, weight: .bold))
+                                    .foregroundStyle(Theme.premiumForest)
                             }
                         }
                     } else {
                         Text(profileInitials)
-                            .font(.system(size: 26, weight: .bold))
-                            .foregroundStyle(Theme.ink)
+                            .font(.system(size: 27, weight: .bold))
+                            .foregroundStyle(Theme.premiumForest)
                     }
                 }
-                .frame(width: 92, height: 92)
+                .frame(width: 88, height: 88)
                 .clipShape(Circle())
                 .overlay(
                     Circle()
-                        .stroke(Theme.ink.opacity(0.12), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.72), lineWidth: 2)
                 )
 
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 5) {
                     Text(displayName)
-                        .font(.title3.weight(.bold))
-                        .foregroundStyle(Theme.ink)
+                        .font(.system(size: profileNameSize, weight: .regular, design: .serif))
+                        .foregroundStyle(Theme.premiumIvory)
                         .lineLimit(2)
 
                     Text(
-                        [degreeLevel, intendedMajor, nationality]
+                        [degreeLevel, intendedMajor]
                             .filter {
                                 !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                             }
                             .joined(separator: " · ")
                     )
-                    .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    .font(.caption)
+                    .foregroundStyle(Theme.premiumIvory.opacity(0.72))
                     .lineLimit(2)
 
-                    Label(
-                        "Private student profile",
-                        systemImage: "lock.fill"
-                    )
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(Theme.blueSoft)
-                }
-
-                Spacer(minLength: 0)
-            }
-            .padding(.horizontal, 16)
-
-            Button {
-                showingEditProfile = true
-            } label: {
-                Text("Edit")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 36)
-                    .background(Theme.surfaceRaised)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-            }
-            .buttonStyle(.plain)
-            .padding(.horizontal, 16)
-            .padding(.top, 14)
-
-            HStack(spacing: 10) {
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text("Academic profile")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.muted)
-
-                        Spacer()
-
-                        Text("\(profileCompletion)%")
-                            .font(.caption.weight(.bold))
-                            .foregroundStyle(Theme.ink)
-                    }
-
-                    GeometryReader { geometry in
-                        ZStack(alignment: .leading) {
-                            Capsule()
-                                .fill(Theme.ink.opacity(0.08))
-
-                            Capsule()
-                                .fill(Theme.blueSoft)
-                                .frame(
-                                    width: geometry.size.width *
-                                        CGFloat(profileCompletion) / 100
-                                )
+                    Button {
+                        showingEditProfile = true
+                    } label: {
+                        HStack(spacing: 5) {
+                            Text("Edit Profile")
+                            Image(systemName: "chevron.right")
                         }
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.premiumIvory)
+                        .frame(minHeight: 44)
                     }
-                    .frame(height: 5)
+                    .buttonStyle(.plain)
                 }
 
-                Image(systemName: "lock.fill")
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
-                    .accessibilityLabel("Private academic data")
+                Spacer()
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 14)
-            .padding(.bottom, 16)
+            .padding(.horizontal, 18)
+            .padding(.top, 20)
+
+            VStack(alignment: .leading, spacing: 9) {
+                HStack {
+                    Text(L10n.string("Profile completeness"))
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Theme.premiumInk)
+
+                    Spacer()
+
+                    Text("\(profileCompletion)%")
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(Theme.premiumForest)
+                }
+
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Theme.premiumInk.opacity(0.08))
+
+                        Capsule()
+                            .fill(Theme.premiumForest)
+                            .frame(
+                                width: geometry.size.width *
+                                    CGFloat(profileCompletion) / 100
+                            )
+                    }
+                }
+                .frame(height: 6)
+            }
+            .padding(14)
+            .background(Theme.premiumIvoryRaised)
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .shadow(
+                color: Color.black.opacity(0.08),
+                radius: 16,
+                x: 0,
+                y: 8
+            )
+            .padding(.horizontal, 18)
+            .padding(.top, 20)
         }
-        .background(Theme.surface)
+        .padding(.bottom, 18)
+        .background {
+            LinearGradient(
+                colors: [Theme.premiumForest, Theme.premiumForestSoft],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .overlay(alignment: .topTrailing) {
+                Circle()
+                    .fill(Color.white.opacity(0.08))
+                    .frame(width: 170, height: 170)
+                    .offset(x: 44, y: -56)
+            }
+            .clipped()
+        }
     }
 
     private var profileSectionTabs: some View {
@@ -385,11 +388,17 @@ struct ProfileView: View {
             }
         }
         .padding(16)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .background(Theme.premiumIvoryRaised)
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(Theme.ink.opacity(0.05))
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .stroke(Theme.premiumInk.opacity(0.05), lineWidth: 1)
+        )
+        .shadow(
+            color: Color.black.opacity(0.035),
+            radius: 12,
+            x: 0,
+            y: 6
         )
     }
 
@@ -472,7 +481,7 @@ struct ProfileView: View {
                 CommunityView()
             } label: {
                 Label(
-                    "Open Student Community",
+                    L10n.string("Open Student Community"),
                     systemImage: "person.3.fill"
                 )
                 .font(.subheadline.weight(.semibold))

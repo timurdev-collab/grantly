@@ -6,13 +6,20 @@ struct HomeView: View {
     let openExplore: () -> Void
     let openApplications: () -> Void
 
+    @ScaledMetric(relativeTo: .largeTitle) private var titleSize: CGFloat = 34
+
     @State private var matches: [ScholarshipMatch] = []
     @State private var upcoming: [Scholarship] = []
-    @State private var universityApplications: [UniversityApplicationCase] = []
-    @State private var scholarshipApplications: [SavedScholarshipItem] = []
+    @State private var hasLoadError = false
     @State private var loading = true
     @State private var unreadNotifications = 0
-    @State private var avatarURL: String?
+
+    private var firstName: String? {
+        profile?.fullName?
+            .split(separator: " ")
+            .first
+            .map(String.init)
+    }
 
     private var profileNeedsSetup: Bool {
         guard let profile else { return true }
@@ -30,469 +37,361 @@ struct HomeView: View {
         }
     }
 
-    private var firstName: String? {
-        profile?.fullName?
-            .split(separator: " ")
-            .first
-            .map(String.init)
-    }
-
-    private var applicationPreviews: [HomeApplicationPreview] {
-        let universityRows = universityApplications.map {
-            HomeApplicationPreview(
-                id: "university-\($0.id.uuidString)",
-                title: $0.university.name,
-                subtitle: $0.programName.isEmpty
-                    ? ($0.degreeLevel ?? "University application")
-                    : $0.programName,
-                status: $0.applicationStatus,
-                deadline: $0.deadline
-            )
-        }
-
-        let activeStatuses = Set([
-            "preparing",
-            "applied",
-            "submitted",
-            "interview",
-            "offer",
-            "rejected",
-            "withdrawn"
-        ])
-
-        let scholarshipRows = scholarshipApplications
-            .filter {
-                activeStatuses.contains(
-                    $0.applicationStatus.lowercased()
-                )
-            }
-            .map {
-                HomeApplicationPreview(
-                    id: "scholarship-\($0.scholarshipId.uuidString)",
-                    title: $0.scholarship.title,
-                    subtitle: $0.scholarship.provider,
-                    status: $0.applicationStatus,
-                    deadline:
-                        $0.personalDeadline ??
-                        $0.applicationDeadline ??
-                        $0.scholarship.deadline
-                )
-            }
-
-        return (universityRows + scholarshipRows)
-            .sorted {
-                ($0.deadline ?? "9999-12-31") <
-                ($1.deadline ?? "9999-12-31")
-            }
-    }
-
-    private var nextDeadline: HomeApplicationPreview? {
-        applicationPreviews.first { preview in
-            guard let deadline = preview.deadline else { return false }
-            return !deadline.isEmpty
-        }
-    }
-
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 0) {
-                greetingHeader
+        GeometryReader { proxy in
+            ZStack {
+                HomeVisualStyle.cream
+                    .ignoresSafeArea()
 
-                VStack(alignment: .leading, spacing: 20) {
-                    nextStepCard
-
-                    communityConversationsCard
-
-                    recommendationsSection
-                    deadlinesSection
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        header
+                        editorialIntro
+                        searchButton
+                        categoryStrip
+                        if hasLoadError { refreshError }
+                        bestMatchHero
+                        personalizedSection
+                        closingSoonSection
+                        advisorNudge
+                    }
+                    .frame(
+                        width: max(proxy.size.width - 36, 0),
+                        alignment: .leading
+                    )
+                    .padding(.horizontal, 18)
+                    .padding(.top, 8)
+                    .padding(.bottom, 112)
                 }
-                .padding(.horizontal, 16)
-                .padding(.top, 14)
-                .padding(.bottom, 32)
+                .frame(width: proxy.size.width)
+                .clipped()
             }
         }
-        .background(Theme.pageBackground)
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await load() }
         .task { await load() }
     }
 
-    private var communityConversationsCard: some View {
-        NavigationLink {
-            MessagesView()
-        } label: {
-            HStack(spacing: 13) {
-                Image(systemName: "bubble.left.and.bubble.right.fill")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(Theme.orangeSoft)
-                    .frame(width: 44, height: 44)
-                    .background(Theme.surfaceRaised)
-                    .clipShape(RoundedRectangle(cornerRadius: 13))
+    private var header: some View {
+        HStack(spacing: 10) {
+            ZStack {
+                Circle()
+                    .fill(HomeVisualStyle.forest)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Community")
-                        .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
-
-                    Text("Messages")
-                        .font(.caption)
-                        .foregroundStyle(Theme.muted)
-                }
-
-                Spacer()
-
-                Image(systemName: "chevron.right")
-                    .font(.caption.bold())
-                    .foregroundStyle(Theme.muted)
+                Image(systemName: "graduationcap.fill")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(Theme.onAccent)
             }
-            .padding(14)
-            .background(Theme.surface)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .frame(width: 32, height: 32)
+            .overlay(alignment: .topTrailing) {
+                Circle()
+                    .fill(HomeVisualStyle.sand)
+                    .frame(width: 7, height: 7)
+                    .offset(x: 1, y: -1)
+            }
+
+            Text(verbatim: "EduT")
+                .font(.system(size: 21, weight: .bold, design: .rounded))
+                .foregroundStyle(HomeVisualStyle.forest)
+
+            Spacer()
+
+            LanguageFlagMenu()
+
+            NavigationLink {
+                NotificationInboxView()
+            } label: {
+                ZStack(alignment: .topTrailing) {
+                    Image(systemName: "bell")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(HomeVisualStyle.forest)
+                        .frame(width: 44, height: 44)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white.opacity(0.58), lineWidth: 1)
+                        )
+
+                    if unreadNotifications > 0 {
+                        Text(unreadNotifications > 9 ? "9+" : "\(unreadNotifications)")
+                            .font(.system(size: 8, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(minWidth: 16, minHeight: 16)
+                            .background(Theme.danger)
+                            .clipShape(Circle())
+                            .offset(x: 3, y: -2)
+                    }
+                }
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Notifications")
+        }
+    }
+
+    private var editorialIntro: some View {
+        VStack(alignment: .leading, spacing: 7) {
+            Text(firstName.map { "Good afternoon, \($0)" } ?? "Good afternoon")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(HomeVisualStyle.forest)
+
+            Text(L10n.string("Scholarships picked\nfor your next chapter."))
+                .font(.system(size: titleSize, weight: .regular, design: .serif))
+                .foregroundStyle(HomeVisualStyle.ink)
+                .tracking(-0.8)
+                .lineSpacing(-2)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var searchButton: some View {
+        Button(action: openExplore) {
+            HStack(spacing: 10) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(HomeVisualStyle.muted)
+
+                Text(L10n.string("Search scholarships, countries, majors"))
+                    .font(.subheadline)
+                    .foregroundStyle(HomeVisualStyle.muted)
+                    .lineLimit(1)
+
+                Spacer(minLength: 8)
+
+                Image(systemName: "slider.horizontal.3")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(Theme.onAccent)
+                    .frame(width: 32, height: 32)
+                    .background(HomeVisualStyle.forest)
+                    .clipShape(Circle())
+            }
+            .padding(.leading, 15)
+            .padding(.trailing, 8)
+            .frame(height: 52)
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Theme.ink.opacity(0.05))
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(Color.white.opacity(0.65), lineWidth: 1)
+            )
+            .shadow(
+                color: Theme.accent.opacity(0.08),
+                radius: 16,
+                x: 0,
+                y: 6
             )
         }
         .buttonStyle(.plain)
     }
 
-    private var greetingHeader: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 12) {
-                Text("EduT")
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
-                    .foregroundStyle(Theme.ink)
 
-                Spacer()
-
-                LanguageFlagMenu()
-
+    private var categoryStrip: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 9) {
+                HomeFilterPill(title: "For you", selected: true, action: openExplore)
+                HomeFilterPill(title: "Applications", selected: false, action: openApplications)
                 NavigationLink {
-                    NotificationInboxView()
+                    AdvisorsView()
                 } label: {
-                    ZStack(alignment: .topTrailing) {
-                        Image(
-                            systemName:
-                                unreadNotifications > 0
-                                ? "heart.fill"
-                                : "heart"
-                        )
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(Theme.ink)
-                        .frame(width: 38, height: 38)
-
-                        if unreadNotifications > 0 {
-                            Text(
-                                unreadNotifications > 9
-                                    ? "9+"
-                                    : "\(unreadNotifications)"
-                            )
-                            .font(.system(size: 8, weight: .bold))
-                            .foregroundStyle(Theme.onAccent)
-                            .frame(minWidth: 16, minHeight: 16)
-                            .background(Theme.orange)
-                            .clipShape(Circle())
-                            .offset(x: 3, y: -1)
-                        }
-                    }
+                    HomePillLabel(title: "Advisors", selected: false)
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Notifications")
-
-                NavigationLink {
-                    MessagesView()
-                } label: {
-                    Image(systemName: "paperplane")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(Theme.ink)
-                        .frame(width: 38, height: 38)
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Messages")
+                .buttonStyle(CardPressButtonStyle())
+                HomeFilterPill(title: "Profile", selected: false, action: openProfile)
             }
-
-            Text(firstName.map { "Hi, \($0)" } ?? "Hi")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.ink)
-
-            Text("Here’s what needs your attention")
-                .font(.caption)
-                .foregroundStyle(Theme.muted)
+            .padding(.vertical, 1)
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 8)
-        .padding(.bottom, 14)
-        .background(Theme.surface)
-        .overlay(alignment: .bottom) {
-            Rectangle()
-                .fill(Theme.ink.opacity(0.07))
-                .frame(height: 1)
-        }
+        .contentMargins(.horizontal, 0, for: .scrollContent)
+        .frame(maxWidth: .infinity)
     }
 
-    private var quickActionsRail: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 18) {
-                Button(action: openProfile) {
-                    HomeQuickAction(
-                        title: "Profile",
-                        systemImage: nil,
-                        avatarURL: avatarURL,
-                        fallback: firstName.flatMap { $0.first.map(String.init) }
-                    )
-                }
-                .buttonStyle(.plain)
-
-                Button(action: openExplore) {
-                    HomeQuickAction(
-                        title: "Explore",
-                        systemImage: "magnifyingglass",
-                        avatarURL: nil,
-                        fallback: nil
-                    )
-                }
-                .buttonStyle(.plain)
-
-                Button(action: openApplications) {
-                    HomeQuickAction(
-                        title: "Applications",
-                        systemImage: "folder",
-                        avatarURL: nil,
-                        fallback: nil
-                    )
-                }
-                .buttonStyle(.plain)
-
-                NavigationLink {
-                    MessagesView()
-                } label: {
-                    HomeQuickAction(
-                        title: "Messages",
-                        systemImage: "bubble.left.and.bubble.right",
-                        avatarURL: nil,
-                        fallback: nil
-                    )
-                }
-                .buttonStyle(.plain)
+    private var refreshError: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Unable to refresh", systemImage: "wifi.exclamationmark")
+                .font(.subheadline.weight(.medium))
+            Button("Try again") {
+                Task { await load() }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
+            .font(.subheadline.weight(.semibold))
+            .frame(minHeight: 44)
+            .disabled(loading)
         }
-        .background(Theme.surface)
+        .foregroundStyle(HomeVisualStyle.forest)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .background(HomeVisualStyle.sage, in: RoundedRectangle(cornerRadius: 18))
     }
 
     @ViewBuilder
-    private var profileAvatarFallback: some View {
-        if let initial = firstName?.first {
-            Text(String(initial).uppercased())
-                .font(.system(size: 15, weight: .bold))
-                .foregroundStyle(Theme.ink)
-                .frame(width: 38, height: 38)
-                .background(Theme.surfaceRaised)
-                .clipShape(Circle())
+    private var bestMatchHero: some View {
+        if loading && matches.isEmpty && upcoming.isEmpty {
+            RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .fill(HomeVisualStyle.forest)
+                .frame(height: 180)
+                .overlay {
+                    ProgressView()
+                        .tint(Theme.onAccent)
+                }
+        } else if let match = matches.first {
+            NavigationLink {
+                ScholarshipDetailView(
+                    scholarship: match.scholarship,
+                    match: match
+                )
+            } label: {
+                HomeEditorialHero(
+                    scholarship: match.scholarship,
+                    score: match.score
+                )
+            }
+            .buttonStyle(.plain)
+        } else if let scholarship = upcoming.first {
+            NavigationLink {
+                ScholarshipDetailView(
+                    scholarship: scholarship,
+                    match: nil
+                )
+            } label: {
+                HomeEditorialHero(
+                    scholarship: scholarship,
+                    score: nil
+                )
+            }
+            .buttonStyle(.plain)
         } else {
-            Image(systemName: "person.fill")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(Theme.ink.opacity(0.72))
-                .frame(width: 38, height: 38)
-                .background(Theme.surfaceRaised)
-                .clipShape(Circle())
-        }
-    }
-
-    private var nextStepCard: some View {
-        let content = nextStepContent
-
-        return HStack(spacing: 12) {
-            Image(systemName: content.icon)
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(Theme.orangeSoft)
-                .frame(width: 36, height: 36)
-                .background(Theme.surfaceRaised)
-                .clipShape(Circle())
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(content.title)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
-                    .lineLimit(1)
-
-                Text(content.message)
-                    .font(.caption2)
-                    .foregroundStyle(Theme.muted)
-                    .lineLimit(1)
+            Button(action: openExplore) {
+                HomeEmptyHero()
             }
-
-            Spacer(minLength: 6)
-
-            Button(content.buttonTitle) {
-                content.action()
-            }
-            .font(.caption2.weight(.semibold))
-            .foregroundStyle(Theme.onAccent)
-            .padding(.horizontal, 10)
-            .frame(height: 32)
-            .background(Theme.accent)
-            .clipShape(Capsule())
             .buttonStyle(.plain)
         }
-        .padding(10)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(Theme.ink.opacity(0.05))
-        )
     }
 
-    private var nextStepContent: HomeNextStep {
-        if profileNeedsSetup {
-            return HomeNextStep(
-                title: "Complete your profile",
-                message:
-                    "Add your study level, intended major and background so EduT can improve your recommendations.",
-                buttonTitle: "Complete profile",
-                icon: "person.crop.circle.badge.plus",
-                action: openProfile
-            )
-        }
-
-        if applicationPreviews.isEmpty {
-            return HomeNextStep(
-                title: "Find your first opportunity",
-                message:
-                    "Explore verified scholarships and save the ones you want to consider.",
-                buttonTitle: "Explore scholarships",
-                icon: "magnifyingglass",
+    private var exploreSection: some View {
+        VStack(alignment: .leading, spacing: 11) {
+            HomeConceptSectionTitle(
+                title: "Explore your way",
+                trailing: "See all",
                 action: openExplore
             )
-        }
 
-        if let nextDeadline {
-            return HomeNextStep(
-                title: "Deadline coming up",
-                message:
-                    "\(nextDeadline.title) · \(displayDeadline(nextDeadline.deadline))",
-                buttonTitle: "Open applications",
-                icon: "calendar.badge.exclamationmark",
-                action: openApplications
-            )
-        }
+            HStack(spacing: 8) {
+                HomeExploreShortcut(
+                    title: "Top\nmatches",
+                    icon: "sparkles",
+                    accent: Theme.accent,
+                    action: openExplore
+                )
 
-        return HomeNextStep(
-            title: "Continue your applications",
-            message:
-                "You have \(applicationPreviews.count) application\(applicationPreviews.count == 1 ? "" : "s") in progress.",
-            buttonTitle: "Open applications",
-            icon: "checklist",
-            action: openApplications
-        )
-    }
+                HomeExploreShortcut(
+                    title: "Country",
+                    icon: "globe",
+                    accent: Theme.trustTeal,
+                    action: openExplore
+                )
 
-    @ViewBuilder
-    private var applicationsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HomeSectionHeader(
-                title: "Your applications",
-                subtitle: applicationPreviews.isEmpty
-                    ? "Applications you start will appear here"
-                    : "\(applicationPreviews.count) application\(applicationPreviews.count == 1 ? "" : "s") to track",
-                actionTitle: applicationPreviews.isEmpty ? nil : "View all",
-                action: openApplications
-            )
+                HomeExploreShortcut(
+                    title: "Level",
+                    icon: "graduationcap",
+                    accent: Theme.ink,
+                    action: openExplore
+                )
 
-            if loading && applicationPreviews.isEmpty {
-                ProgressView()
-                    .tint(Theme.orange)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 24)
-            } else if applicationPreviews.isEmpty {
-                Button {
-                    openExplore()
-                } label: {
-                    HStack(spacing: 12) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title3)
-                            .foregroundStyle(Theme.orangeSoft)
-
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text("No applications yet")
-                                .font(.subheadline.bold())
-                                .foregroundStyle(Theme.ink)
-
-                            Text("Find a scholarship or university to get started.")
-                                .font(.caption)
-                                .foregroundStyle(Theme.muted)
-                        }
-
-                        Spacer()
-
-                        Image(systemName: "chevron.right")
-                            .font(.caption.bold())
-                            .foregroundStyle(Theme.muted)
-                    }
-                    .padding(14)
-                    .background(Theme.surface)
-                    .clipShape(RoundedRectangle(cornerRadius: 17))
-                }
-                .buttonStyle(.plain)
-            } else {
-                VStack(spacing: 9) {
-                    ForEach(applicationPreviews.prefix(3)) { preview in
-                        Button {
-                            openApplications()
-                        } label: {
-                            HomeApplicationRow(preview: preview)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
+                HomeExploreShortcut(
+                    title: "Field",
+                    icon: "square.grid.2x2",
+                    accent: Theme.sand,
+                    action: openExplore
+                )
             }
         }
     }
 
     @ViewBuilder
-    private var recommendationsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HomeSectionHeader(
-                title: "Best matches for your profile",
-                subtitle: profileNeedsSetup
-                    ? "Complete your profile to unlock stronger matches"
-                    : "AI-assisted ranking based on your profile and study goals",
-                actionTitle: "Explore more",
-                action: openExplore
+    private var personalizedSection: some View {
+        VStack(alignment: .leading, spacing: 11) {
+            HomeConceptSectionTitle(
+                title: "Picked for your goals",
+                trailing: profileNeedsSetup ? "Complete profile" : "For you",
+                action: profileNeedsSetup ? openProfile : openExplore
             )
 
-            if loading {
-                ProgressView()
-                    .tint(Theme.orange)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 28)
-            } else if !matches.isEmpty {
-                LazyVStack(spacing: 16) {
-                    ForEach(matches.prefix(3)) { match in
-                        NavigationLink {
-                            ScholarshipDetailView(
-                                scholarship: match.scholarship,
-                                match: match
-                            )
-                        } label: {
-                            HomeMatchCard(match: match)
-                        }
-                        .buttonStyle(.plain)
+            if loading && matches.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        HomeRecommendationSkeleton()
+                        HomeRecommendationSkeleton()
                     }
                 }
+                .scrollDisabled(true)
+                .accessibilityHidden(true)
+            } else if !matches.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(matches.prefix(4)) { match in
+                            NavigationLink {
+                                ScholarshipDetailView(
+                                    scholarship: match.scholarship,
+                                    match: match
+                                )
+                            } label: {
+                                HomeRecommendationTile(
+                                    scholarship: match.scholarship,
+                                    score: match.score
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+                .contentMargins(.horizontal, 0, for: .scrollContent)
+                .frame(maxWidth: .infinity)
             } else {
-                LazyVStack(spacing: 16) {
-                    ForEach(upcoming.prefix(3)) { scholarship in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(upcoming.prefix(4)) { scholarship in
+                            NavigationLink {
+                                ScholarshipDetailView(
+                                    scholarship: scholarship,
+                                    match: nil
+                                )
+                            } label: {
+                                HomeRecommendationTile(
+                                    scholarship: scholarship,
+                                    score: nil
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+                .contentMargins(.horizontal, 0, for: .scrollContent)
+                .frame(maxWidth: .infinity)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var closingSoonSection: some View {
+        let scholarships = Array(upcoming.prefix(3))
+
+        if !scholarships.isEmpty {
+            VStack(alignment: .leading, spacing: 10) {
+                HomeConceptSectionTitle(
+                    title: "Closing soon",
+                    trailing: "View all",
+                    action: openExplore
+                )
+
+                VStack(spacing: 7) {
+                    ForEach(scholarships) { scholarship in
                         NavigationLink {
                             ScholarshipDetailView(
                                 scholarship: scholarship,
                                 match: nil
                             )
                         } label: {
-                            FeaturedScholarshipCard(
-                                scholarship: scholarship
+                            HomeClosingRow(
+                                scholarship: scholarship,
+                                urgency: daysUntil(scholarship.deadline)
                             )
                         }
                         .buttonStyle(.plain)
@@ -502,121 +401,69 @@ struct HomeView: View {
         }
     }
 
-    @ViewBuilder
-    private var deadlinesSection: some View {
-        if !allDeadlineItems.isEmpty {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(alignment: .bottom) {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text("Upcoming deadlines")
-                            .font(.headline.bold())
-                            .foregroundStyle(Theme.ink)
+    private var advisorNudge: some View {
+        NavigationLink {
+            AdvisorsView()
+        } label: {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Theme.onAccent)
 
-                        Text("The next dates worth checking")
-                            .font(.caption)
-                            .foregroundStyle(Theme.muted)
-                    }
+                    Image(systemName: "person.crop.circle.fill")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(HomeVisualStyle.forest)
+                }
+                .frame(width: 38, height: 38)
 
-                    Spacer()
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(L10n.string("Need help choosing?"))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Theme.onAccent)
 
-                    NavigationLink {
-                        UpcomingDeadlinesView(items: allDeadlineItems)
-                    } label: {
-                        Text("See all")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Theme.orangeSoft)
-                    }
-                    .buttonStyle(.plain)
+                    Text(L10n.string("Ask your advisor about your next move"))
+                        .font(.caption2)
+                        .foregroundStyle(Theme.onAccent.opacity(0.72))
                 }
 
-                VStack(spacing: 0) {
-                    ForEach(Array(allDeadlineItems.prefix(3))) { item in
-                        HomeDeadlineRow(
-                            title: item.title,
-                            deadline: displayDeadline(item.deadline),
-                            status: item.status
-                        )
+                Spacer()
 
-                        if item.id != allDeadlineItems.prefix(3).last?.id {
-                            Divider()
-                                .overlay(Theme.ink.opacity(0.06))
-                        }
-                    }
-                }
-                .padding(.horizontal, 14)
-                .background(Theme.surface)
-                .clipShape(RoundedRectangle(cornerRadius: 18))
+                Image(systemName: "arrow.right")
+                    .font(.caption.bold())
+                    .foregroundStyle(HomeVisualStyle.forest)
+                    .frame(width: 31, height: 31)
+                    .background(Theme.onAccent)
+                    .clipShape(Circle())
             }
+            .padding(12)
+            .background(HomeVisualStyle.forest)
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         }
+        .buttonStyle(.plain)
     }
 
-    private var allDeadlineItems: [HomeDeadlineItem] {
-        var items: [HomeDeadlineItem] = []
-
-        for preview in applicationPreviews {
-            guard let deadline = preview.deadline, !deadline.isEmpty else {
-                continue
-            }
-
-            items.append(
-                HomeDeadlineItem(
-                    id: preview.id,
-                    title: preview.title,
-                    status: preview.status,
-                    deadline: deadline,
-                    scholarship: nil
-                )
-            )
+    private func daysUntil(_ value: String?) -> Int? {
+        guard
+            let value,
+            let date = AppDateParser.date(from: value)
+        else {
+            return nil
         }
 
-        for scholarship in upcoming {
-            guard let deadline = scholarship.deadline, !deadline.isEmpty else {
-                continue
-            }
-
-            items.append(
-                HomeDeadlineItem(
-                    id: "catalog-\(scholarship.id.uuidString)",
-                    title: scholarship.title,
-                    status: scholarship.provider,
-                    deadline: deadline,
-                    scholarship: scholarship
-                )
-            )
-        }
-
-        return items.sorted {
-            $0.deadline < $1.deadline
-        }
-    }
-
-    private func displayDeadline(_ value: String?) -> String {
-        guard let value, !value.isEmpty else {
-            return "Deadline not set"
-        }
-
-        return String(value.prefix(10))
+        let start = Calendar.current.startOfDay(for: Date())
+        let end = Calendar.current.startOfDay(for: date)
+        return Calendar.current.dateComponents(
+            [.day],
+            from: start,
+            to: end
+        ).day
     }
 
     @MainActor
     private func load() async {
         loading = true
+        hasLoadError = false
         defer { loading = false }
-
-        if let userId = profile?.id,
-           let communityProfile = try? await DataService.currentCommunityProfile(
-               userId: userId
-           ) {
-            avatarURL = communityProfile.avatarUrl
-        } else {
-            avatarURL = nil
-        }
-
-        async let caseRows = DataService.universityApplicationCases()
-        async let savedRows = DataService.savedScholarshipItems()
-
-        universityApplications = (try? await caseRows) ?? []
-        scholarshipApplications = (try? await savedRows) ?? []
 
         if let notifications = try? await DataService.appNotifications(
             limit: 100
@@ -646,7 +493,7 @@ struct HomeView: View {
 
             do {
                 matches = try await ScholarshipSearchService
-                    .matches(limit: 3)
+                    .matches(limit: 4)
                     .matches
             } catch {
                 guard let profile else {
@@ -660,15 +507,413 @@ struct HomeView: View {
                             profile: profile,
                             scholarships: scholarships
                         )
-                        .prefix(3)
+                        .prefix(4)
                 )
             }
         } catch {
-            matches = []
-            upcoming = []
+            // Keep the last successful content visible during a failed refresh.
+            hasLoadError = true
         }
     }
 }
+
+
+private enum HomeVisualStyle {
+    static let cream = Color(
+        red: 247 / 255,
+        green: 243 / 255,
+        blue: 232 / 255
+    )
+
+    static let forest = Color(
+        red: 18 / 255,
+        green: 55 / 255,
+        blue: 42 / 255
+    )
+
+    static let ink = Color(
+        red: 26 / 255,
+        green: 31 / 255,
+        blue: 28 / 255
+    )
+
+    static let muted = Color(
+        red: 103 / 255,
+        green: 111 / 255,
+        blue: 104 / 255
+    )
+
+    static let sage = Color(
+        red: 221 / 255,
+        green: 235 / 255,
+        blue: 227 / 255
+    )
+
+    static let sand = Color(
+        red: 215 / 255,
+        green: 154 / 255,
+        blue: 54 / 255
+    )
+}
+
+private struct HomeFilterPill: View {
+    let title: String
+    let selected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HomePillLabel(title: title, selected: selected)
+        }
+        .buttonStyle(CardPressButtonStyle())
+    }
+}
+
+private struct HomePillLabel: View {
+    let title: String
+    let selected: Bool
+
+    var body: some View {
+        Text(L10n.string(title))
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(selected ? Theme.onAccent : HomeVisualStyle.ink)
+            .padding(.horizontal, 15)
+            .padding(.vertical, 10)
+            .frame(minHeight: 44)
+            .background(selected ? Theme.accent : Theme.surface, in: Capsule())
+            .overlay {
+                Capsule()
+                    .strokeBorder(selected ? Color.clear : Theme.ink.opacity(0.07), lineWidth: 1)
+            }
+    }
+}
+
+private struct HomeConceptSectionTitle: View {
+    let title: String
+    let trailing: String
+    let action: () -> Void
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(title)
+                .font(.system(size: 21, weight: .regular, design: .serif))
+                .foregroundStyle(HomeVisualStyle.ink)
+
+            Spacer()
+
+            Button(trailing, action: action)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(HomeVisualStyle.forest)
+                .buttonStyle(.plain)
+        }
+    }
+}
+
+private struct HomeEditorialHero: View {
+    @ScaledMetric(relativeTo: .title) private var heroHeight: CGFloat = 318
+    @ScaledMetric(relativeTo: .title) private var titleSize: CGFloat = 29
+    let scholarship: Scholarship
+    let score: Int?
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            UniversityPhoto(
+                seed: scholarship.provider + scholarship.title,
+                remoteURL: scholarship.university?.campusImageUrl,
+                height: heroHeight
+            )
+            .frame(maxWidth: .infinity)
+            .overlay {
+                LinearGradient(
+                    colors: [
+                        Color.black.opacity(0.04),
+                        Color.black.opacity(0.18),
+                        Theme.accent.opacity(0.86)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
+
+            VStack(alignment: .leading, spacing: 11) {
+                HStack {
+                    Text(L10n.string("BEST MATCH"))
+                        .font(.system(size: 10, weight: .bold))
+                        .tracking(0.7)
+                        .foregroundStyle(HomeVisualStyle.forest)
+                        .padding(.horizontal, 12)
+                        .frame(height: 30)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Capsule())
+
+                    Spacer()
+
+                    if let score {
+                        Text("\(score)%")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 12)
+                            .frame(height: 30)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                    }
+                }
+
+                Spacer()
+
+                Text(scholarship.title)
+                    .font(.system(size: titleSize, weight: .regular, design: .serif))
+                    .foregroundStyle(.white)
+                    .lineLimit(3)
+                    .lineSpacing(-1)
+
+                Text("\(scholarship.provider) · \(scholarship.country)")
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.82))
+                    .lineLimit(1)
+
+                HStack {
+                    Text(scholarship.fundingType)
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(HomeVisualStyle.ink)
+                        .padding(.horizontal, 11)
+                        .frame(height: 30)
+                        .background(Theme.onAccent)
+                        .clipShape(Capsule())
+
+                    Spacer()
+
+                    Image(systemName: "arrow.up.right")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(HomeVisualStyle.ink)
+                        .frame(width: 42, height: 42)
+                        .background(.ultraThinMaterial)
+                        .clipShape(Circle())
+                }
+            }
+            .padding(18)
+        }
+        .frame(height: heroHeight)
+        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .shadow(
+            color: Color.black.opacity(0.10),
+            radius: 18,
+            x: 0,
+            y: 10
+        )
+    }
+}
+
+private struct HomeEmptyHero: View {
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            Theme.accent
+
+            Circle()
+                .fill(Theme.trustTeal.opacity(0.35))
+                .frame(width: 180, height: 180)
+                .offset(x: 245, y: -45)
+
+            VStack(alignment: .leading, spacing: 7) {
+                Text(L10n.string("START EXPLORING"))
+                    .font(.system(size: 10, weight: .bold))
+                    .tracking(0.5)
+                    .foregroundStyle(HomeVisualStyle.forest)
+                    .padding(.horizontal, 11)
+                    .padding(.vertical, 6)
+                    .background(Theme.onAccent)
+                    .clipShape(Capsule())
+
+                Spacer()
+
+                Text(L10n.string("Your next opportunity\nis waiting."))
+                    .font(.system(size: 26, weight: .regular, design: .serif))
+                    .foregroundStyle(Theme.onAccent)
+
+                Text(L10n.string("Browse verified scholarships from around the world."))
+                    .font(.caption)
+                    .foregroundStyle(Theme.onAccent.opacity(0.75))
+            }
+            .padding(16)
+        }
+        .frame(height: 180)
+        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+    }
+}
+
+private struct HomeExploreShortcut: View {
+    let title: String
+    let icon: String
+    let accent: Color
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 7) {
+                Image(systemName: icon)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(accent)
+
+                Text(title)
+                    .font(.system(size: 10.5, weight: .semibold))
+                    .foregroundStyle(HomeVisualStyle.ink)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+
+                Spacer(minLength: 0)
+            }
+            .padding(10)
+            .frame(maxWidth: .infinity, minHeight: 68, alignment: .leading)
+            .background(.ultraThinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .stroke(Color.white.opacity(0.62), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct HomeRecommendationTile: View {
+    let scholarship: Scholarship
+    let score: Int?
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            UniversityPhoto(
+                seed: scholarship.provider,
+                remoteURL: scholarship.university?.campusImageUrl,
+                height: 224
+            )
+            .frame(width: 270, height: 224)
+            .overlay {
+                LinearGradient(
+                    colors: [
+                        Color.clear,
+                        Color.black.opacity(0.16),
+                        Theme.accent.opacity(0.80)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    if let score {
+                        Text("\(score)% match")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(HomeVisualStyle.forest)
+                            .padding(.horizontal, 10)
+                            .frame(height: 27)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                    }
+
+                    Spacer()
+                }
+
+                Spacer()
+
+                Text(scholarship.title)
+                    .font(.system(size: 20, weight: .regular, design: .serif))
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+
+                Text("\(scholarship.country) · \(scholarship.fundingType)")
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.78))
+                    .lineLimit(1)
+            }
+            .padding(14)
+        }
+        .frame(width: 270, height: 224)
+        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .shadow(
+            color: Color.black.opacity(0.08),
+            radius: 14,
+            x: 0,
+            y: 8
+        )
+    }
+}
+
+private struct HomeRecommendationSkeleton: View {
+    var body: some View {
+        RoundedRectangle(cornerRadius: 22, style: .continuous)
+            .fill(Theme.surfaceRaised)
+            .frame(maxWidth: .infinity)
+            .frame(height: 108)
+            .redacted(reason: .placeholder)
+    }
+}
+
+private struct HomeClosingRow: View {
+    let scholarship: Scholarship
+    let urgency: Int?
+
+    private var urgencyText: String {
+        guard let urgency else {
+            return "Soon"
+        }
+
+        if urgency <= 0 {
+            return "Today"
+        }
+
+        return "\(urgency) day\(urgency == 1 ? "" : "s") left"
+    }
+
+    private var isUrgent: Bool {
+        guard let urgency else { return false }
+        return urgency <= 7
+    }
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "building.columns.fill")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(Theme.trustTeal)
+                .frame(width: 38, height: 38)
+                .background(HomeVisualStyle.sage)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(scholarship.title)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(HomeVisualStyle.ink)
+                    .lineLimit(1)
+
+                Text(scholarship.country)
+                    .font(.caption2)
+                    .foregroundStyle(HomeVisualStyle.muted)
+            }
+
+            Spacer(minLength: 6)
+
+            Text(urgencyText)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(isUrgent ? Theme.danger : HomeVisualStyle.forest)
+                .padding(.horizontal, 10)
+                .frame(height: 28)
+                .background(
+                    (isUrgent ? Theme.danger : HomeVisualStyle.sage)
+                        .opacity(isUrgent ? 0.12 : 1)
+                )
+                .clipShape(Capsule())
+        }
+        .padding(10)
+        .background(Theme.surface.opacity(0.86))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(Theme.ink.opacity(0.04), lineWidth: 1)
+        )
+    }
+}
+
 
 private struct HomeQuickAction: View {
     let title: String
@@ -711,7 +956,7 @@ private struct HomeQuickAction: View {
                 } else if let systemImage {
                     Image(systemName: systemImage)
                         .font(.system(size: 21, weight: .semibold))
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(HomeVisualStyle.ink)
                 } else {
                     quickFallback
                 }
@@ -719,7 +964,7 @@ private struct HomeQuickAction: View {
 
             Text(title)
                 .font(.caption2)
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(HomeVisualStyle.ink)
                 .lineLimit(1)
                 .frame(width: 72)
         }
@@ -730,11 +975,11 @@ private struct HomeQuickAction: View {
         if let fallback, !fallback.isEmpty {
             Text(fallback.uppercased())
                 .font(.headline.bold())
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(HomeVisualStyle.ink)
         } else {
             Image(systemName: "person.fill")
                 .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
         }
     }
 }
@@ -766,11 +1011,11 @@ private struct HomeSectionHeader: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
 
                 Text(subtitle)
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
             }
 
             Spacer()
@@ -800,12 +1045,12 @@ private struct HomeApplicationRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(preview.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(1)
 
                 Text(preview.subtitle)
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
 
                 HStack(spacing: 7) {
@@ -815,14 +1060,14 @@ private struct HomeApplicationRow: View {
 
                     if let deadline = preview.deadline {
                         Text("·")
-                            .foregroundStyle(Theme.muted)
+                            .foregroundStyle(HomeVisualStyle.muted)
 
                         Label(
                             String(deadline.prefix(10)),
                             systemImage: "calendar"
                         )
                         .font(.caption2)
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(HomeVisualStyle.muted)
                     }
                 }
             }
@@ -831,7 +1076,7 @@ private struct HomeApplicationRow: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption.bold())
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
         }
         .padding(13)
         .background(Theme.surface)
@@ -893,12 +1138,12 @@ private struct UpcomingDeadlinesView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(item.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(2)
 
                 Text(item.status)
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
             }
 
@@ -928,12 +1173,12 @@ private struct HomeDeadlineRow: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(1)
 
                 Text(status)
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
             }
 
@@ -964,11 +1209,11 @@ private struct HomeStat: View {
 
             Text(value)
                 .font(.system(size: 19, weight: .bold))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(HomeVisualStyle.ink)
 
             Text(label)
                 .font(.caption2)
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
         }
         .padding(13)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1021,12 +1266,12 @@ private struct HomeMatchCard: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(match.scholarship.title)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(2)
 
                 Text(match.scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
 
                 HStack(spacing: 7) {
@@ -1042,7 +1287,7 @@ private struct HomeMatchCard: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption.weight(.bold))
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
         }
         .padding(12)
         .background(Theme.surface)
@@ -1068,12 +1313,12 @@ private struct FeaturedScholarshipCard: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(scholarship.title)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(2)
 
                 Text(scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
 
                 HStack(spacing: 7) {
@@ -1084,7 +1329,7 @@ private struct FeaturedScholarshipCard: View {
                         systemImage: "mappin.and.ellipse"
                     )
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
                 }
             }
@@ -1093,7 +1338,7 @@ private struct FeaturedScholarshipCard: View {
 
             Image(systemName: "chevron.right")
                 .font(.caption.weight(.bold))
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
         }
         .padding(12)
         .background(Theme.surface)
@@ -1119,13 +1364,13 @@ struct UpcomingDeadlineCard: View {
             VStack(alignment: .leading, spacing: 7) {
                 Text(scholarship.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(2)
                     .frame(height: 38, alignment: .top)
 
                 Text(scholarship.provider)
                     .font(.caption2)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineLimit(1)
 
                 if let deadline = scholarship.deadline {
@@ -1161,16 +1406,16 @@ struct ProfileSetupCard: View {
 
                     Text("1 min")
                         .font(.caption2.bold())
-                        .foregroundStyle(Theme.muted)
+                        .foregroundStyle(HomeVisualStyle.muted)
                 }
 
                 Text("Unlock personalised matches")
                     .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
 
                 Text("Add your degree, field, GPA and destination goals so EduT can rank scholarships around you.")
                     .font(.subheadline)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
                     .lineSpacing(3)
 
                 Button("Complete my profile", action: openProfile)
@@ -1189,7 +1434,7 @@ struct ProfileSnapshot: View {
                 HStack {
                     Text("Academic snapshot")
                         .font(.headline.bold())
-                        .foregroundStyle(Theme.ink)
+                        .foregroundStyle(HomeVisualStyle.ink)
 
                     Spacer()
 
@@ -1199,7 +1444,7 @@ struct ProfileSnapshot: View {
 
                 Text(profile.intendedMajor ?? "Your study plan")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
 
                 HStack(spacing: 0) {
                     SnapshotMetric(
@@ -1231,11 +1476,11 @@ struct SnapshotMetric: View {
             Text(label)
                 .font(.system(size: 9, weight: .bold))
                 .tracking(0.8)
-                .foregroundStyle(Theme.muted)
+                .foregroundStyle(HomeVisualStyle.muted)
 
             Text(value)
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Theme.ink)
+                .foregroundStyle(HomeVisualStyle.ink)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1258,12 +1503,12 @@ struct MatchCard: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(match.scholarship.title)
                     .font(.subheadline.bold())
-                    .foregroundStyle(Theme.ink)
+                    .foregroundStyle(HomeVisualStyle.ink)
                     .lineLimit(2)
 
                 Text(match.scholarship.country)
                     .font(.caption)
-                    .foregroundStyle(Theme.muted)
+                    .foregroundStyle(HomeVisualStyle.muted)
 
                 HStack {
                     FundingBadge(text: match.scholarship.fundingType)
@@ -1368,7 +1613,7 @@ struct NotificationInboxView: View {
                                     HStack {
                                         Text(notification.title)
                                             .font(.subheadline.weight(.semibold))
-                                            .foregroundStyle(Theme.ink)
+                                            .foregroundStyle(HomeVisualStyle.ink)
 
                                         Spacer()
 
@@ -1381,7 +1626,7 @@ struct NotificationInboxView: View {
 
                                     Text(notification.body)
                                         .font(.caption)
-                                        .foregroundStyle(Theme.muted)
+                                        .foregroundStyle(HomeVisualStyle.muted)
                                         .multilineTextAlignment(.leading)
                                         .lineLimit(3)
 

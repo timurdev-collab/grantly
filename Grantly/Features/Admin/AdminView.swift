@@ -879,7 +879,7 @@ struct AdminView: View {
                                     }
                                     .buttonStyle(.bordered)
 
-                                    Button("Resolve") {
+                                    Button(L10n.string("Resolve")) {
                                         Task {
                                             await update(
                                                 report: report,
@@ -890,7 +890,7 @@ struct AdminView: View {
                                     .buttonStyle(.borderedProminent)
 
                                     Menu {
-                                        Button("Open") {
+                                        Button(L10n.string("Open")) {
                                             Task {
                                                 await update(
                                                     report: report,
@@ -899,7 +899,7 @@ struct AdminView: View {
                                             }
                                         }
 
-                                        Button("Dismiss", role: .destructive) {
+                                        Button(L10n.string("Dismiss"), role: .destructive) {
                                             Task {
                                                 await update(
                                                     report: report,

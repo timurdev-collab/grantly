@@ -5,7 +5,7 @@ private enum MainTab: Hashable {
     case home
     case explore
     case saved
-    case advisors
+    case messages
     case profile
 }
 
@@ -173,31 +173,17 @@ private struct StudentMainTabs: View {
             .tag(MainTab.saved)
 
             NavigationStack {
-                AdvisorsView()
+                MessagesView()
             }
             .tabItem {
-                Label {
-                    Text("Advisors")
-                } icon: {
-                    Image(
-                        uiImage: UIImage(
-                            systemName: selection == .advisors
-                                ? "person.2.fill"
-                                : "person.2"
-                        )!
-                        .withTintColor(
-                            UIColor(
-                                red: 0.20,
-                                green: 0.47,
-                                blue: 0.96,
-                                alpha: 1
-                            ),
-                            renderingMode: .alwaysOriginal
-                        )
-                    )
-                }
+                Label(
+                    "Messages",
+                    systemImage: selection == .messages
+                        ? "bubble.left.and.bubble.right.fill"
+                        : "bubble.left.and.bubble.right"
+                )
             }
-            .tag(MainTab.advisors)
+            .tag(MainTab.messages)
 
             NavigationStack {
                 ProfileView(profile: $profile)
@@ -212,8 +198,17 @@ private struct StudentMainTabs: View {
             }
             .tag(MainTab.profile)
         }
-        .tint(Theme.ink)
-        .toolbarBackground(Theme.surface, for: .tabBar)
+        .preferredColorScheme(.light)
+        .tint(Theme.premiumForest)
+        .toolbarColorScheme(.light, for: .tabBar)
+        .toolbarBackground(
+            Color(
+                red: 247 / 255,
+                green: 243 / 255,
+                blue: 232 / 255
+            ).opacity(0.94),
+            for: .tabBar
+        )
         .toolbarBackground(.visible, for: .tabBar)
         .overlay(alignment: .top) {
             if !networkMonitor.isOnline {

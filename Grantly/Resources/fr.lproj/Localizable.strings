@@ -710,3 +710,13 @@
 /* Advisor launch pricing */
 "Launch price" = "Prix de lancement";
 "LAUNCH PRICE" = "PRIX DE LANCEMENT";
+
+"Clear search" = "Effacer la recherche";
+
+"Page %lld of %lld" = "Page %lld sur %lld";
+
+"Search messages" = "Rechercher des messages";
+
+"No matching conversations" = "Aucune conversation correspondante";
+
+"Try another name or clear your search." = "Essayez un autre nom ou effacez votre recherche.";

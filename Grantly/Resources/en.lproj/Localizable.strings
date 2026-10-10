@@ -709,3 +709,13 @@
 /* Advisor launch pricing */
 "Launch price" = "Launch price";
 "LAUNCH PRICE" = "LAUNCH PRICE";
+
+"Clear search" = "Clear search";
+
+"Page %lld of %lld" = "Page %lld of %lld";
+
+"Search messages" = "Search messages";
+
+"No matching conversations" = "No matching conversations";
+
+"Try another name or clear your search." = "Try another name or clear your search.";
