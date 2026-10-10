@@ -2362,42 +2362,10 @@ struct CommunityView: View {
 
                     LazyVStack(spacing: 12) {
                         ForEach(visibleResults) { profile in
-                            HStack(spacing: 10) {
-                                NavigationLink(value: profile) {
-                                    CommunityRow(profile: profile)
-                                }
-                                .buttonStyle(.plain)
-
-                                Button {
-                                    Task {
-                                        await openConversation(for: profile)
-                                    }
-                                } label: {
-                                    if messagingProfileID == profile.id {
-                                        ProgressView()
-                                            .tint(Theme.blueSoft)
-                                            .frame(width: 40, height: 40)
-                                    } else {
-                                        Image(systemName: "message.fill")
-                                            .font(
-                                                .system(
-                                                    size: 15,
-                                                    weight: .semibold
-                                                )
-                                            )
-                                            .foregroundStyle(Theme.blueSoft)
-                                            .frame(width: 40, height: 40)
-                                            .background(Theme.surface)
-                                            .clipShape(Circle())
-                                    }
-                                }
-                                .buttonStyle(.plain)
-                                .disabled(messagingProfileID != nil)
-                                .accessibilityLabel(
-                                    "Message " +
-                                    (profile.displayName ?? "student")
-                                )
+                            NavigationLink(value: profile) {
+                                CommunityRow(profile: profile)
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -2464,20 +2432,46 @@ struct CommunityView: View {
 
             Spacer()
 
-            NavigationLink {
-                MessagesView()
-            } label: {
-                Image(
-                    systemName:
-                        "bubble.left.and.bubble.right.fill"
-                )
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(Theme.blueSoft)
-                .frame(width: 42, height: 42)
-                .background(Theme.surface)
-                .clipShape(RoundedRectangle(cornerRadius: 13))
+            HStack(spacing: 8) {
+                NavigationLink {
+                    CommunityFriendsView()
+                } label: {
+                    Image(systemName: "person.2.fill")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Theme.blueSoft)
+                        .frame(width: 40, height: 40)
+                        .background(Theme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .accessibilityLabel("Friends")
+
+                NavigationLink {
+                    CommunityFriendRequestsView()
+                } label: {
+                    Image(systemName: "person.badge.plus")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Theme.blueSoft)
+                        .frame(width: 40, height: 40)
+                        .background(Theme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .accessibilityLabel("Friend requests")
+
+                NavigationLink {
+                    MessagesView()
+                } label: {
+                    Image(
+                        systemName:
+                            "bubble.left.and.bubble.right.fill"
+                    )
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Theme.blueSoft)
+                    .frame(width: 40, height: 40)
+                    .background(Theme.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .accessibilityLabel("Messages")
             }
-            .accessibilityLabel("Messages")
         }
     }
 
@@ -2706,6 +2700,281 @@ private struct CommunityChatDestination: Identifiable {
     let title: String
 }
 
+struct CommunityFriendRequestsView: View {
+    @State private var rows: [CommunityFriendRequest] = []
+    @State private var loading = true
+    @State private var workingID: UUID?
+    @State private var errorMessage: String?
+
+    var body: some View {
+        List {
+            if loading && rows.isEmpty {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                }
+            } else if rows.isEmpty {
+                ContentUnavailableView(
+                    "No friend requests",
+                    systemImage: "person.badge.plus",
+                    description: Text(
+                        "Incoming requests will appear here."
+                    )
+                )
+            } else {
+                ForEach(rows) { request in
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack(spacing: 12) {
+                            CommunityAvatar(
+                                name: request.displayName ?? "Student",
+                                imageURL: request.avatarUrl,
+                                size: 46
+                            )
+
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(request.displayName ?? "Student")
+                                    .font(.subheadline.bold())
+
+                                if let code = request.communityCode {
+                                    Text(code)
+                                        .font(
+                                            .caption2.monospaced()
+                                                .weight(.semibold)
+                                        )
+                                        .foregroundStyle(Theme.blueSoft)
+                                }
+                            }
+
+                            Spacer()
+                        }
+
+                        HStack {
+                            Button("Accept") {
+                                Task {
+                                    await respond(
+                                        request,
+                                        accept: true
+                                    )
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+
+                            Button("Decline", role: .destructive) {
+                                Task {
+                                    await respond(
+                                        request,
+                                        accept: false
+                                    )
+                                }
+                            }
+                            .buttonStyle(.bordered)
+                        }
+                        .disabled(workingID != nil)
+                    }
+                    .padding(.vertical, 5)
+                }
+            }
+        }
+        .navigationTitle("Friend Requests")
+        .refreshable { await load() }
+        .task { await load() }
+        .alert(
+            "Unable to update request",
+            isPresented: Binding(
+                get: { errorMessage != nil },
+                set: { if !$0 { errorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
+    }
+
+    @MainActor
+    private func load() async {
+        loading = rows.isEmpty
+        defer { loading = false }
+
+        do {
+            rows = try await DataService.communityFriendRequests()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func respond(
+        _ request: CommunityFriendRequest,
+        accept: Bool
+    ) async {
+        workingID = request.id
+        defer { workingID = nil }
+
+        do {
+            try await DataService.respondCommunityFriendRequest(
+                requestId: request.id,
+                accept: accept
+            )
+            rows.removeAll { $0.id == request.id }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+struct CommunityFriendsView: View {
+    @State private var rows: [CommunityFriend] = []
+    @State private var loading = true
+    @State private var workingID: UUID?
+    @State private var chatDestination: CommunityChatDestination?
+    @State private var errorMessage: String?
+
+    var body: some View {
+        List {
+            if loading && rows.isEmpty {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                }
+            } else if rows.isEmpty {
+                ContentUnavailableView(
+                    "No friends yet",
+                    systemImage: "person.2",
+                    description: Text(
+                        "Search by EduT ID and send a friend request."
+                    )
+                )
+            } else {
+                ForEach(rows) { friend in
+                    HStack(spacing: 12) {
+                        CommunityAvatar(
+                            name: friend.displayName ?? "Student",
+                            imageURL: friend.avatarUrl,
+                            size: 46
+                        )
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(friend.displayName ?? "Student")
+                                .font(.subheadline.bold())
+
+                            if let code = friend.communityCode {
+                                Text(code)
+                                    .font(
+                                        .caption2.monospaced()
+                                            .weight(.semibold)
+                                    )
+                                    .foregroundStyle(Theme.blueSoft)
+                            }
+
+                            Text(
+                                [friend.nationality, friend.major]
+                                    .compactMap { $0 }
+                                    .filter { !$0.isEmpty }
+                                    .joined(separator: " · ")
+                            )
+                            .font(.caption2)
+                            .foregroundStyle(Theme.muted)
+                        }
+
+                        Spacer()
+
+                        Button {
+                            Task { await message(friend) }
+                        } label: {
+                            Image(systemName: "message.fill")
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(workingID != nil)
+
+                        Menu {
+                            Button("Remove friend", role: .destructive) {
+                                Task { await remove(friend) }
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                        }
+                    }
+                }
+            }
+        }
+        .navigationTitle("Friends")
+        .refreshable { await load() }
+        .task { await load() }
+        .sheet(item: $chatDestination) { destination in
+            NavigationStack {
+                ChatView(
+                    conversationId: destination.id,
+                    otherUserId: destination.otherUserId,
+                    title: destination.title,
+                    showsCloseButton: true
+                )
+            }
+        }
+        .alert(
+            "Community error",
+            isPresented: Binding(
+                get: { errorMessage != nil },
+                set: { if !$0 { errorMessage = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorMessage ?? "")
+        }
+    }
+
+    @MainActor
+    private func load() async {
+        loading = rows.isEmpty
+        defer { loading = false }
+
+        do {
+            rows = try await DataService.communityFriends()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func message(_ friend: CommunityFriend) async {
+        workingID = friend.id
+        defer { workingID = nil }
+
+        do {
+            let conversationId =
+                try await DataService.startDirectConversation(
+                    otherUser: friend.userId
+                )
+
+            chatDestination = CommunityChatDestination(
+                id: conversationId,
+                otherUserId: friend.userId,
+                title: friend.displayName ?? "Student"
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func remove(_ friend: CommunityFriend) async {
+        workingID = friend.id
+        defer { workingID = nil }
+
+        do {
+            try await DataService.removeCommunityFriend(friend.userId)
+            rows.removeAll { $0.id == friend.id }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
 struct CommunityProfileView: View {
     @Environment(AuthStore.self) private var auth
 
@@ -2715,6 +2984,8 @@ struct CommunityProfileView: View {
     @State private var openingConversation = false
     @State private var showingReport = false
     @State private var isBlocked = false
+    @State private var friendshipStatus = "none"
+    @State private var changingFriendship = false
     @State private var changingBlock = false
     @State private var chatDestination: CommunityChatDestination?
 
@@ -2771,7 +3042,9 @@ struct CommunityProfileView: View {
         .background(Theme.pageBackground)
         .navigationTitle("Student")
         .navigationBarTitleDisplayMode(.inline)
-        .task { await loadBlockState() }
+        .task {
+            await loadRelationshipState()
+        }
         .sheet(isPresented: $showingReport) {
             ReportSheet(
                 subject: profile.displayName ?? "student"
@@ -2846,18 +3119,13 @@ struct CommunityProfileView: View {
     private var actions: some View {
         VStack(spacing: 10) {
             if profile.id != auth.userId {
-                Button {
-                    Task { await startConversation() }
-                } label: {
-                    Label(
-                        openingConversation
-                            ? "Opening..."
-                            : "Start conversation",
-                        systemImage: "message.fill"
-                    )
+                if isBlocked {
+                    Text("This student is blocked.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                } else {
+                    friendshipActions
                 }
-                .buttonStyle(PrimaryButtonStyle())
-                .disabled(openingConversation || isBlocked)
 
                 Button {
                     Task { await toggleBlock() }
@@ -2898,14 +3166,122 @@ struct CommunityProfileView: View {
         }
     }
 
-    @MainActor
-    private func loadBlockState() async {
-        guard profile.id != auth.userId else {
-            return
-        }
+    @ViewBuilder
+    private var friendshipActions: some View {
+        switch friendshipStatus {
+        case "friends":
+            Button {
+                Task { await startConversation() }
+            } label: {
+                Label(
+                    openingConversation ? "Opening..." : "Message friend",
+                    systemImage: "message.fill"
+                )
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(openingConversation)
 
-        let blocked = (try? await DataService.blockedUserIDs()) ?? []
-        isBlocked = blocked.contains(profile.id)
+            Button("Remove friend", role: .destructive) {
+                Task { await removeFriend() }
+            }
+            .buttonStyle(SecondaryButtonStyle())
+            .disabled(changingFriendship)
+
+        case "outgoing":
+            Label("Friend request sent", systemImage: "clock.fill")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(Theme.muted)
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+                .background(Theme.surfaceRaised)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            Button("Cancel request") {
+                Task { await cancelFriendRequest() }
+            }
+            .buttonStyle(SecondaryButtonStyle())
+            .disabled(changingFriendship)
+
+        case "incoming":
+            Button {
+                Task { await sendFriendRequest() }
+            } label: {
+                Label("Accept friend request", systemImage: "person.badge.plus")
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(changingFriendship)
+
+        default:
+            Button {
+                Task { await sendFriendRequest() }
+            } label: {
+                Label(
+                    changingFriendship ? "Sending..." : "Add friend",
+                    systemImage: "person.badge.plus"
+                )
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(changingFriendship)
+        }
+    }
+
+    @MainActor
+    private func loadRelationshipState() async {
+        guard profile.id != auth.userId else { return }
+
+        async let blocked = DataService.blockedUserIDs()
+        async let relation = DataService.communityFriendshipStatus(
+            with: profile.id
+        )
+
+        isBlocked = ((try? await blocked) ?? []).contains(profile.id)
+        friendshipStatus = (try? await relation) ?? "none"
+    }
+
+    @MainActor
+    private func sendFriendRequest() async {
+        changingFriendship = true
+        defer { changingFriendship = false }
+
+        do {
+            friendshipStatus = try await DataService
+                .sendCommunityFriendRequest(to: profile.id)
+            status = friendshipStatus == "friends"
+                ? "You are now friends. Messaging is available."
+                : "Friend request sent."
+        } catch {
+            status = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func cancelFriendRequest() async {
+        changingFriendship = true
+        defer { changingFriendship = false }
+
+        do {
+            try await DataService.cancelCommunityFriendRequest(
+                to: profile.id
+            )
+            friendshipStatus = "none"
+            status = "Friend request cancelled."
+        } catch {
+            status = error.localizedDescription
+        }
+    }
+
+    @MainActor
+    private func removeFriend() async {
+        changingFriendship = true
+        defer { changingFriendship = false }
+
+        do {
+            try await DataService.removeCommunityFriend(profile.id)
+            friendshipStatus = "none"
+            status = "Friend removed."
+        } catch {
+            status = error.localizedDescription
+        }
     }
 
     @MainActor
@@ -2943,10 +3319,12 @@ struct CommunityProfileView: View {
             if isBlocked {
                 try await DataService.unblockUser(profile.id)
                 isBlocked = false
+                await loadRelationshipState()
                 status = L10n.string("Student unblocked.")
             } else {
                 try await DataService.blockUser(profile.id)
                 isBlocked = true
+                friendshipStatus = "blocked"
                 status = L10n.string("Student blocked. Messaging is disabled between your accounts.")
             }
         } catch {
