@@ -5,7 +5,7 @@ private enum MainTab: Hashable {
     case home
     case explore
     case saved
-    case messages
+    case advisors
     case profile
 }
 
@@ -68,7 +68,7 @@ struct MainTabView: View {
                         )
                     }
                 case "advisor":
-                    AdvisorMessagesHomeView(profile: $profile)
+                    AdvisorPortalView(profile: $profile)
                 default:
                     StudentMainTabs(profile: $profile)
                 }
@@ -173,17 +173,17 @@ private struct StudentMainTabs: View {
             .tag(MainTab.saved)
 
             NavigationStack {
-                MessagesView()
+                AdvisorsView()
             }
             .tabItem {
                 Label(
-                    "Messages",
-                    systemImage: selection == .messages
-                        ? "bubble.left.and.bubble.right.fill"
-                        : "bubble.left.and.bubble.right"
+                    "Advisors",
+                    systemImage: selection == .advisors
+                        ? "person.2.fill"
+                        : "person.2"
                 )
             }
-            .tag(MainTab.messages)
+            .tag(MainTab.advisors)
 
             NavigationStack {
                 ProfileView(profile: $profile)
@@ -701,27 +701,6 @@ private struct AdminConsultationPaymentsView: View {
         } catch {
             errorMessage = error.localizedDescription
         }
-    }
-}
-
-private struct AdvisorMessagesHomeView: View {
-    @Binding var profile: StudentProfile?
-
-    var body: some View {
-        TabView {
-            NavigationStack {
-                MessagesView()
-            }
-            .tabItem {
-                Label("Messages", systemImage: "bubble.left.and.bubble.right.fill")
-            }
-
-            AdvisorPortalView(profile: $profile)
-                .tabItem {
-                    Label("Advisor tools", systemImage: "person.crop.rectangle.stack")
-                }
-        }
-        .tint(Theme.ink)
     }
 }
 
