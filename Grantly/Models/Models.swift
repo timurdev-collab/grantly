@@ -503,6 +503,7 @@ struct SocialComment: Codable, Identifiable, Hashable {
 struct CommunityProfile: Codable, Identifiable, Hashable {
     let id: UUID
     var displayName: String?
+    var communityCode: String?
     var avatarUrl: String?
     var nationality: String?
     var major: String?
@@ -514,6 +515,7 @@ struct CommunityProfile: Codable, Identifiable, Hashable {
     enum CodingKeys: String, CodingKey {
         case id
         case displayName = "display_name"
+        case communityCode = "community_code"
         case avatarUrl = "avatar_url"
         case nationality, major
         case targetRegions = "target_regions"
