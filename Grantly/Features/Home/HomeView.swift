@@ -133,9 +133,15 @@ struct HomeView: View {
 
     private var editorialIntro: some View {
         VStack(alignment: .leading, spacing: 7) {
-            Text(firstName.map { "Good afternoon, \($0)" } ?? "Good afternoon")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(editorialAccent)
+            TimelineView(.periodic(from: .now, by: 60)) { context in
+                let hour = Calendar.current.component(.hour, from: context.date)
+                let greeting = hour < 12
+                    ? "Good morning"
+                    : (hour < 17 ? "Good afternoon" : "Good evening")
+                Text(firstName.map { "\(greeting), \($0)" } ?? greeting)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(editorialAccent)
+            }
 
             Text(L10n.string("Scholarships picked\nfor your next chapter."))
                 .font(.system(size: titleSize, weight: .regular, design: .serif))
