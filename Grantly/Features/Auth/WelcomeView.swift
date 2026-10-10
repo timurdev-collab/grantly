@@ -3,148 +3,356 @@ import SwiftUI
 struct WelcomeView: View {
     @State private var showingLogin = false
     @State private var showingSignup = false
+    @State private var page = 0
 
-    private let earthURL = URL(string:
-        "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?auto=format&fit=crop&w=1200&q=88"
-    )
+    private let pages: [WelcomePage] = [
+        WelcomePage(
+            eyebrow: "DISCOVER",
+            title: "Your next chapter\nstarts here",
+            body: "Find scholarships and universities that fit your ambitions, not just your search terms.",
+            imageURL: URL(
+                string:
+                    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=88"
+            ),
+            symbol: "sparkles"
+        ),
+        WelcomePage(
+            eyebrow: "PERSONALIZED",
+            title: "Find opportunities\nthat fit you",
+            body: "Use your goals, study level and background to surface stronger scholarship matches.",
+            imageURL: URL(
+                string:
+                    "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=88"
+            ),
+            symbol: "scope"
+        ),
+        WelcomePage(
+            eyebrow: "GUIDANCE",
+            title: "Get guidance\nfrom experts",
+            body: "Work with verified advisors for applications, essays, documents and your next decision.",
+            imageURL: URL(
+                string:
+                    "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=88"
+            ),
+            symbol: "person.2.fill"
+        )
+    ]
 
     var body: some View {
         ZStack {
-            Theme.navyDeep.ignoresSafeArea()
+            Theme.premiumIvory
+                .ignoresSafeArea()
 
-            LinearGradient(
-                colors: [Theme.navyDeep, Theme.navy, Theme.navyDeep],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 0) {
-                    Spacer(minLength: 34)
-
-                    Image("EduTBrandIcon")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 72, height: 72)
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-
-                    Text("EduT")
-                        .font(.system(size: 36, weight: .bold))
-                        .foregroundStyle(Theme.ink)
-                        .padding(.top, 14)
-
-                    Text("Global opportunities for\nbrighter futures")
-                        .font(.system(size: 24, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(Theme.ink)
-                        .padding(.top, 30)
-
-                    Text("Discover scholarships, connect with a global community and take the next step in your journey.")
-                        .font(.subheadline)
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(Theme.muted)
-                        .lineSpacing(4)
-                        .padding(.horizontal, 34)
-                        .padding(.top, 12)
-
-                    ZStack(alignment: .bottom) {
-                        AsyncImage(url: earthURL) { phase in
-                            switch phase {
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                            case .failure:
-                                ZStack {
-                                    Circle()
-                                        .fill(
-                                            RadialGradient(
-                                                colors: [Theme.blue.opacity(0.48), Theme.navyDeep],
-                                                center: .center,
-                                                startRadius: 18,
-                                                endRadius: 150
-                                            )
-                                        )
-                                    Image(systemName: "globe.americas.fill")
-                                        .font(.system(size: 112))
-                                        .foregroundStyle(Theme.blue.opacity(0.36))
-                                }
-                            default:
-                                ProgressView().tint(Theme.blue)
-                            }
-                        }
-                        .frame(height: 250)
-                        .clipShape(RoundedRectangle(cornerRadius: 26))
-
-                        LinearGradient(
-                            colors: [.clear, Theme.navyDeep.opacity(0.86)],
-                            startPoint: .center,
-                            endPoint: .bottom
-                        )
-                        .frame(height: 110)
-                    }
-                    .padding(.horizontal, 18)
-                    .padding(.top, 22)
-
-                    VStack(spacing: 12) {
-                        Button("Get started") {
-                            showingSignup = true
-                        }
-                        .buttonStyle(PrimaryButtonStyle())
-
-                        Button("I already have an account") {
-                            showingLogin = true
-                        }
-                        .buttonStyle(SecondaryButtonStyle())
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.top, 22)
-
-                    Spacer(minLength: 24)
+            TabView(selection: $page) {
+                ForEach(Array(pages.enumerated()), id: \.offset) {
+                    index,
+                    item in
+                    WelcomeEditorialPage(
+                        item: item,
+                        pageIndex: index
+                    )
+                    .tag(index)
                 }
             }
-        }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .ignoresSafeArea()
 
+            VStack {
+                HStack {
+                    HStack(spacing: 8) {
+                        ZStack {
+                            Circle()
+                                .fill(Theme.premiumForest)
+
+                            Image(systemName: "graduationcap.fill")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(Theme.premiumIvory)
+                        }
+                        .frame(width: 32, height: 32)
+
+                        Text(verbatim: "EduT")
+                            .font(
+                                .system(
+                                    size: 20,
+                                    weight: .bold,
+                                    design: .rounded
+                                )
+                            )
+                            .foregroundStyle(Theme.premiumForest)
+                    }
+
+                    Spacer()
+
+                    if page < pages.count - 1 {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.28)) {
+                                page = pages.count - 1
+                            }
+                        } label: {
+                            Text(L10n.string("Skip"))
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(
+                                    page == 2
+                                        ? Theme.premiumIvory
+                                        : Theme.premiumForest
+                                )
+                                .padding(.horizontal, 12)
+                                .frame(height: 34)
+                                .background(.ultraThinMaterial)
+                                .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+
+                Spacer()
+
+                VStack(spacing: 16) {
+                    HStack(spacing: 6) {
+                        ForEach(pages.indices, id: \.self) { index in
+                            Capsule()
+                                .fill(
+                                    index == page
+                                        ? Theme.premiumForest
+                                        : Theme.premiumMuted.opacity(0.26)
+                                )
+                                .frame(
+                                    width: index == page ? 22 : 6,
+                                    height: 6
+                                )
+                                .animation(
+                                    .easeInOut(duration: 0.22),
+                                    value: page
+                                )
+                        }
+                    }
+
+                    if page < pages.count - 1 {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.28)) {
+                                page += 1
+                            }
+                        } label: {
+                            HStack(spacing: 8) {
+                                Text(L10n.string("Continue"))
+                                Image(systemName: "arrow.right")
+                            }
+                        }
+                        .buttonStyle(PremiumPrimaryButtonStyle())
+                    } else {
+                        Button {
+                            showingSignup = true
+                        } label: {
+                            HStack(spacing: 8) {
+                                Text(L10n.string("Get started"))
+                                Image(systemName: "arrow.right")
+                            }
+                        }
+                        .buttonStyle(PremiumPrimaryButtonStyle())
+
+                        Button {
+                            showingLogin = true
+                        } label: {
+                            Text(L10n.string("I already have an account"))
+                        }
+                        .buttonStyle(PremiumSecondaryButtonStyle())
+                    }
+                }
+                .padding(.horizontal, 22)
+                .padding(.bottom, 18)
+            }
+        }
+        .preferredColorScheme(.light)
         .sheet(isPresented: $showingLogin) {
             LoginView()
-
+                .preferredColorScheme(.light)
         }
         .sheet(isPresented: $showingSignup) {
             SignupView()
-
+                .preferredColorScheme(.light)
         }
     }
 }
 
-struct PrimaryButtonStyle: ButtonStyle {
+private struct WelcomePage {
+    let eyebrow: String
+    let title: String
+    let body: String
+    let imageURL: URL?
+    let symbol: String
+}
+
+private struct WelcomeEditorialPage: View {
+    let item: WelcomePage
+    let pageIndex: Int
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack {
+                AsyncImage(url: item.imageURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    default:
+                        LinearGradient(
+                            colors: [
+                                Theme.premiumSage,
+                                Theme.premiumForestSoft
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        .overlay {
+                            Image(systemName: item.symbol)
+                                .font(.system(size: 100, weight: .thin))
+                                .foregroundStyle(
+                                    Theme.premiumIvory.opacity(0.44)
+                                )
+                        }
+                    }
+                }
+                .frame(
+                    width: proxy.size.width,
+                    height: proxy.size.height
+                )
+                .clipped()
+
+                LinearGradient(
+                    colors: [
+                        Theme.premiumIvory.opacity(0.10),
+                        Color.clear,
+                        Theme.premiumForest.opacity(0.35),
+                        Theme.premiumForest.opacity(0.96)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+
+                if pageIndex == 1 {
+                    Circle()
+                        .stroke(
+                            Theme.premiumIvory.opacity(0.55),
+                            lineWidth: 1
+                        )
+                        .frame(width: 230, height: 230)
+                        .offset(x: 100, y: 40)
+
+                    Circle()
+                        .fill(Theme.premiumBrass.opacity(0.26))
+                        .frame(width: 72, height: 72)
+                        .offset(x: 125, y: 15)
+                }
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Spacer()
+
+                    Text(L10n.string(item.eyebrow))
+                        .font(.system(size: 10, weight: .bold))
+                        .tracking(1.7)
+                        .foregroundStyle(
+                            Theme.premiumIvory.opacity(0.78)
+                        )
+
+                    Text(L10n.string(item.title))
+                        .font(
+                            .system(
+                                size: 39,
+                                weight: .regular,
+                                design: .serif
+                            )
+                        )
+                        .tracking(-1.0)
+                        .lineSpacing(-2)
+                        .foregroundStyle(Theme.premiumIvory)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text(L10n.string(item.body))
+                        .font(.subheadline)
+                        .lineSpacing(3)
+                        .foregroundStyle(
+                            Theme.premiumIvory.opacity(0.78)
+                        )
+                        .frame(maxWidth: 330, alignment: .leading)
+
+                    Spacer()
+                        .frame(height: pageIndex == 2 ? 174 : 116)
+                }
+                .padding(.horizontal, 24)
+            }
+        }
+    }
+}
+
+struct PremiumPrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline.weight(.semibold))
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 15)
+            .frame(height: 54)
             .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(Theme.blueGradient)
-                    .opacity(configuration.isPressed ? 0.82 : 1)
+                Theme.premiumIvory.opacity(
+                    configuration.isPressed ? 0.84 : 1
+                )
             )
-            .foregroundStyle(Theme.onAccent)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .foregroundStyle(Theme.premiumForest)
+            .clipShape(
+                RoundedRectangle(
+                    cornerRadius: 19,
+                    style: .continuous
+                )
+            )
+            .shadow(
+                color: Color.black.opacity(0.12),
+                radius: 18,
+                x: 0,
+                y: 8
+            )
+    }
+}
+
+struct PremiumSecondaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.subheadline.weight(.semibold))
+            .frame(maxWidth: .infinity)
+            .frame(height: 48)
+            .background(.ultraThinMaterial)
+            .foregroundStyle(Theme.premiumIvory)
+            .clipShape(
+                RoundedRectangle(
+                    cornerRadius: 17,
+                    style: .continuous
+                )
+            )
+            .overlay(
+                RoundedRectangle(
+                    cornerRadius: 17,
+                    style: .continuous
+                )
+                .stroke(
+                    Color.white.opacity(0.36),
+                    lineWidth: 1
+                )
+            )
+            .opacity(configuration.isPressed ? 0.82 : 1)
+    }
+}
+
+// Kept as aliases for older screens that still use the shared button styles.
+struct PrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .buttonStyle(PremiumPrimaryButtonStyle())
     }
 }
 
 struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.headline.weight(.semibold))
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 15)
-            .background(Theme.navyDeep.opacity(configuration.isPressed ? 0.75 : 1))
-            .foregroundStyle(Theme.ink)
-            .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(Theme.blue.opacity(0.75), lineWidth: 1)
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .buttonStyle(PremiumSecondaryButtonStyle())
     }
 }
