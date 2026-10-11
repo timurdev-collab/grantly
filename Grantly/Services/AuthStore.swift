@@ -176,8 +176,29 @@ final class AuthStore {
             return L10n.string("Too many attempts. Please wait a moment and try again.")
         }
 
-        if message.contains("weak password") {
+        if message.contains("same_password") ||
+            message.contains("new password should be different") ||
+            message.contains("same as the old password") {
+            return L10n.string("Your new password must be different from your current password. Please choose another password.")
+        }
+
+        if message.contains("weak password") ||
+            message.contains("password should be at least") ||
+            message.contains("password is too short") {
             return L10n.string("Choose a stronger password and try again.")
+        }
+
+        if message.contains("otp_expired") ||
+            message.contains("token has expired") ||
+            message.contains("link has expired") {
+            return L10n.string("This password-reset link has expired. Request a new link and try again.")
+        }
+
+        if message.contains("invalid token") ||
+            message.contains("invalid_grant") ||
+            message.contains("session not found") ||
+            message.contains("session has expired") {
+            return L10n.string("Your password-reset session is no longer valid. Request a new reset email.")
         }
 
         return L10n.string("Something went wrong. Please try again.")
