@@ -202,31 +202,35 @@ struct AdvisorsView: View {
 
                 if loading && advisors.isEmpty {
                     ProgressView()
-                        .tint(Theme.premiumForest)
+                        .tint(Theme.accent)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 48)
-                } else if filteredAdvisors.isEmpty &&
-                          !search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        .padding(.vertical, 12)
+                }
+
+                if !loading && filteredAdvisors.isEmpty &&
+                    !search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     EmptyState(
                         icon: "person.2",
                         title: "No advisors found",
                         text: "Try a different expertise or country."
                     )
-                    .padding(.vertical, 30)
-                } else {
-                    LazyVGrid(
-                        columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)],
-                        alignment: .center,
-                        spacing: 10
-                    ) {
-                        ForEach(filteredAdvisors) { advisor in
-                            advisorGridCard(advisor)
-                        }
-                        if search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                            ForEach(0..<2, id: \.self) { _ in
-                                upcomingAdvisorCard
-                            }
-                        }
+                    .padding(.vertical, 12)
+                }
+
+                LazyVGrid(
+                    columns: [
+                        GridItem(.flexible(), spacing: 10),
+                        GridItem(.flexible(), spacing: 10)
+                    ],
+                    alignment: .center,
+                    spacing: 10
+                ) {
+                    ForEach(filteredAdvisors) { advisor in
+                        advisorGridCard(advisor)
+                    }
+                    ForEach(0..<2, id: \.self) { index in
+                        upcomingAdvisorCard
+                            .id("upcoming-advisor-\(index)")
                     }
                 }
 
