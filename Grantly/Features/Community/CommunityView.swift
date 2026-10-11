@@ -606,16 +606,24 @@ struct AdvisorsView: View {
         loading = true
         defer { loading = false }
 
+        // Load the directory independently: a registration request failure must
+        // never hide available advisor profiles.
         do {
-            async let directoryRows = DataService.availableAdvisors()
-            async let currentRegistration =
-                DataService.myAdvisorRegistration()
-
-            advisors = try await directoryRows
-            registration = try await currentRegistration
+            advisors = try await DataService.availableAdvisors()
             errorMessage = nil
+        } catch is CancellationError {
+            return
         } catch {
-            errorMessage = error.localizedDescription
+            errorMessage = "Unable to load advisors. Pull down to try again."
+        }
+
+        do {
+            registration = try await DataService.myAdvisorRegistration()
+        } catch is CancellationError {
+            return
+        } catch {
+            // Existing consultations are supplementary to the advisor directory.
+            // Preserve any previously loaded registration.
         }
     }
 
