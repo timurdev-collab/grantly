@@ -3,6 +3,7 @@ package com.grantly.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -50,6 +51,8 @@ class MainActivity : ComponentActivity() {
 private fun EduTApp() {
     var tab by remember { mutableStateOf(Tab.Home) }
     var requestedDegree by remember { mutableStateOf("All") }
+    var selectedScholarship by remember { mutableStateOf<Scholarship?>(null) }
+    BackHandler(enabled = selectedScholarship != null) { selectedScholarship = null }
     MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Ivory, surface = Ivory)) {
         Scaffold(
             containerColor = Ivory,
@@ -58,7 +61,7 @@ private fun EduTApp() {
                     Tab.entries.forEach { item ->
                         NavigationBarItem(
                             selected = item == tab,
-                            onClick = { tab = item },
+                            onClick = { tab = item; selectedScholarship = null },
                             icon = { Icon(item.icon, contentDescription = null) },
                             label = { Text(item.title, fontSize = 10.sp, maxLines = 1) },
                             colors = NavigationBarItemDefaults.colors(
@@ -80,12 +83,19 @@ private fun EduTApp() {
                             Text("EduT", fontFamily = FontFamily.Serif, fontSize = 25.sp, color = DeepForest)
                             Spacer(Modifier.height(16.dp))
                         }
-                        when (tab) {
-                            Tab.Home -> HomeContent(onDiscover = { degree ->
+                        when {
+                            selectedScholarship != null -> ScholarshipDetailContent(
+                                scholarship = selectedScholarship!!,
+                                onBack = { selectedScholarship = null }
+                            )
+                            tab == Tab.Home -> HomeContent(onDiscover = { degree ->
                                 requestedDegree = degree
                                 tab = Tab.Discover
                             })
-                            Tab.Discover -> DiscoverContent(initialDegree = requestedDegree)
+                            tab == Tab.Discover -> ScholarshipDiscoverContent(
+                                initialDegree = requestedDegree,
+                                onSelect = { selectedScholarship = it }
+                            )
                             else -> PlaceholderContent(tab)
                         }
                     }
