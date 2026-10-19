@@ -33,7 +33,7 @@ private val Ink = Color(0xFF19372B)
 
 private enum class Tab(val title: String, val icon: ImageVector) {
     Home("Home", Icons.Outlined.Home),
-    Discover("Discover", Icons.Outlined.Search),
+    Discover("Explore", Icons.Outlined.Search),
     Applications("Applications", Icons.Outlined.Assignment),
     Messages("Messages", Icons.Outlined.ChatBubbleOutline),
     Profile("Profile", Icons.Outlined.PersonOutline)
@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun EduTApp() {
     var tab by remember { mutableStateOf(Tab.Home) }
+    var requestedDegree by remember { mutableStateOf("All") }
     MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Ivory, surface = Ivory)) {
         Scaffold(
             containerColor = Ivory,
@@ -75,11 +76,16 @@ private fun EduTApp() {
             LazyColumn(modifier = Modifier.fillMaxSize().padding(padding)) {
                 item {
                     Column(Modifier.padding(22.dp)) {
-                        Text("EduT", fontFamily = FontFamily.Serif, fontSize = 31.sp, color = DeepForest)
-                        Spacer(Modifier.height(20.dp))
+                        if (tab != Tab.Home) {
+                            Text("EduT", fontFamily = FontFamily.Serif, fontSize = 25.sp, color = DeepForest)
+                            Spacer(Modifier.height(16.dp))
+                        }
                         when (tab) {
-                            Tab.Home -> HomeContent(onDiscover = { tab = Tab.Discover })
-                            Tab.Discover -> DiscoverContent()
+                            Tab.Home -> HomeContent(onDiscover = { degree ->
+                                requestedDegree = degree
+                                tab = Tab.Discover
+                            })
+                            Tab.Discover -> DiscoverContent(initialDegree = requestedDegree)
                             else -> PlaceholderContent(tab)
                         }
                     }
@@ -90,7 +96,7 @@ private fun EduTApp() {
 }
 
 @Composable
-private fun HomeContent(onDiscover: () -> Unit) {
+private fun HomeContent(onDiscover: (String) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(32.dp).background(Forest, RoundedCornerShape(50)), contentAlignment = Alignment.Center) {
             Icon(Icons.Outlined.School, contentDescription = null, tint = Ivory, modifier = Modifier.size(19.dp))
@@ -108,7 +114,7 @@ private fun HomeContent(onDiscover: () -> Unit) {
     Text("Scholarships picked\nfor your next chapter.", fontFamily = FontFamily.Serif, fontSize = 35.sp, lineHeight = 39.sp, color = Ink)
     Spacer(Modifier.height(20.dp))
     Row(
-        Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(18.dp)).clickable(onClick = onDiscover).padding(17.dp),
+        Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(18.dp)).clickable { onDiscover("All") }.padding(17.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(Icons.Outlined.Search, null, tint = Forest)
@@ -118,10 +124,14 @@ private fun HomeContent(onDiscover: () -> Unit) {
         Icon(Icons.Outlined.ArrowForward, null, tint = Forest)
     }
     Spacer(Modifier.height(18.dp))
-    Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-        listOf("All", "Bachelor's", "Master's").forEachIndexed { i, label ->
-            Surface(color = if (i == 0) Forest else Color.White, shape = RoundedCornerShape(30.dp)) {
-                Text(label, Modifier.padding(horizontal = 14.dp, vertical = 11.dp), color = if (i == 0) Ivory else Forest, fontSize = 12.sp)
+    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(9.dp)) {
+        listOf("All", "Bachelor's", "Master's", "PhD").forEachIndexed { i, label ->
+            Surface(
+                onClick = { onDiscover(label) },
+                color = if (i == 0) Forest else Color.White,
+                shape = RoundedCornerShape(30.dp)
+            ) {
+                Text(label, Modifier.padding(horizontal = 12.dp, vertical = 11.dp), color = if (i == 0) Ivory else Forest, fontSize = 12.sp)
             }
         }
     }
@@ -133,7 +143,7 @@ private fun HomeContent(onDiscover: () -> Unit) {
         Spacer(Modifier.height(14.dp))
         Text("Complete your profile to discover personalized opportunities.", color = Sage, fontSize = 13.sp, lineHeight = 19.sp)
         Spacer(Modifier.height(16.dp))
-        OutlinedButton(onClick = onDiscover, border = BorderStroke(1.dp, Sage.copy(alpha=.6f))) {
+        OutlinedButton(onClick = { onDiscover("All") }, border = BorderStroke(1.dp, Sage.copy(alpha=.6f))) {
             Text("Explore scholarships", color = Ivory)
         }
     }
@@ -154,9 +164,9 @@ private fun HomeContent(onDiscover: () -> Unit) {
 }
 
 @Composable
-private fun DiscoverContent() {
+private fun DiscoverContent(initialDegree: String) {
     var query by remember { mutableStateOf("") }
-    var level by remember { mutableStateOf("All") }
+    var level by remember(initialDegree) { mutableStateOf(initialDegree) }
     Column {
         Text("Explore opportunities", fontFamily = FontFamily.Serif, fontSize = 35.sp, color = Ink)
         Spacer(Modifier.height(8.dp))
@@ -174,8 +184,8 @@ private fun DiscoverContent() {
         Spacer(Modifier.height(16.dp))
         Text("Study level", fontWeight = FontWeight.SemiBold, color = Forest)
         Spacer(Modifier.height(10.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-            listOf("All", "Bachelor's", "Master's").forEach { option ->
+        Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+            listOf("All", "Bachelor's", "Master's", "PhD").forEach { option ->
                 FilterChip(
                     selected = option == level,
                     onClick = { level = option },
