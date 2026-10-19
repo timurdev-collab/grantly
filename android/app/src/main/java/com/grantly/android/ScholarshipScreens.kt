@@ -28,9 +28,9 @@ private val sage = Color(0xFFDDEADB)
 private val gold = Color(0xFFD9B66E)
 
 @Composable
-internal fun ScholarshipDiscoverContent(onSelect: (Scholarship) -> Unit) {
+internal fun ScholarshipDiscoverContent(initialDegree: String = "All", onSelect: (Scholarship) -> Unit) {
     var query by remember { mutableStateOf("") }
-    var level by remember { mutableStateOf("All") }
+    var level by remember(initialDegree) { mutableStateOf(initialDegree) }
     var scholarships by remember { mutableStateOf<List<Scholarship>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -48,9 +48,9 @@ internal fun ScholarshipDiscoverContent(onSelect: (Scholarship) -> Unit) {
         }
     }
 
-    Text("Explore opportunities", fontFamily = FontFamily.Serif, fontSize = 34.sp, color = ink)
+    Text("Discover", fontFamily = FontFamily.Serif, fontSize = 34.sp, color = ink)
     Spacer(Modifier.height(8.dp))
-    Text("Discover verified scholarships aligned with your plans.", color = ink.copy(alpha = .7f), fontSize = 14.sp)
+    Text("Curated, verified opportunities for your goals", color = ink.copy(alpha = .7f), fontSize = 14.sp)
     Spacer(Modifier.height(18.dp))
     OutlinedTextField(
         value = query,
