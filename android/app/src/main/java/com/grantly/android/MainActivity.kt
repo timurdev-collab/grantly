@@ -4,12 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -76,6 +79,7 @@ private fun EduTApp() {
                         Spacer(Modifier.height(20.dp))
                         when (tab) {
                             Tab.Home -> HomeContent(onDiscover = { tab = Tab.Discover })
+                            Tab.Discover -> DiscoverContent()
                             else -> PlaceholderContent(tab)
                         }
                     }
@@ -87,35 +91,105 @@ private fun EduTApp() {
 
 @Composable
 private fun HomeContent(onDiscover: () -> Unit) {
-    Text("YOUR FUTURE STARTS HERE", fontSize = 11.sp, letterSpacing = 2.sp, color = Forest, fontWeight = FontWeight.SemiBold)
-    Spacer(Modifier.height(12.dp))
-    Text("Find opportunities\nthat fit you.", fontFamily = FontFamily.Serif, fontSize = 40.sp, lineHeight = 44.sp, color = DeepForest)
-    Spacer(Modifier.height(12.dp))
-    Text("Scholarships, applications and educational guidance in one thoughtful place.", fontSize = 15.sp, lineHeight = 23.sp, color = Ink.copy(alpha = .75f))
-    Spacer(Modifier.height(24.dp))
-    Button(onClick = onDiscover, shape = RoundedCornerShape(40.dp), colors = ButtonDefaults.buttonColors(containerColor = Forest)) {
-        Text("Explore scholarships"); Spacer(Modifier.width(8.dp)); Icon(Icons.Outlined.ArrowForward, null)
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(32.dp).background(Forest, RoundedCornerShape(50)), contentAlignment = Alignment.Center) {
+            Icon(Icons.Outlined.School, contentDescription = null, tint = Ivory, modifier = Modifier.size(19.dp))
+        }
+        Spacer(Modifier.width(10.dp))
+        Text("EduT", fontSize = 21.sp, fontWeight = FontWeight.Bold, color = Forest)
+        Spacer(Modifier.weight(1f))
+        Text("🌐", fontSize = 19.sp)
+        Spacer(Modifier.width(16.dp))
+        Icon(Icons.Outlined.NotificationsNone, contentDescription = "Notifications", tint = Forest)
     }
-    Spacer(Modifier.height(28.dp))
-    Column(Modifier.fillMaxWidth().background(DeepForest, RoundedCornerShape(25.dp)).padding(24.dp)) {
-        Text("A WORLD OF POSSIBILITIES", color = Gold, fontSize = 11.sp, letterSpacing = 2.sp)
+    Spacer(Modifier.height(29.dp))
+    Text("Good afternoon", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = Forest)
+    Spacer(Modifier.height(8.dp))
+    Text("Scholarships picked\nfor your next chapter.", fontFamily = FontFamily.Serif, fontSize = 35.sp, lineHeight = 39.sp, color = Ink)
+    Spacer(Modifier.height(20.dp))
+    Row(
+        Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(18.dp)).clickable(onClick = onDiscover).padding(17.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(Icons.Outlined.Search, null, tint = Forest)
+        Spacer(Modifier.width(11.dp))
+        Text("Search scholarships, countries...", color = Ink.copy(alpha = .65f), fontSize = 14.sp)
+        Spacer(Modifier.weight(1f))
+        Icon(Icons.Outlined.ArrowForward, null, tint = Forest)
+    }
+    Spacer(Modifier.height(18.dp))
+    Row(horizontalArrangement = Arrangement.spacedBy(9.dp)) {
+        listOf("All", "Bachelor's", "Master's").forEachIndexed { i, label ->
+            Surface(color = if (i == 0) Forest else Color.White, shape = RoundedCornerShape(30.dp)) {
+                Text(label, Modifier.padding(horizontal = 14.dp, vertical = 11.dp), color = if (i == 0) Ivory else Forest, fontSize = 12.sp)
+            }
+        }
+    }
+    Spacer(Modifier.height(25.dp))
+    Column(Modifier.fillMaxWidth().background(DeepForest, RoundedCornerShape(24.dp)).padding(24.dp)) {
+        Text("YOUR BEST MATCH", color = Gold, fontSize = 11.sp, letterSpacing = 2.sp)
         Spacer(Modifier.height(12.dp))
-        Text("Your next chapter\nstarts here.", fontFamily = FontFamily.Serif, fontSize = 30.sp, color = Ivory, lineHeight = 37.sp)
-        Spacer(Modifier.height(18.dp))
-        Text("Discover · Organize · Connect", color = Sage, fontSize = 13.sp)
+        Text("Find the right scholarship\nfor your next chapter.", fontFamily = FontFamily.Serif, fontSize = 27.sp, lineHeight = 33.sp, color = Ivory)
+        Spacer(Modifier.height(14.dp))
+        Text("Complete your profile to discover personalized opportunities.", color = Sage, fontSize = 13.sp, lineHeight = 19.sp)
+        Spacer(Modifier.height(16.dp))
+        OutlinedButton(onClick = onDiscover, border = BorderStroke(1.dp, Sage.copy(alpha=.6f))) {
+            Text("Explore scholarships", color = Ivory)
+        }
     }
-    Spacer(Modifier.height(24.dp))
-    Text("Explore EduT", fontFamily = FontFamily.Serif, fontSize = 28.sp, color = Ink)
-    Spacer(Modifier.height(12.dp))
-    listOf(
-        "Discover" to "Find scholarships and universities",
-        "Applications" to "Keep your next steps organized",
-        "Advisors" to "Get educational guidance"
-    ).forEach { (title, detail) ->
-        Column(Modifier.fillMaxWidth().padding(vertical = 10.dp).background(Color.White, RoundedCornerShape(20.dp)).padding(20.dp)) {
-            Text(title, color = Forest, fontSize = 19.sp, fontWeight = FontWeight.SemiBold)
-            Spacer(Modifier.height(5.dp))
-            Text(detail, color = Ink.copy(alpha = .7f), fontSize = 14.sp)
+    Spacer(Modifier.height(25.dp))
+    Text("Picked for you", fontFamily = FontFamily.Serif, fontSize = 28.sp, color = Ink)
+    Spacer(Modifier.height(7.dp))
+    Text("Recommendations will appear after your account is connected.", fontSize = 13.sp, color = Ink.copy(alpha = .68f))
+    Spacer(Modifier.height(20.dp))
+    Text("Closing soon", fontFamily = FontFamily.Serif, fontSize = 26.sp, color = Ink)
+    Spacer(Modifier.height(7.dp))
+    Text("Verified scholarship deadlines will appear here.", fontSize = 13.sp, color = Ink.copy(alpha = .68f))
+    Spacer(Modifier.height(26.dp))
+    Column(Modifier.fillMaxWidth().background(Sage, RoundedCornerShape(22.dp)).padding(20.dp)) {
+        Text("Need a little guidance?", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
+        Spacer(Modifier.height(7.dp))
+        Text("Connect with an educational advisor for help planning your journey.", fontSize = 13.sp, color = Ink)
+    }
+}
+
+@Composable
+private fun DiscoverContent() {
+    var query by remember { mutableStateOf("") }
+    var level by remember { mutableStateOf("All") }
+    Column {
+        Text("Explore opportunities", fontFamily = FontFamily.Serif, fontSize = 35.sp, color = Ink)
+        Spacer(Modifier.height(8.dp))
+        Text("Discover scholarships that align with your plans.", color = Ink.copy(alpha=.7f), fontSize = 14.sp)
+        Spacer(Modifier.height(20.dp))
+        OutlinedTextField(
+            value = query,
+            onValueChange = { query = it },
+            leadingIcon = { Icon(Icons.Outlined.Search, null) },
+            label = { Text("Search scholarships, universities, countries") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp)
+        )
+        Spacer(Modifier.height(16.dp))
+        Text("Study level", fontWeight = FontWeight.SemiBold, color = Forest)
+        Spacer(Modifier.height(10.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+            listOf("All", "Bachelor's", "Master's").forEach { option ->
+                FilterChip(
+                    selected = option == level,
+                    onClick = { level = option },
+                    label = { Text(option, fontSize = 11.sp) }
+                )
+            }
+        }
+        Spacer(Modifier.height(22.dp))
+        Text("Scholarship results", fontFamily = FontFamily.Serif, fontSize = 26.sp, color = Ink)
+        Spacer(Modifier.height(11.dp))
+        Column(Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(20.dp)).padding(21.dp)) {
+            Text("Connect to explore live opportunities", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Forest)
+            Spacer(Modifier.height(8.dp))
+            Text("This Android preview uses the iPhone layout. Search and study-level controls are local previews until the Supabase scholarship API is connected.", fontSize = 13.sp, lineHeight = 20.sp, color = Ink.copy(alpha=.7f))
         }
     }
 }
