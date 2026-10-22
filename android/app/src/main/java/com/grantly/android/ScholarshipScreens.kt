@@ -70,7 +70,7 @@ internal fun ScholarshipDiscoverContent(initialDegree: String = "All", onSelect:
     }
     Spacer(Modifier.height(20.dp))
     val results = scholarships.filter { scholarship ->
-        (query.isBlank() || listOf(scholarship.title, scholarship.provider, scholarship.country)
+        (query.isBlank() || (listOf(scholarship.title, scholarship.provider, scholarship.country, scholarship.fundingType) + scholarship.fields)
             .any { it.contains(query.trim(), ignoreCase = true) }) &&
         (level == "All" || scholarship.degreeLevels.any {
             when (level) {
