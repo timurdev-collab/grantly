@@ -104,11 +104,13 @@ internal fun SavedScholarshipsContent() {
                         }
                         Spacer(Modifier.height(8.dp))
                         ApplicationTaskControls(item.scholarshipId)
+                        Spacer(Modifier.height(8.dp))
+                        ApplicationDocumentControls(item.scholarshipId)
                     }
                 }
             }
             Text(
-                "Preview: showing up to 100 saved items. Documents are not yet available.",
+                "Preview: showing up to 100 saved items. Document metadata is read-only.",
                 color = trackerInk.copy(alpha = .65f),
                 fontSize = 12.sp
             )
