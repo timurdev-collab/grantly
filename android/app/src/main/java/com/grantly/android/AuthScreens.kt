@@ -22,6 +22,12 @@ private val authInk = Color(0xFF19372B)
 internal fun AuthContent() {
     val session = AuthRepository.session
     val scope = rememberCoroutineScope()
+    if (AuthRepository.isRestoring) {
+        CircularProgressIndicator(color = authForest)
+        Spacer(Modifier.height(12.dp))
+        Text("Restoring your account securely…", color = authInk)
+        return
+    }
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
 
@@ -31,12 +37,12 @@ internal fun AuthContent() {
         Text("Signed in as ${session.email}", color = authInk)
         Spacer(Modifier.height(12.dp))
         Text(
-            "Your account is connected for this app session. Saved scholarships, application tracking and profile editing are still being ported.",
+            "Your account is connected. Saved scholarships and basic application tracking are available; profile editing is still being ported.",
             color = authInk.copy(alpha = .7f)
         )
         Spacer(Modifier.height(10.dp))
         Text(
-            "Preview limitation: your session is not saved when the app closes.",
+            "Your session is encrypted on this device and restored when you reopen EduT.",
             color = authInk.copy(alpha = .7f),
             fontSize = 12.sp
         )
@@ -140,7 +146,7 @@ internal fun AuthContent() {
     }
     Spacer(Modifier.height(12.dp))
     Text(
-        "This is an Android authentication preview. Password recovery and secure session restoration are not available yet.",
+        "This is an Android authentication preview. Password recovery is not available yet.",
         color = authInk.copy(alpha = .65f),
         fontSize = 12.sp
     )
