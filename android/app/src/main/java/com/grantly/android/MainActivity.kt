@@ -1,6 +1,8 @@
 package com.grantly.android
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.compose.BackHandler
@@ -43,6 +45,7 @@ private enum class Tab(val title: String, val icon: ImageVector) {
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch { AuthRepository.restoreSession(applicationContext) }
         setContent { EduTApp() }
     }
 }
