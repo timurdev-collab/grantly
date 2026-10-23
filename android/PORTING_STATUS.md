@@ -1,6 +1,6 @@
 # EduT Android port status
 
-Updated: 2026-10-23. Source branch: `feature/android-compose-foundation`.
+Updated: 2026-10-24. Source branch: `feature/android-compose-foundation`.
 Design and behavior reference (read-only): `design/home-concept-02`.
 
 ## Implemented in Android source
@@ -15,11 +15,12 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Private application document metadata, single-file uploads and confirmed deletion via the existing user-scoped RLS table and private Storage bucket (PDF/JPEG/PNG/HEIC/HEIF, up to 6 MiB). Upload failure attempts storage rollback; all mutations remain unverified on a live account/device.
 - Save/remove scholarship controls on detail screens using existing user-scoped Supabase RLS policies (not yet device-tested).
 - Automatic access-token refresh and Android Keystore AES-GCM encrypted session persistence, including restoration at launch and local token removal on sign-out (not yet device-tested).
+- Password recovery email requests, verified recovery deep links and password update through the existing Supabase Auth API (not yet device-tested).
 
 ## Not yet implemented or verified
-- Password recovery, auth deep-link handling and on-device verification of encrypted session restoration.
+- On-device verification of password recovery deep links and encrypted session restoration.
 - Profile loading, editing and student/advisor/admin role routing.
-- Application task due-date editing, document downloads and notifications. Upload, deletion and rollback behavior still need authenticated backend testing.
+- Application task due-date editing and notifications. Upload, deletion and rollback behavior still need authenticated backend testing.
 - Saved-scholarship pagination beyond 100 items.
 - Messaging, community, advisor consultations and personalized matching.
 - iOS-equivalent styling, accessibility, localization and navigation across all screens.

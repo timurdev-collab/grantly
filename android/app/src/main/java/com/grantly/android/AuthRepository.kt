@@ -1,6 +1,7 @@
 package com.grantly.android
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -26,6 +27,10 @@ internal object AuthRepository {
     var session by mutableStateOf<AuthSession?>(null)
         private set
     private val refreshMutex = Mutex()
+    var needsPasswordReset by mutableStateOf(false)
+        private set
+    var recoveryError by mutableStateOf<String?>(null)
+        private set
     private var encryptedStore: EncryptedSessionStore? = null
     var isRestoring by mutableStateOf(true)
         private set
@@ -188,11 +193,122 @@ internal object AuthRepository {
         // A confirmation email may be required. Never assume signup is an authenticated session.
     }
 
+
+    /** Send a recovery email using the existing iOS-approved callback URI.
+     * Do not reveal whether an account exists for the supplied address.
+     */
+    suspend fun requestPasswordReset(email: String) {
+        val normalized = email.trim().lowercase()
+        require(normalized.length <= 254 && normalized.contains('@') &&
+            normalized.substringAfterLast('@').contains('.') && !normalized.contains(' ')) {
+            "Enter a valid email address."
+        }
+        withContext(Dispatchers.IO) {
+            post("/auth/v1/recover?redirect_to=grantly%3A%2F%2Flogin-callback",
+                JSONObject().put("email", normalized))
+        }
+    }
+
+    /** Handle only verified recovery links, never arbitrary login callbacks.
+     * Both Supabase implicit fragments and token_hash recovery links are supported.
+     */
+    suspend fun handleRecoveryLink(uri: Uri) {
+        if (uri.scheme != "grantly" || uri.host != "login-callback") return
+        try {
+            val fragment = Uri.parse("https://edut.invalid/?${uri.encodedFragment.orEmpty()}")
+            val kind = fragment.getQueryParameter("type") ?: uri.getQueryParameter("type")
+            if (kind != "recovery") return
+            val hash = uri.getQueryParameter("token_hash")
+            val payload = if (!hash.isNullOrBlank()) {
+                withContext(Dispatchers.IO) {
+                    post("/auth/v1/verify", JSONObject().put("token_hash", hash).put("type", "recovery"))
+                }
+            } else {
+                JSONObject().apply {
+                    put("access_token", fragment.getQueryParameter("access_token").orEmpty())
+                    put("refresh_token", fragment.getQueryParameter("refresh_token").orEmpty())
+                    put("expires_in", fragment.getQueryParameter("expires_in")?.toLongOrNull() ?: 0L)
+                }
+            }
+            val access = payload.optString("access_token")
+            val refresh = payload.optString("refresh_token")
+            val expiresIn = payload.optLong("expires_in", 0L)
+            if (access.isBlank() || refresh.isBlank() || expiresIn <= 0L) {
+                throw IOException("The recovery link is incomplete or expired. Request a new email.")
+            }
+            // Never trust a user ID or email supplied in the deep link itself.
+            val user = withContext(Dispatchers.IO) { fetchVerifiedUser(access) }
+            val userId = user.optString("id")
+            if (userId.isBlank()) throw IOException("Could not verify the recovery link.")
+            val recovered = AuthSession(
+                userId, user.optString("email"), access, refresh,
+                System.currentTimeMillis() + expiresIn * 1000L
+            )
+            refreshMutex.withLock {
+                persist(recovered)
+                session = recovered
+                needsPasswordReset = true
+                recoveryError = null
+            }
+        } catch (failure: Exception) {
+            recoveryError = failure.message ?: "Unable to open the recovery link."
+        }
+    }
+
+    private fun fetchVerifiedUser(accessToken: String): JSONObject {
+        val connection = URL(baseUrl() + "/auth/v1/user").openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = "GET"
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 15_000
+            connection.setRequestProperty("apikey", BuildConfig.SUPABASE_PUBLISHABLE_KEY)
+            connection.setRequestProperty("Authorization", "Bearer $accessToken")
+            if (connection.responseCode !in 200..299) {
+                throw IOException("The recovery link is expired or invalid. Request a new email.")
+            }
+            return JSONObject(connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() })
+        } finally {
+            connection.disconnect()
+        }
+    }
+
+    suspend fun updateRecoveredPassword(password: String) {
+        require(password.length in 8..128) { "Use a password between 8 and 128 characters." }
+        if (!needsPasswordReset) throw IOException("Open a password recovery link first.")
+        val active = activeSession()
+        withContext(Dispatchers.IO) {
+            val connection = URL(baseUrl() + "/auth/v1/user").openConnection() as HttpURLConnection
+            try {
+                connection.requestMethod = "PUT"
+                connection.connectTimeout = 12_000
+                connection.readTimeout = 15_000
+                connection.doOutput = true
+                connection.setRequestProperty("apikey", BuildConfig.SUPABASE_PUBLISHABLE_KEY)
+                connection.setRequestProperty("Authorization", "Bearer ${active.accessToken}")
+                connection.setRequestProperty("Content-Type", "application/json")
+                connection.outputStream.use {
+                    it.write(JSONObject().put("password", password).toString().toByteArray(Charsets.UTF_8))
+                }
+                val status = connection.responseCode
+                if (status !in 200..299) {
+                    throw IOException(if (status == 422) "Choose a stronger password." else
+                        "Password update failed (HTTP $status). Please try again.")
+                }
+            } finally {
+                connection.disconnect()
+            }
+        }
+        needsPasswordReset = false
+        recoveryError = null
+    }
+
     suspend fun signOut() {
         // Serialize with refresh so an in-flight refresh cannot restore a signed-out user.
         val token = refreshMutex.withLock {
             val currentToken = session?.accessToken
             session = null
+            needsPasswordReset = false
+            recoveryError = null
             forget()
             currentToken
         }

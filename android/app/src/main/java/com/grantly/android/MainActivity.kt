@@ -1,6 +1,7 @@
 package com.grantly.android
 
 import android.os.Bundle
+import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import androidx.activity.ComponentActivity
@@ -45,8 +46,19 @@ private enum class Tab(val title: String, val icon: ImageVector) {
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch { AuthRepository.restoreSession(applicationContext) }
+        lifecycleScope.launch {
+            AuthRepository.restoreSession(applicationContext)
+            intent?.data?.let { AuthRepository.handleRecoveryLink(it) }
+        }
         setContent { EduTApp() }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        intent.data?.let { uri ->
+            lifecycleScope.launch { AuthRepository.handleRecoveryLink(uri) }
+        }
     }
 }
 
