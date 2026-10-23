@@ -34,7 +34,7 @@ internal object ScholarshipRepository {
         if (!baseUrl.startsWith("https://") || publicKey.isBlank()) {
             throw IOException("Scholarship service is not configured.")
         }
-        val connection = URL("$"+"{baseUrl}/rest/v1/rpc/search_scholarships")
+        val connection = URL(baseUrl + "/rest/v1/rpc/search_scholarships")
             .openConnection() as HttpURLConnection
         try {
             connection.requestMethod = "POST"
@@ -57,7 +57,7 @@ internal object ScholarshipRepository {
             }
             connection.outputStream.use { it.write(request.toString().toByteArray(Charsets.UTF_8)) }
             val status = connection.responseCode
-            if (status !in 200..299) throw IOException("Scholarship service unavailable (HTTP $"+"{status}).")
+            if (status !in 200..299) throw IOException("Scholarship service unavailable (HTTP " + status + ").")
             val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
             val rows = JSONArray(response)
             buildList {
