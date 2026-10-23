@@ -300,5 +300,34 @@
   "staging_changes": 0,
   "publications": 0,
   "archives": 0,
-  "production_changes": 0
+  "production_changes": 0,
+  "urgent_private_drafts": [
+    {
+      "id": "27968090-2edf-464d-9236-76f5186b741b",
+      "title": "EPFL-WISH Foundation Fellowship for Master's Projects Abroad",
+      "deadline": "2026-10-25 23:59 CET",
+      "next_deadline": "2027-04-11 23:59 CET",
+      "source": "https://wish-foundation.epfl.ch/masters-projects-abroad/",
+      "official_evidence": {
+        "funding": "Complementary grant, generally maximum CHF 5,000; variable by project duration, location and foundation budget. NOT a full Master's degree tuition scholarship.",
+        "eligibility": "Female students already enrolled in an EPFL Master's programme undertaking approved Master's project abroad, project not completed by deadline; Master's average 5.0 or higher is a selection criterion.",
+        "documents": "Two recommendation letters (at least one EPFL faculty), motivation letter, host confirmation, transcript, video, financial plan when relevant."
+      },
+      "staging_audit": "link_status exact but last_successful_check_at NULL; authenticated source audit and reviewer-attributed provenance required",
+      "action": "KEEP_PRIVATE_UNTIL_ADMIN_APPROVAL"
+    },
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "title": "Gordon and Isabel Humphrey Scholarship",
+      "deadline": "2026-10-25",
+      "source": "https://scholarships.unimelb.edu.au/awards/gordon-and-isabel-humphrey-scholarship",
+      "official_evidence": {
+        "funding": "AUD 41,100/year pro-rata 2027 rate for up to 3.5 years, AUD 2,000 interstate/AUD 3,000 overseas relocation allowance, OSHC for eligible international visa holders; do NOT assume full tuition coverage.",
+        "eligibility": "Already received 2027 PhD Engineering course offer, domestic and international candidates; separate application with personal statement.",
+        "application_cycle": "2027 commencement"
+      },
+      "staging_audit": "link_status exact but last_successful_check_at NULL; authenticated source audit and reviewer-attributed provenance required",
+      "action": "KEEP_PRIVATE_UNTIL_ADMIN_APPROVAL"
+    }
+  ]
 }
