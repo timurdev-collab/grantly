@@ -102,7 +102,7 @@ internal object ApplicationDocumentsRepository {
         val path = document.storagePath
         if (!path.startsWith("$userId/$scholarship/") ||
             path.length <= "$userId/$scholarship/".length ||
-            path.contains("..") || path.contains('\\\\')) {
+            path.contains("..") || path.contains('\\')) {
             throw IOException("Document path does not belong to this application.")
         }
         val base = BuildConfig.SUPABASE_URL.trimEnd('/')
