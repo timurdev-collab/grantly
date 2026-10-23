@@ -273,22 +273,61 @@ internal fun ScholarshipDetailContent(scholarship: Scholarship, onBack: () -> Un
     }
     Spacer(Modifier.height(18.dp))
     when (selectedTab) {
-        "Overview" -> Text(scholarship.description ?: "The scholarship provider has not supplied a description.",
-            fontSize = 15.sp, lineHeight = 23.sp, color = ink)
+        "Overview" -> {
+            Text(scholarship.description ?: "The scholarship provider has not supplied a description.",
+                fontSize = 15.sp, lineHeight = 23.sp, color = ink)
+            Spacer(Modifier.height(16.dp))
+            Text("At a glance", fontWeight = FontWeight.Bold, color = forest)
+            Text("Provider: ${scholarship.provider}", color = ink)
+            Text("Country: ${scholarship.country}", color = ink)
+            Text("Funding: ${scholarship.fundingType}", color = ink)
+            Text("Source: ${if (scholarship.verificationStatus == "verified") "Verified" else "Curated"}", color = ink)
+            scholarship.reliabilityScore?.let { Text("Data reliability: $it/100", color = ink) }
+            scholarship.lastCheckedAt?.let { Text("Last source check: ${it.take(10)}", color = ink) }
+        }
         "Eligibility" -> {
             Text("Study levels", fontWeight = FontWeight.Bold, color = forest)
             Text(scholarship.degreeLevels.joinToString().ifBlank { "Not specified" }, color = ink)
             Spacer(Modifier.height(12.dp))
             Text("Fields of study", fontWeight = FontWeight.Bold, color = forest)
             Text(scholarship.fields.joinToString().ifBlank { "Not specified" }, color = ink)
+            Spacer(Modifier.height(12.dp))
+            Text("Minimum GPA", fontWeight = FontWeight.Bold, color = forest)
+            Text(scholarship.minGpaPercent?.let { "${it.toInt()}%" } ?: "Not listed", color = ink)
+            Spacer(Modifier.height(12.dp))
+            Text("Minimum IELTS", fontWeight = FontWeight.Bold, color = forest)
+            Text(scholarship.minIelts?.toString() ?: "Not listed", color = ink)
+            Spacer(Modifier.height(12.dp))
+            Text("SAT", fontWeight = FontWeight.Bold, color = forest)
+            Text(if (scholarship.satRequired) "Required" else "Not listed as required", color = ink)
+            Spacer(Modifier.height(12.dp))
+            Text("Confirm nationality, residency and document requirements on the official provider page.",
+                color = ink.copy(alpha = .7f), fontSize = 13.sp)
         }
         "Benefits" -> {
             Text("Funding", fontWeight = FontWeight.Bold, color = forest)
-            Text(scholarship.fundingType, color = ink)
-            Text("Check the official provider page for full award conditions.", fontSize = 13.sp, color = ink.copy(alpha = .7f))
+            Text(scholarship.tuitionCoverage ?: scholarship.fundingType, color = ink)
+            Spacer(Modifier.height(12.dp))
+            Text("Stipend", fontWeight = FontWeight.Bold, color = forest)
+            Text(scholarship.stipend ?: "Check official source", color = ink)
+            Spacer(Modifier.height(12.dp))
+            Text("Airfare: ${if (scholarship.airfare) "Included" else "Not listed"}", color = ink)
+            Text("Accommodation: ${if (scholarship.accommodation) "Included" else "Not listed"}", color = ink)
+            Text("Health insurance: ${if (scholarship.healthInsurance) "Included" else "Not listed"}", color = ink)
+            Spacer(Modifier.height(10.dp))
+            Text("Confirm all award conditions with the provider.", fontSize = 13.sp, color = ink.copy(alpha = .7f))
         }
-        else -> Text("Review the official scholarship website for application instructions. Android application tracking is still in development.",
-            color = ink, fontSize = 14.sp, lineHeight = 22.sp)
+        else -> {
+            Text("Current deadline: ${scholarship.deadline?.take(10) ?: "Not yet confirmed"}",
+                fontWeight = FontWeight.Bold, color = forest)
+            scholarship.deadlineNotes?.let {
+                Spacer(Modifier.height(8.dp))
+                Text(it, color = ink, fontSize = 14.sp)
+            }
+            Spacer(Modifier.height(12.dp))
+            Text("Verify the application cycle, eligibility, required documents and deadline on the official provider website. Android application tracking is still in development.",
+                color = ink, fontSize = 14.sp, lineHeight = 22.sp)
+        }
     }
     Spacer(Modifier.height(24.dp))
     if (safeUrl != null) {
