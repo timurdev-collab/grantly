@@ -197,7 +197,7 @@
         "Master"
       ],
       "funding": "£12,500 one-year tuition fee waiver; up to 12 awards",
-      "eligibility": "India; eligible one-year taught Masters offer for September 2027; UK First equivalent, typically >=85%",
+      "eligibility": "Indian passport holder domiciled in India, international fee status, eligible one-year taught Masters offer for September 2027, UK First equivalent (typically >=85%); recipient must satisfy UKVI living-cost requirement",
       "deadline": "2027-03-31",
       "deadline_note": "11:45 UK time; programme offer required",
       "decision": "prepare_private_draft_after_semantic_review"
@@ -211,8 +211,8 @@
       ],
       "funding": "£12,500 one-year tuition fee waiver; up to 12 awards",
       "eligibility": "Chinese passport holder domiciled in China, international fee status, eligible one-year taught Masters offer, academic merit",
-      "deadline": null,
-      "deadline_note": "Scholarship deadline not established in verified source excerpt",
+      "deadline": "2027-03-31",
+      "deadline_note": "11:45 UK time; offer required; award does not cover UKVI living-cost requirement",
       "decision": "prepare_private_draft_after_semantic_review"
     },
     {
