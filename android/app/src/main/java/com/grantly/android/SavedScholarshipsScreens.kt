@@ -110,7 +110,7 @@ internal fun SavedScholarshipsContent() {
                 }
             }
             Text(
-                "Preview: showing up to 100 saved items. Document metadata is read-only.",
+                "Preview: showing up to 100 saved items. Private document uploads and deletion require live verification.",
                 color = trackerInk.copy(alpha = .65f),
                 fontSize = 12.sp
             )
