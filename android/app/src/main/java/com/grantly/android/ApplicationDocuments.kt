@@ -29,13 +29,11 @@ internal data class ApplicationDocumentItem(
     val id: String,
     val fileName: String,
     val contentType: String?,
-    val byteSize: Long?
+    val byteSize: Long?,
+    val storagePath: String
 )
 
-/**
- * Read-only private document metadata from the existing application_documents table.
- * Storage objects are deliberately not downloaded or exposed through public URLs.
- */
+/** User-scoped document metadata and private Storage operations; never creates public URLs. */
 internal object ApplicationDocumentsRepository {
     suspend fun load(scholarshipId: String): List<ApplicationDocumentItem> = withContext(Dispatchers.IO) {
         val session = AuthRepository.activeSession()
@@ -49,7 +47,7 @@ internal object ApplicationDocumentsRepository {
             throw IOException("Document vault is not configured.")
         }
         fun enc(value: String) = URLEncoder.encode(value, "UTF-8")
-        val query = "select=id,file_name,content_type,byte_size" +
+        val query = "select=id,file_name,content_type,byte_size,storage_path" +
             "&user_id=eq." + enc(userId) +
             "&scholarship_id=eq." + enc(scholarship) +
             "&order=created_at.desc&limit=100"
@@ -79,7 +77,8 @@ internal object ApplicationDocumentsRepository {
                         contentType = row.optString("content_type").takeUnless {
                             row.isNull("content_type") || it.isBlank()
                         },
-                        byteSize = if (row.isNull("byte_size")) null else row.optLong("byte_size")
+                        byteSize = if (row.isNull("byte_size")) null else row.optLong("byte_size"),
+                        storagePath = row.optString("storage_path")
                     ))
                 }
             }
@@ -87,6 +86,71 @@ internal object ApplicationDocumentsRepository {
             connection.disconnect()
         }
     }
+    /**
+     * Remove a private document, matching the iOS storage-first deletion order.
+     * A metadata deletion failure is reported so the user can retry cleanup.
+     * The path is validated against the signed-in user's scholarship namespace.
+     */
+    suspend fun delete(scholarshipId: String, document: ApplicationDocumentItem) = withContext(Dispatchers.IO) {
+        val session = AuthRepository.activeSession()
+        val userId = try { UUID.fromString(session.userId).toString() }
+            catch (_: IllegalArgumentException) { throw IOException("Invalid account identifier.") }
+        val scholarship = try { UUID.fromString(scholarshipId).toString() }
+            catch (_: IllegalArgumentException) { throw IOException("Invalid scholarship identifier.") }
+        val documentId = try { UUID.fromString(document.id).toString() }
+            catch (_: IllegalArgumentException) { throw IOException("Invalid document identifier.") }
+        val path = document.storagePath
+        if (!path.startsWith("$userId/$scholarship/") ||
+            path.length <= "$userId/$scholarship/".length ||
+            path.contains("..") || path.contains('\\\\')) {
+            throw IOException("Document path does not belong to this application.")
+        }
+        val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!base.startsWith("https://") || key.isBlank()) {
+            throw IOException("Document vault is not configured.")
+        }
+        val storage = URL("$base/storage/v1/object/application-documents")
+            .openConnection() as HttpURLConnection
+        try {
+            storage.requestMethod = "DELETE"
+            storage.connectTimeout = 12_000
+            storage.readTimeout = 15_000
+            storage.doOutput = true
+            storage.setRequestProperty("apikey", key)
+            storage.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            storage.setRequestProperty("Content-Type", "application/json")
+            val payload = JSONObject().put("prefixes", JSONArray().put(path))
+            storage.outputStream.use { it.write(payload.toString().toByteArray(Charsets.UTF_8)) }
+            val code = storage.responseCode
+            if (code !in 200..299) throw IOException(
+                if (code == 401 || code == 403) "Sign in again to remove documents."
+                else "Unable to remove private file (HTTP $code)."
+            )
+        } finally {
+            storage.disconnect()
+        }
+
+        fun enc(value: String) = URLEncoder.encode(value, "UTF-8")
+        val query = "id=eq.${enc(documentId)}&user_id=eq.${enc(userId)}" +
+            "&scholarship_id=eq.${enc(scholarship)}"
+        val metadata = URL("$base/rest/v1/application_documents?$query")
+            .openConnection() as HttpURLConnection
+        try {
+            metadata.requestMethod = "DELETE"
+            metadata.connectTimeout = 12_000
+            metadata.readTimeout = 15_000
+            metadata.setRequestProperty("apikey", key)
+            metadata.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            val code = metadata.responseCode
+            if (code !in 200..299) throw IOException(
+                "Private file removed, but its record could not be cleared (HTTP $code). Retry deletion."
+            )
+        } finally {
+            metadata.disconnect()
+        }
+    }
+
     /**
      * Uploads one user-selected file to the existing private Supabase Storage bucket,
      * then creates its RLS-protected metadata row. No public URLs are created.
@@ -232,6 +296,8 @@ internal fun ApplicationDocumentControls(scholarshipId: String) {
     var refresh by remember(userId, scholarshipId) { mutableIntStateOf(0) }
     var uploading by remember(userId, scholarshipId) { mutableStateOf(false) }
     var uploadSuccess by remember(userId, scholarshipId) { mutableStateOf(false) }
+    var deleting by remember(userId, scholarshipId) { mutableStateOf(false) }
+    var pendingDelete by remember(userId, scholarshipId) { mutableStateOf<ApplicationDocumentItem?>(null) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val filePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -277,7 +343,7 @@ internal fun ApplicationDocumentControls(scholarshipId: String) {
 
     Spacer(Modifier.height(8.dp))
     OutlinedButton(
-        enabled = !loading && !uploading,
+        enabled = !loading && !uploading && !deleting,
         onClick = { filePicker.launch(arrayOf("application/pdf", "image/*")) }
     ) { Text(if (uploading) "Uploading…" else "Upload PDF or image (max 6 MB)") }
     if (uploading) CircularProgressIndicator(Modifier.size(24.dp))
@@ -299,12 +365,52 @@ internal fun ApplicationDocumentControls(scholarshipId: String) {
                         listOfNotNull(doc.contentType, size).joinToString(" · "),
                         style = MaterialTheme.typography.bodySmall
                     )
+                    TextButton(
+                        enabled = !uploading && !deleting && !loading,
+                        onClick = { pendingDelete = doc }
+                    ) { Text("Delete file") }
                 }
             }
         }
     }
+    pendingDelete?.let { document ->
+        AlertDialog(
+            onDismissRequest = { if (!deleting) pendingDelete = null },
+            title = { Text("Delete private document?") },
+            text = { Text("Permanently delete ${document.fileName}? This cannot be undone.") },
+            confirmButton = {
+                TextButton(
+                    enabled = !deleting && !uploading,
+                    onClick = {
+                        deleting = true
+                        error = null
+                        scope.launch {
+                            try {
+                                ApplicationDocumentsRepository.delete(scholarshipId, document)
+                                pendingDelete = null
+                                uploadSuccess = false
+                                refresh++
+                            } catch (cancelled: CancellationException) {
+                                throw cancelled
+                            } catch (failure: Exception) {
+                                error = failure.message ?: "Unable to delete document."
+                                pendingDelete = null
+                            } finally {
+                                deleting = false
+                            }
+                        }
+                    }
+                ) { Text(if (deleting) "Deleting…" else "Delete") }
+            },
+            dismissButton = {
+                TextButton(enabled = !deleting, onClick = { pendingDelete = null }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
     Text(
-        "Preview: private document uploads and metadata. Download and deletion are not yet supported on Android.",
+        "Preview: private document uploads and deletion. Download is not yet supported on Android.",
         style = MaterialTheme.typography.bodySmall
     )
 }
