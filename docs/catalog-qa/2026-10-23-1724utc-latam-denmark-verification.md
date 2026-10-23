@@ -1,4 +1,4 @@
-# Grantly staging catalog QA — Latin America and Denmark (2026-10-23 17:24–17:35 UTC)
+# Grantly staging catalog QA — Latin America and Denmark (2026-10-23 17:24–17:27 UTC)
 
 **Scope:** Read-only staging project `cbzriyarlvpmtfbjgede`. This file is research and proposed field provenance only; it does **not** authorize status promotion, provenance acceptance, archival, or publication. All scholarship candidates must pass exact-title, official-URL, semantic award-identity, source-audit, reviewer, and authenticated publication gates.
 
