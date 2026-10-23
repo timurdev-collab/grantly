@@ -142,4 +142,63 @@ internal object SavedScholarshipsRepository {
     suspend fun remove(scholarshipId: String) = withContext(Dispatchers.IO) {
         savedRequest("DELETE", scholarshipId)
     }
+
+    /** Status updates use the existing RPC so submitted/interview/result timestamps stay consistent. */
+    suspend fun updateStatus(scholarshipId: String, status: String) = withContext(Dispatchers.IO) {
+        val allowed = setOf("Planning", "Preparing", "Submitted", "Applied", "Interview", "Offer", "Rejected", "Withdrawn", "Result")
+        require(status in allowed) { "Invalid application status." }
+        val id = try { java.util.UUID.fromString(scholarshipId).toString() }
+            catch (_: IllegalArgumentException) { throw IOException("Invalid scholarship identifier.") }
+        val payload = org.json.JSONObject()
+            .put("p_scholarship_id", id)
+            .put("p_status", status)
+        trackerWrite("/rest/v1/rpc/set_application_status", "POST", payload)
+    }
+
+    /** Notes are updated only for the signed-in user's saved scholarship row. */
+    suspend fun updateNotes(scholarshipId: String, notes: String) = withContext(Dispatchers.IO) {
+        require(notes.length <= 10_000) { "Keep notes under 10,000 characters." }
+        val id = try { java.util.UUID.fromString(scholarshipId).toString() }
+            catch (_: IllegalArgumentException) { throw IOException("Invalid scholarship identifier.") }
+        val session = AuthRepository.session ?: throw IOException("Sign in to edit your applications.")
+        val filter = "user_id=eq." + URLEncoder.encode(session.userId, "UTF-8") +
+            "&scholarship_id=eq." + URLEncoder.encode(id, "UTF-8")
+        val payload = org.json.JSONObject()
+            .put("notes", notes)
+            .put("updated_at", java.time.Instant.now().toString())
+        trackerWrite("/rest/v1/saved_scholarships?$filter", "PATCH", payload)
+    }
+
+    private fun trackerWrite(path: String, method: String, payload: org.json.JSONObject) {
+        val session = AuthRepository.session ?: throw IOException("Sign in to edit your applications.")
+        val baseUrl = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!baseUrl.startsWith("https://") || key.isBlank()) {
+            throw IOException("Application tracker is not configured.")
+        }
+        val connection = URL(baseUrl + path).openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = method
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 15_000
+            connection.doOutput = true
+            connection.setRequestProperty("apikey", key)
+            connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Accept", "application/json")
+            connection.setRequestProperty("Prefer", "return=minimal")
+            connection.outputStream.use {
+                it.write(payload.toString().toByteArray(Charsets.UTF_8))
+            }
+            val code = connection.responseCode
+            if (code !in 200..299) {
+                throw IOException(
+                    if (code == 401 || code == 403) "Your session has expired or access was denied. Sign in again."
+                    else "Unable to update application (HTTP $code)."
+                )
+            }
+        } finally {
+            connection.disconnect()
+        }
+    }
 }
