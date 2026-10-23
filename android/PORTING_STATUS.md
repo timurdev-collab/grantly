@@ -1,5 +1,33 @@
-# Android port status
+# EduT Android port status
 
-The GitHub Actions debug APK builds successfully, but the app is a UI preview. Home and Explore are partial; authentication, scholarship details, applications, messages and profile are not yet ported. The iPhone reference is the design/home-concept-02 branch. Do not treat this build as feature-complete.
+Updated: 2026-10-23. Source branch: `feature/android-compose-foundation`.
+Design and behavior reference (read-only): `design/home-concept-02`.
 
-October 19 update: wired Discover-to-Detail navigation with Android back handling. Catalog repository remains a stub and still returns no live scholarships. A compatibility overload keeps the build source-compatible while study-level synchronization is pending.
+## Implemented in Android source
+- Compose home layout and bottom navigation.
+- Read-only scholarship discovery through the existing public Supabase RPC.
+- Server-side search, degree/country/field/funding filters, sorting and pagination.
+- Scholarship detail tabs for overview, eligibility, benefits and application information.
+- Profile-tab email/password sign-in, signup and sign-out through the existing Supabase Auth API.
+
+## Not yet implemented or verified
+- Authentication session persistence, refresh, password recovery and deep-link handling.
+- Profile loading, editing and student/advisor/admin role routing.
+- Saved scholarships, application pipeline, tasks, document workspace and notifications.
+- Messaging, community, advisor consultations and personalized matching.
+- iOS-equivalent styling, accessibility, localization and navigation across all screens.
+- Live API testing with a real account and physical-device end-to-end testing.
+
+## Preview safety
+The authentication client holds its access token **in memory only**. Signing in does not
+unlock unimplemented account features; users must sign in again after the process is
+restarted. No credentials are written to local storage. This is intentionally a preview
+until secure session persistence and refresh are available.
+
+A successful `Android Debug APK` GitHub Actions build proves compilation only, not
+feature parity, server availability, account behavior or device compatibility.
+Do not distribute the debug APK as a production release.
+
+## Build
+See `android/README.md` and the `Android Debug APK` GitHub Actions workflow.
+Only modify the Android feature branch; do not change iOS, production backend or website.
