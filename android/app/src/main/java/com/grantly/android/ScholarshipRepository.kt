@@ -20,7 +20,18 @@ internal data class Scholarship(
     val deadline: String?,
     val description: String?,
     val officialUrl: String?,
-    val verificationStatus: String?
+    val verificationStatus: String?,
+    val tuitionCoverage: String?,
+    val stipend: String?,
+    val airfare: Boolean,
+    val accommodation: Boolean,
+    val healthInsurance: Boolean,
+    val minGpaPercent: Double?,
+    val minIelts: Double?,
+    val satRequired: Boolean,
+    val reliabilityScore: Int?,
+    val lastCheckedAt: String?,
+    val deadlineNotes: String?
 )
 
 /**
@@ -99,7 +110,18 @@ internal object ScholarshipRepository {
                             deadline = row.optionalText("deadline"),
                             description = row.optionalText("description"),
                             officialUrl = row.optionalText("official_url"),
-                            verificationStatus = row.optionalText("verification_status")
+                            verificationStatus = row.optionalText("verification_status"),
+                            tuitionCoverage = row.optionalText("tuition_coverage"),
+                            stipend = row.optionalText("stipend"),
+                            airfare = row.optBoolean("airfare", false),
+                            accommodation = row.optBoolean("accommodation", false),
+                            healthInsurance = row.optBoolean("health_insurance", false),
+                            minGpaPercent = row.optionalDouble("min_gpa_percent"),
+                            minIelts = row.optionalDouble("min_ielts"),
+                            satRequired = row.optBoolean("sat_required", false),
+                            reliabilityScore = row.optionalInt("reliability_score"),
+                            lastCheckedAt = row.optionalText("last_checked_at"),
+                            deadlineNotes = row.optionalText("deadline_notes")
                         )
                     )
                 }
@@ -155,4 +177,10 @@ internal object ScholarshipRepository {
 
     private fun JSONObject.optionalText(key: String): String? =
         if (isNull(key)) null else optString(key).takeIf(String::isNotBlank)
+
+    private fun JSONObject.optionalDouble(key: String): Double? =
+        if (!has(key) || isNull(key)) null else optDouble(key).takeUnless { it.isNaN() }
+
+    private fun JSONObject.optionalInt(key: String): Int? =
+        if (!has(key) || isNull(key)) null else optInt(key)
 }
