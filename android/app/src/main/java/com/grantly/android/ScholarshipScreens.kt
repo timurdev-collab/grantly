@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import java.net.URI
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 private val forest = Color(0xFF123E30)
 private val ink = Color(0xFF19372B)
@@ -235,6 +236,23 @@ private fun ScholarshipResultCard(scholarship: Scholarship, onClick: () -> Unit)
 @Composable
 internal fun ScholarshipDetailContent(scholarship: Scholarship, onBack: () -> Unit) {
     var selectedTab by remember(scholarship.id) { mutableStateOf("Overview") }
+    val session = AuthRepository.session
+    val scope = rememberCoroutineScope()
+    var saved by remember(scholarship.id, session?.userId) { mutableStateOf<Boolean?>(null) }
+    var saveBusy by remember(scholarship.id, session?.userId) { mutableStateOf(false) }
+    var saveError by remember(scholarship.id, session?.userId) { mutableStateOf<String?>(null) }
+    var saveRetry by remember(scholarship.id, session?.userId) { mutableIntStateOf(0) }
+    LaunchedEffect(scholarship.id, session?.userId, saveRetry) {
+        if (session == null) return@LaunchedEffect
+        saveError = null
+        try {
+            saved = SavedScholarshipsRepository.isSaved(scholarship.id)
+        } catch (cancelled: kotlinx.coroutines.CancellationException) {
+            throw cancelled
+        } catch (failure: Exception) {
+            saveError = failure.message ?: "Unable to check saved status."
+        }
+    }
     val uriHandler = LocalUriHandler.current
     val safeUrl = remember(scholarship.officialUrl) {
         scholarship.officialUrl?.takeIf { raw ->
@@ -264,6 +282,46 @@ internal fun ScholarshipDetailContent(scholarship: Scholarship, onBack: () -> Un
     scholarship.deadline?.let {
         Spacer(Modifier.height(6.dp))
         Text("Deadline: ${it.take(10)}", color = ink.copy(alpha = .7f), fontSize = 13.sp)
+    }
+    Spacer(Modifier.height(15.dp))
+    if (session != null) {
+        OutlinedButton(
+            onClick = {
+                val wasSaved = saved ?: return@OutlinedButton
+                saveBusy = true
+                saveError = null
+                scope.launch {
+                    try {
+                        if (wasSaved) SavedScholarshipsRepository.remove(scholarship.id)
+                        else SavedScholarshipsRepository.save(scholarship.id)
+                        saved = !wasSaved
+                    } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                        throw cancelled
+                    } catch (failure: Exception) {
+                        saveError = failure.message ?: "Unable to update saved scholarship."
+                    } finally {
+                        saveBusy = false
+                    }
+                }
+            },
+            enabled = saved != null && !saveBusy,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                when {
+                    saveBusy -> "Updating…"
+                    saved == null -> "Checking saved status…"
+                    saved == true -> "Remove from saved scholarships"
+                    else -> "Save scholarship"
+                }
+            )
+        }
+        if (saveError != null) {
+            Text(saveError ?: "", color = MaterialTheme.colorScheme.error, fontSize = 12.sp)
+            TextButton(onClick = { saveRetry++ }, enabled = !saveBusy) { Text("Retry saved status") }
+        }
+    } else {
+        Text("Sign in on the Profile tab to save this scholarship.", color = ink.copy(alpha = .7f), fontSize = 13.sp)
     }
     Spacer(Modifier.height(15.dp))
     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
