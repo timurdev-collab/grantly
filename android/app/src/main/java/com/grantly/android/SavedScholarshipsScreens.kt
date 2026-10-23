@@ -102,11 +102,13 @@ internal fun SavedScholarshipsContent() {
                                 editingNotes = item
                             }) { Text("Edit note") }
                         }
+                        Spacer(Modifier.height(8.dp))
+                        ApplicationTaskControls(item.scholarshipId)
                     }
                 }
             }
             Text(
-                "Preview: showing up to 100 saved items. Tasks and documents are not yet available.",
+                "Preview: showing up to 100 saved items. Documents are not yet available.",
                 color = trackerInk.copy(alpha = .65f),
                 fontSize = 12.sp
             )
