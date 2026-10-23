@@ -47,7 +47,9 @@ internal object AuthRepository {
                 }
                 throw IOException(message)
             }
-            return JSONObject(connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() })
+            if (status == 204) return JSONObject()
+            val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            return if (response.isBlank()) JSONObject() else JSONObject(response)
         } finally {
             connection.disconnect()
         }
