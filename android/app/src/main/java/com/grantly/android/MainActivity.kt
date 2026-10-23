@@ -67,7 +67,10 @@ private fun EduTApp() {
     var tab by remember { mutableStateOf(Tab.Home) }
     var requestedDegree by remember { mutableStateOf("All") }
     var selectedScholarship by remember { mutableStateOf<Scholarship?>(null) }
-    BackHandler(enabled = selectedScholarship != null) { selectedScholarship = null }
+    var showingAdvisors by remember { mutableStateOf(false) }
+    BackHandler(enabled = selectedScholarship != null || showingAdvisors) {
+        if (selectedScholarship != null) selectedScholarship = null else showingAdvisors = false
+    }
     MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Ivory, surface = Ivory)) {
         Scaffold(
             containerColor = Ivory,
@@ -76,7 +79,7 @@ private fun EduTApp() {
                     Tab.entries.forEach { item ->
                         NavigationBarItem(
                             selected = item == tab,
-                            onClick = { tab = item; selectedScholarship = null },
+                            onClick = { tab = item; selectedScholarship = null; showingAdvisors = false },
                             icon = { Icon(item.icon, contentDescription = null) },
                             label = { Text(item.title, fontSize = 10.sp, maxLines = 1) },
                             colors = NavigationBarItemDefaults.colors(
@@ -99,14 +102,18 @@ private fun EduTApp() {
                             Spacer(Modifier.height(16.dp))
                         }
                         when {
+                            showingAdvisors -> AdvisorDirectoryContent(onBack = { showingAdvisors = false })
                             selectedScholarship != null -> ScholarshipDetailContent(
                                 scholarship = selectedScholarship!!,
                                 onBack = { selectedScholarship = null }
                             )
-                            tab == Tab.Home -> HomeContent(onDiscover = { degree ->
-                                requestedDegree = degree
-                                tab = Tab.Discover
-                            })
+                            tab == Tab.Home -> HomeContent(
+                                onDiscover = { degree ->
+                                    requestedDegree = degree
+                                    tab = Tab.Discover
+                                },
+                                onAdvisors = { showingAdvisors = true }
+                            )
                             tab == Tab.Discover -> ScholarshipDiscoverContent(
                                 initialDegree = requestedDegree,
                                 onSelect = { selectedScholarship = it }
@@ -123,7 +130,7 @@ private fun EduTApp() {
 }
 
 @Composable
-private fun HomeContent(onDiscover: (String) -> Unit) {
+private fun HomeContent(onDiscover: (String) -> Unit, onAdvisors: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(32.dp).background(Forest, RoundedCornerShape(50)), contentAlignment = Alignment.Center) {
             Icon(Icons.Outlined.School, contentDescription = null, tint = Ivory, modifier = Modifier.size(19.dp))
@@ -183,10 +190,12 @@ private fun HomeContent(onDiscover: (String) -> Unit) {
     Spacer(Modifier.height(7.dp))
     Text("Verified scholarship deadlines will appear here.", fontSize = 13.sp, color = Ink.copy(alpha = .68f))
     Spacer(Modifier.height(26.dp))
-    Column(Modifier.fillMaxWidth().background(Sage, RoundedCornerShape(22.dp)).padding(20.dp)) {
+    Column(Modifier.fillMaxWidth().background(Sage, RoundedCornerShape(22.dp)).clickable(onClick = onAdvisors).padding(20.dp)) {
         Text("Need a little guidance?", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
         Spacer(Modifier.height(7.dp))
-        Text("Connect with an educational advisor for help planning your journey.", fontSize = 13.sp, color = Ink)
+        Text("Browse verified educational advisors (sign-in required).", fontSize = 13.sp, color = Ink)
+        Spacer(Modifier.height(8.dp))
+        Text("Browse advisors →", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     }
 }
 
