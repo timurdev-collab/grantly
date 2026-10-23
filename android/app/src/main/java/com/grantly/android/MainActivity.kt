@@ -96,6 +96,7 @@ private fun EduTApp() {
                                 initialDegree = requestedDegree,
                                 onSelect = { selectedScholarship = it }
                             )
+                            tab == Tab.Profile -> AuthContent()
                             else -> PlaceholderContent(tab)
                         }
                     }
