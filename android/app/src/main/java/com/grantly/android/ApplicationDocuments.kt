@@ -152,6 +152,78 @@ internal object ApplicationDocumentsRepository {
     }
 
     /**
+     * Downloads a private document with the current user's access token, then writes
+     * it to a user-selected location. Never exposes a public or signed URL.
+     * Buffer before writing so failed network requests do not create partial files.
+     */
+    suspend fun download(
+        context: Context,
+        scholarshipId: String,
+        document: ApplicationDocumentItem,
+        destination: Uri
+    ) = withContext(Dispatchers.IO) {
+        val session = AuthRepository.activeSession()
+        val userId = try { UUID.fromString(session.userId).toString() }
+            catch (_: IllegalArgumentException) { throw IOException("Invalid account identifier.") }
+        val scholarship = try { UUID.fromString(scholarshipId).toString() }
+            catch (_: IllegalArgumentException) { throw IOException("Invalid scholarship identifier.") }
+        val path = document.storagePath
+        val prefix = "$userId/$scholarship/"
+        if (!path.startsWith(prefix) || path.length <= prefix.length ||
+            path.contains("..") || path.contains('\\\\') ||
+            path.split('/').any { it.isBlank() }) {
+            throw IOException("Document path does not belong to this application.")
+        }
+        val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!base.startsWith("https://") || key.isBlank()) {
+            throw IOException("Document vault is not configured.")
+        }
+        val encodedPath = path.split('/').joinToString("/") {
+            URLEncoder.encode(it, "UTF-8").replace("+", "%20")
+        }
+        val connection = URL("$base/storage/v1/object/authenticated/application-documents/$encodedPath")
+            .openConnection() as HttpURLConnection
+        val maxBytes = 10 * 1024 * 1024
+        val bytes = try {
+            connection.requestMethod = "GET"
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 25_000
+            connection.setRequestProperty("apikey", key)
+            connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            val code = connection.responseCode
+            if (code !in 200..299) throw IOException(
+                when (code) {
+                    401, 403 -> "Sign in again to download documents."
+                    404 -> "This private file is no longer available."
+                    else -> "Unable to download private file (HTTP $code)."
+                }
+            )
+            if (connection.contentLengthLong > maxBytes) {
+                throw IOException("The private file exceeds the 10 MB download limit.")
+            }
+            connection.inputStream.use { stream ->
+                val output = ByteArrayOutputStream()
+                val buffer = ByteArray(8192)
+                while (true) {
+                    val count = stream.read(buffer)
+                    if (count < 0) break
+                    if (output.size() + count > maxBytes) {
+                        throw IOException("The private file exceeds the 10 MB download limit.")
+                    }
+                    output.write(buffer, 0, count)
+                }
+                output.toByteArray()
+            }
+        } finally {
+            connection.disconnect()
+        }
+        if (bytes.isEmpty()) throw IOException("The private file is empty.")
+        context.contentResolver.openOutputStream(destination, "w")?.use { it.write(bytes) }
+            ?: throw IOException("Unable to write to the selected location.")
+    }
+
+    /**
      * Uploads one user-selected file to the existing private Supabase Storage bucket,
      * then creates its RLS-protected metadata row. No public URLs are created.
      */
@@ -298,8 +370,36 @@ internal fun ApplicationDocumentControls(scholarshipId: String) {
     var uploadSuccess by remember(userId, scholarshipId) { mutableStateOf(false) }
     var deleting by remember(userId, scholarshipId) { mutableStateOf(false) }
     var pendingDelete by remember(userId, scholarshipId) { mutableStateOf<ApplicationDocumentItem?>(null) }
+    var downloading by remember(userId, scholarshipId) { mutableStateOf(false) }
+    var downloadSuccess by remember(userId, scholarshipId) { mutableStateOf(false) }
+    var pendingDownload by remember(userId, scholarshipId) { mutableStateOf<ApplicationDocumentItem?>(null) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val savePicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/octet-stream")
+    ) { uri ->
+        val document = pendingDownload
+        pendingDownload = null
+        if (uri != null && document != null && !downloading) {
+            downloading = true
+            downloadSuccess = false
+            error = null
+            scope.launch {
+                try {
+                    ApplicationDocumentsRepository.download(
+                        context.applicationContext, scholarshipId, document, uri
+                    )
+                    downloadSuccess = true
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (failure: Exception) {
+                    error = failure.message ?: "Unable to download private document."
+                } finally {
+                    downloading = false
+                }
+            }
+        }
+    }
     val filePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null && !uploading) {
             uploading = true
@@ -343,11 +443,13 @@ internal fun ApplicationDocumentControls(scholarshipId: String) {
 
     Spacer(Modifier.height(8.dp))
     OutlinedButton(
-        enabled = !loading && !uploading && !deleting,
+        enabled = !loading && !uploading && !deleting && !downloading,
         onClick = { filePicker.launch(arrayOf("application/pdf", "image/*")) }
     ) { Text(if (uploading) "Uploading…" else "Upload PDF or image (max 6 MB)") }
     if (uploading) CircularProgressIndicator(Modifier.size(24.dp))
     if (uploadSuccess) Text("Document uploaded.", color = MaterialTheme.colorScheme.primary)
+    if (downloading) CircularProgressIndicator(Modifier.size(24.dp))
+    if (downloadSuccess) Text("Document saved to selected location.", color = MaterialTheme.colorScheme.primary)
     when {
         loading -> CircularProgressIndicator(Modifier.size(24.dp))
         error != null -> {
@@ -366,7 +468,15 @@ internal fun ApplicationDocumentControls(scholarshipId: String) {
                         style = MaterialTheme.typography.bodySmall
                     )
                     TextButton(
-                        enabled = !uploading && !deleting && !loading,
+                        enabled = !uploading && !deleting && !loading && !downloading,
+                        onClick = {
+                            pendingDownload = doc
+                            downloadSuccess = false
+                            savePicker.launch(doc.fileName)
+                        }
+                    ) { Text("Download file") }
+                    TextButton(
+                        enabled = !uploading && !deleting && !loading && !downloading,
                         onClick = { pendingDelete = doc }
                     ) { Text("Delete file") }
                 }
