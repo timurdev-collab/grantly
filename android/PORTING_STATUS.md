@@ -10,22 +10,25 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Scholarship detail tabs for overview, eligibility, benefits and application information.
 - Profile-tab email/password sign-in, signup and sign-out through the existing Supabase Auth API.
 - Authenticated Applications list showing saved scholarships, status and notes (first 100).
+- Authenticated application status and notes editing through existing user-scoped APIs.
 - Save/remove scholarship controls on detail screens using existing user-scoped Supabase RLS policies (not yet device-tested).
+- Automatic access-token refresh and Android Keystore AES-GCM encrypted session persistence, including restoration at launch and local token removal on sign-out (not yet device-tested).
 
 ## Not yet implemented or verified
-- Authentication session persistence, refresh, password recovery and deep-link handling.
+- Password recovery, auth deep-link handling and on-device verification of encrypted session restoration.
 - Profile loading, editing and student/advisor/admin role routing.
-- Application editing, tasks, document workspace and notifications.
+- Application tasks, document workspace and notifications.
 - Saved-scholarship pagination beyond 100 items.
 - Messaging, community, advisor consultations and personalized matching.
 - iOS-equivalent styling, accessibility, localization and navigation across all screens.
 - Save/remove API behavior, live API testing with a real account and physical-device end-to-end testing.
 
 ## Preview safety
-The authentication client holds its access token **in memory only**. Signing in does not
-unlock unimplemented account features; users must sign in again after the process is
-restarted. No credentials are written to local storage. This is intentionally a preview
-until secure session persistence and refresh are available.
+Authentication tokens are stored as AES-GCM ciphertext using a non-exportable Android
+Keystore key; app backup is disabled. On restart, the app attempts to restore and refresh
+the encrypted session. Sign-out clears local credentials before contacting the server.
+If Keystore storage is unavailable, the app keeps an in-memory session only. The
+persistence flow has not yet been verified on a physical Android device.
 
 A successful `Android Debug APK` GitHub Actions build proves compilation only, not
 feature parity, server availability, account behavior or device compatibility.
