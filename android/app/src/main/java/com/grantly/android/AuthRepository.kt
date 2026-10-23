@@ -1,5 +1,6 @@
 package com.grantly.android
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,7 +13,7 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
-/** Tokens remain in memory; persistence is deferred until Android Keystore storage is available. */
+/** Session tokens are encrypted at rest with Android Keystore. */
 internal data class AuthSession(
     val userId: String,
     val email: String,
@@ -25,6 +26,42 @@ internal object AuthRepository {
     var session by mutableStateOf<AuthSession?>(null)
         private set
     private val refreshMutex = Mutex()
+    private var encryptedStore: EncryptedSessionStore? = null
+    var isRestoring by mutableStateOf(true)
+        private set
+
+    /** Restore on launch before displaying account-dependent controls. */
+    suspend fun restoreSession(context: Context) {
+        try {
+            val store = withContext(Dispatchers.IO) {
+                EncryptedSessionStore(context.applicationContext)
+            }
+            encryptedStore = store
+            val restored = withContext(Dispatchers.IO) { store.load() }
+            if (session == null) {
+                session = restored
+                if (restored != null) {
+                    // Offline restores retain the encrypted session for a later refresh attempt.
+                    try { activeSession() } catch (_: IOException) { }
+                }
+            }
+        } finally {
+            isRestoring = false
+        }
+    }
+
+    private suspend fun persist(value: AuthSession) = withContext(Dispatchers.IO) {
+        try {
+            encryptedStore?.save(value)
+        } catch (_: Exception) {
+            // Never fall back to unencrypted storage.
+            encryptedStore?.clear()
+        }
+    }
+
+    private suspend fun forget() = withContext(Dispatchers.IO) {
+        encryptedStore?.clear()
+    }
 
     private fun baseUrl(): String {
         val url = BuildConfig.SUPABASE_URL.trimEnd('/')
@@ -83,16 +120,18 @@ internal object AuthRepository {
         val refreshToken = result.optString("refresh_token")
         val expiresIn = result.optLong("expires_in", 0L)
         if (refreshToken.isBlank() || expiresIn <= 0L) throw IOException("Unable to verify your session.")
-        session = AuthSession(
+        val signedIn = AuthSession(
             userId, user?.optString("email").orEmpty().ifBlank { normalized },
             token, refreshToken, System.currentTimeMillis() + expiresIn * 1000L
         )
+        persist(signedIn)
+        session = signedIn
     }
 
     /**
      * Refresh an expiring access token before authenticated API requests.
      * A mutex prevents concurrent requests from consuming the same rotating refresh token.
-     * Network errors leave the in-memory session intact so the user can retry.
+     * Network errors preserve the encrypted session so the user can retry.
      */
     suspend fun activeSession(): AuthSession = refreshMutex.withLock {
         val current = session ?: throw IOException("Sign in to continue.")
@@ -107,6 +146,7 @@ internal object AuthRepository {
         } catch (failure: IOException) {
             if (failure.message == "Session expired. Please sign in again." && session === current) {
                 session = null
+                forget()
             }
             throw failure
         }
@@ -118,12 +158,16 @@ internal object AuthRepository {
         if (token.isBlank() || refreshToken.isBlank() || expiresIn <= 0L ||
             (returnedUserId.isNotBlank() && returnedUserId != current.userId)) {
             session = null
+            forget()
             throw IOException("Session could not be refreshed. Please sign in again.")
         }
-        AuthSession(
+        val refreshed = AuthSession(
             current.userId, current.email, token, refreshToken,
             System.currentTimeMillis() + expiresIn * 1000L
-        ).also { session = it }
+        )
+        persist(refreshed)
+        session = refreshed
+        refreshed
     }
 
     suspend fun signUp(email: String, password: String) {
@@ -142,12 +186,13 @@ internal object AuthRepository {
     suspend fun signOut() {
         val token = session?.accessToken
         session = null
+        forget()
         if (token != null) {
             // Clear local access immediately even if remote sign-out cannot be reached.
             try {
                 withContext(Dispatchers.IO) { post("/auth/v1/logout", JSONObject(), token) }
             } catch (_: IOException) {
-                // No persistent token exists in this preview.
+                // Local credentials have already been removed.
             }
         }
     }
