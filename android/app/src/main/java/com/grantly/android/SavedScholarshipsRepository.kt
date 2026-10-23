@@ -69,4 +69,74 @@ internal object SavedScholarshipsRepository {
             connection.disconnect()
         }
     }
+
+    /** Read/write access is always scoped to the authenticated user under Supabase RLS. */
+    private fun savedRequest(method: String, scholarshipId: String, body: String? = null): String {
+        val session = AuthRepository.session ?: throw IOException("Sign in to save scholarships.")
+        val id = try { java.util.UUID.fromString(scholarshipId).toString() }
+            catch (_: IllegalArgumentException) { throw IOException("Invalid scholarship identifier.") }
+        val baseUrl = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!baseUrl.startsWith("https://") || key.isBlank()) {
+            throw IOException("Scholarship saving is not configured.")
+        }
+        val url = when (method) {
+            "GET", "DELETE" -> {
+                val filter = "&user_id=eq." + URLEncoder.encode(session.userId, "UTF-8") +
+                    "&scholarship_id=eq." + URLEncoder.encode(id, "UTF-8")
+                "$baseUrl/rest/v1/saved_scholarships?select=scholarship_id$filter&limit=1"
+            }
+            "POST" -> "$baseUrl/rest/v1/saved_scholarships?on_conflict=user_id,scholarship_id"
+            else -> throw IOException("Unsupported scholarship operation.")
+        }
+        val connection = URL(url).openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = method
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 15_000
+            connection.setRequestProperty("apikey", key)
+            connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            connection.setRequestProperty("Accept", "application/json")
+            if (method == "POST") {
+                connection.setRequestProperty("Content-Type", "application/json")
+                connection.setRequestProperty("Prefer", "resolution=ignore-duplicates,return=minimal")
+                connection.doOutput = true
+                connection.outputStream.use {
+                    it.write((body ?: "").toByteArray(Charsets.UTF_8))
+                }
+            }
+            val status = connection.responseCode
+            if (status !in 200..299) {
+                throw IOException(
+                    if (status == 401 || status == 403)
+                        "Your session has expired or access was denied. Sign in again."
+                    else "Unable to update saved scholarship (HTTP $status)."
+                )
+            }
+            return if (method == "GET") {
+                connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            } else ""
+        } finally {
+            connection.disconnect()
+        }
+    }
+
+    suspend fun isSaved(scholarshipId: String): Boolean = withContext(Dispatchers.IO) {
+        JSONArray(savedRequest("GET", scholarshipId)).length() > 0
+    }
+
+    suspend fun save(scholarshipId: String) = withContext(Dispatchers.IO) {
+        val session = AuthRepository.session ?: throw IOException("Sign in to save scholarships.")
+        val id = try { java.util.UUID.fromString(scholarshipId).toString() }
+            catch (_: IllegalArgumentException) { throw IOException("Invalid scholarship identifier.") }
+        val payload = org.json.JSONObject()
+            .put("user_id", session.userId)
+            .put("scholarship_id", id)
+            .toString()
+        savedRequest("POST", id, payload)
+    }
+
+    suspend fun remove(scholarshipId: String) = withContext(Dispatchers.IO) {
+        savedRequest("DELETE", scholarshipId)
+    }
 }
