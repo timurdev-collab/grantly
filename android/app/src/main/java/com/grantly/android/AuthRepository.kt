@@ -45,6 +45,9 @@ internal object AuthRepository {
                     try { activeSession() } catch (_: IOException) { }
                 }
             }
+        } catch (_: Exception) {
+            // Keystore errors must not crash the app. Sign-in remains available in memory.
+            encryptedStore = null
         } finally {
             isRestoring = false
         }
