@@ -27,8 +27,18 @@ internal data class Scholarship(
  * Read-only public catalog search. Uses only the client-safe publishable key.
  * The server's existing search_scholarships RPC applies visibility policies.
  */
+internal data class ScholarshipPage(val items: List<Scholarship>, val totalCount: Int)
+
 internal object ScholarshipRepository {
-    suspend fun fetchPublished(): List<Scholarship> = withContext(Dispatchers.IO) {
+    /** Read-only server-side search over the published catalog. */
+    suspend fun search(
+        query: String? = null,
+        degree: String? = null,
+        sort: String = "Verified first",
+        offset: Int = 0,
+        limit: Int = 20
+    ): ScholarshipPage = withContext(Dispatchers.IO) {
+        require(offset >= 0 && limit in 1..100) { "Invalid scholarship page." }
         val baseUrl = BuildConfig.SUPABASE_URL.trimEnd('/')
         val publicKey = BuildConfig.SUPABASE_PUBLISHABLE_KEY
         if (!baseUrl.startsWith("https://") || publicKey.isBlank()) {
@@ -45,22 +55,23 @@ internal object ScholarshipRepository {
             connection.setRequestProperty("Content-Type", "application/json")
             connection.setRequestProperty("Accept", "application/json")
             val request = JSONObject().apply {
-                put("p_query", JSONObject.NULL)
+                put("p_query", query?.trim()?.takeIf { it.isNotEmpty() } ?: JSONObject.NULL)
                 put("p_country", JSONObject.NULL)
-                put("p_degree", JSONObject.NULL)
+                put("p_degree", degree?.takeIf { it.isNotBlank() } ?: JSONObject.NULL)
                 put("p_field", JSONObject.NULL)
                 put("p_funding", JSONObject.NULL)
                 put("p_source", JSONObject.NULL)
-                put("p_sort", "Verified first")
-                put("p_offset", 0)
-                put("p_limit", 50)
+                put("p_sort", sort)
+                put("p_offset", offset)
+                put("p_limit", limit)
             }
             connection.outputStream.use { it.write(request.toString().toByteArray(Charsets.UTF_8)) }
             val status = connection.responseCode
             if (status !in 200..299) throw IOException("Scholarship service unavailable (HTTP " + status + ").")
             val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
             val rows = JSONArray(response)
-            buildList {
+            val totalCount = rows.optJSONObject(0)?.optInt("total_count", 0) ?: 0
+            val items = buildList {
                 for (i in 0 until rows.length()) {
                     val row = rows.optJSONObject(i)?.optJSONObject("scholarship") ?: continue
                     val id = row.optString("id")
@@ -83,10 +94,14 @@ internal object ScholarshipRepository {
                     )
                 }
             }
+            ScholarshipPage(items, totalCount)
         } finally {
             connection.disconnect()
         }
     }
+
+    /** Compatibility for callers that only need the first page. */
+    suspend fun fetchPublished(): List<Scholarship> = search().items
 
     private fun JSONArray?.toStrings(): List<String> =
         if (this == null) emptyList() else (0 until length()).mapNotNull {

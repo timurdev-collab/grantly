@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.net.URI
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 
 private val forest = Color(0xFF123E30)
 private val ink = Color(0xFF19372B)
@@ -35,16 +37,42 @@ internal fun ScholarshipDiscoverContent(initialDegree: String = "All", onSelect:
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
     var retry by remember { mutableIntStateOf(0) }
+    var sort by remember { mutableStateOf("Verified first") }
+    var pageOffset by remember(query, level, sort, retry) { mutableIntStateOf(0) }
+    var totalCount by remember { mutableIntStateOf(0) }
+    var loadingMore by remember { mutableStateOf(false) }
 
-    LaunchedEffect(retry) {
-        loading = true
+    LaunchedEffect(query, level, sort, retry, pageOffset) {
+        val firstPage = pageOffset == 0
+        if (firstPage) {
+            loading = true
+            scholarships = emptyList()
+            totalCount = 0
+            if (query.isNotBlank()) delay(350)
+        } else {
+            loadingMore = true
+        }
         error = null
         try {
-            scholarships = ScholarshipRepository.fetchPublished()
+            val degree = when (level) {
+                "Bachelor's" -> "Bachelor"
+                "Master's" -> "Master"
+                "PhD" -> "PhD"
+                else -> null
+            }
+            val page = ScholarshipRepository.search(
+                query = query, degree = degree, sort = sort, offset = pageOffset, limit = 20
+            )
+            scholarships = if (firstPage) page.items
+                else (scholarships + page.items).distinctBy { it.id }
+            totalCount = page.totalCount
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (failure: Exception) {
             error = failure.message ?: "Unable to load scholarships."
         } finally {
             loading = false
+            loadingMore = false
         }
     }
 
@@ -68,18 +96,16 @@ internal fun ScholarshipDiscoverContent(initialDegree: String = "All", onSelect:
             FilterChip(selected = option == level, onClick = { level = option }, label = { Text(option, fontSize = 12.sp) })
         }
     }
-    Spacer(Modifier.height(20.dp))
-    val results = scholarships.filter { scholarship ->
-        (query.isBlank() || (listOf(scholarship.title, scholarship.provider, scholarship.country, scholarship.fundingType) + scholarship.fields)
-            .any { it.contains(query.trim(), ignoreCase = true) }) &&
-        (level == "All" || scholarship.degreeLevels.any {
-            when (level) {
-                "Bachelor's" -> it.contains("bachelor", ignoreCase = true) || it.contains("undergrad", ignoreCase = true)
-                "Master's" -> it.contains("master", ignoreCase = true)
-                else -> it.contains("phd", ignoreCase = true) || it.contains("doctor", ignoreCase = true)
-            }
-        })
+    Spacer(Modifier.height(12.dp))
+    Text("Sort by", fontWeight = FontWeight.SemiBold, color = forest)
+    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        listOf("Verified first", "Recommended", "Deadline").forEach { option ->
+            FilterChip(selected = option == sort, onClick = { sort = option }, label = { Text(option, fontSize = 12.sp) })
+        }
     }
+    Spacer(Modifier.height(20.dp))
+    // The RPC applies filters to the full catalog before pagination.
+    val results = scholarships
     Text("Scholarship results", fontFamily = FontFamily.Serif, fontSize = 27.sp, color = ink)
     Spacer(Modifier.height(10.dp))
     when {
@@ -88,24 +114,34 @@ internal fun ScholarshipDiscoverContent(initialDegree: String = "All", onSelect:
             Spacer(Modifier.height(12.dp))
             Text("Finding trusted opportunities...", color = ink.copy(alpha = .7f))
         }
-        error != null -> {
+        error != null && results.isEmpty() -> {
             Text(error ?: "Unable to load scholarships.", color = MaterialTheme.colorScheme.error)
             Spacer(Modifier.height(8.dp))
             OutlinedButton(onClick = { retry++ }) { Text("Try again") }
         }
         results.isEmpty() -> {
             Text(
-                if (scholarships.isEmpty()) "No published scholarships are visible to this session yet."
-                else "No scholarships match these filters.",
+                "No scholarships match these filters.",
                 color = ink.copy(alpha = .7f)
             )
         }
         else -> {
-            Text("${results.size} opportunities", fontSize = 12.sp, color = ink.copy(alpha = .65f))
+            Text("${results.size} of $totalCount opportunities", fontSize = 12.sp, color = ink.copy(alpha = .65f))
             Spacer(Modifier.height(12.dp))
             results.forEach { scholarship ->
                 ScholarshipResultCard(scholarship = scholarship, onClick = { onSelect(scholarship) })
                 Spacer(Modifier.height(12.dp))
+            }
+            if (error != null) {
+                Text(error ?: "Unable to load more.", color = MaterialTheme.colorScheme.error)
+                OutlinedButton(onClick = { retry++ }) { Text("Retry") }
+            }
+            if (error == null && pageOffset + 20 < totalCount) {
+                OutlinedButton(
+                    onClick = { pageOffset += 20 },
+                    enabled = !loadingMore,
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text(if (loadingMore) "Loading more..." else "Load more") }
             }
         }
     }
