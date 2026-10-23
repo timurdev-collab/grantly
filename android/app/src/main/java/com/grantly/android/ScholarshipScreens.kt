@@ -38,7 +38,7 @@ internal fun ScholarshipDiscoverContent(initialDegree: String = "All", onSelect:
     var error by remember { mutableStateOf<String?>(null) }
     var retry by remember { mutableIntStateOf(0) }
     var sort by remember { mutableStateOf("Verified first") }
-    var pageOffset by remember(query, level, sort, retry) { mutableIntStateOf(0) }
+    var pageOffset by remember(query, level, sort) { mutableIntStateOf(0) }
     var totalCount by remember { mutableIntStateOf(0) }
     var loadingMore by remember { mutableStateOf(false) }
 
