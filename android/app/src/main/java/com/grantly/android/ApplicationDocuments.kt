@@ -170,7 +170,7 @@ internal object ApplicationDocumentsRepository {
         val path = document.storagePath
         val prefix = "$userId/$scholarship/"
         if (!path.startsWith(prefix) || path.length <= prefix.length ||
-            path.contains("..") || path.contains('\\\\') ||
+            path.contains("..") || path.contains(92.toChar()) ||
             path.split('/').any { it.isBlank() }) {
             throw IOException("Document path does not belong to this application.")
         }
