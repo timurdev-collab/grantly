@@ -82,10 +82,12 @@ internal object SavedScholarshipsRepository {
         }
         val url = when (method) {
             "GET", "DELETE" -> {
-                val filter = "&user_id=eq." + URLEncoder.encode(session.userId, "UTF-8") +
+                val filter = "user_id=eq." + URLEncoder.encode(session.userId, "UTF-8") +
                     "&scholarship_id=eq." + URLEncoder.encode(id, "UTF-8")
-                "$baseUrl/rest/v1/saved_scholarships?select=scholarship_id$filter" +
-                    if (method == "GET") "&limit=1" else ""
+                if (method == "GET")
+                    "$baseUrl/rest/v1/saved_scholarships?select=scholarship_id&$filter&limit=1"
+                else
+                    "$baseUrl/rest/v1/saved_scholarships?$filter"
             }
             "POST" -> "$baseUrl/rest/v1/saved_scholarships?on_conflict=user_id,scholarship_id"
             else -> throw IOException("Unsupported scholarship operation.")
