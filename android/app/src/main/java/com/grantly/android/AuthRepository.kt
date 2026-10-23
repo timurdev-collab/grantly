@@ -184,9 +184,13 @@ internal object AuthRepository {
     }
 
     suspend fun signOut() {
-        val token = session?.accessToken
-        session = null
-        forget()
+        // Serialize with refresh so an in-flight refresh cannot restore a signed-out user.
+        val token = refreshMutex.withLock {
+            val currentToken = session?.accessToken
+            session = null
+            forget()
+            currentToken
+        }
         if (token != null) {
             // Clear local access immediately even if remote sign-out cannot be reached.
             try {
