@@ -4,6 +4,7 @@ on:
     branches: [feature/android-compose-foundation]
     paths:
       - 'android/**'
+      - 'project.yml'
       - '.github/workflows/android-debug.yml'
   workflow_dispatch:
 jobs:
