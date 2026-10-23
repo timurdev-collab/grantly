@@ -5,17 +5,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.json.JSONObject
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
-/** A deliberately memory-only session until secure persistence and refresh are implemented. */
-internal data class AuthSession(val userId: String, val email: String, val accessToken: String)
+/** Tokens remain in memory; persistence is deferred until Android Keystore storage is available. */
+internal data class AuthSession(
+    val userId: String,
+    val email: String,
+    val accessToken: String,
+    val refreshToken: String,
+    val expiresAtMs: Long
+)
 
 internal object AuthRepository {
     var session by mutableStateOf<AuthSession?>(null)
         private set
+    private val refreshMutex = Mutex()
 
     private fun baseUrl(): String {
         val url = BuildConfig.SUPABASE_URL.trimEnd('/')
@@ -40,7 +49,9 @@ internal object AuthRepository {
             val status = connection.responseCode
             if (status !in 200..299) {
                 val message = when (status) {
-                    400, 401 -> "Check your email and password, and confirm your email if required."
+                    400, 401 -> if (path.contains("grant_type=refresh_token"))
+                        "Session expired. Please sign in again."
+                    else "Check your email and password, and confirm your email if required."
                     422 -> "Check the email address and password requirements."
                     429 -> "Too many attempts. Please wait before trying again."
                     else -> "Account service unavailable (HTTP $status)."
@@ -69,7 +80,50 @@ internal object AuthRepository {
         val user = result.optJSONObject("user")
         val userId = user?.optString("id").orEmpty()
         if (token.isBlank() || userId.isBlank()) throw IOException("Unable to verify your session.")
-        session = AuthSession(userId, user?.optString("email").orEmpty().ifBlank { normalized }, token)
+        val refreshToken = result.optString("refresh_token")
+        val expiresIn = result.optLong("expires_in", 0L)
+        if (refreshToken.isBlank() || expiresIn <= 0L) throw IOException("Unable to verify your session.")
+        session = AuthSession(
+            userId, user?.optString("email").orEmpty().ifBlank { normalized },
+            token, refreshToken, System.currentTimeMillis() + expiresIn * 1000L
+        )
+    }
+
+    /**
+     * Refresh an expiring access token before authenticated API requests.
+     * A mutex prevents concurrent requests from consuming the same rotating refresh token.
+     * Network errors leave the in-memory session intact so the user can retry.
+     */
+    suspend fun activeSession(): AuthSession = refreshMutex.withLock {
+        val current = session ?: throw IOException("Sign in to continue.")
+        if (current.expiresAtMs - System.currentTimeMillis() > 60_000L) {
+            return@withLock current
+        }
+        val result = try {
+            withContext(Dispatchers.IO) {
+                post("/auth/v1/token?grant_type=refresh_token",
+                    JSONObject().put("refresh_token", current.refreshToken))
+            }
+        } catch (failure: IOException) {
+            if (failure.message == "Session expired. Please sign in again." && session === current) {
+                session = null
+            }
+            throw failure
+        }
+        if (session !== current) throw IOException("Your account changed. Please retry.")
+        val token = result.optString("access_token")
+        val refreshToken = result.optString("refresh_token")
+        val expiresIn = result.optLong("expires_in", 0L)
+        val returnedUserId = result.optJSONObject("user")?.optString("id").orEmpty()
+        if (token.isBlank() || refreshToken.isBlank() || expiresIn <= 0L ||
+            (returnedUserId.isNotBlank() && returnedUserId != current.userId)) {
+            session = null
+            throw IOException("Session could not be refreshed. Please sign in again.")
+        }
+        AuthSession(
+            current.userId, current.email, token, refreshToken,
+            System.currentTimeMillis() + expiresIn * 1000L
+        ).also { session = it }
     }
 
     suspend fun signUp(email: String, password: String) {
