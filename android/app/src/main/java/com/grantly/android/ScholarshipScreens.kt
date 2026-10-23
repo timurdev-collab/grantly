@@ -38,11 +38,30 @@ internal fun ScholarshipDiscoverContent(initialDegree: String = "All", onSelect:
     var error by remember { mutableStateOf<String?>(null) }
     var retry by remember { mutableIntStateOf(0) }
     var sort by remember { mutableStateOf("Verified first") }
-    var pageOffset by remember(query, level, sort) { mutableIntStateOf(0) }
+    var country by remember { mutableStateOf("All") }
+    var field by remember { mutableStateOf("All") }
+    var funding by remember { mutableStateOf("All") }
+    var filterOptions by remember {
+        mutableStateOf(ScholarshipFilterOptions(emptyList(), emptyList(), emptyList()))
+    }
+    var filterError by remember { mutableStateOf(false) }
+    var filterRetry by remember { mutableIntStateOf(0) }
+    var pageOffset by remember(query, level, sort, country, field, funding) { mutableIntStateOf(0) }
     var totalCount by remember { mutableIntStateOf(0) }
     var loadingMore by remember { mutableStateOf(false) }
 
-    LaunchedEffect(query, level, sort, retry, pageOffset) {
+    LaunchedEffect(filterRetry) {
+        try {
+            filterOptions = ScholarshipRepository.filterOptions()
+            filterError = false
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            filterError = true
+        }
+    }
+
+    LaunchedEffect(query, level, sort, country, field, funding, retry, pageOffset) {
         val firstPage = pageOffset == 0
         if (firstPage) {
             loading = true
@@ -61,7 +80,10 @@ internal fun ScholarshipDiscoverContent(initialDegree: String = "All", onSelect:
                 else -> null
             }
             val page = ScholarshipRepository.search(
-                query = query, degree = degree, sort = sort, offset = pageOffset, limit = 20
+                query = query, degree = degree, sort = sort, offset = pageOffset, limit = 20,
+                country = country.takeUnless { it == "All" },
+                field = field.takeUnless { it == "All" },
+                funding = funding.takeUnless { it == "All" }
             )
             scholarships = if (firstPage) page.items
                 else (scholarships + page.items).distinctBy { it.id }
@@ -95,6 +117,21 @@ internal fun ScholarshipDiscoverContent(initialDegree: String = "All", onSelect:
         listOf("All", "Bachelor's", "Master's", "PhD").forEach { option ->
             FilterChip(selected = option == level, onClick = { level = option }, label = { Text(option, fontSize = 12.sp) })
         }
+    }
+    Spacer(Modifier.height(12.dp))
+    ScholarshipOptionFilter("Country", country, filterOptions.countries) { country = it }
+    Spacer(Modifier.height(10.dp))
+    ScholarshipOptionFilter("Field of study", field, filterOptions.fields) { field = it }
+    Spacer(Modifier.height(10.dp))
+    ScholarshipOptionFilter("Funding", funding, filterOptions.funding) { funding = it }
+    if (country != "All" || field != "All" || funding != "All") {
+        TextButton(onClick = { country = "All"; field = "All"; funding = "All" }) {
+            Text("Clear additional filters")
+        }
+    }
+    if (filterError) {
+        Text("Additional filter options are unavailable.", color = ink.copy(alpha = .7f), fontSize = 12.sp)
+        TextButton(onClick = { filterRetry++ }) { Text("Retry filters") }
     }
     Spacer(Modifier.height(12.dp))
     Text("Sort by", fontWeight = FontWeight.SemiBold, color = forest)
@@ -143,6 +180,25 @@ internal fun ScholarshipDiscoverContent(initialDegree: String = "All", onSelect:
                     modifier = Modifier.fillMaxWidth()
                 ) { Text(if (loadingMore) "Loading more..." else "Load more") }
             }
+        }
+    }
+}
+
+@Composable
+private fun ScholarshipOptionFilter(
+    label: String,
+    selected: String,
+    options: List<String>,
+    onSelected: (String) -> Unit
+) {
+    Text(label, fontWeight = FontWeight.SemiBold, color = forest)
+    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        (listOf("All") + options).distinct().forEach { option ->
+            FilterChip(
+                selected = option == selected,
+                onClick = { onSelected(option) },
+                label = { Text(option, fontSize = 12.sp) }
+            )
         }
     }
 }
