@@ -1,0 +1,422 @@
+{
+  "document_type": "staging_only_scholarship_verification_and_private_candidate_proposals",
+  "run_utc": "2026-10-23 19:26 UTC",
+  "project": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "branch": "catalog-qa/2026-10-23-official-sources",
+  "safety": "Evidence-only GitHub document. No staging scholarship/provenance/source candidate changes. Not a verification, approval, publication, archive, or production authorization. Official web content is evidence for human admin review; transient failures are not discontinuation.",
+  "baseline": {
+    "published": 397,
+    "published_needs_review": 309,
+    "private_drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_value": 207,
+    "reviewer_attributed": 0,
+    "source_candidates": 636,
+    "auth_uid": null,
+    "is_admin": false
+  },
+  "published_corrections": [
+    {
+      "id": "ae0d01ab-163f-41cd-9f58-969e6cd9ed68",
+      "title": "Swinburne University International Excellence Scholarship",
+      "issue": "Generic up-to-75% discount not supported by current 2027 official named George Swinburne award; 2027 award is 30% tuition-only. Possible identity/renaming; reconcile before correction.",
+      "official_source": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+      "proposed_fields": {
+        "funding_type": "partial tuition",
+        "tuition_coverage": "30% tuition only IF identity with George Swinburne International Excellence confirmed",
+        "degree_levels": "eligible undergraduate and postgraduate coursework; exclude research and specified degrees",
+        "application_cycle": "2027",
+        "deadline": null,
+        "eligible_nationalities": "international, excluding AU/NZ citizens and AU permanent residents; do not encode ALL"
+      },
+      "action": "human_reconciliation_not_archival"
+    },
+    {
+      "id": "85068aa3-53fb-416b-a878-31850b2cf88a",
+      "title": "University of Auckland International Scholarship",
+      "issue": "Generic Bachelor's NZ$10k–20k per year conflates multiple distinct institutional schemes; new 2027 International Student Excellence is Master's only 25% first-year tuition, while undergraduate International School Leaver and Pathway awards have separate eligibility.",
+      "official_source": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "action": "identify canonical undergraduate award; do not overwrite with Master's data"
+    },
+    {
+      "id": "6add8e4a-d951-4925-a67c-fb46802deaf7",
+      "title": "University of Auckland Masters International Scholarship",
+      "issue": "Homepage-only generic award; needs comparison against existing private 2027 International Student Excellence draft and five region-specific High Achievers awards.",
+      "official_source": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "action": "identity_reconciliation"
+    },
+    {
+      "id": "01057f47-8ad1-4cae-b6cf-fedd1c43087e",
+      "title": "University of Auckland Phd International Scholarship",
+      "issue": "Homepage-only generic record; do not conflate with 2027 Master's High Achievers programmes.",
+      "official_source": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "action": "programme_identity_review"
+    },
+    {
+      "id": "2c56e7a9-12cc-4161-bf31-65ff0979a5cf",
+      "title": "University of Melbourne Phd International Scholarship",
+      "issue": "Generic full tuition + A$28,000/year is not supported as a distinct award; named Melbourne Research Scholarship has A$39,500/year 2026 stipend rate for stipend awards.",
+      "official_source": "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship",
+      "action": "reconcile_with_canonical_melbourne_research_scholarship; no automatic archive"
+    },
+    {
+      "id": "7666f8a6-c053-429e-b16f-b5bcd57197f6",
+      "title": "University of Melbourne Masters Excellence Scholarship",
+      "issue": "Generic full tuition + A$28,000/year; no identified programme-specific page; risk of overlap with Melbourne Research Scholarship. Research degree vs coursework must be distinguished.",
+      "official_source": "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship",
+      "action": "identity_reconciliation"
+    },
+    {
+      "id": "7385caff-9493-4889-b1c0-70858627227c",
+      "title": "Melbourne Research Scholarship",
+      "issue": "Existing record largely matches official 2026 A$39,500 stipend and graduate-research eligibility, but 'ALL' is broad and source-provenance acceptance lacks reviewer identity.",
+      "official_source": "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship",
+      "action": "review_field_provenance_and_auto_consideration; no universal deadline"
+    },
+    {
+      "id": "ebf98ae2-f142-44fc-86bc-a2737a52b8bd",
+      "title": "Khalifa University Scholarship",
+      "issue": "False universal full tuition + stipend + accommodation across Bachelor/Master/PhD. Undergraduate tiers range 100/75/50/25% to books only; master's tiers vary; PhD stipend depends on tier and work-commitment pathway.",
+      "official_sources": [
+        "https://www.ku.ac.ae/scholarships-undergraduate",
+        "https://ku.ac.ae/scholarship/graduate-research-teaching-scholarship-for-international-students",
+        "https://www.ku.ac.ae/admissions/admission-faqs"
+      ],
+      "admissions_test_note": "KU undergraduate admission FAQ says IELTS Academic 6.0 or TOEFL iBT 79; SAT Math 700 may be considered. These are admission criteria, NOT universal scholarship thresholds.",
+      "action": "split_or_replace_generic_record_through_authenticated_review"
+    },
+    {
+      "id": "dbbacad7-d0be-4d75-ae3e-2eda9c1bfc7f",
+      "title": "Khalifa University Undergraduate Scholarships for International Students",
+      "issue": "Existing named undergraduate scheme: compare official 100/75/50/25% and books-only tiers before adding new record.",
+      "official_source": "https://www.ku.ac.ae/scholarships-undergraduate",
+      "action": "canonical_review_no_duplicate"
+    },
+    {
+      "id": "ac51d176-74d2-4e9b-b9e3-10096b3afacf",
+      "title": "Mo Ibrahim Foundation Scholarship (SOAS)",
+      "issue": "Unrestricted nationality and blanket full tuition/living/travel are misleading. SOAS 2026/27 offers two £45,479 total-value awards (tuition deducted; remainder maintenance), eligible full-time one-year taught Master's; African ordinary residence is preference, not a categorical citizenship exclusion; no travel award specified. 2026/27 closed 17 June 2026, 2027 call unconfirmed.",
+      "official_source": "https://www.soas.ac.uk/study/student-life/finance/scholarships/mo-ibrahim-foundation-scholarship",
+      "action": "correct funding and 2026/27 cycle; leave 2027 deadline unknown"
+    },
+    {
+      "id": "cb9f4d07-500d-4c5c-88e9-42d9cb0ea581",
+      "title": "Mo Ibrahim Foundation Scholarship",
+      "issue": "Generic Mo Ibrahim Foundation record; potential overlap with SOAS programme but distinctness not established.",
+      "official_source": "https://www.soas.ac.uk/study/student-life/finance/scholarships/mo-ibrahim-foundation-scholarship",
+      "action": "identity_reconciliation"
+    }
+  ],
+  "existing_drafts": [
+    {
+      "id": "0db4b799-59af-435b-8731-e7fc043dabbb",
+      "title": "University of Auckland International Student Excellence Scholarship (2027)",
+      "source": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+      "deadline": "2026-11-04",
+      "issue": "Two accepted-value provenance rows but neither reviewer-attributed; last_successful_check_at NULL; invitation-only offer required by 20 Oct 2026; official page internally says 'No application required' while requiring supplementary form; cycle_status upcoming after invitations began.",
+      "status": "remain_private_until_authenticated_admin_audit"
+    },
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "title": "Gordon and Isabel Humphrey Scholarship",
+      "source": "https://scholarships.unimelb.edu.au/awards/gordon-and-isabel-humphrey-scholarship",
+      "deadline": "2026-10-25",
+      "issue": "Official confirms 2027 A$41,100 annual stipend; two accepted-value provenance rows with no reviewer; no successful source audit. Urgent, do not bypass gate.",
+      "status": "remain_private_until_authenticated_admin_audit"
+    }
+  ],
+  "candidate_proposals": [
+    {
+      "title": "University of Auckland China High Achievers Scholarship",
+      "country": "New Zealand",
+      "institution": "University of Auckland",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-china-high-achievers-scholarship-1241-all.html",
+      "additional_official_url": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "cycle": "Semester One / Quarter Two 2027",
+      "degree": "Master's",
+      "funding": "25% of one year of tuition fees; one-year tenure; no living allowance documented",
+      "funding_type": "partial tuition",
+      "eligibility": "New international Master's offer holders from China; GPE >=7.0 per official institutional overview; check award regulations before encoding nationality vs residence",
+      "offer_required_by": "2026-10-20",
+      "invitation_date": "2026-10-21",
+      "supplementary_form_deadline": "2026-11-04",
+      "application_note": "Official award page labels 'No application required' while expressly requiring invited offer holders to complete a supplementary form by 4 Nov; use the explicit stage-specific invitation rule, retain discrepancy for reviewer.",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT minimum documented; do not infer from admissions.",
+      "staging_exact_title_matches": 0,
+      "staging_exact_official_url_matches": 0,
+      "staging_source_candidate_url_matches": 0,
+      "review_status": "proposal_only_not_published",
+      "field_provenance": {
+        "title": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-china-high-achievers-scholarship-1241-all.html",
+        "degree": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-china-high-achievers-scholarship-1241-all.html",
+        "funding": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-china-high-achievers-scholarship-1241-all.html",
+        "application_cycle": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-china-high-achievers-scholarship-1241-all.html",
+        "deadline": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-china-high-achievers-scholarship-1241-all.html",
+        "eligibility": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-china-high-achievers-scholarship-1241-all.html"
+      }
+    },
+    {
+      "title": "University of Auckland India High Achievers Scholarship",
+      "country": "New Zealand",
+      "institution": "University of Auckland",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-india-high-achievers-scholarship-1143-all.html",
+      "additional_official_url": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "cycle": "Semester One / Quarter Two 2027",
+      "degree": "Master's",
+      "funding": "25% of one year of tuition fees; one-year tenure; no living allowance documented",
+      "funding_type": "partial tuition",
+      "eligibility": "New international Master's offer holders from India; GPE >=7.0 per official institutional overview; check award regulations before encoding nationality vs residence",
+      "offer_required_by": "2026-10-20",
+      "invitation_date": "2026-10-21",
+      "supplementary_form_deadline": "2026-11-04",
+      "application_note": "Official award page labels 'No application required' while expressly requiring invited offer holders to complete a supplementary form by 4 Nov; use the explicit stage-specific invitation rule, retain discrepancy for reviewer.",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT minimum documented; do not infer from admissions.",
+      "staging_exact_title_matches": 0,
+      "staging_exact_official_url_matches": 0,
+      "staging_source_candidate_url_matches": 0,
+      "review_status": "proposal_only_not_published",
+      "field_provenance": {
+        "title": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-india-high-achievers-scholarship-1143-all.html",
+        "degree": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-india-high-achievers-scholarship-1143-all.html",
+        "funding": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-india-high-achievers-scholarship-1143-all.html",
+        "application_cycle": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-india-high-achievers-scholarship-1143-all.html",
+        "deadline": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-india-high-achievers-scholarship-1143-all.html",
+        "eligibility": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-india-high-achievers-scholarship-1143-all.html"
+      }
+    },
+    {
+      "title": "University of Auckland Indonesia High Achievers Scholarship",
+      "country": "New Zealand",
+      "institution": "University of Auckland",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-indonesia-high-achievers-scholarship-1242-all.html",
+      "additional_official_url": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "cycle": "Semester One / Quarter Two 2027",
+      "degree": "Master's",
+      "funding": "25% of one year of tuition fees; one-year tenure; no living allowance documented",
+      "funding_type": "partial tuition",
+      "eligibility": "New international Master's offer holders from Indonesia; GPE >=7.0 per official institutional overview; check award regulations before encoding nationality vs residence",
+      "offer_required_by": "2026-10-20",
+      "invitation_date": "2026-10-21",
+      "supplementary_form_deadline": "2026-11-04",
+      "application_note": "Official award page labels 'No application required' while expressly requiring invited offer holders to complete a supplementary form by 4 Nov; use the explicit stage-specific invitation rule, retain discrepancy for reviewer.",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT minimum documented; do not infer from admissions.",
+      "staging_exact_title_matches": 0,
+      "staging_exact_official_url_matches": 0,
+      "staging_source_candidate_url_matches": 0,
+      "review_status": "proposal_only_not_published",
+      "field_provenance": {
+        "title": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-indonesia-high-achievers-scholarship-1242-all.html",
+        "degree": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-indonesia-high-achievers-scholarship-1242-all.html",
+        "funding": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-indonesia-high-achievers-scholarship-1242-all.html",
+        "application_cycle": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-indonesia-high-achievers-scholarship-1242-all.html",
+        "deadline": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-indonesia-high-achievers-scholarship-1242-all.html",
+        "eligibility": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-indonesia-high-achievers-scholarship-1242-all.html"
+      }
+    },
+    {
+      "title": "University of Auckland USA High Achievers Scholarship",
+      "country": "New Zealand",
+      "institution": "University of Auckland",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-usa-high-achievers-scholarship-1243-all.html",
+      "additional_official_url": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "cycle": "Semester One / Quarter Two 2027",
+      "degree": "Master's",
+      "funding": "25% of one year of tuition fees; one-year tenure; no living allowance documented",
+      "funding_type": "partial tuition",
+      "eligibility": "New international Master's offer holders from USA; GPE >=7.0 per official institutional overview; check award regulations before encoding nationality vs residence",
+      "offer_required_by": "2026-10-20",
+      "invitation_date": "2026-10-21",
+      "supplementary_form_deadline": "2026-11-04",
+      "application_note": "Official award page labels 'No application required' while expressly requiring invited offer holders to complete a supplementary form by 4 Nov; use the explicit stage-specific invitation rule, retain discrepancy for reviewer.",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT minimum documented; do not infer from admissions.",
+      "staging_exact_title_matches": 0,
+      "staging_exact_official_url_matches": 0,
+      "staging_source_candidate_url_matches": 0,
+      "review_status": "proposal_only_not_published",
+      "field_provenance": {
+        "title": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-usa-high-achievers-scholarship-1243-all.html",
+        "degree": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-usa-high-achievers-scholarship-1243-all.html",
+        "funding": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-usa-high-achievers-scholarship-1243-all.html",
+        "application_cycle": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-usa-high-achievers-scholarship-1243-all.html",
+        "deadline": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-usa-high-achievers-scholarship-1243-all.html",
+        "eligibility": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-usa-high-achievers-scholarship-1243-all.html"
+      }
+    },
+    {
+      "title": "University of Auckland Vietnam High Achievers Scholarship",
+      "country": "New Zealand",
+      "institution": "University of Auckland",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-vietnam-high-achievers-scholarship-1244-all.html",
+      "additional_official_url": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "cycle": "Semester One / Quarter Two 2027",
+      "degree": "Master's",
+      "funding": "25% of one year of tuition fees; one-year tenure; no living allowance documented",
+      "funding_type": "partial tuition",
+      "eligibility": "New international Master's offer holders from Vietnam; GPE >=7.0 per official institutional overview; check award regulations before encoding nationality vs residence",
+      "offer_required_by": "2026-10-20",
+      "invitation_date": "2026-10-21",
+      "supplementary_form_deadline": "2026-11-04",
+      "application_note": "Official award page labels 'No application required' while expressly requiring invited offer holders to complete a supplementary form by 4 Nov; use the explicit stage-specific invitation rule, retain discrepancy for reviewer.",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT minimum documented; do not infer from admissions.",
+      "staging_exact_title_matches": 0,
+      "staging_exact_official_url_matches": 0,
+      "staging_source_candidate_url_matches": 0,
+      "review_status": "proposal_only_not_published",
+      "field_provenance": {
+        "title": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-vietnam-high-achievers-scholarship-1244-all.html",
+        "degree": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-vietnam-high-achievers-scholarship-1244-all.html",
+        "funding": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-vietnam-high-achievers-scholarship-1244-all.html",
+        "application_cycle": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-vietnam-high-achievers-scholarship-1244-all.html",
+        "deadline": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-vietnam-high-achievers-scholarship-1244-all.html",
+        "eligibility": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-vietnam-high-achievers-scholarship-1244-all.html"
+      }
+    },
+    {
+      "title": "Swinburne International Scholarship (2027)",
+      "country": "Australia",
+      "institution": "Swinburne University of Technology",
+      "official_url": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+      "cycle": "2027 first commencement",
+      "degree": "Bachelor's, postgraduate coursework, qualifying pathways",
+      "funding": "20% tuition discount for standard course duration",
+      "eligibility": "International students first commencing at Hawthorn; excludes Australian/NZ citizens and Australian permanent residents; excluded degree courses include Aviation and Piloting, Physiotherapy, Occupational Therapy, research master's and PhDs",
+      "deadline": null,
+      "application_note": "Automatic admission consideration; no separate scholarship application deadline established",
+      "review_status": "candidate_pending_semantic_duplicate_review",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT numerical threshold documented",
+      "staging_exact_title_matches": 0,
+      "staging_exact_shared_page_url_matches": 0,
+      "field_provenance": {
+        "funding": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "degree": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "eligibility": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "cycle": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/"
+      }
+    },
+    {
+      "title": "George Swinburne International Excellence Scholarship (2027)",
+      "country": "Australia",
+      "institution": "Swinburne University of Technology",
+      "official_url": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+      "cycle": "2027 first commencement",
+      "degree": "Bachelor's and postgraduate coursework",
+      "funding": "30% tuition discount for standard course duration",
+      "eligibility": "International students first commencing at Hawthorn; excluded degrees as listed on official 2027 scholarship page",
+      "deadline": null,
+      "application_note": "Automatic admission consideration; no separate deadline",
+      "review_status": "possible_same_award_as_published_swinburne_university_international_excellence_scholarship_id_ae0d01ab-163f-41cd-9f58-969e6cd9ed68_do_not_duplicate",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT numerical threshold documented",
+      "staging_exact_title_matches": 0,
+      "staging_exact_shared_page_url_matches": 0,
+      "field_provenance": {
+        "funding": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "degree": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "eligibility": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "cycle": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/"
+      }
+    },
+    {
+      "title": "Women in Engineering Leadership Scholarship (Swinburne 2027)",
+      "country": "Australia",
+      "institution": "Swinburne University of Technology",
+      "official_url": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+      "cycle": "2027 first commencement",
+      "degree": "Bachelor's or Master's coursework",
+      "funding": "30% tuition discount for standard course duration",
+      "eligibility": "Female international students (as described by university passport criterion) in five specified engineering/construction courses; first commencement at Hawthorn",
+      "deadline": null,
+      "application_note": "Automatic admission consideration; no separate deadline",
+      "review_status": "candidate_pending_semantic_duplicate_review",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT numerical threshold documented",
+      "staging_exact_title_matches": 0,
+      "staging_exact_shared_page_url_matches": 0,
+      "field_provenance": {
+        "funding": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "degree": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "eligibility": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "cycle": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/"
+      }
+    },
+    {
+      "title": "Swinburne ELICOS+ Scholarship (2027)",
+      "country": "Australia",
+      "institution": "Swinburne University of Technology",
+      "official_url": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+      "cycle": "2027 first commencement",
+      "degree": "ELICOS plus undergraduate or postgraduate coursework",
+      "funding": "Up to 10 weeks of ELICOS tuition refunded by deduction from subsequent principal-course tuition over first three semesters",
+      "eligibility": "Must initially not meet English entry requirement for principal course; must finish ELICOS and commence principal degree",
+      "deadline": null,
+      "application_note": "Automatic consideration; not a cash grant or unconditional full scholarship",
+      "review_status": "conditional_fee_refund_taxonomy_hold_do_not_count_until_eligibility_and_independence_confirmed",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT numerical threshold documented",
+      "staging_exact_title_matches": 0,
+      "staging_exact_shared_page_url_matches": 0,
+      "field_provenance": {
+        "funding": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "degree": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "eligibility": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+        "cycle": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/"
+      }
+    },
+    {
+      "title": "Sir John and Lady Higgins Research Scholarship",
+      "country": "Australia",
+      "institution": "University of Melbourne",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/sir-john-and-lady-higgins-research-scholarship",
+      "cycle": "2026 applications / future graduate research",
+      "degree": "Master's by Research or PhD",
+      "funding": "A$49,500 per year (2026 full-time rate) for up to two years Master's or 3.5 years doctoral; relocation support; tuition not explicitly part of this named award",
+      "eligibility": "Australian citizen or permanent resident, research in chemistry/biochemistry directly relating to pastoral and agricultural industries",
+      "deadline": "2026-10-31",
+      "tests": "No scholarship-specific IELTS/TOEFL/SAT requirement documented",
+      "staging_exact_title_matches": 0,
+      "staging_exact_official_url_matches": 0,
+      "review_status": "candidate_pending_semantic_duplicate_review",
+      "field_provenance": {
+        "funding": "https://scholarships.unimelb.edu.au/awards/sir-john-and-lady-higgins-research-scholarship",
+        "degree": "https://scholarships.unimelb.edu.au/awards/sir-john-and-lady-higgins-research-scholarship",
+        "eligibility": "https://scholarships.unimelb.edu.au/awards/sir-john-and-lady-higgins-research-scholarship",
+        "deadline": "https://scholarships.unimelb.edu.au/awards/sir-john-and-lady-higgins-research-scholarship"
+      }
+    },
+    {
+      "title": "University of Melbourne Human Rights Scholarship",
+      "country": "Australia",
+      "institution": "University of Melbourne",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/human-rights-scholarship",
+      "cycle": "2026 applications / future graduate research",
+      "degree": "Master's by Research or PhD",
+      "funding": "Full research-degree fee offset (2y Master's, 4y PhD), A$44,500/year 2026 rate living allowance (2y Master's or 3.5y PhD), other eligible support",
+      "eligibility": "Domestic and international applicants enrolling in graduate research in human rights; selection criteria apply",
+      "deadline": "2026-10-31",
+      "tests": "No scholarship-specific IELTS/TOEFL/SAT requirement documented",
+      "staging_exact_title_matches": 0,
+      "staging_exact_official_url_matches": 0,
+      "review_status": "candidate_pending_semantic_duplicate_review",
+      "field_provenance": {
+        "funding": "https://scholarships.unimelb.edu.au/awards/human-rights-scholarship",
+        "degree": "https://scholarships.unimelb.edu.au/awards/human-rights-scholarship",
+        "eligibility": "https://scholarships.unimelb.edu.au/awards/human-rights-scholarship",
+        "deadline": "https://scholarships.unimelb.edu.au/awards/human-rights-scholarship"
+      }
+    }
+  ],
+  "uniqueness_check": "Targeted exact-title search of scholarship and source-candidate tables found no named new awards; targeted exact-official-URL search for five Auckland awards, two Melbourne awards, and the shared Swinburne page found zero matches. Existing generic Swinburne and Auckland/Melbourne records still pose semantic-duplicate risks. Do not treat shared institutional page as independent record proof.",
+  "publication_requirements": [
+    "Authenticated Grantly admin role with reviewer identity",
+    "Official programme-specific source and field-level provenance",
+    "Resolve nationality vs residence and English admission-vs-scholarship requirements",
+    "Successful official-source audit, cycle/deadline validation and semantic duplicate check",
+    "Run draft readiness and audited publish workflow, independently read back staging counts",
+    "CI validation before any production merge or deployment"
+  ],
+  "writes": {
+    "staging_edits": 0,
+    "staging_publications": 0,
+    "staging_archives": 0,
+    "production_changes": 0
+  }
+}
