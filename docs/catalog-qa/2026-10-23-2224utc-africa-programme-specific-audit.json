@@ -1,0 +1,527 @@
+{
+  "audit_type": "official_programme_evidence_unapplied",
+  "checked_at_utc": "2026-10-23T22:24:49Z",
+  "project": "cbzriyarlvpmtfbjgede",
+  "before_readback": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 636,
+    "admin_logs": 8
+  },
+  "authentication": {
+    "auth_uid": null,
+    "is_admin": false
+  },
+  "rules": [
+    "Official programme-specific evidence is a proposed provenance source, not reviewer-accepted provenance.",
+    "Do not directly mutate staging using privileged management SQL to evade application admin workflow.",
+    "Do not archive or verify published records without authenticated audited action.",
+    "Do not treat a grant for entrepreneurship as a degree scholarship.",
+    "Do not infer future application dates from previous years.",
+    "Duplicate screening is preliminary: targeted staging title and official URL search only."
+  ],
+  "published_review": [
+    {
+      "id": "3a4821f7-41e6-47a5-a9e6-8029ae5c5d38",
+      "title": "University of Ghana Masters Excellence Scholarship",
+      "action": "identity_not_established",
+      "issue": "Generic all-nationalities full Master's tuition/living support not established by UG financial aid office; its financial aid describes Ghanaian students and fee assistance, not this named Master's programme.",
+      "field_provenance_needed": [
+        "title",
+        "degree_levels",
+        "funding_type",
+        "eligible_nationalities",
+        "official_url"
+      ],
+      "official_source": "https://www.ug.edu.gh/financialaid/",
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "b69b9607-4cb2-43f7-bfa8-511a463bc46f",
+      "title": "University of Ghana Scholarship",
+      "action": "reconcile_named_awards",
+      "issue": "UG's aid office lists several distinct scholarships and eligibility rules, and fee aid may be full or partial; generic all-nationalities Bachelor's/Master's claim is unsupported.",
+      "field_provenance_needed": [
+        "title",
+        "degree_levels",
+        "funding_type",
+        "eligible_nationalities",
+        "official_url"
+      ],
+      "official_source": "https://www.ug.edu.gh/financialaid/",
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "5ded32f8-fb61-409f-8735-ced342f040f3",
+      "title": "University of Ghana Undergraduate Excellence Scholarship",
+      "action": "identity_not_established",
+      "issue": "UG financial aid does not establish this generic named universally fully-funded award; no stipend guarantee.",
+      "field_provenance_needed": [
+        "title",
+        "funding_type",
+        "stipend",
+        "eligible_nationalities"
+      ],
+      "official_source": "https://www.ug.edu.gh/financialaid/",
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "d6b51232-8cf5-4c58-978b-32e7e10fa139",
+      "title": "Mastercard Foundation at KNUST",
+      "action": "correct_degree_eligibility_and_cycle",
+      "issue": "Official 2025/26 KNUST call requires secondary results, financial need, leadership and non-enrolment in tertiary education; does not establish Master's eligibility or a 2027 deadline.",
+      "field_provenance_needed": [
+        "degree_levels",
+        "eligible_nationalities",
+        "application_cycle",
+        "deadline",
+        "official_url"
+      ],
+      "official_source": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "a3ba152b-07f1-42d0-a748-165f6280a346",
+      "title": "KNUST Scholarship",
+      "action": "reconcile_named_awards",
+      "issue": "Generic all-nationalities full-tuition claim lacks programme identity; do not equate automatically with Mastercard Foundation at KNUST.",
+      "field_provenance_needed": [
+        "title",
+        "funding_type",
+        "eligible_nationalities",
+        "official_url"
+      ],
+      "official_source": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "75273afa-f09e-423f-b288-0950e4aa8cd0",
+      "title": "MTN Foundation Scholarship",
+      "action": "reconcile_three_named_routes",
+      "issue": "Official MTN Nigeria identifies separate Science & Technology, Blind Students and Top 10 UTME scholarships; N300,000 annual awards, not an unrestricted scholarship open to all nationalities.",
+      "field_provenance_needed": [
+        "title",
+        "funding_type",
+        "stipend",
+        "eligible_nationalities",
+        "degree_levels",
+        "application_cycle",
+        "deadline",
+        "official_url"
+      ],
+      "official_source": "https://www.mtn.ng/scholarships/",
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "afbd5e74-2ad3-4fbf-895e-bcacb3403b14",
+      "title": "Tony Elumelu Foundation Entrepreneurship",
+      "action": "high_priority_non_academic_grant_archive_review",
+      "issue": "Official 2026 programme provides US$5,000 non-refundable seed capital for African entrepreneurs, training and mentorship, NOT tuition, academic degree funding or a Bachelor scholarship. Strong evidence for authenticated audited exclusion from academic scholarship catalog.",
+      "field_provenance_needed": [
+        "title",
+        "funding_type",
+        "tuition_coverage",
+        "degree_levels",
+        "eligible_nationalities",
+        "official_url"
+      ],
+      "official_source": "https://www.tonyelumelufoundation.org/pt/comunicados-de-imprensa-2/apply-tef-entrepreneurship-programme-2026/",
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "3b6fb08d-5fad-47f2-a51d-c8b4e0350578",
+      "title": "United States International University Scholarship",
+      "action": "reconcile_with_usiu_mastercard",
+      "issue": "Generic full-tuition Bachelor award and ALL nationalities lack named programme evidence; separately documented Mastercard Foundation at USIU-Africa covers first-time undergraduate applicants from Africa with strict age, financial and course eligibility.",
+      "field_provenance_needed": [
+        "title",
+        "funding_type",
+        "eligible_nationalities",
+        "degree_levels",
+        "official_url"
+      ],
+      "official_source": "https://www.usiu.ac.ke/mastercard-foundation-scholars-program/",
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "847ba3a6-ded4-4123-bbcb-813b53d20c65",
+      "title": "Strathmore University Scholarship",
+      "action": "identity_not_established",
+      "issue": "Institution homepage alone does not prove universal full tuition or nationality ALL. Find a named award and current call before correcting or publishing.",
+      "field_provenance_needed": [
+        "title",
+        "funding_type",
+        "eligible_nationalities",
+        "official_url"
+      ],
+      "official_source": null,
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "e3e887eb-1c14-4d63-91df-594c5b87c886",
+      "title": "Rwanda Government Scholarship",
+      "action": "identity_not_established",
+      "issue": "Ministry homepage alone is not programme-specific evidence of universal fully funded Bachelor scholarship; no confirmed current cycle.",
+      "field_provenance_needed": [
+        "title",
+        "funding_type",
+        "eligible_nationalities",
+        "application_cycle"
+      ],
+      "official_source": null,
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "a7e941c3-1ed6-4a73-941f-b0e51c0eaad0",
+      "title": "University of Rwanda Scholarship",
+      "action": "identity_not_established",
+      "issue": "Institution homepage alone does not establish this universal fully funded undergraduate scholarship; no current programme-specific call identified.",
+      "field_provenance_needed": [
+        "title",
+        "funding_type",
+        "eligible_nationalities",
+        "official_url"
+      ],
+      "official_source": null,
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    },
+    {
+      "id": "6abc1fe9-0ad4-4414-bc53-bbac39351333",
+      "title": "Addis Ababa University Scholarship",
+      "action": "identity_not_established",
+      "issue": "Institution homepage alone does not substantiate a single award across Bachelor/Master/PhD with nationality ALL; needs specific scheme and source.",
+      "field_provenance_needed": [
+        "title",
+        "degree_levels",
+        "funding_type",
+        "eligible_nationalities",
+        "official_url"
+      ],
+      "official_source": null,
+      "verification_decision": "hold_unverified",
+      "database_edit_applied": false
+    }
+  ],
+  "candidate_routes": [
+    {
+      "title": "UGHE MSc Health Professions Education Mastercard Foundation Scholars",
+      "country": "Rwanda",
+      "degree": "Master",
+      "funding": "Fully funded scholarship pathway (official wording)",
+      "eligibility": "African country citizens/residents or refugees, <=35 except disability exceptions; health-related Bachelor's; no previous Master's",
+      "deadline": "2026-10-25",
+      "opens": "2026-10-06",
+      "cycle": "2026 MSc-HPE application; closes 23:59 CAT",
+      "official_source": "https://ughe.org/master-of-science-hpe-2/",
+      "decision": "urgent_source_verified_candidate",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "UGHE MSc Global Health Delivery Mastercard Foundation Scholars",
+      "country": "Rwanda",
+      "degree": "Master",
+      "funding": "Fully funded Mastercard Foundation programme",
+      "eligibility": "Young Africans <=35, refugee status accepted; eligible options Global Surgery, Health Management, One Health, Social and Community Medicine; no previous Master's",
+      "deadline": null,
+      "opens": null,
+      "cycle": "HOLD: same official page says class of 2027 closed yet lists opening 14 Dec 2026 and closing 31 Jan 2027, with inconsistent June 2026 decision",
+      "official_source": "https://ughe.org/admission-for-the-mghd-program-mastercard-foundation-scholars/",
+      "decision": "hold_official_cycle_conflict",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "Pan-Atlantic University Mastercard Foundation Scholars Program",
+      "country": "Nigeria",
+      "degree": "Bachelor",
+      "funding": "Full tuition, accommodation and learning resources",
+      "eligibility": "Young Africans facing financial barriers; WAEC/NECO equivalents; UTME minimum 220 per official 2026 call",
+      "deadline": "2026-05-22",
+      "opens": "2026-04-27",
+      "cycle": "2026 intake closed; 2027 call not established",
+      "official_source": "https://pau.edu.ng/mastercard-foundation/",
+      "decision": "draft_candidate_future_cycle_unannounced",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "USIU-Africa Mastercard Foundation Scholars Program",
+      "country": "Kenya",
+      "degree": "Bachelor",
+      "funding": "Tuition, learning materials, meals/accommodation, medical, stipend, transport",
+      "eligibility": "First-time African undergraduates <=29; <=32 refugees/displaced and persons with disabilities; approved 13 programmes",
+      "deadline": null,
+      "opens": null,
+      "cycle": "No call currently open per official page; May and September intakes, no universal deadline",
+      "official_source": "https://www.usiu.ac.ke/mastercard-foundation-scholars-program/",
+      "decision": "draft_candidate_current_call_closed",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "UWC Mastercard Foundation Scholars Program",
+      "country": "South Africa",
+      "degree": "Bachelor and Master",
+      "funding": "Full scholarship, restricted fields",
+      "eligibility": "African students with financial barriers; degree-specific age limits and admission requirements",
+      "deadline": null,
+      "opens": null,
+      "cycle": "Official university page is for 2026 intake; no 2027 deadline established",
+      "official_source": "https://www.uwc.ac.za/study/partnerships/mastercard-foundation-scholars-program",
+      "decision": "draft_candidate_cycle_unannounced",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "UM6P Mastercard Foundation Scholars Program",
+      "country": "Morocco",
+      "degree": "Not established",
+      "funding": "Programme support for young African women; specific financial terms not established",
+      "eligibility": "Young African women, programme-specific eligibility pending",
+      "deadline": null,
+      "opens": null,
+      "cycle": "Programme announced 2025; no current call or deadline established",
+      "official_source": "https://www.um6p.ma/um6p-launched-mastercard-foundation-scholars-program-empower-young-africans",
+      "decision": "hold_details_incomplete",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "University of Ghana UG Sponsorship 2026/27",
+      "country": "Ghana",
+      "degree": "Bachelor",
+      "funding": "Tuition-fee assistance; amount variable",
+      "eligibility": "Ghanaian continuing UG students with financial need; WASSCE aggregate <=20, CGPA >=2.5",
+      "deadline": null,
+      "opens": null,
+      "cycle": "2026/27 call published; deadline not shown on programme page",
+      "official_source": "https://www.ug.edu.gh/financialaid/node/29",
+      "decision": "draft_candidate_cycle_confirmed",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "University of Ghana UGBS Scholars' Scholarship 2026/27",
+      "country": "Ghana",
+      "degree": "Bachelor",
+      "funding": "Financial assistance, amount not stated",
+      "eligibility": "Disadvantaged undergraduate students of UG Business School Main Campus",
+      "deadline": "2026-07-29",
+      "opens": null,
+      "cycle": "2026/27 call closed 15:00 local; 2027/28 deadline unknown",
+      "official_source": "https://www.ug.edu.gh/financialaid/node/63",
+      "decision": "draft_candidate_closed_cycle",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "University of Ghana SRC Yi Bi Boa Scholarship",
+      "country": "Ghana",
+      "degree": "Bachelor",
+      "funding": "Need-based support, amount not established",
+      "eligibility": "UG students paying SRC dues; continuing CGPA >=1.5; financial need",
+      "deadline": "2026-07-02",
+      "opens": null,
+      "cycle": "2026 application closed; 2027 deadline unknown",
+      "official_source": "https://www.ug.edu.gh/financialaid/node/27",
+      "decision": "draft_candidate_closed_cycle",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "University of Ghana Educational Pathways International Scholarship",
+      "country": "Ghana",
+      "degree": "Bachelor",
+      "funding": "Tuition, books, room and board; 4 years conditional on academic progress",
+      "eligibility": "UG students from disadvantaged areas; specific WASSCE/CGPA thresholds",
+      "deadline": "2026-02-11",
+      "opens": null,
+      "cycle": "2025/26 call closed; do not invent 2027 deadline",
+      "official_source": "https://www.ug.edu.gh/financialaid/node/23",
+      "decision": "draft_candidate_closed_cycle",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "University of Ghana Fondazione Edu Scholarship",
+      "country": "Ghana",
+      "degree": "Bachelor",
+      "funding": "Tuition, books, accommodation, stipend; academic renewal conditions",
+      "eligibility": "UG financially needy Level 100/continuing students; WASSCE/CGPA requirements",
+      "deadline": "2026-02-11",
+      "opens": null,
+      "cycle": "2025/26 call closed; do not invent 2027 deadline",
+      "official_source": "https://www.ug.edu.gh/financialaid/node/25",
+      "decision": "draft_candidate_closed_cycle",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "MTN Foundation Science and Technology Scholarship",
+      "country": "Nigeria",
+      "degree": "Bachelor/tertiary undergraduate",
+      "funding": "NGN 300,000 annual scholarship",
+      "eligibility": "Nigerian 300-level STEM or 400-level medical students in public tertiary institutions; GPA rules",
+      "deadline": null,
+      "opens": null,
+      "cycle": "2026 scheme documented; no 2027 application deadline established",
+      "official_source": "https://www.mtn.ng/scholarships/",
+      "decision": "reconcile_with_existing_mtn_published",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "MTN Foundation Scholarship for Blind Students",
+      "country": "Nigeria",
+      "degree": "Bachelor/tertiary undergraduate",
+      "funding": "NGN 300,000 annually",
+      "eligibility": "Nigerian blind 200/300-level students in public tertiary institutions; subject to academic rules",
+      "deadline": null,
+      "opens": null,
+      "cycle": "2026 scheme documented; no 2027 deadline established",
+      "official_source": "https://www.mtn.ng/scholarships/",
+      "decision": "reconcile_with_existing_mtn_published",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    },
+    {
+      "title": "MTN Foundation Top 10 UTME Scholarship",
+      "country": "Nigeria",
+      "degree": "Bachelor/tertiary undergraduate",
+      "funding": "NGN 300,000 annually",
+      "eligibility": "Top ten UTME candidates announced by JAMB; automatic, subject to academic progress",
+      "deadline": null,
+      "opens": null,
+      "cycle": "2026 scheme documented; automatic, no application deadline",
+      "official_source": "https://www.mtn.ng/scholarships/",
+      "decision": "reconcile_with_existing_mtn_published",
+      "language_tests": {
+        "ielts": null,
+        "toefl": null,
+        "sat": null,
+        "reason": "No programme-specific numeric IELTS/TOEFL/SAT thresholds established; Nigerian UTME is not SAT."
+      },
+      "staging_exact_title_or_url_match": false,
+      "semantic_duplicate_review_required": true,
+      "database_draft_inserted": false
+    }
+  ],
+  "high_priority": [
+    "Authenticated audited archival review of Tony Elumelu entrepreneurship non-degree grant.",
+    "Correct/reconcile MTN generic scholarship against three documented Nigerian award categories.",
+    "Correct three generic University of Ghana records; current UG financial aid applies Ghanaian student restrictions.",
+    "Prepare UGHE HPE Mastercard Scholars application closing 25 Oct 2026 23:59 CAT for authenticated draft approval.",
+    "Hold UGHE MGHD 2027 cycle because official page contradicts itself."
+  ],
+  "staging_writes_succeeded": 0,
+  "published_succeeded": 0,
+  "production_changed": false
+}
