@@ -124,8 +124,10 @@ internal object AuthRepository {
             userId, user?.optString("email").orEmpty().ifBlank { normalized },
             token, refreshToken, System.currentTimeMillis() + expiresIn * 1000L
         )
-        persist(signedIn)
-        session = signedIn
+        refreshMutex.withLock {
+            persist(signedIn)
+            session = signedIn
+        }
     }
 
     /**
