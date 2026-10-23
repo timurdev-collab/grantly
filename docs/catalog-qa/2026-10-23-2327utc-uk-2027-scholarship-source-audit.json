@@ -1,0 +1,348 @@
+{
+  "schema_version": "1.0",
+  "scope": "Staging-only source QA and private-draft proposals; NOT accepted provenance",
+  "run_utc": "2026-10-23T23:27Z",
+  "staging_project": "cbzriyarlvpmtfbjgede",
+  "starting_snapshot": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636
+  },
+  "dedup": "12 candidate URLs normalized for trailing slash; all returned 0 exact matches in scholarship official_url and source candidate candidate_url. Generic published Glasgow/GREAT records still create semantic duplicate risk.",
+  "publication_gates": {
+    "auth_uid": null,
+    "is_admin": false,
+    "db_write_status": "blocked; no write attempted",
+    "ci": "required before production; no production changes",
+    "publication_requires": "authenticated admin, successful source audit, source evidence, reviewer-attributed field provenance, duplicate review"
+  },
+  "published_record_reviews": [
+    {
+      "id": "d8d64eb3-381f-4ca7-9725-27617c719ebe",
+      "title": "Exeter Global Excellence Scholarship",
+      "status": "needs_review",
+      "risk": "Published up to £10k, no cycle/deadline. Official 2027/28 Exeter Excellence advertised £15k undergraduate per eligible year and £15k first-year Masters; 2026/27 January 2027 intake deadline Nov 26 2026 is distinct",
+      "official_sources": [
+        "https://www.exeter.ac.uk/international-students/vietnam/",
+        "https://www.exeter.ac.uk/study/funding/exeterexcellence/"
+      ],
+      "field_evidence": [
+        {
+          "field": "application_cycle",
+          "proposal": "September 2027 / 2027-28",
+          "evidence": "2027/28 scholarships advertised on Exeter official international pages"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "£15,000 tuition discount (2027/28); undergrad recurring eligible years; Masters first year",
+          "evidence": "Official 2027/28 Exeter country pages specify £15,000 each"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Qualifying international/EU fee-paying applicants, subject to course and scheme restrictions",
+          "evidence": "Official university international scholarships page"
+        }
+      ],
+      "action": "manual correction after mapping precise scheme and cycle; do not set universal deadline"
+    },
+    {
+      "id": "00d18610-547f-4742-9dfa-cb43b8feaafb",
+      "title": "Glasgow Excellence Scholarship",
+      "status": "needs_review",
+      "risk": "Generic £10k and ALL nationalities may conflate 2027 Glasgow Excellence Award (UK) £5k Home/RUK with Global Leadership £10k international",
+      "official_sources": [
+        "https://www.gla.ac.uk/scholarships/glasgowexcellenceawarduk/",
+        "https://www.gla.ac.uk/scholarships/globalleadershipscholarship/"
+      ],
+      "field_evidence": [
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Unknown until exact award identity reconciled",
+          "evidence": "2027 Glasgow Excellence UK restricted to Home/RUK; Global Leadership is distinct"
+        }
+      ],
+      "action": "programme identity reconciliation; do not auto-rename"
+    },
+    {
+      "id": "112ec15b-5535-4761-958d-0374f4680ba7",
+      "title": "Edinburgh Global Scholarship",
+      "status": "needs_review",
+      "risk": "Generic universally full-funded undergraduate scholarship not supported by official university portfolio",
+      "official_sources": [
+        "https://edinburgh-global.ed.ac.uk/education-beyond-borders/scholarships-and-fellowships",
+        "https://registryservices.ed.ac.uk/scholarships-and-student-funding/prospective-undergraduates/international-and-eu-students/the-defne"
+      ],
+      "field_evidence": [
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Not universal; depends on named award",
+          "evidence": "Official Edinburgh named awards have restricted nationality/eligibility"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Not established for this generic programme",
+          "evidence": "Named awards differ; no single Global Scholarship award demonstrated"
+        }
+      ],
+      "action": "identify award before editing; no archive without authorized review"
+    },
+    {
+      "id": "ad86d601-ea9a-49c3-bc77-2f611adc6ffb",
+      "title": "Cisco Global Problem Solver Challenge",
+      "status": "needs_review",
+      "risk": "Entrepreneurship/startup prize mislabelled as Bachelor scholarship",
+      "official_sources": [
+        "https://blogs.cisco.com/our-corporate-purpose/cisco-to-award-1m-usd-to-techforgood-startups-and-entrepreneurs-addressing-social-issues-and-climate-change",
+        "https://www.cisco.com/c/m/ja_jp/about/csr/esg-hub/global/challenge.html"
+      ],
+      "field_evidence": [
+        {
+          "field": "degree_levels",
+          "proposal": "Not a degree scholarship",
+          "evidence": "Cisco official describes cash prizes for early-stage tech entrepreneurs"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Startup competition prize; exclude from academic scholarship count",
+          "evidence": "Cisco official 2021 announcement calls it cash prizes for entrepreneurs"
+        }
+      ],
+      "action": "candidate for audited authorized archive, not immediate deletion"
+    },
+    {
+      "id": "a4f9dafa-ec4c-4955-96bf-28a6d4108866",
+      "title": "Huawei Seeds for the Future",
+      "status": "needs_review",
+      "risk": "ICT short training and experiential programme, not a degree tuition scholarship",
+      "official_sources": [
+        "https://www.huawei.com/kr/news/2026/9/seedsforthefuture26"
+      ],
+      "field_evidence": [
+        {
+          "field": "degree_levels",
+          "proposal": "Not a degree scholarship",
+          "evidence": "Official 2026 Huawei news reports 8-day ICT training and site visits for students"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Not established; training is not university tuition coverage",
+          "evidence": "Official programme announcement describes education activities, not degree tuition"
+        }
+      ],
+      "action": "candidate for audited authorized archive or reclassification outside degree-scholarship catalog"
+    },
+    {
+      "id": "9d2e2386-ba7b-44ea-bf3d-d5252fd5982b",
+      "title": "Developing Solutions Scholarship",
+      "status": "needs_review",
+      "risk": "Potential duplicate of another published Nottingham Developing Solutions entry",
+      "official_sources": [
+        "https://www.nottingham.ac.uk/pgstudy/funding/developing-solutions-masters-scholarship"
+      ],
+      "field_evidence": [],
+      "action": "HOLD official Nottingham site blocked by robots; compare with 2116ac6a record after access; no discontinued inference"
+    },
+    {
+      "id": "2116ac6a-4063-4b13-a0af-4d7edf63f581",
+      "title": "Developing Solutions Scholarship (University of Nottingham)",
+      "status": "needs_review",
+      "risk": "Same named scheme as 9d2e2386, one record labelled fully funded despite being tuition-only",
+      "official_sources": [
+        "https://www.nottingham.ac.uk/studywithus/international-applicants/scholarships-fees-and-finance/scholarships/developing-solutions.aspx"
+      ],
+      "field_evidence": [],
+      "action": "HOLD pending official current-cycle source and semantic reconciliation; no edit"
+    },
+    {
+      "id": "a43a7874-c25e-4670-be0f-2e56ad799ca9",
+      "title": "Denys Holland Scholarship",
+      "status": "needs_review",
+      "risk": "Official UCL page redirects to login; funding £9k/year + travel unverified this run",
+      "official_sources": [
+        "https://www.ucl.ac.uk/scholarships/denys-holland-scholarship"
+      ],
+      "field_evidence": [],
+      "action": "HOLD source inaccessible; do not treat as discontinued"
+    }
+  ],
+  "candidate_programmes": [
+    {
+      "name": "World Changers Global Excellence Scholarship",
+      "url": "https://www.gla.ac.uk/scholarships/worldchangersglobalexcellencescholarship/",
+      "cycle": "2027 undergraduate",
+      "degree": [
+        "Bachelor"
+      ],
+      "funding": "Annual tuition discount £10,000 for eligible science/engineering/medical-life sciences, £7,000 for arts/social sciences; renewable subject to progress",
+      "eligibility": "International or EU (non-UK) fee status; eligible 2027 undergraduate offer; academic grades by programme",
+      "deadline": null,
+      "deadline_note": "Automatic consideration after admissions offer; no separate scholarship deadline",
+      "evidence": {
+        "degree_levels": "New International/EU undergraduate students for 2027",
+        "tuition_coverage": "£10,000 or £7,000 annually by academic college",
+        "eligibility": "International/EU fee status and grade thresholds; medicine/dentistry/veterinary excluded from specified group"
+      },
+      "decision": "prepare_private_draft_after_semantic_review"
+    },
+    {
+      "name": "World Changers India Excellence Award",
+      "url": "https://www.gla.ac.uk/scholarships/worldchangersindiaexcellenceaward/",
+      "cycle": "2027/28",
+      "degree": [
+        "Master"
+      ],
+      "funding": "£12,500 one-year tuition fee waiver; up to 12 awards",
+      "eligibility": "India; eligible one-year taught Masters offer for September 2027; UK First equivalent, typically >=85%",
+      "deadline": "2027-03-31",
+      "deadline_note": "11:45 UK time; programme offer required",
+      "decision": "prepare_private_draft_after_semantic_review"
+    },
+    {
+      "name": "World Changers China Excellence Award",
+      "url": "https://www.gla.ac.uk/scholarships/worldchangerschinaexcellenceaward/",
+      "cycle": "2027/28",
+      "degree": [
+        "Master"
+      ],
+      "funding": "£12,500 one-year tuition fee waiver; up to 12 awards",
+      "eligibility": "Chinese passport holder domiciled in China, international fee status, eligible one-year taught Masters offer, academic merit",
+      "deadline": null,
+      "deadline_note": "Scholarship deadline not established in verified source excerpt",
+      "decision": "prepare_private_draft_after_semantic_review"
+    },
+    {
+      "name": "World Changers Glasgow Scholarship PGT (EU)",
+      "url": "https://www.gla.ac.uk/scholarships/worldchangersglasgowscholarshippgteu/",
+      "cycle": "September 2027 or January 2028",
+      "degree": [
+        "Master"
+      ],
+      "funding": "£5,000 tuition discount per year; not stackable with most other awards",
+      "eligibility": "EU fee status and qualifying eligible postgraduate programme",
+      "deadline": null,
+      "deadline_note": "Automatic discount at registration; no separate application",
+      "decision": "prepare_private_draft_after_semantic_review"
+    },
+    {
+      "name": "ASBS Global Impact Scholarship",
+      "url": "https://www.gla.ac.uk/scholarships/asbsglobalimpactscholarship/",
+      "cycle": "September 2027",
+      "degree": [
+        "Master"
+      ],
+      "funding": "Full tuition fee waiver; five awards; no living stipend established",
+      "eligibility": "International/EU fee status, eligible Adam Smith Business School one-year taught Masters offer accepted, UK First equivalent",
+      "deadline": "2027-03-31",
+      "deadline_note": "11:45 UK time; shortlisted video due April 9, 2027",
+      "decision": "prepare_private_draft_after_semantic_review"
+    },
+    {
+      "name": "ASBS Entrepreneurial Leaders Award",
+      "url": "https://www.gla.ac.uk/scholarships/asbsentrepreneurialleadersaward/",
+      "cycle": "CONFLICTING: body says September 2026, deadline March 2027",
+      "degree": [
+        "Master"
+      ],
+      "funding": "£25,000 tuition discount; three awards; programme deposit required after award",
+      "eligibility": "International/EU fee status, eligible one-year ASBS taught Masters offer accepted",
+      "deadline": "2027-03-31",
+      "deadline_note": "11:45 UK time, but source retains September 2026 intake wording; reconcile before publication",
+      "decision": "hold_source_cycle_conflict"
+    },
+    {
+      "name": "The Bseisu–University of Glasgow Scholarship",
+      "url": "https://www.gla.ac.uk/scholarships/thebseisu-universityofglasgowscholarship/",
+      "cycle": "2027/28",
+      "degree": [
+        "Master"
+      ],
+      "funding": "Full tuition waiver + £17,424/year study costs + visa/IHS/flights; two awards",
+      "eligibility": "Nationals of Jordan, Lebanon, Palestine or Syria, eligible College of Science and Engineering taught STEM Masters, firm offer",
+      "deadline": null,
+      "deadline_note": "Decision by June 25, 2027; application deadline not shown, do not use decision date",
+      "decision": "prepare_private_draft_after_semantic_review"
+    },
+    {
+      "name": "University of Glasgow Humanitarian Scholarship",
+      "url": "https://www.gla.ac.uk/scholarships/thehumanitarianscholarship/",
+      "cycle": "2027/28",
+      "degree": [
+        "Master"
+      ],
+      "funding": "Full tuition, living stipend, accommodation and travel; direct page says up to five awards",
+      "eligibility": "Conflict-affected/displaced applicants outside UK, international/EU fee status, eligible full-time taught Masters",
+      "deadline": null,
+      "deadline_note": "Direct award page says up to five; other university course listings say nine, confirm allocation",
+      "decision": "hold_allocation_conflict"
+    },
+    {
+      "name": "University of Glasgow Sanctuary Scholarships",
+      "url": "https://www.gla.ac.uk/scholarships/sanctuaryscholarships/",
+      "cycle": "2027/28",
+      "degree": [
+        "Bachelor",
+        "Master"
+      ],
+      "funding": "Conditional full/partial tuition and stipend; direct page says £4,000 for some recipients but £5,000 in other cases",
+      "eligibility": "UK-resident asylum seekers/refugees with Home/RUK fee status, relevant full-time admission offer",
+      "deadline": null,
+      "deadline_note": "Direct page contains 2027/26 typo and conditional stipend values; confirm before normalization",
+      "decision": "hold_funding_cycle_conflict"
+    },
+    {
+      "name": "Glasgow Excellence Award (UK)",
+      "url": "https://www.gla.ac.uk/scholarships/glasgowexcellenceawarduk/",
+      "cycle": "2027/28",
+      "degree": [
+        "Master"
+      ],
+      "funding": "£5,000 tuition discount; 40 awards",
+      "eligibility": "Home/RUK fee status, UK First equivalent, eligible full-time taught Masters offer",
+      "deadline": "2027-07-13",
+      "deadline_note": "11:45 UK time; overlaps generic published Glasgow Excellence Scholarship, reconcile identity",
+      "decision": "hold_semantic_duplicate_risk"
+    },
+    {
+      "name": "University of Glasgow GREAT Scholarships 2027",
+      "url": "https://www.gla.ac.uk/scholarships/greatscholarships2027/",
+      "cycle": "2027",
+      "degree": [
+        "Master"
+      ],
+      "funding": "£10,000 tuition fee discount; three awards",
+      "eligibility": "Body names Bangladesh, Pakistan and Vietnam; page eligible-country list also includes Greece and Spain; confirm",
+      "deadline": "2027-04-30",
+      "deadline_note": "11:45 UK time; existing two generic GREAT published records; confirm country discrepancy and scheme identity",
+      "decision": "hold_semantic_duplicate_and_country_conflict"
+    },
+    {
+      "name": "Bseisu–University of Edinburgh Scholarship",
+      "url": "https://edinburgh-global.ed.ac.uk/education-beyond-borders/scholarships-and-fellowships/bseisu-university-of-edinburgh-scholarship",
+      "cycle": "2026/27 CLOSED",
+      "degree": [
+        "Master"
+      ],
+      "funding": "Full tuition, £20,780 living stipend, travel/visa/IHS; two awards",
+      "eligibility": "Displaced/refugee nationals of Syria, Jordan, Lebanon or Palestine, outside UK, eligible on-campus STEM Masters",
+      "deadline": "2026-03-13",
+      "deadline_note": "Historical deadline only; 2027/28 call not confirmed; separate from Glasgow's Bseisu programme",
+      "decision": "hold_next_cycle_unannounced"
+    }
+  ],
+  "review_notes": [
+    "All deadline values refer to official programme pages and cycles; do not reuse historical deadlines for 2027.",
+    "Do not assign IELTS/TOEFL/SAT thresholds unless official scholarship or admission programme page documents a threshold; none assigned here.",
+    "Do not count individual recipients or academic majors as separate programmes.",
+    "Potentially misclassified Cisco/Huawei programmes require authorized audited archival review.",
+    "A current HTTP block, redirect or temporary failure is not proof of discontinuation.",
+    "GREAT Glasgow official page internally conflicts on countries (3 named in prose vs 5 in list); hold.",
+    "ASBS Entrepreneurial Leaders page retains September 2026 intake despite March 2027 deadline; hold.",
+    "Sanctuary page includes 2027/26 typo and £4,000 vs £5,000 stipends; hold.",
+    "Bseisu Edinburgh 2026/27 closed; not a current-cycle new publishable record."
+  ]
+}
