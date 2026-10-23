@@ -165,8 +165,9 @@ internal fun AuthContent() {
         }) { Text("Forgot password?") }
     }
     TextButton(onClick = {
+        val wasRecovering = isRecovering
         isRecovering = false
-        isSignup = if (isRecovering) false else !isSignup
+        isSignup = if (wasRecovering) false else !isSignup
         error = null
         confirmationSent = false
         resetSent = false
