@@ -16,10 +16,11 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Save/remove scholarship controls on detail screens using existing user-scoped Supabase RLS policies (not yet device-tested).
 - Automatic access-token refresh and Android Keystore AES-GCM encrypted session persistence, including restoration at launch and local token removal on sign-out (not yet device-tested).
 - Password recovery email requests, verified recovery deep links and password update through the existing Supabase Auth API (not yet device-tested).
+- Private academic profile summary and validated editing through the existing `student_profiles` RLS table; degree, GPA, IELTS, graduation, residence, nationality, major and study preferences. Role is read-only and never included in update payloads (not yet account/device-tested).
 
 ## Not yet implemented or verified
 - On-device verification of password recovery deep links and encrypted session restoration.
-- Profile loading, editing and student/advisor/admin role routing.
+- Student/advisor/admin role-specific destinations and community profile editing (academic profile read/write is now in Android).
 - Application task due-date editing and notifications. Upload, deletion and rollback behavior still need authenticated backend testing.
 - Saved-scholarship pagination beyond 100 items.
 - Messaging, community, advisor consultations and personalized matching.
