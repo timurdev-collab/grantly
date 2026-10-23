@@ -245,19 +245,16 @@
     {
       "title": "PTE x Universiti Malaya Scholarship 2026",
       "country": "Malaysia",
-      "degree_levels": [
-        "Bachelor",
-        "Master"
-      ],
+      "degree_levels": null,
       "funding": "Up to GBP 3,000 tuition award; do not claim full funding",
-      "eligibility": "International students; PTE-specific qualification/selection must be confirmed on detailed application terms",
+      "eligibility": "International applicants; specific degree-level eligibility and PTE score/selection requirements must be verified in the current award's full terms",
       "deadline": "2026-12-31",
       "official_sources": [
         "https://aasd.um.edu.my/financial-aid-for-postgraduate",
         "https://www.um.edu.my/news/universiti-malaya-and-pearson-strengthen-partnership-as-pte-scholarship-enters-third-year"
       ],
       "duplicate_screen": "No exact title in staging scholarships or source candidate title search; not the same as UM Bright.",
-      "decision": "REVIEW_DEGREE_ELIGIBILITY_BEFORE_PRIVATE_DRAFT"
+      "decision": "HOLD_UNTIL_DEGREE_AND_PTE_REQUIREMENTS_VERIFIED"
     },
     {
       "title": "UKM Vice-Chancellor Gold Scholarship",
