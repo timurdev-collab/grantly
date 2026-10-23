@@ -20,7 +20,7 @@ internal data class SavedScholarshipSummary(
 
 internal object SavedScholarshipsRepository {
     suspend fun load(): List<SavedScholarshipSummary> = withContext(Dispatchers.IO) {
-        val session = AuthRepository.session ?: throw IOException("Sign in to view your applications.")
+        val session = AuthRepository.activeSession()
         val baseUrl = BuildConfig.SUPABASE_URL.trimEnd('/')
         val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
         if (!baseUrl.startsWith("https://") || key.isBlank()) {
@@ -71,8 +71,8 @@ internal object SavedScholarshipsRepository {
     }
 
     /** Read/write access is always scoped to the authenticated user under Supabase RLS. */
-    private fun savedRequest(method: String, scholarshipId: String, body: String? = null): String {
-        val session = AuthRepository.session ?: throw IOException("Sign in to save scholarships.")
+    private suspend fun savedRequest(method: String, scholarshipId: String, body: String? = null): String {
+        val session = AuthRepository.activeSession()
         val id = try { java.util.UUID.fromString(scholarshipId).toString() }
             catch (_: IllegalArgumentException) { throw IOException("Invalid scholarship identifier.") }
         val baseUrl = BuildConfig.SUPABASE_URL.trimEnd('/')
@@ -129,7 +129,7 @@ internal object SavedScholarshipsRepository {
     }
 
     suspend fun save(scholarshipId: String) = withContext(Dispatchers.IO) {
-        val session = AuthRepository.session ?: throw IOException("Sign in to save scholarships.")
+        val session = AuthRepository.activeSession()
         val id = try { java.util.UUID.fromString(scholarshipId).toString() }
             catch (_: IllegalArgumentException) { throw IOException("Invalid scholarship identifier.") }
         val payload = org.json.JSONObject()
@@ -160,7 +160,7 @@ internal object SavedScholarshipsRepository {
         require(notes.length <= 10_000) { "Keep notes under 10,000 characters." }
         val id = try { java.util.UUID.fromString(scholarshipId).toString() }
             catch (_: IllegalArgumentException) { throw IOException("Invalid scholarship identifier.") }
-        val session = AuthRepository.session ?: throw IOException("Sign in to edit your applications.")
+        val session = AuthRepository.activeSession()
         val filter = "user_id=eq." + URLEncoder.encode(session.userId, "UTF-8") +
             "&scholarship_id=eq." + URLEncoder.encode(id, "UTF-8")
         val payload = org.json.JSONObject()
@@ -169,8 +169,8 @@ internal object SavedScholarshipsRepository {
         trackerWrite("/rest/v1/saved_scholarships?$filter", "PATCH", payload)
     }
 
-    private fun trackerWrite(path: String, method: String, payload: org.json.JSONObject) {
-        val session = AuthRepository.session ?: throw IOException("Sign in to edit your applications.")
+    private suspend fun trackerWrite(path: String, method: String, payload: org.json.JSONObject) {
+        val session = AuthRepository.activeSession()
         val baseUrl = BuildConfig.SUPABASE_URL.trimEnd('/')
         val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
         if (!baseUrl.startsWith("https://") || key.isBlank()) {
