@@ -9,11 +9,13 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Server-side search, degree/country/field/funding filters, sorting and pagination.
 - Scholarship detail tabs for overview, eligibility, benefits and application information.
 - Profile-tab email/password sign-in, signup and sign-out through the existing Supabase Auth API.
+- Read-only authenticated Applications list showing saved scholarships, status and notes (first 100).
 
 ## Not yet implemented or verified
 - Authentication session persistence, refresh, password recovery and deep-link handling.
 - Profile loading, editing and student/advisor/admin role routing.
-- Saved scholarships, application pipeline, tasks, document workspace and notifications.
+- Saving/unsaving scholarships, application editing, tasks, document workspace and notifications.
+- Saved-scholarship pagination beyond 100 items.
 - Messaging, community, advisor consultations and personalized matching.
 - iOS-equivalent styling, accessibility, localization and navigation across all screens.
 - Live API testing with a real account and physical-device end-to-end testing.
