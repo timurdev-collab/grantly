@@ -17,13 +17,14 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Automatic access-token refresh and Android Keystore AES-GCM encrypted session persistence, including restoration at launch and local token removal on sign-out (not yet device-tested).
 - Password recovery email requests, verified recovery deep links and password update through the existing Supabase Auth API (not yet device-tested).
 - Private academic profile summary and validated editing through the existing `student_profiles` RLS table; degree, GPA, IELTS, graduation, residence, nationality, major and study preferences. Role is read-only and never included in update payloads (not yet account/device-tested).
+- Read-only approved advisor directory, reachable from the Home guidance card after sign-in. Uses existing authenticated `available_advisors` RPC, with local search and advisor detail summaries; booking and messaging are intentionally disabled (not yet live-account/device-tested).
 
 ## Not yet implemented or verified
 - On-device verification of password recovery deep links and encrypted session restoration.
-- Student/advisor/admin role-specific destinations and community profile editing (academic profile read/write is now in Android).
+- Student/advisor/admin role-specific destinations and community profile editing (academic profile read/write and read-only approved advisor discovery are now in Android).
 - Application task due-date editing and notifications. Upload, deletion and rollback behavior still need authenticated backend testing.
 - Saved-scholarship pagination beyond 100 items.
-- Messaging, community, advisor consultations and personalized matching.
+- Messaging, community, advisor consultation booking and personalized matching (advisor directory is read-only).
 - iOS-equivalent styling, accessibility, localization and navigation across all screens.
 - Save/remove and task-checklist API behavior, live API testing with a real account and physical-device end-to-end testing.
 
