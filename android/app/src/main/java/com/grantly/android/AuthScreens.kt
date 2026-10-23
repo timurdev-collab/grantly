@@ -41,16 +41,13 @@ internal fun AuthContent() {
     }
 
     if (session != null) {
-        Text("Your account", fontFamily = FontFamily.Serif, fontSize = 34.sp, color = authInk)
-        Spacer(Modifier.height(12.dp))
-        Text("Signed in as ${session.email}", color = authInk)
-        Spacer(Modifier.height(12.dp))
-        Text("Your saved scholarships and application tracker are connected. Profile editing is still being ported.",
-            color = authInk.copy(alpha = .7f))
+        StudentProfileContent(userId = session.userId)
+        Spacer(Modifier.height(18.dp))
+        Text("Signed in as ${session.email}", color = authInk, fontSize = 12.sp)
         Spacer(Modifier.height(10.dp))
         Text("Your session is encrypted on this device and restored when you reopen EduT.",
             color = authInk.copy(alpha = .7f), fontSize = 12.sp)
-        Spacer(Modifier.height(18.dp))
+        Spacer(Modifier.height(14.dp))
         OutlinedButton(enabled = !busy, onClick = {
             busy = true
             scope.launch {
