@@ -6,6 +6,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +19,12 @@ import org.json.JSONObject
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.TimeZone
 import java.util.UUID
 
@@ -99,8 +108,11 @@ internal object AdvisorBookingRepository {
 
     suspend fun submit(
         advisorId: String, serviceId: String, acceptanceId: String,
-        email: String, whatsapp: String, topic: String, notes: String
+        email: String, whatsapp: String, topic: String, notes: String, preferredStartMillis: Long
     ) {
+        if (preferredStartMillis < System.currentTimeMillis() + 15 * 60_000L) {
+            throw IOException("Please choose a consultation time at least 15 minutes from now.")
+        }
         val payload = JSONObject()
             .put("p_advisor_id", UUID.fromString(advisorId).toString())
             .put("p_service_id", UUID.fromString(serviceId).toString())
@@ -110,7 +122,7 @@ internal object AdvisorBookingRepository {
             .put("p_refund_policy_version", ADVISOR_TERMS_VERSION)
             .put("p_contact_email", email.trim())
             .put("p_whatsapp_number", whatsapp.trim())
-            .put("p_preferred_start", JSONObject.NULL)
+            .put("p_preferred_start", Instant.ofEpochMilli(preferredStartMillis).toString())
             .put("p_timezone", TimeZone.getDefault().id)
             .put("p_topic", topic.trim())
             .put("p_notes", notes.trim())
@@ -123,6 +135,10 @@ internal object AdvisorBookingRepository {
 internal fun AdvisorBookingContent(advisor: AdvisorDirectoryItem, onViewRequests: () -> Unit) {
     val userId = AuthRepository.session?.userId
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    var preferredStartMillis by remember(userId, advisor.id) {
+        mutableLongStateOf(System.currentTimeMillis() + 24 * 60 * 60_000L)
+    }
     var accepted by remember(userId, advisor.id) { mutableStateOf(false) }
     var acceptanceId by remember(userId, advisor.id) { mutableStateOf<String?>(null) }
     var openedPolicy by remember(userId, advisor.id) { mutableStateOf<AdvisorPolicy?>(null) }
@@ -235,8 +251,28 @@ internal fun AdvisorBookingContent(advisor: AdvisorDirectoryItem, onViewRequests
         label = { Text("WhatsApp with country code") }, singleLine = true, modifier = Modifier.fillMaxWidth())
     Text("Contact details are released to the advisor only after payment is recorded.",
         style = MaterialTheme.typography.bodySmall)
-    Text("Preferred time: to be arranged after your request. Time zone: " + TimeZone.getDefault().id,
+    val localPreferredTime = Instant.ofEpochMilli(preferredStartMillis).atZone(ZoneId.systemDefault())
+    val preferredTimeLabel = localPreferredTime.format(
+        DateTimeFormatter.ofPattern("EEE, d MMM yyyy 'at' h:mm a", Locale.getDefault())
+    )
+    Text("Preferred date and time (local)", fontWeight = FontWeight.SemiBold)
+    OutlinedButton(onClick = {
+        val initial = Instant.ofEpochMilli(preferredStartMillis).atZone(ZoneId.systemDefault())
+        val picker = DatePickerDialog(context, { _, year, month, day ->
+            TimePickerDialog(context, { _, hour, minute ->
+                val localDateTime = LocalDate.of(year, month + 1, day).atTime(LocalTime.of(hour, minute))
+                preferredStartMillis = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            }, initial.hour, initial.minute, false).show()
+        }, initial.year, initial.monthValue - 1, initial.dayOfMonth)
+        picker.datePicker.minDate = System.currentTimeMillis()
+        picker.show()
+    }) { Text(preferredTimeLabel) }
+    Text("Time zone: " + TimeZone.getDefault().id + ". Your preferred time is not a confirmed appointment.",
         style = MaterialTheme.typography.bodySmall)
+    val validPreferredTime = preferredStartMillis >= System.currentTimeMillis() + 15 * 60_000L
+    if (!validPreferredTime) {
+        Text("Choose a time at least 15 minutes from now.", color = MaterialTheme.colorScheme.error)
+    }
     OutlinedTextField(value = topic, onValueChange = { topic = it.take(240) },
         label = { Text("What do you need help with?") }, modifier = Modifier.fillMaxWidth())
     OutlinedTextField(value = notes, onValueChange = { notes = it.take(2000) },
@@ -252,7 +288,8 @@ internal fun AdvisorBookingContent(advisor: AdvisorDirectoryItem, onViewRequests
     }
     val validPhone = whatsapp.count(Char::isDigit) in 7..15
     val canSubmit = serviceId != null && validEmail && validPhone &&
-        topic.trim().length in 3..240 && notes.length <= 2000 && contactConsent && !busy && !loading
+        topic.trim().length in 3..240 && notes.length <= 2000 && contactConsent &&
+        validPreferredTime && !busy && !loading
     if (error != null) Text(error.orEmpty(), color = MaterialTheme.colorScheme.error)
     Text("Requesting a consultation does not charge you. Payment is arranged separately.",
         style = MaterialTheme.typography.bodySmall)
@@ -264,7 +301,7 @@ internal fun AdvisorBookingContent(advisor: AdvisorDirectoryItem, onViewRequests
         scope.launch {
             try {
                 AdvisorBookingRepository.submit(
-                    advisor.id, selectedService, acceptedTerms, email, whatsapp, topic, notes
+                    advisor.id, selectedService, acceptedTerms, email, whatsapp, topic, notes, preferredStartMillis
                 )
                 if (AuthRepository.session?.userId == userId) submitted = true
             } catch (failure: Exception) {
