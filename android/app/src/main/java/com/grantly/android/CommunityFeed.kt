@@ -17,10 +17,12 @@ import org.json.JSONArray
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.UUID
 
 /** Read-only social preview. The existing RLS policy determines which posts are visible. */
 internal data class CommunityPost(
     val id: String,
+    val authorId: String,
     val kind: String,
     val caption: String,
     val createdAt: String,
@@ -41,7 +43,7 @@ internal object CommunityFeedRepository {
         }
         // Explicitly exclude inactive posts; server RLS additionally enforces visibility and blocks.
         val path = "/rest/v1/social_posts" +
-            "?select=id,kind,caption,created_at,media_type" +
+            "?select=id,author_id,kind,caption,created_at,media_type,media_path" +
             "&kind=neq.story&is_active=eq.true&order=created_at.desc&limit=${limit + 1}&offset=$offset"
         val connection = URL(base + path).openConnection() as HttpURLConnection
         try {
@@ -71,15 +73,74 @@ internal object CommunityFeedRepository {
                     add(
                         CommunityPost(
                             id = id,
+                            authorId = row.optString("author_id"),
                             kind = kind,
                             caption = row.optString("caption").take(4000),
                             createdAt = row.optString("created_at"),
-                            hasMedia = !row.isNull("media_type") && row.optString("media_type").isNotBlank()
+                            hasMedia = (!row.isNull("media_type") && row.optString("media_type").isNotBlank()) ||
+                                (!row.isNull("media_path") && row.optString("media_path").isNotBlank())
                         )
                     )
                 }
             }
             CommunityPage(posts = visiblePosts, hasMore = rows.length() > limit)
+        } finally {
+            connection.disconnect()
+        }
+    }
+}
+
+/**
+ * Deletes only the signed-in author's text-only posts. Media posts require
+ * storage cleanup and are intentionally excluded until that flow is ported.
+ * The server's own-post RLS policy remains authoritative.
+ */
+internal object CommunityPostManager {
+    suspend fun deleteOwnTextPost(post: CommunityPost) = withContext(Dispatchers.IO) {
+        val session = AuthRepository.activeSession()
+        val userId = try {
+            UUID.fromString(session.userId).toString()
+        } catch (_: IllegalArgumentException) {
+            throw IOException("Invalid account. Please sign in again.")
+        }
+        val postId = try {
+            UUID.fromString(post.id).toString()
+        } catch (_: IllegalArgumentException) {
+            throw IOException("Invalid post identifier.")
+        }
+        if (post.authorId != userId || post.hasMedia || post.kind != "post") {
+            throw IOException("Only your own text-only posts can be deleted here.")
+        }
+        val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!base.startsWith("https://") || key.isBlank()) {
+            throw IOException("Community service is not configured.")
+        }
+        val path = "/rest/v1/social_posts?id=eq.$postId&author_id=eq.$userId" +
+            "&kind=eq.post&media_type=is.null&media_path=is.null"
+        val connection = URL(base + path).openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = "DELETE"
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 15_000
+            connection.setRequestProperty("apikey", key)
+            connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            connection.setRequestProperty("Accept", "application/json")
+            connection.setRequestProperty("Prefer", "return=representation")
+            val status = connection.responseCode
+            if (status !in 200..299) {
+                throw IOException(when (status) {
+                    401 -> "Your session expired. Sign in again."
+                    403 -> "You do not have permission to delete this post."
+                    else -> "Unable to delete post (HTTP $status)."
+                })
+            }
+            val rows = JSONArray(
+                connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            )
+            if (rows.length() != 1) {
+                throw IOException("Post was not deleted. Refresh and try again.")
+            }
         } finally {
             connection.disconnect()
         }
@@ -98,11 +159,52 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
 
     var selectedPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var composing by remember(session?.userId) { mutableStateOf(false) }
+    var pendingDelete by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
+    var deletingId by remember(session?.userId) { mutableStateOf<String?>(null) }
+    var deleteError by remember(session?.userId) { mutableStateOf<String?>(null) }
     var likedIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
     var knownLikeIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
     var busyLikeIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
     var likeError by remember(session?.userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    if (pendingDelete != null) {
+        val target = pendingDelete!!
+        AlertDialog(
+            onDismissRequest = { if (deletingId == null) pendingDelete = null },
+            title = { Text("Delete your post?") },
+            text = { Text("This permanently deletes the text post and its comments and likes. This cannot be undone.") },
+            confirmButton = {
+                TextButton(
+                    enabled = deletingId == null,
+                    onClick = {
+                        deletingId = target.id
+                        deleteError = null
+                        scope.launch {
+                            try {
+                                CommunityPostManager.deleteOwnTextPost(target)
+                                pendingDelete = null
+                                nextOffset = 0
+                                refresh++
+                            } catch (cancelled: CancellationException) {
+                                throw cancelled
+                            } catch (failure: Exception) {
+                                deleteError = failure.message ?: "Unable to delete post."
+                                pendingDelete = null
+                            } finally {
+                                deletingId = null
+                            }
+                        }
+                    }
+                ) { Text(if (deletingId == null) "Delete" else "Deleting...") }
+            },
+            dismissButton = {
+                TextButton(
+                    enabled = deletingId == null,
+                    onClick = { pendingDelete = null }
+                ) { Text("Cancel") }
+            }
+        )
+    }
     if (composing) {
         CommunityPostComposer(
             onBack = { composing = false },
@@ -199,6 +301,9 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                     enabled = !loading
                 ) { Text("Retry failed page") }
             }
+            if (deleteError != null) {
+                Text(deleteError!!, color = MaterialTheme.colorScheme.error)
+            }
             if (likeError != null) {
                 Text(likeError!!, color = MaterialTheme.colorScheme.error)
                 TextButton(onClick = { refresh++ }, enabled = !loading) { Text("Retry likes") }
@@ -253,6 +358,12 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                         }
                         TextButton(onClick = { selectedPost = post }) {
                             Text("View comments")
+                        }
+                        if (post.authorId == session.userId && !post.hasMedia && post.kind == "post") {
+                            TextButton(
+                                enabled = deletingId == null,
+                                onClick = { pendingDelete = post }
+                            ) { Text("Delete my post") }
                         }
                     }
                     Text(
