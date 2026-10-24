@@ -217,6 +217,8 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     var editingPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var deletingId by remember(session?.userId) { mutableStateOf<String?>(null) }
     var deleteError by remember(session?.userId) { mutableStateOf<String?>(null) }
+    var pendingReport by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
+    var reportNotice by remember(session?.userId) { mutableStateOf<String?>(null) }
     var likedIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
     var knownLikeIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
     var busyLikeIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
@@ -257,6 +259,16 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                     enabled = deletingId == null,
                     onClick = { pendingDelete = null }
                 ) { Text("Cancel") }
+            }
+        )
+    }
+    if (pendingReport != null) {
+        CommunityPostReportDialog(
+            post = pendingReport!!,
+            onDismiss = { pendingReport = null },
+            onSubmitted = {
+                pendingReport = null
+                reportNotice = "Your report was submitted for review."
             }
         )
     }
@@ -347,7 +359,7 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         TextButton(onClick = onBack) { Text("← Back to Home") }
         Text("Community", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text(
-            "Preview of visible posts. You can comment, like and publish text-only posts. Media uploads, stories and playback are not available yet.",
+            "Preview of visible posts. You can comment, like, report posts and publish text-only posts. Media uploads, stories and playback are not available yet.",
             style = MaterialTheme.typography.bodySmall
         )
         if (session == null) {
@@ -370,6 +382,9 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
             }
             if (deleteError != null) {
                 Text(deleteError!!, color = MaterialTheme.colorScheme.error)
+            }
+            if (reportNotice != null) {
+                Text(reportNotice!!, style = MaterialTheme.typography.bodySmall)
             }
             if (likeError != null) {
                 Text(likeError!!, color = MaterialTheme.colorScheme.error)
@@ -425,6 +440,12 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                         }
                         TextButton(onClick = { selectedPost = post }) {
                             Text("View comments")
+                        }
+                        if (post.authorId.isNotBlank() && post.authorId != session.userId) {
+                            TextButton(onClick = {
+                                reportNotice = null
+                                pendingReport = post
+                            }) { Text("Report post") }
                         }
                         if (post.authorId == session.userId && !post.hasMedia && post.kind == "post") {
                             TextButton(
