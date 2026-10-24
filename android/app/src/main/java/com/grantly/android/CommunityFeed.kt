@@ -28,7 +28,9 @@ internal data class CommunityPost(
     val kind: String,
     val caption: String,
     val createdAt: String,
-    val hasMedia: Boolean
+    val hasMedia: Boolean,
+    val mediaType: String?,
+    val mediaPath: String?
 )
 
 internal data class CommunityPage(val posts: List<CommunityPost>, val hasMore: Boolean)
@@ -81,7 +83,9 @@ internal object CommunityFeedRepository {
                             createdAt = row.optString("created_at"),
                             hasMedia = (!row.isNull("media_type") && row.optString("media_type").isNotBlank()) ||
                                 (!row.isNull("media_path") && row.optString("media_path").isNotBlank()) ||
-                                (!row.isNull("media_url") && row.optString("media_url").isNotBlank())
+                                (!row.isNull("media_url") && row.optString("media_url").isNotBlank()),
+                            mediaType = if (row.isNull("media_type")) null else row.optString("media_type"),
+                            mediaPath = if (row.isNull("media_path")) null else row.optString("media_path")
                         )
                     )
                 }
@@ -214,6 +218,7 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     var hasMore by remember(session?.userId) { mutableStateOf(false) }
 
     var selectedPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
+    var photoPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var composing by remember(session?.userId) { mutableStateOf(false) }
     var pendingDelete by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var editingPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
@@ -301,6 +306,10 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         CommunityCommentsContent(post = selectedPost!!, onBack = { selectedPost = null })
         return
     }
+    if (photoPost != null) {
+        CommunityPhotoPreview(post = photoPost!!, onBack = { photoPost = null })
+        return
+    }
 
     LaunchedEffect(session?.userId, refresh, nextOffset) {
         if (session == null) {
@@ -361,7 +370,7 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         TextButton(onClick = onBack) { Text("← Back to Home") }
         Text("Community", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text(
-            "Preview of visible posts. You can comment, like, report posts and publish text-only posts. Media uploads, stories and playback are not available yet.",
+            "Preview of visible posts. You can comment, like, report and publish text posts. Private photo viewing is available for supported uploads; videos, uploads and stories are not yet supported.",
             style = MaterialTheme.typography.bodySmall
         )
         if (session == null) {
@@ -409,10 +418,16 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                     )
                     if (post.caption.isNotBlank()) Text(post.caption)
                     if (post.hasMedia) {
-                        Text(
-                            "Media attached — playback is not yet available in this preview.",
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                        if (post.mediaType == "image" && !post.mediaPath.isNullOrBlank()) {
+                            OutlinedButton(onClick = { photoPost = post }) {
+                                Text("View attached photo")
+                            }
+                        } else {
+                            Text(
+                                "Media attached — video playback and legacy media viewing are not yet available.",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
