@@ -9,7 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -177,7 +179,7 @@ internal fun AdvisorMessagesContent() {
     }
 
     Text("Messages", style = MaterialTheme.typography.headlineMedium, color = Color(0xFF123E30))
-    Text("Private conversations with approved advisors. Pull-to-refresh is not yet available; use Refresh.",
+    Text("Private advisor conversations. Updates checked every 30 seconds while this screen is open.",
         style = MaterialTheme.typography.bodySmall)
     Spacer(Modifier.height(12.dp))
     if (userId == null) {
@@ -196,6 +198,24 @@ internal fun AdvisorMessagesContent() {
             }
         } finally {
             loading = false
+        }
+    }
+    // Poll only while the inbox is visible; do not keep a background service running.
+    LaunchedEffect(userId) {
+        if (userId == null) return@LaunchedEffect
+        while (true) {
+            delay(30_000L)
+            try {
+                val latest = AdvisorMessagesRepository.conversations()
+                if (AuthRepository.session?.userId == userId) {
+                    conversations = latest
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                // Keep the last successful inbox rather than clearing it on transient failures.
+                // Manual Refresh remains available for an explicit error message.
+            }
         }
     }
     OutlinedButton(onClick = { refresh++ }, enabled = !loading) { Text("Refresh") }
@@ -256,7 +276,7 @@ internal fun AdvisorMessageThreadContent(conversationId: String, title: String, 
     var reportMessage by remember(userId, conversationId) { mutableStateOf<AdvisorMessage?>(null) }
 
     Text(title, style = MaterialTheme.typography.titleLarge, color = Color(0xFF123E30))
-    Text("Advisor messaging · manually refreshed preview", style = MaterialTheme.typography.bodySmall)
+    Text("Advisor messaging · checks for new messages every 20 seconds (polling preview)", style = MaterialTheme.typography.bodySmall)
     Spacer(Modifier.height(10.dp))
     if (userId == null) {
         Text("Sign in to view this conversation.")
@@ -279,6 +299,36 @@ internal fun AdvisorMessageThreadContent(conversationId: String, title: String, 
             }
         } finally {
             loading = false
+        }
+    }
+    // Periodic foreground-only polling is not a Supabase Realtime subscription.
+    // Merge the newest page with previously paginated history instead of discarding
+    // older messages whenever a new message arrives.
+    LaunchedEffect(userId, conversationId) {
+        if (userId == null) return@LaunchedEffect
+        while (true) {
+            delay(20_000L)
+            if (loading || loadingOlder || sending) continue
+            try {
+                val latest = AdvisorMessagesRepository.page(conversationId)
+                if (AuthRepository.session?.userId == userId) {
+                    val knownIds = messages.map { it.id }.toSet()
+                    val recentIds = latest.map { it.id }.toSet()
+                    val unreadIncoming = latest.any {
+                        it.senderId != userId && it.id !in knownIds
+                    }
+                    messages = (messages.filterNot { it.id in recentIds } + latest)
+                        .sortedWith(compareBy<AdvisorMessage> { it.createdAt }.thenBy { it.id })
+                    if (unreadIncoming) {
+                        runCatching { AdvisorMessagesRepository.markRead(conversationId) }
+                    }
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                // Preserve visible messages on transient failures. Manual Refresh
+                // reports errors and can be used to retry immediately.
+            }
         }
     }
     OutlinedButton(onClick = { refresh++ }, enabled = !loading && !sending) {
