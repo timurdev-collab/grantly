@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.io.IOException
@@ -96,6 +97,11 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     var hasMore by remember(session?.userId) { mutableStateOf(false) }
 
     var selectedPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
+    var likedIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
+    var knownLikeIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
+    var busyLikeIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
+    var likeError by remember(session?.userId) { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
     if (selectedPost != null) {
         CommunityCommentsContent(post = selectedPost!!, onBack = { selectedPost = null })
         return
@@ -130,11 +136,34 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         }
     }
 
+    // Fetch only the current user's likes for visible posts. Failed requests leave
+    // previously loaded state intact, rather than falsely showing posts as unliked.
+    LaunchedEffect(session?.userId, refresh, posts.map { it.id }) {
+        if (session == null || posts.isEmpty()) {
+            if (session == null) {
+                likedIds = emptySet()
+                knownLikeIds = emptySet()
+            }
+        } else {
+            val ids = posts.map { it.id }
+            try {
+                val mine = CommunityLikesRepository.loadMine(ids)
+                likedIds = (likedIds - ids.toSet()) + mine
+                knownLikeIds = knownLikeIds + ids
+                likeError = null
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (failure: Exception) {
+                likeError = failure.message ?: "Unable to load Community likes."
+            }
+        }
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         TextButton(onClick = onBack) { Text("← Back to Home") }
         Text("Community", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text(
-            "Read-only preview of posts you are permitted to see. Creating posts, comments, likes and media playback are not available on Android yet.",
+            "Preview of visible posts. You can comment and like posts; creating posts and playing media are not available on Android yet.",
             style = MaterialTheme.typography.bodySmall
         )
         if (session == null) {
@@ -151,6 +180,10 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                     onClick = { refresh++ },
                     enabled = !loading
                 ) { Text("Retry failed page") }
+            }
+            if (likeError != null) {
+                Text(likeError!!, color = MaterialTheme.colorScheme.error)
+                TextButton(onClick = { refresh++ }, enabled = !loading) { Text("Retry likes") }
             }
             if (!loading && posts.isEmpty() && error == null) {
                 Text("No visible community posts. Community profiles may be hidden by current release policies.")
@@ -174,8 +207,35 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
-                    TextButton(onClick = { selectedPost = post }) {
-                        Text("View comments")
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        TextButton(
+                            enabled = post.id in knownLikeIds && post.id !in busyLikeIds,
+                            onClick = {
+                                val wasLiked = post.id in likedIds
+                                busyLikeIds = busyLikeIds + post.id
+                                scope.launch {
+                                    try {
+                                        CommunityLikesRepository.setLiked(post.id, !wasLiked)
+                                        likedIds = if (wasLiked) likedIds - post.id else likedIds + post.id
+                                        likeError = null
+                                    } catch (failure: Exception) {
+                                        likeError = failure.message ?: "Unable to update like."
+                                    } finally {
+                                        busyLikeIds = busyLikeIds - post.id
+                                    }
+                                }
+                            }
+                        ) {
+                            Text(when {
+                                post.id in busyLikeIds -> "Updating..."
+                                post.id !in knownLikeIds -> "Loading likes..."
+                                post.id in likedIds -> "♥ Liked"
+                                else -> "♡ Like"
+                            })
+                        }
+                        TextButton(onClick = { selectedPost = post }) {
+                            Text("View comments")
+                        }
                     }
                     Text(
                         post.createdAt.take(10),
