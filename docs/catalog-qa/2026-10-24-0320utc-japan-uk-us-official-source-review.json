@@ -1,0 +1,595 @@
+{
+  "package_version": 2,
+  "prepared_at_utc": "2026-10-24T03:20:42Z",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "scope": "Staging-only official-source review proposals. Not applied, verified, accepted, published, or approved.",
+  "baseline_staging_readback": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_action_logs": 8
+  },
+  "duplicate_screening": "Staging title scan found generic St Andrews, Manchester, Tokyo, Keio and Waseda records, but no exact titles for the named St Andrews and Keio leads; semantic overlap must be reviewed before any insert. Existing Manchester records are likely duplicates.",
+  "records": [
+    {
+      "id": "e9fb2147-957d-47e8-ba16-e8e6855b7c67",
+      "title": "Keio University Scholarship",
+      "country": "Japan",
+      "risk": "Generic record claims full tuition for Bachelor and Master, conflating several distinct internal awards.",
+      "fields": [
+        {
+          "field": "tuition_coverage",
+          "proposed": "Keio University Scholarship (undergraduate) is ¥250,000 or ¥500,000 annually; Graduate School Scholarship is ¥500,000 or ¥600,000 depending on school; neither is universally a full tuition waiver.",
+          "evidence_summary": "2026 internal scholarship table gives different annual grants by level.",
+          "source_url": "https://www.students.keio.ac.jp/en/com/scholarships/guideline/internal.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "Separate named undergraduate and graduate awards rather than one universal award.",
+          "evidence_summary": "Different Keio University Scholarship and Graduate School Scholarship rows.",
+          "source_url": "https://www.students.keio.ac.jp/en/com/scholarships/guideline/internal.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "deadline",
+          "proposed": "Not established as a universal deadline; applications depend on scholarship, school, and enrollment status.",
+          "evidence_summary": "Internal guidelines require current-student login for full application instructions.",
+          "source_url": "https://www.students.keio.ac.jp/en/com/scholarships/guideline/internal.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "Some scholarships include privately financed international students; not universally open to every nationality/status.",
+          "evidence_summary": "2026 table explicitly distinguishes student groups.",
+          "source_url": "https://www.students.keio.ac.jp/en/com/scholarships/guideline/internal.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        }
+      ],
+      "action": "reconcile_generic_with_named_awards"
+    },
+    {
+      "id": "cb27de96-9140-4025-9a7d-e857e8297505",
+      "title": "Waseda University Scholarship",
+      "country": "Japan",
+      "risk": "Generic full tuition plus stipend claim is contradicted by Waseda's official scholarship FAQ.",
+      "fields": [
+        {
+          "field": "funding_type",
+          "proposed": "Partial, for Waseda-funded international undergraduate scholarships; distinct MEXT/external scholarships must not be conflated.",
+          "evidence_summary": "Official English-based undergraduate FAQ says all Waseda-offered scholarships are partial.",
+          "source_url": "https://www.waseda.jp/inst/admission/en/undergraduate/english/",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed": "Programme-specific; e.g., IPS partial tuition waiver 50%, Reserved Scholarship ¥500,000/year for up to two years.",
+          "evidence_summary": "Graduate School IPS lists separately named awards and amounts.",
+          "source_url": "https://www.waseda.jp/fsci/gips/en/applicants/tuition/",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "Eligibility varies by programme and residence status; not unrestricted.",
+          "evidence_summary": "Waseda distinguishes student visa, permanent resident and other statuses.",
+          "source_url": "https://www.waseda.jp/inst/admission/en/undergraduate/english/",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "deadline",
+          "proposed": "No universal deadline; school and semester specific.",
+          "evidence_summary": "Waseda scholarship FAQ distinguishes pre-enrollment automatic awards from post-enrollment applications.",
+          "source_url": "https://www.waseda.jp/inst/admission/en/undergraduate/english/",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        }
+      ],
+      "action": "reconcile_generic_with_named_awards"
+    },
+    {
+      "id": "9b2b11a1-1240-4324-80a4-92646fc1ac38",
+      "title": "Manchester Global Futures Scholarship",
+      "country": "United Kingdom",
+      "risk": "Record omits 2027 cycle and applies unrestricted nationality eligibility.",
+      "fields": [
+        {
+          "field": "application_cycle",
+          "proposed": "September 2027 entry",
+          "evidence_summary": "Official page announces 2027-entry Global Futures scholarships.",
+          "source_url": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "degree_levels",
+          "proposed": [
+            "Bachelor",
+            "Master"
+          ],
+          "evidence_summary": "2027 programme covers undergraduate and taught master's students.",
+          "source_url": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "Country-specific residence eligibility; 23 countries listed, Taiwan restricted to postgraduate taught master's.",
+          "evidence_summary": "Official list and regional profiles govern eligibility.",
+          "source_url": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed": "Partial merit-based tuition discount, amount differs by country/region and level; do not assign universal £10,000.",
+          "evidence_summary": "Official 2027 page says value and deadlines vary by region.",
+          "source_url": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "deadline",
+          "proposed": "Region-specific; no single universal 2027 scholarship deadline.",
+          "evidence_summary": "Official page directs applicants to country profiles.",
+          "source_url": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        }
+      ],
+      "action": "canonical_merge_review"
+    },
+    {
+      "id": "5f101c0d-8cb1-4a4a-95f4-d9a692247f4e",
+      "title": "University of Manchester Global Futures Scholarship",
+      "country": "United Kingdom",
+      "risk": "Likely same named Global Futures programme as 9b2b11a1; different generic source URL.",
+      "fields": [
+        {
+          "field": "official_url",
+          "proposed": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "evidence_summary": "Direct official programme-specific 2027 source.",
+          "source_url": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "application_cycle",
+          "proposed": "September 2027 entry",
+          "evidence_summary": "Official 2027 intake page.",
+          "source_url": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "Restricted to listed domicile countries, with Taiwan only for taught master's.",
+          "evidence_summary": "Official 2027 list.",
+          "source_url": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        }
+      ],
+      "action": "canonical_merge_review_with_9b2b11a1"
+    },
+    {
+      "id": "0eb62bdf-c402-4a50-b44a-514a23622ed2",
+      "title": "University of St Andrews Scholarship",
+      "country": "United Kingdom",
+      "risk": "Generic £5k–£10k/year description cannot represent the university's distinct 2027 awards.",
+      "fields": [
+        {
+          "field": "tuition_coverage",
+          "proposed": "Do not assign a universal amount; named International Excellence covers full tuition (one award), while International Undergraduate Scholarship amount is not yet announced.",
+          "evidence_summary": "Two distinct official 2027 award pages.",
+          "source_url": "https://www.st-andrews.ac.uk/study/scholarships/scholarships-catalogue/undergraduate-scholarships/international-excellence-scholarship/",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "deadline",
+          "proposed": "Named undergraduate scholarships close 2027-01-27; other programmes, including St Leonard's Master's, have different deadlines.",
+          "evidence_summary": "Official 2027 International Excellence page.",
+          "source_url": "https://www.st-andrews.ac.uk/study/scholarships/scholarships-catalogue/undergraduate-scholarships/international-excellence-scholarship/",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "Separate undergraduate and postgraduate named programmes.",
+          "evidence_summary": "2027 International Excellence is undergraduate only.",
+          "source_url": "https://www.st-andrews.ac.uk/study/scholarships/scholarships-catalogue/undergraduate-scholarships/international-excellence-scholarship/",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "Overseas fee status required for the International Excellence award; other named awards can have nationality restrictions.",
+          "evidence_summary": "Official scholarship restrictions.",
+          "source_url": "https://www.st-andrews.ac.uk/study/scholarships/scholarships-catalogue/undergraduate-scholarships/international-excellence-scholarship/",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        }
+      ],
+      "action": "reconcile_generic_with_named_awards"
+    },
+    {
+      "id": "948d8524-b860-423a-9dcf-65a36c30116f",
+      "title": "UCLA International Scholarship",
+      "country": "United States",
+      "risk": "Potentially materially misleading: UCLA explicitly states no university scholarship/financial aid for noncitizen, non-permanent-resident undergraduate students.",
+      "fields": [
+        {
+          "field": "eligible_nationalities",
+          "proposed": "Not available to undergraduate applicants who are neither US citizens nor permanent residents through UCLA institutional aid.",
+          "evidence_summary": "UCLA international admissions explicitly excludes this group from UCLA scholarships and financial aid.",
+          "source_url": "https://admission.ucla.edu/apply/international-applicants",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "funding_type",
+          "proposed": "Do not advertise as an open UCLA international undergraduate scholarship without a distinct independently evidenced programme.",
+          "evidence_summary": "UCLA undergraduate admission contradicts generic record.",
+          "source_url": "https://admission.ucla.edu/apply/international-applicants",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "min_ielts",
+          "proposed": "Do not treat 7.5 as a scholarship threshold; UCLA cites it as competitive admissions English score.",
+          "evidence_summary": "UCLA lists IELTS 7.5, older TOEFL >100, and revised TOEFL scale as competitive admissions guidance.",
+          "source_url": "https://admission.ucla.edu/apply/international-applicants",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "sat_required",
+          "proposed": false,
+          "evidence_summary": "UCLA does not consider SAT/ACT for admission or scholarship purposes.",
+          "source_url": "UCLA states test-free admissions.",
+          "confidence": "https://admission.ucla.edu/apply/international-applicants",
+          "apply_only_after_admin_review": true
+        }
+      ],
+      "action": "authorized_archive_review_if_no_specific_programme_exists"
+    },
+    {
+      "id": "b7f5d9c0-22df-43ff-aa72-1439c251aa52",
+      "title": "University of Tokyo Masters Excellence Scholarship",
+      "country": "Japan",
+      "risk": "Generic full tuition plus ¥143,000/month is not independently substantiated as a distinct scholarship.",
+      "fields": [
+        {
+          "field": "provider",
+          "proposed": "Graduate-school-specific or MEXT route must be established; generic university label insufficient.",
+          "evidence_summary": "Tokyo Graduate School of Science publishes separate 2027 MEXT application.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "stipend",
+          "proposed": "2027 MEXT stipend not yet set; 2026 reference is ¥144,000/month Master's.",
+          "evidence_summary": "Official 2027 call explicitly says amounts undecided.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "deadline",
+          "proposed": "Do not generalize 2026-10-30 Graduate School of Science deadline to all Tokyo Master's scholarships.",
+          "evidence_summary": "The 2027 MEXT Science-specific window is 2026-10-15 to 2026-10-30 JST.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        }
+      ],
+      "action": "identity_reconciliation"
+    },
+    {
+      "id": "28bd9aef-96c0-4364-adae-a0ce09c74805",
+      "title": "University of Tokyo Masters International Scholarship",
+      "country": "Japan",
+      "risk": "Potential semantic duplicate of other generic Tokyo Master's scholarship and MEXT.",
+      "fields": [
+        {
+          "field": "tuition_coverage",
+          "proposed": "Establish named programme before asserting universal full tuition.",
+          "evidence_summary": "2027 MEXT call is a specific route, not all Tokyo scholarships.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "stipend",
+          "proposed": "2027 MEXT value undecided; 2026 reference ¥144,000/month Master's.",
+          "evidence_summary": "Official 2027 call.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "deadline",
+          "proposed": "Graduate School of Science 2027 MEXT deadline 2026-10-30 only if record identity matches that programme.",
+          "evidence_summary": "School-specific application window.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        }
+      ],
+      "action": "identity_and_duplicate_review"
+    },
+    {
+      "id": "67934aa0-375f-42be-9937-33b16f505f8d",
+      "title": "University of Tokyo Phd International Scholarship",
+      "country": "Japan",
+      "risk": "Generic ¥143,000/month amount is not the documented 2026 doctoral MEXT rate.",
+      "fields": [
+        {
+          "field": "stipend",
+          "proposed": "2027 MEXT rate undecided; 2026 reference ¥145,000/month for doctoral students.",
+          "evidence_summary": "Official 2027 call explicitly gives prior-year reference.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "deadline",
+          "proposed": "2026-10-30 only for the Graduate School of Science 2027 MEXT university recommendation route, not universal PhD funding.",
+          "evidence_summary": "Official graduate-school-specific 2027 application window.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "MEXT Science route requires nationality of a country with diplomatic relations with Japan; Japanese nationals generally ineligible, subject to limited dual-nationality exception.",
+          "evidence_summary": "Official 2027 MEXT nationality section.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        }
+      ],
+      "action": "identity_and_duplicate_review"
+    },
+    {
+      "id": "59f73f24-e5bd-4a5f-8f88-cd0befcc331c",
+      "title": "MEXT Scholarship",
+      "country": "Japan",
+      "risk": "Different embassy/university and General/Special tracks; 2027 university recommendation General suspension is reported by Keio and Waseda, but Tokyo Science still shows a live 2027 application.",
+      "fields": [
+        {
+          "field": "application_cycle",
+          "proposed": "Track and institution-specific; do not mark entire MEXT programme discontinued.",
+          "evidence_summary": "Waseda says 2027 university General suspended but Special may continue; embassy recommendation separate.",
+          "source_url": "https://www.waseda.jp/inst/cie/en/to-waseda/mext",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "deadline",
+          "proposed": "Embassy deadlines vary by country; Tokyo Graduate School of Science advertises a 2026-10-30 deadline for 2027 despite general-track suspension notices.",
+          "evidence_summary": "Official sources have route-specific conditions and apparent conflict.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "medium",
+          "apply_only_after_admin_review": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "Not unrestricted; programme route and Japanese government nationality restrictions apply.",
+          "evidence_summary": "Tokyo Graduate School of Science 2027 MEXT call specifies diplomatic-relations nationality rule.",
+          "source_url": "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+          "confidence": "high",
+          "apply_only_after_admin_review": true
+        }
+      ],
+      "action": "flag_conflicting_official_2027_route_not_discontinuation"
+    }
+  ],
+  "leads": [
+    {
+      "title": "St Andrews International Excellence Scholarship",
+      "country": "United Kingdom",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Full tuition fees for the duration of the degree; one award",
+      "deadline": "2027-01-27",
+      "eligible": "Overseas fee status; exclusions include Medicine and BA International Honours",
+      "official_url": "https://www.st-andrews.ac.uk/study/scholarships/scholarships-catalogue/undergraduate-scholarships/international-excellence-scholarship/",
+      "status": "private_draft_candidate"
+    },
+    {
+      "title": "St Andrews International Undergraduate Scholarship",
+      "country": "United Kingdom",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Annual tuition fee reduction; 2027 amount to be confirmed by December 2026",
+      "deadline": "2027-01-27",
+      "eligible": "Overseas fee status, assessed on financial need",
+      "official_url": "https://www.st-andrews.ac.uk/study/scholarships/scholarships-catalogue/undergraduate-scholarships/international-undergraduate-scholarship/",
+      "status": "private_draft_candidate"
+    },
+    {
+      "title": "St Andrews Davis United World College Scholarship",
+      "country": "United Kingdom",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Annual tuition reduction USD $10,000–25,000 equivalent depending on household income",
+      "deadline": "2027-01-27",
+      "eligible": "US citizens, United World College graduates, overseas fee status",
+      "official_url": "https://www.st-andrews.ac.uk/study/scholarships/scholarships-catalogue/undergraduate-scholarships/davis-united-world-college-scholarship/",
+      "status": "private_draft_candidate"
+    },
+    {
+      "title": "St Andrews Accommodation Award International",
+      "country": "United Kingdom",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "£1,900 annually toward accommodation; not tuition",
+      "deadline": "2027-01-27",
+      "eligible": "Overseas fee status; first-year entrants; financial need",
+      "official_url": "https://www.st-andrews.ac.uk/study/scholarships/scholarships-catalogue/undergraduate-scholarships/accommodation-award---international/",
+      "status": "private_draft_candidate"
+    },
+    {
+      "title": "St Leonard's Master's Scholarship (International)",
+      "country": "United Kingdom",
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "Award categories: full tuition + £18,000 stipend; or 75% tuition; or 25–50% tuition. One umbrella application, not three independent programmes.",
+      "deadline": "2027-02-03",
+      "eligible": "Qualifying international Master's students; award category depends on selection",
+      "official_url": "https://www.st-andrews.ac.uk/study/scholarships/scholarships-catalogue/postgraduate-scholarships/st-leonards-masters-scholarship-international/",
+      "status": "private_draft_candidate"
+    },
+    {
+      "title": "Keio GIGA Mentor Mitakai Scholarship for International Students",
+      "country": "Japan",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Admission fee and first-year academic fees; up to four years subject to annual review",
+      "deadline": null,
+      "eligible": "Foreign national entering Keio GIGA September 2027 via Winter AO 2026; scholarship submitted with admission application",
+      "official_url": "https://www.keio.ac.jp/en/sfc-pem/admission/financial-aid/undergrad/",
+      "status": "private_draft_candidate_deadline_from_admissions_needed"
+    },
+    {
+      "title": "Keio GIGA Yoshiaki Ishii Scholarship",
+      "country": "Japan",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Admission fee and first-year academic fees; up to four years subject to annual review",
+      "deadline": null,
+      "eligible": "Foreign national entering Keio GIGA September 2027 via Winter AO 2026",
+      "official_url": "https://www.keio.ac.jp/en/sfc-pem/admission/financial-aid/undergrad/",
+      "status": "private_draft_candidate_deadline_from_admissions_needed"
+    },
+    {
+      "title": "Keio GIGA Masatada Kobayashi Scholarship",
+      "country": "Japan",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "First-year academic and admission fees; second-year ¥1,000,000 annually, duration subject to annual review",
+      "deadline": null,
+      "eligible": "Foreign national entering Keio GIGA September 2027 via Winter AO 2026",
+      "official_url": "https://www.keio.ac.jp/en/sfc-pem/admission/financial-aid/undergrad/",
+      "status": "private_draft_candidate_deadline_from_admissions_needed"
+    },
+    {
+      "title": "Waseda IPS Reserved Scholarship for Successful International Examinees",
+      "country": "Japan",
+      "degree_levels": [
+        "Master",
+        "PhD"
+      ],
+      "funding": "¥500,000 annually for up to two years",
+      "deadline": null,
+      "eligible": "International students admitted via pre-arrival admission; selected by graduate school automatically",
+      "official_url": "https://www.waseda.jp/fsci/gips/en/applicants/tuition/",
+      "status": "hold_2027_cycle_unconfirmed"
+    },
+    {
+      "title": "Waseda IPS Partial Tuition-Waiver Scholarship",
+      "country": "Japan",
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "50% tuition waiver",
+      "deadline": null,
+      "eligible": "Privately financed international students at IPS; no separate application per prospective-student page",
+      "official_url": "https://www.waseda.jp/fsci/gips/en/applicants/tuition/",
+      "status": "hold_2027_cycle_and_eligibility_unconfirmed"
+    }
+  ],
+  "urgent_drafts": [
+    {
+      "id": "27968090-2edf-464d-9236-76f5186b741b",
+      "title": "EPFL-WISH Foundation Fellowship",
+      "deadline": "2026-10-25",
+      "provenance": 3,
+      "reviewer_attributed": 0,
+      "last_successful_check_at": null
+    },
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "title": "Gordon and Isabel Humphrey Scholarship",
+      "deadline": "2026-10-25",
+      "provenance": 2,
+      "reviewer_attributed": 0,
+      "last_successful_check_at": null
+    },
+    {
+      "id": "719cccf5-54e5-4680-a5c0-8e930a8a839c",
+      "title": "Mick Hitchcock PhD Scholarship",
+      "deadline": "2026-10-31",
+      "provenance": 0,
+      "reviewer_attributed": 0,
+      "last_successful_check_at": "2026-10-05"
+    },
+    {
+      "id": "cea12dff-0230-4a13-bbd8-0fb894f75bc5",
+      "title": "Computing and Information Systems PhD Scholarship",
+      "deadline": "2026-11-01",
+      "provenance": 0,
+      "reviewer_attributed": 0,
+      "last_successful_check_at": "2026-10-05"
+    },
+    {
+      "id": "d8ec0b3a-c82c-4592-bb7e-20d468118dc0",
+      "title": "EPFL MX Master Fellowship",
+      "deadline": "2026-11-01",
+      "provenance": 2,
+      "reviewer_attributed": 0,
+      "last_successful_check_at": null
+    },
+    {
+      "id": "0db4b799-59af-435b-8731-e7fc043dabbb",
+      "title": "Auckland International Student Excellence Scholarship",
+      "deadline": "2026-11-04",
+      "provenance": 2,
+      "reviewer_attributed": 0,
+      "last_successful_check_at": null
+    }
+  ],
+  "source_notes": [
+    "2027 Tokyo Graduate School of Science MEXT application page conflicts with general-category suspension notices from Keio and Waseda. Treat as unresolved institutional/track-specific issue, not evidence of global discontinuation.",
+    "UCLA IELTS 7.5 and TOEFL scores are admissions guidance, not scholarship eligibility thresholds.",
+    "St Andrews named award amounts differ; do not infer a universal amount for the generic record.",
+    "Keio and Waseda institutional grants are not automatically fully funded.",
+    "SAT not universally mandatory for Waseda English-based undergraduate programmes; alternate standardized qualifications accepted."
+  ],
+  "auth_status": {
+    "auth_uid": null,
+    "is_admin": false,
+    "publication_authorized": false
+  },
+  "next_actions": [
+    "Authorized reviewer reconcile generic/duplicate published records and write reviewer-attributed field provenance.",
+    "Verify Keio GIGA Winter AO 2026 admission closing date before setting scholarship deadline.",
+    "Confirm 2027 Tokyo MEXT general-track status with university/MEXT before changing publication status.",
+    "Review six urgent private drafts, source audits, and provenance before authorized promotion.",
+    "Run CI and validate staging before any production change."
+  ],
+  "database_writes_applied": 0,
+  "production_changes": 0
+}
