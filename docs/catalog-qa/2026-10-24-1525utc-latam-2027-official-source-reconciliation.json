@@ -1,0 +1,782 @@
+{
+  "schema_version": "catalog-qa-official-evidence-v1",
+  "prepared_at_utc": "2026-10-24T15:27:07Z",
+  "scope": "STAGING ONLY; research and proposed changes, not applied database edits",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "repo": "timurdev-collab/grantly",
+  "initial_counts": {
+    "sampled_at_utc": "2026-10-24T15:25:22.564445Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 636
+  },
+  "final_counts": {
+    "sampled_at_utc": "2026-10-24T15:27:06.702936Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 636
+  },
+  "authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "publication_blocked": true,
+    "legitimate_function": "public.publish_scholarship_draft(uuid) requires public.is_admin()",
+    "draft_readiness": "public.scholarship_draft_readiness(uuid) requires public.is_admin()",
+    "provenance_write": "public.record_scholarship_field_provenance(...) requires public.is_admin()"
+  },
+  "duplicate_screen": {
+    "published_exact_title_checks": "17 named leads searched in scholarships title with targeted LIKE; zero exact named matches, but generic umbrella overlaps exist",
+    "candidate_exact_title_checks": "targeted source_candidates title search; zero matches",
+    "limitation": "Not a full semantic or normalized URL duplicate check; must perform before draft creation/publication"
+  },
+  "published_investigations": [
+    {
+      "id": "cc4f23a7-c3bd-4694-9940-79d72a4b06f0",
+      "title": "Argentine Government Scholarship",
+      "country": "Argentina",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://www.argentina.gob.ar/educacion/becas-internacionales",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "Umbrella government portal does not establish a single unrestricted Master's full-tuition-plus-stipend award",
+          "source_url": "https://www.argentina.gob.ar/educacion/becas-internacionales",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Replace ALL only after matching a named bilateral programme and its citizenship rules",
+          "source_url": "https://www.argentina.gob.ar/educacion/becas-internacionales",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Do not assert fully funded until named award and exact benefits are confirmed",
+          "source_url": "https://www.argentina.gob.ar/educacion/becas-internacionales",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "identity_hold"
+    },
+    {
+      "id": "ac741fcd-aa80-4a31-b6e0-b2a1686c95fe",
+      "title": "University of Buenos Aires Scholarship",
+      "country": "Argentina",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://www.argentina.gob.ar/educacion/becas-internacionales",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "No generic UBA scholarship established from the homepage; separate bilateral awards exist",
+          "source_url": "https://www.argentina.gob.ar/educacion/becas-internacionales",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Do not generalize no tuition plus stipend to all Bachelor/Master programmes",
+          "source_url": "https://www.argentina.gob.ar/educacion/becas-internacionales",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Programme-specific, not established",
+          "source_url": "https://www.argentina.gob.ar/educacion/becas-internacionales",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "identity_hold"
+    },
+    {
+      "id": "8bd752c7-41b8-4907-b285-000d06de74a8",
+      "title": "University of São Paulo (USP) Graduate Scholarship",
+      "country": "Brazil",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://sites.usp.br/ppgarqmae/bolsas/",
+      "review_checks": [
+        {
+          "field": "funding_source",
+          "proposal": "CAPES/CNPq quotas are allocated through programmes; FAPESP is separately applied for",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposal": "Do not imply guaranteed monthly stipend; one official USP programme cites BRL 2100 Master and BRL 3100 PhD",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Varies by USP programme and funder",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "reconcile"
+    },
+    {
+      "id": "ed89e879-9bb8-461b-b1e8-70f2c58c01a3",
+      "title": "University of São Paulo Masters International Scholarship",
+      "country": "Brazil",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://sites.usp.br/ppgarqmae/bolsas/",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "No independently named universal USP international Master's award established",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "funding_source",
+          "proposal": "FAPESP applications separate from CAPES/CNPq programme quotas",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposal": "Conditional on selection, not automatic",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "identity_hold"
+    },
+    {
+      "id": "a56fe345-2e59-4fd8-bbe1-a53e7a8c108d",
+      "title": "University of São Paulo Phd International Scholarship",
+      "country": "Brazil",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://sites.usp.br/ppgarqmae/bolsas/",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "No independently named universal USP international PhD award established",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "funding_source",
+          "proposal": "FAPESP applications separate from CAPES/CNPq programme quotas",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposal": "Conditional on selection, not automatic",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "identity_hold"
+    },
+    {
+      "id": "3ccbea8c-7655-4645-b881-3f36b8433deb",
+      "title": "Pontificia Universidad Católica de Chile Computer Science Phd Award",
+      "country": "Chile",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "UC doctoral VRI scholarships exist; exact Computer Science-specific award not verified",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Do not claim universal full tuition and stipend for a programme-specific award without evidence",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Verify doctoral programme and scholarship separately",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "identity_hold"
+    },
+    {
+      "id": "40cc63cf-7c0c-4991-827b-af7426a14693",
+      "title": "Pontificia Universidad Católica de Chile Masters Excellence Scholarship",
+      "country": "Chile",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "Official UC doctoral funding evidence does not establish named Master's Excellence scholarship",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "No evidence of blanket fully funded Master's award",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Not verified",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "identity_hold"
+    },
+    {
+      "id": "9fce5eed-12c0-42f6-930e-a407326fc0e6",
+      "title": "Pontificia Universidad Católica de Chile Masters International Scholarship",
+      "country": "Chile",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "No programme-specific official Master's International scholarship established",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Do not extrapolate doctoral stipend/tuition to Master's",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Unrestricted eligibility not evidenced",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "identity_hold"
+    },
+    {
+      "id": "c90b2b17-9d04-4eeb-9b0a-dffe92bcc2e8",
+      "title": "Pontificia Universidad Católica de Chile Phd International Scholarship",
+      "country": "Chile",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "Doctoral VRI scholarship available to eligible doctoral students; generic international name not verified",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "funding",
+          "proposal": "Doctoral VRI may cover tuition and maintenance; external funding application conditions apply",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Use UC doctoral funding calendar, not fabricated universal date",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "reconcile"
+    },
+    {
+      "id": "6b7b8b60-dde1-4644-a4fe-bd048cb17f2c",
+      "title": "Pontificia Universidad Católica de Chile Scholarship",
+      "country": "Chile",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "Generic umbrella overlaps potential doctoral VRI funding; do not double-count",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Verified doctoral VRI evidence cannot establish a universal Master's award",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Conditional awards, not blanket full funding",
+          "source_url": "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "reconcile"
+    },
+    {
+      "id": "f7afc176-0610-4109-af60-f8f5d79f95f4",
+      "title": "Pontificia Universidad Javeriana Scholarship",
+      "country": "Colombia",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://www.javeriana.edu.co/carrera-economia",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "Generic record overlaps named Bachiller Destacado and Ingresa routes",
+          "source_url": "https://www.javeriana.edu.co/carrera-economia",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Official university programme page lists Bachiller Destacado 80% and Ingresa up to 50%, not generic full funding",
+          "source_url": "https://www.javeriana.edu.co/carrera-economia",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Scholarship-specific call needed; 2027 admissions deadline must not be used as scholarship deadline",
+          "source_url": "https://www.javeriana.edu.co/carrera-economia",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "reconcile"
+    },
+    {
+      "id": "1d95ebc8-2a57-4698-9e21-29b1f6a58df9",
+      "title": "Universidad de los Andes Scholarship",
+      "country": "Colombia",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "Multiple named undergraduate awards, not one general Bachelor/Master full-tuition scholarship",
+          "source_url": "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Beca Preferente 5-50%; Mazda 95%; others differ",
+          "source_url": "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Verified 2027 named awards here apply to undergraduate entry",
+          "source_url": "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Quiero Estudiar/Quiero Enseñar require income-based post-graduation contributions; never mislabel as unconditional grants",
+          "source_url": "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "reconcile"
+    },
+    {
+      "id": "ce2d8a5f-4c84-4cb4-8f8c-02ebc1e4e0de",
+      "title": "EARTH University Scholarship",
+      "country": "Costa Rica",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://www.earth.ac.cr/",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "Official programme-specific aid terms and 2027 deadline not independently established in this pass",
+          "source_url": "https://www.earth.ac.cr/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "ALL and full financial aid must be rechecked against admissions rules",
+          "source_url": "https://www.earth.ac.cr/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "source_pending"
+    },
+    {
+      "id": "e3e76b8c-4456-41ec-af3b-ee33dab3fc8f",
+      "title": "Mexican Government Scholarship",
+      "country": "Mexico",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://www.gob.mx/amexcid/documentos/becas-de-excelencia-del-gobierno-de-mexico-para-extranjeros-2026",
+      "review_checks": [
+        {
+          "field": "official_url",
+          "proposal": "Replace AMEXCID homepage with programme-specific 2026 call after authenticated approval",
+          "source_url": "https://www.gob.mx/amexcid/documentos/becas-de-excelencia-del-gobierno-de-mexico-para-extranjeros-2026",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Not ALL; official call includes eligible-country annex",
+          "source_url": "https://www.gob.mx/amexcid/documentos/becas-de-excelencia-del-gobierno-de-mexico-para-extranjeros-2026",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Do not assume universal Bachelor's, Master's and PhD availability; match 2026 call academic offerings",
+          "source_url": "https://www.gob.mx/amexcid/documentos/becas-de-excelencia-del-gobierno-de-mexico-para-extranjeros-2026",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposal": "2027 cycle not confirmed; no invented date",
+          "source_url": "https://www.gob.mx/amexcid/documentos/becas-de-excelencia-del-gobierno-de-mexico-para-extranjeros-2026",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "reconcile"
+    },
+    {
+      "id": "0f63ea3c-823f-42f2-acdc-3382dce1a8ea",
+      "title": "Tecnológico de Monterrey Scholarship",
+      "country": "Mexico",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://tec.mx/es/profesional/becas",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "Umbrella overlaps at least seven independently named 2027 tuition scholarships",
+          "source_url": "https://tec.mx/es/profesional/becas",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Awards differ: 20-60%, 50/70%, 70%, or 100%; not blanket full tuition",
+          "source_url": "https://tec.mx/es/profesional/becas",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Beca Socioeconómica mixes grants and interest-bearing loans; loan component must never be counted as a grant",
+          "source_url": "https://tec.mx/es/profesional/becas",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "sat_required",
+          "proposal": "PAA 1360 for Talento Académico/Líderes, SAT/ACT equivalent permitted; SAT is not universally required",
+          "source_url": "https://tec.mx/es/profesional/becas",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Different named scholarship deadlines; do not assign one generic deadline",
+          "source_url": "https://tec.mx/es/profesional/becas",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "reconcile"
+    },
+    {
+      "id": "9d4712cd-362c-41bc-9b2e-c53e1ca868cf",
+      "title": "UNAM Masters Excellence Scholarship",
+      "country": "Mexico",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://www.becas.unam.mx/2026/03/17/becas-para-estudios-de-posgrado-en-la-unam-convocatoria-2026-2/",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "Named UNAM Posgrado 2026-2 grant is for eligible enrolled Master's/PhD students, not generic Masters Excellence",
+          "source_url": "https://www.becas.unam.mx/2026/03/17/becas-para-estudios-de-posgrado-en-la-unam-convocatoria-2026-2/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposal": "Official 2026-2 Master's stipend is 4.5 UMA units, not automatic CONACYT stipend",
+          "source_url": "https://www.becas.unam.mx/2026/03/17/becas-para-estudios-de-posgrado-en-la-unam-convocatoria-2026-2/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Historical 2026-2 application March 17-24, 2026; 2027 not established",
+          "source_url": "https://www.becas.unam.mx/2026/03/17/becas-para-estudios-de-posgrado-en-la-unam-convocatoria-2026-2/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "reconcile"
+    },
+    {
+      "id": "296900b4-6d13-4242-8d60-787d4c605b51",
+      "title": "UNAM Phd Excellence Scholarship",
+      "country": "Mexico",
+      "verification_status_at_read": "needs_review",
+      "official_source": "https://www.becas.unam.mx/2026/03/17/becas-para-estudios-de-posgrado-en-la-unam-convocatoria-2026-2/",
+      "review_checks": [
+        {
+          "field": "programme_identity",
+          "proposal": "Named UNAM Posgrado 2026-2 grant is for eligible enrolled Master's/PhD students, not generic PhD Excellence",
+          "source_url": "https://www.becas.unam.mx/2026/03/17/becas-para-estudios-de-posgrado-en-la-unam-convocatoria-2026-2/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposal": "Official 2026-2 PhD stipend is 6.0 UMA units, not automatic CONACYT stipend",
+          "source_url": "https://www.becas.unam.mx/2026/03/17/becas-para-estudios-de-posgrado-en-la-unam-convocatoria-2026-2/",
+          "status": "proposal_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Historical 2026-2 application March 17-24, 2026; 2027 not established",
+          "source_url": "https://www.becas.unam.mx/2026/03/17/becas-para-estudios-de-posgrado-en-la-unam-convocatoria-2026-2/",
+          "status": "proposal_not_applied"
+        }
+      ],
+      "decision": "reconcile"
+    }
+  ],
+  "scholarship_leads": [
+    {
+      "name": "Tec Beca al Talento Académico 2027",
+      "country": "Mexico",
+      "degree": "Bachelor",
+      "funding": "20%-60% tuition reduction",
+      "deadline": "2027-01-22",
+      "source_url": "https://tec.mx/es/profesional/becas",
+      "eligibility_and_caveats": "PAA 1360 minimum; SAT/ACT equivalent accepted; GPA >=90/100; age <21; earlier admission deadlines for select majors",
+      "disposition": "candidate",
+      "db_draft_created": false
+    },
+    {
+      "name": "Tec Beca al Talento Emprendedor 2027",
+      "country": "Mexico",
+      "degree": "Bachelor",
+      "funding": "50% or 70% tuition reduction",
+      "deadline": "2027-02-16",
+      "source_url": "https://tec.mx/es/profesional/becas",
+      "eligibility_and_caveats": "Prototyped entrepreneurship project and evidence; admission by Feb 11; age <21",
+      "disposition": "candidate",
+      "db_draft_created": false
+    },
+    {
+      "name": "Tec Beca al Talento Creativo (Humanidades y Educación) 2027",
+      "country": "Mexico",
+      "degree": "Bachelor",
+      "funding": "50% or 70% tuition reduction",
+      "deadline": "2027-02-12",
+      "source_url": "https://tec.mx/es/profesional/becas",
+      "eligibility_and_caveats": "Specific humanities/education degree programmes; portfolio; admission Feb 4; age <21",
+      "disposition": "candidate",
+      "db_draft_created": false
+    },
+    {
+      "name": "Tec Beca al Talento Creativo (Arquitectura, Arte y Diseño) 2027",
+      "country": "Mexico",
+      "degree": "Bachelor",
+      "funding": "50% or 70% tuition reduction",
+      "deadline": "2027-02-12",
+      "source_url": "https://tec.mx/es/profesional/becas",
+      "eligibility_and_caveats": "Specific architecture/art/design programmes; portfolio; admission Feb 4; age <21",
+      "disposition": "candidate",
+      "db_draft_created": false
+    },
+    {
+      "name": "Tec Beca al Talento Transformador 2027",
+      "country": "Mexico",
+      "degree": "Bachelor",
+      "funding": "70% tuition reduction",
+      "deadline": "2027-02-08",
+      "source_url": "https://tec.mx/es/profesional/becas",
+      "eligibility_and_caveats": "Law/economics/international relations/public government only; admission Feb 4; age <21",
+      "disposition": "candidate",
+      "db_draft_created": false
+    },
+    {
+      "name": "Tec Líderes del Mañana Nacional 2027",
+      "country": "Mexico",
+      "degree": "Bachelor",
+      "funding": "100% tuition; medical insurance and books/materials allowance",
+      "deadline": "2027-02-26",
+      "source_url": "https://tec.mx/es/profesional/becas",
+      "eligibility_and_caveats": "Mexican nationality; health-programme registration Feb 12; PAA 1360 or SAT/ACT equivalent; GPA >=90; age <=22",
+      "disposition": "candidate",
+      "db_draft_created": false
+    },
+    {
+      "name": "Tec Líderes del Mañana LATAM 2027",
+      "country": "Mexico",
+      "degree": "Bachelor",
+      "funding": "100% tuition; programme terms and other benefits must be verified separately",
+      "deadline": "2027-02-26",
+      "source_url": "https://tec.mx/es/profesional/becas",
+      "eligibility_and_caveats": "Institutional page lists 7 eligible countries; 2026 news lists 8 including Nicaragua; resolve nationality discrepancy; health Feb 12; return-to-region expectation",
+      "disposition": "hold_country_conflict",
+      "db_draft_created": false
+    },
+    {
+      "name": "Universidad de los Andes Beca Preferente 2027-10",
+      "country": "Colombia",
+      "degree": "Bachelor",
+      "funding": "5%-50% tuition reduction",
+      "deadline": "2026-12-15",
+      "source_url": "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+      "eligibility_and_caveats": "Specific undergraduate majors; new admitted students; application from Aug 14; until funds exhausted",
+      "disposition": "candidate",
+      "db_draft_created": false
+    },
+    {
+      "name": "Universidad de los Andes Beca Fundación Mazda 2027-10",
+      "country": "Colombia",
+      "degree": "Bachelor",
+      "funding": "95% tuition reduction",
+      "deadline": "2026-12-15",
+      "source_url": "https://apoyofinanciero.uniandes.edu.co/beca-mazda",
+      "eligibility_and_caveats": "Specific majors; two applicant tracks under one umbrella; inspect reciprocity obligations before publication",
+      "disposition": "candidate_with_conditions",
+      "db_draft_created": false
+    },
+    {
+      "name": "Universidad de los Andes Beca Decidí Enseñar 2027-10",
+      "country": "Colombia",
+      "degree": "Bachelor",
+      "funding": "66% tuition reduction",
+      "deadline": "2026-12-15",
+      "source_url": "https://apoyofinanciero.uniandes.edu.co/decidi-ensenar",
+      "eligibility_and_caveats": "Education licentiate degrees; verify postgraduation reciprocity terms and distinguish from a loan",
+      "disposition": "hold_reciprocity",
+      "db_draft_created": false
+    },
+    {
+      "name": "Universidad de los Andes Quiero Estudiar 2027-10",
+      "country": "Colombia",
+      "degree": "Bachelor",
+      "funding": "Up to 95% tuition; income-linked future contributions",
+      "deadline": "2026-11-08",
+      "source_url": "https://apoyofinanciero.uniandes.edu.co/quiero-estudiar",
+      "eligibility_and_caveats": "20% of future earnings for twice duration of support; not unconditional nonrepayable grant",
+      "disposition": "hold_reciprocity",
+      "db_draft_created": false
+    },
+    {
+      "name": "Universidad de los Andes Quiero Enseñar 2027-10",
+      "country": "Colombia",
+      "degree": "Bachelor",
+      "funding": "Up to 95% tuition; income-linked future contributions",
+      "deadline": "2026-11-08",
+      "source_url": "https://apoyofinanciero.uniandes.edu.co/quiero-ensenar",
+      "eligibility_and_caveats": "Education degrees; Colombian students; 20% of future earnings for twice duration of support; not unconditional nonrepayable grant",
+      "disposition": "hold_reciprocity",
+      "db_draft_created": false
+    },
+    {
+      "name": "Brazil PEC-PG International Graduate Scholarship",
+      "country": "Brazil",
+      "degree": "Master/PhD",
+      "funding": "BRL 2100/month Master; BRL 3100/month PhD in 2025/26 call; health and return travel support",
+      "deadline": null,
+      "source_url": "https://www.gov.br/capes/pt-br/acesso-a-informacao/acoes-e-programas/bolsas/bolsas-e-auxilios-internacionais/encontre-aqui/paises/multinacional/programa-de-estudantes-convenio-de-pos-graduacao-pec-pg",
+      "eligibility_and_caveats": "Eligible foreign nationals from participating countries; multiple modes under one programme; 2027 application deadline unconfirmed",
+      "disposition": "hold_cycle",
+      "db_draft_created": false
+    },
+    {
+      "name": "Chile AGCID República de Chile Master's Scholarships",
+      "country": "Chile",
+      "degree": "Master",
+      "funding": "Tuition, degree costs, medical insurance and monthly stipend; travel not covered",
+      "deadline": null,
+      "source_url": "https://www.agcid.gob.cl/becas/becas-para-extranjeros",
+      "eligibility_and_caveats": "Eligible specified Latin American/Caribbean nationals; nominated via home-country focal point; specific 2027 call not established",
+      "disposition": "hold_cycle",
+      "db_draft_created": false
+    },
+    {
+      "name": "Chile AGCID Pacific Alliance Master's Scholarships",
+      "country": "Chile",
+      "degree": "Master",
+      "funding": "Tuition, degree costs, insurance, stipend and return airfare",
+      "deadline": null,
+      "source_url": "https://www.agcid.gob.cl/becas/becas-para-extranjeros",
+      "eligibility_and_caveats": "Colombia/Mexico/Peru; home-country nomination; 2027 call not established",
+      "disposition": "hold_cycle",
+      "db_draft_created": false
+    },
+    {
+      "name": "Argentina Postgraduate Scholarships for Mexican Citizens",
+      "country": "Argentina",
+      "degree": "Master",
+      "funding": "Monthly maintenance, health assistance, partial tuition; differential tuition paid by recipient",
+      "deadline": null,
+      "source_url": "https://www.argentina.gob.ar/node/484500",
+      "eligibility_and_caveats": "Mexican graduates only; 2026 regulations linked; next exact cycle deadline not verified",
+      "disposition": "hold_cycle",
+      "db_draft_created": false
+    },
+    {
+      "name": "UNAM Becas para Estudios de Posgrado 2026-2",
+      "country": "Mexico",
+      "degree": "Master/PhD",
+      "funding": "4.5 UMA Master; 6 UMA PhD monthly",
+      "deadline": "2026-03-24",
+      "source_url": "https://www.becas.unam.mx/2026/03/17/becas-para-estudios-de-posgrado-en-la-unam-convocatoria-2026-2/",
+      "eligibility_and_caveats": "Historical closed cycle; may overlap generic UNAM published records; no 2027 date",
+      "disposition": "hold_historical",
+      "db_draft_created": false
+    }
+  ],
+  "existing_private_drafts": [
+    {
+      "id": "b92a5b8d-b319-4912-b0b1-d504de46c1c7",
+      "title": "Beca Bachiller Destacado – 2026-2",
+      "status": "draft",
+      "verification_status": "verified",
+      "deadline": "2026-05-08",
+      "source_url": "https://www.javeriana.edu.co/recursosdb/d/estudia-en-la-javeriana/convoctoria-beca-bachiller-destacado-segundo-semestre-de-2026-2-pdf",
+      "review": "Closed historical cycle; do not publish as current 2027 scholarship without new official call; avoid overlap with generic published Javeriana Scholarship"
+    },
+    {
+      "id": "ccce5655-e8b0-42a4-8349-94ce57669528",
+      "title": "ITAM Scholarship",
+      "status": "draft",
+      "verification_status": "verified",
+      "source_url": "https://www.itam.mx/es/becas-itam",
+      "review": "Generic identity and cycle; separate current scholarship-specific audit and admin approval required"
+    }
+  ],
+  "quality_flags": [
+    "Tec Socioeconómica includes interest-bearing educational loan; exclude loan component from scholarship count.",
+    "Uniandes Quiero Estudiar and Quiero Enseñar carry income-based reciprocity obligations, must not be represented as unconditional nonrepayable grants.",
+    "Tec LATAM eligibility conflict: official institutional page omits Nicaragua, university news includes it; hold pending reconciliation.",
+    "No 2027 dates invented for AGCID, Argentina bilateral or PEC-PG.",
+    "Generic university homepage not sufficient evidence for a named award.",
+    "No source-verified fields were marked accepted; no source audit or reviewer identity fabricated."
+  ],
+  "outcome": {
+    "staging_edits": 0,
+    "publications": 0,
+    "new_db_drafts": 0,
+    "provenance_inserts": 0,
+    "archives": 0,
+    "production_changes": 0,
+    "published_goal": 1000,
+    "published_actual": 397,
+    "distance": 603
+  },
+  "sources": [
+    "https://www.gob.mx/amexcid/documentos/becas-de-excelencia-del-gobierno-de-mexico-para-extranjeros-2026",
+    "https://tec.mx/es/profesional/becas",
+    "https://www.becas.unam.mx/2026/03/17/becas-para-estudios-de-posgrado-en-la-unam-convocatoria-2026-2/",
+    "https://sites.usp.br/ppgarqmae/bolsas/",
+    "https://www.gov.br/capes/pt-br/acesso-a-informacao/acoes-e-programas/bolsas/bolsas-e-auxilios-internacionais/encontre-aqui/paises/multinacional/programa-de-estudantes-convenio-de-pos-graduacao-pec-pg",
+    "https://artes.uc.cl/postgrado/doctorado/costos-y-becas/",
+    "https://www.javeriana.edu.co/carrera-economia",
+    "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+    "https://www.argentina.gob.ar/educacion/becas-internacionales",
+    "https://www.argentina.gob.ar/node/484500",
+    "https://www.agcid.gob.cl/becas/becas-para-extranjeros",
+    "https://apoyofinanciero.uniandes.edu.co/beca-mazda",
+    "https://apoyofinanciero.uniandes.edu.co/decidi-ensenar",
+    "https://apoyofinanciero.uniandes.edu.co/quiero-estudiar",
+    "https://apoyofinanciero.uniandes.edu.co/quiero-ensenar"
+  ]
+}
