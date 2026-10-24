@@ -95,6 +95,12 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     var nextOffset by remember(session?.userId) { mutableIntStateOf(0) }
     var hasMore by remember(session?.userId) { mutableStateOf(false) }
 
+    var selectedPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
+    if (selectedPost != null) {
+        CommunityCommentsContent(post = selectedPost!!, onBack = { selectedPost = null })
+        return
+    }
+
     LaunchedEffect(session?.userId, refresh, nextOffset) {
         if (session == null) {
             posts = emptyList()
@@ -167,6 +173,9 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                             "Media attached — playback is not yet available in this preview.",
                             style = MaterialTheme.typography.bodySmall
                         )
+                    }
+                    TextButton(onClick = { selectedPost = post }) {
+                        Text("View comments")
                     }
                     Text(
                         post.createdAt.take(10),
