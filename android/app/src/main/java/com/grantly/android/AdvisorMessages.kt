@@ -64,7 +64,9 @@ internal object AdvisorMessagesRepository {
                 connection.setRequestProperty("Authorization", "Bearer " + session.accessToken)
                 connection.setRequestProperty("Content-Type", "application/json")
                 connection.setRequestProperty("Accept", "application/json")
-                connection.setRequestProperty("Prefer", "return=minimal")
+                if (path == "/rest/v1/messages") {
+                    connection.setRequestProperty("Prefer", "return=minimal")
+                }
                 connection.outputStream.use {
                     it.write(body.toString().toByteArray(Charsets.UTF_8))
                 }
