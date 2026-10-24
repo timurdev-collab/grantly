@@ -466,10 +466,14 @@
         "Bachelor"
       ],
       "funding": "Admission fee and first-year academic fees; up to four years subject to annual review",
-      "deadline": null,
+      "deadline": "2027-01-22",
       "eligible": "Foreign national entering Keio GIGA September 2027 via Winter AO 2026; scholarship submitted with admission application",
       "official_url": "https://www.keio.ac.jp/en/sfc-pem/admission/financial-aid/undergrad/",
-      "status": "private_draft_candidate_deadline_from_admissions_needed"
+      "status": "private_draft_candidate",
+      "application_opens": "2026-12-08",
+      "deadline_local_time": "15:00 JST",
+      "deadline_basis": "Keio GIGA Winter AO 2026 admission deadline; scholarship applications must be submitted with admission application",
+      "deadline_source_url": "https://www.keio.ac.jp/en/admissions/faculty/examinations/ao-giga-sfc-pem/"
     },
     {
       "title": "Keio GIGA Yoshiaki Ishii Scholarship",
@@ -478,10 +482,14 @@
         "Bachelor"
       ],
       "funding": "Admission fee and first-year academic fees; up to four years subject to annual review",
-      "deadline": null,
+      "deadline": "2027-01-22",
       "eligible": "Foreign national entering Keio GIGA September 2027 via Winter AO 2026",
       "official_url": "https://www.keio.ac.jp/en/sfc-pem/admission/financial-aid/undergrad/",
-      "status": "private_draft_candidate_deadline_from_admissions_needed"
+      "status": "private_draft_candidate",
+      "application_opens": "2026-12-08",
+      "deadline_local_time": "15:00 JST",
+      "deadline_basis": "Keio GIGA Winter AO 2026 admission deadline; scholarship applications must be submitted with admission application",
+      "deadline_source_url": "https://www.keio.ac.jp/en/admissions/faculty/examinations/ao-giga-sfc-pem/"
     },
     {
       "title": "Keio GIGA Masatada Kobayashi Scholarship",
@@ -490,10 +498,14 @@
         "Bachelor"
       ],
       "funding": "First-year academic and admission fees; second-year ¥1,000,000 annually, duration subject to annual review",
-      "deadline": null,
+      "deadline": "2027-01-22",
       "eligible": "Foreign national entering Keio GIGA September 2027 via Winter AO 2026",
       "official_url": "https://www.keio.ac.jp/en/sfc-pem/admission/financial-aid/undergrad/",
-      "status": "private_draft_candidate_deadline_from_admissions_needed"
+      "status": "private_draft_candidate",
+      "application_opens": "2026-12-08",
+      "deadline_local_time": "15:00 JST",
+      "deadline_basis": "Keio GIGA Winter AO 2026 admission deadline; scholarship applications must be submitted with admission application",
+      "deadline_source_url": "https://www.keio.ac.jp/en/admissions/faculty/examinations/ao-giga-sfc-pem/"
     },
     {
       "title": "Waseda IPS Reserved Scholarship for Successful International Examinees",
@@ -576,7 +588,8 @@
     "UCLA IELTS 7.5 and TOEFL scores are admissions guidance, not scholarship eligibility thresholds.",
     "St Andrews named award amounts differ; do not infer a universal amount for the generic record.",
     "Keio and Waseda institutional grants are not automatically fully funded.",
-    "SAT not universally mandatory for Waseda English-based undergraduate programmes; alternate standardized qualifications accepted."
+    "SAT not universally mandatory for Waseda English-based undergraduate programmes; alternate standardized qualifications accepted.",
+    "Keio GIGA Winter AO 2026 applications open December 8, 2026 at 11:00 JST and close January 22, 2027 at 15:00 JST; scholarships must be applied for with the admissions application."
   ],
   "auth_status": {
     "auth_uid": null,
@@ -585,7 +598,7 @@
   },
   "next_actions": [
     "Authorized reviewer reconcile generic/duplicate published records and write reviewer-attributed field provenance.",
-    "Verify Keio GIGA Winter AO 2026 admission closing date before setting scholarship deadline.",
+    "Keio GIGA deadline independently verified from official Winter AO admissions schedule; proceed to authorized duplicate review and private draft preparation.",
     "Confirm 2027 Tokyo MEXT general-track status with university/MEXT before changing publication status.",
     "Review six urgent private drafts, source audits, and provenance before authorized promotion.",
     "Run CI and validate staging before any production change."
