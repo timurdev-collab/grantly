@@ -375,14 +375,14 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         TextButton(onClick = onBack) { Text("← Back to Home") }
         Text("Community", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text(
-            "Preview of visible posts. You can comment, like, report and publish text posts. Private photo and video viewing is available for supported uploads; uploads and stories are not yet supported.",
+            "Preview of visible posts. You can comment, like, report and publish text or single-photo posts. Private photo and video viewing is available for supported uploads; video uploads and stories are not yet supported.",
             style = MaterialTheme.typography.bodySmall
         )
         if (session == null) {
             Text("Sign in from the Profile tab to view community posts.")
         } else {
             OutlinedButton(onClick = { composing = true }, enabled = !loading) {
-                Text("Create text post")
+                Text("Create post")
             }
             OutlinedButton(onClick = {
                 nextOffset = 0
