@@ -43,7 +43,7 @@ internal object CommunityFeedRepository {
         }
         // Explicitly exclude inactive posts; server RLS additionally enforces visibility and blocks.
         val path = "/rest/v1/social_posts" +
-            "?select=id,author_id,kind,caption,created_at,media_type,media_path" +
+            "?select=id,author_id,kind,caption,created_at,media_type,media_path,media_url" +
             "&kind=neq.story&is_active=eq.true&order=created_at.desc&limit=${limit + 1}&offset=$offset"
         val connection = URL(base + path).openConnection() as HttpURLConnection
         try {
@@ -78,7 +78,8 @@ internal object CommunityFeedRepository {
                             caption = row.optString("caption").take(4000),
                             createdAt = row.optString("created_at"),
                             hasMedia = (!row.isNull("media_type") && row.optString("media_type").isNotBlank()) ||
-                                (!row.isNull("media_path") && row.optString("media_path").isNotBlank())
+                                (!row.isNull("media_path") && row.optString("media_path").isNotBlank()) ||
+                                (!row.isNull("media_url") && row.optString("media_url").isNotBlank())
                         )
                     )
                 }
@@ -117,7 +118,7 @@ internal object CommunityPostManager {
             throw IOException("Community service is not configured.")
         }
         val path = "/rest/v1/social_posts?id=eq.$postId&author_id=eq.$userId" +
-            "&kind=eq.post&media_type=is.null&media_path=is.null"
+            "&kind=eq.post&media_type=is.null&media_path=is.null&media_url=is.null"
         val connection = URL(base + path).openConnection() as HttpURLConnection
         try {
             connection.requestMethod = "DELETE"
@@ -145,6 +146,59 @@ internal object CommunityPostManager {
             connection.disconnect()
         }
     }
+    /** Only update the caption of an owned, text-only post under existing RLS. */
+    suspend fun editOwnTextPost(post: CommunityPost, caption: String) = withContext(Dispatchers.IO) {
+        val text = caption.trim()
+        require(text.length in 1..2000) { "Write 1–2,000 characters." }
+        val session = AuthRepository.activeSession()
+        val userId = try {
+            UUID.fromString(session.userId).toString()
+        } catch (_: IllegalArgumentException) {
+            throw IOException("Invalid account. Please sign in again.")
+        }
+        val postId = try {
+            UUID.fromString(post.id).toString()
+        } catch (_: IllegalArgumentException) {
+            throw IOException("Invalid post identifier.")
+        }
+        if (post.authorId != userId || post.hasMedia || post.kind != "post") {
+            throw IOException("Only your own text-only posts can be edited.")
+        }
+        val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!base.startsWith("https://") || key.isBlank()) {
+            throw IOException("Community service is not configured.")
+        }
+        val path = "/rest/v1/social_posts?id=eq.$postId&author_id=eq.$userId" +
+            "&kind=eq.post&media_type=is.null&media_path=is.null&media_url=is.null"
+        val connection = URL(base + path).openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = "PATCH"
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 15_000
+            connection.doOutput = true
+            connection.setRequestProperty("apikey", key)
+            connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Accept", "application/json")
+            connection.setRequestProperty("Prefer", "return=representation")
+            val payload = org.json.JSONObject().put("caption", text).toString()
+            connection.outputStream.use { it.write(payload.toByteArray(Charsets.UTF_8)) }
+            val status = connection.responseCode
+            if (status !in 200..299) {
+                throw IOException(when (status) {
+                    401 -> "Your session expired. Sign in again."
+                    403 -> "You do not have permission to edit this post."
+                    else -> "Unable to edit post (HTTP $status)."
+                })
+            }
+            val rows = JSONArray(connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() })
+            if (rows.length() != 1) throw IOException("Post was not updated. Refresh and try again.")
+        } finally {
+            connection.disconnect()
+        }
+    }
+
 }
 
 @Composable
@@ -160,6 +214,7 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     var selectedPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var composing by remember(session?.userId) { mutableStateOf(false) }
     var pendingDelete by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
+    var editingPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var deletingId by remember(session?.userId) { mutableStateOf<String?>(null) }
     var deleteError by remember(session?.userId) { mutableStateOf<String?>(null) }
     var likedIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
@@ -210,6 +265,18 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
             onBack = { composing = false },
             onPosted = {
                 composing = false
+                nextOffset = 0
+                refresh++
+            }
+        )
+        return
+    }
+    if (editingPost != null) {
+        CommunityPostEditor(
+            post = editingPost!!,
+            onBack = { editingPost = null },
+            onSaved = {
+                editingPost = null
                 nextOffset = 0
                 refresh++
             }
@@ -362,6 +429,10 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                         if (post.authorId == session.userId && !post.hasMedia && post.kind == "post") {
                             TextButton(
                                 enabled = deletingId == null,
+                                onClick = { editingPost = post }
+                            ) { Text("Edit my post") }
+                            TextButton(
+                                enabled = deletingId == null,
                                 onClick = { pendingDelete = post }
                             ) { Text("Delete my post") }
                         }
@@ -382,5 +453,52 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                 ) { Text("Load more posts") }
             }
         }
+    }
+}
+
+/** Text-only editing preview; no media or privileged backend changes. */
+@Composable
+private fun CommunityPostEditor(post: CommunityPost, onBack: () -> Unit, onSaved: () -> Unit) {
+    var caption by remember(post.id) { mutableStateOf(post.caption) }
+    var saving by remember(post.id) { mutableStateOf(false) }
+    var error by remember(post.id) { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        TextButton(onClick = onBack, enabled = !saving) { Text("← Back to Community") }
+        Text("Edit text post", style = MaterialTheme.typography.headlineSmall)
+        OutlinedTextField(
+            value = caption,
+            onValueChange = { if (it.length <= 2000) caption = it },
+            label = { Text("Post caption") },
+            minLines = 4,
+            maxLines = 10,
+            enabled = !saving,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Text("${caption.length}/2,000 characters", style = MaterialTheme.typography.labelSmall)
+        if (error != null) Text(error!!, color = MaterialTheme.colorScheme.error)
+        if (saving) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+        Button(
+            enabled = !saving && caption.trim().isNotEmpty() && caption.trim() != post.caption,
+            onClick = {
+                saving = true
+                error = null
+                scope.launch {
+                    try {
+                        CommunityPostManager.editOwnTextPost(post, caption)
+                        onSaved()
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (failure: Exception) {
+                        error = failure.message ?: "Unable to edit post."
+                    } finally {
+                        saving = false
+                    }
+                }
+            }
+        ) { Text(if (saving) "Saving..." else "Save changes") }
     }
 }
