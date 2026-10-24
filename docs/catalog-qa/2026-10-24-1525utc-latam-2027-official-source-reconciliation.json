@@ -35,9 +35,9 @@
     "provenance_write": "public.record_scholarship_field_provenance(...) requires public.is_admin()"
   },
   "duplicate_screen": {
-    "published_exact_title_checks": "17 named leads searched in scholarships title with targeted LIKE; zero exact named matches, but generic umbrella overlaps exist",
-    "candidate_exact_title_checks": "targeted source_candidates title search; zero matches",
-    "limitation": "Not a full semantic or normalized URL duplicate check; must perform before draft creation/publication"
+    "published_exact_title_checks": "Targeted subset of distinctive named lead patterns searched in scholarships.title; zero matches returned for those patterns. This is not an exhaustive 17-lead exact or semantic duplicate check.",
+    "candidate_exact_title_checks": "Targeted subset of distinctive lead patterns searched in scholarship_source_candidates.candidate_title; zero matches returned for those patterns. Not an exhaustive source-candidate search.",
+    "limitation": "Existing generic university/agency umbrella records create known overlap. Each named lead requires independent full title, normalized URL, identity and semantic duplicate reconciliation before any draft or publication."
   },
   "published_investigations": [
     {
