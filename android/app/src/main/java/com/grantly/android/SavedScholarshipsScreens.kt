@@ -1,5 +1,7 @@
 package com.grantly.android
 
+import android.app.DatePickerDialog
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -7,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -14,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 private val trackerInk = Color(0xFF19372B)
 private val trackerForest = Color(0xFF123E30)
@@ -22,6 +26,7 @@ private val trackerForest = Color(0xFF123E30)
 @Composable
 internal fun SavedScholarshipsContent() {
     val session = AuthRepository.session
+    val context = LocalContext.current
     Text("Applications", fontFamily = FontFamily.Serif, fontSize = 34.sp, color = trackerInk)
     Spacer(Modifier.height(8.dp))
     Text("Your saved scholarships and application stages", color = trackerInk.copy(alpha = .7f))
@@ -38,6 +43,8 @@ internal fun SavedScholarshipsContent() {
     var retry by remember(session.userId) { mutableIntStateOf(0) }
     var editingStatus by remember(session.userId) { mutableStateOf<SavedScholarshipSummary?>(null) }
     var editingNotes by remember(session.userId) { mutableStateOf<SavedScholarshipSummary?>(null) }
+    var editingDeadline by remember(session.userId) { mutableStateOf<SavedScholarshipSummary?>(null) }
+    var deadlineDraft by remember(session.userId) { mutableStateOf<LocalDate?>(null) }
     var noteDraft by remember(session.userId) { mutableStateOf("") }
     var mutationBusy by remember(session.userId) { mutableStateOf(false) }
     var mutationError by remember(session.userId) { mutableStateOf<String?>(null) }
@@ -86,6 +93,9 @@ internal fun SavedScholarshipsContent() {
                         }
                         Spacer(Modifier.height(8.dp))
                         Text("Status: ${item.status}", color = trackerForest, fontSize = 13.sp)
+                        item.personalDeadline?.let { date ->
+                            Text("Personal target: $date", color = trackerForest, fontSize = 13.sp)
+                        }
                         item.notes?.let { note ->
                             Spacer(Modifier.height(6.dp))
                             Text(note, color = trackerInk.copy(alpha = .7f), fontSize = 12.sp)
@@ -102,6 +112,13 @@ internal fun SavedScholarshipsContent() {
                                 editingNotes = item
                             }) { Text("Edit note") }
                         }
+                        TextButton(enabled = !mutationBusy, onClick = {
+                            mutationError = null
+                            deadlineDraft = item.personalDeadline?.let { date ->
+                                runCatching { LocalDate.parse(date) }.getOrNull()
+                            }
+                            editingDeadline = item
+                        }) { Text(if (item.personalDeadline == null) "Set personal target" else "Edit personal target") }
                         Spacer(Modifier.height(8.dp))
                         ApplicationTaskControls(item.scholarshipId)
                         Spacer(Modifier.height(8.dp))
@@ -150,6 +167,61 @@ internal fun SavedScholarshipsContent() {
             },
             confirmButton = {},
             dismissButton = { TextButton(enabled = !mutationBusy, onClick = { editingStatus = null }) { Text("Cancel") } }
+        )
+    }
+
+    editingDeadline?.let { item ->
+        AlertDialog(
+            onDismissRequest = { if (!mutationBusy) editingDeadline = null },
+            title = { Text("Personal application target") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text("Choose your own preparation target. This does not change the scholarship provider's official deadline.")
+                    OutlinedButton(enabled = !mutationBusy, onClick = {
+                        val initial = deadlineDraft ?: LocalDate.now()
+                        DatePickerDialog(
+                            context,
+                            { _, year, month, day -> deadlineDraft = LocalDate.of(year, month + 1, day) },
+                            initial.year, initial.monthValue - 1, initial.dayOfMonth
+                        ).show()
+                    }) {
+                        Text(deadlineDraft?.toString() ?: "Choose a date")
+                    }
+                    if (deadlineDraft != null) {
+                        TextButton(enabled = !mutationBusy, onClick = { deadlineDraft = null }) {
+                            Text("Clear target")
+                        }
+                    }
+                    Text("Android deadline notifications are not available in this preview.", style = MaterialTheme.typography.bodySmall)
+                }
+            },
+            confirmButton = {
+                TextButton(enabled = !mutationBusy, onClick = {
+                    mutationBusy = true
+                    mutationError = null
+                    val chosen = deadlineDraft
+                    scope.launch {
+                        try {
+                            SavedScholarshipsRepository.updatePersonalDeadline(item.scholarshipId, chosen)
+                            items = items.map {
+                                if (it.scholarshipId == item.scholarshipId)
+                                    it.copy(personalDeadline = chosen?.toString())
+                                else it
+                            }
+                            editingDeadline = null
+                        } catch (cancelled: CancellationException) {
+                            throw cancelled
+                        } catch (failure: Exception) {
+                            mutationError = failure.message ?: "Unable to save target date."
+                        } finally {
+                            mutationBusy = false
+                        }
+                    }
+                }) { Text(if (mutationBusy) "Saving…" else "Save") }
+            },
+            dismissButton = {
+                TextButton(enabled = !mutationBusy, onClick = { editingDeadline = null }) { Text("Cancel") }
+            }
         )
     }
 
