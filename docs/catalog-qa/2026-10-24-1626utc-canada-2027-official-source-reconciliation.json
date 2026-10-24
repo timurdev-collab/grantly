@@ -1,0 +1,395 @@
+{
+  "run_utc": "2026-10-24T16:28:01Z",
+  "project": "cbzriyarlvpmtfbjgede",
+  "repo": "timurdev-collab/grantly",
+  "environment": "staging_only",
+  "readback": {
+    "before_utc": "2026-10-24T16:26:44.553282Z",
+    "after_utc": "2026-10-24T16:28:01.581912Z",
+    "before": {
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_provenance": 0,
+      "source_candidates": 636
+    },
+    "after": {
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_provenance": 0,
+      "source_candidates": 636
+    }
+  },
+  "research_method": "Programme-specific official sources verified 2026-10-24; published titles and candidate overlaps queried in staging. Targeted exact/title and candidate-URL duplicate screening is not a complete semantic duplicate audit. All changes proposed only.",
+  "published_investigations": [
+    {
+      "id": "0f2adcfa-4737-47bb-bee5-0bb0812cc99e",
+      "title": "Vanier Canada Graduate Scholarship",
+      "proposed_fields": {
+        "cycle_status": "discontinued for new applications (Vanier only)",
+        "deadline": null,
+        "application_cycle": "Final Vanier competition 2024/25; CGRS D is a distinct successor",
+        "funding_note": "Historic Vanier award CAD 50,000 annually for three years, not tuition-fee waiver"
+      },
+      "reason": "Government of Canada states Vanier no longer accepts applications. Do not silently rename as CGRS D. Authorized audited archival review required.",
+      "official_sources": [
+        "https://vanier.gc.ca/en/information_for_institutions-information_pour_etablissements.html",
+        "https://nserc-crsng.canada.ca/en/news/launch-new-harmonized-tri-agency-scholarship-and-fellowship-programs"
+      ],
+      "action": "authorized_archive_review"
+    },
+    {
+      "id": "ce28b2b8-27a4-4158-950f-8977cab86ad3",
+      "title": "Lester B. Pearson Scholarship",
+      "proposed_fields": {
+        "deadline": "2026-11-06",
+        "application_cycle": "September 2027 entry; nomination closed 2026-10-09; admission closed 2026-10-16",
+        "eligible_nationalities": "Non-Canadian international applicants requiring study permit, secondary school nominee",
+        "funding": "Tuition, books, incidental fees, full residence support for four years",
+        "deadline_notes": "Only previously nominated applicants who met October 16 admission deadline can complete Nov 6 scholarship application"
+      },
+      "reason": "Duplicate with 721df0a1; exact same programme and URL. Official page FAQ contains stale 2025 examples: use 2027-specific timeline above.",
+      "official_sources": [
+        "https://future.utoronto.ca/pearson-scholarships"
+      ],
+      "action": "canonical_duplicate_review"
+    },
+    {
+      "id": "721df0a1-47c5-468f-9db8-04a46f24c3c2",
+      "title": "University of Toronto Lester B. Pearson Scholarship",
+      "proposed_fields": {
+        "deadline": "2026-11-06",
+        "application_cycle": "2027 intake; nomination 2026-10-09; admission 2026-10-16",
+        "eligible_nationalities": "International applicants requiring Canadian study permit",
+        "funding": "Full tuition, books, incidental fees and full residence for four years",
+        "deadline_notes": "Nomination and qualifying admission deadline already passed"
+      },
+      "reason": "Duplicate with ce28b2b8; canonical decision needed. The official page prohibits use of generative AI to create scholarship application responses.",
+      "official_sources": [
+        "https://future.utoronto.ca/pearson-scholarships"
+      ],
+      "action": "canonical_duplicate_review"
+    },
+    {
+      "id": "d6fe449b-4b5c-4d16-b49b-65cdb7885b0e",
+      "title": "UBC International Major Entrance Scholarship",
+      "proposed_fields": {
+        "official_url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+        "application_cycle": "2027/28 UBC entry; current published award range refers to 2026/27",
+        "deadline": "2027-01-15",
+        "deadline_notes": "UBC general undergraduate admission deadline; automatic scholarship consideration, no separate scholarship application",
+        "tuition_coverage": "CAD 10,000–25,000 per year as stated for 2026/27; 2027/28 award amounts not independently announced",
+        "eligible_nationalities": "International entrants from secondary school studying on a Canadian study permit; exclude International Scholars nominees",
+        "funding_type": "Partial"
+      },
+      "reason": "Current record describes a full scholarship but IMES is not full-cost coverage; never carry 2026/27 amount forward as confirmed 2027/28.",
+      "official_sources": [
+        "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+        "https://you.ubc.ca/applying-ubc/dates-deadlines/"
+      ],
+      "action": "correct_after_admin_review"
+    },
+    {
+      "id": "400fcb4d-32dd-44b8-9ca4-d58f34e0f676",
+      "title": "University of Manitoba Graduate Fellowship",
+      "proposed_fields": {
+        "official_url": "https://umanitoba.ca/graduate-studies/funding-awards/university-manitoba-graduate-fellowship-umgf",
+        "tuition_coverage": "Not a guaranteed tuition waiver; annual fellowship CAD 20,000 (Master's) or CAD 25,000 (PhD)",
+        "stipend": "CAD 20,000/year Master's for 12–24 months; CAD 25,000/year PhD for 12–48 months",
+        "deadline": null,
+        "deadline_notes": "Departmental nomination and internal deadlines; no university-wide direct deadline",
+        "eligible_nationalities": "All citizenships eligible, subject to full-time enrolment and department recommendation",
+        "min_gpa_percent": null
+      },
+      "reason": "Current record states obsolete CAD 14k–18k; programme-specific funding confirmed. No IELTS/TOEFL/SAT scholarship-wide threshold found.",
+      "official_sources": [
+        "https://umanitoba.ca/graduate-studies/funding-awards/university-manitoba-graduate-fellowship-umgf"
+      ],
+      "action": "correct_after_admin_review"
+    },
+    {
+      "id": "300da265-eedd-466c-b53b-565053f79b2c",
+      "title": "Waterloo International Experience Award",
+      "proposed_fields": {
+        "official_url": "https://uwaterloo.ca/the-centre/forms-and-official-documents/forms-undergraduate-students/international-experience-award-application",
+        "tuition_coverage": "Not a tuition scholarship; support for university-approved outbound experience typically CAD 500–2,500",
+        "funding_type": "Partial travel/experience grant",
+        "deadline": null,
+        "deadline_notes": "Term-based main deadlines: Spring Mar 15; Fall Jul 15; Winter Nov 15; late co-op exceptions Apr 30/Aug 31/Dec 31",
+        "eligible_nationalities": "Current University of Waterloo undergraduates on eligible sanctioned international travel; not a new international entrant award"
+      },
+      "reason": "Existing record incorrectly advertises CAD 10,000 as a general entrance award; award is travel/experience support for existing students. Assess catalogue scope.",
+      "official_sources": [
+        "https://uwaterloo.ca/the-centre/forms-and-official-documents/forms-undergraduate-students/international-experience-award-application"
+      ],
+      "action": "catalog_scope_and_correction_review"
+    },
+    {
+      "id": "f31e2996-1b1a-4532-911f-d928e6f13897",
+      "title": "McGill University Masters International Scholarship",
+      "proposed_fields": {
+        "official_url": null,
+        "funding_type": null,
+        "deadline": null
+      },
+      "reason": "No identifiable universal McGill Master's award established from generic institutional URL; do not infer full tuition or a deadline.",
+      "official_sources": [
+        "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships"
+      ],
+      "action": "identity_hold"
+    },
+    {
+      "id": "dfdf9d29-8e07-4a89-8c83-8d9a4ffa4c38",
+      "title": "McGill University Phd International Scholarship",
+      "proposed_fields": {
+        "official_url": null,
+        "funding_type": null,
+        "deadline": null
+      },
+      "reason": "No identifiable universal McGill PhD scholarship established; distinguish departmental research funding and named awards.",
+      "official_sources": [
+        "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships"
+      ],
+      "action": "identity_hold"
+    },
+    {
+      "id": "2b38db0b-fb23-40fe-8b59-c3134d42eab4",
+      "title": "McGill University Undergraduate International Scholarship",
+      "proposed_fields": {
+        "official_url": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships",
+        "funding_type": "Not a universal full tuition waiver",
+        "deadline": null
+      },
+      "reason": "Generic entry overlaps existing McGill Entrance Scholarship record 17db5eb2; one-year and major renewable entrance awards differ, and highest CAD 12,000 major awards are nationality restricted.",
+      "official_sources": [
+        "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships"
+      ],
+      "action": "canonical_duplicate_review"
+    },
+    {
+      "id": "42a497ee-b113-41fd-bddc-330e93e6c9fa",
+      "title": "University of British Columbia Masters Excellence Scholarship",
+      "proposed_fields": {
+        "official_url": null,
+        "deadline": null,
+        "funding_type": null
+      },
+      "reason": "Generic full tuition plus CAD 18,000 assertion has no named programme-specific support; investigate before retention.",
+      "official_sources": [
+        "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/"
+      ],
+      "action": "identity_hold"
+    },
+    {
+      "id": "431f4a5a-cbe6-429c-a424-2831c56edafb",
+      "title": "University of British Columbia Phd Excellence Scholarship",
+      "proposed_fields": {
+        "official_url": null,
+        "deadline": null,
+        "funding_type": null
+      },
+      "reason": "Generic full tuition plus CAD 18,000 assertion has no named programme-specific support; distinguish departmental PhD funding and actual awards.",
+      "official_sources": [
+        "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/"
+      ],
+      "action": "identity_hold"
+    },
+    {
+      "id": "d28f2eb2-f883-4699-8a72-dde739ce3814",
+      "title": "University of Toronto Masters International Scholarship",
+      "proposed_fields": {
+        "official_url": null,
+        "deadline": null,
+        "funding_type": null
+      },
+      "reason": "Generic universal full funding record lacks programme identity; do not confuse with undergraduate Pearson.",
+      "official_sources": [
+        "https://future.utoronto.ca/pearson-scholarships"
+      ],
+      "action": "identity_hold"
+    },
+    {
+      "id": "0a13eb23-77dd-4d13-a68f-0ca549be3b71",
+      "title": "University of Toronto Phd International Scholarship",
+      "proposed_fields": {
+        "official_url": null,
+        "deadline": null,
+        "funding_type": null
+      },
+      "reason": "Generic universal full funding record lacks named scholarship evidence; department funding may vary.",
+      "official_sources": [
+        "https://future.utoronto.ca/pearson-scholarships"
+      ],
+      "action": "identity_hold"
+    }
+  ],
+  "named_leads": [
+    {
+      "name": "UBC Okanagan Global Elevation Award",
+      "provider": "University of British Columbia",
+      "country": "Canada",
+      "funding": "CAD 8,000 per year as tuition credit, renewable up to four years",
+      "deadline": "2027-01-15",
+      "degree": "Bachelor",
+      "eligibility": "New international students enrolled at UBC Okanagan",
+      "official_url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "notes": "Automatic after enrolment; general admission deadline, not separate scholarship deadline",
+      "classification": "private_draft_candidate_after_semantic_screen"
+    },
+    {
+      "name": "UBC Okanagan International Welcome Award",
+      "provider": "University of British Columbia",
+      "country": "Canada",
+      "funding": "CAD 5,000 first-year tuition credit",
+      "deadline": "2027-01-15",
+      "degree": "Bachelor",
+      "eligibility": "International first-year students who list UBC Okanagan as first-choice degree, admitted and enrolled full-time",
+      "official_url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "notes": "Automatic; 24-credit Winter Session condition; not renewable",
+      "classification": "private_draft_candidate_after_semantic_screen"
+    },
+    {
+      "name": "UBC Okanagan Bachelor of Commerce International Launch Award",
+      "provider": "University of British Columbia",
+      "country": "Canada",
+      "funding": "CAD 6,000 per year tuition credit, renewable up to four years",
+      "deadline": "2027-01-15",
+      "degree": "Bachelor",
+      "eligibility": "New international students enrolled in UBC Okanagan BCom for September 2027",
+      "official_url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "notes": "Automatically applied; explicitly confirmed for 2027 intake",
+      "classification": "private_draft_candidate_after_semantic_screen"
+    },
+    {
+      "name": "UBC Outstanding International Student Award",
+      "provider": "University of British Columbia",
+      "country": "Canada",
+      "funding": "One-time CAD 10,000–25,000 reference from 2025/26; 2027 amount unconfirmed",
+      "deadline": "2027-01-15",
+      "degree": "Bachelor",
+      "eligibility": "International new entrants on Canadian study permit; cannot also be nominated for International Scholars",
+      "official_url": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "notes": "Automatic admissions consideration; do not present old funding as 2027 confirmed",
+      "classification": "private_draft_candidate_after_semantic_screen"
+    },
+    {
+      "name": "Canada Graduate Research Scholarship — Master's (CGRS M)",
+      "provider": "CIHR / NSERC / SSHRC",
+      "country": "Canada",
+      "funding": "CAD 27,000 for 12 months",
+      "deadline": "2026-12-01",
+      "degree": "Research Master's or qualifying early-stage doctoral",
+      "eligibility": "Canadian citizens, permanent residents, or protected persons only; research-intensive programme at eligible Canadian institution",
+      "official_url": "https://nserc-crsng.canada.ca/en/funding-opportunity/canada-graduate-research-scholarship-masters-program",
+      "notes": "Applications by 8pm ET through Research Portal; no foreign-only applicant eligibility",
+      "classification": "private_draft_candidate_after_semantic_screen"
+    },
+    {
+      "name": "Faculty of Science Fellowship for Graduate Excellence 2026/27",
+      "provider": "University of Manitoba",
+      "country": "Canada",
+      "funding": "Funding amount not confirmed on official faculty page",
+      "deadline": "2026-11-30",
+      "degree": "Master / PhD",
+      "eligibility": "Full-time Faculty of Science graduate students, GPA at least 3.0; two awards",
+      "official_url": "https://umanitoba.ca/science/student-experience/financial-aid-awards",
+      "notes": "Application 11:59pm local; source does not specify amount",
+      "classification": "hold_funding_verification"
+    },
+    {
+      "name": "Graduate Science Research Scholarship for Indigenous Students 2026/27",
+      "provider": "University of Manitoba",
+      "country": "Canada",
+      "funding": "Funding amount not confirmed on official faculty page",
+      "deadline": "2026-11-30",
+      "degree": "Master / PhD",
+      "eligibility": "Self-declared First Nations, Métis or Inuit person from Canada; Faculty of Science graduate student, GPA >=3.0, relevant research",
+      "official_url": "https://umanitoba.ca/science/student-experience/financial-aid-awards",
+      "notes": "One award; 11:59pm; do not imply unrestricted international eligibility",
+      "classification": "hold_funding_verification"
+    },
+    {
+      "name": "Molly Weinberg Soudack Scholarship for Women in Science 2026/27",
+      "provider": "University of Manitoba",
+      "country": "Canada",
+      "funding": "Funding amount not confirmed on official faculty page",
+      "deadline": "2026-11-30",
+      "degree": "Master",
+      "eligibility": "Woman in full-time Faculty of Science Master's, GPA >=3.5 and ancestral link to Holocaust or Residential School survivor",
+      "official_url": "https://umanitoba.ca/science/student-experience/financial-aid-awards",
+      "notes": "One award; 11:59pm; sensitive eligibility must be described accurately",
+      "classification": "hold_funding_verification"
+    },
+    {
+      "name": "James C. Jamieson Graduate Scholarship in Biochemistry 2026/27",
+      "provider": "University of Manitoba",
+      "country": "Canada",
+      "funding": "Funding amount not confirmed on official faculty page",
+      "deadline": "2026-11-06",
+      "degree": "Master / PhD",
+      "eligibility": "Full-time Faculty of Science Biochemistry research, GPA >=3.5",
+      "official_url": "https://umanitoba.ca/science/student-experience/financial-aid-awards",
+      "notes": "One award; supervisor assessment required",
+      "classification": "hold_funding_verification"
+    }
+  ],
+  "existing_draft": {
+    "id": "70931a29-0ce4-4700-bfcd-42f0b4abcbe1",
+    "title": "Canada Graduate Research Scholarship — Doctoral (CGRS D), 2026 competition",
+    "official_url": "https://nserc-crsng.canada.ca/en/funding-opportunity/canada-graduate-research-scholarship-doctoral-program",
+    "cycle": "2026",
+    "agency_direct_deadline": "2026-10-17 (passed; institutional deadlines vary)",
+    "funding": "CAD 40,000 annually for 36 months, not tuition waiver",
+    "international_eligibility": "Already registered at eligible Canadian doctoral institution by application deadline; up to 15% awards",
+    "link_status": "exact",
+    "last_successful_check_at": "2026-10-24T04:41:00.698Z",
+    "audit_failure_count": 0,
+    "provenance_records": 6,
+    "accepted_provenance": 0,
+    "reviewer_attributed_provenance": 0,
+    "action": "Do not publish as an open 2026 opportunity; authenticated reviewer provenance and cycle review needed"
+  },
+  "source_candidate_review": {
+    "total": 636,
+    "pending": 625,
+    "ignored": 11,
+    "accepted": 0,
+    "manitoba_umgf_candidate_id": "15f44c0c-4e26-4583-b2c3-5f767c6d3b58",
+    "manitoba_umgf_duplicate_of_published_id": "400fcb4d-32dd-44b8-9ca4-d58f34e0f676",
+    "targeted_title_and_candidate_url_matches_for_nine_leads": 0,
+    "warning": "Targeted screening does not establish semantic uniqueness."
+  },
+  "authentication": {
+    "current_user": "postgres",
+    "auth_uid": null,
+    "is_admin": false,
+    "publish_function": "publish_scholarship_draft",
+    "candidate_promotion_function": "promote_source_candidate_to_draft",
+    "admin_context_available": false,
+    "permission_bypass": false
+  },
+  "proposed_field_count": 55,
+  "writes": {
+    "staging_edits": 0,
+    "new_drafts": 0,
+    "new_publications": 0,
+    "archives": 0,
+    "new_provenance": 0,
+    "production_changes": 0
+  },
+  "safeguards": [
+    "No verified status without accepted field provenance and source audit",
+    "No blanket IELTS/TOEFL/SAT assumptions",
+    "Do not count historical Vanier and current CGRS D as the same programme",
+    "Do not count two Pearson published records as independent programmes",
+    "Do not infer closed programme from transient HTTP failure",
+    "No production deployment before staging, review and CI"
+  ]
+}
