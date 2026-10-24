@@ -68,8 +68,13 @@ private fun EduTApp() {
     var requestedDegree by remember { mutableStateOf("All") }
     var selectedScholarship by remember { mutableStateOf<Scholarship?>(null) }
     var showingAdvisors by remember { mutableStateOf(false) }
-    BackHandler(enabled = selectedScholarship != null || showingAdvisors) {
-        if (selectedScholarship != null) selectedScholarship = null else showingAdvisors = false
+    var showingCommunity by remember { mutableStateOf(false) }
+    BackHandler(enabled = selectedScholarship != null || showingAdvisors || showingCommunity) {
+        when {
+            selectedScholarship != null -> selectedScholarship = null
+            showingCommunity -> showingCommunity = false
+            else -> showingAdvisors = false
+        }
     }
     MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Ivory, surface = Ivory)) {
         Scaffold(
@@ -79,7 +84,7 @@ private fun EduTApp() {
                     Tab.entries.forEach { item ->
                         NavigationBarItem(
                             selected = item == tab,
-                            onClick = { tab = item; selectedScholarship = null; showingAdvisors = false },
+                            onClick = { tab = item; selectedScholarship = null; showingAdvisors = false; showingCommunity = false },
                             icon = { Icon(item.icon, contentDescription = null) },
                             label = { Text(item.title, fontSize = 10.sp, maxLines = 1) },
                             colors = NavigationBarItemDefaults.colors(
@@ -103,6 +108,7 @@ private fun EduTApp() {
                         }
                         when {
                             showingAdvisors -> AdvisorDirectoryContent(onBack = { showingAdvisors = false })
+                            showingCommunity -> CommunityFeedContent(onBack = { showingCommunity = false })
                             selectedScholarship != null -> ScholarshipDetailContent(
                                 scholarship = selectedScholarship!!,
                                 onBack = { selectedScholarship = null }
@@ -113,6 +119,7 @@ private fun EduTApp() {
                                     tab = Tab.Discover
                                 },
                                 onAdvisors = { showingAdvisors = true },
+                                onCommunity = { showingCommunity = true },
                                 onScholarshipSelect = { selectedScholarship = it }
                             )
                             tab == Tab.Discover -> ScholarshipDiscoverContent(
@@ -135,6 +142,7 @@ private fun EduTApp() {
 private fun HomeContent(
     onDiscover: (String) -> Unit,
     onAdvisors: () -> Unit,
+    onCommunity: () -> Unit,
     onScholarshipSelect: (Scholarship) -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -202,6 +210,14 @@ private fun HomeContent(
         Text("Browse verified educational advisors (sign-in required).", fontSize = 13.sp, color = Ink)
         Spacer(Modifier.height(8.dp))
         Text("Browse advisors →", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
+    }
+    Spacer(Modifier.height(16.dp))
+    Column(Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(22.dp)).clickable(onClick = onCommunity).padding(20.dp)) {
+        Text("Community", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
+        Spacer(Modifier.height(7.dp))
+        Text("See community posts available to your account. Read-only Android preview.", fontSize = 13.sp, color = Ink)
+        Spacer(Modifier.height(8.dp))
+        Text("Explore community →", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     }
 }
 
