@@ -1,0 +1,437 @@
+{
+  "package_type": "staging_only_official_source_verification",
+  "generated_utc": "2026-10-24T06:22:00Z",
+  "target_project": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "base_counts": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_value_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_logs": 8
+  },
+  "authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "staging_writes_attempted": false,
+    "reason": "No authenticated administrative application session; never bypass Grantly publication/provenance gates."
+  },
+  "published_record_reviews": [
+    {
+      "id": "6b9104ae-8be9-47d0-a972-c05dee118b38",
+      "title": "Norway Quota Scheme",
+      "priority": "critical",
+      "proposed_action": "authenticated_archive_review",
+      "evidence_based_findings": [
+        "Government circular dated 2015-10-21 initiated phase-out from 2016/17.",
+        "Current national portal says Norwegian government provides no individual degree scholarships.",
+        "Published universal-eligibility, fully-funded and currently available claims cannot stand."
+      ],
+      "official_sources": [
+        "https://www.regjeringen.no/no/dokumenter/Rundskriv-om-kvoteordningen/id2458725/",
+        "https://studyinnorway.no/scholarships-degree-students"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "7381255f-9599-48d5-a1f7-53adad30991e",
+      "title": "NTNU International Scholarship",
+      "priority": "critical",
+      "proposed_action": "programme_identity_review",
+      "evidence_based_findings": [
+        "NTNU says it generally offers no scholarships or loans to international degree students.",
+        "NTNU explicitly says it does not offer tuition-fee scholarships; non-EU/EEA/Swiss students normally pay tuition.",
+        "PhD candidates are usually salaried employees, not generic scholarship recipients.",
+        "Generic tuition-free PhD scholarship claim requires correction or authorized archival after identity review."
+      ],
+      "official_sources": [
+        "https://www.ntnu.edu/studies/financing-and-scholarships",
+        "https://www.ntnu.edu/studies/tuition-fee",
+        "https://www.ntnu.edu/phd/admission-and-financing"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "ab80168a-bbc2-4b7a-b568-c3b8feadf6f5",
+      "title": "University of Oslo Masters Excellence Scholarship",
+      "priority": "critical",
+      "proposed_action": "authenticated_archive_review",
+      "evidence_based_findings": [
+        "UiO's official scholarships page explicitly states there are no scholarships for full bachelor's and master's degree students.",
+        "Generic fully-funded Master's Excellence Scholarship has no independently identifiable programme-specific source."
+      ],
+      "official_sources": [
+        "https://www.uio.no/english/studies/admission/scholarships/"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "c21bf3c4-19d3-4190-97b4-87c2721acaf5",
+      "title": "University of Oslo Phd Excellence Scholarship",
+      "priority": "high",
+      "proposed_action": "programme_identity_review",
+      "evidence_based_findings": [
+        "UiO generic homepage does not establish a named PhD Excellence Scholarship.",
+        "Do not treat salaried doctoral research fellow vacancies as unrestricted nonrepayable scholarship grants.",
+        "Separate PhD vacancies from actual independently named fellowships; no general deadline established."
+      ],
+      "official_sources": [
+        "https://www.uio.no/english/studies/admission/scholarships/",
+        "https://www.ntnu.edu/phd/admission-and-financing"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "85068aa3-53fb-416b-a878-31850b2cf88a",
+      "title": "University of Auckland International Scholarship",
+      "priority": "high",
+      "proposed_action": "identity_reconcile_with_named_2027_draft",
+      "evidence_based_findings": [
+        "Published NZ$10,000–20,000/year is not supported by currently published 2027 named Master's scheme.",
+        "Official 2027 University of Auckland International Student Excellence Scholarship supports 25% of one year's Master's tuition, not living costs.",
+        "Eligible 2027 applicants needed offer by 2026-10-20; invited 2026-10-21; supplementary form due 2026-11-04.",
+        "Older 2026 regulations describe a different funding structure; preserve cycle distinction."
+      ],
+      "official_sources": [
+        "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "6add8e4a-d951-4925-a67c-fb46802deaf7",
+      "title": "University of Auckland Masters International Scholarship",
+      "priority": "high",
+      "proposed_action": "identity_reconcile_with_named_2027_draft",
+      "evidence_based_findings": [
+        "Generic 'full tuition + NZ$27,000/year' has no programme-specific supporting source.",
+        "Named 2027 Master's international student excellence scheme is partial tuition (25% one year), and a private draft already exists.",
+        "Do not overwrite generic record as if the same award until canonical identity is reviewed."
+      ],
+      "official_sources": [
+        "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "01057f47-8ad1-4cae-b6cf-fedd1c43087e",
+      "title": "University of Auckland Phd International Scholarship",
+      "priority": "high",
+      "proposed_action": "reconcile_with_doctoral_scholarship",
+      "evidence_based_findings": [
+        "Named University of Auckland Doctoral Scholarship provides NZ$35,468 annual 2026 stipend, CPI-adjusted, plus up to 42 months' tuition and single-student health insurance.",
+        "Awards are competitive; four rounds per year and faculty-specific conditions apply.",
+        "Arts and Education lists 2026-11-01, 2027-02-01, 2027-05-01 and 2027-08-01 rounds; do not generalize faculty deadlines.",
+        "Existing NZ$27,000 amount and universal award claims need correction."
+      ],
+      "official_sources": [
+        "https://www.auckland.ac.nz/en/study/scholarships-and-awards/scholarship-types/postgraduate-scholarships/doctoral-scholarships.html",
+        "https://www.auckland.ac.nz/en/arts/study-with-us/scholarships-and-awards/doctoral-scholarship-selection.html"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "85a5f79c-000e-4bec-884c-5c3b445bb19e",
+      "title": "Victoria University of Wellington Scholarship",
+      "priority": "high",
+      "proposed_action": "split_umbrella_and_correct_funding",
+      "evidence_based_findings": [
+        "Generic Master/PhD full-tuition + NZ$25,000/year claim does not match named awards.",
+        "Wellington Doctoral Scholarship: NZ$32,000/year plus domestic tuition fees, three rounds (Mar 1, Jul 1, Nov 1), PhD only.",
+        "VUW Postgraduate International Scholarship: NZ$10,000 one-year tuition credit for qualifying new Master's/PGDip students.",
+        "Do not conflate these separately named awards."
+      ],
+      "official_sources": [
+        "https://www.wgtn.ac.nz/scholarships/current/wellington-doctoral-scholarships",
+        "https://www.wgtn.ac.nz/scholarships/current/vuw-postgraduate-international-scholarship"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "0f12ae03-b115-46a7-b9a0-27e878bb25ed",
+      "title": "National University of Singapore Masters Excellence Scholarship",
+      "priority": "high",
+      "proposed_action": "identity_reconcile",
+      "evidence_based_findings": [
+        "Generic Master's Excellence scholarship has no identified named programme.",
+        "NUS Research Scholarship funds research Master's (not all taught Master's), full tuition and international stipend SGD 2,900/month from 2026-01-01.",
+        "Admissions deadlines are faculty-specific; IELTS/TOEFL may be supporting evidence but no universal score established."
+      ],
+      "official_sources": [
+        "https://nusgs.nus.edu.sg/scholarships/nus-research-scholarship"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "44ae81c3-5bf1-477b-ab85-30880609b1cf",
+      "title": "National University of Singapore Phd International Scholarship",
+      "priority": "high",
+      "proposed_action": "identity_reconcile",
+      "evidence_based_findings": [
+        "NUS Research Scholarship funds qualifying PhD applicants with tuition waiver and international stipend SGD 3,000/month from 2026-01-01, plus possible SGD 500 after qualifying exam.",
+        "The named NUS Research Scholarship is already published separately, so this generic record is potential duplication.",
+        "Programme-specific admissions deadlines; do not fabricate IELTS/TOEFL cutoffs."
+      ],
+      "official_sources": [
+        "https://nusgs.nus.edu.sg/scholarships/nus-research-scholarship"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "eee04496-2e70-4418-9909-51c7c23a7576",
+      "title": "National University of Singapore Undergraduate Excellence Scholarship",
+      "priority": "high",
+      "proposed_action": "identity_reconcile",
+      "evidence_based_findings": [
+        "NUS International Undergraduate Scholarship is separately named and already exists as a private draft.",
+        "Its benefits are 100% subsidised tuition after MOE Tuition Grant, SGD 5,800/year living, SGD 5,000/year accommodation, SGD 1,750 one-time computer.",
+        "MOE Tuition Grant creates a three-year Singapore work bond for international recipients; generic full funding without this restriction is misleading."
+      ],
+      "official_sources": [
+        "https://nus.edu.sg/oam/scholarships/scholarships-for-freshmen-international-students/nus-international-undergraduate-scholarship"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "a6d504d3-6f90-4686-87f3-591febd226b5",
+      "title": "NTU Singapore Scholarship",
+      "priority": "high",
+      "proposed_action": "split_umbrella_into_named_awards",
+      "evidence_based_findings": [
+        "Generic NTU Scholarship is not a distinct verified award.",
+        "NTU Nanyang Merit Scholarship: full subsidised tuition after Tuition Grant, SGD 5,000/year living, SGD 4,000 one-off travel grant.",
+        "MOE Tuition Grant bond applies to international/PR students; avoid representing tuition as unconditional full-cost support."
+      ],
+      "official_sources": [
+        "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "91d0f9ae-3739-4882-afb2-f9c1cb4a6351",
+      "title": "NUS ASEAN Undergraduate Scholarship",
+      "priority": "medium",
+      "proposed_action": "provenance_and_terms_review",
+      "evidence_based_findings": [
+        "Official source supports ASEAN citizens excluding Singapore, SGD 5,800 living, SGD 3,000 accommodation and SGD 1,750 computer, and subsidised tuition after MOE grant.",
+        "Scholarship consideration follows undergraduate admission; no standalone 2027 scholarship deadline or scholarship-wide IELTS/SAT minimum is documented.",
+        "Keep MOE Tuition Grant obligation explicit; do not mark verified until reviewer-attributed field provenance exists."
+      ],
+      "official_sources": [
+        "https://nus.edu.sg/oam/scholarships/scholarships-for-freshmen-international-students/asean-undergraduate-scholarship"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "94f29107-9957-4ac2-ba80-4d307613a1d0",
+      "title": "NUS Research Scholarship",
+      "priority": "medium",
+      "proposed_action": "provenance_and_terms_review",
+      "evidence_based_findings": [
+        "Official source supports SGD 3,000/month international PhD, SGD 2,900/month international research Master's from 2026-01-01, full tuition waiver.",
+        "PhD qualifying exam can add SGD 500/month; faculty-specific deadlines and assistantship duties apply.",
+        "IELTS/TOEFL are optional supporting evidence at scholarship level, not universal numeric minima."
+      ],
+      "official_sources": [
+        "https://nusgs.nus.edu.sg/scholarships/nus-research-scholarship"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "65d89dc3-1b09-41f9-ac1f-00889956e1c9",
+      "title": "Yale-NUS Scholarship",
+      "priority": "critical",
+      "proposed_action": "authenticated_archive_review",
+      "evidence_based_findings": [
+        "Yale-NUS stopped new admissions after its Class of 2025; college officially closed on 2025-06-30.",
+        "Generic current Bachelor scholarship cannot accept new applicants. Do not confuse NUS College scholarships with Yale-NUS."
+      ],
+      "official_sources": [
+        "https://www.yale-nus.edu.sg/about-yale-nus/"
+      ],
+      "applied": false,
+      "verified": false
+    },
+    {
+      "id": "2649d957-9d5e-4650-aff1-2d6800d7c85c",
+      "title": "EPFL Excellence Fellowship",
+      "priority": "high",
+      "proposed_action": "reconcile_duplicate_and_add_2027_cycle",
+      "evidence_based_findings": [
+        "EPFL official 2027 Master Excellence Fellowship provides CHF 10,000 per semester, not tuition waiver.",
+        "2027 deadline 2026-12-15 for external Master's applicants via IS-Academia, 2027-01-31 for EPFL students applying to consecutive Master's.",
+        "Existing 'EPFL Excellence Master Fellowships' verified record likely canonical duplicate; require identity check before archival."
+      ],
+      "official_sources": [
+        "https://www.epfl.ch/education/master/master-excellence-fellowships/"
+      ],
+      "applied": false,
+      "verified": false
+    }
+  ],
+  "existing_private_draft_reviews": [
+    {
+      "id": "0db4b799-59af-435b-8731-e7fc043dabbb",
+      "title": "University of Auckland International Student Excellence Scholarship (2027)",
+      "source": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+      "successful_source_audit_in_staging": false,
+      "reviewer_attributed_provenance": 0,
+      "gate": "private; authenticated source audit, evidence acceptance and readiness review required",
+      "issue": "2026-11-04 invited supplementary application; eligibility required Master's offer by 2026-10-20; no open public application for uninvited applicants; 25% one-year tuition. Compare generic published Auckland records."
+    },
+    {
+      "id": "cf22a230-5223-4f2e-9b02-2b305cbc8459",
+      "title": "NUS International Undergraduate Scholarship",
+      "source": "https://nus.edu.sg/oam/scholarships/scholarships-for-freshmen-international-students/nus-international-undergraduate-scholarship",
+      "successful_source_audit_in_staging": false,
+      "reviewer_attributed_provenance": 0,
+      "gate": "private; authenticated source audit, evidence acceptance and readiness review required",
+      "issue": "Confirm 3-year MOE Tuition Grant work bond, eligibility all countries except Singapore, SGD 5,800 living and SGD 5,000 accommodation; no invented separate deadline."
+    },
+    {
+      "id": "32f47c20-4556-4938-8a7b-7079bfdf5a3c",
+      "title": "NUS Science & Technology Undergraduate Scholarship",
+      "source": "https://www.nus.edu.sg/oam/scholarships/scholarships-for-freshmen-international-students/science-technology-undergraduate-scholarship",
+      "successful_source_audit_in_staging": false,
+      "reviewer_attributed_provenance": 0,
+      "gate": "private; authenticated source audit, evidence acceptance and readiness review required",
+      "issue": "Asian nationals excluding Singapore, limited computing/engineering/science majors, SGD 6,000 living, mandatory 6-year work bond; no invented IELTS/SAT or scholarship deadline."
+    },
+    {
+      "id": "eb44c3a4-066d-46bc-a9f2-6e94a3664e38",
+      "title": "NUS ASEAN Research Scholarship",
+      "source": "https://nusgs.nus.edu.sg/scholarships/nus-asean-research-scholarship",
+      "successful_source_audit_in_staging": false,
+      "reviewer_attributed_provenance": 0,
+      "gate": "private; authenticated source audit, evidence acceptance and readiness review required",
+      "issue": "ASEAN nationals except Singapore, PhD, SGD 3,000/month international stipend, full tuition; faculty-specific deadlines; no accepted reviewer attribution."
+    }
+  ],
+  "new_programme_leads": [
+    {
+      "title": "VUW Undergraduate International Scholarship",
+      "country": "New Zealand",
+      "degree": "Bachelor",
+      "funding": "NZ$15,000 first-year tuition credit",
+      "cycle": "Admissions-based; example 2027 Trimester 1 programme deadline 2026-12-07",
+      "restrictions": "New full-fee-paying international undergraduates; no separate scholarship application.",
+      "official_url": "https://www.wgtn.ac.nz/scholarships/current/vuw-undergraduate-international-scholarship",
+      "notes": "",
+      "staging_exact_title_and_url_screen": "no exact title or canonical URL match found in targeted readback; broader semantic duplicate screening still required",
+      "status": "research_only_private_draft_candidate"
+    },
+    {
+      "title": "VUW Postgraduate International Scholarship",
+      "country": "New Zealand",
+      "degree": "Master / Postgraduate Diploma",
+      "funding": "NZ$10,000 first-year tuition credit",
+      "cycle": "Programme-specific admission deadline; example 2027 Trimester 1 2026-12-07",
+      "restrictions": "New full-fee-paying international Master's/PGDip students; no separate scholarship application.",
+      "official_url": "https://www.wgtn.ac.nz/scholarships/current/vuw-postgraduate-international-scholarship",
+      "notes": "",
+      "staging_exact_title_and_url_screen": "no exact title or canonical URL match found in targeted readback; broader semantic duplicate screening still required",
+      "status": "research_only_private_draft_candidate"
+    },
+    {
+      "title": "Wellington Doctoral Scholarship",
+      "country": "New Zealand",
+      "degree": "PhD",
+      "funding": "NZ$32,000 annual stipend plus domestic tuition fees up to three years",
+      "cycle": "Recurring 1 March, 1 July, 1 November; next 2026-11-01 16:30 local time",
+      "restrictions": "Domestic and international applicants; competitive; doctorate holders excluded.",
+      "official_url": "https://www.wgtn.ac.nz/scholarships/current/wellington-doctoral-scholarships",
+      "notes": "",
+      "staging_exact_title_and_url_screen": "no exact title or canonical URL match found in targeted readback; broader semantic duplicate screening still required",
+      "status": "research_only_private_draft_candidate"
+    },
+    {
+      "title": "International School-Leaver Excellence Scholarship (Victoria University of Wellington)",
+      "country": "New Zealand",
+      "degree": "Bachelor",
+      "funding": "NZ$10,000 second-year tuition credit",
+      "cycle": "Annual September 1; 2026 deadline passed, 2027 recurrence unconfirmed",
+      "restrictions": "International fee-paying applicants who completed Year 12 and 13 at NZ secondary school; academic merit; conditional GPA.",
+      "official_url": "https://www.wgtn.ac.nz/scholarships/current/international-school-leaver-excellence-scholarships",
+      "notes": "",
+      "staging_exact_title_and_url_screen": "no exact title or canonical URL match found in targeted readback; broader semantic duplicate screening still required",
+      "status": "research_only_private_draft_candidate"
+    },
+    {
+      "title": "Dean's International Doctoral Scholarship (FMHS)",
+      "country": "New Zealand",
+      "degree": "PhD",
+      "funding": "2026 NZ$35,468 annual stipend, tuition, health insurance, relocation grant",
+      "cycle": "By nomination; annual; no universal application deadline",
+      "restrictions": "International PhD in Auckland Faculty of Medical and Health Sciences.",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/deans-international-doctoral-scholarship-640-fmhs.html",
+      "notes": "2027 amount not confirmed; institution has another summary with older amount.",
+      "staging_exact_title_and_url_screen": "no exact title or canonical URL match found in targeted readback; broader semantic duplicate screening still required",
+      "status": "research_only_private_draft_candidate"
+    },
+    {
+      "title": "Nanyang Merit Scholarship",
+      "country": "Singapore",
+      "degree": "Bachelor",
+      "funding": "100% subsidised tuition after Tuition Grant; SGD 5,000/year living; SGD 4,000 one-off travel",
+      "cycle": "Undergraduate admission/scholarship application cycle; 2027 date not confirmed",
+      "restrictions": "Open to all nationalities; international/PR recipients subject to MOE Tuition Grant bond.",
+      "official_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+      "notes": "",
+      "staging_exact_title_and_url_screen": "no exact title or canonical URL match found in targeted readback; broader semantic duplicate screening still required",
+      "status": "research_only_private_draft_candidate"
+    },
+    {
+      "title": "AI Singapore PhD Fellowship",
+      "country": "Singapore",
+      "degree": "PhD",
+      "funding": "International SGD 6,300/month; four years subsidised tuition; research allowances",
+      "cycle": "August intake; university nomination; applications open February (2027 call not yet confirmed)",
+      "restrictions": "AI fundamental research; non-Singaporean/non-PR scholars owe two-year Singapore-based service.",
+      "official_url": "https://nusgs.nus.edu.sg/scholarships/ai-singapore-scholarship",
+      "notes": "",
+      "staging_exact_title_and_url_screen": "no exact title or canonical URL match found in targeted readback; broader semantic duplicate screening still required",
+      "status": "research_only_private_draft_candidate"
+    },
+    {
+      "title": "NUS Suzhou Research Institute Scholarship",
+      "country": "Singapore / China",
+      "degree": "PhD",
+      "funding": "International SGD 3,000/month plus full tuition waiver, 2026+ intake rates",
+      "cycle": "Programme-specific; no universal 2027 date confirmed",
+      "restrictions": "NUSRI Suzhou affiliated research, English evidence required where prior instruction not in English; 312 assistantship hours for international students.",
+      "official_url": "https://nusgs.nus.edu.sg/scholarships/nus-suzhou-research-institute-scholarship",
+      "notes": "",
+      "staging_exact_title_and_url_screen": "no exact title or canonical URL match found in targeted readback; broader semantic duplicate screening still required",
+      "status": "research_only_private_draft_candidate"
+    }
+  ],
+  "quality_controls": [
+    "Evidence package is not an approval or a verified flag.",
+    "Current generic published records must not be counted as independently funded scholarships until canonical programme identity is established.",
+    "Salaried PhD employment and tuition exemptions are not scholarship grants.",
+    "2026 amounts are not automatically 2027 amounts.",
+    "Application deadlines for academic admissions are not automatically scholarship deadlines.",
+    "No unconfirmed IELTS/TOEFL/SAT numeric threshold assigned.",
+    "A temporary HTTP error does not establish discontinuation.",
+    "Confirmed discontinued/duplicate records require authenticated audited archival.",
+    "New leads screened against exact title and canonical URL in staging; semantic/alias duplicate review outstanding.",
+    "No staging or production mutations authorized from this evidence file."
+  ]
+}
