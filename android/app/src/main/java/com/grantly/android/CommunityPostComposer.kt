@@ -1,9 +1,13 @@
 package com.grantly.android
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -76,9 +80,17 @@ internal fun CommunityPostComposer(
     onPosted: () -> Unit
 ) {
     var caption by remember { mutableStateOf("") }
+    var selectedPhoto by remember { mutableStateOf<Uri?>(null) }
     var submitting by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val photoPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (!submitting && uri != null) {
+            selectedPhoto = uri
+            error = null
+        }
+    }
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -86,7 +98,7 @@ internal fun CommunityPostComposer(
         TextButton(onClick = onBack, enabled = !submitting) { Text("← Back to Community") }
         Text("Create Community post", style = MaterialTheme.typography.headlineSmall)
         Text(
-            "Text-only posts are supported in this Android preview. Posting requires a visible Community profile; existing server permissions apply.",
+            "Text posts and single JPEG/PNG photos (up to 6 MB) are supported. Posting requires a visible Community profile; existing server permissions apply.",
             style = MaterialTheme.typography.bodySmall
         )
         OutlinedTextField(
@@ -99,16 +111,31 @@ internal fun CommunityPostComposer(
             enabled = !submitting
         )
         Text("${caption.length}/2,000 characters", style = MaterialTheme.typography.labelSmall)
+        OutlinedButton(
+            onClick = { photoPicker.launch(arrayOf("image/jpeg", "image/png")) },
+            enabled = !submitting
+        ) { Text(if (selectedPhoto == null) "Attach photo" else "Change photo") }
+        if (selectedPhoto != null) {
+            Text("One private photo selected (JPEG/PNG, max 6 MB).", style = MaterialTheme.typography.bodySmall)
+            TextButton(onClick = { selectedPhoto = null }, enabled = !submitting) {
+                Text("Remove photo")
+            }
+        }
         if (error != null) Text(error!!, color = MaterialTheme.colorScheme.error)
         if (submitting) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         Button(
-            enabled = !submitting && caption.trim().isNotEmpty(),
+            enabled = !submitting && (caption.trim().isNotEmpty() || selectedPhoto != null),
             onClick = {
                 submitting = true
                 error = null
                 scope.launch {
                     try {
-                        CommunityPostPublisher.publish(caption)
+                        val photo = selectedPhoto
+                        if (photo == null) {
+                            CommunityPostPublisher.publish(caption)
+                        } else {
+                            CommunityPhotoPublisher.publish(context.applicationContext, photo, caption)
+                        }
                         onPosted()
                     } catch (cancelled: CancellationException) {
                         throw cancelled
