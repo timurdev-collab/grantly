@@ -21,7 +21,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.UUID
 
-/** Read-only social preview. The existing RLS policy determines which posts are visible. */
+/** Community feed. Existing RLS policies determine which posts and actions are visible. */
 internal data class CommunityPost(
     val id: String,
     val authorId: String,
@@ -34,6 +34,52 @@ internal data class CommunityPost(
 )
 
 internal data class CommunityPage(val posts: List<CommunityPost>, val hasMore: Boolean)
+
+/**
+ * Read-only posting eligibility check. Never changes community_profiles visibility:
+ * iOS 1.0 intentionally hid existing profiles and the server remains authoritative.
+ * A failed or RLS-filtered lookup must not be treated as permission to publish.
+ */
+internal object CommunityPostingAccessRepository {
+    suspend fun canPublish(): Boolean = withContext(Dispatchers.IO) {
+        val session = AuthRepository.activeSession()
+        val userId = try {
+            UUID.fromString(session.userId).toString()
+        } catch (_: IllegalArgumentException) {
+            throw IOException("Invalid account. Sign in again.")
+        }
+        val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!base.startsWith("https://") || key.isBlank()) {
+            throw IOException("Community service is not configured.")
+        }
+        val connection = URL(
+            base + "/rest/v1/community_profiles?select=is_visible&id=eq." + userId + "&limit=1"
+        ).openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = "GET"
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 15_000
+            connection.instanceFollowRedirects = false
+            connection.setRequestProperty("apikey", key)
+            connection.setRequestProperty("Authorization", "Bearer " + session.accessToken)
+            connection.setRequestProperty("Accept", "application/json")
+            val status = connection.responseCode
+            if (status !in 200..299) {
+                throw IOException(
+                    if (status == 401 || status == 403) "Sign in again to check Community access."
+                    else "Unable to check Community posting access (HTTP $status)."
+                )
+            }
+            val rows = JSONArray(
+                connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            )
+            rows.length() == 1 && rows.optJSONObject(0)?.optBoolean("is_visible", false) == true
+        } finally {
+            connection.disconnect()
+        }
+    }
+}
 
 internal object CommunityFeedRepository {
     suspend fun loadPage(limit: Int = 30, offset: Int = 0): CommunityPage = withContext(Dispatchers.IO) {
@@ -214,6 +260,9 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     var loading by remember(session?.userId) { mutableStateOf(false) }
     var error by remember(session?.userId) { mutableStateOf<String?>(null) }
     var refresh by remember(session?.userId) { mutableIntStateOf(0) }
+    // null = still checking / unknown; fail closed instead of attempting a denied write.
+    var canPublish by remember(session?.userId) { mutableStateOf<Boolean?>(null) }
+    var postingAccessError by remember(session?.userId) { mutableStateOf<String?>(null) }
     var nextOffset by remember(session?.userId) { mutableIntStateOf(0) }
     var hasMore by remember(session?.userId) { mutableStateOf(false) }
 
@@ -316,6 +365,20 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         return
     }
 
+    LaunchedEffect(session?.userId, refresh) {
+        canPublish = null
+        postingAccessError = null
+        if (session != null) {
+            try {
+                canPublish = CommunityPostingAccessRepository.canPublish()
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (failure: Exception) {
+                postingAccessError = failure.message ?: "Unable to check Community posting access."
+            }
+        }
+    }
+
     LaunchedEffect(session?.userId, refresh, nextOffset) {
         if (session == null) {
             posts = emptyList()
@@ -381,8 +444,22 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         if (session == null) {
             Text("Sign in from the Profile tab to view community posts.")
         } else {
-            OutlinedButton(onClick = { composing = true }, enabled = !loading) {
+            OutlinedButton(onClick = { composing = true }, enabled = !loading && canPublish == true) {
                 Text("Create post")
+            }
+            when {
+                postingAccessError != null -> {
+                    Text(postingAccessError!!, color = MaterialTheme.colorScheme.error)
+                    TextButton(onClick = { refresh++ }) { Text("Retry posting access check") }
+                }
+                canPublish == null -> Text(
+                    "Checking Community posting access...",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                canPublish == false -> Text(
+                    "Posting is currently unavailable for this account because its Community profile is hidden or unavailable. This is controlled by the existing release policy; browsing remains available.",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
             OutlinedButton(onClick = {
                 nextOffset = 0
