@@ -1,6 +1,5 @@
 {
   "schema": "grantly_catalog_official_source_qa_v1",
-  "prepared_at_utc": "2026-10-24T10:29:00Z",
   "environment": "staging",
   "project_id": "cbzriyarlvpmtfbjgede",
   "branch": "catalog-qa/2026-10-23-official-sources",
@@ -777,5 +776,36 @@
     "existing_private_drafts_assessed": 1,
     "staging_edits": 0,
     "new_publications": 0
+  },
+  "staging_before_snapshot_utc": "2026-10-24T10:24:59.795927Z",
+  "staging_after_snapshot_utc": "2026-10-24T10:27:19.440208Z",
+  "staging_readbacks": {
+    "before": {
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_attributed_provenance": 0,
+      "source_candidates": 636,
+      "admin_action_logs": 8
+    },
+    "after": {
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_attributed_provenance": 0,
+      "source_candidates": 636,
+      "admin_action_logs": 8
+    }
+  },
+  "staging_authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "admin_write_access": false
   }
 }
