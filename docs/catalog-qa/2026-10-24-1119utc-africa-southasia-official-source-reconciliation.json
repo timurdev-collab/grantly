@@ -1,0 +1,967 @@
+{
+  "schema": "grantly_catalog_official_source_qa_v1",
+  "environment": "staging",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "branch": "catalog-qa/2026-10-23-official-sources",
+  "mode": "documentation_only_no_database_mutations",
+  "generated_at_utc": "2026-10-24T11:21:05Z",
+  "independent_staging_readbacks": {
+    "before": {
+      "at_utc": "2026-10-24T11:19:02Z",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_attributed": 0,
+      "source_candidates": 636,
+      "admin_action_logs": 8
+    },
+    "after": {
+      "at_utc": "2026-10-24T11:21:05Z",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_attributed": 0,
+      "source_candidates": 636,
+      "admin_action_logs": 8
+    }
+  },
+  "summary": {
+    "published_investigations": 14,
+    "field_proposals": 76,
+    "named_programme_leads": 10,
+    "urgent_private_drafts": 3,
+    "staging_edits_succeeded": 0,
+    "staging_publications_succeeded": 0,
+    "staging_new_drafts": 0,
+    "staging_archives": 0,
+    "published_target": 1000,
+    "published_remaining": 603
+  },
+  "official_source_urls": [
+    "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+    "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+    "https://mcf.knust.edu.gh/scholars-program/",
+    "https://www.ug.edu.gh/financialaid/",
+    "https://www.ug.edu.gh/financialaid/node/29",
+    "https://www.ug.edu.gh/financialaid/node/27",
+    "https://www.ug.edu.gh/financialaid/node/63",
+    "https://www.mtn.ng/scholarships/",
+    "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+    "https://nop.lums.edu.pk/",
+    "https://nop.lums.edu.pk/sites/default/files/2025-09/NOP%20Brochure%20v1%20with%20date-01.pdf",
+    "https://a2ascholarships.iccr.gov.in/assets/site/docs/Timeline-AY-2026-27.pdf",
+    "https://a2ascholarships.iccr.gov.in/home/notificationList/55",
+    "https://www.ir.iitb.ac.in/new-international-degree-students",
+    "https://acad.iitb.ac.in/index.php/admissions/research",
+    "https://www.che.iitb.ac.in/announcement/phd-admission-spring-semester-2026-27",
+    "https://wish-foundation.epfl.ch/masters-projects-abroad/",
+    "https://scholarships.unimelb.edu.au/awards/gordon-and-isabel-humphrey-scholarship",
+    "https://scholarships.unimelb.edu.au/awards/mick-hitchcock-phd-scholarship-in-microbiology"
+  ],
+  "investigations": [
+    {
+      "id": "a3ba152b-07f1-42d0-a748-165f6280a346",
+      "title": "KNUST Scholarship",
+      "country": "Ghana",
+      "decision": "resolve_generic_umbrella_before_renaming",
+      "official_source": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "evidence": "2026/27 programme-specific bursary call exists; homepage is not evidence of a universal award.",
+          "source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "staging_applied": false
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": [
+            "Ghana"
+          ],
+          "evidence": "The named KNUST Bursary is only for regular Ghanaian students; do not apply to all KNUST aid schemes.",
+          "source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "staging_applied": false
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": [
+            "Bachelor"
+          ],
+          "evidence": "Bursary call targets enrolled full-time regular students; existing undergraduate classification should be reconciled with programme identity.",
+          "source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "One-year bursary, amount not specified; not a guaranteed full-tuition award",
+          "evidence": "Official call describes a one-year bursary for eligible students.",
+          "source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "KNUST Bursary 2026/27 closed 17 April 2026; next call unconfirmed",
+          "evidence": "Do not assign a speculative 2027 deadline.",
+          "source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "The published generic scholarship is not yet proven identical to the named bursary; identity reconciliation is mandatory.",
+        "The official bursary call requests evidence of a student loan application for continuing students; that does not make the bursary itself a loan."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "d6b51232-8cf5-4c58-978b-32e7e10fa139",
+      "title": "Mastercard Foundation at KNUST",
+      "country": "Ghana",
+      "decision": "retain_programme_correct_study_level_and_cycle",
+      "official_source": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "evidence": "The published KNUST /mcfsp URL is stale; programme-specific application call exists.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "staging_applied": false
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": [
+            "Bachelor"
+          ],
+          "evidence": "2025/26 entry call requires secondary-school results and excludes anyone currently enrolled in tertiary education; Master's eligibility not supported.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "staging_applied": false
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Economically disadvantaged applicants from Ghana and Africa, subject to current call; not unrestricted worldwide",
+          "evidence": "KNUST programme describes its focus on deprived communities of Ghana and Africa.",
+          "source_url": "https://mcf.knust.edu.gh/scholars-program/",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Full tuition, on-campus accommodation, learning materials, transport, monthly stipend and mentoring for selected scholars",
+          "evidence": "The 2025/26 call enumerates the award benefits.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "staging_applied": false
+        },
+        {
+          "field": "accommodation",
+          "proposed_value": true,
+          "evidence": "The 2025/26 scholarship package explicitly includes fully paid on-campus accommodation.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Last independently confirmed application deadline: 30 June 2025 for 2025/26; 2026/27 call not confirmed",
+          "evidence": "Do not recycle the 2025 date as a current deadline.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "staging_applied": false
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2025/26 historical; next scholarship application cycle not independently verified",
+          "evidence": "The 2026 posts are programme news, not a current application call.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "2025 call is historical, but the programme continues to operate. A transient official-page timeout does not establish discontinuation."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "3a4821f7-41e6-47a5-a9e6-8029ae5c5d38",
+      "title": "University of Ghana Masters Excellence Scholarship",
+      "country": "Ghana",
+      "decision": "unverified_programme_identity_review",
+      "official_source": "https://www.ug.edu.gh/financialaid/",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.ug.edu.gh/financialaid/",
+          "evidence": "Official financial-aid office describes its own financial aid rather than a named generic Master's Excellence Scholarship.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "staging_applied": false
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Unverified; do not advertise fully funded Master's support",
+          "evidence": "No programme-specific evidence establishes this title or full graduate stipend.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Unverified for this title; university financial aid generally concerns academic fees",
+          "evidence": "Do not transfer undergraduate financial-aid terms to Master's applicants.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "staging_applied": false
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Unverified for this title; general SFAO aid restricted to Ghanaian students",
+          "evidence": "Official SFAO citizenship rule cannot be generalized to other graduate schemes.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "No official deadline for the claimed Master's Excellence Scholarship confirmed",
+          "evidence": "Do not use postgraduate admission deadlines as scholarship deadlines.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "Priority programme-identity review and potential authorized archival if no named award can be established."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "b69b9607-4cb2-43f7-bfa8-511a463bc46f",
+      "title": "University of Ghana Scholarship",
+      "country": "Ghana",
+      "decision": "reconcile_generic_with_named_undergraduate_aid",
+      "official_source": "https://www.ug.edu.gh/financialaid/",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.ug.edu.gh/financialaid/",
+          "evidence": "Official student financial aid portal is the canonical university source.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "staging_applied": false
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": [
+            "Ghana"
+          ],
+          "evidence": "SFAO requires Ghanaian citizenship for its general aid.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "staging_applied": false
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": [
+            "Bachelor"
+          ],
+          "evidence": "SFAO 2026/27 named calls concern enrolled undergraduates; generic Master's inclusion unsupported.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Academic fees only where awarded; full or partial according to individual scheme",
+          "evidence": "SFAO does not promise universal full tuition.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "2026/27 named calls have separate deadlines; UG Sponsorship and SRC Yi Bi Boa must not be conflated",
+          "evidence": "Programme-specific dates vary.",
+          "source_url": "https://www.ug.edu.gh/financialaid/node/29",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "Reconcile with UG Sponsorship, SRC Yi Bi Boa and UGBS Scholars rather than create duplicate generic entries."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "5ded32f8-fb61-409f-8735-ced342f040f3",
+      "title": "University of Ghana Undergraduate Excellence Scholarship",
+      "country": "Ghana",
+      "decision": "unverified_generic_reconcile_named_schemes",
+      "official_source": "https://www.ug.edu.gh/financialaid/node/63",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.ug.edu.gh/financialaid/node/63",
+          "evidence": "Official 2026/27 UGBS Scholars programme is named and restricts eligible students.",
+          "source_url": "https://www.ug.edu.gh/financialaid/node/63",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Financial assistance to disadvantaged UGBS undergraduate students; amount not established",
+          "evidence": "Full tuition and living costs are not guaranteed by the call.",
+          "source_url": "https://www.ug.edu.gh/financialaid/node/63",
+          "staging_applied": false
+        },
+        {
+          "field": "stipend",
+          "proposed_value": null,
+          "evidence": "The official UGBS Scholars call does not promise a living stipend.",
+          "source_url": "https://www.ug.edu.gh/financialaid/node/63",
+          "staging_applied": false
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "University of Ghana financial aid normally restricted to Ghanaian students; verify named scheme",
+          "evidence": "SFAO general citizenship rule.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "UGBS Scholars 2026/27 deadline was 29 July 2026, 15:00; next call unconfirmed",
+          "evidence": "Date applies only to UGBS Scholars.",
+          "source_url": "https://www.ug.edu.gh/financialaid/node/63",
+          "staging_applied": false
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": [
+            "Bachelor"
+          ],
+          "evidence": "UGBS Scholars is an undergraduate scholarship.",
+          "source_url": "https://www.ug.edu.gh/financialaid/node/63",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "Do not automatically rename this generic record to UGBS Scholars without checking canonical identity."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "a816f159-5564-4c5c-87c0-b39409690c79",
+      "title": "IIT Bombay International Graduate Scholarship",
+      "country": "India",
+      "decision": "reconcile_generic_assistantship_claims_and_potential_duplicates",
+      "official_source": "https://www.ir.iitb.ac.in/new-international-degree-students",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "evidence": "Use degree-appropriate official admissions/funding source rather than institution homepage.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "No guaranteed full tuition waiver; limited waivers may be available to exceptionally qualified doctoral applicants",
+          "evidence": "Official international admissions page notes only very limited doctoral tuition waivers.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "PhD TA/RA support conditional on admission category and teaching/research duties; amounts depend on category",
+          "evidence": "Official doctoral admissions distinguishes TA, RA and sponsored-project fellowships.",
+          "source_url": "https://acad.iitb.ac.in/index.php/admissions/research",
+          "staging_applied": false
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Conditional assistantship/fellowship or self-funded admission; not universal fully funded scholarship",
+          "evidence": "The institution lists distinct funding and self-finance routes.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Programme/department admission calendar, not a universal scholarship deadline",
+          "evidence": "Spring 2026/27 PhD call is department-specific.",
+          "source_url": "https://www.che.iitb.ac.in/announcement/phd-admission-spring-semester-2026-27",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "No independently named award with this generic title established. Five records must be semantically reconciled before any archival.",
+        "Official IIT pages intermittently return HTTP 502; treat as transient, not discontinuation."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "d42efd88-bedc-4346-b883-237b3a9d96d8",
+      "title": "IIT Bombay Masters Excellence Scholarship",
+      "country": "India",
+      "decision": "reconcile_generic_assistantship_claims_and_potential_duplicates",
+      "official_source": "https://www.ir.iitb.ac.in/new-international-degree-students",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "evidence": "Use degree-appropriate official admissions/funding source rather than institution homepage.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "No guaranteed full tuition waiver; limited waivers may be available to exceptionally qualified doctoral applicants",
+          "evidence": "Official international admissions page notes only very limited doctoral tuition waivers.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "No universal Master's stipend established for the named generic award",
+          "evidence": "Official doctoral admissions distinguishes TA, RA and sponsored-project fellowships.",
+          "source_url": "https://acad.iitb.ac.in/index.php/admissions/research",
+          "staging_applied": false
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Conditional assistantship/fellowship or self-funded admission; not universal fully funded scholarship",
+          "evidence": "The institution lists distinct funding and self-finance routes.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Programme/department admission calendar, not a universal scholarship deadline",
+          "evidence": "Spring 2026/27 PhD call is department-specific.",
+          "source_url": "https://www.che.iitb.ac.in/announcement/phd-admission-spring-semester-2026-27",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "No independently named award with this generic title established. Five records must be semantically reconciled before any archival.",
+        "Official IIT pages intermittently return HTTP 502; treat as transient, not discontinuation."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "6ba8a99f-2107-4d9e-9b95-7f4158650401",
+      "title": "IIT Bombay Masters International Scholarship",
+      "country": "India",
+      "decision": "reconcile_generic_assistantship_claims_and_potential_duplicates",
+      "official_source": "https://www.ir.iitb.ac.in/new-international-degree-students",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "evidence": "Use degree-appropriate official admissions/funding source rather than institution homepage.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "No guaranteed full tuition waiver; limited waivers may be available to exceptionally qualified doctoral applicants",
+          "evidence": "Official international admissions page notes only very limited doctoral tuition waivers.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "No universal Master's stipend established for the named generic award",
+          "evidence": "Official doctoral admissions distinguishes TA, RA and sponsored-project fellowships.",
+          "source_url": "https://acad.iitb.ac.in/index.php/admissions/research",
+          "staging_applied": false
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Conditional assistantship/fellowship or self-funded admission; not universal fully funded scholarship",
+          "evidence": "The institution lists distinct funding and self-finance routes.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Programme/department admission calendar, not a universal scholarship deadline",
+          "evidence": "Spring 2026/27 PhD call is department-specific.",
+          "source_url": "https://www.che.iitb.ac.in/announcement/phd-admission-spring-semester-2026-27",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "No independently named award with this generic title established. Five records must be semantically reconciled before any archival.",
+        "Official IIT pages intermittently return HTTP 502; treat as transient, not discontinuation."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "700b8004-fb0b-4246-8b8a-d383b25edbdf",
+      "title": "IIT Bombay Phd Excellence Scholarship",
+      "country": "India",
+      "decision": "reconcile_generic_assistantship_claims_and_potential_duplicates",
+      "official_source": "https://www.ir.iitb.ac.in/new-international-degree-students",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://acad.iitb.ac.in/index.php/admissions/research",
+          "evidence": "Use degree-appropriate official admissions/funding source rather than institution homepage.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "No guaranteed full tuition waiver; limited waivers may be available to exceptionally qualified doctoral applicants",
+          "evidence": "Official international admissions page notes only very limited doctoral tuition waivers.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "PhD TA/RA support conditional on admission category and teaching/research duties; amounts depend on category",
+          "evidence": "Official doctoral admissions distinguishes TA, RA and sponsored-project fellowships.",
+          "source_url": "https://acad.iitb.ac.in/index.php/admissions/research",
+          "staging_applied": false
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Conditional assistantship/fellowship or self-funded admission; not universal fully funded scholarship",
+          "evidence": "The institution lists distinct funding and self-finance routes.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Programme/department admission calendar, not a universal scholarship deadline",
+          "evidence": "Spring 2026/27 PhD call is department-specific.",
+          "source_url": "https://www.che.iitb.ac.in/announcement/phd-admission-spring-semester-2026-27",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "No independently named award with this generic title established. Five records must be semantically reconciled before any archival.",
+        "Official IIT pages intermittently return HTTP 502; treat as transient, not discontinuation."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "44daaaf2-e51c-4f68-80d4-5baa19573f9b",
+      "title": "IIT Bombay Phd International Scholarship",
+      "country": "India",
+      "decision": "reconcile_generic_assistantship_claims_and_potential_duplicates",
+      "official_source": "https://www.ir.iitb.ac.in/new-international-degree-students",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://acad.iitb.ac.in/index.php/admissions/research",
+          "evidence": "Use degree-appropriate official admissions/funding source rather than institution homepage.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "No guaranteed full tuition waiver; limited waivers may be available to exceptionally qualified doctoral applicants",
+          "evidence": "Official international admissions page notes only very limited doctoral tuition waivers.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "PhD TA/RA support conditional on admission category and teaching/research duties; amounts depend on category",
+          "evidence": "Official doctoral admissions distinguishes TA, RA and sponsored-project fellowships.",
+          "source_url": "https://acad.iitb.ac.in/index.php/admissions/research",
+          "staging_applied": false
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Conditional assistantship/fellowship or self-funded admission; not universal fully funded scholarship",
+          "evidence": "The institution lists distinct funding and self-finance routes.",
+          "source_url": "https://www.ir.iitb.ac.in/new-international-degree-students",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Programme/department admission calendar, not a universal scholarship deadline",
+          "evidence": "Spring 2026/27 PhD call is department-specific.",
+          "source_url": "https://www.che.iitb.ac.in/announcement/phd-admission-spring-semester-2026-27",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "No independently named award with this generic title established. Five records must be semantically reconciled before any archival.",
+        "Official IIT pages intermittently return HTTP 502; treat as transient, not discontinuation."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "34af3577-5c9f-4113-b509-86fc2b10c008",
+      "title": "Indian Council for Cultural Relations (ICCR) Scholarship",
+      "country": "India",
+      "decision": "reconcile_umbrella_scheme_country_and_deadlines",
+      "official_source": "https://a2ascholarships.iccr.gov.in/assets/site/docs/Timeline-AY-2026-27.pdf",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://a2ascholarships.iccr.gov.in/home/notificationList/55",
+          "evidence": "Official A2A portal gives scheme status and 2026/27 registration closure.",
+          "source_url": "https://a2ascholarships.iccr.gov.in/assets/site/docs/Timeline-AY-2026-27.pdf",
+          "staging_applied": false
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "Academic year 2026/27 closed; next cycle not confirmed",
+          "evidence": "ICCR A2A portal reports registration closed.",
+          "source_url": "https://a2ascholarships.iccr.gov.in/assets/site/docs/Timeline-AY-2026-27.pdf",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "General 2026/27 A2A window: 27 February–15 April 2026; AYUSH scheme separately until 31 May 2026",
+          "evidence": "Deadlines vary by scholarship scheme; no universal 2027 deadline.",
+          "source_url": "https://a2ascholarships.iccr.gov.in/assets/site/docs/Timeline-AY-2026-27.pdf",
+          "staging_applied": false
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Restricted by specific ICCR scheme and partner country; not all nationalities",
+          "evidence": "ICCR has different country allocations and schemes.",
+          "source_url": "https://a2ascholarships.iccr.gov.in/assets/site/docs/Timeline-AY-2026-27.pdf",
+          "staging_applied": false
+        },
+        {
+          "field": "accommodation",
+          "proposed_value": false,
+          "evidence": "Do not advertise accommodation as fully covered; scholarship conditions may provide housing allowance while housing costs remain payable by student",
+          "source_url": "Housing allowance differs from guaranteed accommodation.",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Scheme-specific tuition/compulsory fees and stipends; not a single universal benefit",
+          "evidence": "ICCR schemes have differing rules and allocations.",
+          "source_url": "https://a2ascholarships.iccr.gov.in/assets/site/docs/Timeline-AY-2026-27.pdf",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "Do not count the umbrella and its schemes as independent scholarships without identity review.",
+        "Official 2026/27 timeline PDF contains an apparent 2025 typo for one second-round date; do not propagate."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "75273afa-f09e-423f-b288-0950e4aa8cd0",
+      "title": "MTN Foundation Scholarship",
+      "country": "Nigeria",
+      "decision": "split_three_distinct_named_scholarship_categories_after_duplicate_review",
+      "official_source": "https://www.mtn.ng/scholarships/",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.mtn.ng/scholarships/",
+          "evidence": "Official MTN Nigeria scholarship page lists three named award categories.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "staging_applied": false
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": [
+            "Nigeria"
+          ],
+          "evidence": "STS and SBS explicitly require Nigerian students; do not list worldwide eligibility.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "NGN 300,000 annual scholarship award, not a guaranteed tuition percentage",
+          "evidence": "2026 STS, SBS and UTME awards are stated as monetary support.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "staging_applied": false
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Annual monetary education grant conditional on eligibility and continued academic performance",
+          "evidence": "The awards are not described as full tuition.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "2026 edition advertised; no universal 2027 application deadline verified",
+          "evidence": "Top 10 UTME is automatic; STS and SBS have application routes.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "staging_applied": false
+        },
+        {
+          "field": "description",
+          "proposed_value": "Umbrella includes Science & Technology, Blind Students and Top 10 UTME scholarships; programme-specific eligibility applies",
+          "evidence": "The three categories have distinct academic-year, disability and institution rules.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "STS: 400 awards in 2026; SBS: 100 awards; Top 10 UTME: ten automatic awards. These counts are recipients, not separate programmes.",
+        "No universal IELTS/TOEFL/SAT threshold established."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "afbd5e74-2ad3-4fbf-895e-bcacb3403b14",
+      "title": "Tony Elumelu Foundation Entrepreneurship",
+      "country": "Nigeria",
+      "decision": "authorized_archive_review_non_academic_grant",
+      "official_source": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "evidence": "Official 2026 entrepreneurship programme announcement.",
+          "source_url": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "staging_applied": false
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": [],
+          "evidence": "No university degree enrolment requirement or academic scholarship award.",
+          "source_url": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": null,
+          "evidence": "US$5,000 is nonrepayable business seed capital, not tuition.",
+          "source_url": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "staging_applied": false
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Nonrepayable entrepreneurship seed grant; exclude from degree scholarship catalog",
+          "evidence": "Official foundation describes founder funding and business training.",
+          "source_url": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "2026 entrepreneur applications ran 1 January–1 March 2026; no 2027 cycle confirmed",
+          "evidence": "This is a business grant deadline, not scholarship admissions.",
+          "source_url": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "Strong candidate for audited archival from a degree-scholarship catalog; not a discontinued grant. Do not mark as discontinued.",
+        "Eligible founders from all 54 African countries, not restricted to Nigerian degree applicants."
+      ],
+      "staging_applied": false
+    },
+    {
+      "id": "8cf9de06-a379-4b6b-8617-c2a15712b195",
+      "title": "LUMS National Outreach Programme",
+      "country": "Pakistan",
+      "decision": "retain_correct_2027_coaching_deadline_and_eligibility",
+      "official_source": "https://nop.lums.edu.pk/",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://nop.lums.edu.pk/",
+          "evidence": "Official National Outreach Programme application site rather than LUMS homepage.",
+          "source_url": "https://nop.lums.edu.pk/",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-02-23",
+          "evidence": "Official site currently states NOP online application deadline 23 February 2027.",
+          "source_url": "https://nop.lums.edu.pk/",
+          "staging_applied": false
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2027 NOP Summer Coaching Session application; undergraduate admission and financial-aid decision follow later",
+          "evidence": "Do not confuse the coaching deadline with final university admission.",
+          "source_url": "https://nop.lums.edu.pk/",
+          "staging_applied": false
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Targeted at academically talented, financially disadvantaged students across Pakistan",
+          "evidence": "Official programme aims to recruit from across Pakistan; not a global unrestricted award.",
+          "source_url": "https://nop.lums.edu.pk/",
+          "staging_applied": false
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Full financial assistance for selected NOP scholars, conditional on admissions and financial assessment",
+          "evidence": "Attending summer coaching alone does not guarantee an award.",
+          "source_url": "https://nop.lums.edu.pk/sites/default/files/2025-09/NOP%20Brochure%20v1%20with%20date-01.pdf",
+          "staging_applied": false
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "23 February 2027 is the NOP SCS application deadline, not an independent scholarship award decision deadline",
+          "evidence": "Programme has a multistage admissions pipeline.",
+          "source_url": "https://nop.lums.edu.pk/",
+          "staging_applied": false
+        }
+      ],
+      "notes": [
+        "Brochure states at least 80% Matric/equivalent and financial need. Do not assign universal IELTS, TOEFL or SAT thresholds.",
+        "2026 coaching leads to 2027 admission per brochure; do not assert 2027 coaching's eventual matriculation year without official confirmation."
+      ],
+      "staging_applied": false
+    }
+  ],
+  "leads": [
+    {
+      "title": "MTN Foundation Science and Technology Scholarship",
+      "country": "Nigeria",
+      "official_url": "https://www.mtn.ng/scholarships/",
+      "confirmed_terms": "2026: 400 awards of NGN 300,000; qualifying Nigerian public tertiary STEM/medical students",
+      "disposition": "reconcile_with_published_MTN_umbrella",
+      "deadline_notes": null,
+      "staging_draft_created": false,
+      "publication_attempted": false
+    },
+    {
+      "title": "MTN Foundation Scholarship for Blind Students",
+      "country": "Nigeria",
+      "official_url": "https://www.mtn.ng/scholarships/",
+      "confirmed_terms": "2026: 100 annual awards of NGN 300,000; eligible blind students in Nigerian public tertiary institutions",
+      "disposition": "reconcile_with_published_MTN_umbrella",
+      "deadline_notes": null,
+      "staging_draft_created": false,
+      "publication_attempted": false
+    },
+    {
+      "title": "MTN Foundation Top 10 UTME Scholarship",
+      "country": "Nigeria",
+      "official_url": "https://www.mtn.ng/scholarships/",
+      "confirmed_terms": "Automatic NGN 300,000 annual awards for top ten JAMB UTME candidates; public or private institution",
+      "disposition": "reconcile_with_published_MTN_umbrella",
+      "deadline_notes": null,
+      "staging_draft_created": false,
+      "publication_attempted": false
+    },
+    {
+      "title": "UG Sponsorship for Continuing Students",
+      "country": "Ghana",
+      "official_url": "https://www.ug.edu.gh/financialaid/node/29",
+      "confirmed_terms": "2026/27 tuition support for eligible Ghanaian undergraduate students; official detail page carries a stale 2025 deadline in its body",
+      "disposition": "reconcile_with_published_UG_generic",
+      "deadline_notes": "2026/27 call exists; specific deadline not independently resolved",
+      "staging_draft_created": false,
+      "publication_attempted": false
+    },
+    {
+      "title": "UG SRC Yi Bi Boa Scholarship",
+      "country": "Ghana",
+      "official_url": "https://www.ug.edu.gh/financialaid/node/27",
+      "confirmed_terms": "Need-based support for continuing UG students; CGPA at least 1.5; 2026 deadline 2 July",
+      "disposition": "reconcile_with_published_UG_generic",
+      "deadline_notes": "2026/27 cycle closed",
+      "staging_draft_created": false,
+      "publication_attempted": false
+    },
+    {
+      "title": "UGBS Scholars Scholarship",
+      "country": "Ghana",
+      "official_url": "https://www.ug.edu.gh/financialaid/node/63",
+      "confirmed_terms": "Financial assistance for disadvantaged University of Ghana Business School undergraduates; deadline 29 July 2026 15:00",
+      "disposition": "reconcile_with_published_UG_generic",
+      "deadline_notes": "2026/27 cycle closed",
+      "staging_draft_created": false,
+      "publication_attempted": false
+    },
+    {
+      "title": "KNUST Bursary",
+      "country": "Ghana",
+      "official_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+      "confirmed_terms": "One-year bursary for regular Ghanaian full-time students; 2026 deadline 17 April",
+      "disposition": "reconcile_with_published_KNUST_generic",
+      "deadline_notes": "2026/27 cycle closed",
+      "staging_draft_created": false,
+      "publication_attempted": false
+    },
+    {
+      "title": "IIT Bombay PhD Teaching Assistantship",
+      "country": "India",
+      "official_url": "https://acad.iitb.ac.in/index.php/admissions/research",
+      "confirmed_terms": "PhD TA funding category: INR 37,000/month first two years, then INR 42,000; eight hours/week teaching duties",
+      "disposition": "hold_not_independent_named_scholarship",
+      "deadline_notes": "Category of PhD funding, not confirmed separate scholarship",
+      "staging_draft_created": false,
+      "publication_attempted": false
+    },
+    {
+      "title": "IIT Bombay PhD Research Assistantship",
+      "country": "India",
+      "official_url": "https://acad.iitb.ac.in/index.php/admissions/research",
+      "confirmed_terms": "PhD RA funding category: INR 42,000/month first two years, then INR 47,000; ~20 hours/week duties",
+      "disposition": "hold_not_independent_named_scholarship",
+      "deadline_notes": "Category of PhD funding, not confirmed separate scholarship",
+      "staging_draft_created": false,
+      "publication_attempted": false
+    },
+    {
+      "title": "ICCR India-Africa Maitri Scholarship Scheme",
+      "country": "India",
+      "official_url": "https://a2ascholarships.iccr.gov.in/home/notificationList/55",
+      "confirmed_terms": "Country-restricted ICCR scheme; 2026/27 A2A cycle closed",
+      "disposition": "hold_scheme_specific_guidelines_needed",
+      "deadline_notes": "No verified 2027 dates",
+      "staging_draft_created": false,
+      "publication_attempted": false
+    }
+  ],
+  "urgent_private_drafts": [
+    {
+      "draft_id": "27968090-2edf-464d-9236-76f5186b741b",
+      "title": "EPFL-WISH Foundation Fellowship",
+      "deadline": "2026-10-25",
+      "official_url": "https://wish-foundation.epfl.ch/masters-projects-abroad/",
+      "confirmed_terms": "Female EPFL Master's students undertaking thesis project abroad; up to CHF 5,000 generally; next spring call 11 April 2027",
+      "provenance_records": 3,
+      "reviewer_attributed": 0,
+      "successful_source_audit": false,
+      "staging_published": false
+    },
+    {
+      "draft_id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "title": "Gordon and Isabel Humphrey Scholarship",
+      "deadline": "2026-10-25",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/gordon-and-isabel-humphrey-scholarship",
+      "confirmed_terms": "2027 Engineering PhD, AUD 41,100 per year for up to 3.5 years plus relocation/insurance if applicable",
+      "provenance_records": 2,
+      "reviewer_attributed": 0,
+      "successful_source_audit": false,
+      "staging_published": false
+    },
+    {
+      "draft_id": "719cccf5-54e5-4680-a5c0-8e930a8a839c",
+      "title": "Mick Hitchcock PhD Scholarship in Microbiology",
+      "deadline": "2026-10-31",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/mick-hitchcock-phd-scholarship-in-microbiology",
+      "confirmed_terms": "Microbiology PhD research; AUD 39,500/year 2026 rate; automatic consideration",
+      "provenance_records": 0,
+      "reviewer_attributed": 0,
+      "successful_source_audit": true,
+      "staging_published": false
+    }
+  ],
+  "authentication": {
+    "auth_uid": null,
+    "is_admin": false,
+    "management_db_role": "postgres",
+    "blocker": "Admin-only application RPCs require authenticated admin; direct management SQL must not bypass audit/permissions",
+    "legitimate_functions": [
+      "publish_scholarship_draft",
+      "update_scholarship_draft",
+      "record_scholarship_field_provenance",
+      "promote_source_candidate_to_draft"
+    ],
+    "additional_guardrail": "Current scholarship_draft_readiness does not explicitly require reviewer-attributed field provenance; consider adding a staging-tested check before relying on ready status."
+  },
+  "quality_rules": [
+    "Do not publish entrepreneurship seed grants as degree scholarships.",
+    "Do not count scholarship recipients or funding categories as independent programmes.",
+    "Do not treat intermittent HTTP errors as discontinuation.",
+    "Keep historical cycles explicitly historical; do not invent 2027 deadlines.",
+    "Resolve generic titles and semantic duplicates before any publication or archive.",
+    "Do not mark verified or add accepted_by without real authenticated reviewer action.",
+    "All proposed values are unapproved and not applied."
+  ],
+  "production_changes": false
+}
