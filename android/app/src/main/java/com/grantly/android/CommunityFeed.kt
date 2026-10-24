@@ -1,6 +1,8 @@
 package com.grantly.android
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -412,7 +414,10 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                             style = MaterialTheme.typography.bodySmall
                         )
                     }
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
                         TextButton(
                             enabled = post.id in knownLikeIds && post.id !in busyLikeIds,
                             onClick = {
