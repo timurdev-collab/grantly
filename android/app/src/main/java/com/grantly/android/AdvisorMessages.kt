@@ -23,6 +23,7 @@ import java.util.UUID
 internal data class AdvisorConversation(
     val id: String,
     val title: String,
+    val otherUserId: String?,
     val lastMessage: String,
     val unreadCount: Int,
     val lastMessageAt: String
@@ -105,6 +106,9 @@ internal object AdvisorMessagesRepository {
                 add(AdvisorConversation(
                     id = id,
                     title = row.optString("display_name").ifBlank { "EduT advisor" },
+                    otherUserId = row.optString("other_user_id").takeIf {
+                        runCatching { validId(it) }.isSuccess
+                    },
                     lastMessage = row.optString("last_message").takeUnless { it == "null" }.orEmpty(),
                     unreadCount = row.optInt("unread_count").coerceAtLeast(0),
                     lastMessageAt = row.optString("last_message_at").takeUnless { it == "null" }.orEmpty()
@@ -168,7 +172,7 @@ internal fun AdvisorMessagesContent() {
 
     if (selected != null) {
         TextButton(onClick = { selected = null; refresh++ }) { Text("← All messages") }
-        AdvisorMessageThreadContent(selected!!.id, selected!!.title)
+        AdvisorMessageThreadContent(selected!!.id, selected!!.title, selected!!.otherUserId)
         return
     }
 
@@ -237,7 +241,7 @@ internal fun AdvisorMessagesContent() {
 }
 
 @Composable
-internal fun AdvisorMessageThreadContent(conversationId: String, title: String) {
+internal fun AdvisorMessageThreadContent(conversationId: String, title: String, otherUserId: String? = null) {
     val userId = AuthRepository.session?.userId
     val scope = rememberCoroutineScope()
     var messages by remember(userId, conversationId) { mutableStateOf<List<AdvisorMessage>>(emptyList()) }
@@ -248,6 +252,8 @@ internal fun AdvisorMessageThreadContent(conversationId: String, title: String) 
     var error by remember(userId, conversationId) { mutableStateOf<String?>(null) }
     var draft by remember(userId, conversationId) { mutableStateOf("") }
     var refresh by remember(userId, conversationId) { mutableIntStateOf(0) }
+    var blockedByMe by remember(userId, conversationId) { mutableStateOf(false) }
+    var reportMessage by remember(userId, conversationId) { mutableStateOf<AdvisorMessage?>(null) }
 
     Text(title, style = MaterialTheme.typography.titleLarge, color = Color(0xFF123E30))
     Text("Advisor messaging · manually refreshed preview", style = MaterialTheme.typography.bodySmall)
@@ -313,12 +319,27 @@ internal fun AdvisorMessageThreadContent(conversationId: String, title: String) 
                 Text(if (mine) "You" else title, style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold)
                 Text(message.body)
+                if (!mine) {
+                    TextButton(onClick = { reportMessage = message }) {
+                        Text("Report message")
+                    }
+                }
                 Text(message.createdAt.take(16).replace('T', ' '),
                     style = MaterialTheme.typography.labelSmall)
             }
         }
     }
     Spacer(Modifier.height(12.dp))
+    AdvisorMessageSafetyControls(
+        otherUserId = otherUserId ?: messages.firstOrNull { it.senderId != userId }?.senderId,
+        reportMessage = reportMessage,
+        onReportHandled = { reportMessage = null },
+        onBlockChanged = { blockedByMe = it }
+    )
+    if (blockedByMe) {
+        Text("You blocked this user. Unblock to send messages.",
+            color = MaterialTheme.colorScheme.error)
+    }
     OutlinedTextField(
         value = draft,
         onValueChange = { if (it.length <= 2000) draft = it },
@@ -330,7 +351,7 @@ internal fun AdvisorMessageThreadContent(conversationId: String, title: String) 
     Button(
         onClick = {
             val submitted = draft.trim()
-            if (submitted.isBlank() || sending) return@Button
+            if (submitted.isBlank() || sending || blockedByMe) return@Button
             sending = true
             error = null
             scope.launch {
@@ -347,7 +368,7 @@ internal fun AdvisorMessageThreadContent(conversationId: String, title: String) 
                 }
             }
         },
-        enabled = !sending && !loading && draft.isNotBlank() && draft.length <= 2000
+        enabled = !sending && !loading && !blockedByMe && draft.isNotBlank() && draft.length <= 2000
     ) { Text(if (sending) "Sending…" else "Send message") }
     Text("Messages are delivered only when the server permits this advisor conversation. " +
         "Do not share passwords or payment details.", style = MaterialTheme.typography.bodySmall)
