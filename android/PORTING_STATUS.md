@@ -21,16 +21,16 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Read-only advisor consultation service options (duration, live price and discount) and authenticated consultation-request history (status, advisor, topic and quoted price), using existing `available_advisor_services` and `my_advisor_consultation_requests` RPCs (not yet live-account/device-tested).
 - Personalized scholarship recommendations through the existing `get_my_scholarship_matches` RPC, including ranking, explanations and eligibility warnings (not yet live-account/device-tested).
 - Advisor consultation booking requests using the existing policy-acceptance and booking RPCs. Displays three policies, records versioned consent, allows service and local preferred date/time selection, and sends the chosen instant in UTC with the device time zone. No in-app payment or guaranteed booking; requires live-account/device testing.
-- Advisor-only Messages tab with authenticated conversation summaries, unread counts, paginated messages, manual refresh, read receipts and explicit message sending. Approved advisor profiles can open or create advisor-direct conversations through the existing role-restricted RPC. No realtime subscription or safety-report/block controls yet; messaging is not live-account/device-tested.
+- Advisor-only Messages tab with authenticated conversation summaries, unread counts, paginated messages, manual refresh, read receipts and explicit message sending. Approved advisor profiles can open or create advisor-direct conversations through the existing role-restricted RPC. Android now includes user/message safety reports and block/unblock controls through existing RLS-protected tables, including a block confirmation and disabled composer for locally blocked users. No realtime subscription; messaging and safety actions are not live-account/device-tested.
 
 ## Not yet implemented or verified
 - On-device verification of password recovery deep links and encrypted session restoration.
 - Student/advisor/admin role-specific destinations and community profile editing (academic profile read/write and read-only approved advisor discovery are now in Android).
 - Application task due-date editing and notifications. Upload, deletion and rollback behavior still need authenticated backend testing.
 - Saved-scholarship pagination beyond 100 items.
-- Messaging realtime updates, moderation/reporting and blocking UI, community, administrator tools and full role-specific navigation. Advisor messaging, booking and personalized matching now exist in source but remain unverified with real accounts.
+- Messaging realtime updates, community, administrator moderation queues/tools and full role-specific navigation. Advisor messaging, user/message reporting, blocking, booking and personalized matching now exist in source but remain unverified with real accounts.
 - iOS-equivalent styling, accessibility, localization and navigation across all screens.
-- Save/remove, task-checklist, recommendations, advisor booking policy acceptance, preferred-time submission, live API testing with a real account and physical-device end-to-end testing.
+- Save/remove, task-checklist, recommendations, advisor booking policy acceptance, preferred-time submission, message reports, block/unblock actions, live API testing with a real account and physical-device end-to-end testing.
 
 ## Preview safety
 Authentication tokens are stored as AES-GCM ciphertext using a non-exportable Android
