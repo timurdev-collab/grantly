@@ -21,7 +21,7 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Read-only advisor consultation service options (duration, live price and discount) and authenticated consultation-request history (status, advisor, topic and quoted price), using existing `available_advisor_services` and `my_advisor_consultation_requests` RPCs (not yet live-account/device-tested).
 - Personalized scholarship recommendations through the existing `get_my_scholarship_matches` RPC, including ranking, explanations and eligibility warnings (not yet live-account/device-tested).
 - Advisor consultation booking requests using the existing policy-acceptance and booking RPCs. Displays three policies, records versioned consent, allows service and local preferred date/time selection, and sends the chosen instant in UTC with the device time zone. No in-app payment or guaranteed booking; requires live-account/device testing.
-- Read-only authenticated Community feed reachable from Home, loading up to 30 visible non-story posts through existing social_posts RLS with manual refresh, caption and media-presence indicators. No media playback, author cards, likes, comments, posting, stories or community profile editing; hidden community profiles may yield an empty feed. This code has not been account/device-tested.
+- Read-only authenticated Community feed reachable from Home, loading visible non-story posts in 30-post pages through existing social_posts RLS with manual refresh, explicit Load more, caption and media-presence indicators. Pagination preserves already loaded posts and deduplicates by post ID. No media playback, author cards, likes, comments, posting, stories or community profile editing; hidden community profiles may yield an empty feed. This code has not been account/device-tested.
 - Advisor-only Messages tab with authenticated conversation summaries, unread counts, paginated messages, manual refresh, read receipts and explicit message sending. Approved advisor profiles can open or create advisor-direct conversations through the existing role-restricted RPC. Foreground-only inbox polling (30 seconds) and thread polling (20 seconds) now refresh content while visible; thread updates preserve older paginated messages. Android includes user/message safety reports and block/unblock controls through existing RLS-protected tables, including a block confirmation and disabled composer for locally blocked users. Polling is not a realtime subscription or push notification; messaging and safety actions are not live-account/device-tested.
 
 ## Not yet implemented or verified
@@ -39,6 +39,8 @@ Keystore key; app backup is disabled. On restart, the app attempts to restore an
 the encrypted session. Sign-out clears local credentials before contacting the server.
 If Keystore storage is unavailable, the app keeps an in-memory session only. The
 persistence flow has not yet been verified on a physical Android device.
+
+The iOS `design/home-concept-02` HomeView currently emphasizes scholarship matches, deadlines and advisors; Android's Community shortcut is an additional preview entry point, not verified iOS Home visual parity.
 
 A successful `Android Debug APK` GitHub Actions build proves compilation only, not
 feature parity, server availability, account behavior or device compatibility.
