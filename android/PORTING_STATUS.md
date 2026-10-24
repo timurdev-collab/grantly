@@ -12,6 +12,7 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Authenticated Applications list showing saved scholarships, status and notes (first 100).
 - Authenticated application status and notes editing through existing user-scoped APIs.
 - Application task checklist: read, complete/reopen, add custom tasks and delete custom tasks using existing `application_tasks` RLS table (not yet device-tested; first 100 tasks per scholarship).
+- Personal application target dates can now be viewed, selected using the native Android date picker, changed or cleared from saved scholarship cards. Writes are scoped to the signed-in user's `saved_scholarships` row and use the existing `personal_deadline` date column under RLS. This does not change official provider deadlines, does not send Android reminders and remains unverified with a live account/device.
 - Private application document metadata, single-file uploads and confirmed deletion via the existing user-scoped RLS table and private Storage bucket (PDF/JPEG/PNG/HEIC/HEIF, up to 6 MiB). Upload failure attempts storage rollback; all mutations remain unverified on a live account/device.
 - Save/remove scholarship controls on detail screens using existing user-scoped Supabase RLS policies (not yet device-tested).
 - Automatic access-token refresh and Android Keystore AES-GCM encrypted session persistence, including restoration at launch and local token removal on sign-out (not yet device-tested).
@@ -27,7 +28,7 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 ## Not yet implemented or verified
 - On-device verification of password recovery deep links and encrypted session restoration.
 - Student/advisor/admin role-specific destinations and community profile editing (academic profile read/write and read-only approved advisor discovery are now in Android).
-- Application task due-date editing and notifications. Upload, deletion and rollback behavior still need authenticated backend testing.
+- Application task due-date editing, Android deadline notifications and reminder-preference UI. Saved-scholarship personal target date editing is implemented but not yet account/device-tested. Upload, deletion and rollback behavior still need authenticated backend testing.
 - Saved-scholarship pagination beyond 100 items.
 - Messaging realtime subscriptions/push notifications (foreground polling only), remaining community interactions (video streaming beyond the 200 MiB temporary-download preview, media uploads, stories and full post management), administrator moderation queues/tools and full role-specific navigation. Advisor messaging, user/message reporting, blocking, booking and personalized matching now exist in source but remain unverified with real accounts.
 - iOS-equivalent styling, accessibility, localization and navigation across all screens.
