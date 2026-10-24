@@ -219,6 +219,7 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
 
     var selectedPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var photoPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
+    var videoPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var composing by remember(session?.userId) { mutableStateOf(false) }
     var pendingDelete by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var editingPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
@@ -310,6 +311,10 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         CommunityPhotoPreview(post = photoPost!!, onBack = { photoPost = null })
         return
     }
+    if (videoPost != null) {
+        CommunityVideoPreview(post = videoPost!!, onBack = { videoPost = null })
+        return
+    }
 
     LaunchedEffect(session?.userId, refresh, nextOffset) {
         if (session == null) {
@@ -370,7 +375,7 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         TextButton(onClick = onBack) { Text("← Back to Home") }
         Text("Community", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text(
-            "Preview of visible posts. You can comment, like, report and publish text posts. Private photo viewing is available for supported uploads; videos, uploads and stories are not yet supported.",
+            "Preview of visible posts. You can comment, like, report and publish text posts. Private photo and video viewing is available for supported uploads; uploads and stories are not yet supported.",
             style = MaterialTheme.typography.bodySmall
         )
         if (session == null) {
@@ -422,9 +427,13 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                             OutlinedButton(onClick = { photoPost = post }) {
                                 Text("View attached photo")
                             }
+                        } else if (post.mediaType == "video" && !post.mediaPath.isNullOrBlank()) {
+                            OutlinedButton(onClick = { videoPost = post }) {
+                                Text("Play attached video")
+                            }
                         } else {
                             Text(
-                                "Media attached — video playback and legacy media viewing are not yet available.",
+                                "Media attached — legacy media viewing is not yet available.",
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }
