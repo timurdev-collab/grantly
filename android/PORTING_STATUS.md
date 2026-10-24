@@ -17,17 +17,19 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Automatic access-token refresh and Android Keystore AES-GCM encrypted session persistence, including restoration at launch and local token removal on sign-out (not yet device-tested).
 - Password recovery email requests, verified recovery deep links and password update through the existing Supabase Auth API (not yet device-tested).
 - Private academic profile summary and validated editing through the existing `student_profiles` RLS table; degree, GPA, IELTS, graduation, residence, nationality, major and study preferences. Role is read-only and never included in update payloads (not yet account/device-tested).
-- Read-only approved advisor directory, reachable from the Home guidance card after sign-in. Uses existing authenticated `available_advisors` RPC, with local search and advisor detail summaries; booking and messaging are intentionally disabled (not yet live-account/device-tested).
-- Read-only advisor consultation service options (duration, live price and discount) and authenticated consultation-request history (status, advisor, topic and quoted price), using existing `available_advisor_services` and `my_advisor_consultation_requests` RPCs. No booking, payment or policy-acceptance writes (not yet live-account/device-tested).
+- Read-only approved advisor directory, reachable from the Home guidance card after sign-in. Uses existing authenticated `available_advisors` RPC, with local search and advisor detail summaries (not yet live-account/device-tested).
+- Read-only advisor consultation service options (duration, live price and discount) and authenticated consultation-request history (status, advisor, topic and quoted price), using existing `available_advisor_services` and `my_advisor_consultation_requests` RPCs (not yet live-account/device-tested).
+- Personalized scholarship recommendations through the existing `get_my_scholarship_matches` RPC, including ranking, explanations and eligibility warnings (not yet live-account/device-tested).
+- Advisor consultation booking requests using the existing policy-acceptance and booking RPCs. Displays three policies, records versioned consent, allows service and local preferred date/time selection, and sends the chosen instant in UTC with the device time zone. No in-app payment or guaranteed booking; requires live-account/device testing.
 
 ## Not yet implemented or verified
 - On-device verification of password recovery deep links and encrypted session restoration.
 - Student/advisor/admin role-specific destinations and community profile editing (academic profile read/write and read-only approved advisor discovery are now in Android).
 - Application task due-date editing and notifications. Upload, deletion and rollback behavior still need authenticated backend testing.
 - Saved-scholarship pagination beyond 100 items.
-- Messaging, community, advisor consultation booking and personalized matching (advisor directory, services and consultation history are read-only).
+- Messaging, community, administrator tools, advisor messaging, and full role-specific navigation. Advisor booking and personalized matching now exist in source but remain unverified with real accounts.
 - iOS-equivalent styling, accessibility, localization and navigation across all screens.
-- Save/remove and task-checklist API behavior, live API testing with a real account and physical-device end-to-end testing.
+- Save/remove, task-checklist, recommendations, advisor booking policy acceptance, preferred-time submission, live API testing with a real account and physical-device end-to-end testing.
 
 ## Preview safety
 Authentication tokens are stored as AES-GCM ciphertext using a non-exportable Android
