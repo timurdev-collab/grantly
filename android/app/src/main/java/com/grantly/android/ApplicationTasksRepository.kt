@@ -9,6 +9,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.UUID
 
 internal data class ApplicationTaskItem(
@@ -16,7 +18,8 @@ internal data class ApplicationTaskItem(
     val title: String,
     val taskKey: String?,
     val position: Int,
-    val completed: Boolean
+    val completed: Boolean,
+    val dueDate: LocalDate?
 )
 
 /** Android checklist backed by the existing user-scoped application_tasks RLS table. */
@@ -62,7 +65,7 @@ internal object ApplicationTasksRepository {
 
     suspend fun load(scholarshipId: String): List<ApplicationTaskItem> {
         val session = AuthRepository.activeSession()
-        val query = "select=id,title,task_key,position,completed_at" +
+        val query = "select=id,title,task_key,position,completed_at,due_at" +
             "&user_id=eq." + enc(uuid(session.userId)) +
             "&scholarship_id=eq." + enc(uuid(scholarshipId)) +
             "&order=position.asc&limit=100"
@@ -75,7 +78,12 @@ internal object ApplicationTasksRepository {
                 add(ApplicationTaskItem(
                     id, row.optString("title"),
                     row.optString("task_key").takeUnless { row.isNull("task_key") || it.isBlank() },
-                    row.optInt("position"), !row.isNull("completed_at")
+                    row.optInt("position"), !row.isNull("completed_at"),
+                    row.optString("due_at").takeUnless { row.isNull("due_at") || it.isBlank() }
+                        ?.let { timestamp ->
+                            runCatching { Instant.parse(timestamp).atZone(ZoneId.systemDefault()).toLocalDate() }
+                                .getOrNull()
+                        }
                 ))
             }
         }
@@ -86,6 +94,16 @@ internal object ApplicationTasksRepository {
         val query = "id=eq." + enc(uuid(taskId)) + "&user_id=eq." + enc(uuid(session.userId))
         request("PATCH", query, JSONObject()
             .put("completed_at", if (completed) Instant.now().toString() else JSONObject.NULL)
+            .put("updated_at", Instant.now().toString()))
+    }
+
+    /** Persist the selected local calendar day as local noon in the existing timestamptz column. */
+    suspend fun setDueDate(taskId: String, date: LocalDate?) {
+        val session = AuthRepository.activeSession()
+        val query = "id=eq." + enc(uuid(taskId)) + "&user_id=eq." + enc(uuid(session.userId))
+        val dueAt = date?.atTime(12, 0)?.atZone(ZoneId.systemDefault())?.toInstant()?.toString()
+        request("PATCH", query, JSONObject()
+            .put("due_at", dueAt ?: JSONObject.NULL)
             .put("updated_at", Instant.now().toString()))
     }
 
