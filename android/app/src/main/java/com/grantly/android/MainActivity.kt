@@ -202,7 +202,7 @@ private fun HomeContent(
     Spacer(Modifier.height(20.dp))
     Text("Closing soon", fontFamily = FontFamily.Serif, fontSize = 26.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
-    Text("Verified scholarship deadlines will appear here.", fontSize = 13.sp, color = Ink.copy(alpha = .68f))
+    HomeClosingSoonContent(onSelect = onScholarshipSelect)
     Spacer(Modifier.height(26.dp))
     Column(Modifier.fillMaxWidth().background(Sage, RoundedCornerShape(22.dp)).clickable(onClick = onAdvisors).padding(20.dp)) {
         Text("Need a little guidance?", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
