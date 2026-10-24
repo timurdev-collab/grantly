@@ -120,6 +120,7 @@ private fun EduTApp() {
                                 onSelect = { selectedScholarship = it }
                             )
                             tab == Tab.Applications -> SavedScholarshipsContent()
+                            tab == Tab.Messages -> AdvisorMessagesContent()
                             tab == Tab.Profile -> AuthContent()
                             else -> PlaceholderContent(tab)
                         }
