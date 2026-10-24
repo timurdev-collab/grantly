@@ -26,9 +26,12 @@ internal data class CommunityPost(
     val hasMedia: Boolean
 )
 
+internal data class CommunityPage(val posts: List<CommunityPost>, val hasMore: Boolean)
+
 internal object CommunityFeedRepository {
-    suspend fun load(limit: Int = 30): List<CommunityPost> = withContext(Dispatchers.IO) {
+    suspend fun loadPage(limit: Int = 30, offset: Int = 0): CommunityPage = withContext(Dispatchers.IO) {
         require(limit in 1..50) { "Invalid community page size." }
+        require(offset in 0..10_000) { "Invalid community offset." }
         val session = AuthRepository.activeSession()
         val base = BuildConfig.SUPABASE_URL.trimEnd('/')
         val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
@@ -38,7 +41,7 @@ internal object CommunityFeedRepository {
         // Explicitly exclude inactive posts; server RLS additionally enforces visibility and blocks.
         val path = "/rest/v1/social_posts" +
             "?select=id,kind,caption,created_at,media_type" +
-            "&kind=neq.story&is_active=eq.true&order=created_at.desc&limit=$limit"
+            "&kind=neq.story&is_active=eq.true&order=created_at.desc&limit=${limit + 1}&offset=$offset"
         val connection = URL(base + path).openConnection() as HttpURLConnection
         try {
             connection.requestMethod = "GET"
@@ -58,8 +61,8 @@ internal object CommunityFeedRepository {
             val rows = JSONArray(
                 connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
             )
-            buildList {
-                for (index in 0 until rows.length()) {
+            val visiblePosts = buildList {
+                for (index in 0 until minOf(rows.length(), limit)) {
                     val row = rows.optJSONObject(index) ?: continue
                     val id = row.optString("id")
                     val kind = row.optString("kind")
@@ -75,6 +78,7 @@ internal object CommunityFeedRepository {
                     )
                 }
             }
+            CommunityPage(posts = visiblePosts, hasMore = rows.length() > limit)
         } finally {
             connection.disconnect()
         }
@@ -87,18 +91,28 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     var posts by remember(session?.userId) { mutableStateOf<List<CommunityPost>>(emptyList()) }
     var loading by remember(session?.userId) { mutableStateOf(false) }
     var error by remember(session?.userId) { mutableStateOf<String?>(null) }
-    var refresh by remember { mutableIntStateOf(0) }
+    var refresh by remember(session?.userId) { mutableIntStateOf(0) }
+    var nextOffset by remember(session?.userId) { mutableIntStateOf(0) }
+    var hasMore by remember(session?.userId) { mutableStateOf(false) }
 
-    LaunchedEffect(session?.userId, refresh) {
+    LaunchedEffect(session?.userId, refresh, nextOffset) {
         if (session == null) {
             posts = emptyList()
+            hasMore = false
             error = null
             loading = false
         } else {
             loading = true
             error = null
             try {
-                posts = CommunityFeedRepository.load()
+                val page = CommunityFeedRepository.loadPage(offset = nextOffset)
+                posts = if (nextOffset == 0) {
+                    page.posts
+                } else {
+                    val knownIds = posts.mapTo(mutableSetOf()) { it.id }
+                    posts + page.posts.filter { knownIds.add(it.id) }
+                }
+                hasMore = page.hasMore
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (failure: Exception) {
@@ -120,7 +134,10 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         if (session == null) {
             Text("Sign in from the Profile tab to view community posts.")
         } else {
-            OutlinedButton(onClick = { refresh++ }, enabled = !loading) { Text("Refresh posts") }
+            OutlinedButton(onClick = {
+                nextOffset = 0
+                refresh++
+            }, enabled = !loading) { Text("Refresh posts") }
             if (loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             if (error != null) {
                 Text(error!!, color = MaterialTheme.colorScheme.error)
@@ -152,6 +169,15 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
+            }
+            if (posts.isNotEmpty()) {
+                Text("Showing ${posts.size} community posts", style = MaterialTheme.typography.labelSmall)
+            }
+            if (hasMore) {
+                OutlinedButton(
+                    onClick = { nextOffset += 30 },
+                    enabled = !loading && nextOffset < 10_000
+                ) { Text("Load more posts") }
             }
         }
     }
