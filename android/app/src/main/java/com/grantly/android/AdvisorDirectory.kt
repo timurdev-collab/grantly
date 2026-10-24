@@ -103,7 +103,8 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var query by remember { mutableStateOf("") }
-    var selected by remember { mutableStateOf<AdvisorDirectoryItem?>(null) }
+    var selected by remember(userId) { mutableStateOf<AdvisorDirectoryItem?>(null) }
+    var showingRequests by remember(userId) { mutableStateOf(false) }
     val forest = Color(0xFF123E30)
 
     LaunchedEffect(userId, refresh) {
@@ -122,11 +123,17 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
         }
     }
 
-    TextButton(onClick = { if (selected != null) selected = null else onBack() }) {
-        Text(if (selected == null) "← Home" else "← All advisors")
+    TextButton(onClick = {
+        when {
+            showingRequests -> showingRequests = false
+            selected != null -> selected = null
+            else -> onBack()
+        }
+    }) {
+        Text(if (selected == null && !showingRequests) "← Home" else "← All advisors")
     }
     Spacer(Modifier.height(8.dp))
-    Text(if (selected == null) "Find an advisor" else selected!!.name,
+    Text(if (showingRequests) "My consultations" else if (selected == null) "Find an advisor" else selected!!.name,
         style = MaterialTheme.typography.headlineMedium, color = forest)
     Spacer(Modifier.height(8.dp))
     Text("Verified educational advisors · directory preview",
@@ -135,6 +142,10 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
 
     if (userId == null) {
         Text("Sign in from Profile to view approved advisors.")
+        return
+    }
+    if (showingRequests) {
+        AdvisorConsultationHistoryContent()
         return
     }
     if (loading) {
@@ -155,11 +166,16 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
         AdvisorLine("Countries", advisor.countries.joinToString(", "))
         AdvisorLine("Languages", advisor.languages.joinToString(", "))
         Spacer(Modifier.height(18.dp))
+        AdvisorServicesContent(advisor.id)
         Text("Consultation booking and messaging are not available in this Android preview.",
             style = MaterialTheme.typography.bodySmall)
         return
     }
 
+    OutlinedButton(onClick = { showingRequests = true }) {
+        Text("My consultation requests")
+    }
+    Spacer(Modifier.height(10.dp))
     OutlinedTextField(
         value = query,
         onValueChange = { query = it },
