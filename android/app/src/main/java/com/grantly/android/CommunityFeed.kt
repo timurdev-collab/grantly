@@ -97,11 +97,23 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     var hasMore by remember(session?.userId) { mutableStateOf(false) }
 
     var selectedPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
+    var composing by remember(session?.userId) { mutableStateOf(false) }
     var likedIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
     var knownLikeIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
     var busyLikeIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
     var likeError by remember(session?.userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    if (composing) {
+        CommunityPostComposer(
+            onBack = { composing = false },
+            onPosted = {
+                composing = false
+                nextOffset = 0
+                refresh++
+            }
+        )
+        return
+    }
     if (selectedPost != null) {
         CommunityCommentsContent(post = selectedPost!!, onBack = { selectedPost = null })
         return
@@ -166,12 +178,15 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         TextButton(onClick = onBack) { Text("← Back to Home") }
         Text("Community", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text(
-            "Preview of visible posts. You can comment and like posts; creating posts and playing media are not available on Android yet.",
+            "Preview of visible posts. You can comment, like and publish text-only posts. Media uploads, stories and playback are not available yet.",
             style = MaterialTheme.typography.bodySmall
         )
         if (session == null) {
             Text("Sign in from the Profile tab to view community posts.")
         } else {
+            OutlinedButton(onClick = { composing = true }, enabled = !loading) {
+                Text("Create text post")
+            }
             OutlinedButton(onClick = {
                 nextOffset = 0
                 refresh++
