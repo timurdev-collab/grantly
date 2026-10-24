@@ -168,7 +168,7 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
     if (selected != null) {
         val advisor = selected!!
         if (chatId != null) {
-            AdvisorMessageThreadContent(chatId!!, advisor.name)
+            AdvisorMessageThreadContent(chatId!!, advisor.name, advisor.id)
             return
         }
         if (showingBooking) {
