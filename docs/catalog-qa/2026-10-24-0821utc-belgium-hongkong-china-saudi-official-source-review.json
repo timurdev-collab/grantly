@@ -193,9 +193,15 @@
         },
         {
           "field": "deadline",
-          "suggested": "2027-01-20",
+          "suggested": null,
           "evidence_url": "https://cgis.kfupm.edu.sa/apply",
-          "reason": "This is the MS thesis-based and PhD admissions deadline, NOT a standalone scholarship deadline; portal currently says Closed because future opening is Nov 23, 2026."
+          "reason": "No independent scholarship deadline; 2027-01-20 is a graduate admissions deadline only."
+        },
+        {
+          "field": "deadline_notes",
+          "suggested": "2027 MS (thesis) / PhD admissions: Nov 23 2026-Jan 20 2027. Scholarship selection conditional.",
+          "evidence_url": "https://cgis.kfupm.edu.sa/apply",
+          "reason": "Do not present admissions cutoff as scholarship-only deadline."
         },
         {
           "field": "application_cycle",
@@ -447,7 +453,7 @@
       "official_url": "https://www.vliruos.be/get-funded/bachelor-applied-computer-science",
       "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
       "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
-      "status": "ready_for_dedup_review",
+      "status": "hold_organizer_programme_duration_page_shows_2027_to_2029_check_actual_bachelor_duration",
       "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
     },
     {
@@ -650,5 +656,5 @@
     "write_action": "not attempted: no authorized identity",
     "production_changed": false
   },
-  "safety": "No archival, verification-status promotion, direct SQL bypass, or publication permitted without audited authenticated approval. 2027 application deadline must be programme-specific; never use funder umbrella 2027-02-28 as every course deadline. Do not treat a scholarship framework for ITP training as an academic degree scholarship. Programme routes overlap published umbrella and must pass semantic duplicate review."
+  "safety": "No archival, verification-status promotion, direct SQL bypass, or publication permitted without audited authenticated approval. 2027 application deadline must be programme-specific; never use funder umbrella 2027-02-28 as every course deadline. Do not treat a scholarship framework for ITP training as an academic degree scholarship. Programme routes overlap published umbrella and must pass semantic duplicate review. Some bachelor pages have programme duration anomalies; verify against host institution before publication."
 }
