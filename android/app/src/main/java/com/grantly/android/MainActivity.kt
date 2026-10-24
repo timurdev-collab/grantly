@@ -112,7 +112,8 @@ private fun EduTApp() {
                                     requestedDegree = degree
                                     tab = Tab.Discover
                                 },
-                                onAdvisors = { showingAdvisors = true }
+                                onAdvisors = { showingAdvisors = true },
+                                onScholarshipSelect = { selectedScholarship = it }
                             )
                             tab == Tab.Discover -> ScholarshipDiscoverContent(
                                 initialDegree = requestedDegree,
@@ -130,7 +131,11 @@ private fun EduTApp() {
 }
 
 @Composable
-private fun HomeContent(onDiscover: (String) -> Unit, onAdvisors: () -> Unit) {
+private fun HomeContent(
+    onDiscover: (String) -> Unit,
+    onAdvisors: () -> Unit,
+    onScholarshipSelect: (Scholarship) -> Unit
+) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(32.dp).background(Forest, RoundedCornerShape(50)), contentAlignment = Alignment.Center) {
             Icon(Icons.Outlined.School, contentDescription = null, tint = Ivory, modifier = Modifier.size(19.dp))
@@ -184,7 +189,7 @@ private fun HomeContent(onDiscover: (String) -> Unit, onAdvisors: () -> Unit) {
     Spacer(Modifier.height(25.dp))
     Text("Picked for you", fontFamily = FontFamily.Serif, fontSize = 28.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
-    Text("Recommendations will appear after your account is connected.", fontSize = 13.sp, color = Ink.copy(alpha = .68f))
+    PersonalizedMatchesContent(onSelect = onScholarshipSelect)
     Spacer(Modifier.height(20.dp))
     Text("Closing soon", fontFamily = FontFamily.Serif, fontSize = 26.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
