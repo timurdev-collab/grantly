@@ -1,0 +1,461 @@
+{
+  "report_type": "official-programme-source-reconciliation-proposals-only",
+  "checked_on": "2026-10-24",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "branch": "catalog-qa/2026-10-23-official-sources",
+  "staging_before": {
+    "read_at_utc": "2026-10-24T05:24:35.1328Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed": 0,
+    "source_candidates": 636,
+    "admin_logs": 8
+  },
+  "auth_readback": {
+    "uid": null,
+    "is_admin": false
+  },
+  "publication_status": "blocked: authenticated admin required; no database writes attempted",
+  "published_record_investigations": [
+    {
+      "id": "d7a9d79d-3383-4b37-956c-3ec06e002340",
+      "title": "TU Munich Artificial Intelligence Masters Award",
+      "current_funding_claim": "No tuition + EUR 900/month stipend",
+      "identity": "Generic invented-seeming award name; no programme-specific official source supplied",
+      "findings": [
+        {
+          "field": "tuition_coverage",
+          "proposal": "Do not claim universal tuition-free study: non-EU/EEA students newly enrolling in TUM Bachelor's/Master's programmes generally pay tuition unless an exception, exemption or approved waiver applies; doctoral study is generally exempt.",
+          "source": "https://www.tum.de/en/studies/fees/tuition"
+        },
+        {
+          "field": "stipend",
+          "proposal": "No evidence for a guaranteed EUR 900 monthly stipend for this named generic award. Remove claim only after authorized identity reconciliation.",
+          "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+        },
+        {
+          "field": "official_url",
+          "proposal": "Replace university homepage with an independently identified, named award page; otherwise flag for canonicalisation or authorized archive review.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "Unconfirmed; do not infer scholarship dates from admission dates.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        }
+      ],
+      "action": "hold_for_programme_identity_reconciliation; no automated archival"
+    },
+    {
+      "id": "0a43f5c8-a5ba-47a1-a0ef-84703aa8bb0e",
+      "title": "TU Munich Computer Science Phd Award",
+      "current_funding_claim": "No tuition + EUR 900/month stipend",
+      "identity": "Generic invented-seeming award name; no programme-specific official source supplied",
+      "findings": [
+        {
+          "field": "tuition_coverage",
+          "proposal": "Do not claim universal tuition-free study: non-EU/EEA students newly enrolling in TUM Bachelor's/Master's programmes generally pay tuition unless an exception, exemption or approved waiver applies; doctoral study is generally exempt.",
+          "source": "https://www.tum.de/en/studies/fees/tuition"
+        },
+        {
+          "field": "stipend",
+          "proposal": "No evidence for a guaranteed EUR 900 monthly stipend for this named generic award. Remove claim only after authorized identity reconciliation.",
+          "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+        },
+        {
+          "field": "official_url",
+          "proposal": "Replace university homepage with an independently identified, named award page; otherwise flag for canonicalisation or authorized archive review.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "Unconfirmed; do not infer scholarship dates from admission dates.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        }
+      ],
+      "action": "hold_for_programme_identity_reconciliation; no automated archival"
+    },
+    {
+      "id": "0f253995-c846-4205-910b-ea22c9c215dc",
+      "title": "TU Munich Masters Excellence Scholarship",
+      "current_funding_claim": "No tuition + EUR 900/month stipend",
+      "identity": "Generic invented-seeming award name; no programme-specific official source supplied",
+      "findings": [
+        {
+          "field": "tuition_coverage",
+          "proposal": "Do not claim universal tuition-free study: non-EU/EEA students newly enrolling in TUM Bachelor's/Master's programmes generally pay tuition unless an exception, exemption or approved waiver applies; doctoral study is generally exempt.",
+          "source": "https://www.tum.de/en/studies/fees/tuition"
+        },
+        {
+          "field": "stipend",
+          "proposal": "No evidence for a guaranteed EUR 900 monthly stipend for this named generic award. Remove claim only after authorized identity reconciliation.",
+          "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+        },
+        {
+          "field": "official_url",
+          "proposal": "Replace university homepage with an independently identified, named award page; otherwise flag for canonicalisation or authorized archive review.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "Unconfirmed; do not infer scholarship dates from admission dates.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        }
+      ],
+      "action": "hold_for_programme_identity_reconciliation; no automated archival"
+    },
+    {
+      "id": "5010fb18-3495-443f-a7a2-65a1e7d33161",
+      "title": "TU Munich Masters International Scholarship",
+      "current_funding_claim": "No tuition + EUR 900/month stipend",
+      "identity": "Generic invented-seeming award name; no programme-specific official source supplied",
+      "findings": [
+        {
+          "field": "tuition_coverage",
+          "proposal": "Do not claim universal tuition-free study: non-EU/EEA students newly enrolling in TUM Bachelor's/Master's programmes generally pay tuition unless an exception, exemption or approved waiver applies; doctoral study is generally exempt.",
+          "source": "https://www.tum.de/en/studies/fees/tuition"
+        },
+        {
+          "field": "stipend",
+          "proposal": "No evidence for a guaranteed EUR 900 monthly stipend for this named generic award. Remove claim only after authorized identity reconciliation.",
+          "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+        },
+        {
+          "field": "official_url",
+          "proposal": "Replace university homepage with an independently identified, named award page; otherwise flag for canonicalisation or authorized archive review.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "Unconfirmed; do not infer scholarship dates from admission dates.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        }
+      ],
+      "action": "hold_for_programme_identity_reconciliation; no automated archival"
+    },
+    {
+      "id": "2e275173-a72a-47b4-ad77-d81ba7df9ba9",
+      "title": "TU Munich Phd Excellence Scholarship",
+      "current_funding_claim": "No tuition + EUR 900/month stipend",
+      "identity": "Generic invented-seeming award name; no programme-specific official source supplied",
+      "findings": [
+        {
+          "field": "tuition_coverage",
+          "proposal": "Do not claim universal tuition-free study: non-EU/EEA students newly enrolling in TUM Bachelor's/Master's programmes generally pay tuition unless an exception, exemption or approved waiver applies; doctoral study is generally exempt.",
+          "source": "https://www.tum.de/en/studies/fees/tuition"
+        },
+        {
+          "field": "stipend",
+          "proposal": "No evidence for a guaranteed EUR 900 monthly stipend for this named generic award. Remove claim only after authorized identity reconciliation.",
+          "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+        },
+        {
+          "field": "official_url",
+          "proposal": "Replace university homepage with an independently identified, named award page; otherwise flag for canonicalisation or authorized archive review.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "Unconfirmed; do not infer scholarship dates from admission dates.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        }
+      ],
+      "action": "hold_for_programme_identity_reconciliation; no automated archival"
+    },
+    {
+      "id": "b3a00353-c4f2-48b7-bea1-544840301041",
+      "title": "TU Munich Phd International Scholarship",
+      "current_funding_claim": "No tuition + EUR 900/month stipend",
+      "identity": "Generic invented-seeming award name; no programme-specific official source supplied",
+      "findings": [
+        {
+          "field": "tuition_coverage",
+          "proposal": "Do not claim universal tuition-free study: non-EU/EEA students newly enrolling in TUM Bachelor's/Master's programmes generally pay tuition unless an exception, exemption or approved waiver applies; doctoral study is generally exempt.",
+          "source": "https://www.tum.de/en/studies/fees/tuition"
+        },
+        {
+          "field": "stipend",
+          "proposal": "No evidence for a guaranteed EUR 900 monthly stipend for this named generic award. Remove claim only after authorized identity reconciliation.",
+          "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+        },
+        {
+          "field": "official_url",
+          "proposal": "Replace university homepage with an independently identified, named award page; otherwise flag for canonicalisation or authorized archive review.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "Unconfirmed; do not infer scholarship dates from admission dates.",
+          "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers"
+        }
+      ],
+      "action": "hold_for_programme_identity_reconciliation; no automated archival"
+    },
+    {
+      "id": "5039e1f8-3dd7-4897-9ae1-2a80b9cc6b7d",
+      "title": "Technical University of Munich International Scholarship",
+      "verification_status": "curated",
+      "findings": [
+        {
+          "field": "tuition_coverage",
+          "current": "EUR 7,560 per year",
+          "proposal": "Official named TUM Scholarship for International Students provides a one-time EUR 500–1,800 per semester, not EUR 7,560 per year.",
+          "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum"
+        },
+        {
+          "field": "degree_levels",
+          "current": [
+            "Master"
+          ],
+          "proposal": [
+            "Bachelor",
+            "Master"
+          ],
+          "note": "Bachelor from third semester; Master from second semester (or first if TUM Bachelor's).",
+          "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum"
+        },
+        {
+          "field": "deadline",
+          "proposal": "2026-10-15",
+          "note": "Winter 2026/27 deadline is historical and closed; summer 2027 application deadline unconfirmed.",
+          "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Nationality-dependent BAföG ineligibility plus enrollment and financial-need criteria; do not encode ALL as unrestricted eligibility.",
+          "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum"
+        }
+      ],
+      "action": "reconcile against six generic TUM records; correct only with authenticated provenance"
+    },
+    {
+      "id": "9f107a19-c331-4855-9a52-03193d86f2f3",
+      "title": "Konrad Adenauer Foundation Scholarship",
+      "findings": [
+        {
+          "field": "tuition_coverage",
+          "proposal": "Up to EUR 992/month Bachelor's/Master's, up to EUR 1,400/month doctoral; tuition reimbursement exceptional up to EUR 750/semester, not universal full tuition.",
+          "source": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Primarily international non-EU applicants meeting in-country/participating-office route; not ALL unrestricted.",
+          "source": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+        },
+        {
+          "field": "language",
+          "proposal": "German B2 required even for English-taught degrees; no universal IELTS/TOEFL/SAT minimum documented.",
+          "source": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Domestic selection July 15 annually at 12:00 CET per official page; overseas office deadlines differ. Next domestic July 15 2027 subject to programme continuing.",
+          "source": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Bachelor from 2nd semester, qualifying 4-semester Master's, and PhD; not medicine/dentistry state exam or short programmes.",
+          "source": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+        }
+      ],
+      "action": "likely duplicate aliases of one international scholarship; confirm canonical identity before authorized archive"
+    },
+    {
+      "id": "50a8e60a-b5e2-43e3-acf0-483f00e092b8",
+      "title": "Konrad-Adenauer-Stiftung Scholarship",
+      "findings": [
+        {
+          "field": "tuition_coverage",
+          "proposal": "Up to EUR 992/month Bachelor's/Master's, up to EUR 1,400/month doctoral; tuition reimbursement exceptional up to EUR 750/semester, not universal full tuition.",
+          "source": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Primarily international non-EU applicants meeting in-country/participating-office route; not ALL unrestricted.",
+          "source": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+        },
+        {
+          "field": "language",
+          "proposal": "German B2 required even for English-taught degrees; no universal IELTS/TOEFL/SAT minimum documented.",
+          "source": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Domestic selection July 15 annually at 12:00 CET per official page; overseas office deadlines differ. Next domestic July 15 2027 subject to programme continuing.",
+          "source": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Bachelor from 2nd semester, qualifying 4-semester Master's, and PhD; not medicine/dentistry state exam or short programmes.",
+          "source": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+        }
+      ],
+      "action": "likely duplicate aliases of one international scholarship; confirm canonical identity before authorized archive"
+    },
+    {
+      "id": "4ddaf3a6-9ec3-4fd8-a6a3-9ff62fed560d",
+      "title": "Kofi Annan Fellowship",
+      "findings": [
+        {
+          "field": "official_url",
+          "proposal": "Current record points only to ESMT homepage. Official current programme-specific call and 2027 availability were not established; third-party scholarship directory is not sufficient.",
+          "source": "https://esmt.berlin/mba-programs/full-time-mba/tuition-financing/scholarships"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Current ALL unrestricted is unsupported; do not assert country list without official current call.",
+          "source": "https://esmt.berlin/mba-programs/full-time-mba/tuition-financing/scholarships"
+        }
+      ],
+      "action": "hold; no discontinuation inference from absent official listing"
+    }
+  ],
+  "private_draft_review": [
+    {
+      "id": "26526a80-4499-49aa-bc11-5c3de935c428",
+      "name": "ESMT Berlin Global Online MBA Women in Leadership Scholarship",
+      "source": "https://esmt.berlin/degrees/study-esmt/mba-programs/global-online-mba/global-online-mba-scholarships",
+      "funding": "EUR 4,800 tuition reduction",
+      "cycle": "March 2027",
+      "source_registry_present": true,
+      "link_status": "exact",
+      "last_successful_check_at": null,
+      "provenance_count": 1,
+      "reviewer_attributed_count": 0,
+      "action": "Run authenticated official-source audit; approve reviewer-attributed provenance; assess readiness; publish only if gates pass. Do not assign Oct 31 early application award deadline as scholarship deadline."
+    }
+  ],
+  "new_named_programme_leads": [
+    {
+      "name": "TUM Deutschlandstipendium",
+      "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/deutschlandstipendium/application",
+      "funding": "EUR 300/month",
+      "degree": [
+        "Bachelor",
+        "Master"
+      ],
+      "deadline": null,
+      "cycle": "2027/28 application summer 2027; exact dates to be announced spring 2027",
+      "eligibility": "Enrolled or incoming TUM undergraduate and graduate applicants; merit, engagement and circumstances considered",
+      "status": "private_draft_candidate"
+    },
+    {
+      "name": "TUM First-Semester Financial-Need Tuition Waiver Scholarship",
+      "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers",
+      "funding": "Waiver of applicable non-EU/EEA international tuition for standard programme duration; no cash payout",
+      "degree": [
+        "Bachelor",
+        "Master"
+      ],
+      "deadline": null,
+      "cycle": "Winter Bachelor's May 15–July 15; winter Master's Jan 1–May 31; summer Master's Nov 1–Jan 15",
+      "eligibility": "New non-EU/EEA fee-liable TUM students with documented financial hardship; limited awards",
+      "status": "private_draft_candidate",
+      "note": "Summer 2027 Master's period Nov 1 2026 to Jan 15 2027; scholarship not cash grant"
+    },
+    {
+      "name": "TUM High-Achievement Tuition Waiver Scholarship",
+      "source": "https://www.tum.de/en/studies/fees/tuition/scholarships-and-waivers",
+      "funding": "Two-semester waiver of applicable non-EU/EEA international tuition, renewable by reapplication",
+      "degree": [
+        "Bachelor",
+        "Master"
+      ],
+      "deadline": null,
+      "cycle": "Winter May 31–June 30; summer Nov 30–Dec 31",
+      "eligibility": "High-performing fee-liable TUM students from 3rd semester onward",
+      "status": "private_draft_candidate",
+      "note": "Summer 2027 application Nov 30–Dec 31 2026"
+    },
+    {
+      "name": "Linde / MDSI Master's Scholarship",
+      "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/linde-master-scholarship",
+      "funding": "EUR 1,000/month up to 12 months",
+      "degree": [
+        "Master"
+      ],
+      "deadline": "2026-07-05",
+      "cycle": "2026 award closed; next call unannounced",
+      "eligibility": "Enrolled TUM Data Engineering and Analytics or Mathematics in Data Science Master's students meeting performance and commitment criteria",
+      "status": "private_draft_candidate_historical_cycle"
+    },
+    {
+      "name": "Oskar Karl Forster Scholarship for Books and Learning Materials",
+      "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/oskar-karl-forster-scholarship-for-books-and-learning-materials",
+      "funding": "EUR 100–500 grant for books/materials only",
+      "degree": [
+        "Bachelor",
+        "Master"
+      ],
+      "deadline": "2026-10-15",
+      "cycle": "Winter 2026/27 closed; next call unannounced",
+      "eligibility": "TUM students with at least 2 completed semesters, merit and need, with BAföG-related eligibility conditions",
+      "status": "private_draft_candidate_historical_cycle",
+      "note": "Not a tuition scholarship"
+    },
+    {
+      "name": "Loschge Scholarship",
+      "source": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/loschge-scholarship/",
+      "funding": "Up to EUR 550/month",
+      "degree": [
+        "Bachelor",
+        "Master"
+      ],
+      "deadline": null,
+      "cycle": "Current institutional programme; contact Institute for Energy Systems for application",
+      "eligibility": "TUM Engineering and Design students in thermal engineering",
+      "status": "private_draft_candidate"
+    },
+    {
+      "name": "ESMT Global Online MBA Responsible Impact Scholarship",
+      "source": "https://esmt.berlin/degrees/study-esmt/mba-programs/global-online-mba/global-online-mba-scholarships",
+      "funding": "EUR 4,800 tuition reduction",
+      "degree": [
+        "MBA"
+      ],
+      "deadline": null,
+      "cycle": "March 1 2027 intake; no separate scholarship deadline stated",
+      "eligibility": "Applicants with documented social/environmental impact responsibility; scholarship essay",
+      "status": "private_draft_candidate",
+      "note": "Separate from ESMT Women in Leadership draft"
+    },
+    {
+      "name": "BMW Group Change Maker Fellowship at ESMT",
+      "source": "https://esmt.berlin/degrees/bmw-change-maker-fellowship",
+      "funding": "2026 cycle: MBA EUR 45,000 (90% tuition); MSc EUR 17,500 (~50%); Global Online MBA full tuition; programme-specific awards",
+      "degree": [
+        "MBA",
+        "Master"
+      ],
+      "deadline": null,
+      "cycle": "2026 awards linked to January 2027 full-time MBA, September 2026 MSc, October 2026 online MBA; no general 2027 renewal confirmed",
+      "eligibility": "Technical/mathematical background plus citizenship/permanent residency in Germany, India, Portugal, Romania, Brazil, China, USA, South Africa, or refugee status Germany; age restrictions for campus MBA/MSc",
+      "status": "private_draft_candidate_cycle_check",
+      "note": "One umbrella fellowship with degree-specific award tiers, not eight separate programmes"
+    }
+  ],
+  "duplicate_screening": "Targeted title/URL SQL search against scholarships and source candidates: existing ESMT Women in Leadership draft; existing generic TUM International Scholarship; six generic TU Munich awards; two KAS published aliases; umbrella TUM scholarships source candidate. Exact title/URL nonmatch does not prove semantic uniqueness.",
+  "source_conflicts": [
+    {
+      "issue": "TUM international grant amount",
+      "detail": "Programme-specific current page EUR 500–1,800 per semester vs general scholarships index EUR 500–1,500. Prefer programme-specific page; record discrepancy.",
+      "sources": [
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+      ]
+    },
+    {
+      "issue": "TUM tuition",
+      "detail": "Tuition now applies to many new non-EU/EEA Bachelor's/Master's students; 2027/28 rates increasing; never describe all TUM study as tuition-free.",
+      "sources": [
+        "https://www.tum.de/en/studies/fees/tuition"
+      ]
+    }
+  ],
+  "policy": "No production changes; no direct SQL writes, no fabricated cycles, no automatic verified flag, no semantic-duplicate publishing, no archive without authenticated audited workflow. IELTS/TOEFL/SAT only if explicitly stated in programme-specific evidence; none generalized here."
+}
