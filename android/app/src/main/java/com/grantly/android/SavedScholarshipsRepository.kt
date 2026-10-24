@@ -15,7 +15,8 @@ internal data class SavedScholarshipSummary(
     val provider: String,
     val country: String,
     val status: String,
-    val notes: String?
+    val notes: String?,
+    val personalDeadline: String?
 )
 
 internal object SavedScholarshipsRepository {
@@ -26,7 +27,7 @@ internal object SavedScholarshipsRepository {
         if (!baseUrl.startsWith("https://") || key.isBlank()) {
             throw IOException("Application tracker is not configured.")
         }
-        val select = "scholarship_id,application_status,notes,scholarships!saved_scholarships_scholarship_id_fkey(title,provider,country)"
+        val select = "scholarship_id,application_status,notes,personal_deadline,scholarships!saved_scholarships_scholarship_id_fkey(title,provider,country)"
         val query = "select=" + URLEncoder.encode(select, "UTF-8") +
             "&user_id=eq." + URLEncoder.encode(session.userId, "UTF-8") +
             "&order=updated_at.desc&limit=100"
@@ -60,7 +61,8 @@ internal object SavedScholarshipsRepository {
                             provider = scholarship?.optString("provider").orEmpty(),
                             country = scholarship?.optString("country").orEmpty(),
                             status = row.optString("application_status").ifBlank { "Planning" },
-                            notes = row.optString("notes").takeUnless { it.isBlank() || it == "null" }
+                            notes = row.optString("notes").takeUnless { it.isBlank() || it == "null" },
+                            personalDeadline = row.optString("personal_deadline").takeUnless { it.isBlank() || it == "null" }
                         )
                     )
                 }
@@ -168,6 +170,20 @@ internal object SavedScholarshipsRepository {
             .put("updated_at", java.time.Instant.now().toString())
         trackerWrite("/rest/v1/saved_scholarships?$filter", "PATCH", payload)
     }
+
+    /** Optional user-set target date, separate from the provider's official deadline. */
+    suspend fun updatePersonalDeadline(scholarshipId: String, date: java.time.LocalDate?) =
+        withContext(Dispatchers.IO) {
+            val id = try { java.util.UUID.fromString(scholarshipId).toString() }
+                catch (_: IllegalArgumentException) { throw IOException("Invalid scholarship identifier.") }
+            val session = AuthRepository.activeSession()
+            val filter = "user_id=eq." + URLEncoder.encode(session.userId, "UTF-8") +
+                "&scholarship_id=eq." + URLEncoder.encode(id, "UTF-8")
+            val payload = org.json.JSONObject()
+                .put("personal_deadline", date?.toString() ?: org.json.JSONObject.NULL)
+                .put("updated_at", java.time.Instant.now().toString())
+            trackerWrite("/rest/v1/saved_scholarships?$filter", "PATCH", payload)
+        }
 
     private suspend fun trackerWrite(path: String, method: String, payload: org.json.JSONObject) {
         val session = AuthRepository.activeSession()
