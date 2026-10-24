@@ -32,7 +32,7 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - On-device verification of password recovery deep links and encrypted session restoration.
 - Student/advisor/admin role-specific destinations and community profile editing (academic profile read/write and read-only approved advisor discovery are now in Android).
 - Android deadline notifications and reminder-preference UI. Application task due-date editing and saved-scholarship personal target date editing are implemented but not yet account/device-tested. Upload, deletion and rollback behavior still need authenticated backend testing.
-- Saved-scholarship pagination beyond 100 items.
+- Saved-scholarship tracker now pages through records 20 at a time using a stable updated-at/ID sort and an explicit Load more control; authenticated paging beyond the first page is not yet device-tested.
 - Messaging realtime subscriptions/push notifications (foreground polling only), remaining community interactions (video streaming beyond the 200 MiB temporary-download preview, video/HEIC uploads, stories and full media-post management), administrator moderation queues/tools and full role-specific navigation. Advisor messaging, user/message reporting, blocking, booking and personalized matching now exist in source but remain unverified with real accounts.
 - iOS-equivalent styling, accessibility, localization and navigation across all screens.
 - Save/remove, task-checklist, recommendations, advisor booking policy acceptance, preferred-time submission, message reports, Community post reports, Community photo/video viewing, Community photo publishing, Community likes and text-post publishing, block/unblock actions, live API testing with a real account and physical-device end-to-end testing.

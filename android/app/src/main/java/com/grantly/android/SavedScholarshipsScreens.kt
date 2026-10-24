@@ -39,6 +39,9 @@ internal fun SavedScholarshipsContent() {
 
     var items by remember(session.userId) { mutableStateOf<List<SavedScholarshipSummary>>(emptyList()) }
     var loading by remember(session.userId) { mutableStateOf(true) }
+    var loadingMore by remember(session.userId) { mutableStateOf(false) }
+    var hasMore by remember(session.userId) { mutableStateOf(false) }
+    var nextOffset by remember(session.userId) { mutableIntStateOf(0) }
     var error by remember(session.userId) { mutableStateOf<String?>(null) }
     var retry by remember(session.userId) { mutableIntStateOf(0) }
     var editingStatus by remember(session.userId) { mutableStateOf<SavedScholarshipSummary?>(null) }
@@ -54,7 +57,10 @@ internal fun SavedScholarshipsContent() {
         loading = true
         error = null
         try {
-            items = SavedScholarshipsRepository.load()
+            val page = SavedScholarshipsRepository.loadPage()
+            items = page.items
+            hasMore = page.hasMore
+            nextOffset = page.items.size
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (failure: Exception) {
@@ -64,7 +70,7 @@ internal fun SavedScholarshipsContent() {
         }
     }
 
-    OutlinedButton(onClick = { retry++ }, enabled = !loading && !mutationBusy) { Text("Refresh") }
+    OutlinedButton(onClick = { retry++ }, enabled = !loading && !loadingMore && !mutationBusy) { Text("Refresh") }
     if (mutationError != null) {
         Spacer(Modifier.height(8.dp))
         Text(mutationError ?: "", color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
@@ -126,8 +132,32 @@ internal fun SavedScholarshipsContent() {
                     }
                 }
             }
+            if (hasMore) {
+                OutlinedButton(
+                    enabled = !loading && !loadingMore && !mutationBusy,
+                    onClick = {
+                        loadingMore = true
+                        mutationError = null
+                        scope.launch {
+                            try {
+                                val page = SavedScholarshipsRepository.loadPage(offset = nextOffset)
+                                val known = items.map { it.scholarshipId }.toSet()
+                                items = items + page.items.filterNot { it.scholarshipId in known }
+                                nextOffset += page.items.size
+                                hasMore = page.hasMore
+                            } catch (cancelled: CancellationException) {
+                                throw cancelled
+                            } catch (failure: Exception) {
+                                mutationError = failure.message ?: "Unable to load more applications."
+                            } finally {
+                                loadingMore = false
+                            }
+                        }
+                    }
+                ) { Text(if (loadingMore) "Loading more…" else "Load more applications") }
+            }
             Text(
-                "Preview: showing up to 100 saved items. Private document uploads and deletion require live verification.",
+                "Preview: applications load in pages of 20. Private document uploads and deletion require live verification.",
                 color = trackerInk.copy(alpha = .65f),
                 fontSize = 12.sp
             )

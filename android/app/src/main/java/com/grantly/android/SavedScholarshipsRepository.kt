@@ -19,8 +19,11 @@ internal data class SavedScholarshipSummary(
     val personalDeadline: String?
 )
 
+internal data class SavedScholarshipsPage(val items: List<SavedScholarshipSummary>, val hasMore: Boolean)
+
 internal object SavedScholarshipsRepository {
-    suspend fun load(): List<SavedScholarshipSummary> = withContext(Dispatchers.IO) {
+    suspend fun loadPage(limit: Int = 20, offset: Int = 0): SavedScholarshipsPage = withContext(Dispatchers.IO) {
+        require(limit in 1..50 && offset in 0..10_000) { "Invalid applications page." }
         val session = AuthRepository.activeSession()
         val baseUrl = BuildConfig.SUPABASE_URL.trimEnd('/')
         val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
@@ -30,7 +33,7 @@ internal object SavedScholarshipsRepository {
         val select = "scholarship_id,application_status,notes,personal_deadline,scholarships!saved_scholarships_scholarship_id_fkey(title,provider,country)"
         val query = "select=" + URLEncoder.encode(select, "UTF-8") +
             "&user_id=eq." + URLEncoder.encode(session.userId, "UTF-8") +
-            "&order=updated_at.desc&limit=100"
+            "&order=updated_at.desc,scholarship_id.asc&limit=${limit + 1}&offset=$offset"
         val connection = URL("$baseUrl/rest/v1/saved_scholarships?$query")
             .openConnection() as HttpURLConnection
         try {
@@ -48,8 +51,8 @@ internal object SavedScholarshipsRepository {
                 )
             }
             val rows = JSONArray(connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() })
-            buildList {
-                for (i in 0 until rows.length()) {
+            val items = buildList {
+                for (i in 0 until minOf(rows.length(), limit)) {
                     val row = rows.optJSONObject(i) ?: continue
                     val scholarship = row.optJSONObject("scholarships")
                     val id = row.optString("scholarship_id")
@@ -67,6 +70,7 @@ internal object SavedScholarshipsRepository {
                     )
                 }
             }
+            SavedScholarshipsPage(items, rows.length() > limit)
         } finally {
             connection.disconnect()
         }
