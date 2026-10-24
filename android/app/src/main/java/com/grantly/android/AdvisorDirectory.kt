@@ -105,6 +105,7 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
     var query by remember { mutableStateOf("") }
     var selected by remember(userId) { mutableStateOf<AdvisorDirectoryItem?>(null) }
     var showingRequests by remember(userId) { mutableStateOf(false) }
+    var showingBooking by remember(userId) { mutableStateOf(false) }
     val forest = Color(0xFF123E30)
 
     LaunchedEffect(userId, refresh) {
@@ -126,14 +127,15 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
     TextButton(onClick = {
         when {
             showingRequests -> showingRequests = false
+            showingBooking -> showingBooking = false
             selected != null -> selected = null
             else -> onBack()
         }
     }) {
-        Text(if (selected == null && !showingRequests) "← Home" else "← All advisors")
+        Text(if (selected == null && !showingRequests) "← Home" else if (showingBooking) "← Advisor profile" else "← All advisors")
     }
     Spacer(Modifier.height(8.dp))
-    Text(if (showingRequests) "My consultations" else if (selected == null) "Find an advisor" else selected!!.name,
+    Text(if (showingRequests) "My consultations" else if (showingBooking) "Advisor booking" else if (selected == null) "Find an advisor" else selected!!.name,
         style = MaterialTheme.typography.headlineMedium, color = forest)
     Spacer(Modifier.height(8.dp))
     Text("Verified educational advisors · directory preview",
@@ -159,6 +161,13 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
     }
     if (selected != null) {
         val advisor = selected!!
+        if (showingBooking) {
+            AdvisorBookingContent(advisor, onViewRequests = {
+                showingBooking = false
+                showingRequests = true
+            })
+            return
+        }
         AdvisorLine("Title", advisor.title)
         AdvisorLine("Organization", advisor.organization)
         AdvisorLine("About", advisor.bio.ifBlank { advisor.summary })
@@ -167,7 +176,8 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
         AdvisorLine("Languages", advisor.languages.joinToString(", "))
         Spacer(Modifier.height(18.dp))
         AdvisorServicesContent(advisor.id)
-        Text("Consultation booking and messaging are not available in this Android preview.",
+        Button(onClick = { showingBooking = true }) { Text("Book a consultation") }
+        Text("Booking requests require separate payment confirmation. Messaging is not yet available on Android.",
             style = MaterialTheme.typography.bodySmall)
         return
     }
