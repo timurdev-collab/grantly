@@ -147,7 +147,10 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         } else {
             val ids = posts.map { it.id }
             try {
-                val mine = CommunityLikesRepository.loadMine(ids)
+                // Load in bounded batches as the feed grows beyond its first page.
+                val mine = ids.chunked(50).flatMap { batch ->
+                    CommunityLikesRepository.loadMine(batch)
+                }.toSet()
                 likedIds = (likedIds - ids.toSet()) + mine
                 knownLikeIds = knownLikeIds + ids
                 likeError = null
