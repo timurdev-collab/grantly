@@ -18,7 +18,7 @@ import java.net.URL
 import java.util.Locale
 import java.util.UUID
 
-/** Read-only advisor services and consultation history. No booking or payment writes. */
+/** Read-only advisor services and consultation history. Booking writes are isolated in AdvisorBookingRepository. */
 internal data class AdvisorServiceItem(
     val id: String,
     val title: String,
@@ -194,7 +194,7 @@ internal fun AdvisorServicesContent(advisorId: String) {
     }
     Spacer(Modifier.height(6.dp))
     Text(
-        "Prices are informational. Booking, payment and policy acceptance are not available in this Android preview.",
+        "Prices are informational until confirmed. To request a service, use Book a consultation and accept the versioned policies first. Payment is arranged separately; no in-app payment is available.",
         style = MaterialTheme.typography.bodySmall
     )
 }
