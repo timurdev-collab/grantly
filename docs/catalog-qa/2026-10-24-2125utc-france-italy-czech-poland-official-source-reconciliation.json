@@ -681,7 +681,8 @@
     "database_edits": 0,
     "publications": 0,
     "drafts_created": 0,
-    "archived": 0
+    "archived": 0,
+    "private_drafts_assessed": 2
   },
   "safety": [
     "Do not convert generic university tuition policy into a scholarship.",
@@ -692,5 +693,46 @@
     "Do not archive published duplicate/discontinued records without authenticated audited workflow.",
     "No direct staging or production SQL mutations; authenticated admin session is unavailable (auth.uid null, is_admin false).",
     "Reviewer-attributed provenance is zero in staging; do not backfill without authorized evidence review."
+  ],
+  "private_draft_assessments": [
+    {
+      "id": "eb5b4c90-3a30-4f56-9e4b-4f52a3c07867",
+      "title": "Studiare Architettura a Mantova Scholarship 2026/27",
+      "status": "draft",
+      "verified_official_source": "https://www.mantova.polimi.it/en/il-polo/news/news-detail/bando-borse-di-studio-studiare-architettura-a-mantova-1",
+      "official_evidence": {
+        "cycle": "2026/27",
+        "application_window": "14 Sep–13 Nov 2026 12:00 CET",
+        "total_awards": 50,
+        "award_amount_eur": 1200,
+        "international_awards": 5,
+        "international_eligible_degree": "Master's Degree in Architectural Design and History",
+        "domestic_awards": "25 Italian Bachelor's + 20 Italian Master's"
+      },
+      "staging_evidence": {
+        "deadline": "2026-11-13",
+        "funding": "€1,200 scholarship award",
+        "last_successful_check_at": null,
+        "audit_failure_count": 0,
+        "field_provenance_count": 0,
+        "reviewer_attributed_provenance": 0
+      },
+      "recommendation": "Keep private pending successful official-source audit, authenticated field-level reviewer provenance, semantic duplicate check and readiness gate. The official programme has 50 awards but only five are for international Master's students. Do not imply full tuition coverage or general international Bachelor's eligibility."
+    },
+    {
+      "id": "deaf81c4-5db4-429d-982f-15a0a624f18e",
+      "title": "HEC Paris Sanofi Life Sciences MBA Scholarship",
+      "status": "draft",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "staging_evidence": {
+        "deadline": null,
+        "application_cycle": "Annual award announced June 2026; follows HEC MBA admissions cycles",
+        "last_successful_check_at": null,
+        "audit_failure_count": 0,
+        "field_provenance_count": 6,
+        "reviewer_attributed_provenance": 0
+      },
+      "recommendation": "Keep private; verify programme-specific Sanofi funding/eligibility on official source and current cycle; do not invent standalone deadline or mark source-audited without a successful audit."
+    }
   ]
 }
