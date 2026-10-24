@@ -141,6 +141,10 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
             if (loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             if (error != null) {
                 Text(error!!, color = MaterialTheme.colorScheme.error)
+                OutlinedButton(
+                    onClick = { refresh++ },
+                    enabled = !loading
+                ) { Text("Retry failed page") }
             }
             if (!loading && posts.isEmpty() && error == null) {
                 Text("No visible community posts. Community profiles may be hidden by current release policies.")
@@ -173,10 +177,10 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
             if (posts.isNotEmpty()) {
                 Text("Showing ${posts.size} community posts", style = MaterialTheme.typography.labelSmall)
             }
-            if (hasMore) {
+            if (hasMore && nextOffset + 30 <= 10_000) {
                 OutlinedButton(
                     onClick = { nextOffset += 30 },
-                    enabled = !loading && nextOffset < 10_000
+                    enabled = !loading && error == null
                 ) { Text("Load more posts") }
             }
         }
