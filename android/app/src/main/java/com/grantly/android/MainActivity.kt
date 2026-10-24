@@ -215,7 +215,7 @@ private fun HomeContent(
     Column(Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(22.dp)).clickable(onClick = onCommunity).padding(20.dp)) {
         Text("Community", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
         Spacer(Modifier.height(7.dp))
-        Text("See community posts available to your account. Read-only Android preview.", fontSize = 13.sp, color = Ink)
+        Text("Read posts, like and comment. Posting and media are still in development.", fontSize = 13.sp, color = Ink)
         Spacer(Modifier.height(8.dp))
         Text("Explore community →", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     }
