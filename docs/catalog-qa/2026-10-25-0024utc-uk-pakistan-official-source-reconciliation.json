@@ -651,5 +651,25 @@
     "2027 Sheffield GEMS official page contains 2026/2027 year inconsistency; hold until reconciled.",
     "University of Nottingham official domain blocked by robots in this run, not a programme discontinuation.",
     "No database records were updated or published by this research package."
-  ]
+  ],
+  "staging_after": {
+    "read_at_utc": "2026-10-25T00:27:43.830132Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 636
+  },
+  "staging_mutations": {
+    "successful_edits": 0,
+    "publications": 0,
+    "new_drafts": 0,
+    "archived": 0,
+    "new_provenance": 0,
+    "production_changes": 0
+  },
+  "git_commit_initial": "d151b5cb906616b4d24ac1d9a32f3cb0573e8dc7"
 }
