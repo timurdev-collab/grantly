@@ -82,6 +82,7 @@ internal fun CommunityPostComposer(
 ) {
     var caption by remember { mutableStateOf("") }
     var selectedPhoto by remember { mutableStateOf<Uri?>(null) }
+    var selectedIsVideo by remember { mutableStateOf(false) }
     var storyMode by remember { mutableStateOf(false) }
     var submitting by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -92,6 +93,14 @@ internal fun CommunityPostComposer(
     val photoPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (!submitting && uri != null) {
             selectedPhoto = uri
+            selectedIsVideo = false
+            error = null
+        }
+    }
+    val videoPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (!submitting && uri != null) {
+            selectedPhoto = uri
+            selectedIsVideo = true
             error = null
         }
     }
@@ -106,8 +115,8 @@ internal fun CommunityPostComposer(
             FilterChip(selected = storyMode, onClick = { storyMode = true }, enabled = !submitting, label = { Text("Story") })
         }
         Text(
-            if (storyMode) "Stories require one JPEG/PNG photo (up to 6 MB) and expire after 24 hours. Existing Community profile permissions apply."
-            else "Text posts and single JPEG/PNG photos (up to 6 MB) are supported. Posting requires a visible Community profile; existing server permissions apply.",
+            if (storyMode) "Stories require one JPEG/PNG photo or MP4 video (up to 6 MiB) and expire after 24 hours. Existing Community profile permissions apply."
+            else "Text posts, JPEG/PNG photos and small MP4 videos (up to 6 MiB) are supported. Longer videos need resumable upload support. Posting requires a visible Community profile.",
             style = MaterialTheme.typography.bodySmall
         )
         OutlinedTextField(
@@ -124,10 +133,14 @@ internal fun CommunityPostComposer(
             onClick = { photoPicker.launch(arrayOf("image/jpeg", "image/png")) },
             enabled = !submitting
         ) { Text(if (selectedPhoto == null) "Attach photo" else "Change photo") }
+        OutlinedButton(
+            onClick = { videoPicker.launch(arrayOf("video/mp4")) },
+            enabled = !submitting
+        ) { Text(if (selectedPhoto != null && selectedIsVideo) "Change video" else "Attach MP4 video") }
         if (selectedPhoto != null) {
-            Text("One private photo selected (JPEG/PNG, max 6 MB).", style = MaterialTheme.typography.bodySmall)
+            Text(if (selectedIsVideo) "One private MP4 video selected (max 6 MiB)." else "One private JPEG/PNG photo selected (max 6 MiB).", style = MaterialTheme.typography.bodySmall)
             TextButton(onClick = { selectedPhoto = null }, enabled = !submitting) {
-                Text("Remove photo")
+                Text("Remove media")
             }
         }
         if (error != null) Text(error!!, color = MaterialTheme.colorScheme.error)
@@ -143,13 +156,13 @@ internal fun CommunityPostComposer(
                         if (photo == null) {
                             CommunityPostPublisher.publish(caption)
                         } else {
-                            CommunityPhotoPublisher.publish(context.applicationContext, photo, caption, if (storyMode) "story" else "post")
+                            CommunityPhotoPublisher.publish(context.applicationContext, photo, caption, if (storyMode) "story" else "post", isVideo = selectedIsVideo)
                         }
                         onPosted()
                     } catch (cancelled: CancellationException) {
                         throw cancelled
                     } catch (failure: Exception) {
-                        error = failure.message ?: "Unable to publish post."
+                        error = failure.message ?: "Unable to publish Community content."
                     } finally {
                         submitting = false
                     }
