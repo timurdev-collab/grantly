@@ -67,6 +67,30 @@ internal object NotificationInboxRepository {
         }
     }
 
+    /**
+     * Read at most ten unread IDs for the Home bell. This is a bounded,
+     * user-scoped RLS read, not a push registration or notification delivery.
+     */
+    suspend fun unreadBadgeCount(): Int = withContext(Dispatchers.IO) {
+        val (session, userId) = accountId()
+        val connection = open(
+            "/rest/v1/app_notifications?select=id&user_id=eq.$userId&read_at=is.null&limit=10",
+            session.accessToken
+        )
+        try {
+            connection.requestMethod = "GET"
+            val status = connection.responseCode
+            if (status !in 200..299) throw IOException(
+                if (status == 401 || status == 403) "Sign in again to view notifications."
+                else "Unable to load unread notifications (HTTP $status)."
+            )
+            JSONArray(connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() })
+                .length().coerceIn(0, 10)
+        } finally {
+            connection.disconnect()
+        }
+    }
+
     suspend fun loadPage(offset: Int = 0, limit: Int = 30): NotificationPage =
         withContext(Dispatchers.IO) {
             require(offset in 0..10_000 && limit in 1..50) { "Invalid notification page." }
