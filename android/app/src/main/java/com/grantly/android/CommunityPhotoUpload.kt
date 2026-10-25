@@ -25,7 +25,11 @@ import java.util.UUID
 internal object CommunityPhotoPublisher {
     private const val maxBytes = CommunityUploadRules.maxBytes
 
-    suspend fun publish(context: Context, uri: Uri, caption: String, kind: String = "post", isVideo: Boolean = false) = withContext(Dispatchers.IO) {
+    suspend fun publish(
+        context: Context, uri: Uri, caption: String, kind: String = "post",
+        isVideo: Boolean = false,
+        onVideoProgress: suspend (Long, Long) -> Unit = { _, _ -> }
+    ) = withContext(Dispatchers.IO) {
         require(kind in setOf("post", "story", "short")) { "Unsupported Community post type." }
         val text = caption.trim()
         require(text.length <= 2000) { "Use at most 2,000 characters." }
@@ -71,7 +75,7 @@ internal object CommunityPhotoPublisher {
         // Profile visibility was checked above; the existing server RLS still applies.
         if (isVideo) {
             CommunityResumableVideoPublisher.publish(
-                context, uri, text, kind, userId, session.accessToken, key, base
+                context, uri, text, kind, userId, session.accessToken, key, base, onVideoProgress
             )
             return@withContext
         }
