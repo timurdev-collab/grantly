@@ -2,6 +2,7 @@ package com.grantly.android
 
 import android.content.Context
 import android.net.Uri
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.currentCoroutineContext
@@ -38,10 +39,18 @@ internal object CommunityResumableVideoPublisher {
             val uploadLocation = createUpload(endpoint, fileSize, path, accessToken, key)
             try {
                 uploadChunks(uploadLocation, staged, fileSize, accessToken, key, onProgress)
-            } catch (failure: IOException) {
+            } catch (failure: Exception) {
                 // A failed final PATCH may still have stored the private object.
-                // Attempt to remove it before allowing a fresh upload; keep the original error.
-                deletePrivateMedia(base, path, accessToken, key)
+                // Also clean up when the upload coroutine is cancelled or an unexpected
+                // failure interrupts a chunk, rather than leaving a private orphan.
+                val cleaned = deletePrivateMedia(base, path, accessToken, key)
+                if (failure is CancellationException) throw failure
+                if (!cleaned) {
+                    throw IOException(
+                        "Video upload failed and the private video could not be cleaned up. Contact support before retrying.",
+                        failure
+                    )
+                }
                 throw failure
             }
             try {
@@ -88,7 +97,8 @@ internal object CommunityResumableVideoPublisher {
         }
     }
 
-    private fun stageVideo(context: Context, uri: Uri, staged: File): Long {
+    private suspend fun stageVideo(context: Context, uri: Uri, staged: File): Long {
+        currentCoroutineContext().ensureActive()
         var size = 0L
         val input = context.contentResolver.openInputStream(uri)
             ?: throw IOException("Unable to read the selected video.")
@@ -96,6 +106,9 @@ internal object CommunityResumableVideoPublisher {
             FileOutputStream(staged).use { destination ->
                 val buffer = ByteArray(64 * 1024)
                 while (true) {
+                    // Staging a 200 MiB provider stream can take time. Stop promptly
+                    // if the composer is dismissed instead of copying the whole file.
+                    currentCoroutineContext().ensureActive()
                     val read = source.read(buffer)
                     if (read < 0) break
                     size += read
