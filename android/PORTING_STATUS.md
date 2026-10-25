@@ -10,6 +10,7 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Server-side search, degree/country/field/funding filters, sorting and pagination.
 - Scholarship detail tabs for overview, eligibility, benefits and application information.
 - Profile-tab email/password sign-in, signup and sign-out through the existing Supabase Auth API.
+- Signup now uses a complete authenticated session returned by Supabase when email confirmation is disabled; when the signup response contains no tokens, Android shows email-confirmation instructions instead. Partial or mismatched sessions are rejected. This requires live-account/device verification.
 - Authenticated Applications list showing saved scholarships, status and notes (first 100).
 - Authenticated application status and notes editing through existing user-scoped APIs.
 - Application task checklist: read, complete/reopen, add custom tasks, confirm before deleting custom tasks, and set/change/clear task due dates using existing `application_tasks` RLS table (not yet device-tested; first 100 tasks per scholarship). Due dates use the existing `due_at` timestamptz column, store the selected day at local noon and display in the device time zone; travel/time-zone changes may alter the displayed calendar day. No reminder notifications are scheduled.
