@@ -31,7 +31,9 @@ internal data class CommunityPost(
     val createdAt: String,
     val hasMedia: Boolean,
     val mediaType: String?,
-    val mediaPath: String?
+    val mediaPath: String?,
+    // Stories alone carry an expiry; normal feed posts leave this null.
+    val expiresAt: String? = null
 )
 
 internal data class CommunityPage(val posts: List<CommunityPost>, val hasMore: Boolean)
