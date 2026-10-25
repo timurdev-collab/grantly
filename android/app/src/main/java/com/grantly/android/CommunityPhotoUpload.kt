@@ -15,17 +15,17 @@ import java.time.Instant
 import java.util.UUID
 
 /**
- * Single-photo Community publishing, using the existing private social-media bucket
+ * Bounded photo and small MP4 Community publishing, using the existing private social-media bucket
  * and social_posts RLS. No public URL, service-role key, or schema change is used.
  *
- * The upload is intentionally limited to JPEG/PNG under 6 MiB. Larger photos,
- * HEIC and video require separate, tested implementations. Photo stories use
+ * The upload is intentionally limited to JPEG/PNG/MP4 under 6 MiB. Larger media,
+ * HEIC and long videos require a separate resumable uploader. Stories use
  * the same private upload path with the existing story expiry schema.
  */
 internal object CommunityPhotoPublisher {
-    private const val maxBytes = 6 * 1024 * 1024
+    private const val maxBytes = CommunityUploadRules.maxBytes
 
-    suspend fun publish(context: Context, uri: Uri, caption: String, kind: String = "post") = withContext(Dispatchers.IO) {
+    suspend fun publish(context: Context, uri: Uri, caption: String, kind: String = "post", isVideo: Boolean = false) = withContext(Dispatchers.IO) {
         require(kind == "post" || kind == "story") { "Unsupported Community post type." }
         val text = caption.trim()
         require(text.length <= 2000) { "Use at most 2,000 characters." }
@@ -60,7 +60,7 @@ internal object CommunityPhotoPublisher {
             }
             val rows = JSONArray(profile.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() })
             if (rows.length() != 1 || !rows.optJSONObject(0).optBoolean("is_visible", false)) {
-                throw IOException("Photo posting is unavailable until your Community profile is visible.")
+                throw IOException("Media posting is unavailable until your Community profile is visible.")
             }
         } finally {
             profile.disconnect()
@@ -75,29 +75,28 @@ internal object CommunityPhotoPublisher {
                 val count = stream.read(buffer)
                 if (count < 0) break
                 if (output.size() + count > maxBytes) {
-                    throw IOException("Choose a JPEG or PNG photo smaller than 6 MB.")
+                    throw IOException("Choose a JPEG/PNG photo or MP4 video smaller than 6 MiB.")
                 }
                 output.write(buffer, 0, count)
             }
             output.toByteArray()
         } ?: throw IOException("Unable to read the selected photo.")
         if (bytes.isEmpty()) throw IOException("The selected photo is empty.")
-        val jpeg = bytes.size >= 3 &&
-            (bytes[0].toInt() and 255) == 255 &&
-            (bytes[1].toInt() and 255) == 216 &&
-            (bytes[2].toInt() and 255) == 255
-        val pngHeader = byteArrayOf(137.toByte(), 80, 78, 71, 13, 10, 26, 10)
-        val png = bytes.size >= pngHeader.size &&
-            pngHeader.indices.all { bytes[it] == pngHeader[it] }
-        if (!jpeg && !png) throw IOException("Only JPEG and PNG photos are supported.")
-        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
-        if (bounds.outWidth !in 1..20_000 || bounds.outHeight !in 1..20_000) {
-            throw IOException("This photo could not be decoded safely.")
+        val format = CommunityUploadRules.detect(bytes)
+            ?: throw IOException("Only JPEG/PNG photos and MP4 videos are supported.")
+        if (isVideo != (format == CommunityUploadRules.Format.MP4)) {
+            throw IOException(if (isVideo) "Choose a valid MP4 video." else "Choose a JPEG or PNG photo.")
+        }
+        if (!isVideo) {
+            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
+            if (bounds.outWidth !in 1..20_000 || bounds.outHeight !in 1..20_000) {
+                throw IOException("This photo could not be decoded safely.")
+            }
         }
 
-        val extension = if (png) "png" else "jpg"
-        val mime = if (png) "image/png" else "image/jpeg"
+        val extension = format.extension
+        val mime = format.mimeType
         val path = userId + "/" + UUID.randomUUID().toString() + "." + extension
         val storage = URL(base + "/storage/v1/object/social-media/" + path)
             .openConnection() as HttpURLConnection
@@ -116,9 +115,9 @@ internal object CommunityPhotoPublisher {
             val status = storage.responseCode
             if (status !in 200..299) {
                 throw IOException(when (status) {
-                    401, 403 -> "Photo upload is not permitted for this account."
-                    413 -> "This photo exceeds the upload limit."
-                    else -> "Photo upload failed (HTTP " + status + ")."
+                    401, 403 -> "Media upload is not permitted for this account."
+                    413 -> "This media exceeds the upload limit."
+                    else -> "Media upload failed (HTTP " + status + ")."
                 })
             }
         } finally {
@@ -144,7 +143,7 @@ internal object CommunityPhotoPublisher {
                     .put("kind", kind)
                     .put("caption", text)
                     .put("media_path", path)
-                    .put("media_type", "image")
+                    .put("media_type", format.mediaType)
                 if (kind == "story") {
                     payload.put("expires_at", CommunityStoryRules.expirationForNewStory(Instant.now()))
                 }
@@ -153,7 +152,7 @@ internal object CommunityPhotoPublisher {
                 if (status !in 200..299) {
                     throw IOException(when (status) {
                         401, 403 -> "Posting is not permitted. Check Community profile visibility."
-                        else -> "Photo uploaded but the post could not be created (HTTP " + status + ")."
+                        else -> "Media uploaded but the post could not be created (HTTP " + status + ")."
                     })
                 }
             } finally {
@@ -182,7 +181,7 @@ internal object CommunityPhotoPublisher {
                 }
             } catch (_: Exception) { false }
             if (!cleaned) {
-                throw IOException("Post creation failed and the private photo could not be cleaned up. Contact support before retrying.", failure)
+                throw IOException("Post creation failed and the private media could not be cleaned up. Contact support before retrying.", failure)
             }
             throw failure
         }
