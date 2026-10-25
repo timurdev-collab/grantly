@@ -42,6 +42,8 @@ internal object CommunityResumableUploadRules {
             if (resolved.scheme != "https" || resolved.host != base.host ||
                 resolved.port != -1 || resolved.userInfo != null ||
                 resolved.rawFragment != null || resolved.rawQuery != null ||
+                resolved.normalize().path != resolved.path ||
+                resolved.rawPath != resolved.path ||
                 !resolved.path.startsWith("/storage/v1/upload/resumable/") ||
                 resolved.path.removePrefix("/storage/v1/upload/resumable/").isBlank()
             ) null else resolved.toASCIIString()
