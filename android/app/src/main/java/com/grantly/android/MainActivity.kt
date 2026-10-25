@@ -193,7 +193,11 @@ private fun HomeContent(
                     Badge { Text(label) }
                 }
             }) {
-                Icon(Icons.Outlined.NotificationsNone, contentDescription = "Open notifications", tint = Forest)
+                Icon(
+                    Icons.Outlined.NotificationsNone,
+                    contentDescription = NotificationBadgeRules.accessibilityLabel(unreadNotifications),
+                    tint = Forest
+                )
             }
         }
     }
@@ -262,7 +266,7 @@ private fun HomeContent(
     Column(Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(22.dp)).clickable(onClick = onCommunity).padding(20.dp)) {
         Text("Community", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
         Spacer(Modifier.height(7.dp))
-        Text("Browse posts, like, comment and share text or photos when your Community profile permits. Video uploads and stories are not yet supported.", fontSize = 13.sp, color = Ink)
+        Text("Explore Community posts, Stories and Shorts. Publishing requires a visible profile; video features are still in testing.", fontSize = 13.sp, color = Ink)
         Spacer(Modifier.height(8.dp))
         Text("Explore community →", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     }
