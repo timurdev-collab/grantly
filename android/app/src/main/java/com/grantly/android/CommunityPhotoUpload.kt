@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.time.Instant
 import java.util.UUID
 
 /**
@@ -18,12 +19,14 @@ import java.util.UUID
  * and social_posts RLS. No public URL, service-role key, or schema change is used.
  *
  * The upload is intentionally limited to JPEG/PNG under 6 MiB. Larger photos,
- * HEIC, video and stories require separate, tested implementations.
+ * HEIC and video require separate, tested implementations. Photo stories use
+ * the same private upload path with the existing story expiry schema.
  */
 internal object CommunityPhotoPublisher {
     private const val maxBytes = 6 * 1024 * 1024
 
-    suspend fun publish(context: Context, uri: Uri, caption: String) = withContext(Dispatchers.IO) {
+    suspend fun publish(context: Context, uri: Uri, caption: String, kind: String = "post") = withContext(Dispatchers.IO) {
+        require(kind == "post" || kind == "story") { "Unsupported Community post type." }
         val text = caption.trim()
         require(text.length <= 2000) { "Use at most 2,000 characters." }
         val session = AuthRepository.activeSession()
@@ -138,10 +141,13 @@ internal object CommunityPhotoPublisher {
                 post.setRequestProperty("Prefer", "return=minimal")
                 val payload = JSONObject()
                     .put("author_id", userId)
-                    .put("kind", "post")
+                    .put("kind", kind)
                     .put("caption", text)
                     .put("media_path", path)
                     .put("media_type", "image")
+                if (kind == "story") {
+                    payload.put("expires_at", CommunityStoryRules.expirationForNewStory(Instant.now()))
+                }
                 post.outputStream.use { it.write(payload.toString().toByteArray(Charsets.UTF_8)) }
                 val status = post.responseCode
                 if (status !in 200..299) {
