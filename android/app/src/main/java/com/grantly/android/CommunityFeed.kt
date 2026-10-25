@@ -1,5 +1,6 @@
 package com.grantly.android
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
@@ -281,6 +282,15 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     var busyLikeIds by remember(session?.userId) { mutableStateOf<Set<String>>(emptySet()) }
     var likeError by remember(session?.userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    // Keep Android system Back within the Community navigation stack rather than
+    // unexpectedly closing Community when viewing a post or its media.
+    BackHandler(enabled = selectedPost != null || photoPost != null || videoPost != null) {
+        when {
+            selectedPost != null -> selectedPost = null
+            photoPost != null -> photoPost = null
+            videoPost != null -> videoPost = null
+        }
+    }
     if (pendingDelete != null) {
         val target = pendingDelete!!
         AlertDialog(
@@ -590,6 +600,8 @@ private fun CommunityPostEditor(post: CommunityPost, onBack: () -> Unit, onSaved
     var saving by remember(post.id) { mutableStateOf(false) }
     var error by remember(post.id) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    // Match the disabled Back button while a write is in flight.
+    BackHandler { if (!saving) onBack() }
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
