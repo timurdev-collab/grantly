@@ -131,8 +131,9 @@ internal fun AuthContent() {
                                 resetSent = true
                             }
                             isSignup -> {
-                                AuthRepository.signUp(email, password)
-                                confirmationSent = true
+                                // Supabase returns a session when email confirmation is disabled.
+                                // Otherwise, show the confirmation instructions without signing in.
+                                confirmationSent = !AuthRepository.signUp(email, password)
                             }
                             else -> AuthRepository.signIn(email, password)
                         }
