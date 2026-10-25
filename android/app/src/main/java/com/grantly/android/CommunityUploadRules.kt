@@ -22,15 +22,31 @@ internal object CommunityUploadRules {
             pngHeader.indices.all { bytes[it] == pngHeader[it] }
         ) return Format.PNG
 
-        // MP4 is an ISO base-media container. A filename or provider MIME alone
-        // is not sufficient to authorize uploading a file as video/mp4.
-        if (bytes.size >= 12 &&
-            String(bytes, 4, 4, Charsets.US_ASCII) == "ftyp" &&
-            String(bytes, 8, 4, Charsets.US_ASCII) in setOf(
-                "isom", "iso2", "iso3", "iso4", "iso5", "iso6",
-                "mp41", "mp42", "avc1", "M4V "
-            )
-        ) return Format.MP4
+        // ISO base media: verify the complete ftyp box rather than trusting
+        // only its first 12 bytes. The box includes a size, major brand, minor
+        // version and optional compatible brands. This is still a container
+        // signature check, not proof that the video can be decoded.
+        if (bytes.size >= 16 && String(bytes, 4, 4, Charsets.US_ASCII) == "ftyp") {
+            val boxSize = (0..3).fold(0L) { size, index ->
+                (size shl 8) or (bytes[index].toLong() and 0xffL)
+            }
+            if (boxSize >= 16 && boxSize <= bytes.size && (boxSize - 16) % 4 == 0L) {
+                val supportedBrands = setOf(
+                    "isom", "iso2", "iso3", "iso4", "iso5", "iso6",
+                    "mp41", "mp42", "avc1", "M4V "
+                )
+                if (String(bytes, 8, 4, Charsets.US_ASCII) in supportedBrands) {
+                    return Format.MP4
+                }
+                var offset = 16
+                while (offset + 4 <= boxSize.toInt()) {
+                    if (String(bytes, offset, 4, Charsets.US_ASCII) in supportedBrands) {
+                        return Format.MP4
+                    }
+                    offset += 4
+                }
+            }
+        }
 
         return null
     }
