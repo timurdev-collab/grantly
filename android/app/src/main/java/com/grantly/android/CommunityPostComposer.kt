@@ -44,6 +44,7 @@ internal object CommunityPostPublisher {
             val connection = URL(base + "/rest/v1/social_posts").openConnection() as HttpURLConnection
             try {
                 connection.requestMethod = "POST"
+                connection.instanceFollowRedirects = false
                 connection.connectTimeout = 12_000
                 connection.readTimeout = 15_000
                 connection.doOutput = true
