@@ -96,6 +96,11 @@ internal fun AuthContent() {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)
         )
+        // Match iOS: explain invalid input instead of only disabling submission.
+        if (email.isNotBlank() && !validEmail) {
+            Spacer(Modifier.height(6.dp))
+            Text("Enter a valid email address.", color = MaterialTheme.colorScheme.error, fontSize = 12.sp)
+        }
         if (!isRecovering) {
             Spacer(Modifier.height(12.dp))
             OutlinedTextField(
@@ -106,6 +111,10 @@ internal fun AuthContent() {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)
             )
+            if (isSignup && password.isNotEmpty() && !validPassword) {
+                Spacer(Modifier.height(6.dp))
+                Text("Use 8–128 characters for your password.", color = MaterialTheme.colorScheme.error, fontSize = 12.sp)
+            }
         }
     }
     if (error != null) {
