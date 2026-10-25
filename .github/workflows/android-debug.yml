@@ -26,6 +26,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
+      - name: Run Android JVM unit tests
+        run: gradle :app:testDebugUnitTest --stacktrace
       - name: Build Android debug APK
         run: gradle :app:assembleDebug --stacktrace
       - name: Upload installable debug APK
