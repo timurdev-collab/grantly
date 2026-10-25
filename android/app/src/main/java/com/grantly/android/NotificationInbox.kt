@@ -35,7 +35,7 @@ internal data class NotificationPage(
 )
 
 internal object NotificationInboxRepository {
-    private fun accountId(): Pair<AuthSession, String> {
+    private suspend fun accountId(): Pair<AuthSession, String> {
         val session = AuthRepository.activeSession()
         val id = try {
             UUID.fromString(session.userId).toString()
