@@ -1,10 +1,13 @@
 package com.grantly.android
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -121,6 +124,9 @@ internal fun NotificationPreferencesContent(onBack: () -> Unit) {
     var retry by remember(session?.userId) { mutableIntStateOf(0) }
     val scope = rememberCoroutineScope()
 
+    // Match the disabled on-screen Back button: do not abandon an in-flight save.
+    BackHandler(enabled = busy) { }
+
     LaunchedEffect(session?.userId, retry) {
         if (session == null) {
             loading = false
@@ -177,6 +183,7 @@ internal fun NotificationPreferencesContent(onBack: () -> Unit) {
                     Text(label, modifier = Modifier.weight(1f))
                     Switch(
                         checked = enabled,
+                        modifier = Modifier.semantics { contentDescription = label },
                         enabled = !busy,
                         onCheckedChange = { checked ->
                             val next = when (index) {
