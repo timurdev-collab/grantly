@@ -47,6 +47,7 @@ internal object CommunityPhotoPublisher {
             userId + "&limit=1").openConnection() as HttpURLConnection
         try {
             profile.requestMethod = "GET"
+            profile.instanceFollowRedirects = false
             profile.connectTimeout = 12_000
             profile.readTimeout = 15_000
             profile.setRequestProperty("apikey", key)
