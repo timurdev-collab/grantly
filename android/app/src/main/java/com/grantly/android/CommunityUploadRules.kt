@@ -10,6 +10,13 @@ internal object CommunityUploadRules {
         MP4("mp4", "video/mp4", "video")
     }
 
+    /** Shorts require video; stories and regular posts may contain either supported format. */
+    fun allows(kind: String, format: Format): Boolean = when (kind) {
+        "post", "story" -> true
+        "short" -> format == Format.MP4
+        else -> false
+    }
+
     fun detect(bytes: ByteArray): Format? {
         if (bytes.size >= 3 &&
             (bytes[0].toInt() and 0xff) == 0xff &&
