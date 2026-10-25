@@ -5,16 +5,22 @@ import java.util.Base64
 import java.util.UUID
 
 /**
- * Pure validation/metadata helpers for a future bounded TUS video uploader.
- *
- * Not yet wired into Community publishing: the existing 6 MiB direct uploader
- * remains the only enabled Android upload path.
+ * Pure validation, retry and metadata helpers for the Android TUS video uploader.
+ * The uploader is wired into Community, but still requires live-account/device testing.
  */
 internal object CommunityResumableUploadRules {
     const val chunkBytes = 6 * 1024 * 1024
     const val maxVideoBytes = 200 * 1024 * 1024L
 
     fun allowsVideoSize(bytes: Long): Boolean = bytes in 1..maxVideoBytes
+
+    /** Match iOS's bounded 1s, 3s, 5s retry pauses; never retry indefinitely. */
+    fun retryDelayMillis(failedAttempts: Int): Long? = when (failedAttempts) {
+        1 -> 1_000L
+        2 -> 3_000L
+        3 -> 5_000L
+        else -> null
+    }
 
     /** Invalid offsets are never rendered as successful upload progress. */
     fun progressFraction(uploaded: Long, total: Long): Float? =
