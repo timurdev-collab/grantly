@@ -15,6 +15,15 @@ class CommunityResumableUploadRulesTest {
         assertEquals(6 * 1024 * 1024, rules.chunkBytes)
     }
 
+    @Test fun retriesUseBoundedIosEquivalentBackoff() {
+        assertEquals(1_000L, rules.retryDelayMillis(1))
+        assertEquals(3_000L, rules.retryDelayMillis(2))
+        assertEquals(5_000L, rules.retryDelayMillis(3))
+        for (attempt in listOf(-1, 0, 4, 5, Int.MAX_VALUE)) {
+            assertNull(rules.retryDelayMillis(attempt))
+        }
+    }
+
     @Test fun progressIsBoundedAndRejectsInvalidOffsets() {
         assertEquals(0f, rules.progressFraction(0, 200)!!, 0.0001f)
         assertEquals(0.5f, rules.progressFraction(100, 200)!!, 0.0001f)
