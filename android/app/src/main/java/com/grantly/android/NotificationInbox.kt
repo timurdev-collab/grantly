@@ -1,5 +1,6 @@
 package com.grantly.android
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -150,6 +151,8 @@ internal fun NotificationInboxContent(onBack: () -> Unit) {
     var error by remember(session?.userId) { mutableStateOf<String?>(null) }
     var refresh by remember(session?.userId) { mutableIntStateOf(0) }
     val scope = rememberCoroutineScope()
+    var showingPreferences by remember(session?.userId) { mutableStateOf(false) }
+    BackHandler(enabled = showingPreferences) { showingPreferences = false }
 
     LaunchedEffect(session?.userId, refresh) {
         if (session == null) {
@@ -174,6 +177,11 @@ internal fun NotificationInboxContent(onBack: () -> Unit) {
         }
     }
 
+    if (showingPreferences) {
+        NotificationPreferencesContent(onBack = { showingPreferences = false })
+        return
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -191,6 +199,9 @@ internal fun NotificationInboxContent(onBack: () -> Unit) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedButton(onClick = { refresh++ }, enabled = !busy && !loading) {
                 Text("Refresh")
+            }
+            OutlinedButton(onClick = { showingPreferences = true }, enabled = !busy) {
+                Text("Preferences")
             }
             if (notifications.any { it.readAt == null }) {
                 OutlinedButton(
