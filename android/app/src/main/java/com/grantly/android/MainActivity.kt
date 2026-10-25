@@ -71,16 +71,18 @@ private fun EduTApp() {
     var selectedScholarship by remember { mutableStateOf<Scholarship?>(null) }
     var showingAdvisors by remember { mutableStateOf(false) }
     var showingCommunity by remember { mutableStateOf(false) }
+    var showingNotifications by remember { mutableStateOf(false) }
     // A single list hosts every tab. Reset its scroll offset when changing
     // destinations so a short screen cannot open halfway down or appear blank.
     val pageScroll = rememberLazyListState()
-    LaunchedEffect(tab, selectedScholarship?.id, showingAdvisors, showingCommunity) {
+    LaunchedEffect(tab, selectedScholarship?.id, showingAdvisors, showingCommunity, showingNotifications) {
         pageScroll.scrollToItem(0)
     }
-    BackHandler(enabled = selectedScholarship != null || showingAdvisors || showingCommunity) {
+    BackHandler(enabled = selectedScholarship != null || showingAdvisors || showingCommunity || showingNotifications) {
         when {
             selectedScholarship != null -> selectedScholarship = null
             showingCommunity -> showingCommunity = false
+            showingNotifications -> showingNotifications = false
             else -> showingAdvisors = false
         }
     }
@@ -92,7 +94,7 @@ private fun EduTApp() {
                     Tab.entries.forEach { item ->
                         NavigationBarItem(
                             selected = item == tab,
-                            onClick = { tab = item; selectedScholarship = null; showingAdvisors = false; showingCommunity = false },
+                            onClick = { tab = item; selectedScholarship = null; showingAdvisors = false; showingCommunity = false; showingNotifications = false },
                             icon = { Icon(item.icon, contentDescription = null) },
                             label = { Text(item.title, fontSize = 10.sp, maxLines = 1) },
                             colors = NavigationBarItemDefaults.colors(
@@ -117,6 +119,7 @@ private fun EduTApp() {
                         when {
                             showingAdvisors -> AdvisorDirectoryContent(onBack = { showingAdvisors = false })
                             showingCommunity -> CommunityFeedContent(onBack = { showingCommunity = false })
+                            showingNotifications -> NotificationInboxContent(onBack = { showingNotifications = false })
                             selectedScholarship != null -> ScholarshipDetailContent(
                                 scholarship = selectedScholarship!!,
                                 onBack = { selectedScholarship = null }
@@ -128,6 +131,7 @@ private fun EduTApp() {
                                 },
                                 onAdvisors = { showingAdvisors = true },
                                 onCommunity = { showingCommunity = true },
+                                onNotifications = { showingNotifications = true },
                                 onScholarshipSelect = { selectedScholarship = it }
                             )
                             tab == Tab.Discover -> ScholarshipDiscoverContent(
@@ -151,6 +155,7 @@ private fun HomeContent(
     onDiscover: (String) -> Unit,
     onAdvisors: () -> Unit,
     onCommunity: () -> Unit,
+    onNotifications: () -> Unit,
     onScholarshipSelect: (Scholarship) -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -162,7 +167,9 @@ private fun HomeContent(
         Spacer(Modifier.weight(1f))
         Text("🌐", fontSize = 19.sp)
         Spacer(Modifier.width(16.dp))
-        Icon(Icons.Outlined.NotificationsNone, contentDescription = "Notifications", tint = Forest)
+        IconButton(onClick = onNotifications) {
+            Icon(Icons.Outlined.NotificationsNone, contentDescription = "Open notifications", tint = Forest)
+        }
     }
     Spacer(Modifier.height(29.dp))
     val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
