@@ -114,6 +114,8 @@ internal fun NotificationPreferencesContent(onBack: () -> Unit) {
     val session = AuthRepository.session
     var preferences by remember(session?.userId) { mutableStateOf(NotificationPreferences()) }
     var loading by remember(session?.userId) { mutableStateOf(true) }
+    // Keep successfully loaded switches visible if a later save fails.
+    var hasLoaded by remember(session?.userId) { mutableStateOf(false) }
     var busy by remember(session?.userId) { mutableStateOf(false) }
     var error by remember(session?.userId) { mutableStateOf<String?>(null) }
     var retry by remember(session?.userId) { mutableIntStateOf(0) }
@@ -125,9 +127,11 @@ internal fun NotificationPreferencesContent(onBack: () -> Unit) {
             return@LaunchedEffect
         }
         loading = true
+        hasLoaded = false
         error = null
         try {
             preferences = NotificationPreferencesRepository.load()
+            hasLoaded = true
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (failure: Exception) {
@@ -157,7 +161,7 @@ internal fun NotificationPreferencesContent(onBack: () -> Unit) {
             Text(error!!, color = MaterialTheme.colorScheme.error)
             TextButton(onClick = { retry++ }, enabled = !busy && !loading) { Text("Retry") }
         }
-        if (!loading && error == null) {
+        if (!loading && hasLoaded) {
             val options = listOf(
                 Triple("Scholarship deadlines", preferences.deadlineReminders, 0),
                 Triple("Application tasks", preferences.taskReminders, 1),
@@ -182,6 +186,7 @@ internal fun NotificationPreferencesContent(onBack: () -> Unit) {
                                 else -> preferences.copy(scholarshipMatchNotifications = checked)
                             }
                             busy = true
+                            error = null
                             scope.launch {
                                 try {
                                     NotificationPreferencesRepository.save(next)
