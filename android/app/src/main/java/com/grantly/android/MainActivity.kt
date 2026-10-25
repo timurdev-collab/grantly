@@ -12,6 +12,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -70,6 +71,12 @@ private fun EduTApp() {
     var selectedScholarship by remember { mutableStateOf<Scholarship?>(null) }
     var showingAdvisors by remember { mutableStateOf(false) }
     var showingCommunity by remember { mutableStateOf(false) }
+    // A single list hosts every tab. Reset its scroll offset when changing
+    // destinations so a short screen cannot open halfway down or appear blank.
+    val pageScroll = rememberLazyListState()
+    LaunchedEffect(tab, selectedScholarship?.id, showingAdvisors, showingCommunity) {
+        pageScroll.scrollToItem(0)
+    }
     BackHandler(enabled = selectedScholarship != null || showingAdvisors || showingCommunity) {
         when {
             selectedScholarship != null -> selectedScholarship = null
@@ -100,7 +107,7 @@ private fun EduTApp() {
                 }
             }
         ) { padding ->
-            LazyColumn(modifier = Modifier.fillMaxSize().padding(padding)) {
+            LazyColumn(state = pageScroll, modifier = Modifier.fillMaxSize().padding(padding)) {
                 item {
                     Column(Modifier.padding(22.dp)) {
                         if (tab != Tab.Home) {
