@@ -1,6 +1,7 @@
 package com.grantly.android
 
 import android.os.Bundle
+import java.util.Calendar
 import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -157,7 +158,13 @@ private fun HomeContent(
         Icon(Icons.Outlined.NotificationsNone, contentDescription = "Notifications", tint = Forest)
     }
     Spacer(Modifier.height(29.dp))
-    Text("Good afternoon", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = Forest)
+    val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    val greeting = when {
+        hour < 12 -> "Good morning"
+        hour < 17 -> "Good afternoon"
+        else -> "Good evening"
+    }
+    Text(greeting, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     Spacer(Modifier.height(8.dp))
     Text("Scholarships picked\nfor your next chapter.", fontFamily = FontFamily.Serif, fontSize = 35.sp, lineHeight = 39.sp, color = Ink)
     Spacer(Modifier.height(20.dp))
@@ -215,7 +222,7 @@ private fun HomeContent(
     Column(Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(22.dp)).clickable(onClick = onCommunity).padding(20.dp)) {
         Text("Community", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
         Spacer(Modifier.height(7.dp))
-        Text("Read posts, like and comment. Posting and media are still in development.", fontSize = 13.sp, color = Ink)
+        Text("Browse posts, like, comment and share text or photos when your Community profile permits. Video uploads and stories are not yet supported.", fontSize = 13.sp, color = Ink)
         Spacer(Modifier.height(8.dp))
         Text("Explore community →", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     }
