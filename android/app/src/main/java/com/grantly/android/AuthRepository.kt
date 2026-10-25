@@ -180,17 +180,44 @@ internal object AuthRepository {
         refreshed
     }
 
-    suspend fun signUp(email: String, password: String) {
+    /**
+     * Returns true only when Supabase returns a complete authenticated session.
+     * With email confirmation enabled, signup may succeed without tokens; in that
+     * case the user must confirm their email and sign in later.
+     */
+    suspend fun signUp(email: String, password: String): Boolean {
         val normalized = email.trim().lowercase()
         require(normalized.contains('@') && normalized.length <= 254) { "Enter a valid email address." }
         require(password.length in 8..128) { "Use a password between 8 and 128 characters." }
-        withContext(Dispatchers.IO) {
+        val result = withContext(Dispatchers.IO) {
             post("/auth/v1/signup", JSONObject().apply {
                 put("email", normalized)
                 put("password", password)
             })
         }
-        // A confirmation email may be required. Never assume signup is an authenticated session.
+        val access = result.optString("access_token")
+        val refresh = result.optString("refresh_token")
+        // Supabase omits both tokens when confirmation is required.
+        if (access.isBlank() && refresh.isBlank()) return false
+        val user = result.optJSONObject("user")
+        val userId = user?.optString("id").orEmpty()
+        val expiresIn = result.optLong("expires_in", 0L)
+        if (access.isBlank() || refresh.isBlank() || userId.isBlank() || expiresIn <= 0L) {
+            throw IOException("Account created, but its session could not be verified. Please sign in.")
+        }
+        val registeredEmail = user?.optString("email").orEmpty().ifBlank { normalized }
+        if (!registeredEmail.equals(normalized, ignoreCase = true)) {
+            throw IOException("Account email could not be verified. Please sign in.")
+        }
+        val signedUp = AuthSession(
+            userId, registeredEmail, access, refresh,
+            System.currentTimeMillis() + expiresIn * 1000L
+        )
+        refreshMutex.withLock {
+            persist(signedUp)
+            session = signedUp
+        }
+        return true
     }
 
 
