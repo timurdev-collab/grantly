@@ -209,7 +209,8 @@ internal fun NotificationInboxContent(onBack: () -> Unit) {
             OutlinedButton(onClick = { showingPreferences = true }, enabled = !busy) {
                 Text("Preferences")
             }
-            if (notifications.any { it.readAt == null }) {
+            // Older pages may contain unread items even when this page is fully read.
+            if (notifications.isNotEmpty()) {
                 OutlinedButton(
                     enabled = !busy && !loading,
                     onClick = {
