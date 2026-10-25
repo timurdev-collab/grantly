@@ -82,6 +82,7 @@ internal fun CommunityPostComposer(
 ) {
     var caption by remember { mutableStateOf("") }
     var selectedPhoto by remember { mutableStateOf<Uri?>(null) }
+    var storyMode by remember { mutableStateOf(false) }
     var submitting by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
@@ -99,16 +100,21 @@ internal fun CommunityPostComposer(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         TextButton(onClick = onBack, enabled = !submitting) { Text("← Back to Community") }
-        Text("Create Community post", style = MaterialTheme.typography.headlineSmall)
+        Text(if (storyMode) "Create Community story" else "Create Community post", style = MaterialTheme.typography.headlineSmall)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilterChip(selected = !storyMode, onClick = { storyMode = false }, enabled = !submitting, label = { Text("Post") })
+            FilterChip(selected = storyMode, onClick = { storyMode = true }, enabled = !submitting, label = { Text("Story") })
+        }
         Text(
-            "Text posts and single JPEG/PNG photos (up to 6 MB) are supported. Posting requires a visible Community profile; existing server permissions apply.",
+            if (storyMode) "Stories require one JPEG/PNG photo (up to 6 MB) and expire after 24 hours. Existing Community profile permissions apply."
+            else "Text posts and single JPEG/PNG photos (up to 6 MB) are supported. Posting requires a visible Community profile; existing server permissions apply.",
             style = MaterialTheme.typography.bodySmall
         )
         OutlinedTextField(
             value = caption,
             onValueChange = { if (it.length <= 2000) caption = it },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text("Share something with students") },
+            label = { Text(if (storyMode) "Add a story caption (optional)" else "Share something with students") },
             minLines = 4,
             maxLines = 10,
             enabled = !submitting
@@ -127,7 +133,7 @@ internal fun CommunityPostComposer(
         if (error != null) Text(error!!, color = MaterialTheme.colorScheme.error)
         if (submitting) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         Button(
-            enabled = !submitting && (caption.trim().isNotEmpty() || selectedPhoto != null),
+            enabled = !submitting && (selectedPhoto != null || (!storyMode && caption.trim().isNotEmpty())),
             onClick = {
                 submitting = true
                 error = null
@@ -137,7 +143,7 @@ internal fun CommunityPostComposer(
                         if (photo == null) {
                             CommunityPostPublisher.publish(caption)
                         } else {
-                            CommunityPhotoPublisher.publish(context.applicationContext, photo, caption)
+                            CommunityPhotoPublisher.publish(context.applicationContext, photo, caption, if (storyMode) "story" else "post")
                         }
                         onPosted()
                     } catch (cancelled: CancellationException) {
@@ -149,6 +155,6 @@ internal fun CommunityPostComposer(
                     }
                 }
             }
-        ) { Text(if (submitting) "Publishing..." else "Publish post") }
+        ) { Text(if (submitting) "Publishing..." else if (storyMode) "Publish story" else "Publish post") }
     }
 }
