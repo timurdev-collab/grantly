@@ -42,6 +42,8 @@ class CommunityResumableUploadRulesTest {
             "http://project-123.storage.supabase.co/storage/v1/upload/resumable/token",
             "$base",
             "$base/../private/token",
+            "$base/%2e%2e/private/token",
+            "$base/token%2fextra",
             "$base/token?token=secret",
             "$base/token#fragment"
         )) assertNull(location, rules.trustedUploadLocation(base, location))
