@@ -29,6 +29,14 @@ internal object NotificationBadgeRules {
         unread >= 10 -> "9+"
         else -> unread.toString()
     }
+
+    /** Speak the real lower bound, not the abbreviated visual badge. */
+    fun accessibilityLabel(unread: Int): String = when {
+        unread <= 0 -> "Open notifications"
+        unread == 1 -> "Open notifications, 1 unread"
+        unread >= 10 -> "Open notifications, 10 or more unread"
+        else -> "Open notifications, $unread unread"
+    }
 }
 
 /** In-app notification inbox. Uses existing user-scoped app_notifications RLS only. */
