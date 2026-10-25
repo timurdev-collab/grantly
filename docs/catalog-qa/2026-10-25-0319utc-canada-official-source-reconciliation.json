@@ -1,0 +1,373 @@
+{
+  "kind": "grantly_staging_official_source_reconciliation",
+  "run_utc": "2026-10-25T03:19:59Z",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "staging_only": true,
+  "production_untouched": true,
+  "metrics": {
+    "before": {
+      "observed_utc": "2026-10-25T03:19:59.486238Z",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_attributed_provenance": 0,
+      "source_candidates": 636,
+      "auth_uid": null,
+      "is_admin": false
+    },
+    "after": {
+      "observed_utc": "2026-10-25T03:21:03.916211Z",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_attributed_provenance": 0,
+      "source_candidates": 636,
+      "auth_uid": null,
+      "is_admin": false
+    },
+    "independent_readbacks": true
+  },
+  "published_reviews": [
+    {
+      "id": "0f2adcfa-4737-47bb-bee5-0bb0812cc99e",
+      "title": "Vanier Canada Graduate Scholarship",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_status",
+        "application_cycle",
+        "deadline",
+        "official_url"
+      ],
+      "official_sources": [
+        "https://www.grad.ubc.ca/awards/vanier-scholarship",
+        "https://www.mcgill.ca/medhealthsci-gradstudies/channels/news/sunsetting-vanier-and-banting-programs-363532"
+      ],
+      "evidence_note": "Confirmed final Vanier competition was 2024, results April 2025; no future Vanier deadline. Separate CGRS-D successor exists as private draft. Requires authorized audited archive; never automatically rename Vanier to CGRS-D.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "d6fe449b-4b5c-4d16-b49b-65cdb7885b0e",
+      "title": "UBC International Major Entrance Scholarship",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "funding_type",
+        "tuition_coverage",
+        "eligible_nationalities",
+        "application_method",
+        "cycle"
+      ],
+      "official_sources": [
+        "https://you.ubc.ca/financial-planning/scholarships-awards-international-students"
+      ],
+      "evidence_note": "UBC official: C$10,000–25,000 per year for 2026/27; renewable up to 3 additional years; study-permit international first-entry undergraduate; automatic merit consideration on admission; not full tuition; 2027/28 amount unconfirmed.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "2b38db0b-fb23-40fe-8b59-c3134d42eab4",
+      "title": "McGill University Undergraduate International Scholarship",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "deadline",
+        "official_url"
+      ],
+      "official_sources": [
+        "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships/application-instructions",
+        "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships"
+      ],
+      "evidence_note": "Generic record overlaps existing published McGill Entrance Scholarship; McGill has automatic one-year and separately applied major entrance awards; foreign-school major award deadline Jan 21, admission Jan 15, year not printed on official page; C$12,000 level Canadian citizens/permanent residents only.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "f31e2996-1b1a-4532-911f-d928e6f13897",
+      "title": "McGill University Masters International Scholarship",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "deadline"
+      ],
+      "official_sources": [
+        "https://www.mcgill.ca/bbme/programs/funding"
+      ],
+      "evidence_note": "No programme-specific evidence for a university-wide Masters International Scholarship. McGill Biomedical Engineering thesis masters minimum C$24,000/year is department-specific; non-thesis self-funded. Do not generalize or invent deadline.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "dfdf9d29-8e07-4a89-8c83-8d9a4ffa4c38",
+      "title": "McGill University Phd International Scholarship",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "deadline"
+      ],
+      "official_sources": [
+        "https://www.mcgill.ca/bbme/programs/funding"
+      ],
+      "evidence_note": "No programme-specific evidence for a university-wide PhD International Scholarship. McGill Biomedical Engineering PhD minimum funding is department-specific; do not generalize to all PhDs.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "42a497ee-b113-41fd-bddc-330e93e6c9fa",
+      "title": "University of British Columbia Masters Excellence Scholarship",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "deadline"
+      ],
+      "official_sources": [
+        "https://www.grad.ubc.ca/awards"
+      ],
+      "evidence_note": "Existing generic title and university home-page source do not identify a specific award. Do not treat general graduate funding as guaranteed C$18,000 plus tuition.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "431f4a5a-cbe6-429c-a424-2831c56edafb",
+      "title": "University of British Columbia Phd Excellence Scholarship",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "deadline"
+      ],
+      "official_sources": [
+        "https://www.grad.ubc.ca/awards"
+      ],
+      "evidence_note": "Generic award identity unresolved. Cannot substantiate universal full tuition plus C$18,000 stipend without a programme-specific call.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "d28f2eb2-f883-4699-8a72-dde739ce3814",
+      "title": "University of Toronto Masters International Scholarship",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "deadline"
+      ],
+      "official_sources": [
+        "https://www.sgs.utoronto.ca/awards-funding/"
+      ],
+      "evidence_note": "No verified specific award matching generic title. U of T general funding resources cannot substantiate universal full tuition plus stipend for every Masters programme.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "0a13eb23-77dd-4d13-a68f-0ca549be3b71",
+      "title": "University of Toronto Phd International Scholarship",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "deadline"
+      ],
+      "official_sources": [
+        "https://www.sgs.utoronto.ca/awards-funding/"
+      ],
+      "evidence_note": "Generic title requires programme-specific identity; do not infer a universal independently awarded PhD international scholarship.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "200b5ee0-4879-43e2-8d90-f89eff5c4948",
+      "title": "Columbia University Obama Foundation Scholars",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "degree_levels",
+        "funding_type",
+        "cycle"
+      ],
+      "official_sources": [
+        "https://www.obama.org/programs/scholars",
+        "https://www.obama.org/press-releases/2026-2027-university-of-chicago-scholars/"
+      ],
+      "evidence_note": "Current Obama Foundation programme page describes 2026/27 University of Chicago cohort, not Columbia degree scholarship; prior Columbia cohort involved audited courses and nondegree leadership training. Requires scope and continuation review, not inference of discontinuation from absence.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "b39558a9-6d36-4928-9912-cab45c9b884b",
+      "title": "Adobe Research Fellowship",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_amount",
+        "application_cycle",
+        "official_url"
+      ],
+      "official_sources": [
+        "https://research.adobe.com/fellowship/",
+        "https://research.adobe.com/india-ai-research-fellowship/"
+      ],
+      "evidence_note": "Adobe India AI Research Fellowship is a distinct India-only PhD research award of INR 1,200,000; do not transfer its terms to generic Adobe Research Fellowship. Generic 2027 cycle not verified.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "17db5eb2-ff40-470d-bf83-2de0185a2416",
+      "title": "McGill University Entrance Scholarship",
+      "verification_status": "curated",
+      "reviewed_fields": [
+        "deadline",
+        "funding_amount",
+        "nationality_restrictions",
+        "programme_subtype"
+      ],
+      "official_sources": [
+        "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships/application-instructions",
+        "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships"
+      ],
+      "evidence_note": "One-year entrance awards automatic; major entrance separate application. Foreign school major scholarship Jan 21 and admission Jan 15 (official page lacks year); C$12,000 major awards Canadian/PR only. Keep separate from generic published undergraduate duplicate.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "ce28b2b8-27a4-4158-950f-8977cab86ad3",
+      "title": "Lester B. Pearson Scholarship",
+      "verification_status": "curated",
+      "reviewed_fields": [
+        "deadline",
+        "application_cycle",
+        "eligibility",
+        "duplicate_identity"
+      ],
+      "official_sources": [
+        "https://future.utoronto.ca/pearson-scholarships"
+      ],
+      "evidence_note": "Duplicate canonical programme also listed under University of Toronto Lester B. Pearson Scholarship. For Sep 2027: school nomination Oct 9 2026, U of T admission Oct 16, scholarship submission Nov 6; high-school nomination mandatory; full tuition, books, fees, residence four years. Do not publish duplicate.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "721df0a1-47c5-468f-9db8-04a46f24c3c2",
+      "title": "University of Toronto Lester B. Pearson Scholarship",
+      "verification_status": "curated",
+      "reviewed_fields": [
+        "deadline",
+        "application_cycle",
+        "eligibility",
+        "duplicate_identity"
+      ],
+      "official_sources": [
+        "https://future.utoronto.ca/pearson-scholarships"
+      ],
+      "evidence_note": "Same Pearson programme as ce28b2b8; deadline Nov 6 2026 only for previously nominated and admitted applicants. Nomination Oct 9 and admission Oct 16 have already passed. Authorized canonical reconciliation required.",
+      "action": "authenticated_source_review_and_audited_reconciliation_only",
+      "database_edited": false
+    }
+  ],
+  "review_summary": {
+    "records_reviewed": 14,
+    "needs_review_records": 11,
+    "field_level_review_checks": 55,
+    "verified_in_database": 0
+  },
+  "existing_private_drafts": [
+    {
+      "id": "70931a29-0ce4-4700-bfcd-42f0b4abcbe1",
+      "title": "Canada Graduate Research Scholarship — Doctoral (CGRS D), 2026 competition",
+      "status": "draft",
+      "last_successful_check_at": "2026-10-24T04:41:00.698Z",
+      "audit_failure_count": 0,
+      "provenance_count": 6,
+      "reviewer_attributed_provenance": 0,
+      "official_source": "https://sshrc-crsh.canada.ca/en/funding/opportunities/canada-graduate-research-scholarships/doctoral-program.aspx",
+      "evidence": "C$40,000 per year for three years; SSHRC direct deadline October 19, 2026 at 20:00 ET; Canadian institutional deadline can be earlier. No universal 2027 future deadline. International applicants face enrolment and other conditions; existing draft ALL nationalities needs qualification.",
+      "action": "authenticated_readiness_review_before_publication",
+      "published": false
+    }
+  ],
+  "new_leads": [
+    {
+      "title": "UBC Okanagan Global Elevation Award",
+      "country": "Canada",
+      "degree": [
+        "Bachelor"
+      ],
+      "cycle": "September 2027 intake (current university page)",
+      "funding": "C$8,000/year tuition credit; renewable for up to 3 additional years, subject to enrolment/degree completion",
+      "eligibility": "New international undergraduate students enrolling at UBC Okanagan",
+      "application": "Automatic after offer acceptance and enrolment",
+      "deadline": "Admission deadline; no separate scholarship deadline confirmed",
+      "source": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students",
+      "duplicate_screen": "No title match in staging scholarships or source candidates; broader semantic duplicate review still required",
+      "state": "research_only_not_inserted"
+    },
+    {
+      "title": "UBC Okanagan International Welcome Award",
+      "country": "Canada",
+      "degree": [
+        "Bachelor"
+      ],
+      "cycle": "September 2027 intake (current university page)",
+      "funding": "C$5,000 one-time first-year tuition credit",
+      "eligibility": "First-year international students full-time (24 winter credits), Okanagan first-choice program and enrolment",
+      "application": "Automatic after offer acceptance",
+      "deadline": "Admission deadline; no separate scholarship deadline confirmed",
+      "source": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students",
+      "duplicate_screen": "No title match in staging scholarships or source candidates; broader semantic duplicate review still required",
+      "state": "research_only_not_inserted"
+    },
+    {
+      "title": "UBC Okanagan Bachelor of Commerce International Launch Award",
+      "country": "Canada",
+      "degree": [
+        "Bachelor"
+      ],
+      "cycle": "September 2027 entry explicitly stated",
+      "funding": "C$6,000/year tuition credit; renewable for 3 additional years or degree completion",
+      "eligibility": "New international students entering Bachelor of Commerce at UBC Okanagan",
+      "application": "Automatic after offer acceptance and enrolment",
+      "deadline": "Admission deadline; no separate scholarship deadline confirmed",
+      "source": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students",
+      "duplicate_screen": "No title match in staging scholarships or source candidates; broader semantic duplicate review still required",
+      "state": "research_only_not_inserted"
+    }
+  ],
+  "publication_blocker": {
+    "auth_uid": null,
+    "is_admin": false,
+    "functions": [
+      "publish_scholarship_draft",
+      "promote_source_candidate_to_draft",
+      "record_scholarship_field_provenance",
+      "scholarship_draft_readiness"
+    ],
+    "resolution": "Use a real signed-in administrator with approved role via existing application; no impersonation, role change, or direct bypass."
+  },
+  "successful_staging_edits": 0,
+  "new_publications": 0,
+  "new_database_drafts": 0,
+  "new_provenance": 0,
+  "archived": 0,
+  "production_changes": 0,
+  "source_notes": [
+    "McGill deadline page omits year; do not silently assign 2027 without matching admissions cycle.",
+    "UBC IMES C$10k–25k applies to 2026/27; 2027/28 amount is unconfirmed.",
+    "Pearson Nov 6 submission deadline does not reopen prior nomination/admission deadlines.",
+    "Vanier final competition confirmed; archival requires authorized audited workflow.",
+    "Adobe India fellowship distinct from general Adobe Research Fellowship."
+  ]
+}
