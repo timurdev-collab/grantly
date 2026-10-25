@@ -3,6 +3,9 @@ package com.grantly.android
 import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
@@ -21,7 +24,8 @@ import java.util.UUID
 internal object CommunityResumableVideoPublisher {
     suspend fun publish(
         context: Context, uri: Uri, caption: String, kind: String,
-        userId: String, accessToken: String, key: String, base: String
+        userId: String, accessToken: String, key: String, base: String,
+        onProgress: suspend (Long, Long) -> Unit = { _, _ -> }
     ) = withContext(Dispatchers.IO) {
         require(kind in setOf("post", "story", "short"))
         val endpoint = CommunityResumableUploadRules.endpoint(base)
@@ -29,9 +33,10 @@ internal object CommunityResumableVideoPublisher {
         val staged = File.createTempFile("edut-community-", ".mp4", context.cacheDir)
         try {
             val fileSize = stageVideo(context, uri, staged)
+            onProgress(0L, fileSize)
             val path = "$userId/${UUID.randomUUID()}.mp4"
             val uploadLocation = createUpload(endpoint, fileSize, path, accessToken, key)
-            uploadChunks(uploadLocation, staged, fileSize, accessToken, key)
+            uploadChunks(uploadLocation, staged, fileSize, accessToken, key, onProgress)
             try {
                 val post = URL("$base/rest/v1/social_posts").openConnection() as HttpURLConnection
                 try {
@@ -133,10 +138,14 @@ internal object CommunityResumableVideoPublisher {
         }
     }
 
-    private fun uploadChunks(url: String, staged: File, size: Long, token: String, key: String) {
+    private suspend fun uploadChunks(
+        url: String, staged: File, size: Long, token: String, key: String,
+        onProgress: suspend (Long, Long) -> Unit
+    ) {
         var offset = 0L
         RandomAccessFile(staged, "r").use { file ->
             while (offset < size) {
+                currentCoroutineContext().ensureActive()
                 var attempts = 0
                 while (true) {
                     val amount = minOf(CommunityResumableUploadRules.chunkBytes.toLong(), size - offset).toInt()
@@ -163,6 +172,7 @@ internal object CommunityResumableVideoPublisher {
                                 throw IOException("The upload server returned an invalid progress offset.")
                             }
                             offset = acknowledged
+                            onProgress(offset, size)
                             break
                         } finally {
                             request.disconnect()
@@ -173,15 +183,12 @@ internal object CommunityResumableVideoPublisher {
                             catch (_: IOException) { null }
                         if (reconciled != null && reconciled > offset) {
                             offset = reconciled
+                            onProgress(offset, size)
                             break
                         }
                         attempts++
                         if (attempts >= 4) throw failure
-                        try { Thread.sleep((attempts * 1000).toLong()) }
-                        catch (interrupted: InterruptedException) {
-                            Thread.currentThread().interrupt()
-                            throw IOException("Video upload interrupted.", interrupted)
-                        }
+                        delay((attempts * 1000).toLong())
                     }
                 }
             }
