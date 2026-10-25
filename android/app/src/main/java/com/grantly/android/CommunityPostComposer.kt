@@ -86,6 +86,7 @@ internal fun CommunityPostComposer(
     var selectedIsVideo by remember { mutableStateOf(false) }
     var postKind by remember { mutableStateOf("post") }
     var submitting by remember { mutableStateOf(false) }
+    var videoProgress by remember { mutableStateOf<Float?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -152,11 +153,20 @@ internal fun CommunityPostComposer(
             }
         }
         if (error != null) Text(error!!, color = MaterialTheme.colorScheme.error)
-        if (submitting) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+        if (submitting) {
+            val progress = videoProgress
+            if (selectedIsVideo && progress != null) {
+                LinearProgressIndicator(progress = { progress }, modifier = Modifier.fillMaxWidth())
+                Text("Uploading video: ${(progress * 100).toInt()}%", style = MaterialTheme.typography.labelSmall)
+            } else {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+        }
         Button(
             enabled = !submitting && (selectedPhoto != null || (postKind == "post" && caption.trim().isNotEmpty())),
             onClick = {
                 submitting = true
+                videoProgress = null
                 error = null
                 scope.launch {
                     try {
@@ -164,7 +174,15 @@ internal fun CommunityPostComposer(
                         if (photo == null) {
                             CommunityPostPublisher.publish(caption)
                         } else {
-                            CommunityPhotoPublisher.publish(context.applicationContext, photo, caption, postKind, isVideo = selectedIsVideo)
+                            CommunityPhotoPublisher.publish(
+                                context.applicationContext, photo, caption, postKind,
+                                isVideo = selectedIsVideo,
+                                onVideoProgress = { uploaded, total ->
+                                    withContext(Dispatchers.Main) {
+                                        videoProgress = CommunityResumableUploadRules.progressFraction(uploaded, total)
+                                    }
+                                }
+                            )
                         }
                         onPosted()
                     } catch (cancelled: CancellationException) {
