@@ -21,4 +21,19 @@ class CommunityStoryRulesTest {
         assertFalse(CommunityStoryRules.isCurrent("story", true, "", now))
         assertFalse(CommunityStoryRules.isCurrent("story", true, "not-a-date", now))
     }
+    @Test fun newStoryExpiresExactly24HoursAfterPublication() {
+        val expiry = CommunityStoryRules.expirationForNewStory(now)
+        assertTrue(expiry == "2026-10-26T10:00:00Z")
+        assertTrue(CommunityStoryRules.isCurrent("story", true, expiry, now))
+        assertFalse(CommunityStoryRules.isCurrent("story", true, expiry, now.plusSeconds(86_400)))
+    }
+
+    @Test fun expiryCalculationHandlesYearBoundary() {
+        val newYearsEve = Instant.parse("2026-12-31T23:30:00Z")
+        assertTrue(
+            CommunityStoryRules.expirationForNewStory(newYearsEve) ==
+                "2027-01-01T23:30:00Z"
+        )
+    }
+
 }
