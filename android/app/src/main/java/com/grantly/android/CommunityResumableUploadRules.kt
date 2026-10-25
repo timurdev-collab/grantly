@@ -16,6 +16,11 @@ internal object CommunityResumableUploadRules {
 
     fun allowsVideoSize(bytes: Long): Boolean = bytes in 1..maxVideoBytes
 
+    /** Invalid offsets are never rendered as successful upload progress. */
+    fun progressFraction(uploaded: Long, total: Long): Float? =
+        if (total <= 0 || uploaded < 0 || uploaded > total) null
+        else (uploaded.toDouble() / total.toDouble()).toFloat()
+
     /**
      * Construct only the expected Supabase Storage TUS origin.
      * Never send bearer tokens to a redirect or an arbitrary upload URL.
