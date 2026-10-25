@@ -60,6 +60,18 @@ class CommunityUploadRulesTest {
         assertNull(CommunityUploadRules.detect(byteArrayOf()))
     }
 
+    @Test fun shortsRequireMp4ButPostsAndStoriesAcceptPhotos() {
+        for (kind in listOf("post", "story")) {
+            for (format in CommunityUploadRules.Format.values()) {
+                assertEquals(true, CommunityUploadRules.allows(kind, format))
+            }
+        }
+        assertEquals(true, CommunityUploadRules.allows("short", CommunityUploadRules.Format.MP4))
+        assertEquals(false, CommunityUploadRules.allows("short", CommunityUploadRules.Format.JPEG))
+        assertEquals(false, CommunityUploadRules.allows("short", CommunityUploadRules.Format.PNG))
+        assertEquals(false, CommunityUploadRules.allows("unknown", CommunityUploadRules.Format.MP4))
+    }
+
     @Test fun formatsHaveExpectedPrivateStorageMetadata() {
         assertEquals("video/mp4", CommunityUploadRules.Format.MP4.mimeType)
         assertEquals("video", CommunityUploadRules.Format.MP4.mediaType)
