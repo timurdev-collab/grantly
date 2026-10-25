@@ -156,8 +156,8 @@ internal object CommunityResumableVideoPublisher {
                             if (status !in 200..299) {
                                 throw IOException("Video upload interrupted (HTTP $status).")
                             }
-                            val acknowledged = CommunityResumableUploadRules.acknowledgedOffset(
-                                offset, request.getHeaderField("Upload-Offset"), size
+                            val acknowledged = CommunityResumableUploadRules.chunkOffset(
+                                offset, request.getHeaderField("Upload-Offset"), size, amount
                             )
                             if (acknowledged == null || acknowledged > offset + amount) {
                                 throw IOException("The upload server returned an invalid progress offset.")
@@ -169,7 +169,7 @@ internal object CommunityResumableVideoPublisher {
                         }
                     } catch (failure: IOException) {
                         // A failed PATCH might have succeeded server-side. Reconcile before retry.
-                        val reconciled = try { serverOffset(url, token, key, size) }
+                        val reconciled = try { serverOffset(url, token, key, size, offset, amount) }
                             catch (_: IOException) { null }
                         if (reconciled != null && reconciled > offset) {
                             offset = reconciled
@@ -188,13 +188,13 @@ internal object CommunityResumableVideoPublisher {
         }
     }
 
-    private fun serverOffset(url: String, token: String, key: String, size: Long): Long? {
+    private fun serverOffset(url: String, token: String, key: String, size: Long, previous: Long, sentBytes: Int): Long? {
         val request = connection(url, token, key)
         try {
             request.requestMethod = "HEAD"
             if (request.responseCode !in 200..299) return null
             return request.getHeaderField("Upload-Offset")?.toLongOrNull()
-                ?.takeIf { it in 0..size }
+                ?.takeIf { it in previous..size && it - previous <= sentBytes.toLong() }
         } finally {
             request.disconnect()
         }
