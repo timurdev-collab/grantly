@@ -1,6 +1,8 @@
 package com.grantly.android
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -196,7 +198,11 @@ internal fun NotificationInboxContent(onBack: () -> Unit) {
             Text("Sign in to view your notifications.")
             return@Column
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        // Keep all inbox actions reachable on compact phones and with large text.
+        Row(
+            modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             OutlinedButton(onClick = { refresh++ }, enabled = !busy && !loading) {
                 Text("Refresh")
             }
