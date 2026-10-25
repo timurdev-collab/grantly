@@ -1,6 +1,7 @@
 package com.grantly.android
 
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -85,6 +86,8 @@ internal fun CommunityPostComposer(
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    // Prevent Android system Back from closing the composer during an upload.
+    BackHandler { if (!submitting) onBack() }
     val photoPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (!submitting && uri != null) {
             selectedPhoto = uri
