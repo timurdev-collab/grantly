@@ -112,8 +112,8 @@ internal object AuthRepository {
     }
 
     suspend fun signIn(email: String, password: String) {
-        val normalized = email.trim().lowercase()
-        require(normalized.contains('@') && normalized.length <= 254) { "Enter a valid email address." }
+        val normalized = AuthValidation.normalizedEmail(email)
+        require(AuthValidation.isValidEmail(normalized)) { "Enter a valid email address." }
         require(password.isNotEmpty()) { "Enter your password." }
         val result = withContext(Dispatchers.IO) {
             post("/auth/v1/token?grant_type=password", JSONObject().apply {
@@ -186,9 +186,11 @@ internal object AuthRepository {
      * case the user must confirm their email and sign in later.
      */
     suspend fun signUp(email: String, password: String): Boolean {
-        val normalized = email.trim().lowercase()
-        require(normalized.contains('@') && normalized.length <= 254) { "Enter a valid email address." }
-        require(password.length in 8..128) { "Use a password between 8 and 128 characters." }
+        val normalized = AuthValidation.normalizedEmail(email)
+        require(AuthValidation.isValidEmail(normalized)) { "Enter a valid email address." }
+        require(AuthValidation.passwordIssue(password) == null) {
+            AuthValidation.passwordIssue(password) ?: "Invalid password."
+        }
         val result = withContext(Dispatchers.IO) {
             post("/auth/v1/signup", JSONObject().apply {
                 put("email", normalized)
@@ -225,9 +227,8 @@ internal object AuthRepository {
      * Do not reveal whether an account exists for the supplied address.
      */
     suspend fun requestPasswordReset(email: String) {
-        val normalized = email.trim().lowercase()
-        require(normalized.length <= 254 && normalized.contains('@') &&
-            normalized.substringAfterLast('@').contains('.') && !normalized.contains(' ')) {
+        val normalized = AuthValidation.normalizedEmail(email)
+        require(AuthValidation.isValidEmail(normalized)) {
             "Enter a valid email address."
         }
         withContext(Dispatchers.IO) {
@@ -300,7 +301,9 @@ internal object AuthRepository {
     }
 
     suspend fun updateRecoveredPassword(password: String) {
-        require(password.length in 8..128) { "Use a password between 8 and 128 characters." }
+        require(AuthValidation.passwordIssue(password) == null) {
+            AuthValidation.passwordIssue(password) ?: "Invalid password."
+        }
         if (!needsPasswordReset) throw IOException("Open a password recovery link first.")
         val active = activeSession()
         withContext(Dispatchers.IO) {
