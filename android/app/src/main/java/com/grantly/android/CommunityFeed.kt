@@ -268,6 +268,7 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     var hasMore by remember(session?.userId) { mutableStateOf(false) }
 
     var selectedPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
+    var selectedStory by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var photoPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var videoPost by remember(session?.userId) { mutableStateOf<CommunityPost?>(null) }
     var composing by remember(session?.userId) { mutableStateOf(false) }
@@ -284,8 +285,9 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     // Keep Android system Back within the Community navigation stack rather than
     // unexpectedly closing Community when viewing a post or its media.
-    BackHandler(enabled = selectedPost != null || photoPost != null || videoPost != null) {
+    BackHandler(enabled = selectedStory != null || selectedPost != null || photoPost != null || videoPost != null) {
         when {
+            selectedStory != null -> selectedStory = null
             selectedPost != null -> selectedPost = null
             photoPost != null -> photoPost = null
             videoPost != null -> videoPost = null
@@ -360,6 +362,10 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
                 refresh++
             }
         )
+        return
+    }
+    if (selectedStory != null) {
+        CommunityStoryViewer(story = selectedStory!!, onBack = { selectedStory = null })
         return
     }
     if (selectedPost != null) {
@@ -448,12 +454,13 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         TextButton(onClick = onBack) { Text("← Back to Home") }
         Text("Community", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text(
-            "Preview of visible posts. You can comment, like, report and publish text or single-photo posts. Private photo and video viewing is available for supported uploads; video uploads and stories are not yet supported.",
+            "Preview of visible posts. You can comment, like, report and publish text or single-photo posts. Private photo and video viewing is available for supported uploads; video uploads and story publishing are not yet supported.",
             style = MaterialTheme.typography.bodySmall
         )
         if (session == null) {
             Text("Sign in from the Profile tab to view community posts.")
         } else {
+            CommunityStoriesRail(refresh = refresh, onOpen = { selectedStory = it })
             OutlinedButton(onClick = { composing = true }, enabled = !loading && canPublish == true) {
                 Text("Create post")
             }
