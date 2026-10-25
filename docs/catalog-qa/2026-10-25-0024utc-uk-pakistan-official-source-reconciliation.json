@@ -1,0 +1,655 @@
+{
+  "schema": "grantly_catalog_qa_official_source_reconciliation_v1",
+  "created_at_utc": "2026-10-25T00:24:46Z",
+  "target_environment": "staging Supabase cbzriyarlvpmtfbjgede; GitHub PR #109 branch catalog-qa/2026-10-23-official-sources",
+  "write_policy": "Research proposals only. No staging SQL mutations, no verified marks, no archival, no production changes. Requires authenticated admin and CI.",
+  "source_method": "Official university programme pages checked October 25 2026 UTC; pages blocked/login are not treated as discontinued.",
+  "staging_before": {
+    "read_at_utc": "2026-10-25T00:24:46.990732Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 636
+  },
+  "published_record_reviews": [
+    {
+      "id": "df58a9bb-2589-4b63-a43e-f72495b7f798",
+      "title": "Warwick Chancellor's Scholarship",
+      "official_source_urls": [
+        "https://warwick.ac.uk/services/dc/schols_fund/applicants/competitions/"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "degree_levels",
+          "proposal": "Replace Bachelor with doctoral research routes only (PhD, MPhil/PhD, EngD, PhD stage of integrated programme).",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Full UK or international academic fees; not a Bachelor award.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "proposal": "UKRI-rate maintenance stipend; Faculty Chancellor's stream 3.5 years plus £5,000 RTSG; avoid interpreting £5,000 RTSG as annual living stipend.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "2027/28 entry; applications opened 2026-10-05.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "2026-12-10 16:59 GMT scholarship deadline; separate 2026-12-07 course deadline and 2026-12-21 reference deadline.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://warwick.ac.uk/services/dc/schols_fund/applicants/competitions/",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "Overlaps already published curated Warwick Chancellor's International Scholarship (8a8749ba-ccc1-4c99-9689-410550f99c9c); reconcile before archive; six 2027 streams have shared application, different eligibility."
+    },
+    {
+      "id": "01bc805d-acd9-4160-b405-0290bfc15ba3",
+      "title": "Think Big Scholarship",
+      "official_source_urls": [
+        "https://www.bristol.ac.uk/international/fees-finance/scholarships/"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "funding_type",
+          "proposal": "Partial tuition-fee discount, not guaranteed full tuition.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Undergraduate £3,000/£6,500/£13,000 annually up to four years; postgraduate £6,500/£13,000/£26,000 first year only.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Overseas fee status and eligible in-person Bristol course; not ALL applicants.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "September 2027 entry, applications open 2026-10-27 10:00 UK.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "2027-03-19 13:00 UK scholarship deadline; offer required by that date.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://www.bristol.ac.uk/international/fees-finance/scholarships/",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "Overlaps two other published Think Big records f94e6062... and ac6f3b9b...; do not count as three programmes; 2027 terms prohibit broad AI-generated application answers."
+    },
+    {
+      "id": "9b2b11a1-1240-4324-80a4-92646fc1ac38",
+      "title": "Manchester Global Futures Scholarship",
+      "official_source_urls": [
+        "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Only applicants domiciled in listed eligible countries; not ALL.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Regional and degree-specific discounts; Africa UG £12,000 per year up to three years; Africa PGT £19,000 once, not universal £10,000/year.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Bachelor and eligible taught Master's streams, with region-specific conditions.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "September 2027 entry.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "No universal deadline; Africa UG 2027-02-25 or 2027-04-08 by examination type; Africa PGT 2027-04-20.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "Duplicate/overlap with 5f101c0d...; 350+ awards are not 350 independent programmes."
+    },
+    {
+      "id": "5f101c0d-8cb1-4a4a-95f4-d9a692247f4e",
+      "title": "University of Manchester Global Futures Scholarship",
+      "official_source_urls": [
+        "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Domicile in specified countries and hold offer; not ALL.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Not flat £5,000/year; country/level dependent. Example Africa UG £12,000/year x3; Africa PGT £19,000.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "UG and eligible taught Master's, country-specific.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "September 2027 entry.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Regional and qualification-specific, no single programme deadline.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://www.manchester.ac.uk/study/international/finance-and-scholarships/funding/global-futures-scholarship/index.htm",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "Reconcile with 9b2b11a1... before any duplicate archival."
+    },
+    {
+      "id": "8cf9de06-a379-4b6b-8617-c2a15712b195",
+      "title": "LUMS National Outreach Programme",
+      "official_source_urls": [
+        "https://nop.lums.edu.pk/how-to-apply-nop"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Programme recruits from across Pakistan; not unrestricted worldwide.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Bachelor only.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Fully funded NOP undergraduate support conditional on academic merit and annual financial-need assessment; do not conflate with LUMS repayable interest-free loans.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "2027 NOP summer coaching application leads to September 2028 undergraduate entry, not September 2027.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "2027-02-23 summer coaching application; documents by 2027-02-25; separate undergraduate admissions January-February 2028.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://nop.lums.edu.pk/how-to-apply-nop",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "Minimum 80% Matric/O-level equivalent and demonstrated need; NOP SCS is selection stage, not a guaranteed scholarship."
+    },
+    {
+      "id": "1a24f5f5-d1a2-4983-966b-ecfbd57cd1d9",
+      "title": "Weidenfeld-Hoffmann Scholarship",
+      "official_source_urls": [
+        "https://www.ox.ac.uk/admissions/graduate/fees-and-funding/fees-funding-and-scholarship-search/weidenfeld-hoffmann-scholarships-and-leadership-programme"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Ordinary residence in Oxford's published eligible-country list and eligible course, not ALL.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Eligible full-time graduate courses (mainly Master's), not unrestricted all courses.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "100% course fees plus living grant at least £21,805; leadership programme.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "2027/28 entry.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Course-specific December 2026 or January 2027 admissions deadlines; Oxford MBA/MFE route 2027-01-06, not universal.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://www.ox.ac.uk/admissions/graduate/fees-and-funding/fees-funding-and-scholarship-search/weidenfeld-hoffmann-scholarships-and-leadership-programme",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "Oxford graduate form checkbox and scholarship statement required; current Oxford students/deferred offers excluded, limited exceptions."
+    },
+    {
+      "id": "4b274cc1-bf6a-46c8-bf96-9a57768535e3",
+      "title": "UCL Global Masters Scholarship",
+      "official_source_urls": [
+        "https://www.ucl.ac.uk/study/prospective-students/graduate/funding-your-masters/fund-your-masters-global-masters-scholarship"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Overseas-fee status and low-income background; not all applicants.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "£15,000 award for one year, not full tuition.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "2027 entry; official page expects early May 2027.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Exact 2027 date unconfirmed; do not carry 2026-05-07 forward.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://www.ucl.ac.uk/study/prospective-students/graduate/funding-your-masters/fund-your-masters-global-masters-scholarship",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "Private draft ad124d14... exists for 2026/27 and overlaps this published record; do not publish draft as new programme."
+    },
+    {
+      "id": "9d2e2386-ba7b-44ea-bf3d-d5252fd5982b",
+      "title": "Developing Solutions Scholarship",
+      "official_source_urls": [
+        "https://www.nottingham.ac.uk/pgstudy/funding/developing-solutions-masters-scholarship"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Do not use ALL; confirm official nationality list when programme page accessible.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Tuition waiver of 50% or 100% per established programme; not universal fully funded living costs.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "2027 deadline unconfirmed; 2026/27 April 15 2026 is historical.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "Nottingham site blocked by robots during this run; retain previous 2026/27 evidence only, do not claim new 2027 verification. Reconcile with 2116ac6a..."
+    },
+    {
+      "id": "2116ac6a-4063-4b13-a0af-4d7edf63f581",
+      "title": "Developing Solutions Scholarship (University of Nottingham)",
+      "official_source_urls": [
+        "https://www.nottingham.ac.uk/pgstudy/funding/developing-solutions-masters-scholarship"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Unrestricted ALL unsupported; programme targets specified eligible countries.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Full-tuition waiver can be available, but not a universal full living stipend.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "2027 deadline unconfirmed.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://www.nottingham.ac.uk/pgstudy/funding/developing-solutions-masters-scholarship",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "Likely duplicate of 9d2e2386...; primary official site blocked, preserve unverified status."
+    },
+    {
+      "id": "6ef7dde4-7dce-477b-a4cd-8a3a530e8932",
+      "title": "Sheffield International Merit Scholarship",
+      "official_source_urls": [
+        "https://sheffield.ac.uk/international/fees-and-funding/scholarships/undergraduate"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "proposal": "Generic title conflates several independently named 2027 undergraduate awards and separate postgraduate schemes; identify programme before correction.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Current named 2027 programmes have distinct Bachelor or taught Master's eligibility; do not present one unrestricted mixed award.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Tuition discounts, not guaranteed full living funding.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Different 2027 deadlines per named programme; e.g. NCUK Merit 2027-04-23, GEMS 2027-04-02; no universal date.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://sheffield.ac.uk/international/fees-and-funding/scholarships/undergraduate",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "No exact-title Sheffield draft/source-candidate found in targeted staging searches; must complete broader semantic duplicate screen before new drafts."
+    },
+    {
+      "id": "a43a7874-c25e-4670-be0f-2e56ad799ca9",
+      "title": "Denys Holland Scholarship",
+      "official_source_urls": [
+        "https://www.ucl.ac.uk/scholarships/denys-holland-scholarship"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "official_url",
+          "proposal": "Currently redirects to UCL login; investigate current public programme page and availability.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposal": "Unconfirmed for 2027; do not infer.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Existing £9,000/year plus travel claim not verified this run.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "review_notes": "Official page login restriction is not evidence of discontinuation; do not archive or verify."
+    }
+  ],
+  "named_programme_leads": [
+    {
+      "name": "Warwick Faculty Chancellors",
+      "official_url": "https://warwick.ac.uk/services/dc/schols_fund/applicants/competitions/",
+      "cycle": "2027/28",
+      "deadline": "2026-12-10 16:59 GMT",
+      "benefit": "Full fees, UKRI-rate stipend 3.5 years, £5,000 research support",
+      "eligibility": "All nationalities; eligible new PGR applicants",
+      "staging_duplicate_screen": "Overlaps existing Warwick Chancellor's International published listing; canonical mapping required",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Warwick Interdisciplinary Chancellors",
+      "official_url": "https://warwick.ac.uk/services/dc/schols_fund/applicants/competitions/",
+      "cycle": "2027/28",
+      "deadline": "2026-12-10 16:59 GMT",
+      "benefit": "Full fees, UKRI-rate stipend 3.5 years, £5,000 research support",
+      "eligibility": "All nationalities; interdisciplinary research aligned to spotlight/centre",
+      "staging_duplicate_screen": "No exact-title match in targeted scholarship search; broader screening pending",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Warwick AHRC Doctoral Scholarships",
+      "official_url": "https://warwick.ac.uk/services/dc/schols_fund/applicants/competitions/",
+      "cycle": "2027/28",
+      "deadline": "2026-12-10 16:59 GMT",
+      "benefit": "Full fees, UKRI-rate stipend 3.5 years, £5,000 research support",
+      "eligibility": "Arts and Humanities Research Council remit; all nationalities",
+      "staging_duplicate_screen": "No exact-title match in targeted scholarship search; broader screening pending",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Warwick Doctoral Access Pathway",
+      "official_url": "https://warwick.ac.uk/services/dc/schols_fund/applicants/competitions/",
+      "cycle": "2027/28",
+      "deadline": "2026-12-10 16:59 GMT",
+      "benefit": "Full fees, UKRI-rate stipend 3.5 years, £5,000 research support",
+      "eligibility": "Applicants self-identifying as Black or of Black heritage; any nationality",
+      "staging_duplicate_screen": "No exact-title match in targeted scholarship search; broader screening pending",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Warwick Doctoral Access Sanctuary",
+      "official_url": "https://warwick.ac.uk/services/dc/schols_fund/applicants/competitions/",
+      "cycle": "2027/28",
+      "deadline": "2026-12-10 16:59 GMT",
+      "benefit": "Full fees, UKRI-rate stipend 4 years, £5,000 research support",
+      "eligibility": "Applicants with qualifying UK asylum, refugee, humanitarian or CARA status",
+      "staging_duplicate_screen": "No exact-title match in targeted scholarship search; broader screening pending",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Warwick China Scholarship Council stream",
+      "official_url": "https://warwick.ac.uk/services/dc/schols_fund/applicants/competitions/",
+      "cycle": "2027/28",
+      "deadline": "2026-12-10 16:59 GMT",
+      "benefit": "Full fees, CSC stipend, Warwick stipend enhancement and CSC travel",
+      "eligibility": "PRC passport, CSC eligibility and Warwick offer conditions",
+      "staging_duplicate_screen": "Distinct from Melbourne CSC draft; provider-specific semantic screen pending",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Sheffield International Postgraduate Scholarship 2027",
+      "official_url": "https://sheffield.ac.uk/international/fees-and-funding/scholarships/postgraduate/2027",
+      "cycle": "September 2027",
+      "deadline": "2027-07-06 16:00 UK offer acceptance deadline; automatic award",
+      "benefit": "£7,000 tuition reduction",
+      "eligibility": "Eligible permanent residents or 3-year residents of India, Indonesia, Japan, Kenya, Nigeria, South Korea, Taiwan, Thailand, Türkiye or Vietnam",
+      "staging_duplicate_screen": "No Sheffield private draft or source candidate in targeted query",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Sheffield NCUK Merit Scholarship 2027",
+      "official_url": "https://sheffield.ac.uk/international/fees-and-funding/scholarships/undergraduate/ncuk-merit-scholarship-2027",
+      "cycle": "September 2027",
+      "deadline": "2027-04-23 13:00 UK",
+      "benefit": "£10,000 year one + £2,500 later years subject to progression, up to £17,500",
+      "eligibility": "NCUK International Foundation Year entrants, eligible overseas undergraduate offer holders",
+      "staging_duplicate_screen": "No Sheffield private draft or source candidate in targeted query",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Sheffield SABIS Merit Scholarship 2027",
+      "official_url": "https://sheffield.ac.uk/international/fees-and-funding/scholarships/undergraduate/sabis-merit-scholarship-2027",
+      "cycle": "September 2027",
+      "deadline": "No independent application date confirmed; 2027-06-02 firm-choice deadline",
+      "benefit": "£10,000 first year + £2,500 later years, up to £17,500",
+      "eligibility": "SABIS school students in UAE, Qatar, Oman, Bahrain; eligible UG",
+      "staging_duplicate_screen": "No Sheffield private draft or source candidate in targeted query",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Sheffield IDA Academic Scholarship 2027",
+      "official_url": "https://sheffield.ac.uk/international/fees-and-funding/scholarships/undergraduate/ida-sheffield-academic-scholarship-2027",
+      "cycle": "September 2027",
+      "deadline": "2027-03-22",
+      "benefit": "£10,000 first year + £2,500 subsequent years, up to £17,500",
+      "eligibility": "Signed with Inspire Development Academy, eligible UG, athletics criteria",
+      "staging_duplicate_screen": "No Sheffield private draft or source candidate in targeted query",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Sheffield GEMS Scholarship 2027",
+      "official_url": "https://sheffield.ac.uk/international/fees-and-funding/scholarships/undergraduate/gems-scholarship-2027",
+      "cycle": "September 2027 (page has contradictory 2026 line)",
+      "deadline": "2027-04-02 16:00 UK",
+      "benefit": "£10,000 first year + £2,500 subsequent years, up to £17,500",
+      "eligibility": "GEMS school in UAE, Qatar or Egypt, eligible UG",
+      "staging_duplicate_screen": "HOLD: official page 2026 vs 2027 contradiction requires clarification",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    },
+    {
+      "name": "Oxford Weidenfeld-Hoffmann MBA/MFE route",
+      "official_url": "https://www.sbs.ox.ac.uk/oxford-experience/scholarships-and-funding/weidenfeld-hoffmann-scholarships-and-leadership-programme",
+      "cycle": "2027/28",
+      "deadline": "2027-01-06",
+      "benefit": "Full fees and >= £21,805 living grant",
+      "eligibility": "Eligible MBA/MFE applicants from published eligible-country list",
+      "staging_duplicate_screen": "A route within existing Weidenfeld-Hoffmann programme; do not create independent duplicate",
+      "action": "prepare_private_draft_after_full_semantic_duplicate_screen_and_admin_approval",
+      "verification_status": "official_source_research_only"
+    }
+  ],
+  "existing_private_draft_assessments": [
+    {
+      "id": "ad124d14-372f-41fa-9b64-57b4401bfa92",
+      "title": "UCL Global Master's Scholarship",
+      "cycle": "2026/27",
+      "deadline": "2026-05-07",
+      "link_status": "exact",
+      "last_successful_check_at": "2026-10-04T03:59:38Z",
+      "audit_failure_count": 0,
+      "field_provenance_count": 0,
+      "reviewer_provenance_count": 0,
+      "decision": "DO_NOT_PUBLISH: past cycle and duplicate of existing published UCL Global Masters Scholarship"
+    },
+    {
+      "id": "bc14f49f-ad2c-449c-b249-beef95e9201c",
+      "title": "UCL Research Excellence Scholarship",
+      "cycle": "2027/28",
+      "deadline": null,
+      "link_status": "exact",
+      "last_successful_check_at": "2026-10-03T11:11:31Z",
+      "audit_failure_count": 0,
+      "field_provenance_count": 0,
+      "reviewer_provenance_count": 0,
+      "decision": "HOLD: official audit refresh and authenticated reviewer provenance"
+    },
+    {
+      "id": "b6dcfbd7-c194-4e18-ace4-5f546f2e8a72",
+      "title": "Reach Oxford Scholarship",
+      "cycle": "2027 entry",
+      "deadline": "2027-01-26",
+      "link_status": "unchecked",
+      "last_successful_check_at": "2026-10-07T01:00:14Z",
+      "audit_failure_count": 2,
+      "field_provenance_count": 0,
+      "reviewer_provenance_count": 0,
+      "decision": "HOLD: unresolved audit failures and no reviewer provenance; HTTP failure not discontinuation"
+    },
+    {
+      "id": "5394ffbf-1d39-4d46-a92d-c778610aa92d",
+      "title": "Oxford MBA Military Service Scholarships",
+      "cycle": "2027/28",
+      "deadline": null,
+      "link_status": "exact",
+      "last_successful_check_at": null,
+      "audit_failure_count": 0,
+      "field_provenance_count": 2,
+      "reviewer_provenance_count": 0,
+      "decision": "HOLD: no successful audit and no reviewer provenance"
+    }
+  ],
+  "staging_duplicate_findings": [
+    {
+      "kind": "published_overlap",
+      "ids": [
+        "df58a9bb-2589-4b63-a43e-f72495b7f798",
+        "8a8749ba-ccc1-4c99-9689-410550f99c9c"
+      ],
+      "note": "Warwick Chancellor's generic Bachelor listing vs curated PhD listing; reconcile stream identity."
+    },
+    {
+      "kind": "published_overlap",
+      "ids": [
+        "01bc805d-acd9-4160-b405-0290bfc15ba3",
+        "f94e6062-4b4d-4f2f-bf56-80b3a42c1002",
+        "ac6f3b9b-b043-4ec0-abc6-34cf2460d769"
+      ],
+      "note": "Bristol Think Big multiple published listings; avoid triple-count."
+    },
+    {
+      "kind": "published_overlap",
+      "ids": [
+        "9b2b11a1-1240-4324-80a4-92646fc1ac38",
+        "5f101c0d-8cb1-4a4a-95f4-d9a692247f4e"
+      ],
+      "note": "Manchester Global Futures duplicate generic records."
+    },
+    {
+      "kind": "published_overlap",
+      "ids": [
+        "9d2e2386-ba7b-44ea-bf3d-d5252fd5982b",
+        "2116ac6a-4063-4b13-a0af-4d7edf63f581"
+      ],
+      "note": "Nottingham Developing Solutions duplicates; official site robots-blocked this run."
+    },
+    {
+      "kind": "published_vs_draft_overlap",
+      "ids": [
+        "4b274cc1-bf6a-46c8-bf96-9a57768535e3",
+        "ad124d14-372f-41fa-9b64-57b4401bfa92"
+      ],
+      "note": "UCL Global Master's same programme, draft historical 2026 cycle."
+    }
+  ],
+  "auth_diagnostics": {
+    "auth_uid": null,
+    "is_admin": false,
+    "legitimate_functions": [
+      "update_scholarship_draft",
+      "publish_scholarship_draft",
+      "record_scholarship_field_provenance",
+      "promote_source_candidate_to_draft"
+    ],
+    "blocker": "All applicable admin publication and provenance RPCs require auth admin; management SQL session has no JWT and is_admin false. No role spoofing or bypass attempted.",
+    "publication_action": "NONE"
+  },
+  "notes": [
+    "Do not store unsupported universal IELTS/TOEFL/SAT requirements; course-specific English tests are not scholarship-wide.",
+    "2027 Sheffield GEMS official page contains 2026/2027 year inconsistency; hold until reconciled.",
+    "University of Nottingham official domain blocked by robots in this run, not a programme discontinuation.",
+    "No database records were updated or published by this research package."
+  ]
+}
