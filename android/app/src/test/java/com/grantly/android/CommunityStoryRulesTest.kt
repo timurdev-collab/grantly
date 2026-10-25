@@ -16,6 +16,19 @@ class CommunityStoryRulesTest {
         assertFalse(CommunityStoryRules.isCurrent("post", true, "2026-10-26T10:00:00Z", now))
     }
 
+    @Test fun handlesPostgresTimestampOffsetsAndMicroseconds() {
+        assertTrue(
+            CommunityStoryRules.isCurrent(
+                "story", true, "2026-10-25T10:00:00.000001+00:00", now
+            )
+        )
+        assertFalse(
+            CommunityStoryRules.isCurrent(
+                "story", true, "2026-10-25T09:59:59.999999+00:00", now
+            )
+        )
+    }
+
     @Test fun failsClosedForMissingOrInvalidExpiry() {
         assertFalse(CommunityStoryRules.isCurrent("story", true, null, now))
         assertFalse(CommunityStoryRules.isCurrent("story", true, "", now))
