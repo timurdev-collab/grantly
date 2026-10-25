@@ -54,6 +54,10 @@ internal object CommunityResumableVideoPublisher {
                 throw failure
             }
             try {
+                // The last PATCH may complete just as the user cancels. Do not
+                // create a Community post after cancellation; roll back the
+                // uploaded private video through the catch block below.
+                currentCoroutineContext().ensureActive()
                 val post = URL("$base/rest/v1/social_posts").openConnection() as HttpURLConnection
                 try {
                     post.requestMethod = "POST"
