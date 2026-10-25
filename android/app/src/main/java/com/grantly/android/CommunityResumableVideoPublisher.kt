@@ -36,7 +36,14 @@ internal object CommunityResumableVideoPublisher {
             onProgress(0L, fileSize)
             val path = "$userId/${UUID.randomUUID()}.mp4"
             val uploadLocation = createUpload(endpoint, fileSize, path, accessToken, key)
-            uploadChunks(uploadLocation, staged, fileSize, accessToken, key, onProgress)
+            try {
+                uploadChunks(uploadLocation, staged, fileSize, accessToken, key, onProgress)
+            } catch (failure: IOException) {
+                // A failed final PATCH may still have stored the private object.
+                // Attempt to remove it before allowing a fresh upload; keep the original error.
+                deletePrivateMedia(base, path, accessToken, key)
+                throw failure
+            }
             try {
                 val post = URL("$base/rest/v1/social_posts").openConnection() as HttpURLConnection
                 try {
@@ -187,8 +194,9 @@ internal object CommunityResumableVideoPublisher {
                             break
                         }
                         attempts++
-                        if (attempts >= 4) throw failure
-                        delay((attempts * 1000).toLong())
+                        val retryDelay = CommunityResumableUploadRules.retryDelayMillis(attempts)
+                            ?: throw failure
+                        delay(retryDelay)
                     }
                 }
             }
