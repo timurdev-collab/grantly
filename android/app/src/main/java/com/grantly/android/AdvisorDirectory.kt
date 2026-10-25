@@ -1,5 +1,6 @@
 package com.grantly.android
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -129,7 +130,9 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
         }
     }
 
-    TextButton(onClick = {
+    // Handle system Back within the advisor navigation stack. The parent screen
+    // handles Back from the directory root; nested views return one level at a time.
+    val navigateBack: () -> Unit = {
         when {
             showingRequests -> showingRequests = false
             chatId != null -> chatId = null
@@ -137,7 +140,11 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
             selected != null -> selected = null
             else -> onBack()
         }
-    }) {
+    }
+    BackHandler(enabled = showingRequests || chatId != null || showingBooking || selected != null) {
+        navigateBack()
+    }
+    TextButton(onClick = navigateBack) {
         Text(if (selected == null && !showingRequests) "← Home" else if (showingBooking || chatId != null) "← Advisor profile" else "← All advisors")
     }
     Spacer(Modifier.height(8.dp))
