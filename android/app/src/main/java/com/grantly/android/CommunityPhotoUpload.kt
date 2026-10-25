@@ -18,9 +18,9 @@ import java.util.UUID
  * Bounded photo and small MP4 Community publishing, using the existing private social-media bucket
  * and social_posts RLS. No public URL, service-role key, or schema change is used.
  *
- * The upload is intentionally limited to JPEG/PNG/MP4 under 6 MiB. Larger media,
- * HEIC and long videos require a separate resumable uploader. Stories use
- * the same private upload path with the existing story expiry schema.
+ * Photos use bounded direct uploads (6 MiB). MP4 videos use a private, bounded
+ * TUS uploader (200 MiB) with offset recovery and app-private staging.
+ * HEIC and video transcoding are not implemented; stories retain existing expiry.
  */
 internal object CommunityPhotoPublisher {
     private const val maxBytes = CommunityUploadRules.maxBytes
@@ -65,6 +65,15 @@ internal object CommunityPhotoPublisher {
             }
         } finally {
             profile.disconnect()
+        }
+
+        // All MP4 videos use bounded TUS uploads, not the 6 MiB in-memory photo path.
+        // Profile visibility was checked above; the existing server RLS still applies.
+        if (isVideo) {
+            CommunityResumableVideoPublisher.publish(
+                context, uri, text, kind, userId, session.accessToken, key, base
+            )
+            return@withContext
         }
 
         // Content providers may not report a trustworthy file size or MIME type.
