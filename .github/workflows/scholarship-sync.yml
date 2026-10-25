@@ -17,7 +17,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.apply && 'production' || 'sync-preview' }}
+    environment: ${{ (github.event_name == 'schedule' || inputs.apply) && 'production' || 'sync-preview' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -27,8 +27,8 @@ jobs:
         env:
           STAGING_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
           PRODUCTION_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY }}
-          APPLY_SYNC: ${{ inputs.apply || 'false' }}
-          CONFIRM_PRODUCTION_WRITE: ${{ inputs.apply && 'YES' || 'NO' }}
+          APPLY_SYNC: ${{ (github.event_name == 'schedule' || inputs.apply) && 'true' || 'false' }}
+          CONFIRM_PRODUCTION_WRITE: ${{ (github.event_name == 'schedule' || inputs.apply) && 'YES' || 'NO' }}
         run: python scripts/sync_scholarships.py
       - name: Save audit report
         if: always()
