@@ -121,9 +121,9 @@ internal fun CommunityPostComposer(
         }
         Text(
             when (postKind) {
-                "story" -> "Stories require one JPEG/PNG photo or MP4 video (up to 6 MiB) and expire after 24 hours."
-                "short" -> "Shorts require an MP4 video up to 6 MiB. Longer videos need resumable upload support."
-                else -> "Text posts, JPEG/PNG photos and small MP4 videos (up to 6 MiB) are supported. Posting requires a visible Community profile."
+                "story" -> "Stories require one JPEG/PNG photo (up to 6 MiB) or MP4 video (up to 200 MiB) and expire after 24 hours."
+                "short" -> "Shorts require an MP4 video up to 200 MiB. Video uploads may take several minutes."
+                else -> "Text posts, JPEG/PNG photos (up to 6 MiB) and MP4 videos (up to 200 MiB) are supported. Posting requires a visible Community profile."
             },
             style = MaterialTheme.typography.bodySmall
         )
@@ -146,7 +146,7 @@ internal fun CommunityPostComposer(
             enabled = !submitting
         ) { Text(if (selectedPhoto != null && selectedIsVideo) "Change video" else "Attach MP4 video") }
         if (selectedPhoto != null) {
-            Text(if (selectedIsVideo) "One private MP4 video selected (max 6 MiB)." else "One private JPEG/PNG photo selected (max 6 MiB).", style = MaterialTheme.typography.bodySmall)
+            Text(if (selectedIsVideo) "One private MP4 video selected (max 200 MiB; upload is resumable while this screen stays open)." else "One private JPEG/PNG photo selected (max 6 MiB).", style = MaterialTheme.typography.bodySmall)
             TextButton(onClick = { selectedPhoto = null }, enabled = !submitting) {
                 Text("Remove media")
             }
