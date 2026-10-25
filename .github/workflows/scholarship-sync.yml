@@ -1,5 +1,7 @@
 name: Scholarship staging-to-production sync
 on:
+  schedule:
+    - cron: '17 * * * *'
   workflow_dispatch:
     inputs:
       apply:
@@ -9,6 +11,9 @@ on:
         required: true
 permissions:
   contents: read
+concurrency:
+  group: scholarship-sync
+  cancel-in-progress: false
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -22,7 +27,7 @@ jobs:
         env:
           STAGING_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
           PRODUCTION_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY }}
-          APPLY_SYNC: ${{ inputs.apply }}
+          APPLY_SYNC: ${{ inputs.apply || 'false' }}
           CONFIRM_PRODUCTION_WRITE: ${{ inputs.apply && 'YES' || 'NO' }}
         run: python scripts/sync_scholarships.py
       - name: Save audit report
