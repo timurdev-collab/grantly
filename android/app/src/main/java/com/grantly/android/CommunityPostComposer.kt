@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -86,6 +87,8 @@ internal fun CommunityPostComposer(
     var selectedIsVideo by remember { mutableStateOf(false) }
     var postKind by remember { mutableStateOf("post") }
     var submitting by remember { mutableStateOf(false) }
+    var cancellingUpload by remember { mutableStateOf(false) }
+    var uploadJob by remember { mutableStateOf<Job?>(null) }
     var videoProgress by remember { mutableStateOf<Float?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
@@ -162,13 +165,25 @@ internal fun CommunityPostComposer(
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
         }
+        // Allow users to stop a large video upload without leaving the composer.
+        // Keep the screen locked until the publisher finishes private-media cleanup.
+        if (submitting && selectedIsVideo && !cancellingUpload && (videoProgress ?: 0f) < 1f) {
+            TextButton(onClick = {
+                cancellingUpload = true
+                uploadJob?.cancel()
+            }) { Text("Cancel video upload") }
+        }
+        if (cancellingUpload) {
+            Text("Cancelling upload and cleaning up private media…", style = MaterialTheme.typography.bodySmall)
+        }
         Button(
             enabled = !submitting && (selectedPhoto != null || (postKind == "post" && caption.trim().isNotEmpty())),
             onClick = {
                 submitting = true
+                cancellingUpload = false
                 videoProgress = null
                 error = null
-                scope.launch {
+                uploadJob = scope.launch {
                     try {
                         val photo = selectedPhoto
                         if (photo == null) {
@@ -186,11 +201,14 @@ internal fun CommunityPostComposer(
                         }
                         onPosted()
                     } catch (cancelled: CancellationException) {
+                        if (cancellingUpload) error = "Video upload cancelled."
                         throw cancelled
                     } catch (failure: Exception) {
                         error = failure.message ?: "Unable to publish Community content."
                     } finally {
                         submitting = false
+                        cancellingUpload = false
+                        uploadJob = null
                     }
                 }
             }
