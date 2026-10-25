@@ -15,6 +15,16 @@ class CommunityResumableUploadRulesTest {
         assertEquals(6 * 1024 * 1024, rules.chunkBytes)
     }
 
+    @Test fun progressIsBoundedAndRejectsInvalidOffsets() {
+        assertEquals(0f, rules.progressFraction(0, 200)!!, 0.0001f)
+        assertEquals(0.5f, rules.progressFraction(100, 200)!!, 0.0001f)
+        assertEquals(1f, rules.progressFraction(200, 200)!!, 0.0001f)
+        assertNull(rules.progressFraction(-1, 200))
+        assertNull(rules.progressFraction(201, 200))
+        assertNull(rules.progressFraction(0, 0))
+        assertNull(rules.progressFraction(1, -1))
+    }
+
     @Test fun onlyTrustedSupabaseTusEndpoint() {
         val expected = "https://project-123.storage.supabase.co/storage/v1/upload/resumable"
         assertEquals(expected, rules.endpoint("https://project-123.supabase.co"))
