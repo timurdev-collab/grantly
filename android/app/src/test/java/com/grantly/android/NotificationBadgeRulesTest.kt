@@ -20,4 +20,13 @@ class NotificationBadgeRulesTest {
         assertEquals("9+", NotificationBadgeRules.label(10))
         assertEquals("9+", NotificationBadgeRules.label(999))
     }
+
+    @Test fun accessibilityAnnouncesUnreadCountWithoutMisreadingBadge() {
+        assertEquals("Open notifications", NotificationBadgeRules.accessibilityLabel(0))
+        assertEquals("Open notifications", NotificationBadgeRules.accessibilityLabel(-1))
+        assertEquals("Open notifications, 1 unread", NotificationBadgeRules.accessibilityLabel(1))
+        assertEquals("Open notifications, 9 unread", NotificationBadgeRules.accessibilityLabel(9))
+        assertEquals("Open notifications, 10 or more unread", NotificationBadgeRules.accessibilityLabel(10))
+        assertEquals("Open notifications, 10 or more unread", NotificationBadgeRules.accessibilityLabel(999))
+    }
 }
