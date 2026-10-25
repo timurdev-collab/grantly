@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -75,7 +76,8 @@ internal object CommunityStoriesRepository {
                             createdAt = row.optString("created_at"),
                             hasMedia = !mediaType.isNullOrBlank() || !mediaPath.isNullOrBlank() || !legacyUrl.isNullOrBlank(),
                             mediaType = mediaType,
-                            mediaPath = mediaPath
+                            mediaPath = mediaPath,
+                            expiresAt = row.optString("expires_at").takeUnless { row.isNull("expires_at") }
                         )
                     )
                 }
@@ -93,6 +95,19 @@ internal fun CommunityStoriesRail(refresh: Int, onOpen: (CommunityPost) -> Unit)
     var loading by remember(userId) { mutableStateOf(false) }
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var retry by remember(userId) { mutableIntStateOf(0) }
+    var currentTime by remember(userId) { mutableStateOf(Instant.now()) }
+
+    // Stories can expire while Community stays open; don't show stale story links
+    // indefinitely until the next manual refresh.
+    LaunchedEffect(userId) {
+        while (true) {
+            currentTime = Instant.now()
+            delay(30_000)
+        }
+    }
+    val visibleStories = stories.filter {
+        CommunityStoryRules.isCurrent(it.kind, true, it.expiresAt, currentTime)
+    }
 
     LaunchedEffect(userId, refresh, retry) {
         if (userId == null) {
@@ -113,7 +128,7 @@ internal fun CommunityStoriesRail(refresh: Int, onOpen: (CommunityPost) -> Unit)
         }
     }
 
-    if (loading || error != null || stories.isNotEmpty()) {
+    if (loading || error != null || visibleStories.isNotEmpty()) {
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text("Stories · last 24 hours", style = MaterialTheme.typography.titleSmall)
             if (loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
@@ -125,8 +140,14 @@ internal fun CommunityStoriesRail(refresh: Int, onOpen: (CommunityPost) -> Unit)
                 modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                stories.forEach { story ->
-                    OutlinedButton(onClick = { onOpen(story) }) {
+                visibleStories.forEach { story ->
+                    OutlinedButton(onClick = {
+                        if (CommunityStoryRules.isCurrent(story.kind, true, story.expiresAt, Instant.now())) {
+                            onOpen(story)
+                        } else {
+                            currentTime = Instant.now()
+                        }
+                    }) {
                         Text(if (story.hasMedia) "▶ Story" else "Story · ${story.createdAt.take(10)}")
                     }
                 }
