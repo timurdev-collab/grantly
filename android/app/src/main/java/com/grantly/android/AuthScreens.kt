@@ -74,10 +74,9 @@ internal fun AuthContent() {
     var password by remember { mutableStateOf("") }
     var confirmationSent by remember { mutableStateOf(false) }
     var resetSent by remember { mutableStateOf(false) }
-    val normalized = email.trim()
-    val validEmail = normalized.length <= 254 && normalized.contains('@') &&
-        normalized.substringAfterLast('@').contains('.') && !normalized.contains(' ')
-    val validPassword = if (isSignup) password.length in 8..128 else password.isNotEmpty()
+    val validEmail = AuthValidation.isValidEmail(email)
+    val validPassword = if (isSignup) AuthValidation.passwordIssue(password) == null
+        else password.isNotEmpty()
 
     // Like iOS, a confirmation-required signup gets a distinct success state.
     // When confirmation is disabled, signUp establishes a session instead.
@@ -237,7 +236,7 @@ private fun RecoveryPasswordContent() {
     Spacer(Modifier.height(18.dp))
     OutlinedTextField(
         value = password, onValueChange = { password = it; error = null },
-        label = { Text("New password (at least 8 characters)") },
+        label = { Text("New password (8–128 characters)") },
         singleLine = true, visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         modifier = Modifier.fillMaxWidth()
@@ -259,7 +258,8 @@ private fun RecoveryPasswordContent() {
     }
     Spacer(Modifier.height(18.dp))
     Button(
-        enabled = password.length in 8..128 && password == confirmation && !busy,
+        enabled = AuthValidation.passwordIssue(password) == null &&
+            password == confirmation && !busy,
         onClick = {
             busy = true
             scope.launch {
