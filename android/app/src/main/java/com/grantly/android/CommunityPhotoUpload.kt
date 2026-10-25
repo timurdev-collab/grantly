@@ -26,7 +26,7 @@ internal object CommunityPhotoPublisher {
     private const val maxBytes = CommunityUploadRules.maxBytes
 
     suspend fun publish(context: Context, uri: Uri, caption: String, kind: String = "post", isVideo: Boolean = false) = withContext(Dispatchers.IO) {
-        require(kind == "post" || kind == "story") { "Unsupported Community post type." }
+        require(kind in setOf("post", "story", "short")) { "Unsupported Community post type." }
         val text = caption.trim()
         require(text.length <= 2000) { "Use at most 2,000 characters." }
         val session = AuthRepository.activeSession()
@@ -84,6 +84,9 @@ internal object CommunityPhotoPublisher {
         if (bytes.isEmpty()) throw IOException("The selected photo is empty.")
         val format = CommunityUploadRules.detect(bytes)
             ?: throw IOException("Only JPEG/PNG photos and MP4 videos are supported.")
+        if (!CommunityUploadRules.allows(kind, format)) {
+            throw IOException("Community Shorts require an MP4 video.")
+        }
         if (isVideo != (format == CommunityUploadRules.Format.MP4)) {
             throw IOException(if (isVideo) "Choose a valid MP4 video." else "Choose a JPEG or PNG photo.")
         }
