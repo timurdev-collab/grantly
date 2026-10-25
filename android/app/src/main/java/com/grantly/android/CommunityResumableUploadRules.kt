@@ -70,6 +70,15 @@ internal object CommunityResumableUploadRules {
     }
 
     /** PATCH must acknowledge positive progress without exceeding the file length. */
+    /** Never trust a PATCH/HEAD offset beyond bytes sent in the current chunk. */
+    fun chunkOffset(previous: Long, header: String?, fileSize: Long, sentBytes: Int): Long? {
+        if (sentBytes <= 0 || previous < 0 || previous >= fileSize) return null
+        val offset = header?.toLongOrNull() ?: return null
+        return offset.takeIf {
+            it > previous && it <= fileSize && it - previous <= sentBytes.toLong()
+        }
+    }
+
     fun acknowledgedOffset(previous: Long, header: String?, fileSize: Long): Long? {
         val offset = header?.toLongOrNull() ?: return null
         return offset.takeIf { previous >= 0 && previous < it && it <= fileSize }
