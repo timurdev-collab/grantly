@@ -1,5 +1,6 @@
 package com.grantly.android
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -172,8 +173,12 @@ internal fun AdvisorMessagesContent() {
     var query by remember { mutableStateOf("") }
     var selected by remember(userId) { mutableStateOf<AdvisorConversation?>(null) }
 
+    // System Back from a conversation returns to the inbox, not the launcher.
+    // Refresh unread counts after returning, just like the visible Back button.
+    val backToInbox: () -> Unit = { selected = null; refresh++ }
+    BackHandler(enabled = selected != null) { backToInbox() }
     if (selected != null) {
-        TextButton(onClick = { selected = null; refresh++ }) { Text("← All messages") }
+        TextButton(onClick = backToInbox) { Text("← All messages") }
         AdvisorMessageThreadContent(selected!!.id, selected!!.title, selected!!.otherUserId)
         return
     }
