@@ -454,7 +454,7 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         TextButton(onClick = onBack) { Text("← Back to Home") }
         Text("Community", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text(
-            "Preview of visible posts. You can comment, like, report and publish text or single-photo posts. Private photo and video viewing is available for supported uploads; video uploads and story publishing are not yet supported.",
+            "Preview of visible posts and 24-hour stories. You can comment, like, report, publish text or single-photo posts, and publish single-photo stories. Private photo and video viewing is available for supported uploads; video uploads and full story playback remain unavailable.",
             style = MaterialTheme.typography.bodySmall
         )
         if (session == null) {
