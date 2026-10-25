@@ -1,0 +1,34 @@
+name: Scholarship staging-to-production sync
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "Apply approved inserts to production (otherwise dry run)"
+        type: boolean
+        default: false
+        required: true
+permissions:
+  contents: read
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.apply && 'production' || 'sync-preview' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compare and optionally sync
+        env:
+          STAGING_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+          PRODUCTION_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY }}
+          APPLY_SYNC: ${{ inputs.apply }}
+          CONFIRM_PRODUCTION_WRITE: ${{ inputs.apply && 'YES' || 'NO' }}
+        run: python scripts/sync_scholarships.py
+      - name: Save audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scholarship-sync-report
+          path: sync-report.json
+          if-no-files-found: ignore
