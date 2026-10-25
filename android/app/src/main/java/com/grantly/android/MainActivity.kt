@@ -5,6 +5,7 @@ import java.util.Calendar
 import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.compose.BackHandler
@@ -72,6 +73,23 @@ private fun EduTApp() {
     var showingAdvisors by remember { mutableStateOf(false) }
     var showingCommunity by remember { mutableStateOf(false) }
     var showingNotifications by remember { mutableStateOf(false) }
+    val session = AuthRepository.session
+    var unreadNotifications by remember(session?.userId) { mutableIntStateOf(0) }
+    // Refresh when Home becomes visible, including after returning from the inbox.
+    // No background polling or push delivery is implied by this badge.
+    LaunchedEffect(session?.userId, tab, showingNotifications) {
+        if (session == null) {
+            unreadNotifications = 0
+        } else if (tab == Tab.Home && !showingNotifications) {
+            try {
+                unreadNotifications = NotificationInboxRepository.unreadBadgeCount()
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                unreadNotifications = 0
+            }
+        }
+    }
     // A single list hosts every tab. Reset its scroll offset when changing
     // destinations so a short screen cannot open halfway down or appear blank.
     val pageScroll = rememberLazyListState()
@@ -132,6 +150,7 @@ private fun EduTApp() {
                                 onAdvisors = { showingAdvisors = true },
                                 onCommunity = { showingCommunity = true },
                                 onNotifications = { showingNotifications = true },
+                                unreadNotifications = unreadNotifications,
                                 onScholarshipSelect = { selectedScholarship = it }
                             )
                             tab == Tab.Discover -> ScholarshipDiscoverContent(
@@ -156,6 +175,7 @@ private fun HomeContent(
     onAdvisors: () -> Unit,
     onCommunity: () -> Unit,
     onNotifications: () -> Unit,
+    unreadNotifications: Int,
     onScholarshipSelect: (Scholarship) -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -168,7 +188,13 @@ private fun HomeContent(
         Text("🌐", fontSize = 19.sp)
         Spacer(Modifier.width(16.dp))
         IconButton(onClick = onNotifications) {
-            Icon(Icons.Outlined.NotificationsNone, contentDescription = "Open notifications", tint = Forest)
+            BadgedBox(badge = {
+                NotificationBadgeRules.label(unreadNotifications)?.let { label ->
+                    Badge { Text(label) }
+                }
+            }) {
+                Icon(Icons.Outlined.NotificationsNone, contentDescription = "Open notifications", tint = Forest)
+            }
         }
     }
     Spacer(Modifier.height(29.dp))
