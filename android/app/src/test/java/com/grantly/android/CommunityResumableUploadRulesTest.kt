@@ -67,6 +67,18 @@ class CommunityResumableUploadRulesTest {
         }
     }
 
+    @Test fun chunkAcknowledgementCannotSkipUnsentBytes() {
+        assertEquals(6L, rules.chunkOffset(0, "6", 20, 6))
+        assertEquals(20L, rules.chunkOffset(14, "20", 20, 6))
+        assertNull(rules.chunkOffset(0, "7", 20, 6))
+        assertNull(rules.chunkOffset(0, "6", 20, 0))
+        assertNull(rules.chunkOffset(0, "0", 20, 6))
+        assertNull(rules.chunkOffset(0, "21", 20, 6))
+        assertNull(rules.chunkOffset(-1, "2", 20, 6))
+        assertNull(rules.chunkOffset(20, "21", 20, 6))
+        assertNull(rules.chunkOffset(0, "not-an-offset", 20, 6))
+    }
+
     @Test fun patchOffsetMustAdvanceWithinFile() {
         assertEquals(6L, rules.acknowledgedOffset(0, "6", 10))
         assertEquals(10L, rules.acknowledgedOffset(6, "10", 10))
