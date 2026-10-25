@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 private val authForest = Color(0xFF123E30)
@@ -51,10 +52,19 @@ internal fun AuthContent() {
         OutlinedButton(enabled = !busy, onClick = {
             busy = true
             scope.launch {
-                try { AuthRepository.signOut() }
-                finally { busy = false }
+                try {
+                    AuthRepository.signOut()
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (failure: Exception) {
+                    error = failure.message ?: "Unable to sign out. Please try again."
+                } finally { busy = false }
             }
         }) { Text(if (busy) "Signing out…" else "Sign out") }
+        if (error != null) {
+            Spacer(Modifier.height(8.dp))
+            Text(error ?: "", color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
+        }
         return
     }
 
@@ -68,6 +78,28 @@ internal fun AuthContent() {
     val validEmail = normalized.length <= 254 && normalized.contains('@') &&
         normalized.substringAfterLast('@').contains('.') && !normalized.contains(' ')
     val validPassword = if (isSignup) password.length in 8..128 else password.isNotEmpty()
+
+    // Like iOS, a confirmation-required signup gets a distinct success state.
+    // When confirmation is disabled, signUp establishes a session instead.
+    if (confirmationSent && isSignup) {
+        Text("Account created", fontFamily = FontFamily.Serif, fontSize = 34.sp, color = authInk)
+        Spacer(Modifier.height(12.dp))
+        Text("Check your email to verify the account, then sign in.",
+            color = authInk.copy(alpha = .7f))
+        Spacer(Modifier.height(20.dp))
+        Button(
+            onClick = {
+                confirmationSent = false
+                isSignup = false
+                password = ""
+                error = null
+            },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = authForest),
+            shape = RoundedCornerShape(16.dp)
+        ) { Text("Done — sign in") }
+        return
+    }
 
     Text(
         when {
@@ -147,6 +179,8 @@ internal fun AuthContent() {
                             else -> AuthRepository.signIn(email, password)
                         }
                         password = ""
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
                     } catch (failure: Exception) {
                         error = failure.message ?: "Unable to connect to your account."
                     } finally { busy = false }
@@ -233,6 +267,8 @@ private fun RecoveryPasswordContent() {
                     AuthRepository.updateRecoveredPassword(password)
                     password = ""
                     confirmation = ""
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
                 } catch (failure: Exception) {
                     error = failure.message ?: "Unable to update password."
                 } finally { busy = false }
