@@ -22,6 +22,15 @@ import java.net.URL
 import java.time.Instant
 import java.util.UUID
 
+/** A compact badge matches iOS's 1–9 / 9+ convention without exposing message text. */
+internal object NotificationBadgeRules {
+    fun label(unread: Int): String? = when {
+        unread <= 0 -> null
+        unread >= 10 -> "9+"
+        else -> unread.toString()
+    }
+}
+
 /** In-app notification inbox. Uses existing user-scoped app_notifications RLS only. */
 internal data class EduTNotification(
     val id: String,
