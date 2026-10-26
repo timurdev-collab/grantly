@@ -5,6 +5,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
@@ -14,6 +15,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.io.IOException
 import java.net.HttpURLConnection
+import java.net.URI
 import java.net.URL
 import java.util.UUID
 
@@ -115,6 +117,7 @@ internal fun AdminDraftQueueContent(userId: String) {
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var expandedDraftId by remember(userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(userId, refresh) {
         loading = true
@@ -179,8 +182,22 @@ internal fun AdminDraftQueueContent(userId: String) {
                         Text("Funding: ${draft.fundingType.ifBlank { "Not specified" }}", style = MaterialTheme.typography.bodySmall)
                         Text("Deadline: ${draft.deadline.ifBlank { "Not confirmed" }}", style = MaterialTheme.typography.bodySmall)
                         Text("Source link: ${draft.linkStatus.ifBlank { "Not checked" }}", style = MaterialTheme.typography.bodySmall)
-                        if (draft.officialUrl.startsWith("https://")) {
-                            Text("Official source: ${draft.officialUrl}", style = MaterialTheme.typography.bodySmall)
+                        val officialSource = runCatching { URI(draft.officialUrl) }
+                            .getOrNull()
+                            ?.takeIf { uri ->
+                                uri.scheme.equals("https", ignoreCase = true) &&
+                                    !uri.host.isNullOrBlank() &&
+                                    uri.rawUserInfo == null
+                            }
+                            ?.toString()
+                        if (officialSource != null) {
+                            Text("Official source: $officialSource", style = MaterialTheme.typography.bodySmall)
+                            OutlinedButton(onClick = {
+                                runCatching { uriHandler.openUri(officialSource) }
+                                    .onFailure { error = "Unable to open the official source." }
+                            }) {
+                                Text("Open official source")
+                            }
                         }
                         Text("Read-only details. Editing and publishing are not available on Android yet.", style = MaterialTheme.typography.labelSmall)
                     }
