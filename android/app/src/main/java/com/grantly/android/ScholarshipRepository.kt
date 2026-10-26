@@ -67,6 +67,9 @@ internal object ScholarshipRepository {
         }
         val connection = URL(baseUrl + "/rest/v1/rpc/search_scholarships")
             .openConnection() as HttpURLConnection
+        // Keep the publishable key and RPC request on the configured HTTPS origin.
+        // Do not follow redirects to a different host or downgrade to HTTP.
+        connection.instanceFollowRedirects = false
         try {
             connection.requestMethod = "POST"
             connection.connectTimeout = 12_000
@@ -141,6 +144,9 @@ internal object ScholarshipRepository {
         }
         val connection = URL(baseUrl + "/rest/v1/rpc/scholarship_filter_options")
             .openConnection() as HttpURLConnection
+        // Keep the publishable key and RPC request on the configured HTTPS origin.
+        // Do not follow redirects to a different host or downgrade to HTTP.
+        connection.instanceFollowRedirects = false
         try {
             connection.requestMethod = "POST"
             connection.connectTimeout = 12_000
