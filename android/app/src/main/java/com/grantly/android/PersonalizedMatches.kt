@@ -81,6 +81,8 @@ internal object PersonalizedMatchesRepository {
         }
         val connection = URL("$base/rest/v1/rpc/get_my_scholarship_matches")
             .openConnection() as HttpURLConnection
+        // Do not forward the session bearer token or API key through HTTP redirects.
+        connection.instanceFollowRedirects = false
         try {
             connection.requestMethod = "POST"
             connection.connectTimeout = 12_000
