@@ -21,7 +21,9 @@ class MainActivitySmokeTest {
 
     @Test fun homeOpensAndPrimaryNavigationRemainsUsable() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        assertNotNull("EduT Home should render", device.wait(Until.findObject(By.text("EduT")), 20_000))
+        // A cold API-35 emulator may take longer to expose Compose semantics.
+        device.waitForIdle(5_000)
+        assertNotNull("EduT Home should render", device.wait(Until.findObject(By.text("EduT")), 45_000))
         val explore = device.wait(Until.findObject(By.text("Explore")), 10_000)
         assertNotNull("Explore tab should be visible", explore)
         explore.click()
