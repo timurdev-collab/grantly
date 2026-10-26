@@ -37,7 +37,14 @@ jobs:
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          script: cd android && gradle :app:connectedDebugAndroidTest --stacktrace
+          script: |
+            cd android
+            gradle :app:connectedDebugAndroidTest --stacktrace || {
+              mkdir -p app/build/emulator-diagnostics
+              adb logcat -d -t 4000 > app/build/emulator-diagnostics/logcat.txt || true
+              adb exec-out screencap -p > app/build/emulator-diagnostics/screen.png || true
+              exit 1
+            }
       - name: Upload instrumentation reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -46,5 +53,6 @@ jobs:
           path: |
             android/app/build/reports/androidTests/
             android/app/build/outputs/androidTest-results/
+            android/app/build/emulator-diagnostics/
           if-no-files-found: ignore
           retention-days: 14
