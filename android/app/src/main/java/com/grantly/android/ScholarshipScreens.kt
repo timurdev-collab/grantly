@@ -383,7 +383,7 @@ internal fun ScholarshipDetailContent(scholarship: Scholarship, onBack: () -> Un
                 Text(it, color = ink, fontSize = 14.sp)
             }
             Spacer(Modifier.height(12.dp))
-            Text("Verify the application cycle, eligibility, required documents and deadline on the official provider website. Android application tracking is still in development.",
+            Text("Verify the application cycle, eligibility, required documents and deadline on the official provider website. Sign in to save this scholarship and track your application in the Applications tab.",
                 color = ink, fontSize = 14.sp, lineHeight = 22.sp)
         }
     }
