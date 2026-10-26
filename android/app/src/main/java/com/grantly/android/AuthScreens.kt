@@ -9,6 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,6 +75,7 @@ internal fun AuthContent() {
     var isRecovering by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var showPassword by remember(isSignup, isRecovering) { mutableStateOf(false) }
     var confirmationSent by remember { mutableStateOf(false) }
     var resetSent by remember { mutableStateOf(false) }
     val validEmail = AuthValidation.isValidEmail(email)
@@ -138,8 +142,17 @@ internal fun AuthContent() {
                 value = password,
                 onValueChange = { password = it; error = null },
                 label = { Text(if (isSignup) "Password (8–128 characters)" else "Password") },
-                singleLine = true, visualTransformation = PasswordVisualTransformation(),
+                singleLine = true,
+                visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                trailingIcon = {
+                    TextButton(
+                        onClick = { showPassword = !showPassword },
+                        modifier = Modifier.semantics {
+                            contentDescription = if (showPassword) "Hide password" else "Show password"
+                        }
+                    ) { Text(if (showPassword) "Hide" else "Show") }
+                },
                 modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)
             )
             if (isSignup && password.isNotEmpty() && !validPassword) {
@@ -227,6 +240,8 @@ private fun RecoveryPasswordContent() {
     val scope = rememberCoroutineScope()
     var password by remember { mutableStateOf("") }
     var confirmation by remember { mutableStateOf("") }
+    var showPassword by remember { mutableStateOf(false) }
+    var showConfirmation by remember { mutableStateOf(false) }
     var busy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     Text("Choose a new password", fontFamily = FontFamily.Serif, fontSize = 32.sp, color = authInk)
@@ -237,16 +252,34 @@ private fun RecoveryPasswordContent() {
     OutlinedTextField(
         value = password, onValueChange = { password = it; error = null },
         label = { Text("New password (8–128 characters)") },
-        singleLine = true, visualTransformation = PasswordVisualTransformation(),
+        singleLine = true,
+        visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        trailingIcon = {
+            TextButton(
+                onClick = { showPassword = !showPassword },
+                modifier = Modifier.semantics {
+                    contentDescription = if (showPassword) "Hide new password" else "Show new password"
+                }
+            ) { Text(if (showPassword) "Hide" else "Show") }
+        },
         modifier = Modifier.fillMaxWidth()
     )
     Spacer(Modifier.height(12.dp))
     OutlinedTextField(
         value = confirmation, onValueChange = { confirmation = it; error = null },
         label = { Text("Confirm new password") },
-        singleLine = true, visualTransformation = PasswordVisualTransformation(),
+        singleLine = true,
+        visualTransformation = if (showConfirmation) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        trailingIcon = {
+            TextButton(
+                onClick = { showConfirmation = !showConfirmation },
+                modifier = Modifier.semantics {
+                    contentDescription = if (showConfirmation) "Hide confirmed password" else "Show confirmed password"
+                }
+            ) { Text(if (showConfirmation) "Hide" else "Show") }
+        },
         modifier = Modifier.fillMaxWidth()
     )
     if (confirmation.isNotEmpty() && password != confirmation) {
