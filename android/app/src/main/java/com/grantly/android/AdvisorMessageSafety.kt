@@ -38,6 +38,8 @@ internal object AdvisorMessageSafetyRepository {
             val connection = URL(base + path).openConnection() as HttpURLConnection
             try {
                 connection.requestMethod = method
+                // Never forward authenticated safety requests to redirected hosts.
+                connection.instanceFollowRedirects = false
                 connection.connectTimeout = 12_000
                 connection.readTimeout = 15_000
                 connection.setRequestProperty("apikey", key)
