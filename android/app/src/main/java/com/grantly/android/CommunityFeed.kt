@@ -103,6 +103,8 @@ internal object CommunityFeedRepository {
             connection.requestMethod = "GET"
             connection.connectTimeout = 12_000
             connection.readTimeout = 15_000
+            // Do not forward authenticated requests to redirected origins.
+            connection.instanceFollowRedirects = false
             connection.setRequestProperty("apikey", key)
             connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
             connection.setRequestProperty("Accept", "application/json")
@@ -179,6 +181,8 @@ internal object CommunityPostManager {
             connection.requestMethod = "DELETE"
             connection.connectTimeout = 12_000
             connection.readTimeout = 15_000
+            // Do not forward authenticated requests to redirected origins.
+            connection.instanceFollowRedirects = false
             connection.setRequestProperty("apikey", key)
             connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
             connection.setRequestProperty("Accept", "application/json")
@@ -231,6 +235,8 @@ internal object CommunityPostManager {
             connection.requestMethod = "PATCH"
             connection.connectTimeout = 12_000
             connection.readTimeout = 15_000
+            // Do not forward authenticated requests to redirected origins.
+            connection.instanceFollowRedirects = false
             connection.doOutput = true
             connection.setRequestProperty("apikey", key)
             connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
@@ -456,7 +462,7 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
         TextButton(onClick = onBack) { Text("← Back to Home") }
         Text("Community", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text(
-            "Preview of visible posts, Shorts and 24-hour stories. You can comment, like, report, and publish text, JPEG/PNG photos or small MP4 videos (up to 6 MiB). Story playback and long-video uploads are not yet at iOS parity.",
+            "Preview of visible posts, Shorts and 24-hour stories. You can comment, like, report, and publish text, JPEG/PNG photos (up to 6 MiB) or MP4 videos (up to 200 MiB). Video uploads and story playback still need device verification; video compression and restart recovery are not yet at iOS parity.",
             style = MaterialTheme.typography.bodySmall
         )
         if (session == null) {
