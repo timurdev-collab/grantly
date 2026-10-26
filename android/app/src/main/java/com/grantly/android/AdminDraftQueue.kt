@@ -24,7 +24,11 @@ internal data class AdminDraftSummary(
     val provider: String,
     val country: String,
     val verificationStatus: String,
-    val updatedAt: String
+    val updatedAt: String,
+    val fundingType: String,
+    val deadline: String,
+    val linkStatus: String,
+    val officialUrl: String
 )
 
 internal data class AdminDraftPage(val items: List<AdminDraftSummary>, val hasMore: Boolean)
@@ -44,7 +48,7 @@ internal object AdminDraftRepository {
             throw IOException("Draft review service is not configured.")
         }
         val url = "$base/rest/v1/scholarships" +
-            "?select=id,title,provider,country,status,verification_status,updated_at" +
+            "?select=id,title,provider,country,status,verification_status,updated_at,funding_type,deadline,link_status,official_url" +
             "&status=eq.draft&order=updated_at.desc,id.desc&limit=16&offset=$offset"
         val connection = URL(url).openConnection() as HttpURLConnection
         try {
@@ -81,7 +85,11 @@ internal object AdminDraftRepository {
                         provider = row.optString("provider").take(120),
                         country = row.optString("country").take(80),
                         verificationStatus = row.optString("verification_status").take(60),
-                        updatedAt = row.optString("updated_at").take(10)
+                        updatedAt = row.optString("updated_at").take(10),
+                        fundingType = row.optString("funding_type").take(80),
+                        deadline = if (row.isNull("deadline")) "" else row.optString("deadline").take(10),
+                        linkStatus = if (row.isNull("link_status")) "" else row.optString("link_status").take(50),
+                        officialUrl = if (row.isNull("official_url")) "" else row.optString("official_url").take(240)
                     ))
                 }
             }
@@ -105,12 +113,14 @@ internal fun AdminDraftQueueContent(userId: String) {
     var offset by remember(userId) { mutableIntStateOf(0) }
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var refresh by remember(userId) { mutableIntStateOf(0) }
+    var expandedDraftId by remember(userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(userId, refresh) {
         loading = true
         error = null
         drafts = emptyList()
+        expandedDraftId = null
         hasMore = false
         try {
             val page = AdminDraftRepository.load()
@@ -160,6 +170,20 @@ internal fun AdminDraftQueueContent(userId: String) {
                             if (draft.updatedAt.isBlank()) "" else " · Updated ${draft.updatedAt}",
                         style = MaterialTheme.typography.labelSmall
                     )
+                    OutlinedButton(onClick = {
+                        expandedDraftId = if (expandedDraftId == draft.id) null else draft.id
+                    }) {
+                        Text(if (expandedDraftId == draft.id) "Hide details" else "Review details")
+                    }
+                    if (expandedDraftId == draft.id) {
+                        Text("Funding: ${draft.fundingType.ifBlank { "Not specified" }}", style = MaterialTheme.typography.bodySmall)
+                        Text("Deadline: ${draft.deadline.ifBlank { "Not confirmed" }}", style = MaterialTheme.typography.bodySmall)
+                        Text("Source link: ${draft.linkStatus.ifBlank { "Not checked" }}", style = MaterialTheme.typography.bodySmall)
+                        if (draft.officialUrl.startsWith("https://")) {
+                            Text("Official source: ${draft.officialUrl}", style = MaterialTheme.typography.bodySmall)
+                        }
+                        Text("Read-only details. Editing and publishing are not available on Android yet.", style = MaterialTheme.typography.labelSmall)
+                    }
                 }
             }
         }
