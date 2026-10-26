@@ -15,14 +15,22 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Checks that an incomplete recovery deep link opens Profile with a useful
+ * Checks that an incomplete recovery deep link on cold start opens Profile with a useful
  * error. No token hash, credentials, recovery email, or backend request is sent.
  */
 @RunWith(AndroidJUnit4::class)
 class RecoveryDeepLinkSmokeTest {
-    @get:Rule val activityRule = ActivityScenarioRule(MainActivity::class.java)
+    // Launch the recovery intent as the test activity's initial intent. Starting
+    // another MainActivity from an existing ActivityScenario can leave the
+    // scenario paused and fail teardown even when all assertions pass.
+    @get:Rule val activityRule = ActivityScenarioRule<MainActivity>(
+        Intent(InstrumentationRegistry.getInstrumentation().targetContext, MainActivity::class.java).apply {
+            action = Intent.ACTION_VIEW
+            data = Uri.parse("grantly://login-callback#type=recovery")
+        }
+    )
 
-    @Test fun incompleteRecoveryLinkShowsErrorOnProfile() {
+    @Test fun incompleteRecoveryLinkOnColdStartShowsErrorOnProfile() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val device = UiDevice.getInstance(instrumentation)
         device.waitForIdle(5_000)
@@ -30,16 +38,6 @@ class RecoveryDeepLinkSmokeTest {
             device.wait(Until.findObject(By.text("EduT")), 45_000))
 
         try {
-            // CLEAR_TOP + SINGLE_TOP routes the deep link to the existing
-            // MainActivity in its current task, preserving ActivityScenario.
-            activityRule.scenario.onActivity { activity ->
-                val link = Intent(activity, MainActivity::class.java).apply {
-                    action = Intent.ACTION_VIEW
-                    data = Uri.parse("grantly://login-callback#type=recovery")
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                }
-                activity.startActivity(link)
-            }
             assertNotNull("Incomplete recovery link should show its error",
                 device.wait(Until.findObject(By.textContains("recovery link is incomplete")), 20_000))
             assertNotNull("Recovery error should open the Profile sign-in screen",
