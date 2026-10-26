@@ -11,6 +11,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -69,6 +70,9 @@ internal object AdvisorBookingRepository {
         val connection = URL(base + "/rest/v1/rpc/" + name).openConnection() as HttpURLConnection
         try {
             connection.requestMethod = "POST"
+            // Do not forward booking contact details, policy acceptance or bearer tokens
+            // to an HTTP redirect target.
+            connection.instanceFollowRedirects = false
             connection.connectTimeout = 12_000
             connection.readTimeout = 20_000
             connection.doOutput = true
@@ -160,6 +164,8 @@ internal fun AdvisorBookingContent(advisor: AdvisorDirectoryItem, onViewRequests
         try {
             val result = AdvisorConsultationsRepository.services(advisor.id)
             if (AuthRepository.session?.userId == userId) services = result
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (failure: Exception) {
             if (AuthRepository.session?.userId == userId) error = failure.message
         } finally {
@@ -208,8 +214,12 @@ internal fun AdvisorBookingContent(advisor: AdvisorDirectoryItem, onViewRequests
                 try {
                     val result = AdvisorBookingRepository.accept(advisor.id)
                     if (AuthRepository.session?.userId == userId) acceptanceId = result
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
                 } catch (failure: Exception) {
-                    error = failure.message ?: "Could not record policy acceptance."
+                    if (AuthRepository.session?.userId == userId) {
+                        error = failure.message ?: "Could not record policy acceptance."
+                    }
                 } finally {
                     busy = false
                 }
@@ -304,8 +314,12 @@ internal fun AdvisorBookingContent(advisor: AdvisorDirectoryItem, onViewRequests
                     advisor.id, selectedService, acceptedTerms, email, whatsapp, topic, notes, preferredStartMillis
                 )
                 if (AuthRepository.session?.userId == userId) submitted = true
+            } catch (cancelled: CancellationException) {
+                throw cancelled
             } catch (failure: Exception) {
-                error = failure.message ?: "Unable to submit the request."
+                if (AuthRepository.session?.userId == userId) {
+                    error = failure.message ?: "Unable to submit the request."
+                }
             } finally {
                 busy = false
             }
