@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.sync.Mutex
@@ -50,6 +51,8 @@ internal object AuthRepository {
                     try { activeSession() } catch (_: IOException) { }
                 }
             }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (_: Exception) {
             // Keystore errors must not crash the app. Sign-in remains available in memory.
             encryptedStore = null
@@ -61,6 +64,8 @@ internal object AuthRepository {
     private suspend fun persist(value: AuthSession) = withContext(Dispatchers.IO) {
         try {
             encryptedStore?.save(value)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (_: Exception) {
             // Never fall back to unencrypted storage.
             encryptedStore?.clear()
@@ -281,6 +286,8 @@ internal object AuthRepository {
                 needsPasswordReset = true
                 recoveryError = null
             }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (failure: Exception) {
             recoveryError = failure.message ?: "Unable to open the recovery link."
         }
