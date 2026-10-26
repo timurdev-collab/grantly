@@ -29,6 +29,7 @@ internal fun StudentProfileContent(userId: String) {
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var success by remember(userId) { mutableStateOf(false) }
     var reload by remember(userId) { mutableIntStateOf(0) }
+    var showingAdminDrafts by remember(userId) { mutableStateOf(false) }
 
     LaunchedEffect(userId, reload) {
         loading = true
@@ -97,6 +98,22 @@ internal fun StudentProfileContent(userId: String) {
     Text("Major: ${saved.intendedMajor.ifBlank { "Not set" }}", color = profileInk)
     Text("Countries: ${saved.targetCountries.ifBlank { "Not set" }}", color = profileInk)
     Spacer(Modifier.height(16.dp))
+
+    // Only a successfully loaded admin role can reveal the read-only queue.
+    // The queue also rechecks the role and relies on existing server-side RLS.
+    if (saved.role == "admin") {
+        HorizontalDivider()
+        Spacer(Modifier.height(14.dp))
+        OutlinedButton(
+            onClick = { showingAdminDrafts = !showingAdminDrafts },
+            modifier = Modifier.fillMaxWidth()
+        ) { Text(if (showingAdminDrafts) "Hide admin draft queue" else "Review draft scholarships") }
+        if (showingAdminDrafts) {
+            Spacer(Modifier.height(12.dp))
+            AdminDraftQueueContent(userId = userId)
+        }
+        Spacer(Modifier.height(16.dp))
+    }
 
     if (!editing) {
         Button(
