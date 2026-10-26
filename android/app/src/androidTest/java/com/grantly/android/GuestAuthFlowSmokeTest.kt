@@ -31,12 +31,20 @@ class GuestAuthFlowSmokeTest {
         assertNotNull("Sign-in screen should open",
             device.wait(Until.findObject(By.text("Welcome back")), 20_000))
 
+        val showPassword = device.wait(Until.findObject(By.desc("Show password")), 10_000)
+        assertNotNull("Sign-in should allow password visibility to be toggled", showPassword)
+        showPassword.click()
+        assertNotNull("Sign-in should allow hiding the password again",
+            device.wait(Until.findObject(By.desc("Hide password")), 10_000))
+
         val signup = device.wait(
             Until.findObject(By.text("New to EduT? Create an account")), 10_000)
         assertNotNull("Signup action should be available", signup)
         signup.click()
         assertNotNull("Signup screen should open",
             device.wait(Until.findObject(By.text("Create your account")), 10_000))
+        assertNotNull("Signup should start with its password concealed",
+            device.wait(Until.findObject(By.desc("Show password")), 10_000))
 
         val backToLogin = device.wait(
             Until.findObject(By.text("Already have an account? Sign in")), 10_000)
