@@ -80,7 +80,10 @@ internal object AuthRepository {
     }
 
     private fun post(path: String, body: JSONObject, bearer: String? = null): JSONObject {
-        val connection = URL(baseUrl() + path).openConnection() as HttpURLConnection
+        val connection = (URL(baseUrl() + path).openConnection() as HttpURLConnection).apply {
+            // Never forward credentials or recovery tokens to an HTTP redirect target.
+            instanceFollowRedirects = false
+        }
         try {
             connection.requestMethod = "POST"
             connection.connectTimeout = 12_000
@@ -284,7 +287,10 @@ internal object AuthRepository {
     }
 
     private fun fetchVerifiedUser(accessToken: String): JSONObject {
-        val connection = URL(baseUrl() + "/auth/v1/user").openConnection() as HttpURLConnection
+        val connection = (URL(baseUrl() + "/auth/v1/user").openConnection() as HttpURLConnection).apply {
+            // Authenticated requests must never follow redirects.
+            instanceFollowRedirects = false
+        }
         try {
             connection.requestMethod = "GET"
             connection.connectTimeout = 12_000
@@ -307,7 +313,10 @@ internal object AuthRepository {
         if (!needsPasswordReset) throw IOException("Open a password recovery link first.")
         val active = activeSession()
         withContext(Dispatchers.IO) {
-            val connection = URL(baseUrl() + "/auth/v1/user").openConnection() as HttpURLConnection
+            val connection = (URL(baseUrl() + "/auth/v1/user").openConnection() as HttpURLConnection).apply {
+            // Authenticated requests must never follow redirects.
+            instanceFollowRedirects = false
+        }
             try {
                 connection.requestMethod = "PUT"
                 connection.connectTimeout = 12_000
