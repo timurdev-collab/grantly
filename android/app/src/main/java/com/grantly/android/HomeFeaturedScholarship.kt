@@ -158,8 +158,12 @@ internal fun HomeFeaturedScholarshipContent(
                 }
             }
         }
-        if (error != null) {
-            TextButton(onClick = { retry++ }) { Text("Retry featured scholarship") }
+        // iOS Home supports refreshing recommendations. Give Android users an
+        // explicit way to fetch newly published opportunities without restarting.
+        if (!loading) {
+            TextButton(onClick = { retry++ }) {
+                Text(if (error != null) "Retry featured scholarship" else "Refresh featured scholarship")
+            }
         }
     }
 }
