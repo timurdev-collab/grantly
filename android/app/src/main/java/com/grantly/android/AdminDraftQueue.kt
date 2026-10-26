@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URI
@@ -35,7 +36,80 @@ internal data class AdminDraftSummary(
 
 internal data class AdminDraftPage(val items: List<AdminDraftSummary>, val hasMore: Boolean)
 
+internal data class AdminDraftReadiness(
+    val ready: Boolean,
+    val blockers: List<String>,
+    val warnings: List<String>,
+    val lastSuccessfulCheckAt: String
+)
+
 internal object AdminDraftRepository {
+    /** Read-only, server-authoritative publication check; never updates a draft. */
+    suspend fun readiness(draftId: String): AdminDraftReadiness = withContext(Dispatchers.IO) {
+        val validatedId = try {
+            UUID.fromString(draftId).toString()
+        } catch (_: IllegalArgumentException) {
+            throw IOException("Invalid scholarship draft.")
+        }
+        val session = AuthRepository.activeSession()
+        if (StudentProfileRepository.load().role != "admin" ||
+            AuthRepository.session?.userId != session.userId) {
+            throw IOException("Administrator access is required.")
+        }
+        val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!base.startsWith("https://") || key.isBlank()) {
+            throw IOException("Draft review service is not configured.")
+        }
+        val connection = URL("$base/rest/v1/rpc/scholarship_draft_readiness")
+            .openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = "POST"
+            connection.instanceFollowRedirects = false
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 15_000
+            connection.doOutput = true
+            connection.setRequestProperty("apikey", key)
+            connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Accept", "application/json")
+            val body = JSONObject().put("p_scholarship_id", validatedId).toString()
+            connection.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
+            val status = connection.responseCode
+            if (status !in 200..299) {
+                throw IOException(if (status == 401 || status == 403) {
+                    "Administrator access was denied. Please sign in again."
+                } else {
+                    "Unable to check publication readiness (HTTP $status)."
+                })
+            }
+            val result = JSONObject(
+                connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            )
+            if (AuthRepository.session?.userId != session.userId) {
+                throw IOException("Your account changed. Please reload.")
+            }
+            if (!result.has("ready") || result.isNull("ready")) {
+                throw IOException("The readiness service returned an incomplete result.")
+            }
+            fun messages(field: String): List<String> {
+                val values = result.optJSONArray(field) ?: return emptyList()
+                return (0 until minOf(values.length(), 30)).mapNotNull { index ->
+                    values.optString(index).take(240).takeIf { it.isNotBlank() }
+                }
+            }
+            AdminDraftReadiness(
+                ready = result.getBoolean("ready"),
+                blockers = messages("blockers"),
+                warnings = messages("warnings"),
+                lastSuccessfulCheckAt = result.optString("last_successful_check_at")
+                    .take(10).takeUnless { it == "null" }.orEmpty()
+            )
+        } finally {
+            connection.disconnect()
+        }
+    }
+
     suspend fun load(offset: Int = 0): AdminDraftPage = withContext(Dispatchers.IO) {
         require(offset in 0..5_000) { "Invalid draft page." }
         val session = AuthRepository.activeSession()
@@ -117,6 +191,11 @@ internal fun AdminDraftQueueContent(userId: String) {
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var expandedDraftId by remember(userId) { mutableStateOf<String?>(null) }
     var searchQuery by remember(userId) { mutableStateOf("") }
+    var readinessByDraft by remember(userId) {
+        mutableStateOf<Map<String, AdminDraftReadiness>>(emptyMap())
+    }
+    var readinessLoadingId by remember(userId) { mutableStateOf<String?>(null) }
+    var readinessError by remember(userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
     val uriHandler = LocalUriHandler.current
 
@@ -125,6 +204,8 @@ internal fun AdminDraftQueueContent(userId: String) {
         error = null
         drafts = emptyList()
         expandedDraftId = null
+        readinessByDraft = emptyMap()
+        readinessError = null
         hasMore = false
         try {
             val page = AdminDraftRepository.load()
@@ -199,10 +280,61 @@ internal fun AdminDraftQueueContent(userId: String) {
                     )
                     OutlinedButton(onClick = {
                         expandedDraftId = if (expandedDraftId == draft.id) null else draft.id
+                        readinessError = null
                     }) {
                         Text(if (expandedDraftId == draft.id) "Hide details" else "Review details")
                     }
                     if (expandedDraftId == draft.id) {
+                        OutlinedButton(
+                            enabled = readinessLoadingId == null && !loading,
+                            onClick = {
+                                readinessLoadingId = draft.id
+                                readinessError = null
+                                scope.launch {
+                                    try {
+                                        val result = AdminDraftRepository.readiness(draft.id)
+                                        if (AuthRepository.session?.userId == userId) {
+                                            readinessByDraft = readinessByDraft + (draft.id to result)
+                                        }
+                                    } catch (cancelled: CancellationException) {
+                                        throw cancelled
+                                    } catch (failure: Exception) {
+                                        if (AuthRepository.session?.userId == userId) {
+                                            readinessError = failure.message ?: "Readiness check failed."
+                                        }
+                                    } finally {
+                                        readinessLoadingId = null
+                                    }
+                                }
+                            }
+                        ) {
+                            Text(if (readinessLoadingId == draft.id) "Checking readiness…"
+                                else if (readinessByDraft.containsKey(draft.id)) "Recheck readiness"
+                                else "Check publication readiness")
+                        }
+                        readinessByDraft[draft.id]?.let { result ->
+                            Text(
+                                if (result.ready) "Server check: ready to publish"
+                                else "Server check: ${result.blockers.size} publication blocker(s)",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                            result.blockers.forEach { blocker ->
+                                Text("Blocker: $blocker", style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.error)
+                            }
+                            result.warnings.forEach { warning ->
+                                Text("Warning: $warning", style = MaterialTheme.typography.bodySmall)
+                            }
+                            if (result.lastSuccessfulCheckAt.isNotBlank()) {
+                                Text("Source last checked: ${result.lastSuccessfulCheckAt}",
+                                    style = MaterialTheme.typography.labelSmall)
+                            }
+                            Text("Read-only server assessment; this does not publish or approve.",
+                                style = MaterialTheme.typography.labelSmall)
+                        }
+                        if (readinessError != null) {
+                            Text(readinessError!!, color = MaterialTheme.colorScheme.error)
+                        }
                         Text("Funding: ${draft.fundingType.ifBlank { "Not specified" }}", style = MaterialTheme.typography.bodySmall)
                         Text("Deadline: ${draft.deadline.ifBlank { "Not confirmed" }}", style = MaterialTheme.typography.bodySmall)
                         Text("Source link: ${draft.linkStatus.ifBlank { "Not checked" }}", style = MaterialTheme.typography.bodySmall)
