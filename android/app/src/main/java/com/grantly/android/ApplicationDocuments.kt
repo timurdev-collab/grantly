@@ -53,6 +53,7 @@ internal object ApplicationDocumentsRepository {
             "&order=created_at.desc&limit=100"
         val connection = URL("$base/rest/v1/application_documents?$query")
             .openConnection() as HttpURLConnection
+        connection.instanceFollowRedirects = false
         try {
             connection.requestMethod = "GET"
             connection.connectTimeout = 12_000
@@ -112,6 +113,7 @@ internal object ApplicationDocumentsRepository {
         }
         val storage = URL("$base/storage/v1/object/application-documents")
             .openConnection() as HttpURLConnection
+        storage.instanceFollowRedirects = false
         try {
             storage.requestMethod = "DELETE"
             storage.connectTimeout = 12_000
@@ -136,6 +138,7 @@ internal object ApplicationDocumentsRepository {
             "&scholarship_id=eq.${enc(scholarship)}"
         val metadata = URL("$base/rest/v1/application_documents?$query")
             .openConnection() as HttpURLConnection
+        metadata.instanceFollowRedirects = false
         try {
             metadata.requestMethod = "DELETE"
             metadata.connectTimeout = 12_000
@@ -184,6 +187,7 @@ internal object ApplicationDocumentsRepository {
         }
         val connection = URL("$base/storage/v1/object/authenticated/application-documents/$encodedPath")
             .openConnection() as HttpURLConnection
+        connection.instanceFollowRedirects = false
         val maxBytes = 10 * 1024 * 1024
         val bytes = try {
             connection.requestMethod = "GET"
@@ -278,6 +282,7 @@ internal object ApplicationDocumentsRepository {
         val storagePath = "$userId/$scholarship/${UUID.randomUUID()}-$safeName"
         val storage = URL("$base/storage/v1/object/application-documents/$storagePath")
             .openConnection() as HttpURLConnection
+        storage.instanceFollowRedirects = false
         try {
             storage.requestMethod = "POST"
             storage.connectTimeout = 12_000
@@ -308,6 +313,7 @@ internal object ApplicationDocumentsRepository {
                 .put("byte_size", bytes.size)
             val metadata = URL("$base/rest/v1/application_documents")
                 .openConnection() as HttpURLConnection
+            metadata.instanceFollowRedirects = false
             try {
                 metadata.requestMethod = "POST"
                 metadata.connectTimeout = 12_000
@@ -331,6 +337,7 @@ internal object ApplicationDocumentsRepository {
             val cleanedUp = try {
                 val cleanup = URL("$base/storage/v1/object/application-documents")
                     .openConnection() as HttpURLConnection
+                cleanup.instanceFollowRedirects = false
                 try {
                     cleanup.requestMethod = "DELETE"
                     cleanup.connectTimeout = 12_000
