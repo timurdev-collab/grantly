@@ -279,17 +279,10 @@ private fun HomeContent(
         }
     }
     Spacer(Modifier.height(25.dp))
-    Column(Modifier.fillMaxWidth().background(DeepForest, RoundedCornerShape(24.dp)).padding(24.dp)) {
-        Text("YOUR BEST MATCH", color = Gold, fontSize = 11.sp, letterSpacing = 2.sp)
-        Spacer(Modifier.height(12.dp))
-        Text("Find the right scholarship\nfor your next chapter.", fontFamily = FontFamily.Serif, fontSize = 27.sp, lineHeight = 33.sp, color = Ivory)
-        Spacer(Modifier.height(14.dp))
-        Text("Complete your profile to discover personalized opportunities.", color = Sage, fontSize = 13.sp, lineHeight = 19.sp)
-        Spacer(Modifier.height(16.dp))
-        OutlinedButton(onClick = { onDiscover("All") }, border = BorderStroke(1.dp, Sage.copy(alpha=.6f))) {
-            Text("Explore scholarships", color = Ivory)
-        }
-    }
+    HomeFeaturedScholarshipContent(
+        onSelect = onScholarshipSelect,
+        onExplore = { onDiscover("All") }
+    )
     Spacer(Modifier.height(25.dp))
     Text("Picked for you", fontFamily = FontFamily.Serif, fontSize = 28.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
