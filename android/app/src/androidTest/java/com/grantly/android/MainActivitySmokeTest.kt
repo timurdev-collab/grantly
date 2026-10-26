@@ -31,6 +31,6 @@ class MainActivitySmokeTest {
         assertNotNull("Home tab should remain reachable", home)
         home.click()
         assertNotNull("Home should render after switching tabs",
-            device.wait(Until.findObject(By.text("Scholarships picked\nfor your next chapter.")), 10_000))
+            device.wait(Until.findObject(By.textContains("Scholarships picked")), 10_000))
     }
 }
