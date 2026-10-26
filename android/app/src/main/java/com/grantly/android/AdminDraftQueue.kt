@@ -116,6 +116,7 @@ internal fun AdminDraftQueueContent(userId: String) {
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var expandedDraftId by remember(userId) { mutableStateOf<String?>(null) }
+    var searchQuery by remember(userId) { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val uriHandler = LocalUriHandler.current
 
@@ -141,6 +142,12 @@ internal fun AdminDraftQueueContent(userId: String) {
         }
     }
 
+    val normalizedSearch = searchQuery.trim()
+    val visibleDrafts = if (normalizedSearch.isEmpty()) drafts else drafts.filter { draft ->
+        listOf(draft.title, draft.provider, draft.country, draft.verificationStatus)
+            .any { it.contains(normalizedSearch, ignoreCase = true) }
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Draft scholarship review", style = MaterialTheme.typography.titleLarge)
         Text(
@@ -150,12 +157,29 @@ internal fun AdminDraftQueueContent(userId: String) {
         OutlinedButton(onClick = { refresh++ }, enabled = !loading && !loadingMore) {
             Text("Refresh drafts")
         }
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it.take(120) },
+            label = { Text("Search loaded drafts") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+        if (drafts.isNotEmpty()) {
+            Text(
+                "Showing ${visibleDrafts.size} of ${drafts.size} loaded drafts. " +
+                    "Search only covers loaded pages.",
+                style = MaterialTheme.typography.labelSmall
+            )
+        }
         if (loading) LinearProgressIndicator(Modifier.fillMaxWidth())
         if (error != null) Text(error!!, color = MaterialTheme.colorScheme.error)
         if (!loading && drafts.isEmpty() && error == null) {
             Text("No drafts found in the current queue.")
         }
-        drafts.forEach { draft ->
+        if (!loading && drafts.isNotEmpty() && visibleDrafts.isEmpty()) {
+            Text("No loaded drafts match your search. Load more pages or change the search.")
+        }
+        visibleDrafts.forEach { draft ->
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(14.dp),
