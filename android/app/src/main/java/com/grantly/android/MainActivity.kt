@@ -147,6 +147,8 @@ private fun EduTApp() {
                                     requestedDegree = degree
                                     tab = Tab.Discover
                                 },
+                                onApplications = { tab = Tab.Applications },
+                                onProfile = { tab = Tab.Profile },
                                 onAdvisors = { showingAdvisors = true },
                                 onCommunity = { showingCommunity = true },
                                 onNotifications = { showingNotifications = true },
@@ -172,6 +174,8 @@ private fun EduTApp() {
 @Composable
 private fun HomeContent(
     onDiscover: (String) -> Unit,
+    onApplications: () -> Unit,
+    onProfile: () -> Unit,
     onAdvisors: () -> Unit,
     onCommunity: () -> Unit,
     onNotifications: () -> Unit,
@@ -223,14 +227,25 @@ private fun HomeContent(
         Icon(Icons.Outlined.ArrowForward, null, tint = Forest)
     }
     Spacer(Modifier.height(18.dp))
+    // Mirror the iOS Home quick destinations; degree filters remain available in Discover.
     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-        listOf("All", "Bachelor's", "Master's", "PhD").forEachIndexed { i, label ->
+        listOf(
+            Triple("For you", true, { onDiscover("All") }),
+            Triple("Applications", false, onApplications),
+            Triple("Advisors", false, onAdvisors),
+            Triple("Profile", false, onProfile)
+        ).forEach { (label, selected, action) ->
             Surface(
-                onClick = { onDiscover(label) },
-                color = if (i == 0) Forest else Color.White,
+                onClick = action,
+                color = if (selected) Forest else Color.White,
                 shape = RoundedCornerShape(30.dp)
             ) {
-                Text(label, Modifier.padding(horizontal = 12.dp, vertical = 11.dp), color = if (i == 0) Ivory else Forest, fontSize = 12.sp)
+                Text(
+                    label,
+                    Modifier.padding(horizontal = 12.dp, vertical = 11.dp),
+                    color = if (selected) Ivory else Forest,
+                    fontSize = 12.sp
+                )
             }
         }
     }
