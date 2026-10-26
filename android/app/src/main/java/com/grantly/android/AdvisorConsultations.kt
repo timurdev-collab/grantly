@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -60,6 +61,8 @@ internal object AdvisorConsultationsRepository {
             connection.requestMethod = "POST"
             connection.connectTimeout = 12_000
             connection.readTimeout = 15_000
+            // Never forward the signed-in user's bearer token to a redirected host.
+            connection.instanceFollowRedirects = false
             connection.doOutput = true
             connection.setRequestProperty("apikey", key)
             connection.setRequestProperty("Authorization", "Bearer " + session.accessToken)
@@ -148,6 +151,8 @@ internal fun AdvisorServicesContent(advisorId: String) {
         try {
             val fetched = AdvisorConsultationsRepository.services(advisorId)
             if (AuthRepository.session?.userId == userId) services = fetched
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (failure: Exception) {
             if (AuthRepository.session?.userId == userId) {
                 error = failure.message ?: "Unable to load consultation options."
@@ -215,6 +220,8 @@ internal fun AdvisorConsultationHistoryContent() {
         try {
             val fetched = AdvisorConsultationsRepository.myRequests()
             if (AuthRepository.session?.userId == userId) requests = fetched
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (failure: Exception) {
             if (AuthRepository.session?.userId == userId) {
                 error = failure.message ?: "Unable to load your consultations."
