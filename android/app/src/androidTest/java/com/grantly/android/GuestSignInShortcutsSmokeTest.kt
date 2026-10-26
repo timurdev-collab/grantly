@@ -83,4 +83,26 @@ class GuestSignInShortcutsSmokeTest {
                 By.text("Sign in from the Profile tab to view community posts.")), 15_000))
         assertSignInShortcut(device)
     }
+
+    @Test fun guestApplicationsCanOpenSignInDirectly() {
+        val device = deviceOnHome()
+        val applications = device.wait(Until.findObject(By.text("Applications")), 15_000)
+        assertNotNull("Applications destination should be visible", applications)
+        applications.click()
+        assertNotNull("Guest Applications should require sign-in",
+            device.wait(Until.findObject(By.text(
+                "Sign in on the Profile tab to see your saved scholarships.")), 15_000))
+        assertSignInShortcut(device)
+    }
+
+    @Test fun guestMessagesCanOpenSignInDirectly() {
+        val device = deviceOnHome()
+        val messages = device.wait(Until.findObject(By.text("Messages")), 15_000)
+        assertNotNull("Messages tab should be visible", messages)
+        messages.click()
+        assertNotNull("Guest Messages should require sign-in",
+            device.wait(Until.findObject(By.text(
+                "Sign in from Profile to view your messages.")), 15_000))
+        assertSignInShortcut(device)
+    }
 }
