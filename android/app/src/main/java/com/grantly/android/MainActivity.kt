@@ -73,6 +73,17 @@ private fun EduTApp() {
     var showingAdvisors by remember { mutableStateOf(false) }
     var showingCommunity by remember { mutableStateOf(false) }
     var showingNotifications by remember { mutableStateOf(false) }
+    // A password recovery deep link may open EduT while Home or another tab is
+    // visible. Bring the verified reset form (or a recovery error) into view.
+    LaunchedEffect(AuthRepository.needsPasswordReset, AuthRepository.recoveryError) {
+        if (AuthRepository.needsPasswordReset || AuthRepository.recoveryError != null) {
+            selectedScholarship = null
+            showingAdvisors = false
+            showingCommunity = false
+            showingNotifications = false
+            tab = Tab.Profile
+        }
+    }
     val session = AuthRepository.session
     var unreadNotifications by remember(session?.userId) { mutableIntStateOf(0) }
     // Refresh when Home becomes visible, including after returning from the inbox.
