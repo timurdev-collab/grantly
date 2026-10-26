@@ -30,11 +30,16 @@ class RecoveryDeepLinkSmokeTest {
             device.wait(Until.findObject(By.text("EduT")), 45_000))
 
         try {
-            val link = Intent(Intent.ACTION_VIEW,
-                Uri.parse("grantly://login-callback#type=recovery"))
-            // Deliver to the existing activity. Starting a second task leaves
-            // ActivityScenario paused and makes its cleanup fail after assertions.
-            activityRule.scenario.onActivity { activity -> activity.onNewIntent(link) }
+            // CLEAR_TOP + SINGLE_TOP routes the deep link to the existing
+            // MainActivity in its current task, preserving ActivityScenario.
+            activityRule.scenario.onActivity { activity ->
+                val link = Intent(activity, MainActivity::class.java).apply {
+                    action = Intent.ACTION_VIEW
+                    data = Uri.parse("grantly://login-callback#type=recovery")
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
+                activity.startActivity(link)
+            }
             assertNotNull("Incomplete recovery link should show its error",
                 device.wait(Until.findObject(By.textContains("recovery link is incomplete")), 20_000))
             assertNotNull("Recovery error should open the Profile sign-in screen",
