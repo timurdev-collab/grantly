@@ -1,0 +1,1159 @@
+{
+  "schema": "grantly_catalog_qa_official_source_reconciliation_v1",
+  "created_at_utc": "2026-10-24T23:24:41Z",
+  "target_environment": "staging Supabase cbzriyarlvpmtfbjgede; GitHub draft PR #109",
+  "write_policy": "research proposals only; not staging mutations, verified status, or authorized archival",
+  "source_method": "Official programme pages and official institutional PDFs checked 2026-10-24 UTC; 2026/27 calls not extrapolated to 2027/28",
+  "published_record_reviews": [
+    {
+      "id": "fc207f98-c855-4abb-8d71-838e21b15d63",
+      "title": "Peking University International Student Scholarship",
+      "official_source_urls": [
+        "https://www.isd.pku.edu.cn/en/detail.php?id=525"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Official canonical name: Peking University Scholarship for International Students.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Covers tuition, living stipend and medical insurance; accommodation is NOT in official benefit list.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "note": "Living stipend exists, amount not specified by this source.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "note": "Bachelor, Master and PhD all explicitly eligible.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "International-student admissions criteria, not ALL nationalities including Chinese citizens.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "Official page says generally January and March; no exact 2027 deadline.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "note": "2027 call not independently established.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "description",
+          "note": "Undergraduates automatically considered; graduate applicants apply online; no other scholarship funding; annual renewal review.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Reconcile with two other Peking generic records; keep one canonical programme."
+    },
+    {
+      "id": "ca72da49-c14a-497a-b4a6-8ddb5a64b6d1",
+      "title": "Peking University Masters Excellence Scholarship",
+      "official_source_urls": [
+        "https://www.isd.pku.edu.cn/en/detail.php?id=525"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "No separately named Masters Excellence Scholarship established by official source.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Do not advertise as a separate fully funded programme without programme-specific evidence.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Official PKU scheme does not include free accommodation.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "2027 deadline unknown; do not extrapolate January/March to a fixed date.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Replace homepage with programme-specific source only after identity reconciliation.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Potential semantic duplicate of PKU Scholarship for International Students; hold."
+    },
+    {
+      "id": "8c563d87-7f96-4f58-aa80-fdb870cd1211",
+      "title": "Peking University Undergraduate International Scholarship",
+      "official_source_urls": [
+        "https://www.isd.pku.edu.cn/en/detail.php?id=525"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Likely degree-specific alias of same official PKU Scholarship for International Students.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Official scheme covers tuition, living stipend and medical insurance; not accommodation.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "Undergraduate applicants considered automatically; exact 2027 admissions deadline not established.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "description",
+          "note": "Avoid creating a distinct scholarship solely from degree segmentation.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Duplicate reconciliation before any archive."
+    },
+    {
+      "id": "b1725e2a-49b3-4166-9728-384da601a35f",
+      "title": "Tsinghua University Scholarship",
+      "official_source_urls": [
+        "https://www.tsinghua.edu.cn/en/Admissions/International_Students1/Financial_Aid.htm",
+        "https://yz.tsinghua.edu.cn/en/Financial_Aid/Financial_Aid_System.htm",
+        "https://www.dir.tsinghua.edu.cn/iren/info/1030/1471.htm"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Umbrella entry conflates Chinese Government Scholarship, Tsinghua Tuition Scholarship and Beijing Government Scholarship.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Full CGS is comprehensive; partial CGS and tuition scholarships are not universally fully funded.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Tsinghua Tuition Scholarship is full/partial tuition for one academic year; competitive and renewable application.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "note": "No stipend implied for tuition-only scholarships.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "International applicants, subject to programme-specific requirements.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "No universal 2027 scholarship deadline; departmental admissions windows differ.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "min_ielts",
+          "note": "Tsinghua CPFP 2027 programme has IELTS 7.0, but this must NOT be applied university-wide.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "description",
+          "note": "Separate scholarships from assistantships and awards; annual review for CGS.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Reconcile official named programmes before corrections; do not apply CPFP-specific English threshold universally."
+    },
+    {
+      "id": "4e7d47c2-41c3-42bb-879d-d99bba976639",
+      "title": "Fudan University Scholarship",
+      "official_source_urls": [
+        "https://iso.fudan.edu.cn/_upload/article/files/9d/76/d6586ac74c93af96c0846a4b4c9d/7ebc6a42-9399-4ba4-a45b-55a4d9ef74a2.pdf"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Official 2026 university-program CSC Type B is an identifiable named funding route; generic title ambiguous.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "note": "2026 Type B document specifies Master's and PhD.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "Non-Chinese citizens; Master's under 35 and PhD under 40 in 2026 call.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Full tuition, on-campus accommodation or accommodation subsidy, medical insurance.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "note": "2026 Type B Master's RMB 3000/month; PhD RMB 3500/month.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "2026 cycle applications Oct 13-Dec 10, 2025; 2027 deadline NOT confirmed.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "note": "2026 call closed; do not label open 2027.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Use Fudan programme-specific PDF, not university homepage.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Reconcile generic Fudan record with 2026 Type B; 2027 call requires new source."
+    },
+    {
+      "id": "f6a12dbf-7645-4e46-80d1-1b0baa2498d5",
+      "title": "Zhejiang University CSC Scholarship",
+      "official_source_urls": [
+        "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68989a2981849/page.psp"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Official 2026 route: Chinese Government Scholarship-Chinese University Program (CSC Type B).",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "note": "Reviewed official guide is for Master's only; PhD guide requires separate verification.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "Master's CSC Type B 2026 intake deadline Dec 31, 2025; no 2027 call verified.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "note": "2026 cycle closed.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "Foreign-passport / non-Chinese citizenship rules apply.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Use Zhejiang international admissions guide, not homepage.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Reconcile Type B route with general CSC listings; do not infer 2027 date."
+    },
+    {
+      "id": "c6cb3866-cfe0-4474-8011-a39e97cda83d",
+      "title": "Zhejiang University Scholarship",
+      "official_source_urls": [
+        "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68989a2981849/page.psp"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Generic title conflates CSC Type A, Type B, Zhejiang Government and multiple university/college awards.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Cannot label all funding routes fully funded.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Specific tuition and stipend coverage varies by named scheme.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "2026 deadlines vary: Type B Dec 31 2025, Zhejiang Government Feb 28 2026, China-ASEAN Oceanic May 31 2026.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "note": "Reviewed Master's guide does not substantiate Bachelor+Master+PhD umbrella as one programme.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Replace generic page with matched programme-specific source.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Resolve programme identity; do not split automatically into duplicates."
+    },
+    {
+      "id": "a816f159-5564-4c5c-87c0-b39409690c79",
+      "title": "IIT Bombay International Graduate Scholarship",
+      "official_source_urls": [
+        "https://www.ir.iitb.ac.in/new-international-degree-students"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Official page lists ICCR, Study in India, DIA for ASEAN PhD, AARDO tuition waiver, foreign sponsorship, DAAD In-Region and doctoral TA routes; exact generic award title not established.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Do not conflate competitive assistantships, tuition-only AARDO waivers and externally sponsored scholarships into a guaranteed full grant.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Only very limited PhD tuition waivers may be available; AARDO specifically tuition-only, not stipend.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "Routes vary: DIA ASEAN citizens; AARDO member countries; ICCR schemes have country allocations; foreign admission differs from grant eligibility.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "IITB publishes admission windows (Autumn Jan-Mar, Spring PhD Sep-Oct); not a universal scholarship deadline.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Use IITB international-degree-students page and match named funding route.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Five IITB generic records likely overlap; do not archive without authorized semantic reconciliation."
+    },
+    {
+      "id": "d42efd88-bedc-4346-b883-237b3a9d96d8",
+      "title": "IIT Bombay Masters Excellence Scholarship",
+      "official_source_urls": [
+        "https://www.ir.iitb.ac.in/new-international-degree-students"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Official page lists ICCR, Study in India, DIA for ASEAN PhD, AARDO tuition waiver, foreign sponsorship, DAAD In-Region and doctoral TA routes; exact generic award title not established.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Do not conflate competitive assistantships, tuition-only AARDO waivers and externally sponsored scholarships into a guaranteed full grant.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Only very limited PhD tuition waivers may be available; AARDO specifically tuition-only, not stipend.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "Routes vary: DIA ASEAN citizens; AARDO member countries; ICCR schemes have country allocations; foreign admission differs from grant eligibility.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "IITB publishes admission windows (Autumn Jan-Mar, Spring PhD Sep-Oct); not a universal scholarship deadline.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Use IITB international-degree-students page and match named funding route.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Five IITB generic records likely overlap; do not archive without authorized semantic reconciliation."
+    },
+    {
+      "id": "6ba8a99f-2107-4d9e-9b95-7f4158650401",
+      "title": "IIT Bombay Masters International Scholarship",
+      "official_source_urls": [
+        "https://www.ir.iitb.ac.in/new-international-degree-students"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Official page lists ICCR, Study in India, DIA for ASEAN PhD, AARDO tuition waiver, foreign sponsorship, DAAD In-Region and doctoral TA routes; exact generic award title not established.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Do not conflate competitive assistantships, tuition-only AARDO waivers and externally sponsored scholarships into a guaranteed full grant.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Only very limited PhD tuition waivers may be available; AARDO specifically tuition-only, not stipend.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "Routes vary: DIA ASEAN citizens; AARDO member countries; ICCR schemes have country allocations; foreign admission differs from grant eligibility.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "IITB publishes admission windows (Autumn Jan-Mar, Spring PhD Sep-Oct); not a universal scholarship deadline.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Use IITB international-degree-students page and match named funding route.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Five IITB generic records likely overlap; do not archive without authorized semantic reconciliation."
+    },
+    {
+      "id": "700b8004-fb0b-4246-8b8a-d383b25edbdf",
+      "title": "IIT Bombay Phd Excellence Scholarship",
+      "official_source_urls": [
+        "https://www.ir.iitb.ac.in/new-international-degree-students"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Official page lists ICCR, Study in India, DIA for ASEAN PhD, AARDO tuition waiver, foreign sponsorship, DAAD In-Region and doctoral TA routes; exact generic award title not established.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Do not conflate competitive assistantships, tuition-only AARDO waivers and externally sponsored scholarships into a guaranteed full grant.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Only very limited PhD tuition waivers may be available; AARDO specifically tuition-only, not stipend.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "Routes vary: DIA ASEAN citizens; AARDO member countries; ICCR schemes have country allocations; foreign admission differs from grant eligibility.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "IITB publishes admission windows (Autumn Jan-Mar, Spring PhD Sep-Oct); not a universal scholarship deadline.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Use IITB international-degree-students page and match named funding route.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Five IITB generic records likely overlap; do not archive without authorized semantic reconciliation."
+    },
+    {
+      "id": "44daaaf2-e51c-4f68-80d4-5baa19573f9b",
+      "title": "IIT Bombay Phd International Scholarship",
+      "official_source_urls": [
+        "https://www.ir.iitb.ac.in/new-international-degree-students"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Official page lists ICCR, Study in India, DIA for ASEAN PhD, AARDO tuition waiver, foreign sponsorship, DAAD In-Region and doctoral TA routes; exact generic award title not established.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Do not conflate competitive assistantships, tuition-only AARDO waivers and externally sponsored scholarships into a guaranteed full grant.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Only very limited PhD tuition waivers may be available; AARDO specifically tuition-only, not stipend.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "Routes vary: DIA ASEAN citizens; AARDO member countries; ICCR schemes have country allocations; foreign admission differs from grant eligibility.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "IITB publishes admission windows (Autumn Jan-Mar, Spring PhD Sep-Oct); not a universal scholarship deadline.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Use IITB international-degree-students page and match named funding route.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Five IITB generic records likely overlap; do not archive without authorized semantic reconciliation."
+    },
+    {
+      "id": "34af3577-5c9f-4113-b509-86fc2b10c008",
+      "title": "Indian Council for Cultural Relations (ICCR) Scholarship",
+      "official_source_urls": [
+        "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+        "https://a2ascholarships.iccr.gov.in/assets/site/docs/Timeline-AY-2026-27.pdf"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "ICCR is umbrella of 18 named 2026/27 schemes, not one unrestricted award.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "Country and scheme-specific restrictions: Nepal, Maldives, Mekong-Ganga, Africa, Mongolia, Bhutan, Sri Lanka, Bangladesh, etc.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Scheme-specific support must be verified before any universal fully funded claim.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "2026/27 A2A application window Feb 27-Apr 15, 2026; closed. 2027/28 deadline unannounced.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "note": "2026/27; some Quad STEM scheme runs through 2027/28 but exact call not yet established.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "note": "Online-only Afghan e-scholarship and AYUSH specialities have distinct scope; do not apply generic degree levels to all.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Use ICCR official scheme list and A2A timeline.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Reconcile umbrella vs separately named ICCR schemes; do not mass-publish all 18 without scheme-level funding and nationality verification."
+    },
+    {
+      "id": "5f168983-db6b-45ca-96fa-a1f33d9436dd",
+      "title": "National University of Malaysia Scholarship",
+      "official_source_urls": [
+        "https://www.ukm.my/pusatsiswazah/wp-content/uploads/2021/07/General-Terms-and-Specific-Conditions-UKM-Vice-Chancellor-Scholarship.pdf",
+        "https://www.ukm.my/pusatsiswazah/wp-content/uploads/2020/04/BI-GENERAL-TERMS-AND-SPECIFIC-CONDITIONS-UKM-VC-SCHOLARSHIP-24032020-copy.pdf"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "UKM Vice-Chancellor Gold and Silver are two named awards, not universal scholarship.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "note": "2021 official terms specify full-time research PhD only; 2020 terms include Master's and PhD. Current call must resolve conflict.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Competitive, subject to academic performance and KPI.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "note": "2021 Gold PhD RM 3200/month, Silver PhD RM 2000/month; older 2020 Master's amounts cannot be assumed current.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Fee waiver terms differ Gold/Silver; not automatic for every admitted student.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "No verified 2027 deadline or active 2026/27 call in reviewed documents.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Link current programme-specific terms after verifying which version governs.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Hold until current-cycle UKM call confirms 2021 vs 2020 terms."
+    },
+    {
+      "id": "31b9a432-6477-444a-87ba-9b931bc870d2",
+      "title": "Universiti Malaya Scholarship",
+      "official_source_urls": [
+        "https://umresearch.um.edu.my/join-us/universiti-malaya-scholarshipscheme-umss/"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Official UMSS is graduate research assistantship with conditional tuition waiver, not guaranteed comprehensive scholarship.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "note": "Master's and PhD; GRA may cover coursework/mixed/research but tuition waiver only for full research.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Stipend depends on research-grant allocation and GRA appointment; do not advertise unconditional full funding.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "note": "Minimum RM 1000/month subject to grant conditions; not universal fixed award.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Waiver requires separate approval; admissions, thesis, examination, graduation and international student fees are not waived.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "Malaysian and non-Malaysian students with qualifying UM status; not automatically all applicants.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "UMSS via RARS; no universal scholarship deadline established.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "description",
+          "note": "UMSS agreement includes RM 20,000 Master's / RM 25,000 PhD repayment for breach/withdrawal; disclose material condition.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Reconcile generic listing with UMSS and other named UM scholarships; distinguish research employment-like assistance and breach repayment."
+    },
+    {
+      "id": "6579d3d9-04a2-4647-8179-18cb2d8d6d5a",
+      "title": "University of Barcelona Masters International Scholarship",
+      "official_source_urls": [
+        "https://web.ub.edu/en/web/beques-graus-masters/beques-m%C3%A0ster-ub"
+      ],
+      "field_review_proposals": [
+        {
+          "field": "title",
+          "note": "Generic international Master's full-tuition award not established; named Master+ UB 2026/27 is collaboration programme.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "note": "Master+ UB supports paid research-group collaboration; do not imply unconditional tuition grant.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "note": "Tuition may be financed for some linked Master's programmes depending on research group budget, not guaranteed.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "note": "April 2026 edition application May 5-June 5 2026; October edition exists but exact 2026 date not verified.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "note": "DNI/NIE and programme-specific language/academic requirements; cannot claim unrestricted international eligibility.",
+          "provenance_status": "proposed_only_not_accepted"
+        },
+        {
+          "field": "official_url",
+          "note": "Use Master+ UB programme-specific official page.",
+          "provenance_status": "proposed_only_not_accepted"
+        }
+      ],
+      "decision": "Keep generic listing under review; reconcile with existing private Master+ UB draft."
+    }
+  ],
+  "existing_draft_reviews": [
+    {
+      "id": "09900e57-737b-422e-b6c8-583c9b52aace",
+      "title": "CUHK-Shenzhen International Undergraduate Entry Scholarships",
+      "official_sources": [
+        "https://intladmissions.cuhk.edu.cn/en/page/18",
+        "https://intladmissions.cuhk.edu.cn/en/page/190",
+        "https://intladmissions.cuhk.edu.cn/en/page/351",
+        "https://intladmissions.cuhk.edu.cn/en/article/478"
+      ],
+      "staging": {
+        "status": "draft",
+        "verification_status": "curated",
+        "last_successful_check_at": null,
+        "audit_failure_count": 7,
+        "provenance_count": 0,
+        "reviewer_provenance_count": 0
+      },
+      "verified_fields": {
+        "cycle": "2027 entry",
+        "early_bird_deadline": "2026-11-01 23:59:59 China time",
+        "regular_deadline": "2027-03-07 23:59:59 China time",
+        "late_deadline": "2027-04-18 23:59:59 China time (very limited scholarships)",
+        "degree": "Bachelor",
+        "automatic_entry_scholarship_consideration": true,
+        "tiers": "Honor CNY187000/year; Full CNY162000; Half CNY81000; Inspirational CNY30000; Accommodation CNY2400; separate music tiers",
+        "ielts": "6.5 (or qualifying alternative)",
+        "toefl": "80/120 or 4.5/6.0",
+        "sat": "Not universally required; 590 SAT ERW is one accepted English alternative; SAT1190+high school certificate is one qualifying admissions pathway"
+      },
+      "hold": "Official English page says conditional-test deadline May 21 2027, admissions deadlines/FAQ say May 28 2027; DO NOT choose a date without university clarification. Audit failures are not proof of discontinued programme. Complete fresh audit and authenticated reviewer provenance before publish."
+    },
+    {
+      "id": "7f996e1c-b4ce-4554-800f-9c1788451ecf",
+      "title": "Master+ UB Programme 2026/2027",
+      "official_sources": [
+        "https://web.ub.edu/en/web/beques-graus-masters/beques-m%C3%A0ster-ub"
+      ],
+      "staging": {
+        "status": "draft",
+        "verification_status": "curated",
+        "last_successful_check_at": null,
+        "audit_failure_count": 0,
+        "provenance_count": 0,
+        "reviewer_provenance_count": 0
+      },
+      "verified_fields": {
+        "cycle": "2026/27",
+        "april_round_deadline": "2026-06-05 (closed)",
+        "funding": "Research-group collaboration stipend; tuition financing only for some master's courses subject to budget",
+        "degree": "Master"
+      },
+      "hold": "October 2026 edition exists but exact application deadline unverified; DNI/NIE requirement and language conditions vary. Requires audit and provenance."
+    }
+  ],
+  "official_named_scheme_leads": [
+    {
+      "name": "Sushma Swaraj Silver Jubilee Scholarship Scheme (Nepal)",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Aid to Maldives Scholarship Scheme",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Mekong Ganga Co-operation Scholarship Scheme",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "India-Africa Maitri Scholarship Scheme",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Kushok Bakula Rinpoche Scholarship Scheme (Mongolia)",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Dr. B. R. Ambedkar Scholarship Scheme (Bhutan)",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Quad STEM Scholarship Scheme (2025/26–2027/28)",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Aid to Sri Lanka Scholarship Scheme",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "AYUSH Scholarship Scheme for BIMSTEC Countries",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Special Scholarship Scheme for Afghan Nationals (online e-scholarship)",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": "Online-only scheme; degree catalog eligibility requires review"
+    },
+    {
+      "name": "AYUSH Scholarship Scheme for non-BIMSTEC countries",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "AYUSH Scholarship Scheme for Malaysian Nationals",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "AYUSH Scholarship Scheme for South East Asian Region",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Atal Bihari Vajpayee General Scholarship Scheme",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Dr. A. P. J. Abdul Kalam Commonwealth Scholarship Scheme",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Dr. S. Radhakrishnan Cultural Exchange Scholarship Scheme",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Lata Mangeshkar Dance & Music Scholarship Scheme",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "Suborno Jayanti Scholarship Scheme (Bangladesh)",
+      "provider": "ICCR",
+      "country": "India",
+      "source": "https://iccr.gov.in/index.php/academics/scholarships/iccr-scholarship/iccr-scholarship-schemes",
+      "documented_cycle": "2026/27",
+      "status": "named_official_scheme_only_not_publication_ready",
+      "missing": [
+        "programme-specific funding",
+        "eligibility/country detail",
+        "degree scope",
+        "2027/28 call and deadline",
+        "duplicate review"
+      ],
+      "catalog_scope_note": null
+    },
+    {
+      "name": "IIT Bombay Doctoral-fellowship in India for ASEAN",
+      "provider": "IIT Bombay / Government of India",
+      "source": "https://www.ir.iitb.ac.in/new-international-degree-students",
+      "status": "official_named_route_not_2027_verified",
+      "funding": "Monthly stipend and annual research grant for up to 5 years",
+      "eligibility": "ASEAN scholars pursuing PhD",
+      "missing": [
+        "2027 application dates",
+        "funding amount",
+        "duplicate review"
+      ]
+    },
+    {
+      "name": "IIT Bombay Fellowship to AARDO Member Countries",
+      "provider": "IIT Bombay",
+      "source": "https://www.ir.iitb.ac.in/new-international-degree-students",
+      "status": "official_named_route_not_2027_verified",
+      "funding": "Tuition waiver up to 2 years Master's / 4 years PhD; NOT living stipend",
+      "eligibility": "AARDO member countries",
+      "missing": [
+        "2027 deadline",
+        "member-country eligibility",
+        "duplicate review"
+      ]
+    },
+    {
+      "name": "IIT Bombay Study in India (SII) scholarship/fee waiver route",
+      "provider": "Study in India / IIT Bombay",
+      "source": "https://www.ir.iitb.ac.in/new-international-degree-students",
+      "status": "official_route_needs_grant_vs_waiver_separation",
+      "missing": [
+        "specific grant amount",
+        "2027 date",
+        "duplicate review"
+      ]
+    },
+    {
+      "name": "UKM Vice-Chancellor Gold Scholarship",
+      "provider": "UKM",
+      "source": "https://www.ukm.my/pusatsiswazah/wp-content/uploads/2021/07/General-Terms-and-Specific-Conditions-UKM-Vice-Chancellor-Scholarship.pdf",
+      "status": "official_2021_terms_not_current_cycle",
+      "missing": [
+        "current call",
+        "2027 deadline",
+        "degree conflict with 2020 document"
+      ]
+    },
+    {
+      "name": "UKM Vice-Chancellor Silver Scholarship",
+      "provider": "UKM",
+      "source": "https://www.ukm.my/pusatsiswazah/wp-content/uploads/2021/07/General-Terms-and-Specific-Conditions-UKM-Vice-Chancellor-Scholarship.pdf",
+      "status": "official_2021_terms_not_current_cycle",
+      "missing": [
+        "current call",
+        "2027 deadline",
+        "degree conflict with 2020 document"
+      ]
+    },
+    {
+      "name": "Fudan Chinese Government Scholarship Type B",
+      "provider": "Fudan University / CSC",
+      "source": "https://iso.fudan.edu.cn/_upload/article/files/9d/76/d6586ac74c93af96c0846a4b4c9d/7ebc6a42-9399-4ba4-a45b-55a4d9ef74a2.pdf",
+      "status": "2026_call_closed",
+      "deadline": "2025-12-10",
+      "missing": [
+        "2027 call",
+        "duplicate review"
+      ]
+    },
+    {
+      "name": "Zhejiang University China-ASEAN Oceanic Scholarship",
+      "provider": "Zhejiang University",
+      "source": "https://iczu.zju.edu.cn/admissionsen/2024/1030/c68989a2981849/page.psp",
+      "status": "2026_call_closed",
+      "deadline": "2026-05-31",
+      "missing": [
+        "2027 call",
+        "programme funding details",
+        "duplicate review"
+      ]
+    },
+    {
+      "name": "Tsinghua University Tuition Scholarship",
+      "provider": "Tsinghua University",
+      "source": "https://yz.tsinghua.edu.cn/en/Financial_Aid/Financial_Aid_System.htm",
+      "status": "named_annual_competitive_tuition_only",
+      "missing": [
+        "2027 programme-specific call",
+        "duplicate review"
+      ]
+    }
+  ],
+  "important_scope_controls": [
+    "ICCR has 18 named 2026/27 schemes; 18 schemes do not mean 18 publishable 2027 programmes.",
+    "CUHK-Shenzhen entry scholarship tiers are variants within one umbrella, not automatically five separate scholarship records.",
+    "UKM 2020 and 2021 documents disagree on Master's eligibility; do not silently pick older or newer terms as current.",
+    "UMSS includes conditional repayment on breach; not a conventional unconditional scholarship.",
+    "IIT Bombay AARDO is tuition waiver only, not full scholarship; foreign TA is an assistantship.",
+    "Official CUHK 2027 English-document deadline discrepancy (May 21 vs May 28) is unresolved.",
+    "No 2027 deadlines inferred from 2026 historical calls; no transient HTTP failure treated as programme closure."
+  ],
+  "staging_before": {
+    "snapshot_at_utc": "2026-10-24T23:24:41Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "provenance_with_accepted_value": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_logs": 8,
+    "auth_uid": null,
+    "is_admin": false
+  },
+  "auth_blocker": "Staging SQL management context has auth.uid() NULL and is_admin() false; publication and provenance functions require authenticated admin. No alternate admin-publish edge function present; do not spoof auth role or bypass gates.",
+  "ci_required_before_production": true,
+  "metrics": {
+    "published_records_reviewed": 16,
+    "field_review_proposals": 103,
+    "named_2026_iccr_scheme_leads": 18,
+    "additional_named_or_distinct_funding_routes": 8,
+    "existing_drafts_assessed": 2,
+    "staging_edits": 0,
+    "publications": 0
+  }
+}

@@ -1,0 +1,353 @@
+{
+  "generated_at": "2026-10-25T04:20:54Z",
+  "project": "cbzriyarlvpmtfbjgede",
+  "scope": "Staging-only source evidence, no applied database edits",
+  "before": {
+    "at": "2026-10-25T04:19:48.462778+00:00",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 637,
+    "admin_logs": 8
+  },
+  "after": {
+    "at": "2026-10-25T04:20:54.317061+00:00",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 637,
+    "admin_logs": 8
+  },
+  "records_reviewed": [
+    {
+      "id": "a2d6ecba-ca77-4d3d-b7e2-1cf26968b0ed",
+      "title": "Orange Knowledge Programme",
+      "finding": "Ended 2024; no new rounds; authorized archive",
+      "fields_to_review": [
+        "cycle_status",
+        "deadline_notes"
+      ],
+      "official_source": "https://www.nuffic.nl/en/news/looking-back-on-the-orange-knowledge-impact-event",
+      "review_only": true
+    },
+    {
+      "id": "ca1e3e04-690b-4e94-8505-f30a9f026efb",
+      "title": "Utrecht Excellence Scholarship",
+      "finding": "No new awards for 2026/27 onward; authorized archive review",
+      "fields_to_review": [
+        "cycle_status",
+        "deadline_notes"
+      ],
+      "official_source": "https://www.uu.nl/en/masters/utrecht-excellence-scholarships",
+      "review_only": true
+    },
+    {
+      "id": "2357f2f3-bd5f-4831-b1ad-2e23fd279e2f",
+      "title": "TU Delft Excellence Scholarship",
+      "finding": "Likely van Effen canonical; 2026-12-01 23:59 CET; full tuition plus living contribution; no fixed stipend published",
+      "fields_to_review": [
+        "title",
+        "deadline",
+        "application_cycle",
+        "tuition_coverage",
+        "stipend",
+        "eligible_nationalities"
+      ],
+      "official_source": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships",
+      "review_only": true
+    },
+    {
+      "id": "f23f3f15-0297-4d35-9c71-999301c29bec",
+      "title": "TU Delft Masters Excellence Scholarship",
+      "finding": "Possible van Effen duplicate; EUR 14k stipend unsubstantiated",
+      "fields_to_review": [
+        "title",
+        "tuition_coverage",
+        "stipend",
+        "deadline"
+      ],
+      "official_source": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships",
+      "review_only": true
+    },
+    {
+      "id": "16769d2e-1b09-4472-896d-dc209e86ddd6",
+      "title": "TU Delft Masters International Scholarship",
+      "finding": "Possible van Effen duplicate; generic award identity unverified",
+      "fields_to_review": [
+        "title",
+        "tuition_coverage",
+        "stipend",
+        "deadline"
+      ],
+      "official_source": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships",
+      "review_only": true
+    },
+    {
+      "id": "ec0262a7-6b7c-48a9-95bf-b7f69af09a60",
+      "title": "Leiden University Excellence Scholarship",
+      "finding": "LExS: Feb 1 for September intake, exact year not on page; non-EEA/EFTA except specified Advanced LLM and IR Diplomacy; partial tuition EUR 10k/15k/17.5k/18.5k/19k",
+      "fields_to_review": [
+        "eligible_nationalities",
+        "tuition_coverage",
+        "deadline_notes",
+        "official_url"
+      ],
+      "official_source": "https://www.student.universiteitleiden.nl/en/scholarships/sea/leiden-university-excellence-scholarship-lexs?cd=life-science-and-technology-bsc",
+      "review_only": true
+    },
+    {
+      "id": "d0d0f071-0fa9-4024-b264-932dc6ee3f6d",
+      "title": "Amsterdam Excellence Scholarship",
+      "finding": "Identity and current cycle unverified; do not conflate with faculty-specific Amsterdam Merit Scholarship or infer discontinuation",
+      "fields_to_review": [
+        "title",
+        "application_cycle",
+        "official_url"
+      ],
+      "official_source": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+      "review_only": true
+    },
+    {
+      "id": "47a131a5-c336-449b-9eb4-2c7f71f8a5b8",
+      "title": "University of Amsterdam Masters Excellence Scholarship",
+      "finding": "Generic EUR 25k not substantiated; GSSS AMS is tuition-equivalent grant, 2027-02-15 deadline, non-EEA; identity reconciliation",
+      "fields_to_review": [
+        "title",
+        "tuition_coverage",
+        "eligible_nationalities",
+        "deadline_notes"
+      ],
+      "official_source": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+      "review_only": true
+    },
+    {
+      "id": "cf582c4e-da47-43d5-8c12-5e9a12fc005a",
+      "title": "University of Amsterdam Masters International Scholarship",
+      "finding": "Generic EUR 25k not substantiated; business AMS and GSSS AMS differ; identity reconciliation",
+      "fields_to_review": [
+        "title",
+        "tuition_coverage",
+        "eligible_nationalities",
+        "official_url"
+      ],
+      "official_source": "https://www.uva.nl/en/programmes/masters/business-administration/tuition-fee/amsterdam-merit-scholarship.html",
+      "review_only": true
+    },
+    {
+      "id": "85068aa3-53fb-416b-a878-31850b2cf88a",
+      "title": "University of Auckland International Scholarship",
+      "finding": "Generic bachelor identity unverified; distinct named 2027 master's International Student Excellence award is 25% first-year tuition",
+      "fields_to_review": [
+        "title",
+        "degree_levels",
+        "tuition_coverage",
+        "deadline_notes"
+      ],
+      "official_source": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+      "review_only": true
+    },
+    {
+      "id": "6add8e4a-d951-4925-a67c-fb46802deaf7",
+      "title": "University of Auckland Masters International Scholarship",
+      "finding": "Generic full tuition plus NZD 27k unsubstantiated; 2027 named award only 25% first-year tuition; Oct 20 offer required, Nov 4 invited form",
+      "fields_to_review": [
+        "title",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline_notes"
+      ],
+      "official_source": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+      "review_only": true
+    },
+    {
+      "id": "01057f47-8ad1-4cae-b6cf-fedd1c43087e",
+      "title": "University of Auckland Phd International Scholarship",
+      "finding": "Reconcile with UoADS; 2026 stipend NZD 35,468 plus tuition and insurance, up to 42 months; 2027 rounds 2026-11-01, 2027-02-01, 05-01, 08-01; 2027 stipend CPI pending",
+      "fields_to_review": [
+        "title",
+        "tuition_coverage",
+        "stipend",
+        "deadline_notes",
+        "application_cycle"
+      ],
+      "official_source": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/scholarship-types/postgraduate-scholarships/doctoral-scholarships.html",
+      "review_only": true
+    },
+    {
+      "id": "85a5f79c-000e-4bec-884c-5c3b445bb19e",
+      "title": "Victoria University of Wellington Scholarship",
+      "finding": "Generic Master/PhD not identical to Wellington Doctoral Scholarship; PhD-only official award NZD 32k/year plus domestic tuition for 3 years, Mar/Jul/Nov 1 rounds",
+      "fields_to_review": [
+        "title",
+        "degree_levels",
+        "stipend",
+        "tuition_coverage",
+        "deadline_notes"
+      ],
+      "official_source": "https://www.wgtn.ac.nz/scholarships/current/wellington-doctoral-scholarships",
+      "review_only": true
+    }
+  ],
+  "field_review_items": 52,
+  "private_draft_candidates": [
+    {
+      "title": "University of Auckland China High Achievers Scholarship",
+      "degree": "Master",
+      "funding": "25% first-year tuition, no stipend documented",
+      "eligibility": "New international Master's students from China, offer by 2026-10-20; review regulations for precise nationality/residence",
+      "deadline": "2026-11-04",
+      "deadline_note": "Only invited applicants holding an offer by 20 Oct 2026 can submit supplementary form; not open to new offer-seekers",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-china-high-achievers-scholarship-1241-all.html",
+      "duplicate_screen": "No exact-title match in targeted staging scholarship/source candidate search; broader semantic review pending",
+      "publication_status": "NOT inserted or published"
+    },
+    {
+      "title": "University of Auckland India High Achievers Scholarship",
+      "degree": "Master",
+      "funding": "25% first-year tuition, no stipend documented",
+      "eligibility": "New international Master's students from India, offer by 2026-10-20; review regulations for precise nationality/residence",
+      "deadline": "2026-11-04",
+      "deadline_note": "Only invited applicants holding an offer by 20 Oct 2026 can submit supplementary form; not open to new offer-seekers",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-india-high-achievers-scholarship-1143-all.html",
+      "duplicate_screen": "No exact-title match in targeted staging scholarship/source candidate search; broader semantic review pending",
+      "publication_status": "NOT inserted or published"
+    },
+    {
+      "title": "University of Auckland Indonesia High Achievers Scholarship",
+      "degree": "Master",
+      "funding": "25% first-year tuition, no stipend documented",
+      "eligibility": "New international Master's students from Indonesia, offer by 2026-10-20; review regulations for precise nationality/residence",
+      "deadline": "2026-11-04",
+      "deadline_note": "Only invited applicants holding an offer by 20 Oct 2026 can submit supplementary form; not open to new offer-seekers",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-indonesia-high-achievers-scholarship-1242-all.html",
+      "duplicate_screen": "No exact-title match in targeted staging scholarship/source candidate search; broader semantic review pending",
+      "publication_status": "NOT inserted or published"
+    },
+    {
+      "title": "University of Auckland USA High Achievers Scholarship",
+      "degree": "Master",
+      "funding": "25% first-year tuition, no stipend documented",
+      "eligibility": "New international Master's students from USA, offer by 2026-10-20; review regulations for precise nationality/residence",
+      "deadline": "2026-11-04",
+      "deadline_note": "Only invited applicants holding an offer by 20 Oct 2026 can submit supplementary form; not open to new offer-seekers",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-usa-high-achievers-scholarship-1243-all.html",
+      "duplicate_screen": "No exact-title match in targeted staging scholarship/source candidate search; broader semantic review pending",
+      "publication_status": "NOT inserted or published"
+    },
+    {
+      "title": "University of Auckland Vietnam High Achievers Scholarship",
+      "degree": "Master",
+      "funding": "25% first-year tuition, no stipend documented",
+      "eligibility": "New international Master's students from Vietnam, offer by 2026-10-20; review regulations for precise nationality/residence",
+      "deadline": "2026-11-04",
+      "deadline_note": "Only invited applicants holding an offer by 20 Oct 2026 can submit supplementary form; not open to new offer-seekers",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-vietnam-high-achievers-scholarship-1244-all.html",
+      "duplicate_screen": "No exact-title match in targeted staging scholarship/source candidate search; broader semantic review pending",
+      "publication_status": "NOT inserted or published"
+    },
+    {
+      "title": "TU Delft Microelectronics Scholarship",
+      "degree": "Master",
+      "funding": "Partial tuition; up to 2 awards",
+      "eligibility": "2-year MSc Electrical Engineering Microelectronics track, bachelor GPA >=80% maximum",
+      "deadline": "2026-12-01",
+      "deadline_note": "23:59 CET; scholarship-specific English evidence or exemption",
+      "official_url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships",
+      "duplicate_screen": "No exact-title match in targeted staging scholarship/source candidate search; broader semantic review pending",
+      "publication_status": "NOT inserted or published"
+    },
+    {
+      "title": "Research Mobilisation Doctoral Scholarship",
+      "degree": "PhD",
+      "funding": "NZD 32,000/year plus domestic tuition for 3 years; one award",
+      "eligibility": "Domestic applicants only; every 3 years",
+      "deadline": "2026-11-01",
+      "official_url": "https://www.wgtn.ac.nz/scholarships/current/research-mobilisation-doctoral-scholarship",
+      "duplicate_screen": "No exact-title match in targeted staging scholarship/source candidate search; broader semantic review pending",
+      "publication_status": "NOT inserted or published"
+    },
+    {
+      "title": "University of Auckland International School Leaver Scholarship",
+      "degree": "Bachelor",
+      "funding": "Up to NZD 20,000 tuition, up to 20 awards",
+      "eligibility": "International students who attended NZ secondary school",
+      "deadline": "2026-10-21",
+      "deadline_note": "Closed; next cycle not confirmed; draft only",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-school-leaver-scholarship-883-all.html",
+      "duplicate_screen": "No exact-title match in targeted staging scholarship/source candidate search; broader semantic review pending",
+      "publication_status": "NOT inserted or published"
+    },
+    {
+      "title": "University of Auckland Foundation Pathway High Achiever Award",
+      "degree": "Bachelor",
+      "funding": "NZD 20,000 tuition, 30 awards annually",
+      "eligibility": "Eligible UP Education/Study Group foundation pathway students",
+      "deadline": null,
+      "deadline_note": "No separate application, university nomination; 2027 intake confirmation needed",
+      "official_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-foundation-pathway-high-achiever-award-884-all.html",
+      "duplicate_screen": "No exact-title match in targeted staging scholarship/source candidate search; broader semantic review pending",
+      "publication_status": "NOT inserted or published"
+    }
+  ],
+  "existing_drafts_reviewed": [
+    {
+      "id": "0db4b799-59af-435b-8731-e7fc043dabbb",
+      "title": "University of Auckland International Student Excellence Scholarship (2027)",
+      "provenance": 2,
+      "reviewer_provenance": 0,
+      "successful_source_audit": false,
+      "note": "2027 partial 25% tuition and Nov 4 invited deadline match official; preserve Oct 20 offer requirement"
+    },
+    {
+      "id": "9fcbfb49-c640-40d7-99c5-ec056cbeb270",
+      "title": "Law, Economics and Governance International Talent Scholarship (LEGITS) 2027",
+      "provenance": 3,
+      "reviewer_provenance": 0,
+      "successful_source_audit": false,
+      "note": "2027 Feb 1 deadline and full tuition match; first Dutch master's and non-Dutch schooling/bachelor restrictions"
+    },
+    {
+      "id": "7d2342df-e871-4197-b0ef-c11a01904ec5",
+      "title": "Amsterdam Merit Scholarship — Graduate School of Social Sciences 2027–28",
+      "provenance": 4,
+      "reviewer_provenance": 0,
+      "successful_source_audit": false,
+      "note": "Feb 15 2027, tuition-equivalent instalment grant; degree_levels 'Masters' may need canonical 'Master'"
+    }
+  ],
+  "authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "db_role": "postgres",
+    "finding": "Admin-authenticated update/publish/provenance functions cannot be called legitimately from this session; no bypass",
+    "source_candidate_statuses": {
+      "pending": 626,
+      "ignored": 11
+    }
+  },
+  "actions": {
+    "staging_edits": 0,
+    "publications": 0,
+    "new_database_drafts": 0,
+    "archived": 0,
+    "provenance_inserted": 0,
+    "production_changes": 0
+  },
+  "notes": [
+    "Scholarship IELTS/TOEFL/SAT values are not stated as universal scholarship minima; leave unset rather than invent.",
+    "No transient HTTP failures treated as discontinuation.",
+    "Two ended published programmes require authenticated audited archival, not direct SQL.",
+    "Three generic TU Delft listings require canonical identity reconciliation.",
+    "Never count candidates or documentation as published programmes.",
+    "CI and staging validation required before any production change."
+  ]
+}

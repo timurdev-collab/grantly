@@ -1,0 +1,373 @@
+{
+  "report_type": "staging-only-official-source-catalog-qa",
+  "checked_on": "2026-10-24",
+  "staging_project_id": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "staging_baseline_at": "2026-10-24T05:24:35Z",
+  "published_record_investigations": [
+    {
+      "id": "f31e2996-1b1a-4532-911f-d928e6f13897",
+      "title": "McGill University Masters International Scholarship",
+      "findings": [
+        {
+          "field": "funding_type",
+          "finding": "University confirms graduate funding varies by degree and programme; thesis-based offers include individualized funding letters. No universal full-tuition grant exists under this generic title.",
+          "source": "https://www.mcgill.ca/gradapplicants/funding"
+        },
+        {
+          "field": "tuition_coverage",
+          "finding": "McGill international differential fee waivers are allocated by faculties and only eligible recipients receive the waiver, not all international graduates.",
+          "source": "https://www.mcgill.ca/gps/funding/intl/dfw"
+        },
+        {
+          "field": "deadline",
+          "finding": "No universal scholarship deadline. Individual graduate programme and award cycles apply.",
+          "source": "https://www.mcgill.ca/gradapplicants/funding"
+        },
+        {
+          "field": "official_url",
+          "finding": "Replace generic homepage only after matching a named current scholarship; avoid duplicates with DFW and McCall MacBain.",
+          "source": "https://www.mcgill.ca/gradapplicants/funding"
+        }
+      ],
+      "action": "programme_identity_reconciliation"
+    },
+    {
+      "id": "dfdf9d29-8e07-4a89-8c83-8d9a4ffa4c38",
+      "title": "McGill University Phd International Scholarship",
+      "findings": [
+        {
+          "field": "funding_type",
+          "finding": "University confirms graduate funding varies by degree and programme; thesis-based offers include individualized funding letters. No universal full-tuition grant exists under this generic title.",
+          "source": "https://www.mcgill.ca/gradapplicants/funding"
+        },
+        {
+          "field": "tuition_coverage",
+          "finding": "McGill international differential fee waivers are allocated by faculties and only eligible recipients receive the waiver, not all international graduates.",
+          "source": "https://www.mcgill.ca/gps/funding/intl/dfw"
+        },
+        {
+          "field": "deadline",
+          "finding": "No universal scholarship deadline. Individual graduate programme and award cycles apply.",
+          "source": "https://www.mcgill.ca/gradapplicants/funding"
+        },
+        {
+          "field": "official_url",
+          "finding": "Replace generic homepage only after matching a named current scholarship; avoid duplicates with DFW and McCall MacBain.",
+          "source": "https://www.mcgill.ca/gradapplicants/funding"
+        }
+      ],
+      "action": "programme_identity_reconciliation"
+    },
+    {
+      "id": "2b38db0b-fb23-40fe-8b59-c3134d42eab4",
+      "title": "McGill University Undergraduate International Scholarship",
+      "findings": [
+        {
+          "field": "funding_type",
+          "finding": "Official undergraduate entrance scholarships are one-year CAD 3,000 or major CAD 3,000–12,000 annually; neither universally provides full tuition.",
+          "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships"
+        },
+        {
+          "field": "degree_levels",
+          "finding": "First-time full-time undergraduate entrants; excludes transfer, mature, diploma, exchange, special, part-time and visiting students.",
+          "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships"
+        },
+        {
+          "field": "eligible_nationalities",
+          "finding": "International applicants may compete, but CAD 12,000/year tier reserved for Canadian citizens/permanent residents.",
+          "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships"
+        },
+        {
+          "field": "deadline",
+          "finding": "Major entrance deadline varies by school location (outside Canada Jan 21, rest Canada Feb 7, Quebec CEGEP Mar 7). Source does not explicitly date these to 2027; verify cycle before setting date.",
+          "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships/application-instructions"
+        },
+        {
+          "field": "sat_required",
+          "finding": "SAT/ACT optional for specified Fall 2027 programmes; scholarship consideration can use other academic evidence. Do not set globally mandatory SAT.",
+          "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships/criteria"
+        }
+      ],
+      "action": "reconcile with existing curated McGill Entrance Scholarship umbrella"
+    },
+    {
+      "id": "17db5eb2-ff40-470d-bf83-2de0185a2416",
+      "title": "McGill University Entrance Scholarship",
+      "verification_status": "curated",
+      "findings": [
+        {
+          "field": "application_cycle",
+          "finding": "Official Major Entrance application opens October 1, but current source lacks explicit academic-year label. One-year award is automatic; Major award requires separate application.",
+          "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships/application-instructions"
+        },
+        {
+          "field": "deadline_notes",
+          "finding": "Location-specific Major deadlines: Jan 21 outside Canada, Feb 7 rest of Canada, Mar 7 Quebec CEGEP; do not assign all three as a single deadline.",
+          "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships/application-instructions"
+        },
+        {
+          "field": "sat_required",
+          "finding": "Fall 2027 SAT/ACT test-optional exceptions; not a universal scholarship requirement.",
+          "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships/criteria"
+        }
+      ],
+      "action": "preserve as umbrella pending one-year/major separation decision"
+    },
+    {
+      "id": "300da265-eedd-466c-b53b-565053f79b2c",
+      "title": "Waterloo International Experience Award",
+      "findings": [
+        {
+          "field": "official_url",
+          "finding": "Homepage does not identify this named award. Official CAD 10,000 International Student Entrance Scholarship is separately named and should not be silently substituted.",
+          "source": "https://uwaterloo.ca/future-students/financing/international-scholarships"
+        },
+        {
+          "field": "funding_type",
+          "finding": "The CAD 10,000 amount matches the named International Student Entrance Scholarship, but identity unproven; do not assume they are the same.",
+          "source": "https://uwaterloo.ca/future-students/financing/international-scholarships"
+        },
+        {
+          "field": "eligible_nationalities",
+          "finding": "Official named entrance award is limited to international fee-paying eligible first-year full-time undergraduate students; exclusions apply.",
+          "source": "https://uwaterloo.ca/future-students/financing/international-scholarships"
+        },
+        {
+          "field": "deadline",
+          "finding": "Named entrance award is automatic with admission, not a standalone application date.",
+          "source": "https://uwaterloo.ca/future-students/financing/international-scholarships"
+        }
+      ],
+      "action": "resolve programme identity before edit/duplicate"
+    },
+    {
+      "id": "cf309cba-9022-452d-8167-4918e983d31e",
+      "title": "Carnegie Mellon University Artificial Intelligence Phd Award",
+      "findings": [
+        {
+          "field": "official_url",
+          "finding": "No distinct official scholarship programme evidenced by generic CMU homepage; departmental doctoral financial-support commitments are not independently named scholarship programmes.",
+          "source": "https://www.csd.cs.cmu.edu/academics/doctoral/admissions"
+        },
+        {
+          "field": "funding_type",
+          "finding": "CMU Computer Science Department funds admitted PhD students in good standing (tuition, stipend, fees, health insurance); cannot generalize to all CMU PhD awards.",
+          "source": "https://www.csd.cs.cmu.edu/academics/doctoral/admissions"
+        },
+        {
+          "field": "deadline",
+          "finding": "Programme admissions deadline is not a universal scholarship deadline; verify named award and current call first.",
+          "source": "https://www.csd.cs.cmu.edu/academics/doctoral/admissions"
+        },
+        {
+          "field": "language_tests",
+          "finding": "Programme-specific IELTS/TOEFL scores vary. CMU Materials Science & Engineering specifies IELTS 6.5 Master's / 7.5 PhD and TOEFL 86 / 100; do not generalize to CMU as a whole.",
+          "source": "https://www.mse.engineering.cmu.edu/education/graduate/apply/index.html"
+        }
+      ],
+      "action": "hold_for_identity_reconciliation; doctoral assistantship/salary not automatically grant"
+    },
+    {
+      "id": "7d4d972e-8d8a-4fed-bc49-04a6a09a45fe",
+      "title": "Carnegie Mellon University Engineering Masters Award",
+      "findings": [
+        {
+          "field": "official_url",
+          "finding": "No distinct official scholarship programme evidenced by generic CMU homepage; departmental doctoral financial-support commitments are not independently named scholarship programmes.",
+          "source": "https://www.cmu.edu/hub/new-grad/enrollment-finances.html"
+        },
+        {
+          "field": "funding_type",
+          "finding": "Master's aid depends on department; international students may need own/sponsor funds, and loans must not be treated as scholarships.",
+          "source": "https://www.cmu.edu/hub/new-grad/enrollment-finances.html"
+        },
+        {
+          "field": "deadline",
+          "finding": "Programme admissions deadline is not a universal scholarship deadline; verify named award and current call first.",
+          "source": "https://www.cmu.edu/hub/new-grad/enrollment-finances.html"
+        },
+        {
+          "field": "language_tests",
+          "finding": "Programme-specific IELTS/TOEFL scores vary. CMU Materials Science & Engineering specifies IELTS 6.5 Master's / 7.5 PhD and TOEFL 86 / 100; do not generalize to CMU as a whole.",
+          "source": "https://www.mse.engineering.cmu.edu/education/graduate/apply/index.html"
+        }
+      ],
+      "action": "hold_for_identity_reconciliation; doctoral assistantship/salary not automatically grant"
+    },
+    {
+      "id": "4ea5d339-fd12-41f1-a687-cbbab217bcb3",
+      "title": "Carnegie Mellon University Masters Excellence Scholarship",
+      "findings": [
+        {
+          "field": "official_url",
+          "finding": "No distinct official scholarship programme evidenced by generic CMU homepage; departmental doctoral financial-support commitments are not independently named scholarship programmes.",
+          "source": "https://www.cmu.edu/hub/new-grad/enrollment-finances.html"
+        },
+        {
+          "field": "funding_type",
+          "finding": "Master's aid depends on department; international students may need own/sponsor funds, and loans must not be treated as scholarships.",
+          "source": "https://www.cmu.edu/hub/new-grad/enrollment-finances.html"
+        },
+        {
+          "field": "deadline",
+          "finding": "Programme admissions deadline is not a universal scholarship deadline; verify named award and current call first.",
+          "source": "https://www.cmu.edu/hub/new-grad/enrollment-finances.html"
+        },
+        {
+          "field": "language_tests",
+          "finding": "Programme-specific IELTS/TOEFL scores vary. CMU Materials Science & Engineering specifies IELTS 6.5 Master's / 7.5 PhD and TOEFL 86 / 100; do not generalize to CMU as a whole.",
+          "source": "https://www.mse.engineering.cmu.edu/education/graduate/apply/index.html"
+        }
+      ],
+      "action": "hold_for_identity_reconciliation; doctoral assistantship/salary not automatically grant"
+    },
+    {
+      "id": "a05a5eea-5e4b-4c7e-b2ff-cd45ffcf842f",
+      "title": "Carnegie Mellon University Masters International Scholarship",
+      "findings": [
+        {
+          "field": "official_url",
+          "finding": "No distinct official scholarship programme evidenced by generic CMU homepage; departmental doctoral financial-support commitments are not independently named scholarship programmes.",
+          "source": "https://www.cmu.edu/hub/new-grad/enrollment-finances.html"
+        },
+        {
+          "field": "funding_type",
+          "finding": "Master's aid depends on department; international students may need own/sponsor funds, and loans must not be treated as scholarships.",
+          "source": "https://www.cmu.edu/hub/new-grad/enrollment-finances.html"
+        },
+        {
+          "field": "deadline",
+          "finding": "Programme admissions deadline is not a universal scholarship deadline; verify named award and current call first.",
+          "source": "https://www.cmu.edu/hub/new-grad/enrollment-finances.html"
+        },
+        {
+          "field": "language_tests",
+          "finding": "Programme-specific IELTS/TOEFL scores vary. CMU Materials Science & Engineering specifies IELTS 6.5 Master's / 7.5 PhD and TOEFL 86 / 100; do not generalize to CMU as a whole.",
+          "source": "https://www.mse.engineering.cmu.edu/education/graduate/apply/index.html"
+        }
+      ],
+      "action": "hold_for_identity_reconciliation; doctoral assistantship/salary not automatically grant"
+    },
+    {
+      "id": "e607d235-4b60-432a-a09c-b0ad1e49d468",
+      "title": "Carnegie Mellon University Phd Excellence Scholarship",
+      "findings": [
+        {
+          "field": "official_url",
+          "finding": "No distinct official scholarship programme evidenced by generic CMU homepage; departmental doctoral financial-support commitments are not independently named scholarship programmes.",
+          "source": "https://www.csd.cs.cmu.edu/academics/doctoral/admissions"
+        },
+        {
+          "field": "funding_type",
+          "finding": "CMU Computer Science Department funds admitted PhD students in good standing (tuition, stipend, fees, health insurance); cannot generalize to all CMU PhD awards.",
+          "source": "https://www.csd.cs.cmu.edu/academics/doctoral/admissions"
+        },
+        {
+          "field": "deadline",
+          "finding": "Programme admissions deadline is not a universal scholarship deadline; verify named award and current call first.",
+          "source": "https://www.csd.cs.cmu.edu/academics/doctoral/admissions"
+        },
+        {
+          "field": "language_tests",
+          "finding": "Programme-specific IELTS/TOEFL scores vary. CMU Materials Science & Engineering specifies IELTS 6.5 Master's / 7.5 PhD and TOEFL 86 / 100; do not generalize to CMU as a whole.",
+          "source": "https://www.mse.engineering.cmu.edu/education/graduate/apply/index.html"
+        }
+      ],
+      "action": "hold_for_identity_reconciliation; doctoral assistantship/salary not automatically grant"
+    },
+    {
+      "id": "3ff7f86c-7a78-4c97-b664-d6d4fd0661a7",
+      "title": "Carnegie Mellon University Phd International Scholarship",
+      "findings": [
+        {
+          "field": "official_url",
+          "finding": "No distinct official scholarship programme evidenced by generic CMU homepage; departmental doctoral financial-support commitments are not independently named scholarship programmes.",
+          "source": "https://www.csd.cs.cmu.edu/academics/doctoral/admissions"
+        },
+        {
+          "field": "funding_type",
+          "finding": "CMU Computer Science Department funds admitted PhD students in good standing (tuition, stipend, fees, health insurance); cannot generalize to all CMU PhD awards.",
+          "source": "https://www.csd.cs.cmu.edu/academics/doctoral/admissions"
+        },
+        {
+          "field": "deadline",
+          "finding": "Programme admissions deadline is not a universal scholarship deadline; verify named award and current call first.",
+          "source": "https://www.csd.cs.cmu.edu/academics/doctoral/admissions"
+        },
+        {
+          "field": "language_tests",
+          "finding": "Programme-specific IELTS/TOEFL scores vary. CMU Materials Science & Engineering specifies IELTS 6.5 Master's / 7.5 PhD and TOEFL 86 / 100; do not generalize to CMU as a whole.",
+          "source": "https://www.mse.engineering.cmu.edu/education/graduate/apply/index.html"
+        }
+      ],
+      "action": "hold_for_identity_reconciliation; doctoral assistantship/salary not automatically grant"
+    }
+  ],
+  "programme_leads": [
+    {
+      "name": "McGill One-Year Entrance Scholarship",
+      "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships",
+      "amount": "CAD 3,000 once",
+      "degree": "Bachelor",
+      "eligibility": "First-time full-time undergraduate entrants; automatic merit consideration; programme exclusions",
+      "cycle": "Current ongoing programme, admission-dependent",
+      "status": "reconcile_with_existing_McGill_Entrance_umbrella"
+    },
+    {
+      "name": "McGill Major Entrance Scholarship",
+      "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships",
+      "amount": "CAD 3,000–12,000/year renewable up to four years; CAD 12,000 tier Canadian citizens/permanent residents only",
+      "degree": "Bachelor",
+      "eligibility": "First-time full-time undergraduate entrants, academic merit and leadership; separate application",
+      "cycle": "Opens Oct 1; region-dependent deadlines Jan 21, Feb 7, Mar 7; 2027 label not explicit",
+      "status": "reconcile_with_existing_McGill_Entrance_umbrella"
+    },
+    {
+      "name": "McGill International Graduate Differential Fee Waiver",
+      "source": "https://www.mcgill.ca/gps/funding/intl/dfw",
+      "amount": "2026/27 value CAD 18,231 Master's or CAD 16,045.20 PhD, applied to international tuition supplement",
+      "degree": "Thesis Master/PhD",
+      "eligibility": "Selected international fee-paying full-time graduates; faculty nomination; no individual application",
+      "cycle": "2026/27 confirmed, next cycle pending",
+      "status": "private_draft_candidate"
+    },
+    {
+      "name": "Waterloo International Student Entrance Scholarship",
+      "source": "https://uwaterloo.ca/future-students/financing/international-scholarships",
+      "amount": "CAD 10,000 first year, CAD 5,000 applied to each of first two terms' tuition",
+      "degree": "Bachelor",
+      "eligibility": "International fee-paying first-year full-time students except specified programmes, transfers, deferrals and 2+2 entrants; official page also says certain deferred entrants eligible, needs reconciliation",
+      "cycle": "Automatic with admission; no separate scholarship deadline",
+      "status": "private_draft_candidate_identity_check",
+      "note": "Official page internally contradicts deferral eligibility; preserve uncertainty"
+    },
+    {
+      "name": "Waterloo Faculty of Mathematics Global Scholarships",
+      "source": "https://uwaterloo.ca/future-students/financing/international-scholarships",
+      "amount": "Up to 10 scholarships CAD 12,000–40,000",
+      "degree": "Bachelor",
+      "eligibility": "Most Faculty of Mathematics programmes; automatic consideration",
+      "cycle": "Next entry cycle not explicitly dated",
+      "status": "private_draft_candidate"
+    },
+    {
+      "name": "Waterloo Faculty of Science International Student Scholarships",
+      "source": "https://uwaterloo.ca/future-students/financing/international-scholarships",
+      "amount": "Up to 15 awards CAD 25,000–80,000",
+      "degree": "Bachelor",
+      "eligibility": "International applicants to most Faculty of Science programmes; separate application",
+      "cycle": "Next application deadline not established",
+      "status": "private_draft_candidate"
+    }
+  ],
+  "duplicate_screening": "Targeted SQL title search identified McGill Entrance Scholarship umbrella already published, Waterloo International Experience Award ambiguous identity, and six generic CMU awards. No semantic uniqueness proven.",
+  "important_cautions": [
+    "Do not confuse university graduate employment/assistantships with named grant scholarships.",
+    "Do not generalize CMU MSE IELTS/TOEFL to other departments.",
+    "Do not count McGill entrance subcategories twice before canonical review.",
+    "Waterloo official page has conflicting deferral eligibility statements.",
+    "SAT/ACT McGill test optional for some Fall 2027 programmes; no universal SAT requirement."
+  ],
+  "publication_status": "No staging writes: auth.uid() NULL; is_admin() false; all findings proposed, not accepted provenance."
+}

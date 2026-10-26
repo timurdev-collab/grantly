@@ -1,0 +1,333 @@
+{
+  "audit_type": "official_source_review_queue_not_authorized_publication",
+  "checked_at_utc": "2026-10-23T21:27:57Z",
+  "staging_project": "cbzriyarlvpmtfbjgede",
+  "baseline": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 636,
+    "admin_logs": 8,
+    "auth_uid": null,
+    "is_admin": false
+  },
+  "constraints": [
+    "Do not update production or published records without authenticated staging approval, provenance review and CI.",
+    "Do not mark reviewed/verified based only on public page retrieval.",
+    "Do not count study-fee discounts, paid PhD employment, or repayment obligations as unconditional fully funded grants.",
+    "IELTS/TOEFL/SAT scores are NOT inferred from institutional admission pages unless programme-specific and applicable.",
+    "Existing published records and candidates screened by title and programme URL in staging; semantic duplicate checks still required."
+  ],
+  "published_review": [
+    {
+      "id": "100c8969-e315-4430-ad40-a52d6873dc53",
+      "title": "KTH Royal Institute of Technology Computer Science Masters Award",
+      "action": "IDENTITY_AND_DUPLICATE_RECONCILIATION",
+      "existing_issue": "Generic award claims full tuition plus stipend, unrestricted nationality, no cycle or programme source; no provenance.",
+      "proposed_fields": {
+        "degree_levels": [
+          "Master"
+        ],
+        "funding_type": "Unconfirmed distinct programme; KTH Scholarship covers full tuition but no living costs",
+        "stipend": null,
+        "eligible_nationalities": "Fee-paying eligible students only; NOT unrestricted ALL",
+        "application_cycle": "2027 admission, if identical to KTH Scholarship",
+        "deadline": "2027-01-15 only if identity confirmed as KTH Scholarship",
+        "official_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827"
+      },
+      "field_sources": {
+        "funding_type": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827",
+        "stipend": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827",
+        "deadline": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827"
+      },
+      "duplicate_risk": {
+        "existing_published_id": "8a0f238c-c74a-435c-b59f-4ea4d40a94e2",
+        "decision": "HOLD: do not archive until identity verified"
+      }
+    },
+    {
+      "id": "38dcbee8-8772-477d-9f60-c64394c924df",
+      "title": "Lund University Global Scholarship",
+      "action": "CORRECT_WITH_ADMIN_REVIEW",
+      "existing_issue": "Marked Fully funded, despite tuition-only funding, nationality ALL, no 2027 cycle.",
+      "proposed_fields": {
+        "funding_type": "Partial to full tuition-fee reduction only; not fully funded",
+        "tuition_coverage": "Part or all tuition fees; living costs not covered",
+        "stipend": null,
+        "eligible_nationalities": "Non-EU/EEA tuition-fee-paying applicants, subject to admission and programme eligibility",
+        "application_cycle": "Autumn 2027 admission; scholarship portal usually opens early February 2027",
+        "deadline": null,
+        "deadline_notes": "2027 scholarship closing date not yet announced; 16 Feb 2026 was prior-cycle closing date. Degree admission deadline 15 Jan 2027, not scholarship deadline.",
+        "degree_levels": [
+          "Master",
+          "selected Bachelor programmes"
+        ]
+      },
+      "field_sources": {
+        "funding_type": "https://www.lunduniversity.lu.se/node/83",
+        "eligible_nationalities": "https://www.lunduniversity.lu.se/node/83",
+        "application_cycle": "https://www.lunduniversity.lu.se/node/83",
+        "admissions_deadline": "https://universityadmissions.se/en/key-dates-and-deadlines/autumn-semester-dates/"
+      }
+    },
+    {
+      "id": "f710ef9d-de77-43f4-9876-e2187a5f1500",
+      "title": "University of Copenhagen Masters International Scholarship",
+      "action": "RECONCILE_WITH_NAMED_DANISH_GOVERNMENT_SCHEME",
+      "existing_issue": "Generic full tuition plus guaranteed stipend and unrestricted ALL eligibility are unsupported.",
+      "proposed_fields": {
+        "degree_levels": [
+          "Master"
+        ],
+        "funding_type": "Competitive Danish Government Scholarship: full/partial tuition waiver and/or living-cost grant; not guaranteed",
+        "eligible_nationalities": "Eligible non-EU/EEA/Swiss citizens admitted to a qualifying Master's degree with applicable study residence permit",
+        "application_cycle": "September 2027 admission; scholarship automatically considered for eligible non-EU/EEA Master's applicants",
+        "deadline": "2027-01-15 (23:59 CET) is Master's admission deadline; no separate scholarship application",
+        "stipend": "Varies by faculty and award; not guaranteed",
+        "official_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+      },
+      "field_sources": {
+        "funding_type": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students",
+        "eligible_nationalities": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students",
+        "deadline": "https://www.ku.dk/studies/contact/student-guidance"
+      },
+      "duplicate_risk": {
+        "existing_published_id": "5312e376-15b5-4a22-90d5-71a2e7d44da7",
+        "decision": "HOLD: generic Denmark Government Scholarship may overlap"
+      }
+    },
+    {
+      "id": "2facb27a-61de-4ba1-8dd6-9333981c18b0",
+      "title": "University of Copenhagen Phd International Scholarship",
+      "action": "IDENTITY_REVIEW_NOT_GENERIC_GRANT",
+      "existing_issue": "Generic full-tuition-plus-stipend listing is not an identified independent award; many PhD positions are employment or externally financed.",
+      "proposed_fields": {
+        "degree_levels": [
+          "PhD"
+        ],
+        "funding_type": "Unconfirmed independent grant; funding typically through PhD employment, external funding or other sponsorship",
+        "deadline": null,
+        "application_cycle": "Project/faculty-specific vacancies, not universal",
+        "tuition_coverage": "From 1 Jan 2027 PhD tuition budget DKK 85,000/year for three years, funded by project/faculty/employer, not paid personally by student",
+        "eligible_nationalities": "Project and funding-specific; do not retain ALL without proof"
+      },
+      "field_sources": {
+        "funding_type": "https://phd.ku.dk/english/enrolment/",
+        "tuition_coverage": "https://phd.ku.dk/english/enrolment/phd-tuition-fee-at-the-university-of-copenhagen/"
+      },
+      "notes": "Do not relabel salaried PhD employment as unconditional scholarship. Do not archive solely due to generic description."
+    },
+    {
+      "id": "58307b7b-eda6-4b36-9cf2-ad5ff18bc67b",
+      "title": "University of Oulu International Scholarship",
+      "action": "CORRECT_2027_28_CYCLE",
+      "proposed_fields": {
+        "funding_type": "Partial tuition fee waiver for eligible continuing students; separate early-bird fee discount for new students",
+        "tuition_coverage": "No 100% waiver; programme-specific partial second-year waiver (e.g. 20% Finance, 30% Computer Science and Engineering, 40% Architecture)",
+        "eligible_nationalities": "Tuition-fee-liable non-EU/EEA/Swiss students without qualifying Finnish permit exemptions",
+        "application_cycle": "2027/28 study start; admissions 7–21 January 2027 for cited Master's programmes",
+        "deadline_notes": "7–21 Jan 2027 is admission window, NOT separate second-year scholarship deadline",
+        "stipend": null
+      },
+      "field_sources": {
+        "funding_type": "https://www.oulu.fi/en/apply/how-apply/university-oulu-tuition-fees-and-scholarships-for-international-applicants",
+        "application_cycle": "https://www.oulu.fi/en/apply/masters-computer-science-and-engineering",
+        "tuition_coverage": "https://www.oulu.fi/en/apply/masters-finance"
+      },
+      "notes": "Existing 6 provenance rows; no reviewer attribution. Do not count each degree waiver as an independent grant without programme rules."
+    },
+    {
+      "id": "8a0f238c-c74a-435c-b59f-4ea4d40a94e2",
+      "title": "KTH Scholarship",
+      "action": "VERIFIED_RECORD_PROVENANCE_REVIEW",
+      "existing_issue": "Already marked verified with no reviewer-attributed provenance; eligible_nationalities ALL is overbroad",
+      "proposed_fields": {
+        "degree_levels": [
+          "Master"
+        ],
+        "tuition_coverage": "Full tuition for qualifying KTH programmes; living costs excluded",
+        "stipend": null,
+        "deadline": "2027-01-15",
+        "application_cycle": "Autumn 2027, scholarship applications 1 Dec 2026–15 Jan 2027",
+        "eligible_nationalities": "Fee-paying applicants who select eligible KTH Master's programme first priority and pay application fee"
+      },
+      "field_sources": {
+        "tuition_coverage": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827",
+        "deadline": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827",
+        "eligible_nationalities": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827"
+      }
+    },
+    {
+      "id": "67821593-89ce-4176-991d-845ec3590c72",
+      "title": "University of Helsinki International Scholarship",
+      "action": "NATIONALITY_AND_DUPLICATE_REVIEW",
+      "existing_issue": "ALL nationality misrepresents tuition-liability conditions; overlaps with two generic Helsinki published records.",
+      "proposed_fields": {
+        "eligible_nationalities": "Applicants liable to pay tuition fees for eligible English-taught Master's degrees; EU/EEA fee-exempt applicants are not scholarship target",
+        "application_cycle": "Autumn 2027 admission, 5–19 Jan 2027",
+        "deadline": "2027-01-19",
+        "tuition_coverage": "50% or 100% tuition waiver, most awards 50%; living costs not included"
+      },
+      "field_sources": {
+        "funding_type": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+      },
+      "notes": "Existing 13 provenance rows; all lack reviewer attribution. Confirm exact scholarship policy again before edits."
+    }
+  ],
+  "existing_private_draft_triage": [
+    {
+      "id": "27968090-2edf-464d-9236-76f5186b741b",
+      "title": "EPFL-WISH Foundation Fellowship",
+      "deadline": "2026-10-25",
+      "source_registry_id": "3e493529-96d9-4c39-b454-8a8f111bbe12",
+      "link_status": "exact",
+      "last_successful_check_at": null,
+      "provenance_count": 3,
+      "reviewer_provenance": 0,
+      "action": "HOLD until authenticated source audit and review"
+    },
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "title": "Gordon and Isabel Humphrey Scholarship",
+      "deadline": "2026-10-25",
+      "source_registry_id": "de825573-3b5f-49db-bbef-12412edb8f1d",
+      "link_status": "exact",
+      "last_successful_check_at": null,
+      "provenance_count": 2,
+      "reviewer_provenance": 0,
+      "action": "HOLD until authenticated source audit and review"
+    }
+  ],
+  "candidates": [
+    {
+      "title": "KTH India Scholarship",
+      "provider": "KTH Royal Institute of Technology",
+      "country": "Sweden",
+      "status": "PROPOSE_PRIVATE_DRAFT_AFTER_AUTHENTICATED_DUPLICATE_CHECK",
+      "cycle": "2027",
+      "deadline": "2027-01-15",
+      "opens": "2026-12-01",
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "Full tuition for two years conditional on progress plus monthly living allowance for 10 academic months",
+      "eligibility": "Indian citizens who completed undergraduate studies in India, KTH first-priority fee-paying Master's applicants; Mumbai/Pune prioritized",
+      "official_url": "https://www.kth.se/en/studies/master/electromagnetics-fusion-and-space-engineering/2.25746/kth-india-scholarship-1.422144",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT score established",
+      "duplicate_check": "No matching title or programme URL in scholarships or candidates; distinct from existing tuition-only KTH Scholarship"
+    },
+    {
+      "title": "Lund ARUA Scholarship",
+      "provider": "Lund University",
+      "country": "Sweden",
+      "status": "EXISTING_SOURCE_CANDIDATE_ADVANCE_AFTER_AUTH",
+      "source_candidate_id": "736dc600-13a3-4b8f-90aa-6ff9156fc80c",
+      "cycle": "2027 admission; scholarship applications usually February, exact 2027 close unannounced",
+      "degree_levels": [
+        "Master / eligible international degree programmes"
+      ],
+      "funding": "Up to 90% tuition; living costs excluded",
+      "eligibility": "Past or present students of listed ARUA universities, non-EU/EEA/Swiss fee-paying citizens, Lund first-choice degree applicant",
+      "official_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/african-research-universities-alliance-arua-scholarship",
+      "tests": "No universal scholarship-specific IELTS/TOEFL/SAT score established",
+      "duplicate_check": "Existing pending source candidate; no scholarship record title match"
+    },
+    {
+      "title": "KTH One-Year Scholarship",
+      "provider": "KTH Royal Institute of Technology",
+      "country": "Sweden",
+      "status": "PRIVATE_DRAFT_CANDIDATE_NEXT_CYCLE_UNANNOUNCED",
+      "cycle": "2026 application closed 15 April; 2027 deadline not announced",
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "Tuition for second year only, living costs excluded",
+      "eligibility": "Current KTH fee-paying two-year Master's students with strong first-year grades; excludes joint/EIT programmes",
+      "official_url": "https://www.kth.se/en/studies/2.23106/master/engineering-physics/2.25746/kth-one-year-scholarship-1.290744",
+      "tests": "Not scholarship-specific",
+      "duplicate_check": "No matching title or URL in staging"
+    },
+    {
+      "title": "Alex Chernov Scholarship",
+      "provider": "University of Melbourne",
+      "country": "Australia",
+      "status": "HIGH_PRIORITY_PRIVATE_DRAFT_CANDIDATE",
+      "cycle": "March 2027 start",
+      "deadline": "2026-11-30 23:59 local",
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "100% one-year Melbourne Law Masters tuition plus AUD 20,000 living allowance; potential separate paid research opportunity",
+      "eligibility": "Indian citizen international students applying to eligible Melbourne Law Masters; statement required; 3 awards indicated",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/alex-chernov-scholarship",
+      "tests": "No scholarship-specific IELTS/TOEFL/SAT threshold documented",
+      "duplicate_check": "No matching title or URL in staging"
+    },
+    {
+      "title": "Chin Yee Keang (Peng) Accounting Scholarship",
+      "provider": "University of Melbourne",
+      "country": "Australia",
+      "status": "HIGH_PRIORITY_PRIVATE_DRAFT_CANDIDATE",
+      "cycle": "2026 current-student round",
+      "deadline": "2026-11-30",
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "Up to AUD 10,000 living allowance, one award",
+      "eligibility": "Australian citizen/permanent resident currently enrolled in Master of Management (Accounting) or (Accounting and Finance), financial disadvantage",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/chin-yee-keang-peng-accounting-scholarship",
+      "tests": "Not documented",
+      "duplicate_check": "No matching title or URL in staging"
+    },
+    {
+      "title": "Cbus Super Mavis Robertson Scholarship",
+      "provider": "University of Melbourne",
+      "country": "Australia",
+      "status": "HOLD_SITE_STATUS_CONFLICT",
+      "cycle": "2026",
+      "deadline": "2026-11-30",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "AUD 13,000 per year in BCom second and third years, at least AUD 26,000 total",
+      "eligibility": "Current Bachelor of Commerce students entering second year, financial disadvantage, preference women",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/cbus-super-mavis-robertson",
+      "conflict": "Official page says 'Opening soon' despite listed opening 18 Sep 2026; verify live status before approval",
+      "duplicate_check": "No matching title or URL in staging"
+    },
+    {
+      "title": "Malcolm D H Smith Memorial Scholarship",
+      "provider": "University of Melbourne",
+      "country": "Australia",
+      "status": "HOLD_CONFLICTING_DEADLINES",
+      "cycle": "2027 incoming JD/current JD",
+      "deadline": null,
+      "degree_levels": [
+        "Juris Doctor"
+      ],
+      "funding": "One-off AUD 7,500 allowance",
+      "eligibility": "Qualifying current or entering Melbourne JD students with Asian studies/law academic background",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/malcolm-dh-smith-memorial-scholarship",
+      "conflict": "Official page top says 22 Oct 2026; detailed 2027 intake text says 26 Oct 2026 23:59. Do not choose either without resolution.",
+      "duplicate_check": "No matching title or URL in staging"
+    }
+  ],
+  "planned_next_actions": [
+    "Use authenticated admin session to perform official-source audit, approve field provenance, and reconcile programme identities in staging.",
+    "Reconcile KTH generic Computer Science award with already published KTH Scholarship, without duplicate publication.",
+    "Correct tuition-only funding classifications for Lund and KTH, and distinguish Copenhagen master's government awards from PhD employment.",
+    "Prepare private drafts for KTH India, Alex Chernov, and Chin Yee Keang; advance existing ARUA source candidate through approval gate.",
+    "Resolve Melbourne conflicting application statuses before making those drafts public."
+  ],
+  "actual_mutations": {
+    "staging_edits": 0,
+    "staging_publications": 0,
+    "staging_drafts_inserted": 0,
+    "staging_archives": 0,
+    "production_changes": 0
+  }
+}

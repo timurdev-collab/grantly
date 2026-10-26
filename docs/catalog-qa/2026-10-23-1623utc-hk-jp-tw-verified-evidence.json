@@ -1,0 +1,287 @@
+{
+  "run_utc": "2026-10-23T16:23:55Z",
+  "scope": "Staging evidence only. NOT applied to scholarship rows. Do not auto-publish or archive.",
+  "project": "cbzriyarlvpmtfbjgede",
+  "baseline": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed": 0,
+    "source_candidates": 636,
+    "admin_action_logs": 8
+  },
+  "corrections": [
+    {
+      "ids": [
+        "17bec752-6686-44d8-9183-a90a783f7850",
+        "2b1dee1e-1acb-44c9-87de-fffcd2f225f0"
+      ],
+      "titles": [
+        "Taiwan ICDF Scholarship",
+        "Taiwan Scholarship (ICDF)"
+      ],
+      "risk": "Likely same TaiwanICDF scholarship umbrella; unrestricted nationalities unsupported; cycle and deadline missing; degree-level discrepancy.",
+      "verified": {
+        "application_cycle": "2027",
+        "opens": "2026-12-01",
+        "closes": "2027-03-15",
+        "eligible_nationalities": "Restricted to TaiwanICDF eligible countries, confirm against 2027 guide when published",
+        "funding": "Do not assert exact 2027 benefit amounts until 2027 guidebook verified"
+      },
+      "source": "https://www.icdf.org.tw/wSite/ct?ctNode=31563&mp=3&xItem=69337",
+      "action": "Reviewer reconcile duplicate and update retained programme-specific record with field provenance. Current page links 2026 guide, not 2027."
+    },
+    {
+      "ids": [
+        "94e1ae57-38c4-4b16-abe6-c7db92a716d5"
+      ],
+      "title": "Monbukagakusho Research Scholarship",
+      "risk": "Unrestricted nationality eligibility; 2027 cycle/deadline missing.",
+      "verified": {
+        "cycle": "2027 research students embassy recommendation",
+        "nationality": "Citizens of countries with diplomatic relations with Japan; Japanese nationals generally ineligible subject to detailed dual-nationality exceptions",
+        "age": "Born on/after 1992-04-02 subject to stated exceptions",
+        "monthly_stipend_yen": {
+          "nonregular": 143000,
+          "masters": 144000,
+          "doctoral": 145000
+        },
+        "fees": "Entrance exam, matriculation and tuition generally waived",
+        "airfare": "Conditional economy-class travel per guidelines; not all ancillary costs covered",
+        "deadline": "Varies by Japanese diplomatic mission; 2027 applications opened around April 2026; no universal deadline",
+        "ielts_toefl_sat": "No universal numerical score in official MEXT embassy research guidelines; language certificates if held, language exams at screening."
+      },
+      "source": "https://www.studyinjapan.go.jp/en/_mt/2026/04/01-2027_Research_Guidelines_E.pdf",
+      "action": "Correct eligibility and 2027 programme details without inventing a future open window."
+    },
+    {
+      "ids": [
+        "2ecfcf65-f828-4a54-8927-8bdeaa1045f0"
+      ],
+      "title": "Chinese University of Hong Kong Scholarship",
+      "risk": "Generic fully-funded bachelor listing and full living support are unsupported as universal.",
+      "verified": {
+        "scheme": "CUHK Admission Scholarships (undergraduates)",
+        "degree": "Bachelor only",
+        "amount": "HK$5,000 up to full tuition, some awards include up to HK$66,000 per year allowance",
+        "selection": "Automatic consideration for qualified admitted local/non-local students",
+        "deadline": "No separate scholarship application; admission-route-specific dates"
+      },
+      "source": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/admission-scholarships-for-undergraduates-only/",
+      "action": "Replace generic promise with evidence-based variable award, verify exact scheme identity."
+    },
+    {
+      "ids": [
+        "9cd403ac-3e72-4412-8469-183e6122aaf3"
+      ],
+      "title": "HKUST Scholarship",
+      "risk": "Generic fully-funded Bachelor/Master/PhD record conflates different awards; full tuition + HK$60,000 not guaranteed.",
+      "verified": {
+        "scheme": "HKUST undergraduate admissions scholarships",
+        "degree": "Bachelor only for cited page",
+        "selection": "Academic awards considered automatically; non-academic awards may require separate applications",
+        "admission_priority": "2026-11-25",
+        "admission_final": "2027-06-30",
+        "note": "HK$60,000 is a maximum annual top-up cap for certain schemes, not universal allowance"
+      },
+      "sources": [
+        "https://join.hkust.edu.hk/intlscholarships",
+        "https://join.hkust.edu.hk/fees-and-scholarships",
+        "https://www.join.hkust.edu.hk/global-learners-scholarship"
+      ],
+      "action": "Split by independently named programme; do not blanket-mark fully funded or carry deadline to graduate schemes."
+    },
+    {
+      "ids": [
+        "a37ee4b2-25e1-41f8-b6cb-31ac2a614592",
+        "251f09e2-58c9-4622-8675-143a90cf4a31",
+        "3748883b-ac7b-4440-a347-2c98440e6a14"
+      ],
+      "titles": [
+        "Hong Kong University Masters Excellence Scholarship",
+        "Hong Kong University Phd Excellence Scholarship",
+        "Hong Kong University Undergraduate International Scholarship"
+      ],
+      "risk": "All claim HK$20,000/month and full tuition across disparate degree levels without named programme-specific source.",
+      "verified": {
+        "research_postgraduate_scheme": "HKU PGS MPhil/PhD normally HK$19,135/month, or HK$19,655 after PhD probation confirmation (2026-09 rates), subject to funding and progress",
+        "presidential_phd": "2027/28 HKU Presidential PhD Scholars receive HK$28,700/month plus cash awards and fee waiver; selected PhD students only",
+        "undergraduate": "Do not extrapolate postgraduate monthly stipend to Bachelor's scholarships",
+        "main_phd_round": "2026-09-01 to 2026-12-01 23:59 HKT",
+        "language": "HKU research postgraduate admission: IELTS 6.5 overall and each subscore >=6 for most faculties, Faculty of Arts generally 7 overall; TOEFL pre-2026-01-21 >=85, new scale >=4.5 where required, with additional faculty rules. Admission thresholds, not scholarship-specific."
+      },
+      "sources": [
+        "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/postgraduate_scholarships",
+        "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+        "https://gradsch.hku.hk/prospective_students/application/application_period",
+        "https://gradsch.hku.hk/prospective_students/application/admission_requirement"
+      ],
+      "action": "Identity review; avoid falsely converting generic 'excellence' titles into HKU Presidential scholarship or conflating Bachelor/Master/PhD."
+    },
+    {
+      "ids": [
+        "690e6f01-9ff5-43fb-9193-e2ffbad9537e"
+      ],
+      "title": "Hong Kong PhD Fellowship Scheme",
+      "risk": "Published verified record uses stale HK$27,600 monthly amount.",
+      "verified": {
+        "cycle": "2027/28",
+        "rgc_initial_deadline": "2026-12-01 12:00 HKT",
+        "hku_full_application_deadline": "2026-12-01",
+        "hku_2027_monthly_stipend_hkd": 28700,
+        "conference_travel_hkd_per_year": 14400,
+        "nationality": "Open regardless of origin for eligible new full-time PhD applicants; individual institution requirements apply",
+        "note": "HKU-specific Presidential top-up must not be described as universal HKPFS funding at every institution"
+      },
+      "source": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hong_kong_phd_fellowship_scheme",
+      "action": "Update stipend with provenance and verify RGC-wide terms separately."
+    },
+    {
+      "ids": [
+        "b7f5d9c0-22df-43ff-aa72-1439c251aa52",
+        "28bd9aef-96c0-4364-adae-a0ce09c74805",
+        "34c1df67-2bf1-4639-8a00-3fb3b54d47b8",
+        "67934aa0-375f-42be-9937-33b16f505f8d"
+      ],
+      "titles": [
+        "University of Tokyo Masters Excellence Scholarship",
+        "University of Tokyo Masters International Scholarship",
+        "University of Tokyo Phd Excellence Scholarship",
+        "University of Tokyo Phd International Scholarship"
+      ],
+      "risk": "Four generic similarly funded records link only to institutional homepage and have no provenance. May be duplicated/unsupported; not verified as separately named programmes.",
+      "source": "https://www.u-tokyo.ac.jp/en/prospective-students/scholarship.html",
+      "action": "Identify independently named programmes before modifying or archiving; do not assume MEXT scheme applies."
+    },
+    {
+      "ids": [
+        "e9fb2147-957d-47e8-ba16-e8e6855b7c67",
+        "13aad867-45be-45ff-8d5e-3ba7bbd8f811",
+        "b56f29bd-bdef-4710-8c54-d8b97a0dc3e4",
+        "cb27de96-9140-4025-9a7d-e857e8297505"
+      ],
+      "titles": [
+        "Keio University Scholarship",
+        "Osaka University Scholarship",
+        "Tohoku University Scholarship",
+        "Waseda University Scholarship"
+      ],
+      "risk": "Generic fully funded/tuition waiver descriptions on homepage-only records with no provenance. Individual programmes not yet identified.",
+      "action": "Retain needs_review; investigate university-specific scholarship programmes. No inferred universal full funding or 2027 deadlines."
+    }
+  ],
+  "new_leads": [
+    {
+      "title": "HKU Presidential PhD Scholar Programme",
+      "country": "Hong Kong",
+      "degree": [
+        "PhD"
+      ],
+      "cycle": "2027/28",
+      "funding": "HK$28,700 monthly postgraduate scholarship, HK$40,000 first-year cash award, HK$20,000 later-year cash awards, HK$49,500/year composition-fee waiver, HK$14,400/year research travel allowance",
+      "deadline": "Main round 2026-12-01 23:59 HKT; clearing rounds subject to availability",
+      "nationality": "Applicants to full-time HKU PhD; no universal country restriction stated",
+      "source": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+      "duplicate_caution": "Overlaps HKPFS at HKU; do not count two awards for same HKPFS-funded student."
+    },
+    {
+      "title": "HKU Postgraduate Scholarship (PGS)",
+      "country": "Hong Kong",
+      "degree": [
+        "MPhil",
+        "PhD"
+      ],
+      "cycle": "2027/28 entry, 2026/27 stipend schedule",
+      "funding": "HK$19,135/month basic from Sep 2026; HK$19,655/month after confirmed PhD probation; funding availability/annual renewal",
+      "deadline": "Admissions main round 2026-12-01 23:59 HKT",
+      "source": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/postgraduate_scholarships",
+      "duplicate_caution": "Different from Presidential PhD and HKPFS, but do not double-count same funded award."
+    },
+    {
+      "title": "HKUST Global Learners Scholarship",
+      "country": "Hong Kong",
+      "degree": [
+        "Bachelor"
+      ],
+      "cycle": "2027/28 admissions",
+      "funding": "Full tuition waiver, renewable subject to performance; no guaranteed living allowance",
+      "nationality": "Applicants from underrepresented nationalities; exact list not specified",
+      "deadline": "Automatic consideration; HKUST admissions priority 2026-11-25 and final 2027-06-30",
+      "source": "https://www.join.hkust.edu.hk/global-learners-scholarship"
+    },
+    {
+      "title": "HKUST Future Leaders Award",
+      "country": "Hong Kong",
+      "degree": [
+        "Bachelor"
+      ],
+      "cycle": "2027/28 NOT CONFIRMED on award page (2025/26 dates still shown)",
+      "funding": "HK$50,000 one-off OR renewable full tuition plus living allowance for exceptional need",
+      "nationality": "Non-local direct-from-high-school applicants, not post-secondary entrants",
+      "deadline": null,
+      "source": "https://join.hkust.edu.hk/future-leaders-award",
+      "hold": "Page displays 2025-11-30 deadline and Jan 2026 decisions. Do not publish 2027 deadline until updated official award page."
+    },
+    {
+      "title": "CUHK Asian Future Leaders Scholarship Program",
+      "country": "Hong Kong",
+      "degree": [
+        "Bachelor"
+      ],
+      "cycle": "Recurring, exact 2027 cycle not established",
+      "funding": "Up to US$25,000 per year for up to two years; up to 10 students",
+      "nationality": "Non-local Asian nationalities, year 2/3 CUHK undergraduates with GPA >=3.0",
+      "deadline": "Early January indicative only; internal nominations may be earlier; year not specified",
+      "source": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/aflsp-summary/"
+    },
+    {
+      "title": "CUHK Vice-Chancellor's Scholarships for Excellence",
+      "country": "Hong Kong",
+      "degree": [
+        "Bachelor"
+      ],
+      "cycle": "Recurring, 2027 award announcement not established",
+      "funding": "Eight non-renewable HK$50,000 awards annually",
+      "nationality": "Full-time new undergraduates regardless of admission channel and residency",
+      "deadline": "Faculty invitation after academic year begins; not an admission deadline",
+      "source": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/vice-chancellor/"
+    },
+    {
+      "title": "HKU Hon Ping Entrance Scholarship for Nigerian Students",
+      "country": "Hong Kong",
+      "degree": [
+        "Bachelor"
+      ],
+      "cycle": "2026 terms published; 2027 subject to change",
+      "funding": "Full tuition plus HK$282,000 annual living allowance, renewable subject to progress",
+      "nationality": "Nigerian nationals with financial need and admitted to HKU full-time undergraduate degree",
+      "deadline": "No exact 2027 scholarship deadline established",
+      "source": "https://admissions.hku.hk/fees-and-scholarships/scholarships/hon-ping-entrance-scholarship-for-nigerian-students"
+    },
+    {
+      "title": "HKU Tongcheng Travel Scholarship",
+      "country": "Hong Kong",
+      "degree": [
+        "Bachelor"
+      ],
+      "cycle": "2026 terms published; 2027 subject to change",
+      "funding": "Up to HK$300,000 non-local or HK$80,000 local award for specified AI/CS undergraduate programmes; up to six annually",
+      "deadline": "Automatic consideration; no separate application",
+      "source": "https://www.admissions.hku.hk/fees-and-scholarships/scholarships/tongcheng-travel-scholarship"
+    }
+  ],
+  "staging_duplicate_screen": "Exact-title and related-domain SQL screen found no source candidates; existing published generic CUHK/HKUST/HKU records and HKPFS must be semantically reconciled before draft creation.",
+  "admin_gate": {
+    "auth_uid": null,
+    "is_admin": false,
+    "draft_readiness_attempt": "Admin access required",
+    "db_edits": 0,
+    "publications": 0,
+    "archives": 0,
+    "production_changes": 0
+  },
+  "note": "English scores from HKU are admissions conditions for applicable programmes, NOT universal scholarship-specific thresholds. SAT not assumed for any lead. No HTTP access failure interpreted as discontinuation."
+}

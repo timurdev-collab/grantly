@@ -1,0 +1,274 @@
+{
+  "report_date_utc": "2026-10-24",
+  "scope": "STAGING cbzriyarlvpmtfbjgede ONLY; evidence and review proposals, not approved or applied database mutations",
+  "stage_initial_readback_utc": "2026-10-24T00:22:30.183548Z",
+  "stage_initial_counts": {
+    "published": 397,
+    "published_needs_review": 309,
+    "private_drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636
+  },
+  "policies": [
+    "No status/verification changes without authenticated administrator, source verification and audit",
+    "No guessed IELTS/TOEFL/SAT, deadlines, nationalities or grants",
+    "HTTP errors are not discontinuation evidence",
+    "No production deployment without staging and passing CI",
+    "Treat awards with shared umbrella branding as separate only where independently named and scoped; review stacking and duplicates"
+  ],
+  "published_record_reviews": [
+    {
+      "id": "a2d6ecba-ca77-4d3d-b7e2-1cf26968b0ed",
+      "title": "Orange Knowledge Programme (OKP)",
+      "country": "Netherlands",
+      "action": "authorized_archive_review",
+      "source": "https://www.nuffic.nl/en/news/nuffic-phases-out-most-activities-outside-europe-after-the-orange-knowledge-programme-ends",
+      "evidence": "Nuffic states Orange Knowledge Programme ends in December 2024, with no prospect of new significant funding. Existing published fully-funded master's listing is not a current application opportunity.",
+      "proposed_fields": {
+        "cycle_status": "discontinued",
+        "deadline": null
+      },
+      "review_notes": "Archive only through authenticated audited workflow after confirming no new successor under the same programme name."
+    },
+    {
+      "id": "ca1e3e04-690b-4e94-8505-f30a9f026efb",
+      "title": "Utrecht Excellence Scholarship",
+      "country": "Netherlands",
+      "action": "pause_and_archive_eligibility_review",
+      "source": "https://www.uu.nl/en/masters/utrecht-excellence-scholarships",
+      "evidence": "Utrecht says UES no longer offered for programmes starting 2026–2027, and no new applications accepted in upcoming cycle; existing awardees unaffected.",
+      "proposed_fields": {
+        "application_cycle": "2026–2027: no new awards",
+        "funding_type": "Do not advertise current fully funded availability"
+      },
+      "review_notes": "Do not assert permanent cessation for all future cycles without a 2027–28 notice; confirm current cycle before archival."
+    },
+    {
+      "id": "0f2adcfa-4737-47bb-bee5-0bb0812cc99e",
+      "title": "Vanier Canada Graduate Scholarship",
+      "country": "Canada",
+      "action": "authorized_archive_review",
+      "source": "https://nserc-crsng.canada.ca/en/plans-priorities-and-performance/2026-27-departmental-plan/details-on-transfer-payment-programs",
+      "alternate_source": "https://sshrc-crsh.canada.ca/en/about-sshrc/planning-and-performance-reporting/corporate-reports/departmental-plans/2026-2027/details-transfer-payment-programs.aspx",
+      "evidence": "2026–27 federal plan explicitly states Vanier program discontinued in 2025–26 and folded into Canada Research Training Awards Suite.",
+      "proposed_fields": {
+        "cycle_status": "discontinued"
+      },
+      "review_notes": "Do not replace Vanier in place with CGRS D; separate existing draft id 70931a29-0ce4-4700-bfcd-42f0b4abcbe1."
+    },
+    {
+      "id": "2ae14d86-bf95-4410-b366-a70c53e02db9",
+      "title": "Emile Boutmy Scholarship",
+      "country": "France",
+      "action": "duplicate_and_field_correction_review",
+      "duplicate_of": "a88b8389-ce8a-4852-9080-b2e8508028d2",
+      "source": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/",
+      "evidence": "Sciences Po specifies Bachelor's full or €9,500 tuition exemption, Master's €18,500 tuition exemption each of two years, non-EU applicants with non-EU household tax residence, exclusions including dual EU nationality; undergraduate foreign-school deadline 13 January 2027.",
+      "proposed_fields": {
+        "tuition_coverage": "Bachelor: full or €9,500 tuition exemption; Master: €18,500 per year for two years",
+        "eligible_nationalities": "Non-EU nationality with household tax residence outside EU; detailed exclusions",
+        "deadline_notes": "Undergraduate foreign secondary schools 2027-01-13; French secondary schools 2027-04-01; Master's 18 October / 29 November on official page (year not explicitly shown)"
+      },
+      "review_notes": "Same official URL as a88b...; reconcile canonical record and safely archive duplicate with audit; no unconditional full funding."
+    },
+    {
+      "id": "a88b8389-ce8a-4852-9080-b2e8508028d2",
+      "title": "Sciences Po Emile Boutmy Scholarship",
+      "country": "France",
+      "action": "canonical_candidate_review",
+      "source": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/",
+      "evidence": "Existing curated published record largely matches award amounts but says Non-EEA whereas official uses non-EU and household EU tax rules. Exact master application dates shown without explicit year.",
+      "proposed_fields": {
+        "eligible_nationalities": "Non-EU citizenship and household not filing taxes within EU, subject to exclusions",
+        "deadline_notes": "Bachelor foreign secondary schools 2027-01-13; French secondary schools 2027-04-01; Master 18 October or 29 November (year to verify)"
+      },
+      "review_notes": "Potential canonical survivor after duplicate reconciliation; don't mark verified without authenticated provenance."
+    },
+    {
+      "id": "d6fe449b-4b5c-4d16-b49b-65cdb7885b0e",
+      "title": "UBC International Major Entrance Scholarship",
+      "country": "Canada",
+      "action": "correct_funding_eligibility_and_url",
+      "source": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "evidence": "UBC IMES for 2026/27 C$10,000–25,000 per year, renewable up to three additional years; international incoming undergraduates directly from secondary school on Canadian study permits, not nominated for International Scholars; automatic consideration on admission.",
+      "proposed_fields": {
+        "funding_type": "Partial, renewable merit award",
+        "tuition_coverage": "C$10,000–25,000 per year for 2026/27 (not guaranteed C$40,000)",
+        "eligible_nationalities": "International students entering UBC from secondary school with Canadian study permit; other restrictions apply",
+        "deadline_notes": "Admission deadline governs; exact 2027 admission deadline not yet confirmed"
+      },
+      "review_notes": "2027/28 amount not confirmed; no universal IELTS/TOEFL/SAT threshold from scholarship page."
+    },
+    {
+      "id": "d0d0f071-0fa9-4024-b264-932dc6ee3f6d",
+      "title": "Amsterdam Excellence Scholarship",
+      "country": "Netherlands",
+      "action": "identity_and_cycle_review",
+      "source": "https://www.uva.nl/en/education/fees-and-funding/masters-scholarships-and-loans/amsterdam-merit-scholarship/amsterdam-merit-scholarship.html",
+      "evidence": "Original AES URL is dead; UvA currently offers faculty-specific Amsterdam Merit Scholarships, with different values, restrictions and deadlines. Dead original URL alone does not establish AES discontinuation.",
+      "review_notes": "Investigate exact AES discontinuation/renaming before archive or mapping to AMS; €25,000 generic full funding cannot be inferred."
+    },
+    {
+      "id": "47a131a5-c336-449b-9eb4-2c7f71f8a5b8",
+      "title": "University of Amsterdam Masters Excellence Scholarship",
+      "country": "Netherlands",
+      "action": "generic_record_reconciliation",
+      "source": "https://www.uva.nl/en/education/fees-and-funding/masters-scholarships-and-loans/amsterdam-merit-scholarship/amsterdam-merit-scholarship.html",
+      "evidence": "No single €25,000 all-master excellence award shown. UvA directs applicants to separate faculty-managed merit scholarships with variable amounts/deadlines.",
+      "review_notes": "Compare against AMS Social Sciences and Economics/Business drafts and faculty-specific awards before correction or archival."
+    },
+    {
+      "id": "cf582c4e-da47-43d5-8c12-5e9a12fc005a",
+      "title": "University of Amsterdam Masters International Scholarship",
+      "country": "Netherlands",
+      "action": "generic_record_reconciliation",
+      "source": "https://www.uva.nl/en/education/fees-and-funding/masters-scholarships-and-loans/amsterdam-merit-scholarship/amsterdam-merit-scholarship.html",
+      "evidence": "Generic €25,000 claim lacks programme-specific funding; official UvA AMS funding varies by faculty.",
+      "review_notes": "Likely semantic overlap with other UvA records; no unverified deletion."
+    }
+  ],
+  "existing_drafts": [
+    {
+      "id": "7d2342df-e871-4197-b0ef-c11a01904ec5",
+      "title": "Amsterdam Merit Scholarship — Graduate School of Social Sciences 2027–28",
+      "source": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+      "evidence": "Tuition-equivalent grant paid monthly, not tuition waiver; application deadline 15 February 2027 23:59 CET; only eligible non-EEA applicants.",
+      "staging_provenance": 4,
+      "reviewer_attributed": 0,
+      "successful_audit": false,
+      "action": "authenticated_source_audit_and_review"
+    },
+    {
+      "id": "2f4b3d7d-e756-4f42-8749-283a179ba5ee",
+      "title": "Amsterdam Economics and Business Talent Fund",
+      "source": "https://www.uva.nl/en/programmes/masters/business-administration/tuition-fee/amsterdam-economics-and-business-talent-fund.html",
+      "evidence": "Separate needs-and-merit scholarship for 1-year Economics and Business master's, non-EU nationality, 15 January deadline, IELTS Academic overall 7.0 (components generally 7.0, 6.5 may apply), TOEFL iBT 100 with each component at least 22, exemptions apply.",
+      "staging_provenance": 3,
+      "reviewer_attributed": 0,
+      "successful_audit": false,
+      "action": "update eligibility and 15 January date with correct cycle once verified, authenticated review"
+    },
+    {
+      "id": "70931a29-0ce4-4700-bfcd-42f0b4abcbe1",
+      "title": "Canada Graduate Research Scholarship — Doctoral (CGRS D), 2026 competition",
+      "source": "https://nserc-crsng.canada.ca/en/funding-opportunity/canada-graduate-research-scholarship-doctoral-program",
+      "evidence": "C$40,000 per year for 36 months; international candidates must be enrolled at eligible Canadian doctoral programme by application deadline, at most 15% awards for international applicants; direct-agency Oct 17 (2026 already past), institution deadlines vary.",
+      "staging_provenance": 6,
+      "reviewer_attributed": 0,
+      "successful_audit": true,
+      "action": "do not publish as open for 2026; confirm next competition and review"
+    }
+  ],
+  "new_candidate_research": [
+    {
+      "title": "UBC Okanagan Global Elevation Award",
+      "country": "Canada",
+      "provider": "University of British Columbia",
+      "degree": [
+        "Bachelor"
+      ],
+      "source": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "funding": "C$8,000 annual tuition credit, renewable for up to three additional years",
+      "eligibility": "New international undergraduate enrolling at UBC Okanagan; automatically applied on admission acceptance/enrolment",
+      "deadline": null,
+      "cycle": "Current UBC award page; 2027 award availability to confirm",
+      "duplicate_check": "No title match for UBC Okanagan in published/drafts or source candidates",
+      "status": "private_draft_proposal"
+    },
+    {
+      "title": "UBC Okanagan International Welcome Award",
+      "country": "Canada",
+      "provider": "University of British Columbia",
+      "degree": [
+        "Bachelor"
+      ],
+      "source": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "funding": "C$5,000 one-time first-year tuition credit",
+      "eligibility": "International first-year full-time undergraduate, UBC Okanagan degree first choice and enrol in that first-choice programme",
+      "deadline": null,
+      "cycle": "Current UBC award page; 2027 award availability to confirm",
+      "duplicate_check": "No title match for UBC Okanagan in published/drafts or source candidates",
+      "status": "private_draft_proposal"
+    },
+    {
+      "title": "UBC Okanagan Bachelor of Commerce International Launch Award",
+      "country": "Canada",
+      "provider": "University of British Columbia",
+      "degree": [
+        "Bachelor"
+      ],
+      "source": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "funding": "C$6,000 annual tuition credit, renewable for up to three additional years",
+      "eligibility": "New international undergraduate enrolled in UBC Okanagan Bachelor of Commerce, September 2027 intake; automatically applied after admission acceptance/enrolment",
+      "deadline": null,
+      "cycle": "September 2027 explicitly stated",
+      "duplicate_check": "No title match for UBC Okanagan in published/drafts or source candidates",
+      "status": "private_draft_proposal"
+    },
+    {
+      "title": "UBC Outstanding International Student Award",
+      "country": "Canada",
+      "provider": "University of British Columbia",
+      "degree": [
+        "Bachelor"
+      ],
+      "source": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/",
+      "funding": "One-time C$10,000–25,000 for 2025/26; 2027 value not yet verified",
+      "eligibility": "New international undergraduate studying on Canadian study permit, strong academics/extracurriculars, not nominated for International Scholars; automatic consideration",
+      "deadline": null,
+      "cycle": "Current programme; 2027 amount to confirm",
+      "duplicate_check": "No exact title match in published/drafts or source candidates",
+      "status": "hold_current_amount"
+    },
+    {
+      "title": "Letje Lips Amsterdam Merit Scholarship (LLAMS)",
+      "country": "Netherlands",
+      "provider": "University of Amsterdam Graduate School of Humanities",
+      "degree": [
+        "Master"
+      ],
+      "source": "https://gsh.uva.nl/fees-funding/scholarships/amsterdam-merit-scholarship/ams-scholarships-for-students-humanities.html",
+      "funding": "2027/28: four tuition-fee scholarships of €23,500 and one full-ride scholarship of €40,000; tiers within one named programme, not five programmes",
+      "eligibility": "Non-EU/EEA, new to Dutch higher education, one-year non-selective English-taught Humanities Master's (not Research or Dual)",
+      "deadline": "2027-01-15",
+      "cycle": "2027–2028; initial Master's application by 23:59 CET; conditional admits invited in February to scholarship questionnaire",
+      "duplicate_check": "No LLAMS title match in published/drafts or source candidates; ensure not double-counted with generic Amsterdam Merit Scholarship",
+      "status": "private_draft_proposal"
+    },
+    {
+      "title": "Mr Julia Henriëtte Jaarsma-Adolfs Fund Scholarship",
+      "country": "Netherlands",
+      "provider": "University of Amsterdam Amsterdam Law School",
+      "degree": [
+        "Master"
+      ],
+      "source": "https://www.uva.nl/en/about-the-uva/organisation/faculties/amsterdam-law-school/education/scholarships/mr-julia-henriette-jaarsma-adolfs-fund.html",
+      "funding": "One award per academic year; 2026/27 €25,900 for non-EU and €12,000 for EU students",
+      "eligibility": "Non-Dutch nationality, ineligible for Dutch student finance, qualifying full-time UvA LLM programmes; GPA and other merit requirements",
+      "deadline": null,
+      "deadline_notes": "Official page says 15 January 23:59 CET, but does not label this deadline explicitly 2027; do not assign year until confirmed",
+      "cycle": "2026/27 amount; next cycle unconfirmed",
+      "duplicate_check": "No Jaarsma title match in published/drafts or source candidates",
+      "status": "private_draft_proposal_hold_cycle"
+    }
+  ],
+  "english_test_notes": "Only UvA Economics and Business Talent Fund draft has a programme-specific numerical IELTS/TOEFL requirement documented in this batch. No SAT scholarship-specific threshold established for other entries.",
+  "staging_auth_observation": {
+    "db_role": "postgres",
+    "auth_uid": null,
+    "is_admin": false,
+    "readiness_attempt": "scholarship_draft_readiness(7d2342df...) returned Admin access required",
+    "result": "No authenticated publication/approval writes attempted or succeeded"
+  },
+  "staging_mutations": {
+    "successful_edits": 0,
+    "published": 0,
+    "new_drafts": 0,
+    "new_provenance": 0,
+    "archived": 0,
+    "production_changes": 0
+  }
+}

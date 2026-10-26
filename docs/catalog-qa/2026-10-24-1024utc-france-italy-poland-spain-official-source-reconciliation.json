@@ -1,0 +1,811 @@
+{
+  "schema": "grantly_catalog_official_source_qa_v1",
+  "environment": "staging",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "branch": "catalog-qa/2026-10-23-official-sources",
+  "mode": "documentation_only_no_database_mutations",
+  "official_source_urls": [
+    "https://www.ens.psl.eu/en/une-formation-d-exception/admissions/international/international-selection",
+    "https://www.polimi.it/en/prospective-students/how-much-does-it-cost/scholarships",
+    "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+    "https://edisu.piemonte.it/borse-e-contributi/benefici-economici/borsa-di-studio",
+    "https://studyinitaly.esteri.it/",
+    "https://bandi.unibo.it/s/mat/first-call-for-scholarships-2026-2027",
+    "https://www.unibo.it/it/ateneo/amministrazione-trasparente/archivio-amministrazione-trasparente/archivio-sovvenzioni-contributi-sussidi-vantaggi-economici/archivio-atti-di-concessione/archivio-atti-di-concessione-2026/borse-international-talents-unibo-a-a-2026-2027/",
+    "https://css.agh.edu.pl/en/financial-support-for-agh-students",
+    "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/",
+    "https://bpm.uw.edu.pl/en/announcement-on-the-deadline-and-form-of-applying-for-financial-assistance-in-the-2026-2027-academic-year/",
+    "https://web.ub.edu/en/web/beques-graus-masters/beca-general-2026-2027",
+    "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+    "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/",
+    "https://www.sciencespo.fr/admissions/en/graduate/international-admissions/deadlines/"
+  ],
+  "investigations": [
+    {
+      "id": "20226edb-624c-4087-ac42-0454f95efc99",
+      "title": "ENS International Selection",
+      "country": "France",
+      "decision": "retain_needs_review_until_authenticated_provenance",
+      "field_proposals": [],
+      "notes": [
+        "2027 cycle and 15 December 2026 14:00 Paris deadline already match staging; €1,000 monthly for three years and campus room documented.",
+        "Admission targets entry at undergraduate year 3 or Master's year 1; do not classify as unrestricted standalone master's tuition scholarship.",
+        "Official page has minor conflicting/erroneous 2027 date strings in its expanded schedule; key dates and French page consistently show October–December 2026."
+      ],
+      "official_source": "https://www.ens.psl.eu/en/une-formation-d-exception/admissions/international/international-selection",
+      "staging_applied": false
+    },
+    {
+      "id": "88f1e8b9-fcef-42bb-961f-70615af3de5e",
+      "title": "HEC Paris MBA Scholarship",
+      "country": "France",
+      "decision": "split_or_canonicalize_umbrella",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+          "evidence": "Official HEC MBA scholarships catalogue rather than HEC homepage.",
+          "source_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Varies by named award; HEC MBA Excellence and Diversity up to 50% tuition, not fixed €24,000",
+          "evidence": "HEC describes named awards with differing funding; published generic amount unsupported.",
+          "source_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "MBA application deadlines govern automatic consideration; some named awards require an essay with application or an application after admission",
+          "evidence": "HEC scholarship page distinguishes automatic and application-based awards.",
+          "source_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "MBA admission cycles; specific intake deadline must be verified separately",
+          "evidence": "No universal scholarship date on official award catalogue.",
+          "source_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships"
+        }
+      ],
+      "notes": [
+        "Named routes should not be conflated with an umbrella record. Existing Sanofi award is a private draft; do not duplicate."
+      ],
+      "official_source": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "staging_applied": false
+    },
+    {
+      "id": "2ae14d86-bf95-4410-b366-a70c53e02db9",
+      "title": "Emile Boutmy Scholarship",
+      "country": "France",
+      "decision": "reconcile_duplicate_and_correct",
+      "field_proposals": [
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Bachelor: full tuition waiver OR €9,500 exemption; Master: €18,500 exemption per year for two years",
+          "evidence": "Official programme lists degree-specific tuition exemptions, not €13,000/year.",
+          "source_url": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Qualifying non-EU citizens whose household does not file taxes in the EU; multiple exclusions apply",
+          "evidence": "Official citizenship, tax-residence and programme exclusions.",
+          "source_url": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Bachelor foreign secondary school: 13 January 2027; French secondary school: 1 April 2027; Master's: 18 October or 29 November in the relevant 2027 admission cycle",
+          "evidence": "Official Boutmy scholarship deadlines differ by degree/application route.",
+          "source_url": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/",
+          "evidence": "Exact programme page",
+          "source_url": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/"
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Tuition fee exemption, not a living-stipend award",
+          "evidence": "Programme covers tuition only.",
+          "source_url": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/"
+        }
+      ],
+      "notes": [
+        "Existing second published Boutmy record requires canonical duplicate reconciliation.",
+        "Master's 2027 admission page separately has later general admission deadline 21 February 2027; that is NOT the Boutmy scholarship deadline."
+      ],
+      "official_source": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/",
+      "staging_applied": false
+    },
+    {
+      "id": "5965ccdb-35e0-48c5-8744-3b7e1e5a9fe4",
+      "title": "Sciences Po Excellence Scholarship",
+      "country": "France",
+      "decision": "hold_identity_not_verified",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "NEEDS_PROGRAMME_SPECIFIC_URL",
+          "evidence": "Institution homepage is not programme evidence.",
+          "source_url": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "UNVERIFIED €10,000/year; do not present as verified",
+          "evidence": "No matching general Master's excellence award at this amount established from official source.",
+          "source_url": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/"
+        }
+      ],
+      "notes": [
+        "Could overlap Boutmy or a specific school-sponsored excellence award; do not archive solely on absence of a match."
+      ],
+      "official_source": "https://www.sciencespo.fr/students/en/fees-funding/bursaries-financial-aid/emile-boutmy-scholarship/",
+      "staging_applied": false
+    },
+    {
+      "id": "c6859e53-c906-4d1e-845c-419d94d0936a",
+      "title": "EDISU Piemonte Scholarship",
+      "country": "Italy",
+      "decision": "correct_cycle_and_split_deadlines",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://edisu.piemonte.it/borse-e-contributi/benefici-economici/borsa-di-studio",
+          "evidence": "Official 2026/27 application and deadlines page.",
+          "source_url": "https://edisu.piemonte.it/borse-e-contributi/benefici-economici/borsa-di-studio"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2026/27",
+          "evidence": "Official call opened July 2026.",
+          "source_url": "https://edisu.piemonte.it/borse-e-contributi/benefici-economici/borsa-di-studio"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Bachelor/Master: 4 September 2026 at 12:00 (closed); PhD/specialisation: 27 November 2026 at 12:00 (opens 28 October)",
+          "evidence": "Official page lists separate application windows.",
+          "source_url": "https://edisu.piemonte.it/borse-e-contributi/benefici-economici/borsa-di-studio"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "null until catalogue supports multiple degree-specific deadlines; if using one deadline, label route explicitly",
+          "evidence": "Single generic deadline would mislead about the closed undergraduate window and upcoming PhD window.",
+          "source_url": "https://edisu.piemonte.it/borse-e-contributi/benefici-economici/borsa-di-studio"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Eligibility conditional on EDISU income/merit/residency documentation; international students may apply under specified rules",
+          "evidence": "ALL must not imply unconditional eligibility.",
+          "source_url": "https://edisu.piemonte.it/borse-e-contributi/benefici-economici/borsa-di-studio"
+        }
+      ],
+      "notes": [
+        "Keep umbrella identity; do not create an independent duplicate just because doctoral applications have different dates."
+      ],
+      "official_source": "https://edisu.piemonte.it/borse-e-contributi/benefici-economici/borsa-di-studio",
+      "staging_applied": false
+    },
+    {
+      "id": "86f88814-6bf6-423c-aa0d-f0b5526ac277",
+      "title": "Italian Government Scholarship",
+      "country": "Italy",
+      "decision": "correct_cycle_and_unverified_funding",
+      "field_proposals": [
+        {
+          "field": "application_cycle",
+          "proposed_value": "2026/27, application closed",
+          "evidence": "Official MAECI 2026/27 call published.",
+          "source_url": "https://studyinitaly.esteri.it/"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2026-03-26",
+          "evidence": "Official 2026/27 MAECI call country list states March 26 2026; do not roll to 2027.",
+          "source_url": "https://studyinitaly.esteri.it/"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Specified eligible countries/territories and eligible Italian citizens abroad; not all nationalities",
+          "evidence": "Official MAECI call includes country list.",
+          "source_url": "https://studyinitaly.esteri.it/"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "NEEDS_CALL_SPECIFIC_REVIEW; do not assert universal full tuition + €900/month",
+          "evidence": "Scholarship conditions vary and published generic full-funding claim not established by this review.",
+          "source_url": "https://studyinitaly.esteri.it/"
+        }
+      ],
+      "notes": [
+        "2027/28 application not confirmed. Official country list is part of 2026/27 call."
+      ],
+      "official_source": "https://studyinitaly.esteri.it/",
+      "staging_applied": false
+    },
+    {
+      "id": "801544bc-b412-44cb-be0d-af0026c11db3",
+      "title": "Politecnico di Milano Masters Excellence Scholarship",
+      "country": "Italy",
+      "decision": "canonical_reconciliation",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+          "evidence": "2027/28 merit-based official call.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2027/28",
+          "evidence": "Official call title.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2026-12-15",
+          "evidence": "Scholarship application closes at 12:00 Italian time.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Full tuition waiver plus named tier: Platinum €10,000 gross, Gold €8,000 gross, Piacenza Gold €5,000 gross, Piacenza Bronze €2,500 gross, Silver waiver only",
+          "evidence": "€5,200/year generic amount does not match official 2027/28 call.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Admission fee payment/application 1 Oct–1 Dec 2026; scholarship form by 15 Dec 2026 noon; language certificate by 4 Mar 2027",
+          "evidence": "Three separate process dates.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        }
+      ],
+      "notes": [
+        "Overlaps two other published generic Polimi records; do not mark independent programmes before reconciliation."
+      ],
+      "official_source": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+      "staging_applied": false
+    },
+    {
+      "id": "1a68ac36-20b8-4141-9148-09222d79d716",
+      "title": "Politecnico di Milano International Scholarship",
+      "country": "Italy",
+      "decision": "canonical_reconciliation",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+          "evidence": "Old stored URL is stale; live official 2027/28 call exists.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2027/28",
+          "evidence": "Official call.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2026-12-15",
+          "evidence": "Scholarship form by noon Italian time.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Full tuition waiver for all named merit tiers; only Platinum has €10,000 gross allowance; other tiers differ",
+          "evidence": "Existing record implies €10,000 for all scholarship recipients.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        },
+        {
+          "field": "link_status",
+          "proposed_value": "recheck with official 2027/28 call; do not mark discontinued",
+          "evidence": "Stored old path is inaccessible but programme has current call.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        }
+      ],
+      "notes": [
+        "Do not infer scholarship cancellation from HTTP failure at prior URL."
+      ],
+      "official_source": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+      "staging_applied": false
+    },
+    {
+      "id": "15f0ff80-01f5-46f8-b270-03de0a9cd435",
+      "title": "Politecnico di Milano Computer Science Masters Award",
+      "country": "Italy",
+      "decision": "hold_generic_identity",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+          "evidence": "Institution homepage is insufficient; official general merit call exists.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "UNVERIFIED as independent Computer Science award; do not assert €5,200/year",
+          "evidence": "No named Computer Science-only €5,200 award in 2027/28 merit call.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "If mapped to 2027/28 merit call, scholarship form deadline 15 December 2026 noon Italian time",
+          "evidence": "Cannot apply generic call date to independent award without identity reconciliation.",
+          "source_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf"
+        }
+      ],
+      "notes": [
+        "Potential duplicate of general Polimi merit scheme; require programme-specific proof before retention."
+      ],
+      "official_source": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+      "staging_applied": false
+    },
+    {
+      "id": "0dcac11b-7286-4332-a075-e53169cd46ec",
+      "title": "University of Bologna Study Grants",
+      "country": "Italy",
+      "decision": "hold_generic_identity",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.unibo.it/it/ateneo/amministrazione-trasparente/archivio-amministrazione-trasparente/archivio-sovvenzioni-contributi-sussidi-vantaggi-economici/archivio-atti-di-concessione/archivio-atti-di-concessione-2026/borse-international-talents-unibo-a-a-2026-2027/",
+          "evidence": "Old generic link cannot prove a current named grant; official International Talents 2026/27 renewal notice exists.",
+          "source_url": "https://www.unibo.it/it/ateneo/amministrazione-trasparente/archivio-amministrazione-trasparente/archivio-sovvenzioni-contributi-sussidi-vantaggi-economici/archivio-atti-di-concessione/archivio-atti-di-concessione-2026/borse-international-talents-unibo-a-a-2026-2027/"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "UNVERIFIED €11,000/year for current generic record",
+          "evidence": "Official 2026/27 renewal listing does not substantiate a new €11,000 intake award.",
+          "source_url": "https://www.unibo.it/it/ateneo/amministrazione-trasparente/archivio-amministrazione-trasparente/archivio-sovvenzioni-contributi-sussidi-vantaggi-economici/archivio-atti-di-concessione/archivio-atti-di-concessione-2026/borse-international-talents-unibo-a-a-2026-2027/"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2026/27 renewal confirmed; new 2027/28 award cycle not confirmed",
+          "evidence": "Do not misrepresent renewal as new application call.",
+          "source_url": "https://www.unibo.it/it/ateneo/amministrazione-trasparente/archivio-amministrazione-trasparente/archivio-sovvenzioni-contributi-sussidi-vantaggi-economici/archivio-atti-di-concessione/archivio-atti-di-concessione-2026/borse-international-talents-unibo-a-a-2026-2027/"
+        }
+      ],
+      "notes": [
+        "Distinct University of Bologna Mathematics scholarship 2026/27 offered 2 awards of €5,000, deadline 15 May 2026; closed, not automatically a new 2027 draft."
+      ],
+      "official_source": "https://www.unibo.it/it/ateneo/amministrazione-trasparente/archivio-amministrazione-trasparente/archivio-sovvenzioni-contributi-sussidi-vantaggi-economici/archivio-atti-di-concessione/archivio-atti-di-concessione-2026/borse-international-talents-unibo-a-a-2026-2027/",
+      "staging_applied": false
+    },
+    {
+      "id": "770f1eb8-b046-47c7-8700-580df8512c30",
+      "title": "AGH UST Scholarship (Poland)",
+      "country": "Poland",
+      "decision": "split_named_student_aid_programmes",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://css.agh.edu.pl/en/financial-support-for-agh-students",
+          "evidence": "Official student affairs page lists separate Rector, social, disability and emergency grants.",
+          "source_url": "https://css.agh.edu.pl/en/financial-support-for-agh-students"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "UNVERIFIED universal tuition waiver; AGH aid is benefit-specific",
+          "evidence": "Rector scholarship is merit award; social/disability aid have separate rules.",
+          "source_url": "https://css.agh.edu.pl/en/financial-support-for-agh-students"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Rector's scholarship 2026/27: 9 October 2026 (higher years), 16 October 2026 (first-year undergraduate); social/disability 5 October 2026",
+          "evidence": "Official AGH 2026/27 winter semester schedule; all deadlines passed.",
+          "source_url": "https://css.agh.edu.pl/en/financial-support-for-agh-students"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2026/27 winter semester, closed for listed student aid windows",
+          "evidence": "No open universal scholarship.",
+          "source_url": "https://css.agh.edu.pl/en/financial-support-for-agh-students"
+        }
+      ],
+      "notes": [
+        "NAWA scholarships are externally administered and must not be counted as AGH scholarships."
+      ],
+      "official_source": "https://css.agh.edu.pl/en/financial-support-for-agh-students",
+      "staging_applied": false
+    },
+    {
+      "id": "b69c0aa1-09e6-4681-a0f7-7ba37c755ed7",
+      "title": "University of Warsaw Masters Excellence Scholarship",
+      "country": "Poland",
+      "decision": "hold_generic_identity",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/",
+          "evidence": "Official UW scholarships page instead of university homepage.",
+          "source_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "UNVERIFIED full tuition + stipend",
+          "evidence": "Rector scholarship is merit award for qualifying enrolled students, not generic guaranteed fully funded Master's award.",
+          "source_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Rector scholarship 2026/27 applications 1–15 October 2026; separate social scholarship windows",
+          "evidence": "No universal Master's excellence deadline.",
+          "source_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Depends on scholarship and residence/eligibility conditions; not unconditional ALL",
+          "evidence": "Social scholarship has extensive residence/legal-status conditions.",
+          "source_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/"
+        }
+      ],
+      "notes": [
+        "Potential overlap with second generic UW record; require canonical reconciliation."
+      ],
+      "official_source": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/",
+      "staging_applied": false
+    },
+    {
+      "id": "55174f2e-ea21-4360-b29e-3c9c5c8deadb",
+      "title": "University of Warsaw Masters International Scholarship",
+      "country": "Poland",
+      "decision": "hold_generic_identity",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/",
+          "evidence": "Official university student-aid page.",
+          "source_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "UNVERIFIED full tuition + stipend",
+          "evidence": "No programme-specific evidence for named generic Master's International Scholarship.",
+          "source_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Named Rector's and Scholarship to Start awards have distinct criteria and dates",
+          "evidence": "Do not assign 15 October Rector deadline to unrelated generic record.",
+          "source_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Benefit-specific legal status restrictions; not unconditional ALL",
+          "evidence": "Official UW social scholarship restrictions.",
+          "source_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/"
+        }
+      ],
+      "notes": [
+        "Potential duplicate of UW Masters Excellence; not proven discontinued."
+      ],
+      "official_source": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/",
+      "staging_applied": false
+    },
+    {
+      "id": "6579d3d9-04a2-4647-8179-18cb2d8d6d5a",
+      "title": "University of Barcelona Masters International Scholarship",
+      "country": "Spain",
+      "decision": "hold_unverified_identity",
+      "field_proposals": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://web.ub.edu/en/web/beques-graus-masters/beca-general-2026-2027",
+          "evidence": "2026/27 official general scholarship page, not evidence for generic international Master's award.",
+          "source_url": "https://web.ub.edu/en/web/beques-graus-masters/beca-general-2026-2027"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "UNVERIFIED blanket full tuition",
+          "evidence": "General 2026/27 aid has income/residence/nationality conditions and varied components.",
+          "source_url": "https://web.ub.edu/en/web/beques-graus-masters/beca-general-2026-2027"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "General scholarship primarily Spanish/EU applicants subject to residence rules; separate programmes require separate eligibility",
+          "evidence": "Official general grant rules exclude treating all international applicants as eligible.",
+          "source_url": "https://web.ub.edu/en/web/beques-graus-masters/beca-general-2026-2027"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2026/27 general grant closed; no verified 2027/28 generic international award",
+          "evidence": "General application window 7 April–18 May 2026.",
+          "source_url": "https://web.ub.edu/en/web/beques-graus-masters/beca-general-2026-2027"
+        }
+      ],
+      "notes": [
+        "Official site returned HTTP 403 during direct open, but search-indexed official page contains programme rules. HTTP error is not discontinuation evidence."
+      ],
+      "official_source": "https://web.ub.edu/en/web/beques-graus-masters/beca-general-2026-2027",
+      "staging_applied": false
+    }
+  ],
+  "scholarship_leads": [
+    {
+      "title": "Polimi Merit Platinum",
+      "country": "Italy",
+      "cycle": "2027/28",
+      "funding": "€10,000 gross plus tuition waiver",
+      "deadline": "2026-12-15",
+      "notes": "Tier within one university-wide merit call; 10 awards; Milano campuses",
+      "official_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+      "triage": "reconcile_umbrella",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "Polimi Merit Gold Milan",
+      "country": "Italy",
+      "cycle": "2027/28",
+      "funding": "€8,000 gross plus tuition waiver",
+      "deadline": "2026-12-15",
+      "notes": "18 awards; Milano campuses",
+      "official_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+      "triage": "reconcile_umbrella",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "Polimi Merit Gold Piacenza",
+      "country": "Italy",
+      "cycle": "2027/28",
+      "funding": "€5,000 gross plus tuition waiver",
+      "deadline": "2026-12-15",
+      "notes": "16 awards; restricted Piacenza programmes",
+      "official_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+      "triage": "reconcile_umbrella",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "Polimi Merit Bronze Piacenza",
+      "country": "Italy",
+      "cycle": "2027/28",
+      "funding": "€2,500 gross plus tuition waiver",
+      "deadline": "2026-12-15",
+      "notes": "10 awards; Mechanical Engineering Mechatronics for Manufacturing",
+      "official_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+      "triage": "reconcile_umbrella",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "Polimi Merit Silver regional campuses",
+      "country": "Italy",
+      "cycle": "2027/28",
+      "funding": "Tuition waiver only",
+      "deadline": "2026-12-15",
+      "notes": "10 awards; Cremona, Lecco, Mantova and Piacenza",
+      "official_url": "https://www.polimi.it/fileadmin/user_upload/futuri_studenti/borse-di-studio/Merit_Based_Call_For_Applications_a.y._2027-2028.pdf",
+      "triage": "reconcile_umbrella",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "HEC Paris MBA Excellence Scholarship",
+      "country": "France",
+      "cycle": "MBA ongoing",
+      "funding": "Up to 50% tuition",
+      "deadline": "admissions_based",
+      "notes": "Automatic consideration; GMAT and interview among selection criteria",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "triage": "reconcile_umbrella",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "HEC Paris MBA Diversity Scholarship",
+      "country": "France",
+      "cycle": "MBA ongoing",
+      "funding": "Up to 50% tuition",
+      "deadline": "admissions_based",
+      "notes": "Automatic consideration",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "triage": "reconcile_umbrella",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "HEC Paris MBA Forté Foundation Scholarship",
+      "country": "France",
+      "cycle": "MBA ongoing",
+      "funding": "Up to €26,000",
+      "deadline": "admissions_based",
+      "notes": "Women; essay at MBA application; subject to other restrictions",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "triage": "review_unique",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "HEC Paris MBA Future Leaders of Africa",
+      "country": "France",
+      "cycle": "MBA ongoing",
+      "funding": "Up to €15,000",
+      "deadline": "admissions_based",
+      "notes": "Citizens of South Africa, Nigeria, Ghana, Kenya or Uganda; essay",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "triage": "review_unique",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "HEC Paris MBA Laidlaw Scholars",
+      "country": "France",
+      "cycle": "MBA ongoing",
+      "funding": "Up to full tuition; living costs excluded",
+      "deadline": "one_week_after_admission",
+      "notes": "Eligible women with leadership potential and demonstrated financial need; up to 10 awards per graduating class",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "triage": "review_unique",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "HEC Paris MBA ARD",
+      "country": "France",
+      "cycle": "MBA ongoing",
+      "funding": "€16,000",
+      "deadline": "one_week_after_admission",
+      "notes": "Eligible transitioning French armed-forces officers",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "triage": "review_unique",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "HEC Paris MBA L'Oréal",
+      "country": "France",
+      "cycle": "MBA ongoing",
+      "funding": "€10,000",
+      "deadline": "admissions_based",
+      "notes": "One award per intake; essay required",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "triage": "review_unique",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "HEC Paris MBA 30% Club",
+      "country": "France",
+      "cycle": "MBA ongoing",
+      "funding": "50% of first-year tuition",
+      "deadline": "admissions_based",
+      "notes": "Women; automatic consideration",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "triage": "review_unique",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "HEC Paris MBA Sanofi Life Sciences",
+      "country": "France",
+      "cycle": "2026 launch, annual",
+      "funding": "75% tuition",
+      "deadline": "admissions_based",
+      "notes": "Existing private draft deaf81c4-5db4-429d-982f-15a0a624f18e; no duplicate",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "triage": "existing_draft",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "HEC Paris MBA CMA CGM Excellence Fund",
+      "country": "France",
+      "cycle": "MBA ongoing",
+      "funding": "Individualized; average €25,000",
+      "deadline": "one_week_after_admission",
+      "notes": "International students with financial need and studies in home country",
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "triage": "review_unique",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "University of Warsaw Scholarship to Start for Olympians",
+      "country": "Poland",
+      "cycle": "2026/27",
+      "funding": "Amount not confirmed",
+      "deadline": "2026-04-24",
+      "notes": "One of three distinct eligibility tracks; 2026 deadline closed",
+      "official_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/",
+      "triage": "closed_hold",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "University of Warsaw Scholarship to Start for Athletes",
+      "country": "Poland",
+      "cycle": "2026/27",
+      "funding": "Amount not confirmed",
+      "deadline": "2026-04-24",
+      "notes": "Track within common scholarship; do not multiply programmes without award identity evidence",
+      "official_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/",
+      "triage": "closed_hold",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "University of Warsaw Scholarship to Start for Doctoral Students",
+      "country": "Poland",
+      "cycle": "2026/27",
+      "funding": "Amount not confirmed",
+      "deadline": "2026-04-24",
+      "notes": "Track within common scholarship; 2026 closed",
+      "official_url": "https://welcome.uw.edu.pl/before-you-arrive/scholarship-for-foreigners/scholarship-for-international-students-of-the-university-of-warsaw/",
+      "triage": "closed_hold",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    },
+    {
+      "title": "University of Bologna Mathematics MSc International Award",
+      "country": "Italy",
+      "cycle": "2026/27",
+      "funding": "Two awards €5,000 each",
+      "deadline": "2026-05-15",
+      "notes": "Closed; no 2027/28 call confirmed",
+      "official_url": "https://bandi.unibo.it/s/mat/first-call-for-scholarships-2026-2027",
+      "triage": "closed_hold",
+      "publication_status": "not_submitted",
+      "semantic_duplicate_check": "title_and_provider_checked_staging; broader_review_pending"
+    }
+  ],
+  "existing_drafts_reviewed": [
+    {
+      "id": "deaf81c4-5db4-429d-982f-15a0a624f18e",
+      "title": "HEC Paris Sanofi Life Sciences MBA Scholarship",
+      "status": "draft",
+      "provenance_rows": 6,
+      "source_audit_success": null,
+      "reviewer_attributed_provenance": 0,
+      "official_url": "https://www.hec.edu/en/mba-executive-mba/mba/admissions/fees-funding/scholarships",
+      "readiness": "requires authenticated audit/reviewer approval; do not publish"
+    }
+  ],
+  "caveats": [
+    "Proposals are unapproved and must not be applied without authenticated administrator review, field-level provenance, source audits and canonical duplicate checks.",
+    "A single Polimi 2027/28 call has five named funding tiers; do not treat the 64 individual awards as 64 scholarship programmes.",
+    "HEC Paris MBA scholarship page includes several named awards; generic published HEC record must be reconciled before separate new records.",
+    "No IELTS/TOEFL/SAT thresholds assigned where scholarship-specific official evidence does not specify a score.",
+    "Deadlines for 2026/27 are historical where already closed; do not silently roll them forward.",
+    "No archival recommendation based only on failed HTTP checks.",
+    "No production changes."
+  ],
+  "summary": {
+    "published_records_investigated": 14,
+    "field_level_proposals": 52,
+    "scholarship_leads": 19,
+    "existing_private_drafts_assessed": 1,
+    "staging_edits": 0,
+    "new_publications": 0
+  },
+  "staging_before_snapshot_utc": "2026-10-24T10:24:59.795927Z",
+  "staging_after_snapshot_utc": "2026-10-24T10:27:19.440208Z",
+  "staging_readbacks": {
+    "before": {
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_attributed_provenance": 0,
+      "source_candidates": 636,
+      "admin_action_logs": 8
+    },
+    "after": {
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_attributed_provenance": 0,
+      "source_candidates": 636,
+      "admin_action_logs": 8
+    }
+  },
+  "staging_authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "admin_write_access": false
+  }
+}

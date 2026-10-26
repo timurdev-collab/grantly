@@ -1,0 +1,895 @@
+{
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "created_at_utc": "2026-10-25T06:28:44Z",
+  "run_scope": "Gulf scholarship funding and South Africa official-source reconciliation",
+  "status": "review_proposals_only_no_database_writes",
+  "independent_staging_readbacks": {
+    "before": {
+      "read_at_utc": "2026-10-25T06:27:11.695317Z",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "source_candidates": 637
+    },
+    "after": {
+      "read_at_utc": "2026-10-25T06:28:44.771736Z",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_values": 207,
+      "reviewer_attributed": 0,
+      "source_candidates": 637,
+      "admin_logs": 8
+    }
+  },
+  "investigated_published_needs_review": 14,
+  "field_review_proposals": 75,
+  "published_records": [
+    {
+      "id": "891681ad-b022-431d-85f3-e9acc21525e9",
+      "title": "Hamad Bin Khalifa University Engineering Masters Award",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "application_cycle",
+          "proposed_value": "Fall 2027 graduate admission",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "Graduate admission applications opened 1 Oct 2026; cycle-specific, not a distinct named scholarship call.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-02-01",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "International graduate admission deadline; Qatar nationals/residents seeking funding have a different 15 Mar 2027 deadline. Do not present as universal.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "accommodation",
+          "proposed_value": false,
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "HBKU explicitly does not directly pay student housing; housing is funded from stipend/personal funds.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.hbku.edu.qa/en/scholarship",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Programme-specific university funding guidelines instead of generic home page.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Selected international Master's RA/TA: QAR 7,000/month, up to 21 months; conditional",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Funding availability, full-time RA/TA service and merit/need conditions; not guaranteed.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Selected STEM MS students: 75% tuition waiver",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Programme-level published waiver table, contingent on award.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "reconcile_six_overlapping_HBKU_records",
+        "do_not_create_six_independent_scholarship_programmes"
+      ]
+    },
+    {
+      "id": "e618915f-c5e8-46f8-a240-ec2bb721f1da",
+      "title": "Hamad Bin Khalifa University Engineering Phd Award",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "application_cycle",
+          "proposed_value": "Fall 2027 graduate admission",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "Graduate admission applications opened 1 Oct 2026; cycle-specific, not a distinct named scholarship call.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-02-01",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "International graduate admission deadline; Qatar nationals/residents seeking funding have a different 15 Mar 2027 deadline. Do not present as universal.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "accommodation",
+          "proposed_value": false,
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "HBKU explicitly does not directly pay student housing; housing is funded from stipend/personal funds.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.hbku.edu.qa/en/scholarship",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Programme-specific university funding guidelines instead of generic home page.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Selected international PhD RA/TA: QAR 9,000/month, up to 45 months; conditional",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Funding availability, full-time RA/TA service and merit/need conditions; not guaranteed.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Selected STEM PhD students: 100% tuition waiver",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Programme-level published waiver table, contingent on award.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "reconcile_six_overlapping_HBKU_records",
+        "do_not_create_six_independent_scholarship_programmes"
+      ]
+    },
+    {
+      "id": "04e3ba48-f760-4160-b0e1-dee3fa966f39",
+      "title": "Hamad Bin Khalifa University Masters Excellence Scholarship",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "application_cycle",
+          "proposed_value": "Fall 2027 graduate admission",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "Graduate admission applications opened 1 Oct 2026; cycle-specific, not a distinct named scholarship call.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-02-01",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "International graduate admission deadline; Qatar nationals/residents seeking funding have a different 15 Mar 2027 deadline. Do not present as universal.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "accommodation",
+          "proposed_value": false,
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "HBKU explicitly does not directly pay student housing; housing is funded from stipend/personal funds.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.hbku.edu.qa/en/scholarship",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Programme-specific university funding guidelines instead of generic home page.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Selected international Master's RA/TA: QAR 7,000/month, up to 21 months; conditional",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Funding availability, full-time RA/TA service and merit/need conditions; not guaranteed.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Do not claim guaranteed full tuition; Master's waiver varies by college (STEM 75%, SHAPE 60%, some 0%); PhD selected waivers 100%",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Generic 'Excellence'/'International' scheme identities not independently named by official policy.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "reconcile_six_overlapping_HBKU_records",
+        "do_not_create_six_independent_scholarship_programmes"
+      ]
+    },
+    {
+      "id": "06e74eed-5282-456d-8e97-8b235be85ba7",
+      "title": "Hamad Bin Khalifa University Masters International Scholarship",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "application_cycle",
+          "proposed_value": "Fall 2027 graduate admission",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "Graduate admission applications opened 1 Oct 2026; cycle-specific, not a distinct named scholarship call.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-02-01",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "International graduate admission deadline; Qatar nationals/residents seeking funding have a different 15 Mar 2027 deadline. Do not present as universal.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "accommodation",
+          "proposed_value": false,
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "HBKU explicitly does not directly pay student housing; housing is funded from stipend/personal funds.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.hbku.edu.qa/en/scholarship",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Programme-specific university funding guidelines instead of generic home page.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Selected international Master's RA/TA: QAR 7,000/month, up to 21 months; conditional",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Funding availability, full-time RA/TA service and merit/need conditions; not guaranteed.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Do not claim guaranteed full tuition; Master's waiver varies by college (STEM 75%, SHAPE 60%, some 0%); PhD selected waivers 100%",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Generic 'Excellence'/'International' scheme identities not independently named by official policy.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "reconcile_six_overlapping_HBKU_records",
+        "do_not_create_six_independent_scholarship_programmes"
+      ]
+    },
+    {
+      "id": "cf8c0a33-3ea6-4e23-8132-7dc313d27576",
+      "title": "Hamad Bin Khalifa University Phd Excellence Scholarship",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "application_cycle",
+          "proposed_value": "Fall 2027 graduate admission",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "Graduate admission applications opened 1 Oct 2026; cycle-specific, not a distinct named scholarship call.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-02-01",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "International graduate admission deadline; Qatar nationals/residents seeking funding have a different 15 Mar 2027 deadline. Do not present as universal.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "accommodation",
+          "proposed_value": false,
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "HBKU explicitly does not directly pay student housing; housing is funded from stipend/personal funds.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.hbku.edu.qa/en/scholarship",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Programme-specific university funding guidelines instead of generic home page.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Selected international PhD RA/TA: QAR 9,000/month, up to 45 months; conditional",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Funding availability, full-time RA/TA service and merit/need conditions; not guaranteed.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Do not claim guaranteed full tuition; Master's waiver varies by college (STEM 75%, SHAPE 60%, some 0%); PhD selected waivers 100%",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Generic 'Excellence'/'International' scheme identities not independently named by official policy.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "reconcile_six_overlapping_HBKU_records",
+        "do_not_create_six_independent_scholarship_programmes"
+      ]
+    },
+    {
+      "id": "9465904e-4c22-4198-871f-c83e1e2d22ea",
+      "title": "Hamad Bin Khalifa University Phd International Scholarship",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "application_cycle",
+          "proposed_value": "Fall 2027 graduate admission",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "Graduate admission applications opened 1 Oct 2026; cycle-specific, not a distinct named scholarship call.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-02-01",
+          "source_url": "https://www.hbku.edu.qa/en/graduate-admissions",
+          "evidence_note": "International graduate admission deadline; Qatar nationals/residents seeking funding have a different 15 Mar 2027 deadline. Do not present as universal.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "accommodation",
+          "proposed_value": false,
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "HBKU explicitly does not directly pay student housing; housing is funded from stipend/personal funds.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.hbku.edu.qa/en/scholarship",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Programme-specific university funding guidelines instead of generic home page.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Selected international PhD RA/TA: QAR 9,000/month, up to 45 months; conditional",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Funding availability, full-time RA/TA service and merit/need conditions; not guaranteed.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Do not claim guaranteed full tuition; Master's waiver varies by college (STEM 75%, SHAPE 60%, some 0%); PhD selected waivers 100%",
+          "source_url": "https://www.hbku.edu.qa/en/scholarship",
+          "evidence_note": "Generic 'Excellence'/'International' scheme identities not independently named by official policy.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "reconcile_six_overlapping_HBKU_records",
+        "do_not_create_six_independent_scholarship_programmes"
+      ]
+    },
+    {
+      "id": "364de614-8f2d-4de1-aab8-b45e55ab6058",
+      "title": "Qatar University Scholarship",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "degree_levels",
+          "proposed_value": [
+            "Bachelor"
+          ],
+          "source_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types",
+          "evidence_note": "Official International Students Scholarship is undergraduate-only; generic record must be reconciled to canonical identity before updating.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "International students (not unrestricted universal eligibility)",
+          "source_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types",
+          "evidence_note": "International applicants to first Bachelor's degree; no transfers, visiting, non-degree or second Bachelor's.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "QAR 500 monthly for eligible International Students Scholarship recipients",
+          "source_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types",
+          "evidence_note": "Do not conflate with other Qatar University awards.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "International Students Scholarship: tuition and textbook exemption, campus housing and transport, annual return airfare",
+          "source_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types",
+          "evidence_note": "Applies only if mapped to named International Students Scholarship.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/Pages/scholarships-timeline.aspx",
+          "evidence_note": "Spring 2027 international applicant dates are not established on the official timetable; 11 Nov deadline belongs to resident-only programmes.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "canonical_published_record_6a6e7434-c794-46bb-93d7-be0ae481569f",
+        "canonical_record_itself_has_incorrect_Master_level",
+        "do_not_overwrite_until_identity_reconciled"
+      ]
+    },
+    {
+      "id": "9fa27a6b-f142-44d7-ae3c-41bfd6ca32c0",
+      "title": "MBZUAI Undergraduate Scholarship",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "deadline",
+          "proposed_value": "2027-02-01",
+          "source_url": "https://mbzuai.ac.ae/admissions/undergraduate-admissions",
+          "evidence_note": "Regular Decision closes 1 Feb 2027 17:00 GST; Early Action closes 1 Nov 2026 17:00 GST.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "min_ielts",
+          "proposed_value": 6.5,
+          "source_url": "https://mbzuai.ac.ae/admissions/undergraduate-admissions",
+          "evidence_note": "For non-native English speakers unless a specific official exemption applies; Academic IELTS.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "language_requirements",
+          "proposed_value": "TOEFL iBT 90/4.5; IELTS Academic 6.5; PTE 60; Duolingo 120 under restricted circumstances",
+          "source_url": "https://mbzuai.ac.ae/admissions/undergraduate-admissions",
+          "evidence_note": "Exam conditions and exemptions specified on official admissions page.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "sat_required",
+          "proposed_value": false,
+          "source_url": "https://mbzuai.ac.ae/admissions/undergraduate-admissions",
+          "evidence_note": "SAT/ACT Math may be considered as supporting quantitative evidence, not a universal mandatory score.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Merit/need scholarship up to 100% of tuition and cost of attendance; not automatic",
+          "source_url": "https://mbzuai.ac.ae/admissions/undergraduate-admissions",
+          "evidence_note": "Official undergraduate scholarships are competitive.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "Fall 2027",
+          "source_url": "https://mbzuai.ac.ae/admissions/undergraduate-admissions",
+          "evidence_note": "Admission dates specifically for Fall 2027.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": []
+    },
+    {
+      "id": "6746306d-2d99-466a-955a-5c2752f83d5f",
+      "title": "NYU Abu Dhabi Financial Aid",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "funding_type",
+          "proposed_value": "Need-based institutional grant, variable amount",
+          "source_url": "https://nyuad.nyu.edu/en/apply/undergraduate/scholarships-and-financial-aid.html",
+          "evidence_note": "Non-Emirati awards based on CSS Profile demonstrated financial need, not universally fully funded.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-02-01",
+          "source_url": "https://nyuad.nyu.edu/en/apply/undergraduate/scholarships-and-financial-aid.html",
+          "evidence_note": "CSS Profile deadline for Regular Decision; ED I 10 Nov and ED II 10 Jan. Verify intake year from NYU admissions cycle before accepting a single date.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "All citizenships may apply for need-based grants; separate guaranteed Emirati scholarship is a different programme",
+          "source_url": "https://nyuad.nyu.edu/en/apply/undergraduate/scholarships-and-financial-aid.html",
+          "evidence_note": "Keep NYUAD Emirati scholarship distinct from general need-based grants.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "min_ielts",
+          "proposed_value": null,
+          "source_url": "https://nyuad.nyu.edu/en/apply/undergraduate/scholarships-and-financial-aid.html",
+          "evidence_note": "Existing 7.0 IELTS claim is not substantiated by the financial aid source; admission language testing is a separate policy.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://nyuad.nyu.edu/en/apply/undergraduate/scholarships-and-financial-aid.html",
+          "source_url": "https://nyuad.nyu.edu/en/apply/undergraduate/scholarships-and-financial-aid.html",
+          "evidence_note": "Official financial-aid-specific page.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "do_not_conflate_with_sheikh_mohamed_bin_zayed_nyuad_scholarship"
+      ]
+    },
+    {
+      "id": "ebf98ae2-f142-44fc-86bc-a2737a52b8bd",
+      "title": "Khalifa University Scholarship",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "funding_type",
+          "proposed_value": "Tiered and conditional: partial/full tuition; stipend available to some PhD recipients",
+          "source_url": "https://www.ku.ac.ae/scholarship-faqs",
+          "evidence_note": "Scholarship depends on award tier and degree.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Master's tiers may require payment of 0%, 50% or 100% tuition; PhD tiers depend on pathway and residency",
+          "source_url": "https://www.ku.ac.ae/scholarship-faqs",
+          "evidence_note": "Official tier schedule; no universal full tuition.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "No regular Master's stipend; PhD stipend depends on award tier",
+          "source_url": "https://www.ku.ac.ae/scholarship-faqs",
+          "evidence_note": "University scholarship FAQ explicitly excludes standard Master's stipend.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": [
+            "Bachelor",
+            "Master",
+            "PhD"
+          ],
+          "source_url": "https://www.ku.ac.ae/scholarship-faqs",
+          "evidence_note": "Keep degree-specific award conditions distinct; undergraduate tier is separate.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.ku.ac.ae/scholarships-postgraduate",
+          "source_url": "https://www.ku.ac.ae/scholarships-postgraduate",
+          "evidence_note": "More precise postgraduate source; separate undergraduate scholarship is already published.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "existing_verified_undergraduate_record_dbbacad7-d0be-4d75-ae3e-2eda9c1bfc7f",
+        "many_prior_archived_generic_Khalifa_duplicates"
+      ]
+    },
+    {
+      "id": "62fb7982-8251-4c8e-aed0-2747a014fe02",
+      "title": "Mandela Rhodes Scholarship",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Citizens of African countries only",
+          "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+          "evidence_note": "All African nationalities; non-African citizenship ineligible.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": [
+            "Honours",
+            "Master"
+          ],
+          "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+          "evidence_note": "South African postgraduate Honours (one year) or Master's (up to two years); no MBA.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-04-14",
+          "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+          "evidence_note": "Applications for 2028 intake close 14 Apr 2027 23:59 GMT+2; open 9 Mar 2027.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2028 intake (applications 9 Mar–14 Apr 2027)",
+          "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+          "evidence_note": "Intake and application year must not be conflated.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Tuition and registration plus allowances for accommodation, meals, study materials, research, medical aid and qualifying travel",
+          "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+          "evidence_note": "No invented fixed stipend amount.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": []
+    },
+    {
+      "id": "3e56cbdf-bba4-41db-a58d-fefa4b75e675",
+      "title": "Oppenheimer Memorial Trust Scholarship",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "funding_type",
+          "proposed_value": "Competitive discretionary postgraduate funding; not guaranteed full tuition and stipend",
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "evidence_note": "Trust awards limited Master's, Doctoral and Postdoctoral scholarships; award amounts not guaranteed.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": [
+            "Master",
+            "PhD",
+            "Postdoctoral"
+          ],
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "evidence_note": "Trust includes postdoctoral studies, which are not degree programmes; catalog scope review required.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2026-08-31",
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "evidence_note": "Closed deadline for Jan–Jun 2027 start; do not advertise as open. Next round unconfirmed.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "January–June 2027 study commencement (application closed)",
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "evidence_note": "Official OMT timetable; no invented later deadline.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "South Africa research/academic career intent; exact citizenship restriction not established",
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "evidence_note": "Do not replace ALL with invented South African citizenship-only restriction.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "avoid_misclassifying_research_grants_as_degree_scholarships"
+      ]
+    },
+    {
+      "id": "fa1dd137-4f98-451f-a014-9d11429c9672",
+      "title": "Zayed University Scholarship",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "funding_type",
+          "proposed_value": "Government-funded Emirati tuition and separate conditional international merit support",
+          "source_url": "https://www.zu.ac.ae/main/en/contact_us/faqs",
+          "evidence_note": "Existing generic record conflates different student categories.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "International undergraduate merit scholarship up to 50% tuition, not full; UAE government funding may cover Emirati tuition",
+          "source_url": "https://www.zu.ac.ae/main/ar/admission/undergraduate-programs/admission-requirement/_international-students/scholarships",
+          "evidence_note": "University's international scholarship programme details (Arabic).",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "min_ielts",
+          "proposed_value": 6,
+          "source_url": "https://www.zu.ac.ae/main/ar/admission/undergraduate-programs/admission-requirement/_international-students/scholarships",
+          "evidence_note": "International undergraduate merit: IELTS 6.0 (each component >=5.5) or TOEFL iBT 80.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "accommodation",
+          "proposed_value": false,
+          "source_url": "https://www.zu.ac.ae/main/en/contact_us/faqs",
+          "evidence_note": "Scholarships only cover tuition; not accommodation, transport or equipment.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "do_not_mark_verified_without_authenticated_source_audit"
+      ]
+    },
+    {
+      "id": "3a2fdcfa-7f59-4eb6-825e-bd8ffb5e7f5b",
+      "title": "MasterCard Foundation at University of Pretoria",
+      "review": "needs_review",
+      "proposed_field_reviews": [
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Citizens of African countries facing socioeconomic barriers",
+          "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+          "evidence_note": "African youth, including refugees, IDPs and people with disabilities.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+          "evidence_note": "2027-entry page has contradictory '30 June 2026' and '31 Aug/30 Sep 2026' dates; must resolve, not pick a fabricated date.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": [
+            "Bachelor",
+            "Honours",
+            "Master"
+          ],
+          "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+          "evidence_note": "Official current call includes undergraduate, Honours and Master's applicants.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Full scholarship for eligible admitted students; conditional on UP acceptance and scholarship selection",
+          "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/application-instructions",
+          "evidence_note": "Covers tuition, accommodation, meals, stipend, books, medical aid and eligible travel.",
+          "disposition": "proposal_only_requires_authenticated_review"
+        }
+      ],
+      "flags": [
+        "existing_private_draft_67dc6528-42a1-4844-b676-faf2af87e1c8",
+        "do_not_publish_duplicate"
+      ]
+    }
+  ],
+  "additional_curated_duplicate_crosscheck": {
+    "id": "6a6e7434-c794-46bb-93d7-be0ae481569f",
+    "title": "Qatar University International Student Scholarship",
+    "status": "published",
+    "verification_status": "curated",
+    "issue": "Degree levels currently Bachelor + Master, while official International Students Scholarship is Bachelor only; needs authorized canonical reconciliation",
+    "source_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types"
+  },
+  "candidate_count": 7,
+  "private_draft_candidates": [
+    {
+      "title": "Qatar University Student Recruitment and Excellence Scholarship",
+      "country": "Qatar",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Tuition and textbooks waived; no universal stipend",
+      "deadline": "2026-11-11",
+      "cycle": "Spring 2027",
+      "eligibility": "Newly admitted residents of Qatar; restricted programmes for Recruitment Track; competitive Excellence Track",
+      "official_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types",
+      "timeline_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/Pages/scholarships-timeline.aspx",
+      "stage": "research_only_private_draft_candidate",
+      "targeted_title_duplicate_check": "no_exact_title_match_found_in_staging_scholarships_or_source_candidates",
+      "semantic_duplicate_screening": "pending",
+      "created_in_database": false
+    },
+    {
+      "title": "Qatar University GCC Qatari Certificate Scholarships",
+      "country": "Qatar",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Tuition waiver only",
+      "deadline": "2026-11-11",
+      "cycle": "Spring 2027",
+      "eligibility": "GCC citizens holding Qatari secondary school certificate",
+      "official_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types",
+      "timeline_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/Pages/scholarships-timeline.aspx",
+      "stage": "research_only_private_draft_candidate",
+      "targeted_title_duplicate_check": "no_exact_title_match_found_in_staging_scholarships_or_source_candidates",
+      "semantic_duplicate_screening": "pending",
+      "created_in_database": false
+    },
+    {
+      "title": "Qatar University Children of Employees Scholarship",
+      "country": "Qatar",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Tuition waiver only",
+      "deadline": "2026-11-11",
+      "cycle": "Spring 2027",
+      "eligibility": "Children of full-time Qatar University employees; up to three children concurrently",
+      "official_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types",
+      "timeline_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/Pages/scholarships-timeline.aspx",
+      "stage": "research_only_private_draft_candidate",
+      "targeted_title_duplicate_check": "no_exact_title_match_found_in_staging_scholarships_or_source_candidates",
+      "semantic_duplicate_screening": "pending",
+      "created_in_database": false
+    },
+    {
+      "title": "Qatar University Outstanding Performance Scholarship",
+      "country": "Qatar",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Tuition waiver only",
+      "deadline": "2026-12-02",
+      "cycle": "Spring 2027",
+      "eligibility": "Already enrolled QU students with >=3.5 GPA and >=30 credits; opens 1 Nov 2026",
+      "official_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types",
+      "timeline_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/Pages/scholarships-timeline.aspx",
+      "stage": "research_only_private_draft_candidate",
+      "targeted_title_duplicate_check": "no_exact_title_match_found_in_staging_scholarships_or_source_candidates",
+      "semantic_duplicate_screening": "pending",
+      "created_in_database": false
+    },
+    {
+      "title": "Qatar University Talent Scholarship",
+      "country": "Qatar",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Tuition/textbooks waived plus QAR 1,000 monthly; housing and airfare for eligible international recipients",
+      "deadline": null,
+      "cycle": "Next intake not confirmed",
+      "eligibility": "Non-Qatari talented undergraduate applicants, minimum 80% high-school average, portfolio and references",
+      "official_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types",
+      "timeline_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/Pages/scholarships-timeline.aspx",
+      "stage": "research_only_private_draft_candidate",
+      "targeted_title_duplicate_check": "no_exact_title_match_found_in_staging_scholarships_or_source_candidates",
+      "semantic_duplicate_screening": "pending",
+      "created_in_database": false
+    },
+    {
+      "title": "H.H. the Emir of Qatar's Scholarship for Academic Excellence",
+      "country": "Qatar",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Tuition/textbooks waived plus QAR 1,000 monthly for nine months",
+      "deadline": null,
+      "cycle": "Fall-only, next exact deadline unconfirmed",
+      "eligibility": "Qatari secondary school certificate, >=95%, graduating in same application year",
+      "official_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/types",
+      "timeline_url": "https://qataruniversity-prd.qu.edu.qa/en-us/students/admission/scholarships/Pages/scholarships-timeline.aspx",
+      "stage": "research_only_private_draft_candidate",
+      "targeted_title_duplicate_check": "no_exact_title_match_found_in_staging_scholarships_or_source_candidates",
+      "semantic_duplicate_screening": "pending",
+      "created_in_database": false
+    },
+    {
+      "title": "Sheikh Mohamed bin Zayed NYUAD Scholarship for Exceptional Emirati Students",
+      "country": "United Arab Emirates",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "Tuition, housing, meals, study-related travel, health insurance and books for four years",
+      "deadline": null,
+      "cycle": "2027 entry: university admission deadlines; no separate scholarship application",
+      "eligibility": "Admitted UAE nationals and children of an Emirati mother or father; Falcon Dirhams is separate need-based support",
+      "official_url": "https://nyuad.nyu.edu/en/apply/undergraduate/scholarships-and-financial-aid/scholarships-for-emirati-students.html",
+      "timeline_url": "https://nyuad.nyu.edu/en/apply/undergraduate/apply/key-dates-and-deadlines.html",
+      "stage": "research_only_private_draft_candidate",
+      "targeted_title_duplicate_check": "no_exact_title_match_found_in_staging_scholarships_or_source_candidates",
+      "semantic_duplicate_screening": "pending",
+      "created_in_database": false
+    }
+  ],
+  "existing_private_drafts_assessed": [
+    {
+      "id": "67dc6528-42a1-4844-b676-faf2af87e1c8",
+      "title": "Mastercard Foundation Scholars Program at University of Pretoria",
+      "last_successful_check_at": "2026-10-03T14:14:01Z",
+      "reviewer_attributed_provenance": 0,
+      "field_provenance": 0,
+      "issue": "Official 2027-entry deadlines conflict on source page; existing published record overlaps; do not publish duplicate",
+      "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply"
+    },
+    {
+      "id": "3406e073-aa78-4c18-9eaa-b5b585b04026",
+      "title": "Zayed University Undergraduate Merit Scholarship",
+      "last_successful_check_at": "2026-10-05T15:15:09Z",
+      "field_provenance": 0,
+      "reviewer_attributed_provenance": 0,
+      "issue": "Confirm current international 50% tuition cap and IELTS 6.0/TOEFL 80; reconcile generic published record",
+      "source_url": "https://www.zu.ac.ae/main/ar/admission/undergraduate-programs/admission-requirement/_international-students/scholarships"
+    }
+  ],
+  "auth_blocker": {
+    "auth_uid": null,
+    "is_admin": false,
+    "authorized_publish_function": "public.publish_scholarship_draft",
+    "authorized_provenance_function": "public.record_scholarship_field_provenance",
+    "notes": "Both require public.is_admin() and draft publication requires successful source audit and readiness. Management SQL must not bypass these gates."
+  },
+  "results": {
+    "successful_staging_edits": 0,
+    "new_published": 0,
+    "new_database_drafts": 0,
+    "new_provenance": 0,
+    "archived": 0,
+    "production_changes": 0,
+    "distance_to_1000": 603
+  },
+  "notes": [
+    "Field proposals are not accepted values or verified records.",
+    "Deadlines for admissions are not necessarily scholarship deadlines; exceptions noted per record.",
+    "No archived/discontinued classification inferred from temporary HTTP failures.",
+    "7 named candidate programmes are not published and may require semantic duplicate review.",
+    "No changes to production."
+  ]
+}
