@@ -164,9 +164,13 @@ private fun EduTApp() {
                             tab == Tab.Profile -> AuthContent()
                             else -> PlaceholderContent(tab)
                         }
-                        // Guest-only shortcut shared by Community, Advisors and Notifications.
+                        // Offer a direct authentication route on all guest-gated destinations.
+                        // Scholarship details remain public even when opened from a gated tab.
                         // This changes local navigation only; it never attempts a backend write.
-                        if (session == null && (showingAdvisors || showingCommunity || showingNotifications)) {
+                        if (session == null && (
+                            showingAdvisors || showingCommunity || showingNotifications ||
+                                (selectedScholarship == null && (tab == Tab.Applications || tab == Tab.Messages))
+                            )) {
                             Spacer(Modifier.height(16.dp))
                             Button(onClick = {
                                 showingAdvisors = false
