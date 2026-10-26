@@ -27,6 +27,7 @@ internal fun HomeFeaturedScholarshipContent(
     val userId = AuthRepository.session?.userId
     var featured by remember(userId) { mutableStateOf<Scholarship?>(null) }
     var matchScore by remember(userId) { mutableStateOf<Int?>(null) }
+    var eligibilityWarning by remember(userId) { mutableStateOf<String?>(null) }
     var loading by remember(userId) { mutableStateOf(true) }
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var retry by remember(userId) { mutableIntStateOf(0) }
@@ -36,6 +37,7 @@ internal fun HomeFeaturedScholarshipContent(
         error = null
         featured = null
         matchScore = null
+        eligibilityWarning = null
         try {
             // A failed private matching request must not prevent public discovery.
             val match = if (userId == null) null else try {
@@ -48,6 +50,15 @@ internal fun HomeFeaturedScholarshipContent(
             if (match != null) {
                 featured = match.scholarship
                 matchScore = match.score
+                // A high matching score is not proof of eligibility.
+                if (!match.eligible) {
+                    val blocker = match.blockers.firstOrNull()?.trim()?.take(120)
+                    eligibilityWarning = if (blocker.isNullOrEmpty()) {
+                        "Eligibility needs review before applying."
+                    } else {
+                        "Eligibility needs review: $blocker"
+                    }
+                }
             } else {
                 val today = LocalDate.now()
                 featured = ScholarshipRepository.search(sort = "Deadline", limit = 100)
@@ -117,6 +128,10 @@ internal fun HomeFeaturedScholarshipContent(
                         Spacer(Modifier.height(7.dp))
                         Text("$score% profile match · Verify eligibility with the provider",
                             color = gold, fontSize = 12.sp)
+                        eligibilityWarning?.let { warning ->
+                            Spacer(Modifier.height(7.dp))
+                            Text(warning, color = ivory, fontSize = 12.sp, lineHeight = 17.sp)
+                        }
                     } ?: featured!!.deadline?.take(10)?.let { date ->
                         Spacer(Modifier.height(7.dp))
                         Text("Listed deadline: $date · Confirm with provider",
