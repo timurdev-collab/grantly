@@ -164,6 +164,20 @@ private fun EduTApp() {
                             tab == Tab.Profile -> AuthContent()
                             else -> PlaceholderContent(tab)
                         }
+                        // Guest-only shortcut shared by Community, Advisors and Notifications.
+                        // This changes local navigation only; it never attempts a backend write.
+                        if (session == null && (showingAdvisors || showingCommunity || showingNotifications)) {
+                            Spacer(Modifier.height(16.dp))
+                            Button(onClick = {
+                                showingAdvisors = false
+                                showingCommunity = false
+                                showingNotifications = false
+                                selectedScholarship = null
+                                tab = Tab.Profile
+                            }) {
+                                Text("Sign in or create account")
+                            }
+                        }
                     }
                 }
             }
