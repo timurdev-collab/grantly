@@ -25,20 +25,16 @@ class RecoveryDeepLinkSmokeTest {
     @Test fun incompleteRecoveryLinkShowsErrorOnProfile() {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val device = UiDevice.getInstance(instrumentation)
-        val context = instrumentation.targetContext
         device.waitForIdle(5_000)
         assertNotNull("EduT should launch",
             device.wait(Until.findObject(By.text("EduT")), 45_000))
 
         try {
             val link = Intent(Intent.ACTION_VIEW,
-                Uri.parse("grantly://login-callback#type=recovery")).apply {
-                addCategory(Intent.CATEGORY_BROWSABLE)
-                addCategory(Intent.CATEGORY_DEFAULT)
-                setPackage(context.packageName)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            }
-            context.startActivity(link)
+                Uri.parse("grantly://login-callback#type=recovery"))
+            // Deliver to the existing activity. Starting a second task leaves
+            // ActivityScenario paused and makes its cleanup fail after assertions.
+            activityRule.scenario.onActivity { activity -> activity.onNewIntent(link) }
             assertNotNull("Incomplete recovery link should show its error",
                 device.wait(Until.findObject(By.textContains("recovery link is incomplete")), 20_000))
             assertNotNull("Recovery error should open the Profile sign-in screen",
