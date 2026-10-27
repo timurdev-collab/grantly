@@ -84,6 +84,23 @@ internal data class AdminDraftProvenance(
 )
 
 internal object AdminDraftRepository {
+    // Keep unexpectedly large server responses from exhausting the UI process.
+    // The draft page, readiness, evidence, and history responses are all bounded.
+    private fun readBoundedJson(connection: HttpURLConnection): String =
+        connection.inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
+            val response = StringBuilder()
+            val buffer = CharArray(4_096)
+            while (true) {
+                val count = reader.read(buffer)
+                if (count < 0) break
+                if (response.length + count > 1_048_576) {
+                    throw IOException("Administrator response exceeds the supported size.")
+                }
+                response.append(buffer, 0, count)
+            }
+            response.toString()
+        }
+
     /** The existing server-enforced history RPC; never accepts or changes fields. */
     suspend fun provenance(draftId: String): List<AdminDraftProvenance> =
         withContext(Dispatchers.IO) {
@@ -125,7 +142,7 @@ internal object AdminDraftRepository {
                     })
                 }
                 val rows = JSONArray(
-                    connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                    readBoundedJson(connection)
                 )
                 if (AuthRepository.session?.userId != session.userId) {
                     throw IOException("Your account changed. Please reload.")
@@ -212,7 +229,7 @@ internal object AdminDraftRepository {
                 })
             }
             val result = JSONObject(
-                connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                readBoundedJson(connection)
             )
             if (AuthRepository.session?.userId != session.userId) {
                 throw IOException("Your account changed. Please reload.")
@@ -308,7 +325,7 @@ internal object AdminDraftRepository {
                 })
             }
             val result = JSONObject(
-                connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                readBoundedJson(connection)
             )
             if (AuthRepository.session?.userId != session.userId) {
                 throw IOException("Your account changed. Please reload.")
@@ -368,7 +385,7 @@ internal object AdminDraftRepository {
                 })
             }
             val rows = JSONArray(
-                connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                readBoundedJson(connection)
             )
             if (AuthRepository.session?.userId != session.userId) {
                 throw IOException("Your account changed. Please reload.")
