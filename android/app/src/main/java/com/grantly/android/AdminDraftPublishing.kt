@@ -138,7 +138,9 @@ internal fun AdminDraftPublisher(
                     "Only proceed after reviewing the official source and duplicates.")
             },
             confirmButton = {
-                Button(enabled = !publishing, onClick = {
+                Button(enabled = canPublish && !publishing, onClick = {
+                    // Review conditions can change while this dialog is open.
+                    if (!canPublish) return@Button
                     confirming = false
                     publishing = true
                     error = null
