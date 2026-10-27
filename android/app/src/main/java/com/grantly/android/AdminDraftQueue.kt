@@ -57,8 +57,20 @@ internal data class AdminDraftDuplicateCandidate(
     val title: String,
     val provider: String,
     val country: String,
-    val similarityScore: Int
+    val similarityScore: Int?
 )
+
+/** Match iOS's 90% warning threshold without inventing missing server scores. */
+internal object AdminDraftDuplicateRules {
+    fun similarityScore(raw: Any?): Int? {
+        val value = (raw as? Number)?.toDouble() ?: return null
+        return if (value.isFinite() && value in 0.0..100.0 && value % 1.0 == 0.0) {
+            value.toInt()
+        } else null
+    }
+
+    fun isHighSimilarity(score: Int?): Boolean = score != null && score >= 90
+}
 
 internal data class AdminDraftReadiness(
     val ready: Boolean,
@@ -182,8 +194,9 @@ internal object AdminDraftRepository {
                             title = row.optString("title").take(200),
                             provider = row.optString("provider").take(120),
                             country = row.optString("country").take(80),
-                            similarityScore = row.optInt("similarity_score", -1)
-                                .coerceIn(0, 100)
+                            similarityScore = AdminDraftDuplicateRules.similarityScore(
+                                row.opt("similarity_score")
+                            )
                         ))
                     }
                 }
@@ -770,9 +783,17 @@ internal fun AdminDraftQueueContent(userId: String) {
                                 Text("Possible duplicates — review before publishing",
                                     fontWeight = FontWeight.SemiBold)
                                 candidates.forEach { candidate ->
+                                    val similarityLabel = candidate.similarityScore?.let {
+                                        " · $it% similarity"
+                                    } ?: " · similarity unavailable"
                                     Text("${candidate.title} · ${candidate.provider} · ${candidate.country}" +
-                                        " · ${candidate.similarityScore}% similarity",
+                                        similarityLabel,
                                         style = MaterialTheme.typography.bodySmall)
+                                    if (AdminDraftDuplicateRules.isHighSimilarity(candidate.similarityScore)) {
+                                        Text("High similarity — review the existing record before publishing.",
+                                            color = MaterialTheme.colorScheme.error,
+                                            style = MaterialTheme.typography.bodySmall)
+                                    }
                                 }
                             }
                             Text("Read-only duplicate suggestions; no record was changed.",
