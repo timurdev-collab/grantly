@@ -470,7 +470,8 @@ internal fun AdminDraftQueueContent(userId: String) {
 
     val normalizedSearch = searchQuery.trim()
     val visibleDrafts = if (normalizedSearch.isEmpty()) drafts else drafts.filter { draft ->
-        listOf(draft.title, draft.provider, draft.country, draft.verificationStatus)
+        listOf(draft.title, draft.provider, draft.country, draft.verificationStatus,
+            draft.fundingType, draft.deadline, draft.linkStatus)
             .any { it.contains(normalizedSearch, ignoreCase = true) }
     }
 
@@ -493,7 +494,7 @@ internal fun AdminDraftQueueContent(userId: String) {
         if (drafts.isNotEmpty()) {
             Text(
                 "Showing ${visibleDrafts.size} of ${drafts.size} loaded drafts. " +
-                    "Search only covers loaded pages.",
+                    "Search only covers loaded pages and includes funding, deadline, and link status.",
                 style = MaterialTheme.typography.labelSmall
             )
         }
@@ -527,6 +528,7 @@ internal fun AdminDraftQueueContent(userId: String) {
                         expandedDraftId = if (expandedDraftId == draft.id) null else draft.id
                         readinessError = null
                         evidenceError = null
+                        provenanceError = null
                     }) {
                         Text(if (expandedDraftId == draft.id) "Hide details" else "Review details")
                     }
@@ -550,7 +552,8 @@ internal fun AdminDraftQueueContent(userId: String) {
                                         throw cancelled
                                     } catch (failure: Exception) {
                                         if (AuthRepository.session?.userId == userId &&
-                                            refresh == requestedRefresh) {
+                                            refresh == requestedRefresh &&
+                                            expandedDraftId == draft.id) {
                                             readinessError = failure.message ?: "Readiness check failed."
                                         }
                                     } finally {
@@ -608,7 +611,8 @@ internal fun AdminDraftQueueContent(userId: String) {
                                         throw cancelled
                                     } catch (failure: Exception) {
                                         if (AuthRepository.session?.userId == userId &&
-                                            refresh == requestedRefresh) {
+                                            refresh == requestedRefresh &&
+                                            expandedDraftId == draft.id) {
                                             evidenceError = failure.message ?: "Source evidence unavailable."
                                         }
                                     } finally {
@@ -750,7 +754,8 @@ internal fun AdminDraftQueueContent(userId: String) {
                                         throw cancelled
                                     } catch (failure: Exception) {
                                         if (AuthRepository.session?.userId == userId &&
-                                            refresh == requestedRefresh) {
+                                            refresh == requestedRefresh &&
+                                            expandedDraftId == draft.id) {
                                             provenanceError = failure.message ?: "Field history unavailable."
                                         }
                                     } finally {
