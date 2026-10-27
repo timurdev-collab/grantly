@@ -277,7 +277,8 @@ internal object AdminDraftRepository {
                         fundingType = row.optString("funding_type").take(80),
                         deadline = if (row.isNull("deadline")) "" else row.optString("deadline").take(10),
                         linkStatus = if (row.isNull("link_status")) "" else row.optString("link_status").take(50),
-                        officialUrl = if (row.isNull("official_url")) "" else row.optString("official_url").take(240)
+                        officialUrl = if (row.isNull("official_url")) "" else
+                            row.optString("official_url").takeIf { it.length <= 2_048 }.orEmpty()
                     ))
                 }
             }
@@ -413,6 +414,8 @@ internal fun AdminDraftQueueContent(userId: String) {
                             onClick = {
                                 readinessLoadingId = draft.id
                                 readinessError = null
+                                // Do not show a previous 'ready' verdict while rechecking.
+                                readinessByDraft = readinessByDraft - draft.id
                                 val requestedRefresh = refresh
                                 scope.launch {
                                     try {
@@ -469,6 +472,8 @@ internal fun AdminDraftQueueContent(userId: String) {
                             onClick = {
                                 evidenceLoadingId = draft.id
                                 evidenceError = null
+                                // Do not retain old evidence if a new request fails.
+                                evidenceByDraft = evidenceByDraft - draft.id
                                 val requestedRefresh = refresh
                                 scope.launch {
                                     try {
