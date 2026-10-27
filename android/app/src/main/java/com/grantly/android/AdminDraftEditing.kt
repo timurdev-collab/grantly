@@ -153,7 +153,19 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     val scope = rememberCoroutineScope()
 
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        OutlinedButton(onClick = { editing = !editing; error = null }, enabled = !saving) {
+        OutlinedButton(onClick = {
+            if (editing) {
+                // Cancel discards local changes, even if the editor is opened again.
+                title = draft.title
+                provider = draft.provider
+                country = draft.country
+                funding = draft.fundingType
+                deadline = draft.deadline
+                message = null
+            }
+            editing = !editing
+            error = null
+        }, enabled = !saving) {
             Text(if (editing) "Cancel field editing" else "Edit basic draft fields")
         }
         if (editing) {
