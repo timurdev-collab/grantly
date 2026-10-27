@@ -45,6 +45,7 @@ internal data class AdminDraftReadiness(
 
 internal data class AdminDraftEvidence(
     val available: Boolean,
+    val candidateUrl: String,
     val checkedAt: String,
     val detectedDeadline: String,
     val deadlineConfidence: Int?,
@@ -123,6 +124,7 @@ internal object AdminDraftRepository {
             val nationalities = result.optJSONArray("detected_eligible_nationalities")
             AdminDraftEvidence(
                 available = result.getBoolean("available"),
+                candidateUrl = field("candidate_url", 240),
                 checkedAt = field("checked_at", 10),
                 detectedDeadline = field("detected_deadline", 10),
                 deadlineConfidence = confidence("deadline_confidence"),
@@ -501,6 +503,24 @@ internal fun AdminDraftQueueContent(userId: String) {
                             } else {
                                 Text("Source evidence (read-only)",
                                     fontWeight = FontWeight.SemiBold)
+                                val evidenceSource = runCatching { URI(evidence.candidateUrl) }
+                                    .getOrNull()
+                                    ?.takeIf { uri ->
+                                        uri.scheme.equals("https", ignoreCase = true) &&
+                                            !uri.host.isNullOrBlank() &&
+                                            uri.rawUserInfo == null
+                                    }
+                                    ?.toString()
+                                if (evidenceSource != null) {
+                                    OutlinedButton(onClick = {
+                                        runCatching { uriHandler.openUri(evidenceSource) }
+                                            .onFailure {
+                                                evidenceError = "Unable to open the evidence source."
+                                            }
+                                    }) {
+                                        Text("Open evidence source")
+                                    }
+                                }
                                 if (evidence.checkedAt.isNotBlank()) {
                                     Text("Extracted: ${evidence.checkedAt}",
                                         style = MaterialTheme.typography.labelSmall)
