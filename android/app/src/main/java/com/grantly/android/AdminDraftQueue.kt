@@ -330,6 +330,8 @@ internal fun AdminDraftQueueContent(userId: String) {
         readinessLoadingId = null
         evidenceLoadingId = null
         hasMore = false
+        offset = 0
+        loadingMore = false
         try {
             val page = AdminDraftRepository.load()
             if (AuthRepository.session?.userId == userId) {
@@ -622,21 +624,28 @@ internal fun AdminDraftQueueContent(userId: String) {
                 onClick = {
                     loadingMore = true
                     error = null
+                    val requestedOffset = offset
+                    val requestedRefresh = refresh
                     scope.launch {
                         try {
-                            val page = AdminDraftRepository.load(offset)
-                            if (AuthRepository.session?.userId == userId) {
+                            val page = AdminDraftRepository.load(requestedOffset)
+                            // A refresh or account switch must not append an older page.
+                            if (AuthRepository.session?.userId == userId &&
+                                refresh == requestedRefresh && offset == requestedOffset) {
                                 val seen = drafts.map { it.id }.toHashSet()
                                 drafts = drafts + page.items.filter { seen.add(it.id) }
                                 hasMore = page.hasMore
-                                offset += 15
+                                offset = requestedOffset + 15
                             }
                         } catch (cancelled: CancellationException) {
                             throw cancelled
                         } catch (failure: Exception) {
-                            error = failure.message ?: "Unable to load more drafts."
+                            if (AuthRepository.session?.userId == userId &&
+                                refresh == requestedRefresh && offset == requestedOffset) {
+                                error = failure.message ?: "Unable to load more drafts."
+                            }
                         } finally {
-                            loadingMore = false
+                            if (refresh == requestedRefresh) loadingMore = false
                         }
                     }
                 }
