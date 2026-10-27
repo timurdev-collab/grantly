@@ -322,6 +322,9 @@ internal fun AdminDraftQueueContent(userId: String) {
         evidenceByDraft = emptyMap()
         evidenceError = null
         readinessError = null
+        // Invalidate pending checks when the queue is refreshed.
+        readinessLoadingId = null
+        evidenceLoadingId = null
         hasMore = false
         try {
             val page = AdminDraftRepository.load()
@@ -407,20 +410,26 @@ internal fun AdminDraftQueueContent(userId: String) {
                             onClick = {
                                 readinessLoadingId = draft.id
                                 readinessError = null
+                                val requestedRefresh = refresh
                                 scope.launch {
                                     try {
                                         val result = AdminDraftRepository.readiness(draft.id)
-                                        if (AuthRepository.session?.userId == userId) {
+                                        if (AuthRepository.session?.userId == userId &&
+                                            refresh == requestedRefresh) {
                                             readinessByDraft = readinessByDraft + (draft.id to result)
                                         }
                                     } catch (cancelled: CancellationException) {
                                         throw cancelled
                                     } catch (failure: Exception) {
-                                        if (AuthRepository.session?.userId == userId) {
+                                        if (AuthRepository.session?.userId == userId &&
+                                            refresh == requestedRefresh) {
                                             readinessError = failure.message ?: "Readiness check failed."
                                         }
                                     } finally {
-                                        readinessLoadingId = null
+                                        if (refresh == requestedRefresh &&
+                                            readinessLoadingId == draft.id) {
+                                            readinessLoadingId = null
+                                        }
                                     }
                                 }
                             }
@@ -473,7 +482,10 @@ internal fun AdminDraftQueueContent(userId: String) {
                                             evidenceError = failure.message ?: "Source evidence unavailable."
                                         }
                                     } finally {
-                                        evidenceLoadingId = null
+                                        if (refresh == requestedRefresh &&
+                                            evidenceLoadingId == draft.id) {
+                                            evidenceLoadingId = null
+                                        }
                                     }
                                 }
                             }
