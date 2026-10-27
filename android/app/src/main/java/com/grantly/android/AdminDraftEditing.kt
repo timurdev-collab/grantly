@@ -164,15 +164,17 @@ internal object AdminDraftEditorRepository {
 /** Only changes the five visible fields after an explicit administrator save action. */
 @Composable
 internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
-    var editing by remember(draft.id) { mutableStateOf(false) }
-    var title by remember(draft.id) { mutableStateOf(draft.title) }
-    var provider by remember(draft.id) { mutableStateOf(draft.provider) }
-    var country by remember(draft.id) { mutableStateOf(draft.country) }
-    var funding by remember(draft.id) { mutableStateOf(draft.fundingType) }
-    var deadline by remember(draft.id) { mutableStateOf(draft.deadline) }
-    var saving by remember(draft.id) { mutableStateOf(false) }
-    var error by remember(draft.id) { mutableStateOf<String?>(null) }
-    var message by remember(draft.id) { mutableStateOf<String?>(null) }
+    // Reset local form state whenever the server draft snapshot changes, not just its ID.
+    // Otherwise a refreshed draft can reopen with stale values and overwrite newer edits.
+    var editing by remember(draft) { mutableStateOf(false) }
+    var title by remember(draft) { mutableStateOf(draft.title) }
+    var provider by remember(draft) { mutableStateOf(draft.provider) }
+    var country by remember(draft) { mutableStateOf(draft.country) }
+    var funding by remember(draft) { mutableStateOf(draft.fundingType) }
+    var deadline by remember(draft) { mutableStateOf(draft.deadline) }
+    var saving by remember(draft) { mutableStateOf(false) }
+    var error by remember(draft) { mutableStateOf<String?>(null) }
+    var message by remember(draft) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
