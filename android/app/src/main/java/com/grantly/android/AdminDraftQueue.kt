@@ -609,7 +609,7 @@ internal fun AdminDraftQueueContent(userId: String) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Draft scholarship review", style = MaterialTheme.typography.titleLarge)
         Text(
-            "Read-only administrator preview. Drafts are not published, approved, or changed here.",
+            "Administrator review. Basic field edits require an explicit save; no draft is published here.",
             style = MaterialTheme.typography.bodySmall
         )
         OutlinedButton(onClick = { refresh++ }, enabled = !loading && !loadingMore) {
@@ -1040,7 +1040,9 @@ internal fun AdminDraftQueueContent(userId: String) {
                                 Text("Open official source")
                             }
                         }
-                        Text("Read-only details. Editing and publishing are not available on Android yet.", style = MaterialTheme.typography.labelSmall)
+                        AdminDraftEditor(draft) { refresh++ }
+                        Text("Basic draft fields can be edited by administrators. Publishing and advanced fields are not yet available on Android.",
+                            style = MaterialTheme.typography.labelSmall)
                     }
                 }
             }
