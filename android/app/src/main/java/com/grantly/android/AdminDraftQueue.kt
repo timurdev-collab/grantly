@@ -48,12 +48,21 @@ internal data class AdminDraftEvidence(
     val checkedAt: String,
     val detectedDeadline: String,
     val deadlineConfidence: Int?,
+    val detectedCycle: String,
+    val cycleConfidence: Int?,
     val detectedFundingType: String,
     val fundingConfidence: Int?,
+    val detectedTuitionCoverage: String,
+    val detectedStipend: String,
     val detectedDegreeLevels: List<String>,
     val degreeConfidence: Int?,
+    val detectedEligibleNationalities: List<String>,
+    val eligibilityConfidence: Int?,
     val applicationExcerpt: String,
-    val fundingExcerpt: String
+    val fundingExcerpt: String,
+    val benefitsExcerpt: String,
+    val eligibilityExcerpt: String,
+    val applicationRequirementsExcerpt: String
 )
 
 internal object AdminDraftRepository {
@@ -111,20 +120,33 @@ internal object AdminDraftRepository {
                 if (result.isNull(name)) null else result.optInt(name, -1)
                     .takeIf { it in 0..100 }
             val levels = result.optJSONArray("detected_degree_levels")
+            val nationalities = result.optJSONArray("detected_eligible_nationalities")
             AdminDraftEvidence(
                 available = result.getBoolean("available"),
                 checkedAt = field("checked_at", 10),
                 detectedDeadline = field("detected_deadline", 10),
                 deadlineConfidence = confidence("deadline_confidence"),
+                detectedCycle = field("detected_cycle", 80),
+                cycleConfidence = confidence("cycle_confidence"),
                 detectedFundingType = field("detected_funding_type", 80),
                 fundingConfidence = confidence("funding_confidence"),
+                detectedTuitionCoverage = field("detected_tuition_coverage", 120),
+                detectedStipend = field("detected_stipend", 120),
                 detectedDegreeLevels = if (levels == null) emptyList() else
                     (0 until minOf(levels.length(), 8)).mapNotNull {
                         levels.optString(it).take(60).takeIf(String::isNotBlank)
                     },
                 degreeConfidence = confidence("degree_confidence"),
+                detectedEligibleNationalities = if (nationalities == null) emptyList() else
+                    (0 until minOf(nationalities.length(), 12)).mapNotNull {
+                        nationalities.optString(it).take(60).takeIf(String::isNotBlank)
+                    },
+                eligibilityConfidence = confidence("eligibility_confidence"),
                 applicationExcerpt = field("application_excerpt", 300),
-                fundingExcerpt = field("funding_excerpt", 300)
+                fundingExcerpt = field("funding_excerpt", 300),
+                benefitsExcerpt = field("benefits_excerpt", 300),
+                eligibilityExcerpt = field("eligibility_excerpt", 300),
+                applicationRequirementsExcerpt = field("application_requirements_excerpt", 300)
             )
         } finally {
             connection.disconnect()
@@ -476,14 +498,32 @@ internal fun AdminDraftQueueContent(userId: String) {
                                         (evidence.deadlineConfidence?.let { " ($it% confidence)" } ?: ""),
                                         style = MaterialTheme.typography.bodySmall)
                                 }
+                                if (evidence.detectedCycle.isNotBlank()) {
+                                    Text("Detected application cycle: ${evidence.detectedCycle}" +
+                                        (evidence.cycleConfidence?.let { " ($it% confidence)" } ?: ""),
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
                                 if (evidence.detectedFundingType.isNotBlank()) {
                                     Text("Detected funding: ${evidence.detectedFundingType}" +
                                         (evidence.fundingConfidence?.let { " ($it% confidence)" } ?: ""),
                                         style = MaterialTheme.typography.bodySmall)
                                 }
+                                if (evidence.detectedTuitionCoverage.isNotBlank()) {
+                                    Text("Detected tuition coverage: ${evidence.detectedTuitionCoverage}",
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                if (evidence.detectedStipend.isNotBlank()) {
+                                    Text("Detected stipend: ${evidence.detectedStipend}",
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
                                 if (evidence.detectedDegreeLevels.isNotEmpty()) {
                                     Text("Detected study levels: ${evidence.detectedDegreeLevels.joinToString(", ")}" +
                                         (evidence.degreeConfidence?.let { " ($it% confidence)" } ?: ""),
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                if (evidence.detectedEligibleNationalities.isNotEmpty()) {
+                                    Text("Detected eligible nationalities: ${evidence.detectedEligibleNationalities.joinToString(", ")}" +
+                                        (evidence.eligibilityConfidence?.let { " ($it% confidence)" } ?: ""),
                                         style = MaterialTheme.typography.bodySmall)
                                 }
                                 if (evidence.applicationExcerpt.isNotBlank()) {
@@ -492,6 +532,18 @@ internal fun AdminDraftQueueContent(userId: String) {
                                 }
                                 if (evidence.fundingExcerpt.isNotBlank()) {
                                     Text("Funding evidence: ${evidence.fundingExcerpt}",
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                if (evidence.benefitsExcerpt.isNotBlank()) {
+                                    Text("Benefits evidence: ${evidence.benefitsExcerpt}",
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                if (evidence.eligibilityExcerpt.isNotBlank()) {
+                                    Text("Eligibility evidence: ${evidence.eligibilityExcerpt}",
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                if (evidence.applicationRequirementsExcerpt.isNotBlank()) {
+                                    Text("Application requirements evidence: ${evidence.applicationRequirementsExcerpt}",
                                         style = MaterialTheme.typography.bodySmall)
                                 }
                                 Text("Extracted suggestions are not accepted or published.",
