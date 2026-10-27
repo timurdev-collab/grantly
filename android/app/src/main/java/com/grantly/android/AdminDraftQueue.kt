@@ -66,7 +66,107 @@ internal data class AdminDraftEvidence(
     val applicationRequirementsExcerpt: String
 )
 
+/** Read-only history of accepted administrator edits, as exposed by the iOS RPC. */
+internal data class AdminDraftProvenance(
+    val fieldName: String,
+    val provenanceType: String,
+    val previousValue: String,
+    val acceptedValue: String,
+    val confidence: Int?,
+    val excerpt: String,
+    val sourceUrl: String,
+    val acceptedAt: String
+)
+
 internal object AdminDraftRepository {
+    /** The existing server-enforced history RPC; never accepts or changes fields. */
+    suspend fun provenance(draftId: String): List<AdminDraftProvenance> =
+        withContext(Dispatchers.IO) {
+            val validatedId = try {
+                UUID.fromString(draftId).toString()
+            } catch (_: IllegalArgumentException) {
+                throw IOException("Invalid scholarship draft.")
+            }
+            val session = AuthRepository.activeSession()
+            if (StudentProfileRepository.load().role != "admin" ||
+                AuthRepository.session?.userId != session.userId) {
+                throw IOException("Administrator access is required.")
+            }
+            val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+            val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+            if (!base.startsWith("https://") || key.isBlank()) {
+                throw IOException("Draft review service is not configured.")
+            }
+            val connection = URL("$base/rest/v1/rpc/scholarship_field_provenance_history")
+                .openConnection() as HttpURLConnection
+            try {
+                connection.requestMethod = "POST"
+                connection.instanceFollowRedirects = false
+                connection.connectTimeout = 12_000
+                connection.readTimeout = 15_000
+                connection.doOutput = true
+                connection.setRequestProperty("apikey", key)
+                connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+                connection.setRequestProperty("Content-Type", "application/json")
+                connection.setRequestProperty("Accept", "application/json")
+                val body = JSONObject().put("p_scholarship_id", validatedId).toString()
+                connection.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
+                val status = connection.responseCode
+                if (status !in 200..299) {
+                    throw IOException(if (status == 401 || status == 403) {
+                        "Administrator access was denied. Please sign in again."
+                    } else {
+                        "Unable to load field history (HTTP $status)."
+                    })
+                }
+                val rows = JSONArray(
+                    connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                )
+                if (AuthRepository.session?.userId != session.userId) {
+                    throw IOException("Your account changed. Please reload.")
+                }
+                fun displayValue(value: Any?): String = when (value) {
+                    null, JSONObject.NULL -> "Not set"
+                    is String -> value.take(180)
+                    is Boolean -> if (value) "Yes" else "No"
+                    is Number -> value.toString().take(80)
+                    is JSONArray -> (0 until minOf(value.length(), 8))
+                        .mapNotNull { index ->
+                            when (val item = value.opt(index)) {
+                                is String -> item.take(60)
+                                is Boolean, is Number -> item.toString().take(60)
+                                else -> null
+                            }
+                        }.joinToString(", ").take(180).ifBlank { "Not set" }
+                    else -> "Structured value"
+                }
+                buildList {
+                    for (index in 0 until minOf(rows.length(), 30)) {
+                        val row = rows.optJSONObject(index) ?: continue
+                        val field = row.optString("field_name").take(80)
+                        if (field.isBlank()) continue
+                        add(AdminDraftProvenance(
+                            fieldName = field.replace('_', ' '),
+                            provenanceType = row.optString("provenance_type").take(40),
+                            previousValue = displayValue(row.opt("previous_value")),
+                            acceptedValue = displayValue(row.opt("accepted_value")),
+                            confidence = if (row.isNull("confidence")) null else
+                                row.optInt("confidence", -1).takeIf { it in 0..100 },
+                            excerpt = if (row.isNull("evidence_excerpt")) "" else
+                                row.optString("evidence_excerpt").take(240),
+                            sourceUrl = if (row.isNull("source_url")) "" else
+                                row.optString("source_url")
+                                    .takeIf { it.length <= 2_048 }.orEmpty(),
+                            acceptedAt = if (row.isNull("accepted_at")) "" else
+                                row.optString("accepted_at").take(16)
+                        ))
+                    }
+                }
+            } finally {
+                connection.disconnect()
+            }
+        }
+
     /** Read-only evidence extracted by the existing iOS-compatible RPC. */
     suspend fun evidence(draftId: String): AdminDraftEvidence = withContext(Dispatchers.IO) {
         val validatedId = try {
@@ -310,6 +410,11 @@ internal fun AdminDraftQueueContent(userId: String) {
     var evidenceByDraft by remember(userId) {
         mutableStateOf<Map<String, AdminDraftEvidence>>(emptyMap())
     }
+    var provenanceByDraft by remember(userId) {
+        mutableStateOf<Map<String, List<AdminDraftProvenance>>>(emptyMap())
+    }
+    var provenanceLoadingId by remember(userId) { mutableStateOf<String?>(null) }
+    var provenanceError by remember(userId) { mutableStateOf<String?>(null) }
     var evidenceLoadingId by remember(userId) { mutableStateOf<String?>(null) }
     var evidenceError by remember(userId) { mutableStateOf<String?>(null) }
     var readinessLoadingId by remember(userId) { mutableStateOf<String?>(null) }
@@ -324,6 +429,9 @@ internal fun AdminDraftQueueContent(userId: String) {
         expandedDraftId = null
         readinessByDraft = emptyMap()
         evidenceByDraft = emptyMap()
+        provenanceByDraft = emptyMap()
+        provenanceLoadingId = null
+        provenanceError = null
         evidenceError = null
         readinessError = null
         // Invalidate pending checks when the queue is refreshed.
@@ -592,6 +700,89 @@ internal fun AdminDraftQueueContent(userId: String) {
                         }
                         if (evidenceError != null) {
                             Text(evidenceError!!, color = MaterialTheme.colorScheme.error)
+                        }
+
+                        OutlinedButton(
+                            enabled = provenanceLoadingId == null && !loading,
+                            onClick = {
+                                provenanceLoadingId = draft.id
+                                provenanceError = null
+                                provenanceByDraft = provenanceByDraft - draft.id
+                                val requestedRefresh = refresh
+                                scope.launch {
+                                    try {
+                                        val result = AdminDraftRepository.provenance(draft.id)
+                                        if (AuthRepository.session?.userId == userId &&
+                                            refresh == requestedRefresh) {
+                                            provenanceByDraft = provenanceByDraft + (draft.id to result)
+                                        }
+                                    } catch (cancelled: CancellationException) {
+                                        throw cancelled
+                                    } catch (failure: Exception) {
+                                        if (AuthRepository.session?.userId == userId &&
+                                            refresh == requestedRefresh) {
+                                            provenanceError = failure.message ?: "Field history unavailable."
+                                        }
+                                    } finally {
+                                        if (refresh == requestedRefresh &&
+                                            provenanceLoadingId == draft.id) {
+                                            provenanceLoadingId = null
+                                        }
+                                    }
+                                }
+                            }
+                        ) {
+                            Text(if (provenanceLoadingId == draft.id) "Loading field history…"
+                                else if (provenanceByDraft.containsKey(draft.id)) "Reload field history"
+                                else "View field history")
+                        }
+                        provenanceByDraft[draft.id]?.let { entries ->
+                            if (entries.isEmpty()) {
+                                Text("No accepted field changes recorded yet.",
+                                    style = MaterialTheme.typography.bodySmall)
+                            } else {
+                                Text("Accepted field history (read-only)",
+                                    fontWeight = FontWeight.SemiBold)
+                                entries.forEach { entry ->
+                                    Text(entry.fieldName.replaceFirstChar { it.uppercase() } +
+                                        " · " + if (entry.provenanceType == "source_extracted")
+                                            "Source-derived" else "Manual",
+                                        style = MaterialTheme.typography.labelMedium)
+                                    Text("${entry.previousValue} → ${entry.acceptedValue}",
+                                        style = MaterialTheme.typography.bodySmall)
+                                    entry.confidence?.let {
+                                        Text("$it% source confidence",
+                                            style = MaterialTheme.typography.labelSmall)
+                                    }
+                                    if (entry.excerpt.isNotBlank()) {
+                                        Text(entry.excerpt, style = MaterialTheme.typography.bodySmall)
+                                    }
+                                    val supportingSource = runCatching { URI(entry.sourceUrl) }
+                                        .getOrNull()?.takeIf { uri ->
+                                            uri.scheme.equals("https", ignoreCase = true) &&
+                                                !uri.host.isNullOrBlank() &&
+                                                uri.rawUserInfo == null
+                                        }?.toString()
+                                    if (supportingSource != null) {
+                                        OutlinedButton(onClick = {
+                                            runCatching { uriHandler.openUri(supportingSource) }
+                                                .onFailure {
+                                                    provenanceError = "Unable to open supporting source."
+                                                }
+                                        }) {
+                                            Text("Open supporting source")
+                                        }
+                                    }
+                                    if (entry.acceptedAt.isNotBlank()) {
+                                        Text("Accepted ${entry.acceptedAt}",
+                                            style = MaterialTheme.typography.labelSmall)
+                                    }
+                                    HorizontalDivider()
+                                }
+                            }
+                        }
+                        if (provenanceError != null) {
+                            Text(provenanceError!!, color = MaterialTheme.colorScheme.error)
                         }
                         Text("Funding: ${draft.fundingType.ifBlank { "Not specified" }}", style = MaterialTheme.typography.bodySmall)
                         Text("Deadline: ${draft.deadline.ifBlank { "Not confirmed" }}", style = MaterialTheme.typography.bodySmall)
