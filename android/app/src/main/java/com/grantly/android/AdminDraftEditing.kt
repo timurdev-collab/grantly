@@ -172,16 +172,16 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
             Text("Only the fields you change will be saved. Other scholarship details are preserved.",
                 style = MaterialTheme.typography.bodySmall)
             OutlinedTextField(value = title, onValueChange = { title = it.take(200) },
-                label = { Text("Title") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                label = { Text("Title") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = provider, onValueChange = { provider = it.take(120) },
-                label = { Text("Provider") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                label = { Text("Provider") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = country, onValueChange = { country = it.take(80) },
-                label = { Text("Country") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                label = { Text("Country") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = funding, onValueChange = { funding = it.take(80) },
-                label = { Text("Funding type (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                label = { Text("Funding type (optional)") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = deadline, onValueChange = { deadline = it.take(10) },
                 label = { Text("Deadline YYYY-MM-DD (optional)") }, singleLine = true,
-                modifier = Modifier.fillMaxWidth())
+                enabled = !saving, modifier = Modifier.fillMaxWidth())
             Button(enabled = !saving, onClick = {
                 error = null
                 message = null
