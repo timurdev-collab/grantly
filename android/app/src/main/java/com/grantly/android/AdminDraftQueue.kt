@@ -57,19 +57,17 @@ internal data class AdminDraftDuplicateCandidate(
     val title: String,
     val provider: String,
     val country: String,
-    val similarityScore: Int?
+    val similarityScore: Double?
 )
 
 /** Match iOS's 90% warning threshold without inventing missing server scores. */
 internal object AdminDraftDuplicateRules {
-    fun similarityScore(raw: Any?): Int? {
+    fun similarityScore(raw: Any?): Double? {
         val value = (raw as? Number)?.toDouble() ?: return null
-        return if (value.isFinite() && value in 0.0..100.0 && value % 1.0 == 0.0) {
-            value.toInt()
-        } else null
+        return value.takeIf { it.isFinite() && it in 0.0..100.0 }
     }
 
-    fun isHighSimilarity(score: Int?): Boolean = score != null && score >= 90
+    fun isHighSimilarity(score: Double?): Boolean = score != null && score >= 90.0
 }
 
 internal data class AdminDraftReadiness(
@@ -790,8 +788,13 @@ internal fun AdminDraftQueueContent(userId: String) {
                                 Text("Possible duplicates — review before publishing",
                                     fontWeight = FontWeight.SemiBold)
                                 candidates.forEach { candidate ->
-                                    val similarityLabel = candidate.similarityScore?.let {
-                                        " · $it% similarity"
+                                    val similarityLabel = candidate.similarityScore?.let { score ->
+                                        val displayScore = if (score % 1.0 == 0.0) {
+                                            score.toInt().toString()
+                                        } else {
+                                            score.toString()
+                                        }
+                                        " · $displayScore% similarity"
                                     } ?: " · similarity unavailable"
                                     Text("${candidate.title} · ${candidate.provider} · ${candidate.country}" +
                                         similarityLabel,
