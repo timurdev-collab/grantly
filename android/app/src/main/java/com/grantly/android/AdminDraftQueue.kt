@@ -523,7 +523,7 @@ internal object AdminDraftRepository {
 }
 
 /**
- * Admin-only draft review preview. Does not edit, publish, or approve records.
+ * Admin-only draft review with explicit basic editing and server-gated publishing.
  * Every page is fetched through the existing server-enforced RLS policies.
  */
 @Composable
@@ -1041,7 +1041,13 @@ internal fun AdminDraftQueueContent(userId: String) {
                             }
                         }
                         AdminDraftEditor(draft) { refresh++ }
-                        Text("Basic draft fields can be edited by administrators. Publishing and advanced fields are not yet available on Android.",
+                        AdminDraftPublisher(
+                            draft = draft,
+                            readiness = readinessByDraft[draft.id],
+                            duplicates = duplicatesByDraft[draft.id],
+                            onPublished = { refresh++ }
+                        )
+                        Text("Advanced draft fields are not yet editable on Android.",
                             style = MaterialTheme.typography.labelSmall)
                     }
                 }
