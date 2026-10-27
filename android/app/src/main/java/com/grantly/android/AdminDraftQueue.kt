@@ -506,7 +506,8 @@ internal object AdminDraftRepository {
                         provider = row.optString("provider").take(120),
                         country = row.optString("country").take(80),
                         verificationStatus = row.optString("verification_status").take(60),
-                        updatedAt = row.optString("updated_at").take(10),
+                        // Keep the full server revision so same-day changes invalidate stale editor state.
+                        updatedAt = row.optString("updated_at").take(64),
                         fundingType = row.optString("funding_type").take(80),
                         deadline = if (row.isNull("deadline")) "" else row.optString("deadline").take(10),
                         linkStatus = if (row.isNull("link_status")) "" else row.optString("link_status").take(50),
@@ -652,7 +653,7 @@ internal fun AdminDraftQueueContent(userId: String) {
                     )
                     Text(
                         "Draft · ${draft.verificationStatus.ifBlank { "Unverified" }}" +
-                            if (draft.updatedAt.isBlank()) "" else " · Updated ${draft.updatedAt}",
+                            if (draft.updatedAt.isBlank()) "" else " · Updated ${draft.updatedAt.take(10)}",
                         style = MaterialTheme.typography.labelSmall
                     )
                     OutlinedButton(onClick = {
