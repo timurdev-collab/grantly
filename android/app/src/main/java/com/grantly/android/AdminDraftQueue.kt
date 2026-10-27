@@ -124,7 +124,8 @@ internal object AdminDraftRepository {
             val nationalities = result.optJSONArray("detected_eligible_nationalities")
             AdminDraftEvidence(
                 available = result.getBoolean("available"),
-                candidateUrl = field("candidate_url", 240),
+                candidateUrl = if (result.isNull("candidate_url")) "" else
+                    result.optString("candidate_url").takeIf { it.length <= 2_048 }.orEmpty(),
                 checkedAt = field("checked_at", 10),
                 detectedDeadline = field("detected_deadline", 10),
                 deadlineConfidence = confidence("deadline_confidence"),
