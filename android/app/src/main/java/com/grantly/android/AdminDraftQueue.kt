@@ -545,7 +545,8 @@ internal fun AdminDraftQueueContent(userId: String) {
                                     try {
                                         val result = AdminDraftRepository.readiness(draft.id)
                                         if (AuthRepository.session?.userId == userId &&
-                                            refresh == requestedRefresh) {
+                                            refresh == requestedRefresh &&
+                                            expandedDraftId == draft.id) {
                                             readinessByDraft = readinessByDraft + (draft.id to result)
                                         }
                                     } catch (cancelled: CancellationException) {
@@ -604,7 +605,8 @@ internal fun AdminDraftQueueContent(userId: String) {
                                     try {
                                         val result = AdminDraftRepository.evidence(draft.id)
                                         if (AuthRepository.session?.userId == userId &&
-                                            refresh == requestedRefresh) {
+                                            refresh == requestedRefresh &&
+                                            expandedDraftId == draft.id) {
                                             evidenceByDraft = evidenceByDraft + (draft.id to result)
                                         }
                                     } catch (cancelled: CancellationException) {
@@ -747,7 +749,8 @@ internal fun AdminDraftQueueContent(userId: String) {
                                     try {
                                         val result = AdminDraftRepository.provenance(draft.id)
                                         if (AuthRepository.session?.userId == userId &&
-                                            refresh == requestedRefresh) {
+                                            refresh == requestedRefresh &&
+                                            expandedDraftId == draft.id) {
                                             provenanceByDraft = provenanceByDraft + (draft.id to result)
                                         }
                                     } catch (cancelled: CancellationException) {
