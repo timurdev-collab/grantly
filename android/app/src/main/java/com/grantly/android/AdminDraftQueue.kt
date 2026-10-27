@@ -52,6 +52,14 @@ internal data class AdminDraftSummary(
 
 internal data class AdminDraftPage(val items: List<AdminDraftSummary>, val hasMore: Boolean)
 
+internal data class AdminDraftDuplicateCandidate(
+    val id: String,
+    val title: String,
+    val provider: String,
+    val country: String,
+    val similarityScore: Int
+)
+
 internal data class AdminDraftReadiness(
     val ready: Boolean,
     val blockers: List<String>,
@@ -115,6 +123,73 @@ internal object AdminDraftRepository {
                 response.append(buffer, 0, count)
             }
             response.toString()
+        }
+
+    /** Read-only duplicate search used by iOS before administrators publish drafts. */
+    suspend fun duplicates(draft: AdminDraftSummary): List<AdminDraftDuplicateCandidate> =
+        withContext(Dispatchers.IO) {
+            if (runCatching { UUID.fromString(draft.id) }.isFailure ||
+                draft.title.isBlank() || draft.provider.isBlank() || draft.country.isBlank()) {
+                throw IOException("The draft needs a title, provider, and country for duplicate review.")
+            }
+            val session = AuthRepository.activeSession()
+            if (StudentProfileRepository.load().role != "admin" ||
+                AuthRepository.session?.userId != session.userId) {
+                throw IOException("Administrator access is required.")
+            }
+            val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+            val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+            if (!base.startsWith("https://") || key.isBlank()) {
+                throw IOException("Draft review service is not configured.")
+            }
+            val connection = URL("$base/rest/v1/rpc/find_scholarship_duplicates")
+                .openConnection() as HttpURLConnection
+            try {
+                connection.requestMethod = "POST"
+                connection.instanceFollowRedirects = false
+                connection.connectTimeout = 12_000
+                connection.readTimeout = 15_000
+                connection.doOutput = true
+                connection.setRequestProperty("apikey", key)
+                connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+                connection.setRequestProperty("Content-Type", "application/json")
+                connection.setRequestProperty("Accept", "application/json")
+                val body = JSONObject()
+                    .put("p_title", draft.title.take(200))
+                    .put("p_provider", draft.provider.take(120))
+                    .put("p_country", draft.country.take(80))
+                    .toString()
+                connection.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
+                val status = connection.responseCode
+                if (status !in 200..299) {
+                    throw IOException(if (status == 401 || status == 403) {
+                        "Administrator access was denied. Please sign in again."
+                    } else {
+                        "Unable to check possible duplicates (HTTP $status)."
+                    })
+                }
+                val rows = JSONArray(readBoundedJson(connection))
+                if (AuthRepository.session?.userId != session.userId) {
+                    throw IOException("Your account changed. Please reload.")
+                }
+                buildList {
+                    for (index in 0 until minOf(rows.length(), 20)) {
+                        val row = rows.optJSONObject(index) ?: continue
+                        val id = row.optString("id")
+                        if (runCatching { UUID.fromString(id) }.isFailure || id == draft.id) continue
+                        add(AdminDraftDuplicateCandidate(
+                            id = id,
+                            title = row.optString("title").take(200),
+                            provider = row.optString("provider").take(120),
+                            country = row.optString("country").take(80),
+                            similarityScore = row.optInt("similarity_score", -1)
+                                .coerceIn(0, 100)
+                        ))
+                    }
+                }
+            } finally {
+                connection.disconnect()
+            }
         }
 
     /** The existing server-enforced history RPC; never accepts or changes fields. */
@@ -460,6 +535,11 @@ internal fun AdminDraftQueueContent(userId: String) {
     var provenanceByDraft by remember(userId) {
         mutableStateOf<Map<String, List<AdminDraftProvenance>>>(emptyMap())
     }
+    var duplicatesByDraft by remember(userId) {
+        mutableStateOf<Map<String, List<AdminDraftDuplicateCandidate>>>(emptyMap())
+    }
+    var duplicatesLoadingId by remember(userId) { mutableStateOf<String?>(null) }
+    var duplicatesError by remember(userId) { mutableStateOf<String?>(null) }
     var provenanceLoadingId by remember(userId) { mutableStateOf<String?>(null) }
     var provenanceError by remember(userId) { mutableStateOf<String?>(null) }
     var evidenceLoadingId by remember(userId) { mutableStateOf<String?>(null) }
@@ -477,6 +557,9 @@ internal fun AdminDraftQueueContent(userId: String) {
         readinessByDraft = emptyMap()
         evidenceByDraft = emptyMap()
         provenanceByDraft = emptyMap()
+        duplicatesByDraft = emptyMap()
+        duplicatesLoadingId = null
+        duplicatesError = null
         provenanceLoadingId = null
         provenanceError = null
         evidenceError = null
@@ -566,6 +649,8 @@ internal fun AdminDraftQueueContent(userId: String) {
                         readinessLoadingId = null
                         evidenceLoadingId = null
                         provenanceLoadingId = null
+                        duplicatesLoadingId = null
+                        duplicatesError = null
                         readinessError = null
                         evidenceError = null
                         provenanceError = null
@@ -636,6 +721,65 @@ internal fun AdminDraftQueueContent(userId: String) {
                         }
                         if (readinessError != null) {
                             Text(readinessError!!, color = MaterialTheme.colorScheme.error)
+                        }
+                        OutlinedButton(
+                            enabled = duplicatesLoadingId == null && !loading,
+                            onClick = {
+                                duplicatesLoadingId = draft.id
+                                duplicatesError = null
+                                duplicatesByDraft = duplicatesByDraft - draft.id
+                                val requestedRefresh = refresh
+                                val requestedSelectionEpoch = selectionEpoch
+                                scope.launch {
+                                    try {
+                                        val candidates = AdminDraftRepository.duplicates(draft)
+                                        if (AuthRepository.session?.userId == userId &&
+                                            refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
+                                            expandedDraftId == draft.id) {
+                                            duplicatesByDraft = duplicatesByDraft + (draft.id to candidates)
+                                        }
+                                    } catch (cancelled: CancellationException) {
+                                        throw cancelled
+                                    } catch (failure: Exception) {
+                                        if (AuthRepository.session?.userId == userId &&
+                                            refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
+                                            expandedDraftId == draft.id) {
+                                            duplicatesError = failure.message ?: "Duplicate check failed."
+                                        }
+                                    } finally {
+                                        if (refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
+                                            duplicatesLoadingId == draft.id) {
+                                            duplicatesLoadingId = null
+                                        }
+                                    }
+                                }
+                            }
+                        ) {
+                            Text(if (duplicatesLoadingId == draft.id) "Checking duplicates…"
+                                else if (duplicatesByDraft.containsKey(draft.id)) "Recheck possible duplicates"
+                                else "Check possible duplicates")
+                        }
+                        duplicatesByDraft[draft.id]?.let { candidates ->
+                            if (candidates.isEmpty()) {
+                                Text("No similar scholarships returned by the server.",
+                                    style = MaterialTheme.typography.bodySmall)
+                            } else {
+                                Text("Possible duplicates — review before publishing",
+                                    fontWeight = FontWeight.SemiBold)
+                                candidates.forEach { candidate ->
+                                    Text("${candidate.title} · ${candidate.provider} · ${candidate.country}" +
+                                        " · ${candidate.similarityScore}% similarity",
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                            }
+                            Text("Read-only duplicate suggestions; no record was changed.",
+                                style = MaterialTheme.typography.labelSmall)
+                        }
+                        if (duplicatesError != null) {
+                            Text(duplicatesError!!, color = MaterialTheme.colorScheme.error)
                         }
                         OutlinedButton(
                             enabled = evidenceLoadingId == null && !loading,
