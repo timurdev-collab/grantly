@@ -43,7 +43,94 @@ internal data class AdminDraftReadiness(
     val lastSuccessfulCheckAt: String
 )
 
+internal data class AdminDraftEvidence(
+    val available: Boolean,
+    val checkedAt: String,
+    val detectedDeadline: String,
+    val deadlineConfidence: Int?,
+    val detectedFundingType: String,
+    val fundingConfidence: Int?,
+    val detectedDegreeLevels: List<String>,
+    val degreeConfidence: Int?,
+    val applicationExcerpt: String,
+    val fundingExcerpt: String
+)
+
 internal object AdminDraftRepository {
+    /** Read-only evidence extracted by the existing iOS-compatible RPC. */
+    suspend fun evidence(draftId: String): AdminDraftEvidence = withContext(Dispatchers.IO) {
+        val validatedId = try {
+            UUID.fromString(draftId).toString()
+        } catch (_: IllegalArgumentException) {
+            throw IOException("Invalid scholarship draft.")
+        }
+        val session = AuthRepository.activeSession()
+        if (StudentProfileRepository.load().role != "admin" ||
+            AuthRepository.session?.userId != session.userId) {
+            throw IOException("Administrator access is required.")
+        }
+        val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!base.startsWith("https://") || key.isBlank()) {
+            throw IOException("Draft review service is not configured.")
+        }
+        val connection = URL("$base/rest/v1/rpc/scholarship_draft_source_evidence")
+            .openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = "POST"
+            connection.instanceFollowRedirects = false
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 15_000
+            connection.doOutput = true
+            connection.setRequestProperty("apikey", key)
+            connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Accept", "application/json")
+            val body = JSONObject().put("p_scholarship_id", validatedId).toString()
+            connection.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
+            val status = connection.responseCode
+            if (status !in 200..299) {
+                throw IOException(if (status == 401 || status == 403) {
+                    "Administrator access was denied. Please sign in again."
+                } else {
+                    "Unable to load source evidence (HTTP $status)."
+                })
+            }
+            val result = JSONObject(
+                connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            )
+            if (AuthRepository.session?.userId != session.userId) {
+                throw IOException("Your account changed. Please reload.")
+            }
+            if (!result.has("available") || result.isNull("available")) {
+                throw IOException("The source evidence service returned an incomplete result.")
+            }
+            fun field(name: String, limit: Int = 240): String =
+                if (result.isNull(name)) "" else result.optString(name).take(limit)
+            fun confidence(name: String): Int? =
+                if (result.isNull(name)) null else result.optInt(name, -1)
+                    .takeIf { it in 0..100 }
+            val levels = result.optJSONArray("detected_degree_levels")
+            AdminDraftEvidence(
+                available = result.getBoolean("available"),
+                checkedAt = field("checked_at", 10),
+                detectedDeadline = field("detected_deadline", 10),
+                deadlineConfidence = confidence("deadline_confidence"),
+                detectedFundingType = field("detected_funding_type", 80),
+                fundingConfidence = confidence("funding_confidence"),
+                detectedDegreeLevels = if (levels == null) emptyList() else
+                    (0 until minOf(levels.length(), 8)).mapNotNull {
+                        levels.optString(it).take(60).takeIf(String::isNotBlank)
+                    },
+                degreeConfidence = confidence("degree_confidence"),
+                applicationExcerpt = field("application_excerpt", 300),
+                fundingExcerpt = field("funding_excerpt", 300)
+            )
+        } finally {
+            connection.disconnect()
+        }
+    }
+
     /** Read-only, server-authoritative publication check; never updates a draft. */
     suspend fun readiness(draftId: String): AdminDraftReadiness = withContext(Dispatchers.IO) {
         val validatedId = try {
@@ -194,6 +281,11 @@ internal fun AdminDraftQueueContent(userId: String) {
     var readinessByDraft by remember(userId) {
         mutableStateOf<Map<String, AdminDraftReadiness>>(emptyMap())
     }
+    var evidenceByDraft by remember(userId) {
+        mutableStateOf<Map<String, AdminDraftEvidence>>(emptyMap())
+    }
+    var evidenceLoadingId by remember(userId) { mutableStateOf<String?>(null) }
+    var evidenceError by remember(userId) { mutableStateOf<String?>(null) }
     var readinessLoadingId by remember(userId) { mutableStateOf<String?>(null) }
     var readinessError by remember(userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
@@ -205,6 +297,8 @@ internal fun AdminDraftQueueContent(userId: String) {
         drafts = emptyList()
         expandedDraftId = null
         readinessByDraft = emptyMap()
+        evidenceByDraft = emptyMap()
+        evidenceError = null
         readinessError = null
         hasMore = false
         try {
@@ -281,6 +375,7 @@ internal fun AdminDraftQueueContent(userId: String) {
                     OutlinedButton(onClick = {
                         expandedDraftId = if (expandedDraftId == draft.id) null else draft.id
                         readinessError = null
+                        evidenceError = null
                     }) {
                         Text(if (expandedDraftId == draft.id) "Hide details" else "Review details")
                     }
@@ -334,6 +429,77 @@ internal fun AdminDraftQueueContent(userId: String) {
                         }
                         if (readinessError != null) {
                             Text(readinessError!!, color = MaterialTheme.colorScheme.error)
+                        }
+                        OutlinedButton(
+                            enabled = evidenceLoadingId == null && !loading,
+                            onClick = {
+                                evidenceLoadingId = draft.id
+                                evidenceError = null
+                                val requestedRefresh = refresh
+                                scope.launch {
+                                    try {
+                                        val result = AdminDraftRepository.evidence(draft.id)
+                                        if (AuthRepository.session?.userId == userId &&
+                                            refresh == requestedRefresh) {
+                                            evidenceByDraft = evidenceByDraft + (draft.id to result)
+                                        }
+                                    } catch (cancelled: CancellationException) {
+                                        throw cancelled
+                                    } catch (failure: Exception) {
+                                        if (AuthRepository.session?.userId == userId &&
+                                            refresh == requestedRefresh) {
+                                            evidenceError = failure.message ?: "Source evidence unavailable."
+                                        }
+                                    } finally {
+                                        evidenceLoadingId = null
+                                    }
+                                }
+                            }
+                        ) {
+                            Text(if (evidenceLoadingId == draft.id) "Loading evidence…"
+                                else if (evidenceByDraft.containsKey(draft.id)) "Reload source evidence"
+                                else "View source evidence")
+                        }
+                        evidenceByDraft[draft.id]?.let { evidence ->
+                            if (!evidence.available) {
+                                Text("No structured source evidence is available yet.",
+                                    style = MaterialTheme.typography.bodySmall)
+                            } else {
+                                Text("Source evidence (read-only)",
+                                    fontWeight = FontWeight.SemiBold)
+                                if (evidence.checkedAt.isNotBlank()) {
+                                    Text("Extracted: ${evidence.checkedAt}",
+                                        style = MaterialTheme.typography.labelSmall)
+                                }
+                                if (evidence.detectedDeadline.isNotBlank()) {
+                                    Text("Detected deadline: ${evidence.detectedDeadline}" +
+                                        (evidence.deadlineConfidence?.let { " ($it% confidence)" } ?: ""),
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                if (evidence.detectedFundingType.isNotBlank()) {
+                                    Text("Detected funding: ${evidence.detectedFundingType}" +
+                                        (evidence.fundingConfidence?.let { " ($it% confidence)" } ?: ""),
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                if (evidence.detectedDegreeLevels.isNotEmpty()) {
+                                    Text("Detected study levels: ${evidence.detectedDegreeLevels.joinToString(", ")}" +
+                                        (evidence.degreeConfidence?.let { " ($it% confidence)" } ?: ""),
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                if (evidence.applicationExcerpt.isNotBlank()) {
+                                    Text("Application evidence: ${evidence.applicationExcerpt}",
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                if (evidence.fundingExcerpt.isNotBlank()) {
+                                    Text("Funding evidence: ${evidence.fundingExcerpt}",
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                Text("Extracted suggestions are not accepted or published.",
+                                    style = MaterialTheme.typography.labelSmall)
+                            }
+                        }
+                        if (evidenceError != null) {
+                            Text(evidenceError!!, color = MaterialTheme.colorScheme.error)
                         }
                         Text("Funding: ${draft.fundingType.ifBlank { "Not specified" }}", style = MaterialTheme.typography.bodySmall)
                         Text("Deadline: ${draft.deadline.ifBlank { "Not confirmed" }}", style = MaterialTheme.typography.bodySmall)
