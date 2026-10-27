@@ -20,6 +20,22 @@ import java.net.URI
 import java.net.URL
 import java.util.UUID
 
+/** Only open complete HTTPS source links from administrator review data. */
+internal object AdminSourceLinkRules {
+    fun safeHttpsUrl(raw: String): String? {
+        if (raw.isBlank() || raw.length > 2_048 ||
+            raw.any { it.isWhitespace() || it.isISOControl() }) {
+            return null
+        }
+        val uri = runCatching { URI(raw) }.getOrNull() ?: return null
+        if (!uri.scheme.equals("https", ignoreCase = true) ||
+            uri.host.isNullOrBlank() || uri.rawUserInfo != null || uri.port > 65_535) {
+            return null
+        }
+        return uri.toString()
+    }
+}
+
 /** A bounded, read-only slice of the existing iOS administrator draft queue. */
 internal data class AdminDraftSummary(
     val id: String,
@@ -669,14 +685,7 @@ internal fun AdminDraftQueueContent(userId: String) {
                             } else {
                                 Text("Source evidence (read-only)",
                                     fontWeight = FontWeight.SemiBold)
-                                val evidenceSource = runCatching { URI(evidence.candidateUrl) }
-                                    .getOrNull()
-                                    ?.takeIf { uri ->
-                                        uri.scheme.equals("https", ignoreCase = true) &&
-                                            !uri.host.isNullOrBlank() &&
-                                            uri.rawUserInfo == null
-                                    }
-                                    ?.toString()
+                                val evidenceSource = AdminSourceLinkRules.safeHttpsUrl(evidence.candidateUrl)
                                 if (evidenceSource != null) {
                                     OutlinedButton(onClick = {
                                         runCatching { uriHandler.openUri(evidenceSource) }
@@ -831,12 +840,7 @@ internal fun AdminDraftQueueContent(userId: String) {
                                     if (entry.excerpt.isNotBlank()) {
                                         Text(entry.excerpt, style = MaterialTheme.typography.bodySmall)
                                     }
-                                    val supportingSource = runCatching { URI(entry.sourceUrl) }
-                                        .getOrNull()?.takeIf { uri ->
-                                            uri.scheme.equals("https", ignoreCase = true) &&
-                                                !uri.host.isNullOrBlank() &&
-                                                uri.rawUserInfo == null
-                                        }?.toString()
+                                    val supportingSource = AdminSourceLinkRules.safeHttpsUrl(entry.sourceUrl)
                                     if (supportingSource != null) {
                                         OutlinedButton(onClick = {
                                             runCatching { uriHandler.openUri(supportingSource) }
@@ -861,14 +865,7 @@ internal fun AdminDraftQueueContent(userId: String) {
                         Text("Funding: ${draft.fundingType.ifBlank { "Not specified" }}", style = MaterialTheme.typography.bodySmall)
                         Text("Deadline: ${draft.deadline.ifBlank { "Not confirmed" }}", style = MaterialTheme.typography.bodySmall)
                         Text("Source link: ${draft.linkStatus.ifBlank { "Not checked" }}", style = MaterialTheme.typography.bodySmall)
-                        val officialSource = runCatching { URI(draft.officialUrl) }
-                            .getOrNull()
-                            ?.takeIf { uri ->
-                                uri.scheme.equals("https", ignoreCase = true) &&
-                                    !uri.host.isNullOrBlank() &&
-                                    uri.rawUserInfo == null
-                            }
-                            ?.toString()
+                        val officialSource = AdminSourceLinkRules.safeHttpsUrl(draft.officialUrl)
                         if (officialSource != null) {
                             Text("Official source: $officialSource", style = MaterialTheme.typography.bodySmall)
                             OutlinedButton(onClick = {
