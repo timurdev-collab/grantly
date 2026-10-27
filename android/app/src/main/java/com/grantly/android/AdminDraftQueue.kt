@@ -658,6 +658,12 @@ internal fun AdminDraftQueueContent(userId: String) {
                     OutlinedButton(onClick = {
                         expandedDraftId = if (expandedDraftId == draft.id) null else draft.id
                         selectionEpoch++
+                        // Reopening a review must not reuse cached publication approval,
+                        // duplicate matches, evidence, or field history for this draft.
+                        readinessByDraft = readinessByDraft - draft.id
+                        duplicatesByDraft = duplicatesByDraft - draft.id
+                        evidenceByDraft = evidenceByDraft - draft.id
+                        provenanceByDraft = provenanceByDraft - draft.id
                         // A closed review must not keep another draft\u0027s request controls busy.
                         readinessLoadingId = null
                         evidenceLoadingId = null
