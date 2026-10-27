@@ -415,6 +415,8 @@ internal fun AdminDraftQueueContent(userId: String) {
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var expandedDraftId by remember(userId) { mutableStateOf<String?>(null) }
+    // Invalidate in-flight reviews even when a draft is closed and reopened.
+    var selectionEpoch by remember(userId) { mutableIntStateOf(0) }
     var searchQuery by remember(userId) { mutableStateOf("") }
     var readinessByDraft by remember(userId) {
         mutableStateOf<Map<String, AdminDraftReadiness>>(emptyMap())
@@ -526,6 +528,11 @@ internal fun AdminDraftQueueContent(userId: String) {
                     )
                     OutlinedButton(onClick = {
                         expandedDraftId = if (expandedDraftId == draft.id) null else draft.id
+                        selectionEpoch++
+                        // A closed review must not keep another draft\u0027s request controls busy.
+                        readinessLoadingId = null
+                        evidenceLoadingId = null
+                        provenanceLoadingId = null
                         readinessError = null
                         evidenceError = null
                         provenanceError = null
@@ -541,11 +548,13 @@ internal fun AdminDraftQueueContent(userId: String) {
                                 // Do not show a previous 'ready' verdict while rechecking.
                                 readinessByDraft = readinessByDraft - draft.id
                                 val requestedRefresh = refresh
+                                val requestedSelectionEpoch = selectionEpoch
                                 scope.launch {
                                     try {
                                         val result = AdminDraftRepository.readiness(draft.id)
                                         if (AuthRepository.session?.userId == userId &&
                                             refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
                                             expandedDraftId == draft.id) {
                                             readinessByDraft = readinessByDraft + (draft.id to result)
                                         }
@@ -554,11 +563,13 @@ internal fun AdminDraftQueueContent(userId: String) {
                                     } catch (failure: Exception) {
                                         if (AuthRepository.session?.userId == userId &&
                                             refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
                                             expandedDraftId == draft.id) {
                                             readinessError = failure.message ?: "Readiness check failed."
                                         }
                                     } finally {
                                         if (refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
                                             readinessLoadingId == draft.id) {
                                             readinessLoadingId = null
                                         }
@@ -601,11 +612,13 @@ internal fun AdminDraftQueueContent(userId: String) {
                                 // Do not retain old evidence if a new request fails.
                                 evidenceByDraft = evidenceByDraft - draft.id
                                 val requestedRefresh = refresh
+                                val requestedSelectionEpoch = selectionEpoch
                                 scope.launch {
                                     try {
                                         val result = AdminDraftRepository.evidence(draft.id)
                                         if (AuthRepository.session?.userId == userId &&
                                             refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
                                             expandedDraftId == draft.id) {
                                             evidenceByDraft = evidenceByDraft + (draft.id to result)
                                         }
@@ -614,11 +627,13 @@ internal fun AdminDraftQueueContent(userId: String) {
                                     } catch (failure: Exception) {
                                         if (AuthRepository.session?.userId == userId &&
                                             refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
                                             expandedDraftId == draft.id) {
                                             evidenceError = failure.message ?: "Source evidence unavailable."
                                         }
                                     } finally {
                                         if (refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
                                             evidenceLoadingId == draft.id) {
                                             evidenceLoadingId = null
                                         }
@@ -745,11 +760,13 @@ internal fun AdminDraftQueueContent(userId: String) {
                                 provenanceError = null
                                 provenanceByDraft = provenanceByDraft - draft.id
                                 val requestedRefresh = refresh
+                                val requestedSelectionEpoch = selectionEpoch
                                 scope.launch {
                                     try {
                                         val result = AdminDraftRepository.provenance(draft.id)
                                         if (AuthRepository.session?.userId == userId &&
                                             refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
                                             expandedDraftId == draft.id) {
                                             provenanceByDraft = provenanceByDraft + (draft.id to result)
                                         }
@@ -758,11 +775,13 @@ internal fun AdminDraftQueueContent(userId: String) {
                                     } catch (failure: Exception) {
                                         if (AuthRepository.session?.userId == userId &&
                                             refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
                                             expandedDraftId == draft.id) {
                                             provenanceError = failure.message ?: "Field history unavailable."
                                         }
                                     } finally {
                                         if (refresh == requestedRefresh &&
+                                            selectionEpoch == requestedSelectionEpoch &&
                                             provenanceLoadingId == draft.id) {
                                             provenanceLoadingId = null
                                         }
