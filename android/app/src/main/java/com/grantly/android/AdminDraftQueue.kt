@@ -609,7 +609,7 @@ internal fun AdminDraftQueueContent(userId: String) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Draft scholarship review", style = MaterialTheme.typography.titleLarge)
         Text(
-            "Administrator review. Basic field edits require an explicit save; no draft is published here.",
+            "Administrator review. Editing requires saving; publication requires confirmation and server checks.",
             style = MaterialTheme.typography.bodySmall
         )
         OutlinedButton(onClick = { refresh++ }, enabled = !loading && !loadingMore) {
