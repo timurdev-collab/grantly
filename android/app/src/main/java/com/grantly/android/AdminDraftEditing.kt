@@ -1,0 +1,205 @@
+package com.grantly.android
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import java.time.LocalDate
+import java.time.format.DateTimeParseException
+import java.util.UUID
+
+/** A deliberately limited, partial draft editor; omitted fields are never overwritten. */
+internal data class AdminDraftEditValues(
+    val title: String,
+    val provider: String,
+    val country: String,
+    val fundingType: String,
+    val deadline: String
+)
+
+internal object AdminDraftEditRules {
+    fun validate(
+        title: String,
+        provider: String,
+        country: String,
+        fundingType: String,
+        deadline: String
+    ): AdminDraftEditValues {
+        val normalized = AdminDraftEditValues(
+            title.trim(), provider.trim(), country.trim(), fundingType.trim(), deadline.trim()
+        )
+        require(normalized.title.isNotEmpty() && normalized.title.length <= 200) {
+            "A scholarship title (up to 200 characters) is required."
+        }
+        require(normalized.provider.isNotEmpty() && normalized.provider.length <= 120) {
+            "A provider (up to 120 characters) is required."
+        }
+        require(normalized.country.isNotEmpty() && normalized.country.length <= 80) {
+            "A country (up to 80 characters) is required."
+        }
+        require(normalized.fundingType.length <= 80) { "Funding type is too long." }
+        if (normalized.deadline.isNotEmpty()) {
+            require(normalized.deadline.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))) {
+                "Deadline must use YYYY-MM-DD."
+            }
+            try {
+                LocalDate.parse(normalized.deadline)
+            } catch (_: DateTimeParseException) {
+                throw IllegalArgumentException("Deadline is not a valid calendar date.")
+            }
+        }
+        return normalized
+    }
+}
+
+internal object AdminDraftEditorRepository {
+    suspend fun save(draft: AdminDraftSummary, values: AdminDraftEditValues): Boolean =
+        withContext(Dispatchers.IO) {
+            val id = try {
+                UUID.fromString(draft.id).toString()
+            } catch (_: IllegalArgumentException) {
+                throw IOException("Invalid scholarship draft.")
+            }
+            val patch = JSONObject()
+            if (values.title != draft.title) patch.put("title", values.title)
+            if (values.provider != draft.provider) patch.put("provider", values.provider)
+            if (values.country != draft.country) patch.put("country", values.country)
+            if (values.fundingType != draft.fundingType) {
+                patch.put("funding_type", if (values.fundingType.isEmpty()) JSONObject.NULL else values.fundingType)
+            }
+            if (values.deadline != draft.deadline) {
+                patch.put("deadline", if (values.deadline.isEmpty()) JSONObject.NULL else values.deadline)
+            }
+            if (patch.length() == 0) return@withContext false
+
+            val session = AuthRepository.activeSession()
+            // Client guard for UX; the existing RPC enforces is_admin() on the server.
+            if (StudentProfileRepository.load().role != "admin" ||
+                AuthRepository.session?.userId != session.userId) {
+                throw IOException("Administrator access is required.")
+            }
+            val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+            val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+            if (!base.startsWith("https://") || key.isBlank()) {
+                throw IOException("Draft editing service is not configured.")
+            }
+            val connection = URL("$base/rest/v1/rpc/update_scholarship_draft")
+                .openConnection() as HttpURLConnection
+            try {
+                connection.requestMethod = "POST"
+                connection.instanceFollowRedirects = false
+                connection.connectTimeout = 12_000
+                connection.readTimeout = 15_000
+                connection.doOutput = true
+                connection.setRequestProperty("apikey", key)
+                connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+                connection.setRequestProperty("Content-Type", "application/json")
+                connection.setRequestProperty("Accept", "application/json")
+                val request = JSONObject()
+                    .put("p_scholarship_id", id)
+                    .put("p_patch", patch)
+                    .toString()
+                connection.outputStream.use { it.write(request.toByteArray(Charsets.UTF_8)) }
+                val status = connection.responseCode
+                if (status !in 200..299) {
+                    throw IOException(if (status == 401 || status == 403) {
+                        "Administrator access was denied. Please sign in again."
+                    } else {
+                        "Unable to save draft fields (HTTP $status)."
+                    })
+                }
+                if (AuthRepository.session?.userId != session.userId) {
+                    throw IOException("Your account changed. Reload the draft before editing again.")
+                }
+                true
+            } finally {
+                connection.disconnect()
+            }
+        }
+}
+
+/** Only changes the five visible fields after an explicit administrator save action. */
+@Composable
+internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
+    var editing by remember(draft.id) { mutableStateOf(false) }
+    var title by remember(draft.id) { mutableStateOf(draft.title) }
+    var provider by remember(draft.id) { mutableStateOf(draft.provider) }
+    var country by remember(draft.id) { mutableStateOf(draft.country) }
+    var funding by remember(draft.id) { mutableStateOf(draft.fundingType) }
+    var deadline by remember(draft.id) { mutableStateOf(draft.deadline) }
+    var saving by remember(draft.id) { mutableStateOf(false) }
+    var error by remember(draft.id) { mutableStateOf<String?>(null) }
+    var message by remember(draft.id) { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
+
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        OutlinedButton(onClick = { editing = !editing; error = null }, enabled = !saving) {
+            Text(if (editing) "Cancel field editing" else "Edit basic draft fields")
+        }
+        if (editing) {
+            Text("Only the fields you change will be saved. Other scholarship details are preserved.",
+                style = MaterialTheme.typography.bodySmall)
+            OutlinedTextField(value = title, onValueChange = { title = it.take(200) },
+                label = { Text("Title") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = provider, onValueChange = { provider = it.take(120) },
+                label = { Text("Provider") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = country, onValueChange = { country = it.take(80) },
+                label = { Text("Country") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = funding, onValueChange = { funding = it.take(80) },
+                label = { Text("Funding type (optional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = deadline, onValueChange = { deadline = it.take(10) },
+                label = { Text("Deadline YYYY-MM-DD (optional)") }, singleLine = true,
+                modifier = Modifier.fillMaxWidth())
+            Button(enabled = !saving, onClick = {
+                error = null
+                message = null
+                val values = try {
+                    AdminDraftEditRules.validate(title, provider, country, funding, deadline)
+                } catch (failure: IllegalArgumentException) {
+                    error = failure.message ?: "Invalid draft fields."
+                    return@Button
+                }
+                saving = true
+                val expectedUser = AuthRepository.session?.userId
+                scope.launch {
+                    try {
+                        val changed = AdminDraftEditorRepository.save(draft, values)
+                        if (AuthRepository.session?.userId == expectedUser) {
+                            if (changed) onSaved() else message = "No field changes to save."
+                        }
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (failure: Exception) {
+                        if (AuthRepository.session?.userId == expectedUser) {
+                            error = failure.message ?: "Unable to save the draft."
+                        }
+                    } finally {
+                        saving = false
+                    }
+                }
+            }) { Text(if (saving) "Saving draft…" else "Save draft changes") }
+        }
+        if (message != null) Text(message!!, style = MaterialTheme.typography.bodySmall)
+        if (error != null) Text(error!!, color = MaterialTheme.colorScheme.error)
+    }
+}
