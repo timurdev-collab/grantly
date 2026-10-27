@@ -128,6 +128,29 @@ internal object AdminDraftEditorRepository {
                         "Unable to save draft fields (HTTP $status)."
                     })
                 }
+                // The RPC returns the updated draft row. A 2xx response alone is not
+                // sufficient confirmation of a successful write.
+                val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
+                    val text = StringBuilder()
+                    val buffer = CharArray(4_096)
+                    while (true) {
+                        val count = reader.read(buffer)
+                        if (count < 0) break
+                        if (text.length + count > 1_048_576) {
+                            throw IOException("Save response too large. Refresh to confirm the draft.")
+                        }
+                        text.append(buffer, 0, count)
+                    }
+                    text.toString()
+                }
+                val result = try {
+                    JSONObject(response)
+                } catch (_: Exception) {
+                    throw IOException("Save response unclear. Refresh before trying again.")
+                }
+                if (result.optString("id") != id || result.optString("status") != "draft") {
+                    throw IOException("Saved draft could not be confirmed. Refresh the queue.")
+                }
                 if (AuthRepository.session?.userId != session.userId) {
                     throw IOException("Your account changed. Reload the draft before editing again.")
                 }
