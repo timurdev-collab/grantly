@@ -47,6 +47,8 @@ internal data class AdminDraftEvidence(
     val available: Boolean,
     val candidateUrl: String,
     val checkedAt: String,
+    val pageTitle: String,
+    val metaDescription: String,
     val detectedDeadline: String,
     val deadlineConfidence: Int?,
     val detectedCycle: String,
@@ -55,6 +57,9 @@ internal data class AdminDraftEvidence(
     val fundingConfidence: Int?,
     val detectedTuitionCoverage: String,
     val detectedStipend: String,
+    val detectedAirfare: Boolean?,
+    val detectedAccommodation: Boolean?,
+    val detectedHealthInsurance: Boolean?,
     val detectedDegreeLevels: List<String>,
     val degreeConfidence: Int?,
     val detectedEligibleNationalities: List<String>,
@@ -220,6 +225,8 @@ internal object AdminDraftRepository {
             fun confidence(name: String): Int? =
                 if (result.isNull(name)) null else result.optInt(name, -1)
                     .takeIf { it in 0..100 }
+            // Preserve unknown separately from an explicit false detection.
+            fun detectedFlag(name: String): Boolean? = result.opt(name) as? Boolean
             val levels = result.optJSONArray("detected_degree_levels")
             val nationalities = result.optJSONArray("detected_eligible_nationalities")
             AdminDraftEvidence(
@@ -227,6 +234,8 @@ internal object AdminDraftRepository {
                 candidateUrl = if (result.isNull("candidate_url")) "" else
                     result.optString("candidate_url").takeIf { it.length <= 2_048 }.orEmpty(),
                 checkedAt = field("checked_at", 10),
+                pageTitle = field("page_title", 180),
+                metaDescription = field("meta_description", 240),
                 detectedDeadline = field("detected_deadline", 10),
                 deadlineConfidence = confidence("deadline_confidence"),
                 detectedCycle = field("detected_cycle", 80),
@@ -235,6 +244,9 @@ internal object AdminDraftRepository {
                 fundingConfidence = confidence("funding_confidence"),
                 detectedTuitionCoverage = field("detected_tuition_coverage", 120),
                 detectedStipend = field("detected_stipend", 120),
+                detectedAirfare = detectedFlag("detected_airfare"),
+                detectedAccommodation = detectedFlag("detected_accommodation"),
+                detectedHealthInsurance = detectedFlag("detected_health_insurance"),
                 detectedDegreeLevels = if (levels == null) emptyList() else
                     (0 until minOf(levels.length(), 8)).mapNotNull {
                         levels.optString(it).take(60).takeIf(String::isNotBlank)
@@ -641,6 +653,14 @@ internal fun AdminDraftQueueContent(userId: String) {
                                     Text("Extracted: ${evidence.checkedAt}",
                                         style = MaterialTheme.typography.labelSmall)
                                 }
+                                if (evidence.pageTitle.isNotBlank()) {
+                                    Text("Source page: ${evidence.pageTitle}",
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
+                                if (evidence.metaDescription.isNotBlank()) {
+                                    Text("Source summary: ${evidence.metaDescription}",
+                                        style = MaterialTheme.typography.bodySmall)
+                                }
                                 if (evidence.detectedDeadline.isNotBlank()) {
                                     Text("Detected deadline: ${evidence.detectedDeadline}" +
                                         (evidence.deadlineConfidence?.let { " ($it% confidence)" } ?: ""),
@@ -663,6 +683,16 @@ internal fun AdminDraftQueueContent(userId: String) {
                                 if (evidence.detectedStipend.isNotBlank()) {
                                     Text("Detected stipend: ${evidence.detectedStipend}",
                                         style = MaterialTheme.typography.bodySmall)
+                                }
+                                listOf(
+                                    "Airfare" to evidence.detectedAirfare,
+                                    "Accommodation" to evidence.detectedAccommodation,
+                                    "Health insurance" to evidence.detectedHealthInsurance
+                                ).forEach { (benefit, detected) ->
+                                    if (detected != null) {
+                                        Text("$benefit: ${if (detected) "Detected" else "Not detected"} in source",
+                                            style = MaterialTheme.typography.bodySmall)
+                                    }
                                 }
                                 if (evidence.detectedDegreeLevels.isNotEmpty()) {
                                     Text("Detected study levels: ${evidence.detectedDegreeLevels.joinToString(", ")}" +
