@@ -54,7 +54,11 @@ internal data class AdminDraftSummary(
     val description: String = "",
     val degreeLevels: List<String> = emptyList(),
     val tuitionCoverage: String = "",
-    val stipend: String = ""
+    val stipend: String = "",
+    val airfare: Boolean = false,
+    val accommodation: Boolean = false,
+    val healthInsurance: Boolean = false,
+    val satRequired: Boolean = false
 )
 
 internal data class AdminDraftPage(val items: List<AdminDraftSummary>, val hasMore: Boolean)
@@ -493,7 +497,7 @@ internal object AdminDraftRepository {
             throw IOException("Draft review service is not configured.")
         }
         val url = "$base/rest/v1/scholarships" +
-            "?select=id,title,provider,country,status,verification_status,updated_at,funding_type,deadline,link_status,official_url,application_cycle,region,deadline_notes,description,degree_levels,tuition_coverage,stipend" +
+            "?select=id,title,provider,country,status,verification_status,updated_at,funding_type,deadline,link_status,official_url,application_cycle,region,deadline_notes,description,degree_levels,tuition_coverage,stipend,airfare,accommodation,health_insurance,sat_required" +
             "&status=eq.draft&order=updated_at.desc,id.desc&limit=16&offset=$offset"
         val connection = URL(url).openConnection() as HttpURLConnection
         try {
@@ -546,7 +550,11 @@ internal object AdminDraftRepository {
                             (0 until levels.length()).map { levels.optString(it) }
                         } ?: emptyList(),
                         tuitionCoverage = if (row.isNull("tuition_coverage")) "" else row.optString("tuition_coverage"),
-                        stipend = if (row.isNull("stipend")) "" else row.optString("stipend")
+                        stipend = if (row.isNull("stipend")) "" else row.optString("stipend"),
+                        airfare = row.optBoolean("airfare", false),
+                        accommodation = row.optBoolean("accommodation", false),
+                        healthInsurance = row.optBoolean("health_insurance", false),
+                        satRequired = row.optBoolean("sat_required", false)
                     ))
                 }
             }

@@ -200,6 +200,37 @@ class AdminDraftEditRulesTest {
         }
     }
 
+    @Test fun booleanBenefitsAndSatRequirementPreserveExplicitValues() {
+        val values = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            airfare = true, accommodation = false, healthInsurance = true, satRequired = false
+        )
+        assertEquals(true, values.airfare)
+        assertEquals(false, values.accommodation)
+        assertEquals(true, values.healthInsurance)
+        assertEquals(false, values.satRequired)
+    }
+
+    @Test fun onlyChangedBooleanFieldsAreIncludedInPatch() {
+        val draft = AdminDraftSummary(
+            id = "00000000-0000-0000-0000-000000000001",
+            title = "Scholarship", provider = "University", country = "Japan",
+            verificationStatus = "needs_review", updatedAt = "2026-10-28T00:00:00Z",
+            fundingType = "", deadline = "", linkStatus = "", officialUrl = "",
+            airfare = true, accommodation = false, healthInsurance = true, satRequired = false
+        )
+        val unchanged = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            airfare = true, accommodation = false, healthInsurance = true, satRequired = false
+        )
+        assertEquals(emptyMap<String, Boolean>(), AdminDraftEditRules.changedBooleanFields(draft, unchanged))
+        val changed = unchanged.copy(airfare = false, accommodation = true, satRequired = true)
+        assertEquals(
+            mapOf("airfare" to false, "accommodation" to true, "sat_required" to true),
+            AdminDraftEditRules.changedBooleanFields(draft, changed)
+        )
+    }
+
     @Test fun rejectsRegionOverLimit() {
         assertThrows(IllegalArgumentException::class.java) {
             AdminDraftEditRules.validate(

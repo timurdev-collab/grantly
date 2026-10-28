@@ -2,11 +2,13 @@ package com.grantly.android
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,7 +44,11 @@ internal data class AdminDraftEditValues(
     val description: String = "",
     val degreeLevels: List<String> = emptyList(),
     val tuitionCoverage: String = "",
-    val stipend: String = ""
+    val stipend: String = "",
+    val airfare: Boolean = false,
+    val accommodation: Boolean = false,
+    val healthInsurance: Boolean = false,
+    val satRequired: Boolean = false
 )
 
 internal object AdminDraftEditRules {
@@ -64,7 +70,11 @@ internal object AdminDraftEditRules {
         tuitionCoverage: String = "",
         originalTuitionCoverage: String = "",
         stipend: String = "",
-        originalStipend: String = ""
+        originalStipend: String = "",
+        airfare: Boolean = false,
+        accommodation: Boolean = false,
+        healthInsurance: Boolean = false,
+        satRequired: Boolean = false
     ): AdminDraftEditValues {
         // Keep untouched legacy values intact; only validate newly edited lists.
         val parsedLevels = if (degreeLevels == originalDegreeLevels.joinToString(", ")) {
@@ -84,7 +94,8 @@ internal object AdminDraftEditRules {
             if (description == originalDescription) description else description.trim(),
             parsedLevels,
             if (tuitionCoverage == originalTuitionCoverage) tuitionCoverage else tuitionCoverage.trim(),
-            if (stipend == originalStipend) stipend else stipend.trim()
+            if (stipend == originalStipend) stipend else stipend.trim(),
+            airfare, accommodation, healthInsurance, satRequired
         )
         require(normalized.title.isNotEmpty() && normalized.title.length <= 200) {
             "A scholarship title (up to 200 characters) is required."
@@ -125,6 +136,14 @@ internal object AdminDraftEditRules {
             }
         }
         return normalized
+    }
+
+    /** Pure change detector: never sends unchanged flags or overwrites unseen values. */
+    fun changedBooleanFields(draft: AdminDraftSummary, values: AdminDraftEditValues): Map<String, Boolean> = buildMap {
+        if (values.airfare != draft.airfare) put("airfare", values.airfare)
+        if (values.accommodation != draft.accommodation) put("accommodation", values.accommodation)
+        if (values.healthInsurance != draft.healthInsurance) put("health_insurance", values.healthInsurance)
+        if (values.satRequired != draft.satRequired) put("sat_required", values.satRequired)
     }
 }
 
@@ -168,6 +187,9 @@ internal object AdminDraftEditorRepository {
             }
             if (values.stipend != draft.stipend) {
                 patch.put("stipend", if (values.stipend.isEmpty()) JSONObject.NULL else values.stipend)
+            }
+            for ((field, enabled) in AdminDraftEditRules.changedBooleanFields(draft, values)) {
+                patch.put(field, enabled)
             }
             if (patch.length() == 0) return@withContext false
 
@@ -240,7 +262,7 @@ internal object AdminDraftEditorRepository {
         }
 }
 
-/** Only changes the twelve supported fields after an explicit administrator save action. */
+/** Only changes the sixteen supported fields after an explicit administrator save action. */
 @Composable
 internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     // Reset local form state whenever the server draft snapshot changes, not just its ID.
@@ -253,6 +275,10 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     var degreeLevels by remember(draft) { mutableStateOf(draft.degreeLevels.joinToString(", ")) }
     var tuitionCoverage by remember(draft) { mutableStateOf(draft.tuitionCoverage) }
     var stipend by remember(draft) { mutableStateOf(draft.stipend) }
+    var airfare by remember(draft) { mutableStateOf(draft.airfare) }
+    var accommodation by remember(draft) { mutableStateOf(draft.accommodation) }
+    var healthInsurance by remember(draft) { mutableStateOf(draft.healthInsurance) }
+    var satRequired by remember(draft) { mutableStateOf(draft.satRequired) }
     var funding by remember(draft) { mutableStateOf(draft.fundingType) }
     var deadline by remember(draft) { mutableStateOf(draft.deadline) }
     var applicationCycle by remember(draft) { mutableStateOf(draft.applicationCycle) }
@@ -274,6 +300,10 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 degreeLevels = draft.degreeLevels.joinToString(", ")
                 tuitionCoverage = draft.tuitionCoverage
                 stipend = draft.stipend
+                airfare = draft.airfare
+                accommodation = draft.accommodation
+                healthInsurance = draft.healthInsurance
+                satRequired = draft.satRequired
                 funding = draft.fundingType
                 deadline = draft.deadline
                 applicationCycle = draft.applicationCycle
@@ -308,6 +338,23 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
             OutlinedTextField(value = stipend, onValueChange = { stipend = it.take(120) },
                 label = { Text("Stipend (optional)") }, singleLine = true,
                 enabled = !saving, modifier = Modifier.fillMaxWidth())
+            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                Text("Airfare")
+                Switch(checked = airfare, onCheckedChange = { airfare = it }, enabled = !saving)
+            }
+            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                Text("Accommodation")
+                Switch(checked = accommodation, onCheckedChange = { accommodation = it }, enabled = !saving)
+            }
+            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                Text("Health insurance")
+                Switch(checked = healthInsurance, onCheckedChange = { healthInsurance = it }, enabled = !saving)
+            }
+            Text("Eligibility", style = MaterialTheme.typography.titleSmall)
+            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                Text("SAT required")
+                Switch(checked = satRequired, onCheckedChange = { satRequired = it }, enabled = !saving)
+            }
             OutlinedTextField(value = funding, onValueChange = { funding = it.take(80) },
                 label = { Text("Funding type (optional)") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = deadline, onValueChange = { deadline = it.take(10) },
@@ -331,7 +378,9 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                         deadlineNotes, draft.deadlineNotes, description, draft.description,
                         degreeLevels, draft.degreeLevels,
                         tuitionCoverage = tuitionCoverage, originalTuitionCoverage = draft.tuitionCoverage,
-                        stipend = stipend, originalStipend = draft.stipend)
+                        stipend = stipend, originalStipend = draft.stipend,
+                        airfare = airfare, accommodation = accommodation,
+                        healthInsurance = healthInsurance, satRequired = satRequired)
                 } catch (failure: IllegalArgumentException) {
                     error = failure.message ?: "Invalid draft fields."
                     return@Button
