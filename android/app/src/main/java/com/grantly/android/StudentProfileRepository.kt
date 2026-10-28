@@ -137,6 +137,8 @@ internal object StudentProfileRepository {
         val select = if (method == "GET") "select=*&$filter&limit=1" else "$filter"
         val connection = URL("$base/rest/v1/student_profiles?$select")
             .openConnection() as HttpURLConnection
+        // Never follow redirects while sending an authenticated profile request.
+        connection.instanceFollowRedirects = false
         try {
             connection.requestMethod = method
             connection.connectTimeout = 12_000
