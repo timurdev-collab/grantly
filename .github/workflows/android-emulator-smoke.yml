@@ -33,7 +33,9 @@ jobs:
       - name: Run non-mutating Android navigation smoke test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 35
+          # API 35 emulator intermittently hangs the Quickstep launcher before UI assertions.
+          # Use API 34 for the reliable navigation baseline; revalidate API 35 separately.
+          api-level: 34
           arch: x86_64
           profile: pixel_6
           disable-animations: true
