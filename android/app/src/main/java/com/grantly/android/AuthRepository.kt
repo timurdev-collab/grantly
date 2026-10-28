@@ -348,6 +348,38 @@ internal object AuthRepository {
         recoveryError = null
     }
 
+    /**
+     * Invoke the same authenticated delete-account Edge Function used by iOS.
+     * Do not clear credentials until the server explicitly confirms deletion.
+     * Never send a service-role key from the Android client.
+     */
+    suspend fun deleteAccount() {
+        val current = activeSession()
+        val response = withContext(Dispatchers.IO) {
+            post("/functions/v1/delete-account", JSONObject(), current.accessToken)
+        }
+        if (!response.optBoolean("deleted", false)) {
+            throw IOException("Account deletion was not confirmed. Please try again.")
+        }
+        // The account is gone. Clear only this user's local session, never a
+        // different account that might have signed in while the request ran.
+        refreshMutex.withLock {
+            if (session?.userId == current.userId) {
+                session = null
+                needsPasswordReset = false
+                recoveryError = null
+                try {
+                    forget()
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (_: Exception) {
+                    // The deleted user's server tokens are already invalid.
+                    // Never restore an account just because local cleanup failed.
+                }
+            }
+        }
+    }
+
     suspend fun signOut() {
         // Serialize with refresh so an in-flight refresh cannot restore a signed-out user.
         val token = refreshMutex.withLock {
