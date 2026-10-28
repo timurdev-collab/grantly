@@ -54,6 +54,8 @@ internal object AdvisorDirectoryRepository {
         val connection = URL("$base/rest/v1/rpc/available_advisors")
             .openConnection() as HttpURLConnection
         try {
+            // Never forward an authenticated advisor-directory request to a redirected host.
+            connection.instanceFollowRedirects = false
             connection.requestMethod = "POST"
             connection.connectTimeout = 12_000
             connection.readTimeout = 15_000
