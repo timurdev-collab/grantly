@@ -20,6 +20,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -39,7 +40,8 @@ internal data class AdminDraftEditValues(
     val officialUrl: String = "",
     val region: String = "",
     val deadlineNotes: String = "",
-    val description: String = ""
+    val description: String = "",
+    val degreeLevels: List<String> = emptyList()
 )
 
 internal object AdminDraftEditRules {
@@ -57,13 +59,27 @@ internal object AdminDraftEditRules {
         deadlineNotes: String = "",
         originalDeadlineNotes: String = "",
         description: String = "",
-        originalDescription: String = ""
+        originalDescription: String = "",
+        degreeLevels: String = "",
+        originalDegreeLevels: List<String> = emptyList()
     ): AdminDraftEditValues {
+        // Keep untouched legacy values intact; only validate newly edited lists.
+        val parsedLevels = if (degreeLevels == originalDegreeLevels.joinToString(", ")) {
+            originalDegreeLevels
+        } else {
+            require(degreeLevels.length <= 1_000) { "Study levels are too long." }
+            degreeLevels.split(',').map { it.trim() }.filter { it.isNotEmpty() }.distinct().also { levels ->
+                require(levels.size <= 12 && levels.all { it.length <= 80 }) {
+                    "Use up to 12 study levels, each no longer than 80 characters."
+                }
+            }
+        }
         val normalized = AdminDraftEditValues(
             title.trim(), provider.trim(), country.trim(), fundingType.trim(), deadline.trim(),
             applicationCycle.trim(), officialUrl.trim(), region.trim(),
             if (deadlineNotes == originalDeadlineNotes) deadlineNotes else deadlineNotes.trim(),
-            if (description == originalDescription) description else description.trim()
+            if (description == originalDescription) description else description.trim(),
+            parsedLevels
         )
         require(normalized.title.isNotEmpty() && normalized.title.length <= 200) {
             "A scholarship title (up to 200 characters) is required."
@@ -145,6 +161,9 @@ internal object AdminDraftEditorRepository {
                 // Match the iOS draft editor: clearing the description sends an empty string.
                 patch.put("description", values.description)
             }
+            if (values.degreeLevels != draft.degreeLevels) {
+                patch.put("degree_levels", JSONArray(values.degreeLevels))
+            }
             if (patch.length() == 0) return@withContext false
 
             val session = AuthRepository.activeSession()
@@ -216,7 +235,7 @@ internal object AdminDraftEditorRepository {
         }
 }
 
-/** Only changes the ten visible fields after an explicit administrator save action. */
+/** Only changes the eleven visible fields after an explicit administrator save action. */
 @Composable
 internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     // Reset local form state whenever the server draft snapshot changes, not just its ID.
@@ -226,6 +245,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     var provider by remember(draft) { mutableStateOf(draft.provider) }
     var country by remember(draft) { mutableStateOf(draft.country) }
     var region by remember(draft) { mutableStateOf(draft.region) }
+    var degreeLevels by remember(draft) { mutableStateOf(draft.degreeLevels.joinToString(", ")) }
     var funding by remember(draft) { mutableStateOf(draft.fundingType) }
     var deadline by remember(draft) { mutableStateOf(draft.deadline) }
     var applicationCycle by remember(draft) { mutableStateOf(draft.applicationCycle) }
@@ -245,6 +265,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 provider = draft.provider
                 country = draft.country
                 region = draft.region
+                degreeLevels = draft.degreeLevels.joinToString(", ")
                 funding = draft.fundingType
                 deadline = draft.deadline
                 applicationCycle = draft.applicationCycle
@@ -270,6 +291,9 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
             OutlinedTextField(value = region, onValueChange = { region = it.take(120) },
                 label = { Text("Region") }, singleLine = true,
                 enabled = !saving, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = degreeLevels, onValueChange = { degreeLevels = it.take(1_000) },
+                label = { Text("Study levels (comma separated, optional)") },
+                enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = funding, onValueChange = { funding = it.take(80) },
                 label = { Text("Funding type (optional)") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = deadline, onValueChange = { deadline = it.take(10) },
@@ -293,7 +317,8 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 val values = try {
                     AdminDraftEditRules.validate(title, provider, country, funding, deadline,
                         applicationCycle, officialUrl, draft.officialUrl, region, draft.region,
-                        deadlineNotes, draft.deadlineNotes, description, draft.description)
+                        deadlineNotes, draft.deadlineNotes, description, draft.description,
+                        degreeLevels, draft.degreeLevels)
                 } catch (failure: IllegalArgumentException) {
                     error = failure.message ?: "Invalid draft fields."
                     return@Button
