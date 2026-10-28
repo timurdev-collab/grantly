@@ -55,6 +55,8 @@ internal object CommunityPostReportsRepository {
             val connection = URL(base + "/rest/v1/social_post_reports")
                 .openConnection() as HttpURLConnection
             try {
+                // Do not forward authenticated Community reports requests to redirected hosts.
+                connection.instanceFollowRedirects = false
                 connection.requestMethod = "POST"
                 connection.connectTimeout = 12_000
                 connection.readTimeout = 15_000
