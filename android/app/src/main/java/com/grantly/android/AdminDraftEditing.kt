@@ -67,7 +67,9 @@ internal object AdminDraftEditRules {
         }
         require(normalized.fundingType.length <= 80) { "Funding type is too long." }
         require(normalized.applicationCycle.length <= 80) { "Application cycle is too long." }
-        require(normalized.region.length <= 120) { "Region is too long." }
+        require(normalized.region.isNotEmpty() && normalized.region.length <= 120) {
+            "A region (up to 120 characters) is required."
+        }
         if (normalized.officialUrl != originalOfficialUrl.trim() && normalized.officialUrl.isNotEmpty()) {
             require(AdminSourceLinkRules.safeHttpsUrl(normalized.officialUrl) != null) {
                 "Official URL must be a complete HTTPS link (up to 2048 characters)."
@@ -100,7 +102,7 @@ internal object AdminDraftEditorRepository {
             if (values.provider != draft.provider) patch.put("provider", values.provider)
             if (values.country != draft.country) patch.put("country", values.country)
             if (values.region != draft.region) {
-                patch.put("region", if (values.region.isEmpty()) JSONObject.NULL else values.region)
+                patch.put("region", values.region)
             }
             if (values.fundingType != draft.fundingType) {
                 patch.put("funding_type", if (values.fundingType.isEmpty()) JSONObject.NULL else values.fundingType)
@@ -237,7 +239,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
             OutlinedTextField(value = country, onValueChange = { country = it.take(80) },
                 label = { Text("Country") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = region, onValueChange = { region = it.take(120) },
-                label = { Text("Region (optional)") }, singleLine = true,
+                label = { Text("Region") }, singleLine = true,
                 enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = funding, onValueChange = { funding = it.take(80) },
                 label = { Text("Funding type (optional)") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
