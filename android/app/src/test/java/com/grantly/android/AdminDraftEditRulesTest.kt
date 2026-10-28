@@ -48,4 +48,19 @@ class AdminDraftEditRulesTest {
             AdminDraftEditRules.validate("Scholarship", "University", "Japan", "x".repeat(81), "")
         }
     }
+
+    @Test fun trimsAndValidatesOptionalApplicationCycle() {
+        val values = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "", "  Annual  "
+        )
+        assertEquals("Annual", values.applicationCycle)
+        assertEquals("", AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", ""
+        ).applicationCycle)
+        assertThrows(IllegalArgumentException::class.java) {
+            AdminDraftEditRules.validate(
+                "Scholarship", "University", "Japan", "", "", "x".repeat(81)
+            )
+        }
+    }
 }
