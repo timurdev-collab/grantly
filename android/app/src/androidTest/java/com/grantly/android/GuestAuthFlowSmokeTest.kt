@@ -63,7 +63,12 @@ class GuestAuthFlowSmokeTest {
         forgot.click()
         assertNotNull("Recovery screen should open",
             device.wait(Until.findObject(By.text("Reset password")), 10_000))
-        assertNotNull("Recovery should allow returning to sign-in",
-            device.wait(Until.findObject(By.text("Back to sign in")), 10_000))
+        val backFromRecovery = device.wait(Until.findObject(By.text("Back to sign in")), 10_000)
+        assertNotNull("Recovery should allow returning to sign-in", backFromRecovery)
+        backFromRecovery.click()
+        assertNotNull("Returning from recovery should show sign-in at the top",
+            device.wait(Until.findObject(By.text("Welcome back")), 10_000))
+        assertNotNull("Returning from recovery should restore the sign-in action",
+            device.wait(Until.findObject(By.text("Sign in")), 10_000))
     }
 }
