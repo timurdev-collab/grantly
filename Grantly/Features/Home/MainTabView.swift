@@ -892,7 +892,7 @@ private struct AdvisorPortalView: View {
                         ProfileView(profile: $profile, showsNavigationBar: true)
                     } label: {
                         Label(
-                            "Profile & settings",
+                            "My profile, photo & account settings",
                             systemImage: "person.crop.circle.fill"
                         )
                     }
