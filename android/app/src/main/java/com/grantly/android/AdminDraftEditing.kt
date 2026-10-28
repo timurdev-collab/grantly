@@ -30,6 +30,7 @@ import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 import java.util.UUID
+import java.util.Locale
 
 /** A deliberately limited, partial draft editor; omitted fields are never overwritten. */
 internal data class AdminDraftEditValues(
@@ -87,7 +88,7 @@ internal object AdminDraftEditRules {
             originalDegreeLevels
         } else {
             require(degreeLevels.length <= 1_000) { "Study levels are too long." }
-            degreeLevels.split(',').map { it.trim() }.filter { it.isNotEmpty() }.distinct().also { levels ->
+            degreeLevels.split(',').map { it.trim() }.filter { it.isNotEmpty() }.distinctBy { it.lowercase(Locale.ROOT) }.also { levels ->
                 require(levels.size <= 12 && levels.all { it.length <= 80 }) {
                     "Use up to 12 study levels, each no longer than 80 characters."
                 }
@@ -154,7 +155,7 @@ internal object AdminDraftEditRules {
     ): List<String> {
         if (input == original.joinToString(", ")) return original
         require(input.length <= maxCharacters) { "$label is too long." }
-        val parsed = input.split(',').map { it.trim() }.filter { it.isNotEmpty() }.distinct()
+        val parsed = input.split(',').map { it.trim() }.filter { it.isNotEmpty() }.distinctBy { it.lowercase(Locale.ROOT) }
         require(parsed.size <= maxEntries && parsed.all { it.length <= 80 }) {
             "$label must have at most $maxEntries entries, each up to 80 characters."
         }
