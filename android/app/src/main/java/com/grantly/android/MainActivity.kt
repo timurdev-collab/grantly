@@ -268,6 +268,8 @@ private fun HomeContent(
     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(9.dp)) {
         listOf(
             Triple("For you", true, { onDiscover("All") }),
+            // Community is reachable without scrolling past network-loaded Home sections.
+            Triple("Community", false, onCommunity),
             Triple("Applications", false, onApplications),
             Triple("Advisors", false, onAdvisors),
             Triple("Profile", false, onProfile)
