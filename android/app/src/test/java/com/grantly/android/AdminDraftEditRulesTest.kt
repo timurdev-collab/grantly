@@ -165,6 +165,36 @@ class AdminDraftEditRulesTest {
         ).description)
     }
 
+    @Test fun studyLevelsAreNormalizedAndDeduplicated() {
+        val values = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            degreeLevels = " Bachelor's, Master's, Bachelor's, PhD "
+        )
+        assertEquals(listOf("Bachelor's", "Master's", "PhD"), values.degreeLevels)
+        assertEquals(emptyList<String>(), AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            degreeLevels = "", originalDegreeLevels = listOf("Bachelor's")
+        ).degreeLevels)
+    }
+
+    @Test fun studyLevelsRejectOversizedChangesAndPreserveLegacyValues() {
+        val legacy = listOf("Unusually long legacy level ".repeat(5))
+        assertEquals(legacy, AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            degreeLevels = legacy.joinToString(", "), originalDegreeLevels = legacy
+        ).degreeLevels)
+        try {
+            AdminDraftEditRules.validate("Scholarship", "University", "Japan", "", "",
+                degreeLevels = "x".repeat(81))
+            org.junit.Assert.fail("Oversized level should be rejected")
+        } catch (_: IllegalArgumentException) { }
+        try {
+            AdminDraftEditRules.validate("Scholarship", "University", "Japan", "", "",
+                degreeLevels = (1..13).joinToString(", ") { "Level$it" })
+            org.junit.Assert.fail("Too many levels should be rejected")
+        } catch (_: IllegalArgumentException) { }
+    }
+
     @Test fun rejectsRegionOverLimit() {
         assertThrows(IllegalArgumentException::class.java) {
             AdminDraftEditRules.validate(
