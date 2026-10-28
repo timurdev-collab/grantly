@@ -63,4 +63,34 @@ class AdminDraftEditRulesTest {
             )
         }
     }
+
+    @Test fun acceptsSafeOfficialUrlAndAllowsClearingIt() {
+        val values = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "", "",
+            "  https://university.example/scholarships  "
+        )
+        assertEquals("https://university.example/scholarships", values.officialUrl)
+        val cleared = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "", "", "",
+            "https://university.example/scholarships"
+        )
+        assertEquals("", cleared.officialUrl)
+    }
+
+    @Test fun rejectsUnsafeOfficialUrlWhenChanged() {
+        for (url in listOf("http://university.example", "https://", "https://user@university.example",
+            "https://university.example/space here", "https://university.example/" + "x".repeat(2049))) {
+            assertThrows(IllegalArgumentException::class.java) {
+                AdminDraftEditRules.validate("Scholarship", "University", "Japan", "", "", "", url)
+            }
+        }
+    }
+
+    @Test fun doesNotBlockUnrelatedEditsForUnchangedLegacyUrl() {
+        val legacy = "http://legacy.example/scholarship"
+        val values = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "", "", legacy, legacy
+        )
+        assertEquals(legacy, values.officialUrl)
+    }
 }
