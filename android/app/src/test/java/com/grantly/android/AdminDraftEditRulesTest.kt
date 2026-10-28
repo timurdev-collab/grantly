@@ -276,4 +276,17 @@ class AdminDraftEditRulesTest {
             )
         }
     }
+    @Test fun caseInsensitiveDuplicateListsKeepFirstSpelling() {
+        val values = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            degreeLevels = "Master, master, PhD, phd",
+            fields = "Economics, ECONOMICS, Data Science",
+            eligibleNationalities = "Japan, japan, VIETNAM, Vietnam"
+        )
+        assertEquals(listOf("Master", "PhD"), values.degreeLevels)
+        assertEquals(listOf("Economics", "Data Science"), values.fields)
+        assertEquals(listOf("Japan", "VIETNAM"), values.eligibleNationalities)
+    }
+
+
 }
