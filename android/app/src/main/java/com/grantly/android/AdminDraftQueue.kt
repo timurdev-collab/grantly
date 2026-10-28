@@ -182,11 +182,20 @@ internal object AdminDraftRepository {
                 if (AuthRepository.session?.userId != session.userId) {
                     throw IOException("Your account changed. Please reload.")
                 }
+                // A truncated or malformed duplicate response cannot safely count as
+                // a completed review. Fail closed instead of showing "no matches".
+                if (rows.length() > 20) {
+                    throw IOException("Duplicate review returned too many results. Publication review is incomplete.")
+                }
                 buildList {
-                    for (index in 0 until minOf(rows.length(), 20)) {
-                        val row = rows.optJSONObject(index) ?: continue
+                    for (index in 0 until rows.length()) {
+                        val row = rows.optJSONObject(index)
+                            ?: throw IOException("Duplicate review returned an invalid result. Please retry.")
                         val id = row.optString("id")
-                        if (runCatching { UUID.fromString(id) }.isFailure || id == draft.id) continue
+                        if (runCatching { UUID.fromString(id) }.isFailure) {
+                            throw IOException("Duplicate review returned an invalid scholarship ID. Please retry.")
+                        }
+                        if (id == draft.id) continue
                         add(AdminDraftDuplicateCandidate(
                             id = id,
                             title = row.optString("title").take(200),
