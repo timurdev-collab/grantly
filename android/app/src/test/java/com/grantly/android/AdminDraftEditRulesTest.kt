@@ -94,16 +94,22 @@ class AdminDraftEditRulesTest {
         assertEquals(legacy, values.officialUrl)
     }
 
-    @Test fun trimsRegionAndRejectsMissingValue() {
+    @Test fun trimsRegionAndPreventsClearingPopulatedValue() {
         val populated = AdminDraftEditRules.validate(
             "Scholarship", "University", "Japan", "", "", region = "  East Asia  "
         )
         assertEquals("East Asia", populated.region)
         assertThrows(IllegalArgumentException::class.java) {
             AdminDraftEditRules.validate(
-                "Scholarship", "University", "Japan", "", "", region = ""
+                "Scholarship", "University", "Japan", "", "",
+                region = "", originalRegion = "East Asia"
             )
         }
+        // Unchanged legacy blank regions must not prevent unrelated field edits.
+        assertEquals("", AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            region = "", originalRegion = ""
+        ).region)
     }
 
     @Test fun rejectsRegionOverLimit() {
