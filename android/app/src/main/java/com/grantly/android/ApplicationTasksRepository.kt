@@ -39,6 +39,8 @@ internal object ApplicationTasksRepository {
             if (!base.startsWith("https://") || key.isBlank()) throw IOException("Checklist is not configured.")
             val connection = URL(base + "/rest/v1/application_tasks?" + query).openConnection() as HttpURLConnection
             try {
+                // Do not forward authenticated application checklist requests to redirected hosts.
+                connection.instanceFollowRedirects = false
                 connection.requestMethod = method
                 connection.connectTimeout = 12_000
                 connection.readTimeout = 15_000
