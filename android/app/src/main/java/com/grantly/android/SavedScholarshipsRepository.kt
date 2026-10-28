@@ -36,6 +36,8 @@ internal object SavedScholarshipsRepository {
             "&order=updated_at.desc,scholarship_id.asc&limit=${limit + 1}&offset=$offset"
         val connection = URL("$baseUrl/rest/v1/saved_scholarships?$query")
             .openConnection() as HttpURLConnection
+        // Keep bearer credentials on the configured Supabase origin.
+        connection.instanceFollowRedirects = false
         try {
             connection.requestMethod = "GET"
             connection.connectTimeout = 12_000
@@ -99,6 +101,7 @@ internal object SavedScholarshipsRepository {
             else -> throw IOException("Unsupported scholarship operation.")
         }
         val connection = URL(url).openConnection() as HttpURLConnection
+        connection.instanceFollowRedirects = false
         try {
             connection.requestMethod = method
             connection.connectTimeout = 12_000
@@ -197,6 +200,7 @@ internal object SavedScholarshipsRepository {
             throw IOException("Application tracker is not configured.")
         }
         val connection = URL(baseUrl + path).openConnection() as HttpURLConnection
+        connection.instanceFollowRedirects = false
         try {
             connection.requestMethod = method
             connection.connectTimeout = 12_000
