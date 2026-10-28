@@ -47,7 +47,8 @@ internal data class AdminDraftSummary(
     val fundingType: String,
     val deadline: String,
     val linkStatus: String,
-    val officialUrl: String
+    val officialUrl: String,
+    val applicationCycle: String = ""
 )
 
 internal data class AdminDraftPage(val items: List<AdminDraftSummary>, val hasMore: Boolean)
@@ -486,7 +487,7 @@ internal object AdminDraftRepository {
             throw IOException("Draft review service is not configured.")
         }
         val url = "$base/rest/v1/scholarships" +
-            "?select=id,title,provider,country,status,verification_status,updated_at,funding_type,deadline,link_status,official_url" +
+            "?select=id,title,provider,country,status,verification_status,updated_at,funding_type,deadline,link_status,official_url,application_cycle" +
             "&status=eq.draft&order=updated_at.desc,id.desc&limit=16&offset=$offset"
         val connection = URL(url).openConnection() as HttpURLConnection
         try {
@@ -529,7 +530,9 @@ internal object AdminDraftRepository {
                         deadline = if (row.isNull("deadline")) "" else row.optString("deadline").take(10),
                         linkStatus = if (row.isNull("link_status")) "" else row.optString("link_status").take(50),
                         officialUrl = if (row.isNull("official_url")) "" else
-                            row.optString("official_url").takeIf { it.length <= 2_048 }.orEmpty()
+                            row.optString("official_url").takeIf { it.length <= 2_048 }.orEmpty(),
+                        applicationCycle = if (row.isNull("application_cycle")) "" else
+                            row.optString("application_cycle").take(80)
                     ))
                 }
             }
