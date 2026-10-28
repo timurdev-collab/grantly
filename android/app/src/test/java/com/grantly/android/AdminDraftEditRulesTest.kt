@@ -139,6 +139,32 @@ class AdminDraftEditRulesTest {
         ).deadlineNotes)
     }
 
+    @Test fun descriptionCanBeEditedAndCleared() {
+        val edited = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            description = "  Supports innovative research.  "
+        )
+        assertEquals("Supports innovative research.", edited.description)
+        val cleared = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            description = "", originalDescription = "Previous description"
+        )
+        assertEquals("", cleared.description)
+    }
+
+    @Test fun descriptionRejectsOversizedChangesButPreservesLegacyText() {
+        val legacy = "Research".repeat(600)
+        assertThrows(IllegalArgumentException::class.java) {
+            AdminDraftEditRules.validate(
+                "Scholarship", "University", "Japan", "", "", description = legacy
+            )
+        }
+        assertEquals(legacy, AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            description = legacy, originalDescription = legacy
+        ).description)
+    }
+
     @Test fun rejectsRegionOverLimit() {
         assertThrows(IllegalArgumentException::class.java) {
             AdminDraftEditRules.validate(
