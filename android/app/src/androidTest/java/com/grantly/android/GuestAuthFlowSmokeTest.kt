@@ -66,8 +66,22 @@ class GuestAuthFlowSmokeTest {
         val backFromRecovery = device.wait(Until.findObject(By.text("Back to sign in")), 10_000)
         assertNotNull("Recovery should allow returning to sign-in", backFromRecovery)
         backFromRecovery.click()
-        assertNotNull("Returning from recovery should show sign-in at the top",
-            device.wait(Until.findObject(By.text("Welcome back")), 10_000))
+        // UIAutomator only finds nodes within the visible Compose viewport.
+        // The previous recovery form can leave the single-item LazyColumn below
+        // its heading while Compose applies the new layout. Scroll towards the
+        // top before checking the destination, without accepting recovery text.
+        var signInHeading = device.wait(Until.findObject(By.text("Welcome back")), 3_000)
+        repeat(4) {
+            if (signInHeading == null) {
+                val width = device.displayWidth
+                val height = device.displayHeight
+                device.swipe(width / 2, height / 4, width / 2, height * 4 / 5, 20)
+                device.waitForIdle(1_000)
+                signInHeading = device.wait(Until.findObject(By.text("Welcome back")), 2_000)
+            }
+        }
+        assertNotNull("Returning from recovery should restore the sign-in heading",
+            signInHeading)
         // The heading is at the top, but the disabled sign-in button can be below
         // the fold on smaller emulators. Scroll the form instead of assuming both
         // controls are simultaneously visible in UIAutomator's viewport.
