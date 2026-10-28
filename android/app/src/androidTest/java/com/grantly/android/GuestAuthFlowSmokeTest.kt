@@ -33,7 +33,12 @@ class GuestAuthFlowSmokeTest {
 
         val showPassword = device.wait(Until.findObject(By.desc("Show password")), 10_000)
         assertNotNull("Sign-in should allow password visibility to be toggled", showPassword)
-        showPassword.click()
+        // UIAutomator may resolve the Compose button's accessibility wrapper rather
+        // than its clickable text child. Prefer the visible label when available.
+        // Still require the updated accessibility description after the tap.
+        val showLabel = device.wait(Until.findObject(By.text("Show")), 3_000)
+        (showLabel ?: showPassword).click()
+        device.waitForIdle(5_000)
         assertNotNull("Sign-in should allow hiding the password again",
             device.wait(Until.findObject(By.desc("Hide password")), 10_000))
 
