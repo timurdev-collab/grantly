@@ -104,6 +104,7 @@ private fun EduTApp() {
     // A single list hosts every tab. Reset its scroll offset when changing
     // destinations so a short screen cannot open halfway down or appear blank.
     val pageScroll = rememberLazyListState()
+    val pageNavigationScope = rememberCoroutineScope()
     LaunchedEffect(tab, selectedScholarship?.id, showingAdvisors, showingCommunity, showingNotifications) {
         pageScroll.scrollToItem(0)
     }
@@ -172,7 +173,11 @@ private fun EduTApp() {
                             )
                             tab == Tab.Applications -> SavedScholarshipsContent()
                             tab == Tab.Messages -> AdvisorMessagesContent()
-                            tab == Tab.Profile -> AuthContent()
+                            tab == Tab.Profile -> AuthContent(onNavigate = {
+                                // Login/signup/recovery share a long scrollable page. Return to the
+                                // heading when switching modes instead of leaving it off-screen.
+                                pageNavigationScope.launch { pageScroll.scrollToItem(0) }
+                            })
                             else -> PlaceholderContent(tab)
                         }
                         // Offer a direct authentication route on all guest-gated destinations.
