@@ -58,7 +58,9 @@ internal data class AdminDraftSummary(
     val airfare: Boolean = false,
     val accommodation: Boolean = false,
     val healthInsurance: Boolean = false,
-    val satRequired: Boolean = false
+    val satRequired: Boolean = false,
+    val fields: List<String> = emptyList(),
+    val eligibleNationalities: List<String> = emptyList()
 )
 
 internal data class AdminDraftPage(val items: List<AdminDraftSummary>, val hasMore: Boolean)
@@ -497,7 +499,7 @@ internal object AdminDraftRepository {
             throw IOException("Draft review service is not configured.")
         }
         val url = "$base/rest/v1/scholarships" +
-            "?select=id,title,provider,country,status,verification_status,updated_at,funding_type,deadline,link_status,official_url,application_cycle,region,deadline_notes,description,degree_levels,tuition_coverage,stipend,airfare,accommodation,health_insurance,sat_required" +
+            "?select=id,title,provider,country,status,verification_status,updated_at,funding_type,deadline,link_status,official_url,application_cycle,region,deadline_notes,description,degree_levels,tuition_coverage,stipend,airfare,accommodation,health_insurance,sat_required,fields,eligible_nationalities" +
             "&status=eq.draft&order=updated_at.desc,id.desc&limit=16&offset=$offset"
         val connection = URL(url).openConnection() as HttpURLConnection
         try {
@@ -554,7 +556,13 @@ internal object AdminDraftRepository {
                         airfare = row.optBoolean("airfare", false),
                         accommodation = row.optBoolean("accommodation", false),
                         healthInsurance = row.optBoolean("health_insurance", false),
-                        satRequired = row.optBoolean("sat_required", false)
+                        satRequired = row.optBoolean("sat_required", false),
+                        fields = row.optJSONArray("fields")?.let { values ->
+                            (0 until values.length()).map { values.optString(it) }
+                        } ?: emptyList(),
+                        eligibleNationalities = row.optJSONArray("eligible_nationalities")?.let { values ->
+                            (0 until values.length()).map { values.optString(it) }
+                        } ?: emptyList()
                     ))
                 }
             }

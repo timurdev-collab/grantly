@@ -231,6 +231,44 @@ class AdminDraftEditRulesTest {
         )
     }
 
+    @Test fun subjectAreasAndNationalitiesNormalizeEditsAndClear() {
+        val edited = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            fields = "  Economics, Data Science, Economics  ",
+            eligibleNationalities = "  Japan, Vietnam, Japan  "
+        )
+        assertEquals(listOf("Economics", "Data Science"), edited.fields)
+        assertEquals(listOf("Japan", "Vietnam"), edited.eligibleNationalities)
+        val cleared = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            fields = "", originalFields = listOf("Economics"),
+            eligibleNationalities = "", originalEligibleNationalities = listOf("Japan")
+        )
+        assertEquals(emptyList<String>(), cleared.fields)
+        assertEquals(emptyList<String>(), cleared.eligibleNationalities)
+    }
+
+    @Test fun subjectAreasAndNationalitiesRejectInvalidEditsButPreserveLegacyValues() {
+        val legacyFields = listOf("Historical field ".repeat(7))
+        val legacyNationalities = listOf("Legacy nationality ".repeat(6))
+        val unchanged = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            fields = legacyFields.joinToString(", "), originalFields = legacyFields,
+            eligibleNationalities = legacyNationalities.joinToString(", "),
+            originalEligibleNationalities = legacyNationalities
+        )
+        assertEquals(legacyFields, unchanged.fields)
+        assertEquals(legacyNationalities, unchanged.eligibleNationalities)
+        assertThrows(IllegalArgumentException::class.java) {
+            AdminDraftEditRules.validate("Scholarship", "University", "Japan", "", "",
+                fields = "x".repeat(81))
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            AdminDraftEditRules.validate("Scholarship", "University", "Japan", "", "",
+                eligibleNationalities = (1..201).joinToString(",") { "Country$it" })
+        }
+    }
+
     @Test fun rejectsRegionOverLimit() {
         assertThrows(IllegalArgumentException::class.java) {
             AdminDraftEditRules.validate(

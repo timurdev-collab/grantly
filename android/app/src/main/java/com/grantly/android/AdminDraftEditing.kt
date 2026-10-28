@@ -48,7 +48,9 @@ internal data class AdminDraftEditValues(
     val airfare: Boolean = false,
     val accommodation: Boolean = false,
     val healthInsurance: Boolean = false,
-    val satRequired: Boolean = false
+    val satRequired: Boolean = false,
+    val fields: List<String> = emptyList(),
+    val eligibleNationalities: List<String> = emptyList()
 )
 
 internal object AdminDraftEditRules {
@@ -74,7 +76,11 @@ internal object AdminDraftEditRules {
         airfare: Boolean = false,
         accommodation: Boolean = false,
         healthInsurance: Boolean = false,
-        satRequired: Boolean = false
+        satRequired: Boolean = false,
+        fields: String = "",
+        originalFields: List<String> = emptyList(),
+        eligibleNationalities: String = "",
+        originalEligibleNationalities: List<String> = emptyList()
     ): AdminDraftEditValues {
         // Keep untouched legacy values intact; only validate newly edited lists.
         val parsedLevels = if (degreeLevels == originalDegreeLevels.joinToString(", ")) {
@@ -87,6 +93,10 @@ internal object AdminDraftEditRules {
                 }
             }
         }
+        val parsedFields = parseCommaSeparated(fields, originalFields, "Fields", 4_000, 50)
+        val parsedNationalities = parseCommaSeparated(
+            eligibleNationalities, originalEligibleNationalities, "Eligible nationalities", 16_000, 200
+        )
         val normalized = AdminDraftEditValues(
             title.trim(), provider.trim(), country.trim(), fundingType.trim(), deadline.trim(),
             applicationCycle.trim(), region.trim(),
@@ -95,7 +105,8 @@ internal object AdminDraftEditRules {
             parsedLevels,
             if (tuitionCoverage == originalTuitionCoverage) tuitionCoverage else tuitionCoverage.trim(),
             if (stipend == originalStipend) stipend else stipend.trim(),
-            airfare, accommodation, healthInsurance, satRequired
+            airfare, accommodation, healthInsurance, satRequired,
+            parsedFields, parsedNationalities
         )
         require(normalized.title.isNotEmpty() && normalized.title.length <= 200) {
             "A scholarship title (up to 200 characters) is required."
@@ -136,6 +147,18 @@ internal object AdminDraftEditRules {
             }
         }
         return normalized
+    }
+
+    private fun parseCommaSeparated(
+        input: String, original: List<String>, label: String, maxCharacters: Int, maxEntries: Int
+    ): List<String> {
+        if (input == original.joinToString(", ")) return original
+        require(input.length <= maxCharacters) { "$label is too long." }
+        val parsed = input.split(',').map { it.trim() }.filter { it.isNotEmpty() }.distinct()
+        require(parsed.size <= maxEntries && parsed.all { it.length <= 80 }) {
+            "$label must have at most $maxEntries entries, each up to 80 characters."
+        }
+        return parsed
     }
 
     /** Pure change detector: never sends unchanged flags or overwrites unseen values. */
@@ -190,6 +213,10 @@ internal object AdminDraftEditorRepository {
             }
             for ((field, enabled) in AdminDraftEditRules.changedBooleanFields(draft, values)) {
                 patch.put(field, enabled)
+            }
+            if (values.fields != draft.fields) patch.put("fields", JSONArray(values.fields))
+            if (values.eligibleNationalities != draft.eligibleNationalities) {
+                patch.put("eligible_nationalities", JSONArray(values.eligibleNationalities))
             }
             if (patch.length() == 0) return@withContext false
 
@@ -262,7 +289,7 @@ internal object AdminDraftEditorRepository {
         }
 }
 
-/** Only changes the sixteen supported fields after an explicit administrator save action. */
+/** Only changes the eighteen iOS-supported fields after an explicit administrator save action. */
 @Composable
 internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     // Reset local form state whenever the server draft snapshot changes, not just its ID.
@@ -279,6 +306,10 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     var accommodation by remember(draft) { mutableStateOf(draft.accommodation) }
     var healthInsurance by remember(draft) { mutableStateOf(draft.healthInsurance) }
     var satRequired by remember(draft) { mutableStateOf(draft.satRequired) }
+    var fields by remember(draft) { mutableStateOf(draft.fields.joinToString(", ")) }
+    var eligibleNationalities by remember(draft) {
+        mutableStateOf(draft.eligibleNationalities.joinToString(", "))
+    }
     var funding by remember(draft) { mutableStateOf(draft.fundingType) }
     var deadline by remember(draft) { mutableStateOf(draft.deadline) }
     var applicationCycle by remember(draft) { mutableStateOf(draft.applicationCycle) }
@@ -304,6 +335,8 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 accommodation = draft.accommodation
                 healthInsurance = draft.healthInsurance
                 satRequired = draft.satRequired
+                fields = draft.fields.joinToString(", ")
+                eligibleNationalities = draft.eligibleNationalities.joinToString(", ")
                 funding = draft.fundingType
                 deadline = draft.deadline
                 applicationCycle = draft.applicationCycle
@@ -331,6 +364,9 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
             OutlinedTextField(value = degreeLevels, onValueChange = { degreeLevels = it.take(1_000) },
                 label = { Text("Study levels (comma separated, optional)") },
                 enabled = !saving, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = fields, onValueChange = { fields = it.take(4_000) },
+                label = { Text("Subject areas (comma separated, optional)") },
+                enabled = !saving, modifier = Modifier.fillMaxWidth())
             Text("Benefits", style = MaterialTheme.typography.titleSmall)
             OutlinedTextField(value = tuitionCoverage, onValueChange = { tuitionCoverage = it.take(120) },
                 label = { Text("Tuition coverage (optional)") }, singleLine = true,
@@ -351,6 +387,10 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 Switch(checked = healthInsurance, onCheckedChange = { healthInsurance = it }, enabled = !saving)
             }
             Text("Eligibility", style = MaterialTheme.typography.titleSmall)
+            OutlinedTextField(value = eligibleNationalities,
+                onValueChange = { eligibleNationalities = it.take(16_000) },
+                label = { Text("Eligible nationalities (comma separated, optional)") },
+                enabled = !saving, modifier = Modifier.fillMaxWidth())
             Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                 Text("SAT required")
                 Switch(checked = satRequired, onCheckedChange = { satRequired = it }, enabled = !saving)
@@ -380,7 +420,10 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                         tuitionCoverage = tuitionCoverage, originalTuitionCoverage = draft.tuitionCoverage,
                         stipend = stipend, originalStipend = draft.stipend,
                         airfare = airfare, accommodation = accommodation,
-                        healthInsurance = healthInsurance, satRequired = satRequired)
+                        healthInsurance = healthInsurance, satRequired = satRequired,
+                        fields = fields, originalFields = draft.fields,
+                        eligibleNationalities = eligibleNationalities,
+                        originalEligibleNationalities = draft.eligibleNationalities)
                 } catch (failure: IllegalArgumentException) {
                     error = failure.message ?: "Invalid draft fields."
                     return@Button
