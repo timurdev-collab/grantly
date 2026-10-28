@@ -26,6 +26,20 @@ class AdminDraftDuplicateRulesTest {
         assertNull(AdminDraftDuplicateRules.similarityScore(Double.POSITIVE_INFINITY))
     }
 
+    @Test fun rejectsTruncatedDuplicateResponses() {
+        assertTrue(AdminDraftDuplicateRules.isSupportedResultCount(0))
+        assertTrue(AdminDraftDuplicateRules.isSupportedResultCount(20))
+        assertFalse(AdminDraftDuplicateRules.isSupportedResultCount(21))
+        assertFalse(AdminDraftDuplicateRules.isSupportedResultCount(-1))
+    }
+
+    @Test fun rejectsMalformedCandidateIdentifiers() {
+        assertTrue(AdminDraftDuplicateRules.isValidCandidateId("123e4567-e89b-12d3-a456-426614174000"))
+        assertFalse(AdminDraftDuplicateRules.isValidCandidateId(""))
+        assertFalse(AdminDraftDuplicateRules.isValidCandidateId("not-a-uuid"))
+        assertFalse(AdminDraftDuplicateRules.isValidCandidateId("1-1-1-1-1"))
+    }
+
     @Test fun highSimilarityMatchesIosWarningThreshold() {
         assertFalse(AdminDraftDuplicateRules.isHighSimilarity(null))
         assertFalse(AdminDraftDuplicateRules.isHighSimilarity(89.0))
