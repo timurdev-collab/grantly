@@ -52,6 +52,8 @@ internal object CommunityCommentsRepository {
             }
             val connection = URL(base + path).openConnection() as HttpURLConnection
             try {
+                // Do not forward authenticated Community comments requests to redirected hosts.
+                connection.instanceFollowRedirects = false
                 connection.requestMethod = method
                 connection.connectTimeout = 12_000
                 connection.readTimeout = 15_000
