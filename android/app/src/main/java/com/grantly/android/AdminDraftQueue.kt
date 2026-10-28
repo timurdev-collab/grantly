@@ -68,6 +68,13 @@ internal object AdminDraftDuplicateRules {
     }
 
     fun isHighSimilarity(score: Double?): Boolean = score != null && score >= 90.0
+
+    // Never treat a partial or malformed response as a successful duplicate review.
+    fun isSupportedResultCount(count: Int): Boolean = count in 0..20
+
+    fun isValidCandidateId(raw: String): Boolean =
+        runCatching { UUID.fromString(raw).toString().equals(raw, ignoreCase = true) }
+            .getOrDefault(false)
 }
 
 internal data class AdminDraftReadiness(
@@ -184,7 +191,7 @@ internal object AdminDraftRepository {
                 }
                 // A truncated or malformed duplicate response cannot safely count as
                 // a completed review. Fail closed instead of showing "no matches".
-                if (rows.length() > 20) {
+                if (!AdminDraftDuplicateRules.isSupportedResultCount(rows.length())) {
                     throw IOException("Duplicate review returned too many results. Publication review is incomplete.")
                 }
                 buildList {
@@ -192,7 +199,7 @@ internal object AdminDraftRepository {
                         val row = rows.optJSONObject(index)
                             ?: throw IOException("Duplicate review returned an invalid result. Please retry.")
                         val id = row.optString("id")
-                        if (runCatching { UUID.fromString(id) }.isFailure) {
+                        if (!AdminDraftDuplicateRules.isValidCandidateId(id)) {
                             throw IOException("Duplicate review returned an invalid scholarship ID. Please retry.")
                         }
                         if (id == draft.id) continue
