@@ -68,7 +68,19 @@ class GuestAuthFlowSmokeTest {
         backFromRecovery.click()
         assertNotNull("Returning from recovery should show sign-in at the top",
             device.wait(Until.findObject(By.text("Welcome back")), 10_000))
-        assertNotNull("Returning from recovery should restore the sign-in action",
-            device.wait(Until.findObject(By.text("Sign in")), 10_000))
+        // The heading is at the top, but the disabled sign-in button can be below
+        // the fold on smaller emulators. Scroll the form instead of assuming both
+        // controls are simultaneously visible in UIAutomator's viewport.
+        var signInAction = device.wait(Until.findObject(By.text("Sign in")), 2_000)
+        repeat(3) {
+            if (signInAction == null) {
+                val width = device.displayWidth
+                val height = device.displayHeight
+                device.swipe(width / 2, height * 4 / 5, width / 2, height / 4, 20)
+                signInAction = device.wait(Until.findObject(By.text("Sign in")), 2_000)
+            }
+        }
+        assertNotNull("Returning from recovery should restore a reachable sign-in action",
+            signInAction)
     }
 }
