@@ -103,10 +103,11 @@ private fun EduTApp() {
     }
     // A single list hosts every tab. Reset its scroll offset when changing
     // destinations so a short screen cannot open halfway down or appear blank.
-    val pageScroll = rememberLazyListState()
-    // Changing auth modes keeps the Profile tab selected. Key the scroll effect
-    // to that navigation as well, so it runs after the new form is composed.
+    // Authentication forms share one LazyColumn item, so an effect-only scroll
+    // reset can race with the new form's layout. Recreate its scroll state when
+    // switching modes to guarantee the new heading starts at the top.
     var authNavigationVersion by remember { mutableIntStateOf(0) }
+    val pageScroll = key(authNavigationVersion) { rememberLazyListState() }
     LaunchedEffect(tab, selectedScholarship?.id, showingAdvisors, showingCommunity, showingNotifications, authNavigationVersion) {
         pageScroll.scrollToItem(0, 0)
     }
