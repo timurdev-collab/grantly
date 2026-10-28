@@ -50,7 +50,8 @@ internal object AdminDraftEditRules {
         applicationCycle: String = "",
         officialUrl: String = "",
         originalOfficialUrl: String = "",
-        region: String = ""
+        region: String = "",
+        originalRegion: String = ""
     ): AdminDraftEditValues {
         val normalized = AdminDraftEditValues(
             title.trim(), provider.trim(), country.trim(), fundingType.trim(), deadline.trim(),
@@ -67,8 +68,10 @@ internal object AdminDraftEditRules {
         }
         require(normalized.fundingType.length <= 80) { "Funding type is too long." }
         require(normalized.applicationCycle.length <= 80) { "Application cycle is too long." }
-        require(normalized.region.isNotEmpty() && normalized.region.length <= 120) {
-            "A region (up to 120 characters) is required."
+        require(normalized.region.length <= 120) { "Region is too long." }
+        // Preserve legacy blank regions on unrelated edits, but never clear a populated region.
+        if (normalized.region != originalRegion.trim()) {
+            require(normalized.region.isNotEmpty()) { "Region cannot be cleared." }
         }
         if (normalized.officialUrl != originalOfficialUrl.trim() && normalized.officialUrl.isNotEmpty()) {
             require(AdminSourceLinkRules.safeHttpsUrl(normalized.officialUrl) != null) {
@@ -102,6 +105,7 @@ internal object AdminDraftEditorRepository {
             if (values.provider != draft.provider) patch.put("provider", values.provider)
             if (values.country != draft.country) patch.put("country", values.country)
             if (values.region != draft.region) {
+                if (values.region.isEmpty()) throw IOException("Region cannot be cleared.")
                 patch.put("region", values.region)
             }
             if (values.fundingType != draft.fundingType) {
@@ -257,7 +261,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 message = null
                 val values = try {
                     AdminDraftEditRules.validate(title, provider, country, funding, deadline,
-                        applicationCycle, officialUrl, draft.officialUrl, region)
+                        applicationCycle, officialUrl, draft.officialUrl, region, draft.region)
                 } catch (failure: IllegalArgumentException) {
                     error = failure.message ?: "Invalid draft fields."
                     return@Button
