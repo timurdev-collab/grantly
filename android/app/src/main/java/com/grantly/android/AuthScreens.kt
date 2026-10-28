@@ -22,7 +22,7 @@ private val authForest = Color(0xFF123E30)
 private val authInk = Color(0xFF19372B)
 
 @Composable
-internal fun AuthContent() {
+internal fun AuthContent(onNavigate: () -> Unit = {}) {
     val session = AuthRepository.session
     val scope = rememberCoroutineScope()
     if (AuthRepository.isRestoring) {
@@ -96,6 +96,7 @@ internal fun AuthContent() {
                 isSignup = false
                 password = ""
                 error = null
+                onNavigate()
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = authForest),
@@ -215,6 +216,7 @@ internal fun AuthContent() {
             isRecovering = true
             error = null
             password = ""
+            onNavigate()
         }) { Text("Forgot password?") }
     }
     TextButton(onClick = {
@@ -225,6 +227,7 @@ internal fun AuthContent() {
         confirmationSent = false
         resetSent = false
         password = ""
+        onNavigate()
     }) {
         Text(if (isRecovering) "Back to sign in"
             else if (isSignup) "Already have an account? Sign in"
