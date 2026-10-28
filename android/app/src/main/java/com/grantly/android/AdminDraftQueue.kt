@@ -51,7 +51,8 @@ internal data class AdminDraftSummary(
     val applicationCycle: String = "",
     val region: String = "",
     val deadlineNotes: String = "",
-    val description: String = ""
+    val description: String = "",
+    val degreeLevels: List<String> = emptyList()
 )
 
 internal data class AdminDraftPage(val items: List<AdminDraftSummary>, val hasMore: Boolean)
@@ -490,7 +491,7 @@ internal object AdminDraftRepository {
             throw IOException("Draft review service is not configured.")
         }
         val url = "$base/rest/v1/scholarships" +
-            "?select=id,title,provider,country,status,verification_status,updated_at,funding_type,deadline,link_status,official_url,application_cycle,region,deadline_notes,description" +
+            "?select=id,title,provider,country,status,verification_status,updated_at,funding_type,deadline,link_status,official_url,application_cycle,region,deadline_notes,description,degree_levels" +
             "&status=eq.draft&order=updated_at.desc,id.desc&limit=16&offset=$offset"
         val connection = URL(url).openConnection() as HttpURLConnection
         try {
@@ -538,7 +539,10 @@ internal object AdminDraftRepository {
                             row.optString("application_cycle").take(80),
                         region = if (row.isNull("region")) "" else row.optString("region").take(120),
                         deadlineNotes = if (row.isNull("deadline_notes")) "" else row.optString("deadline_notes"),
-                        description = if (row.isNull("description")) "" else row.optString("description")
+                        description = if (row.isNull("description")) "" else row.optString("description"),
+                        degreeLevels = row.optJSONArray("degree_levels")?.let { levels ->
+                            (0 until levels.length()).map { levels.optString(it) }
+                        } ?: emptyList()
                     ))
                 }
             }
