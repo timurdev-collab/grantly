@@ -132,6 +132,7 @@ private struct StudentMainTabs: View {
     @Environment(\.colorScheme) private var colorScheme
     @Binding var profile: StudentProfile?
     var adminReturnAction: (() -> Void)? = nil
+    var returnLabel: String = "Admin"
 
     @State private var selection: MainTab = .home
     @State private var networkMonitor = NetworkMonitor()
@@ -229,7 +230,7 @@ private struct StudentMainTabs: View {
         .overlay(alignment: .topLeading) {
             if let adminReturnAction {
                 Button(action: adminReturnAction) {
-                    Label("Admin", systemImage: "shield.fill")
+                    Label(returnLabel, systemImage: returnLabel == "Advisor" ? "person.crop.circle.badge.checkmark" : "shield.fill")
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 11)
                         .frame(height: 34)
@@ -522,6 +523,18 @@ private struct AdminAdvisorExperienceView: View {
                     .foregroundStyle(Theme.muted)
                 }
 
+                Section("Explore EduT") {
+                    Button {
+                        showingStudentExperience = true
+                    } label: {
+                        Label(
+                            "Browse scholarships and applications",
+                            systemImage: "graduationcap.fill"
+                        )
+                    }
+                    .accessibilityHint("Opens all student features. Your advisor account remains active.")
+                }
+
                 Section("Advisor tools") {
                     NavigationLink {
                         MessagesView()
@@ -714,6 +727,7 @@ private struct AdvisorPortalView: View {
     @State private var errorMessage: String?
     @State private var chatDestination: AdvisorChatDestination?
     @State private var callSession: AdvisorCallSession?
+    @State private var showingStudentExperience = false
 
     private var pending: [AdvisorStudent] {
         students.filter { $0.status == "requested" }
@@ -910,6 +924,9 @@ private struct AdvisorPortalView: View {
             .sheet(item: $callSession) { session in
                 AdvisorCallPreparationView(session: session)
             }
+            .fullScreenCover(isPresented: $showingStudentExperience) {
+                AdvisorStudentExperienceView(profile: $profile)
+            }
         }
     }
 
@@ -998,6 +1015,20 @@ private struct AdvisorPortalView: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+/// Keeps the advisor role unchanged while exposing normal EduT student features.
+private struct AdvisorStudentExperienceView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var profile: StudentProfile?
+
+    var body: some View {
+        StudentMainTabs(
+            profile: $profile,
+            adminReturnAction: { dismiss() },
+            returnLabel: "Advisor"
+        )
     }
 }
 
