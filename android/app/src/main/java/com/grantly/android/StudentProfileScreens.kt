@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 private val profileForest = Color(0xFF123E30)
@@ -41,6 +42,9 @@ internal fun StudentProfileContent(userId: String) {
                 draft = result
                 editing = false
             }
+        } catch (cancelled: CancellationException) {
+            // Navigating away cancels the request; it is not a profile-load failure.
+            throw cancelled
         } catch (failure: Exception) {
             error = failure.message ?: "Unable to load your academic profile."
         } finally {
@@ -191,6 +195,9 @@ internal fun StudentProfileContent(userId: String) {
                         editing = false
                         success = true
                     }
+                } catch (cancelled: CancellationException) {
+                    // Do not swallow structured cancellation during navigation or logout.
+                    throw cancelled
                 } catch (failure: Exception) {
                     error = failure.message ?: "Unable to save your profile."
                 } finally { saving = false }
