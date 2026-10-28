@@ -41,7 +41,9 @@ internal data class AdminDraftEditValues(
     val region: String = "",
     val deadlineNotes: String = "",
     val description: String = "",
-    val degreeLevels: List<String> = emptyList()
+    val degreeLevels: List<String> = emptyList(),
+    val tuitionCoverage: String = "",
+    val stipend: String = ""
 )
 
 internal object AdminDraftEditRules {
@@ -61,7 +63,11 @@ internal object AdminDraftEditRules {
         description: String = "",
         originalDescription: String = "",
         degreeLevels: String = "",
-        originalDegreeLevels: List<String> = emptyList()
+        originalDegreeLevels: List<String> = emptyList(),
+        tuitionCoverage: String = "",
+        originalTuitionCoverage: String = "",
+        stipend: String = "",
+        originalStipend: String = ""
     ): AdminDraftEditValues {
         // Keep untouched legacy values intact; only validate newly edited lists.
         val parsedLevels = if (degreeLevels == originalDegreeLevels.joinToString(", ")) {
@@ -79,7 +85,9 @@ internal object AdminDraftEditRules {
             applicationCycle.trim(), officialUrl.trim(), region.trim(),
             if (deadlineNotes == originalDeadlineNotes) deadlineNotes else deadlineNotes.trim(),
             if (description == originalDescription) description else description.trim(),
-            parsedLevels
+            parsedLevels,
+            if (tuitionCoverage == originalTuitionCoverage) tuitionCoverage else tuitionCoverage.trim(),
+            if (stipend == originalStipend) stipend else stipend.trim()
         )
         require(normalized.title.isNotEmpty() && normalized.title.length <= 200) {
             "A scholarship title (up to 200 characters) is required."
@@ -93,6 +101,12 @@ internal object AdminDraftEditRules {
         require(normalized.fundingType.length <= 80) { "Funding type is too long." }
         require(normalized.applicationCycle.length <= 80) { "Application cycle is too long." }
         require(normalized.region.length <= 120) { "Region is too long." }
+        if (normalized.tuitionCoverage != originalTuitionCoverage) {
+            require(normalized.tuitionCoverage.length <= 120) { "Tuition coverage is too long (max 120 characters)." }
+        }
+        if (normalized.stipend != originalStipend) {
+            require(normalized.stipend.length <= 120) { "Stipend is too long (max 120 characters)." }
+        }
         if (normalized.deadlineNotes != originalDeadlineNotes) {
             require(normalized.deadlineNotes.length <= 2_000) { "Deadline notes are too long (max 2,000 characters)." }
         }
@@ -163,6 +177,12 @@ internal object AdminDraftEditorRepository {
             }
             if (values.degreeLevels != draft.degreeLevels) {
                 patch.put("degree_levels", JSONArray(values.degreeLevels))
+            }
+            if (values.tuitionCoverage != draft.tuitionCoverage) {
+                patch.put("tuition_coverage", if (values.tuitionCoverage.isEmpty()) JSONObject.NULL else values.tuitionCoverage)
+            }
+            if (values.stipend != draft.stipend) {
+                patch.put("stipend", if (values.stipend.isEmpty()) JSONObject.NULL else values.stipend)
             }
             if (patch.length() == 0) return@withContext false
 
@@ -235,7 +255,7 @@ internal object AdminDraftEditorRepository {
         }
 }
 
-/** Only changes the eleven visible fields after an explicit administrator save action. */
+/** Only changes the thirteen visible fields after an explicit administrator save action. */
 @Composable
 internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     // Reset local form state whenever the server draft snapshot changes, not just its ID.
@@ -246,6 +266,8 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     var country by remember(draft) { mutableStateOf(draft.country) }
     var region by remember(draft) { mutableStateOf(draft.region) }
     var degreeLevels by remember(draft) { mutableStateOf(draft.degreeLevels.joinToString(", ")) }
+    var tuitionCoverage by remember(draft) { mutableStateOf(draft.tuitionCoverage) }
+    var stipend by remember(draft) { mutableStateOf(draft.stipend) }
     var funding by remember(draft) { mutableStateOf(draft.fundingType) }
     var deadline by remember(draft) { mutableStateOf(draft.deadline) }
     var applicationCycle by remember(draft) { mutableStateOf(draft.applicationCycle) }
@@ -266,6 +288,8 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 country = draft.country
                 region = draft.region
                 degreeLevels = draft.degreeLevels.joinToString(", ")
+                tuitionCoverage = draft.tuitionCoverage
+                stipend = draft.stipend
                 funding = draft.fundingType
                 deadline = draft.deadline
                 applicationCycle = draft.applicationCycle
@@ -294,6 +318,13 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
             OutlinedTextField(value = degreeLevels, onValueChange = { degreeLevels = it.take(1_000) },
                 label = { Text("Study levels (comma separated, optional)") },
                 enabled = !saving, modifier = Modifier.fillMaxWidth())
+            Text("Benefits", style = MaterialTheme.typography.titleSmall)
+            OutlinedTextField(value = tuitionCoverage, onValueChange = { tuitionCoverage = it.take(120) },
+                label = { Text("Tuition coverage (optional)") }, singleLine = true,
+                enabled = !saving, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = stipend, onValueChange = { stipend = it.take(120) },
+                label = { Text("Stipend (optional)") }, singleLine = true,
+                enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = funding, onValueChange = { funding = it.take(80) },
                 label = { Text("Funding type (optional)") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = deadline, onValueChange = { deadline = it.take(10) },
@@ -318,7 +349,9 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                     AdminDraftEditRules.validate(title, provider, country, funding, deadline,
                         applicationCycle, officialUrl, draft.officialUrl, region, draft.region,
                         deadlineNotes, draft.deadlineNotes, description, draft.description,
-                        degreeLevels, draft.degreeLevels)
+                        degreeLevels, draft.degreeLevels,
+                        tuitionCoverage = tuitionCoverage, originalTuitionCoverage = draft.tuitionCoverage,
+                        stipend = stipend, originalStipend = draft.stipend)
                 } catch (failure: IllegalArgumentException) {
                     error = failure.message ?: "Invalid draft fields."
                     return@Button

@@ -195,6 +195,41 @@ class AdminDraftEditRulesTest {
         } catch (_: IllegalArgumentException) { }
     }
 
+    @Test fun benefitsCanBeEditedAndCleared() {
+        val edited = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            tuitionCoverage = "  Full tuition  ", stipend = "  USD 1,000 monthly  "
+        )
+        assertEquals("Full tuition", edited.tuitionCoverage)
+        assertEquals("USD 1,000 monthly", edited.stipend)
+        val cleared = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            tuitionCoverage = "", originalTuitionCoverage = "Full tuition",
+            stipend = "", originalStipend = "USD 1,000 monthly"
+        )
+        assertEquals("", cleared.tuitionCoverage)
+        assertEquals("", cleared.stipend)
+    }
+
+    @Test fun benefitsRejectOversizedEditsAndPreserveUnchangedLegacyValues() {
+        val legacy = "Long funding detail ".repeat(20)
+        val unchanged = AdminDraftEditRules.validate(
+            "Scholarship", "University", "Japan", "", "",
+            tuitionCoverage = legacy, originalTuitionCoverage = legacy,
+            stipend = legacy, originalStipend = legacy
+        )
+        assertEquals(legacy, unchanged.tuitionCoverage)
+        assertEquals(legacy, unchanged.stipend)
+        assertThrows(IllegalArgumentException::class.java) {
+            AdminDraftEditRules.validate("Scholarship", "University", "Japan", "", "",
+                tuitionCoverage = "x".repeat(121))
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            AdminDraftEditRules.validate("Scholarship", "University", "Japan", "", "",
+                stipend = "x".repeat(121))
+        }
+    }
+
     @Test fun rejectsRegionOverLimit() {
         assertThrows(IllegalArgumentException::class.java) {
             AdminDraftEditRules.validate(
