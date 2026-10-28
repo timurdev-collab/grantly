@@ -69,6 +69,9 @@ internal object AdminDraftDuplicateRules {
 
     fun isHighSimilarity(score: Double?): Boolean = score != null && score >= 90.0
 
+    // Unknown similarity is not proof that a candidate is safe to publish beside.
+    fun blocksPublication(score: Double?): Boolean = score == null || isHighSimilarity(score)
+
     // Never treat a partial or malformed response as a successful duplicate review.
     fun isSupportedResultCount(count: Int): Boolean = count in 0..20
 
@@ -815,8 +818,8 @@ internal fun AdminDraftQueueContent(userId: String) {
                                     Text("${candidate.title} · ${candidate.provider} · ${candidate.country}" +
                                         similarityLabel,
                                         style = MaterialTheme.typography.bodySmall)
-                                    if (AdminDraftDuplicateRules.isHighSimilarity(candidate.similarityScore)) {
-                                        Text("High similarity — review the existing record before publishing.",
+                                    if (AdminDraftDuplicateRules.blocksPublication(candidate.similarityScore)) {
+                                        Text("High or unknown similarity — resolve this match before publishing.",
                                             color = MaterialTheme.colorScheme.error,
                                             style = MaterialTheme.typography.bodySmall)
                                     }

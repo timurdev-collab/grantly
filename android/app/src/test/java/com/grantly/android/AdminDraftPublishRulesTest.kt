@@ -29,7 +29,9 @@ class AdminDraftPublishRulesTest {
         assertFalse(AdminDraftPublishRules.canOfferPublish(ready, listOf(candidate(100.0))))
     }
 
-    @Test fun unknownSimilarityIsNotInventedAsHigh() {
-        assertTrue(AdminDraftPublishRules.canOfferPublish(ready, listOf(candidate(null))))
+    @Test fun unknownSimilarityFailsClosed() {
+        assertFalse(AdminDraftPublishRules.canOfferPublish(ready, listOf(candidate(null))))
+        assertFalse(AdminDraftPublishRules.canOfferPublish(ready,
+            listOf(candidate(12.0), candidate(null))))
     }
 }

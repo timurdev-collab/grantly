@@ -17,7 +17,7 @@ internal object AdminDraftPublishRules {
         readiness: AdminDraftReadiness?,
         duplicates: List<AdminDraftDuplicateCandidate>?
     ): Boolean = readiness?.ready == true && duplicates != null &&
-        duplicates.none { AdminDraftDuplicateRules.isHighSimilarity(it.similarityScore) }
+        duplicates.none { AdminDraftDuplicateRules.blocksPublication(it.similarityScore) }
 }
 
 internal object AdminDraftPublishingRepository {
@@ -35,9 +35,9 @@ internal object AdminDraftPublishingRepository {
             throw IOException("Draft is not ready. Recheck the publication blockers.")
         }
         if (AdminDraftRepository.duplicates(draft).any {
-                AdminDraftDuplicateRules.isHighSimilarity(it.similarityScore)
+                AdminDraftDuplicateRules.blocksPublication(it.similarityScore)
             }) {
-            throw IOException("High-similarity scholarship found. Review duplicates first.")
+            throw IOException("High or unknown scholarship similarity. Resolve duplicates first.")
         }
         if (AuthRepository.session?.userId != session.userId) {
             throw IOException("Your account changed. Please reload.")
@@ -120,7 +120,7 @@ internal fun AdminDraftPublisher(
     } else if (duplicates == null) {
         Text("Check possible duplicates first.", style = MaterialTheme.typography.labelSmall)
     } else if (!canPublish) {
-        Text("High-similarity scholarships block publication.",
+        Text("High or unknown similarity blocks publication.",
             color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
     }
     OutlinedButton(onClick = { confirming = true; error = null },

@@ -40,6 +40,13 @@ class AdminDraftDuplicateRulesTest {
         assertFalse(AdminDraftDuplicateRules.isValidCandidateId("1-1-1-1-1"))
     }
 
+    @Test fun unknownOrHighSimilarityBlocksPublication() {
+        assertTrue(AdminDraftDuplicateRules.blocksPublication(null))
+        assertFalse(AdminDraftDuplicateRules.blocksPublication(89.9))
+        assertTrue(AdminDraftDuplicateRules.blocksPublication(90.0))
+        assertTrue(AdminDraftDuplicateRules.blocksPublication(90.1))
+    }
+
     @Test fun highSimilarityMatchesIosWarningThreshold() {
         assertFalse(AdminDraftDuplicateRules.isHighSimilarity(null))
         assertFalse(AdminDraftDuplicateRules.isHighSimilarity(89.0))
