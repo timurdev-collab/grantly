@@ -212,14 +212,15 @@ internal fun AuthContent(onNavigate: () -> Unit = {}) {
     }
     Spacer(Modifier.height(12.dp))
     if (!isRecovering && !isSignup) {
-        TextButton(onClick = {
+        // Do not change forms while an authentication request is in flight.
+        TextButton(enabled = !busy, onClick = {
             isRecovering = true
             error = null
             password = ""
             onNavigate()
         }) { Text("Forgot password?") }
     }
-    TextButton(onClick = {
+    TextButton(enabled = !busy, onClick = {
         val wasRecovering = isRecovering
         isRecovering = false
         isSignup = if (wasRecovering) false else !isSignup
