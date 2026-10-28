@@ -81,6 +81,8 @@ internal fun StudentProfileContent(userId: String) {
     Spacer(Modifier.height(6.dp))
     Text("Account role: ${saved.role}", color = profileInk.copy(alpha = .7f), fontSize = 12.sp)
     Spacer(Modifier.height(14.dp))
+    // Match iOS: profile photos are stored separately from private academic details.
+    ProfileAvatarContent(userId = userId, fullName = saved.fullName)
     Text("Academic profile · ${saved.completion}% complete",
         fontWeight = FontWeight.SemiBold, color = profileForest)
     Spacer(Modifier.height(8.dp))
