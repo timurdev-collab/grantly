@@ -59,6 +59,8 @@ internal object AdvisorMessagesRepository {
                 throw IOException("Messaging service is not configured.")
             }
             val connection = URL(base + path).openConnection() as HttpURLConnection
+            // Messaging access tokens must never be forwarded through redirects.
+            connection.instanceFollowRedirects = false
             try {
                 connection.requestMethod = method
                 connection.connectTimeout = 12_000
