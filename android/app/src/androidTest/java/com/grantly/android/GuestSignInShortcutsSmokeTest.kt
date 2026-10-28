@@ -66,18 +66,12 @@ class GuestSignInShortcutsSmokeTest {
 
     @Test fun guestCommunityCanOpenSignInDirectly() {
         val device = deviceOnHome()
-        var community = device.wait(Until.findObject(By.text("Explore community →")), 2_000)
-        repeat(6) {
-            if (community == null) {
-                device.swipe(
-                    device.displayWidth / 2, device.displayHeight * 3 / 4,
-                    device.displayWidth / 2, device.displayHeight / 4, 30)
-                community = device.wait(
-                    Until.findObject(By.text("Explore community →")), 3_000)
-            }
-        }
-        assertNotNull("Home should show Community", community)
-        community!!.click()
+        // Use the always-visible Home shortcut rather than scrolling past
+        // asynchronous recommendations. The lower Community card is covered
+        // independently by GuestCommunitySmokeTest.
+        val community = device.wait(Until.findObject(By.text("Community")), 15_000)
+        assertNotNull("Home should show Community quick destination", community)
+        community.click()
         assertNotNull("Community gate should be visible",
             device.wait(Until.findObject(
                 By.text("Sign in from the Profile tab to view community posts.")), 15_000))
