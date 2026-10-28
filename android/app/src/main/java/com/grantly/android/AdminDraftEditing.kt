@@ -35,7 +35,8 @@ internal data class AdminDraftEditValues(
     val country: String,
     val fundingType: String,
     val deadline: String,
-    val applicationCycle: String = ""
+    val applicationCycle: String = "",
+    val officialUrl: String = ""
 )
 
 internal object AdminDraftEditRules {
@@ -45,11 +46,13 @@ internal object AdminDraftEditRules {
         country: String,
         fundingType: String,
         deadline: String,
-        applicationCycle: String = ""
+        applicationCycle: String = "",
+        officialUrl: String = "",
+        originalOfficialUrl: String = ""
     ): AdminDraftEditValues {
         val normalized = AdminDraftEditValues(
             title.trim(), provider.trim(), country.trim(), fundingType.trim(), deadline.trim(),
-            applicationCycle.trim()
+            applicationCycle.trim(), officialUrl.trim()
         )
         require(normalized.title.isNotEmpty() && normalized.title.length <= 200) {
             "A scholarship title (up to 200 characters) is required."
@@ -62,6 +65,11 @@ internal object AdminDraftEditRules {
         }
         require(normalized.fundingType.length <= 80) { "Funding type is too long." }
         require(normalized.applicationCycle.length <= 80) { "Application cycle is too long." }
+        if (normalized.officialUrl != originalOfficialUrl.trim() && normalized.officialUrl.isNotEmpty()) {
+            require(AdminSourceLinkRules.safeHttpsUrl(normalized.officialUrl) != null) {
+                "Official URL must be a complete HTTPS link (up to 2048 characters)."
+            }
+        }
         if (normalized.deadline.isNotEmpty()) {
             require(normalized.deadline.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))) {
                 "Deadline must use YYYY-MM-DD."
@@ -96,6 +104,13 @@ internal object AdminDraftEditorRepository {
             }
             if (values.applicationCycle != draft.applicationCycle) {
                 patch.put("application_cycle", if (values.applicationCycle.isEmpty()) JSONObject.NULL else values.applicationCycle)
+            }
+            if (values.officialUrl != draft.officialUrl) {
+                if (values.officialUrl.isNotEmpty() &&
+                    AdminSourceLinkRules.safeHttpsUrl(values.officialUrl) == null) {
+                    throw IOException("Official URL must be a complete HTTPS link.")
+                }
+                patch.put("official_url", if (values.officialUrl.isEmpty()) JSONObject.NULL else values.officialUrl)
             }
             if (patch.length() == 0) return@withContext false
 
@@ -168,7 +183,7 @@ internal object AdminDraftEditorRepository {
         }
 }
 
-/** Only changes the six visible fields after an explicit administrator save action. */
+/** Only changes the seven visible fields after an explicit administrator save action. */
 @Composable
 internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     // Reset local form state whenever the server draft snapshot changes, not just its ID.
@@ -180,6 +195,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     var funding by remember(draft) { mutableStateOf(draft.fundingType) }
     var deadline by remember(draft) { mutableStateOf(draft.deadline) }
     var applicationCycle by remember(draft) { mutableStateOf(draft.applicationCycle) }
+    var officialUrl by remember(draft) { mutableStateOf(draft.officialUrl) }
     var saving by remember(draft) { mutableStateOf(false) }
     var error by remember(draft) { mutableStateOf<String?>(null) }
     var message by remember(draft) { mutableStateOf<String?>(null) }
@@ -195,6 +211,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 funding = draft.fundingType
                 deadline = draft.deadline
                 applicationCycle = draft.applicationCycle
+                officialUrl = draft.officialUrl
                 message = null
             }
             editing = !editing
@@ -219,11 +236,15 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
             OutlinedTextField(value = applicationCycle, onValueChange = { applicationCycle = it.take(80) },
                 label = { Text("Application cycle (optional)") }, singleLine = true,
                 enabled = !saving, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = officialUrl, onValueChange = { officialUrl = it.take(2_048) },
+                label = { Text("Official HTTPS URL (optional)") }, singleLine = true,
+                enabled = !saving, modifier = Modifier.fillMaxWidth())
             Button(enabled = !saving, onClick = {
                 error = null
                 message = null
                 val values = try {
-                    AdminDraftEditRules.validate(title, provider, country, funding, deadline, applicationCycle)
+                    AdminDraftEditRules.validate(title, provider, country, funding, deadline,
+                        applicationCycle, officialUrl, draft.officialUrl)
                 } catch (failure: IllegalArgumentException) {
                     error = failure.message ?: "Invalid draft fields."
                     return@Button
