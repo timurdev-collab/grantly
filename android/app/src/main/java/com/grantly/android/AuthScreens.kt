@@ -68,6 +68,9 @@ internal fun AuthContent(onNavigate: () -> Unit = {}) {
             Spacer(Modifier.height(8.dp))
             Text(error ?: "", color = MaterialTheme.colorScheme.error, fontSize = 13.sp)
         }
+        // Available to students, advisors and administrators even when the
+        // academic profile cannot be loaded. Uses the existing iOS endpoint.
+        AccountDeletionContent(userId = session.userId)
         return
     }
 
