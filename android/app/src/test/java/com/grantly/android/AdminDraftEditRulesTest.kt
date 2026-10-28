@@ -94,15 +94,16 @@ class AdminDraftEditRulesTest {
         assertEquals(legacy, values.officialUrl)
     }
 
-    @Test fun trimsOptionalRegionAndAllowsClearing() {
+    @Test fun trimsRegionAndRejectsMissingValue() {
         val populated = AdminDraftEditRules.validate(
             "Scholarship", "University", "Japan", "", "", region = "  East Asia  "
         )
         assertEquals("East Asia", populated.region)
-        val cleared = AdminDraftEditRules.validate(
-            "Scholarship", "University", "Japan", "", "", region = ""
-        )
-        assertEquals("", cleared.region)
+        assertThrows(IllegalArgumentException::class.java) {
+            AdminDraftEditRules.validate(
+                "Scholarship", "University", "Japan", "", "", region = ""
+            )
+        }
     }
 
     @Test fun rejectsRegionOverLimit() {
