@@ -38,7 +38,8 @@ internal data class AdminDraftEditValues(
     val applicationCycle: String = "",
     val officialUrl: String = "",
     val region: String = "",
-    val deadlineNotes: String = ""
+    val deadlineNotes: String = "",
+    val description: String = ""
 )
 
 internal object AdminDraftEditRules {
@@ -54,12 +55,15 @@ internal object AdminDraftEditRules {
         region: String = "",
         originalRegion: String = "",
         deadlineNotes: String = "",
-        originalDeadlineNotes: String = ""
+        originalDeadlineNotes: String = "",
+        description: String = "",
+        originalDescription: String = ""
     ): AdminDraftEditValues {
         val normalized = AdminDraftEditValues(
             title.trim(), provider.trim(), country.trim(), fundingType.trim(), deadline.trim(),
             applicationCycle.trim(), officialUrl.trim(), region.trim(),
-            if (deadlineNotes == originalDeadlineNotes) deadlineNotes else deadlineNotes.trim()
+            if (deadlineNotes == originalDeadlineNotes) deadlineNotes else deadlineNotes.trim(),
+            if (description == originalDescription) description else description.trim()
         )
         require(normalized.title.isNotEmpty() && normalized.title.length <= 200) {
             "A scholarship title (up to 200 characters) is required."
@@ -75,6 +79,9 @@ internal object AdminDraftEditRules {
         require(normalized.region.length <= 120) { "Region is too long." }
         if (normalized.deadlineNotes != originalDeadlineNotes) {
             require(normalized.deadlineNotes.length <= 2_000) { "Deadline notes are too long (max 2,000 characters)." }
+        }
+        if (normalized.description != originalDescription) {
+            require(normalized.description.length <= 4_000) { "Description is too long (max 4,000 characters)." }
         }
         // Preserve legacy blank regions on unrelated edits, but never clear a populated region.
         if (normalized.region != originalRegion.trim()) {
@@ -133,6 +140,10 @@ internal object AdminDraftEditorRepository {
             }
             if (values.deadlineNotes != draft.deadlineNotes) {
                 patch.put("deadline_notes", if (values.deadlineNotes.isEmpty()) JSONObject.NULL else values.deadlineNotes)
+            }
+            if (values.description != draft.description) {
+                // Match the iOS draft editor: clearing the description sends an empty string.
+                patch.put("description", values.description)
             }
             if (patch.length() == 0) return@withContext false
 
@@ -205,7 +216,7 @@ internal object AdminDraftEditorRepository {
         }
 }
 
-/** Only changes the nine visible fields after an explicit administrator save action. */
+/** Only changes the ten visible fields after an explicit administrator save action. */
 @Composable
 internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     // Reset local form state whenever the server draft snapshot changes, not just its ID.
@@ -220,6 +231,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     var applicationCycle by remember(draft) { mutableStateOf(draft.applicationCycle) }
     var officialUrl by remember(draft) { mutableStateOf(draft.officialUrl) }
     var deadlineNotes by remember(draft) { mutableStateOf(draft.deadlineNotes) }
+    var description by remember(draft) { mutableStateOf(draft.description) }
     var saving by remember(draft) { mutableStateOf(false) }
     var error by remember(draft) { mutableStateOf<String?>(null) }
     var message by remember(draft) { mutableStateOf<String?>(null) }
@@ -238,6 +250,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 applicationCycle = draft.applicationCycle
                 officialUrl = draft.officialUrl
                 deadlineNotes = draft.deadlineNotes
+                description = draft.description
                 message = null
             }
             editing = !editing
@@ -271,13 +284,16 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
             OutlinedTextField(value = deadlineNotes, onValueChange = { deadlineNotes = it.take(2_000) },
                 label = { Text("Deadline notes (optional)") }, minLines = 3,
                 enabled = !saving, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = description, onValueChange = { description = it.take(4_000) },
+                label = { Text("Description (optional)") }, minLines = 4,
+                enabled = !saving, modifier = Modifier.fillMaxWidth())
             Button(enabled = !saving, onClick = {
                 error = null
                 message = null
                 val values = try {
                     AdminDraftEditRules.validate(title, provider, country, funding, deadline,
                         applicationCycle, officialUrl, draft.officialUrl, region, draft.region,
-                        deadlineNotes, draft.deadlineNotes)
+                        deadlineNotes, draft.deadlineNotes, description, draft.description)
                 } catch (failure: IllegalArgumentException) {
                     error = failure.message ?: "Invalid draft fields."
                     return@Button
