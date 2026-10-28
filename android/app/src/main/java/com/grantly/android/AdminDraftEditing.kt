@@ -36,7 +36,8 @@ internal data class AdminDraftEditValues(
     val fundingType: String,
     val deadline: String,
     val applicationCycle: String = "",
-    val officialUrl: String = ""
+    val officialUrl: String = "",
+    val region: String = ""
 )
 
 internal object AdminDraftEditRules {
@@ -48,11 +49,12 @@ internal object AdminDraftEditRules {
         deadline: String,
         applicationCycle: String = "",
         officialUrl: String = "",
-        originalOfficialUrl: String = ""
+        originalOfficialUrl: String = "",
+        region: String = ""
     ): AdminDraftEditValues {
         val normalized = AdminDraftEditValues(
             title.trim(), provider.trim(), country.trim(), fundingType.trim(), deadline.trim(),
-            applicationCycle.trim(), officialUrl.trim()
+            applicationCycle.trim(), officialUrl.trim(), region.trim()
         )
         require(normalized.title.isNotEmpty() && normalized.title.length <= 200) {
             "A scholarship title (up to 200 characters) is required."
@@ -65,6 +67,7 @@ internal object AdminDraftEditRules {
         }
         require(normalized.fundingType.length <= 80) { "Funding type is too long." }
         require(normalized.applicationCycle.length <= 80) { "Application cycle is too long." }
+        require(normalized.region.length <= 120) { "Region is too long." }
         if (normalized.officialUrl != originalOfficialUrl.trim() && normalized.officialUrl.isNotEmpty()) {
             require(AdminSourceLinkRules.safeHttpsUrl(normalized.officialUrl) != null) {
                 "Official URL must be a complete HTTPS link (up to 2048 characters)."
@@ -96,6 +99,9 @@ internal object AdminDraftEditorRepository {
             if (values.title != draft.title) patch.put("title", values.title)
             if (values.provider != draft.provider) patch.put("provider", values.provider)
             if (values.country != draft.country) patch.put("country", values.country)
+            if (values.region != draft.region) {
+                patch.put("region", if (values.region.isEmpty()) JSONObject.NULL else values.region)
+            }
             if (values.fundingType != draft.fundingType) {
                 patch.put("funding_type", if (values.fundingType.isEmpty()) JSONObject.NULL else values.fundingType)
             }
@@ -183,7 +189,7 @@ internal object AdminDraftEditorRepository {
         }
 }
 
-/** Only changes the seven visible fields after an explicit administrator save action. */
+/** Only changes the eight visible fields after an explicit administrator save action. */
 @Composable
 internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     // Reset local form state whenever the server draft snapshot changes, not just its ID.
@@ -192,6 +198,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
     var title by remember(draft) { mutableStateOf(draft.title) }
     var provider by remember(draft) { mutableStateOf(draft.provider) }
     var country by remember(draft) { mutableStateOf(draft.country) }
+    var region by remember(draft) { mutableStateOf(draft.region) }
     var funding by remember(draft) { mutableStateOf(draft.fundingType) }
     var deadline by remember(draft) { mutableStateOf(draft.deadline) }
     var applicationCycle by remember(draft) { mutableStateOf(draft.applicationCycle) }
@@ -208,6 +215,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 title = draft.title
                 provider = draft.provider
                 country = draft.country
+                region = draft.region
                 funding = draft.fundingType
                 deadline = draft.deadline
                 applicationCycle = draft.applicationCycle
@@ -228,6 +236,9 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 label = { Text("Provider") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = country, onValueChange = { country = it.take(80) },
                 label = { Text("Country") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
+            OutlinedTextField(value = region, onValueChange = { region = it.take(120) },
+                label = { Text("Region (optional)") }, singleLine = true,
+                enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = funding, onValueChange = { funding = it.take(80) },
                 label = { Text("Funding type (optional)") }, singleLine = true, enabled = !saving, modifier = Modifier.fillMaxWidth())
             OutlinedTextField(value = deadline, onValueChange = { deadline = it.take(10) },
@@ -244,7 +255,7 @@ internal fun AdminDraftEditor(draft: AdminDraftSummary, onSaved: () -> Unit) {
                 message = null
                 val values = try {
                     AdminDraftEditRules.validate(title, provider, country, funding, deadline,
-                        applicationCycle, officialUrl, draft.officialUrl)
+                        applicationCycle, officialUrl, draft.officialUrl, region)
                 } catch (failure: IllegalArgumentException) {
                     error = failure.message ?: "Invalid draft fields."
                     return@Button
