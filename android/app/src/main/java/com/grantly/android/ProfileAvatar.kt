@@ -3,6 +3,8 @@ package com.grantly.android
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -101,18 +104,47 @@ internal object ProfileAvatarRepository {
         val options = BitmapFactory.Options().apply { inSampleSize = sample }
         val decoded = BitmapFactory.decodeByteArray(raw, 0, raw.size, options)
             ?: throw IOException("Could not decode that photo.")
-        val scale = minOf(1f, 1200f / maxOf(decoded.width, decoded.height))
+        // Unlike iOS UIImage, BitmapFactory does not reliably apply camera EXIF rotation.
+        // Normalize all eight orientations before uploading, so portraits stay upright.
+        val orientation = try {
+            ExifInterface(ByteArrayInputStream(raw)).getAttributeInt(
+                ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL
+            )
+        } catch (_: IOException) {
+            ExifInterface.ORIENTATION_NORMAL
+        }
+        val transform = Matrix().apply {
+            when (orientation) {
+                ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> setScale(-1f, 1f)
+                ExifInterface.ORIENTATION_ROTATE_180 -> setRotate(180f)
+                ExifInterface.ORIENTATION_FLIP_VERTICAL -> setScale(1f, -1f)
+                ExifInterface.ORIENTATION_TRANSPOSE -> {
+                    setRotate(90f)
+                    postScale(-1f, 1f)
+                }
+                ExifInterface.ORIENTATION_ROTATE_90 -> setRotate(90f)
+                ExifInterface.ORIENTATION_TRANSVERSE -> {
+                    setRotate(-90f)
+                    postScale(-1f, 1f)
+                }
+                ExifInterface.ORIENTATION_ROTATE_270 -> setRotate(270f)
+            }
+        }
+        val oriented = if (transform.isIdentity) decoded else
+            Bitmap.createBitmap(decoded, 0, 0, decoded.width, decoded.height, transform, true)
+        val scale = minOf(1f, 1200f / maxOf(oriented.width, oriented.height))
         val resized = if (scale < 1f) {
-            Bitmap.createScaledBitmap(decoded, (decoded.width * scale).toInt().coerceAtLeast(1),
-                (decoded.height * scale).toInt().coerceAtLeast(1), true)
-        } else decoded
+            Bitmap.createScaledBitmap(oriented, (oriented.width * scale).toInt().coerceAtLeast(1),
+                (oriented.height * scale).toInt().coerceAtLeast(1), true)
+        } else oriented
         val output = ByteArrayOutputStream()
         try {
             if (!resized.compress(Bitmap.CompressFormat.JPEG, 82, output)) {
                 throw IOException("Could not convert that photo.")
             }
         } finally {
-            if (resized !== decoded) resized.recycle()
+            if (resized !== oriented) resized.recycle()
+            if (oriented !== decoded) oriented.recycle()
             decoded.recycle()
         }
         return output.toByteArray().also {
