@@ -66,31 +66,30 @@ class GuestAuthFlowSmokeTest {
         val backFromRecovery = device.wait(Until.findObject(By.text("Back to sign in")), 10_000)
         assertNotNull("Recovery should allow returning to sign-in", backFromRecovery)
         backFromRecovery.click()
-        // UIAutomator only finds nodes within the visible Compose viewport.
-        // The previous recovery form can leave the single-item LazyColumn below
-        // its heading while Compose applies the new layout. Scroll towards the
-        // top before checking the destination, without accepting recovery text.
-        var signInHeading = device.wait(Until.findObject(By.text("Welcome back")), 3_000)
-        repeat(4) {
-            if (signInHeading == null) {
+        // The heading can be outside UIAutomator's visible Compose viewport after
+        // switching from the shorter recovery form. Verify sign-in-only actions
+        // instead: neither is present on the recovery or signup screen.
+        var forgotPassword = device.wait(Until.findObject(By.text("Forgot password?")), 3_000)
+        repeat(5) {
+            if (forgotPassword == null) {
                 val width = device.displayWidth
                 val height = device.displayHeight
-                device.swipe(width / 2, height / 4, width / 2, height * 4 / 5, 20)
+                device.swipe(width / 2, height * 4 / 5, width / 2, height / 4, 24)
                 device.waitForIdle(1_000)
-                signInHeading = device.wait(Until.findObject(By.text("Welcome back")), 2_000)
+                forgotPassword = device.wait(Until.findObject(By.text("Forgot password?")), 2_000)
             }
         }
-        assertNotNull("Returning from recovery should restore the sign-in heading",
-            signInHeading)
-        // The heading is at the top, but the disabled sign-in button can be below
-        // the fold on smaller emulators. Scroll the form instead of assuming both
-        // controls are simultaneously visible in UIAutomator's viewport.
+        assertNotNull("Returning from recovery should restore the sign-in-only password recovery link",
+            forgotPassword)
+
+        // Verify the sign-in submission action is also reachable. It remains
+        // disabled without credentials, so this test never contacts the backend.
         var signInAction = device.wait(Until.findObject(By.text("Sign in")), 2_000)
-        repeat(3) {
+        repeat(4) {
             if (signInAction == null) {
                 val width = device.displayWidth
                 val height = device.displayHeight
-                device.swipe(width / 2, height * 4 / 5, width / 2, height / 4, 20)
+                device.swipe(width / 2, height * 4 / 5, width / 2, height / 4, 24)
                 signInAction = device.wait(Until.findObject(By.text("Sign in")), 2_000)
             }
         }
