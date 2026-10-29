@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
@@ -61,6 +62,39 @@ internal object AdminAdvisorApplicationRules {
             else -> advisorStatusTitle(status)
         }
 }
+
+/** Mirrors the action/status combinations in the read-only iOS reference. */
+internal object AdminAdvisorReviewRules {
+    fun actionsFor(status: String): List<String> = when (status) {
+        "pending", "changes_requested" -> listOf("approve", "request_changes", "reject")
+        "approved" -> listOf("suspend")
+        "suspended" -> listOf("restore")
+        else -> emptyList()
+    }
+
+    fun label(action: String): String = when (action) {
+        "approve" -> "Approve & publish"
+        "request_changes" -> "Request changes"
+        "reject" -> "Reject application"
+        "suspend" -> "Suspend advisor"
+        "restore" -> "Restore advisor"
+        else -> "Unsupported action"
+    }
+
+    fun validationError(status: String, action: String, note: String): String? = when {
+        action !in actionsFor(status) -> "This action is not available for the advisor's current status."
+        note.length > 500 -> "Review notes must be 500 characters or fewer."
+        action in listOf("request_changes", "reject") && note.isBlank() ->
+            "Add a review note before requesting changes or rejecting an application."
+        else -> null
+    }
+}
+
+private data class AdminAdvisorDecision(
+    val application: AdminAdvisorApplication,
+    val action: String,
+    val note: String
+)
 
 internal object AdminAdvisorApplicationsRepository {
     suspend fun load(userId: String): List<AdminAdvisorApplication> = withContext(Dispatchers.IO) {
@@ -142,6 +176,63 @@ internal object AdminAdvisorApplicationsRepository {
             connection.disconnect()
         }
     }
+    /** Admin-only mutation through the existing iOS RPC. Never bypasses server authorization. */
+    suspend fun review(
+        userId: String,
+        application: AdminAdvisorApplication,
+        action: String,
+        note: String
+    ) = withContext(Dispatchers.IO) {
+        val cleanNote = note.trim()
+        AdminAdvisorReviewRules.validationError(application.status, action, cleanNote)
+            ?.let { throw IOException(it) }
+
+        // Recheck role and the application version/status immediately before making a decision.
+        val latest = load(userId).firstOrNull { it.id == application.id }
+            ?: throw IOException("This application is no longer in the review queue.")
+        if (latest.status != application.status || latest.version != application.version) {
+            throw IOException("The application changed. Refresh and review the latest details.")
+        }
+        val session = AuthRepository.activeSession()
+        if (session.userId != userId || AuthRepository.session?.userId != userId) {
+            throw IOException("Your account changed. Please reload.")
+        }
+        val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!base.startsWith("https://") || key.isBlank()) {
+            throw IOException("Advisor review service is not configured.")
+        }
+        val body = JSONObject()
+            .put("p_user_id", application.id)
+            .put("p_action", action)
+            .put("p_note", if (cleanNote.isEmpty()) JSONObject.NULL else cleanNote)
+            .toString()
+        val connection = URL("$base/rest/v1/rpc/admin_review_advisor")
+            .openConnection() as HttpURLConnection
+        try {
+            connection.requestMethod = "POST"
+            connection.instanceFollowRedirects = false
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 20_000
+            connection.doOutput = true
+            connection.setRequestProperty("apikey", key)
+            connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Accept", "application/json")
+            connection.outputStream.use { it.write(body.toByteArray(Charsets.UTF_8)) }
+            val code = connection.responseCode
+            if (code !in 200..299) {
+                throw IOException(if (code == 401 || code == 403)
+                    "Administrator access denied. Please sign in again."
+                else "Advisor decision was not accepted (HTTP $code). Refresh before retrying.")
+            }
+            if (AuthRepository.session?.userId != userId) {
+                throw IOException("Your account changed. Please reload.")
+            }
+        } finally {
+            connection.disconnect()
+        }
+    }
 }
 
 @Composable
@@ -153,6 +244,11 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
     var filter by remember(userId) { mutableStateOf("pending") }
     var search by remember(userId) { mutableStateOf("") }
     var expandedId by remember(userId) { mutableStateOf<String?>(null) }
+    var reviewNote by remember(userId) { mutableStateOf("") }
+    var actionError by remember(userId) { mutableStateOf<String?>(null) }
+    var working by remember(userId) { mutableStateOf(false) }
+    var pendingDecision by remember(userId) { mutableStateOf<AdminAdvisorDecision?>(null) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(userId, refresh) {
         loading = true
@@ -175,9 +271,10 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Advisor applications", style = MaterialTheme.typography.titleLarge)
-        Text("Read-only administrator preview. Approval, rejection and suspension must still be performed in the existing iOS admin interface.",
+        Text("Administrator review uses the existing secured review service. Confirm decisions carefully; authenticated testing is still pending.",
             style = MaterialTheme.typography.bodySmall)
-        OutlinedButton(onClick = { refresh++ }, enabled = !loading) { Text("Refresh applications") }
+        if (actionError != null) Text(actionError.orEmpty(), color = MaterialTheme.colorScheme.error)
+        OutlinedButton(onClick = { refresh++ }, enabled = !loading && !working) { Text("Refresh applications") }
         Row(
             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -185,7 +282,7 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
             AdminAdvisorApplicationRules.filters.forEach { option ->
                 FilterChip(
                     selected = filter == option,
-                    onClick = { filter = option; expandedId = null },
+                    onClick = { filter = option; expandedId = null; reviewNote = ""; actionError = null },
                     label = { Text(AdminAdvisorApplicationRules.label(option)) }
                 )
             }
@@ -217,21 +314,96 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
                             style = MaterialTheme.typography.bodySmall)
                         Text("${AdminAdvisorApplicationRules.label(application.status)} · Application v${application.version}",
                             style = MaterialTheme.typography.labelMedium)
-                        OutlinedButton(onClick = {
-                            expandedId = if (expandedId == application.id) null else application.id
-                        }) { Text(if (expandedId == application.id) "Hide details" else "View details") }
+                        OutlinedButton(
+                            onClick = {
+                                expandedId = if (expandedId == application.id) null else application.id
+                                reviewNote = ""
+                                actionError = null
+                            },
+                            enabled = !working
+                        ) { Text(if (expandedId == application.id) "Hide details" else "View details") }
                         if (expandedId == application.id) {
                             if (application.specialties.isNotEmpty()) {
                                 Text("Specialties: " + application.specialties.joinToString(", "))
                             }
                             if (application.bio.isNotBlank()) Text(application.bio)
                             if (application.reviewNote.isNotBlank()) {
-                                Text("Review note: ${application.reviewNote}")
+                                Text("Previous review note: ${application.reviewNote}")
+                            }
+                            val actions = AdminAdvisorReviewRules.actionsFor(application.status)
+                            if (actions.isNotEmpty()) {
+                                OutlinedTextField(
+                                    value = reviewNote,
+                                    onValueChange = { reviewNote = it.take(500) },
+                                    label = { Text("New review note") },
+                                    supportingText = { Text("Required for Request changes and Reject.") },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    minLines = 2,
+                                    enabled = !working
+                                )
+                                actions.forEach { action ->
+                                    OutlinedButton(
+                                        onClick = {
+                                            val note = reviewNote.trim()
+                                            actionError = AdminAdvisorReviewRules.validationError(
+                                                application.status, action, note
+                                            )
+                                            if (actionError == null) {
+                                                pendingDecision = AdminAdvisorDecision(application, action, note)
+                                            }
+                                        },
+                                        enabled = !working
+                                    ) { Text(AdminAdvisorReviewRules.label(action)) }
+                                }
+                            } else {
+                                Text("No review actions are available for this status.",
+                                    style = MaterialTheme.typography.bodySmall)
                             }
                         }
                     }
                 }
             }
         }
+    }
+    pendingDecision?.let { decision ->
+        AlertDialog(
+            onDismissRequest = { if (!working) pendingDecision = null },
+            title = { Text(AdminAdvisorReviewRules.label(decision.action) + "?") },
+            text = {
+                Text("Confirm this decision for " +
+                    decision.application.name.ifBlank { "the selected applicant" } +
+                    (if (decision.note.isBlank()) "." else "\\nReview note: " + decision.note))
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = !working,
+                    onClick = {
+                        pendingDecision = null
+                        working = true
+                        actionError = null
+                        scope.launch {
+                            try {
+                                AdminAdvisorApplicationsRepository.review(
+                                    userId, decision.application, decision.action, decision.note
+                                )
+                                reviewNote = ""
+                                refresh++
+                            } catch (cancelled: CancellationException) {
+                                throw cancelled
+                            } catch (failure: Exception) {
+                                actionError = failure.message ?: "Unable to submit advisor decision."
+                            } finally {
+                                working = false
+                            }
+                        }
+                    }
+                ) { Text("Confirm decision") }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingDecision = null }, enabled = !working) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
