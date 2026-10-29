@@ -102,7 +102,8 @@ internal object AdvisorApplicationRepository {
                 introVideoUrl = row.valueOrEmpty("intro_video_url"),
                 linkedinUrl = row.valueOrEmpty("linkedin_url"),
                 websiteUrl = row.valueOrEmpty("website_url"),
-                avatarStoragePath = row.valueOrEmpty("avatar_storage_path").ifBlank { null }
+                avatarStoragePath = row.valueOrEmpty("avatar_storage_path").ifBlank { null },
+                avatarUrl = row.valueOrEmpty("avatar_url").ifBlank { null }
             )
         } finally { request.disconnect() }
     }
@@ -280,7 +281,7 @@ internal fun AdvisorApplicationFormContent(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(84.dp).clip(CircleShape))
             }
-            if (draft.avatarStoragePath != null && photo == null) {
+            if ((draft.avatarStoragePath != null || draft.avatarUrl != null) && photo == null) {
                 Text("Existing professional photo on file.",
                     style = MaterialTheme.typography.bodySmall)
             }
