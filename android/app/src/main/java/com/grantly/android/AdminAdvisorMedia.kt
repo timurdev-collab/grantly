@@ -61,10 +61,21 @@ internal object AdminAdvisorMediaRules {
 
 internal object AdminAdvisorMediaRepository {
     suspend fun signedIntroVideoUrl(adminId: String, application: AdminAdvisorApplication): String =
+        signedMediaUrl(adminId, application, application.introVideoStoragePath)
+
+    suspend fun signedAvatarUrl(adminId: String, application: AdminAdvisorApplication): String =
+        signedMediaUrl(adminId, application, application.avatarStoragePath)
+
+    /** Apply identical ownership, role and signed-object checks to video and photo. */
+    private suspend fun signedMediaUrl(
+        adminId: String,
+        application: AdminAdvisorApplication,
+        storagePath: String
+    ): String =
         withContext(Dispatchers.IO) {
             val encoded = AdminAdvisorMediaRules.encodedStoragePath(
-                application.id, application.introVideoStoragePath
-            ) ?: throw IOException("The introduction video has an invalid storage path.")
+                application.id, storagePath
+            ) ?: throw IOException("The advisor media has an invalid storage path.")
             val session = AuthRepository.activeSession()
             if (session.userId != adminId || AuthRepository.session?.userId != adminId ||
                 StudentProfileRepository.load().role != "admin") {
