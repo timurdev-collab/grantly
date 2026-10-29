@@ -22,6 +22,36 @@ class AdminAdvisorMediaRulesTest {
         assertEquals(null, AdminAdvisorMediaRules.encodedStoragePath(advisorId, "$advisorId/intro/video.mp4?token=x"))
     }
 
+
+    @Test fun signedMediaUrlMustMatchTheExactRequestedObject() {
+        val requested = "$advisorId/intro/video%20one.mp4"
+        val signed = "$base/storage/v1/object/sign/advisor-media/$requested?token=abc"
+        assertEquals(signed, AdminAdvisorMediaRules.signedUrlForPath(
+            base, signed, requested
+        ))
+        assertEquals(signed, AdminAdvisorMediaRules.signedUrlForPath(
+            base, "/object/sign/advisor-media/$requested?token=abc", requested
+        ))
+        assertEquals(null, AdminAdvisorMediaRules.signedUrlForPath(
+            base, "$base/storage/v1/object/sign/advisor-media/$advisorId/intro/other.mp4?token=abc",
+            requested
+        ))
+        assertEquals(null, AdminAdvisorMediaRules.signedUrlForPath(
+            base, "$base/storage/v1/object/sign/advisor-media/00000000-0000-0000-0000-000000000002/intro/video%20one.mp4?token=abc",
+            requested
+        ))
+        assertEquals(null, AdminAdvisorMediaRules.signedUrlForPath(
+            base, "$base/storage/v1/object/sign/advisor-media/$advisorId/intro%2Fvideo%20one.mp4?token=abc",
+            requested
+        ))
+        assertEquals(null, AdminAdvisorMediaRules.signedUrlForPath(
+            base, signed, "../$requested"
+        ))
+        assertEquals(null, AdminAdvisorMediaRules.signedUrlForPath(
+            base, signed, "$requested?token=abc"
+        ))
+    }
+
     @Test fun signedMediaUrlMustStayOnConfiguredStorageOrigin() {
         val expected = "$base/storage/v1/object/sign/advisor-media/$advisorId/intro/video.mp4?token=abc"
         assertEquals(expected, AdminAdvisorMediaRules.signedUrl(
