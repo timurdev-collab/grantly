@@ -106,7 +106,10 @@ class GuestAuthFlowSmokeTest {
             if (signupAction == null) {
                 val width = device.displayWidth
                 val height = device.displayHeight
-                device.swipe(width / 2, height / 4, width / 2, height * 4 / 5, 24)
+                // The signup link is BELOW the recovery link in the sign-in form.
+                // Swipe upward to scroll DOWN; the opposite direction repeatedly
+                // hid the link and caused a false failure on small emulators.
+                device.swipe(width / 2, height * 4 / 5, width / 2, height / 4, 24)
                 device.waitForIdle(1_000)
                 signupAction = device.wait(
                     Until.findObject(By.text("New to EduT? Create an account")), 2_000)
