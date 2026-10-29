@@ -22,6 +22,9 @@ class AdvisorApplicationDraftTest {
         assertNull(valid.completeIssue(hasPhoto = true))
         assertNull(valid.copy(avatarStoragePath = "user/avatar/photo.jpg")
             .completeIssue(hasPhoto = false))
+        // Older approved advisor profiles may have a public avatar URL only.
+        assertNull(valid.copy(avatarUrl = "https://example.org/advisor.jpg")
+            .completeIssue(hasPhoto = false))
     }
 
     @Test fun requiresProfessionalPhotoAndIdentity() {
