@@ -25,5 +25,28 @@ class AdminAdvisorApplicationRulesTest {
         assertEquals(1, AdminAdvisorApplicationRules.visible(items, "changes_requested").size)
         assertEquals(0, AdminAdvisorApplicationRules.visible(items, "rejected").size)
         assertEquals("Status unavailable", AdminAdvisorApplicationRules.label("unexpected"))
+        assertEquals(1, AdminAdvisorApplicationRules.visible(items, "other").size)
+        assertEquals("Other", AdminAdvisorApplicationRules.label("other"))
+    }
+
+    @Test fun applicantSearchIsCaseInsensitiveAndRespectsStatusFilter() {
+        val items = listOf(
+            application("pending").copy(name = "Amira Khan", organization = "Oxford", specialties = listOf("Visa support")),
+            application("approved").copy(name = "Mina Lee", title = "Research Mentor", organization = "Seoul"),
+            application("pending").copy(name = "John Park", organization = "Tokyo", specialties = listOf("Engineering"))
+        )
+        assertEquals(1, AdminAdvisorApplicationRules.visible(items, "all", "amira").size)
+        assertEquals(1, AdminAdvisorApplicationRules.visible(items, "pending", "VISA").size)
+        assertEquals(1, AdminAdvisorApplicationRules.visible(items, "approved", "research").size)
+        assertEquals(0, AdminAdvisorApplicationRules.visible(items, "pending", "research").size)
+        assertEquals(3, AdminAdvisorApplicationRules.visible(items, "all", "  ").size)
+        assertEquals(1, AdminAdvisorApplicationRules.visible(items, "all", "SeOuL").size)
+    }
+
+    @Test fun unknownOrMissingStatusCanBeFoundInOtherWithoutChangingKnownStatusFilters() {
+        val items = listOf(application("pending"), application("unexpected"), application(""))
+        assertEquals(2, AdminAdvisorApplicationRules.visible(items, "other").size)
+        assertEquals(1, AdminAdvisorApplicationRules.visible(items, "pending").size)
+        assertEquals(1, AdminAdvisorApplicationRules.visible(items, "other", "test advisor").size + 1)
     }
 }
