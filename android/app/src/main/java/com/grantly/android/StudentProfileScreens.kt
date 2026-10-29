@@ -85,7 +85,8 @@ internal fun StudentProfileContent(userId: String) {
     Spacer(Modifier.height(14.dp))
     // Match iOS: profile photos are stored separately from private academic details.
     ProfileAvatarContent(userId = userId, fullName = saved.fullName)
-    // Match iOS: students may apply and approved advisors may edit their application.
+    // Students can apply; advisors can inspect their application status.
+    // Approved advisor profile editing is a separate workflow not yet implemented here.
     // Status and submission use the existing RLS-protected advisor endpoints.
     if (saved.role == "student" || saved.role == "advisor") {
         key(advisorApplicationRefresh) {
@@ -96,7 +97,7 @@ internal fun StudentProfileContent(userId: String) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(if (showingAdvisorApplication) "Close advisor application"
-                else if (saved.role == "advisor") "Edit advisor application"
+                else if (saved.role == "advisor") "View advisor application"
                 else "Apply as an advisor")
         }
         if (showingAdvisorApplication) {
