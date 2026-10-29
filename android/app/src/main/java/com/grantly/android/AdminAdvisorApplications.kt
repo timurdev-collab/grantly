@@ -66,6 +66,10 @@ internal object AdminAdvisorApplicationRules {
         }
     }
 
+    /** Render a bounded number of matches to keep the review screen responsive. */
+    fun page(items: List<AdminAdvisorApplication>, limit: Int): List<AdminAdvisorApplication> =
+        items.take(limit.coerceIn(0, 300))
+
     fun label(status: String): String =
         when (status) {
             "all" -> "All"
@@ -280,6 +284,7 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var filter by remember(userId) { mutableStateOf("pending") }
     var search by remember(userId) { mutableStateOf("") }
+    var visibleLimit by remember(userId) { mutableIntStateOf(20) }
     var expandedId by remember(userId) { mutableStateOf<String?>(null) }
     var reviewNote by remember(userId) { mutableStateOf("") }
     var actionError by remember(userId) { mutableStateOf<String?>(null) }
@@ -313,7 +318,7 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
         Text("Administrator review uses the existing secured review service. Confirm decisions carefully; authenticated testing is still pending.",
             style = MaterialTheme.typography.bodySmall)
         if (actionError != null) Text(actionError.orEmpty(), color = MaterialTheme.colorScheme.error)
-        OutlinedButton(onClick = { refresh++ }, enabled = !loading && !working) { Text("Refresh applications") }
+        OutlinedButton(onClick = { visibleLimit = 20; refresh++ }, enabled = !loading && !working) { Text("Refresh applications") }
         Row(
             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -321,14 +326,14 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
             AdminAdvisorApplicationRules.filters.forEach { option ->
                 FilterChip(
                     selected = filter == option,
-                    onClick = { filter = option; expandedId = null; reviewNote = ""; actionError = null },
+                    onClick = { filter = option; visibleLimit = 20; expandedId = null; reviewNote = ""; actionError = null },
                     label = { Text(AdminAdvisorApplicationRules.label(option)) }
                 )
             }
         }
         OutlinedTextField(
             value = search,
-            onValueChange = { search = it },
+            onValueChange = { search = it; visibleLimit = 20; expandedId = null; reviewNote = ""; actionError = null },
             label = { Text("Search applicants") },
             placeholder = { Text("Name, title, organization or specialty") },
             singleLine = true,
@@ -338,10 +343,11 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
         if (error != null) Text(error.orEmpty(), color = MaterialTheme.colorScheme.error)
         if (!loading && error == null) {
             val visible = AdminAdvisorApplicationRules.visible(applications, filter, search)
-            Text("Showing ${visible.size} of ${applications.size} loaded applications.",
+            val shown = AdminAdvisorApplicationRules.page(visible, visibleLimit)
+            Text("Showing ${shown.size} of ${visible.size} matching applications (${applications.size} loaded).",
                 style = MaterialTheme.typography.labelSmall)
             if (visible.isEmpty()) Text("No advisor applications match these filters.")
-            visible.forEach { application ->
+            shown.forEach { application ->
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     Column(
                         modifier = Modifier.padding(14.dp),
@@ -482,6 +488,13 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
                         }
                     }
                 }
+            }
+            if (shown.size < visible.size) {
+                OutlinedButton(
+                    onClick = { visibleLimit = (visibleLimit + 20).coerceAtMost(300) },
+                    enabled = !working && !loading,
+                    modifier = Modifier.fillMaxWidth()
+                ) { Text("Load 20 more applications") }
             }
         }
     }
