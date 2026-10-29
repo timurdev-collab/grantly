@@ -50,4 +50,33 @@ class AdminAdvisorApplicationRulesTest {
         assertEquals(2, AdminAdvisorApplicationRules.visible(items, "other", "test advisor").size)
         assertEquals(0, AdminAdvisorApplicationRules.visible(items, "other", "not found").size)
     }
+    @Test fun administratorReviewActionsFollowIosStatusTransitions() {
+        assertEquals(
+            listOf("approve", "request_changes", "reject"),
+            AdminAdvisorReviewRules.actionsFor("pending")
+        )
+        assertEquals(
+            listOf("approve", "request_changes", "reject"),
+            AdminAdvisorReviewRules.actionsFor("changes_requested")
+        )
+        assertEquals(listOf("suspend"), AdminAdvisorReviewRules.actionsFor("approved"))
+        assertEquals(listOf("restore"), AdminAdvisorReviewRules.actionsFor("suspended"))
+        assertEquals(emptyList<String>(), AdminAdvisorReviewRules.actionsFor("rejected"))
+        assertEquals(emptyList<String>(), AdminAdvisorReviewRules.actionsFor("unexpected"))
+        assertEquals(emptyList<String>(), AdminAdvisorReviewRules.actionsFor(""))
+    }
+
+    @Test fun administratorDecisionsRejectInvalidTransitionsAndMissingNotes() {
+        assertEquals(null, AdminAdvisorReviewRules.validationError("pending", "approve", ""))
+        assertEquals(null, AdminAdvisorReviewRules.validationError("pending", "reject", "Reason"))
+        assertEquals(null, AdminAdvisorReviewRules.validationError("pending", "request_changes", "Please update"))
+        assertEquals(null, AdminAdvisorReviewRules.validationError("approved", "suspend", ""))
+        assertEquals(null, AdminAdvisorReviewRules.validationError("suspended", "restore", ""))
+        assertEquals(true, AdminAdvisorReviewRules.validationError("pending", "reject", "  ") != null)
+        assertEquals(true, AdminAdvisorReviewRules.validationError("pending", "request_changes", "") != null)
+        assertEquals(true, AdminAdvisorReviewRules.validationError("approved", "approve", "") != null)
+        assertEquals(true, AdminAdvisorReviewRules.validationError("rejected", "approve", "") != null)
+        assertEquals(true, AdminAdvisorReviewRules.validationError("unexpected", "restore", "") != null)
+        assertEquals(true, AdminAdvisorReviewRules.validationError("pending", "approve", "x".repeat(501)) != null)
+    }
 }
