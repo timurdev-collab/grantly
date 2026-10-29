@@ -22,7 +22,8 @@ internal data class AdvisorApplicationDraft(
     val linkedinUrl: String = "",
     val websiteUrl: String = "",
     val avatarStoragePath: String? = null,
-    val avatarUrl: String? = null
+    val avatarUrl: String? = null,
+    val approvalStatus: String? = null
 ) {
     fun csv(value: String): List<String> =
         value.split(',').map { it.trim() }.filter { it.isNotEmpty() }
@@ -61,6 +62,10 @@ internal data class AdvisorApplicationDraft(
         (0..2).firstNotNullOfOrNull { validationIssue(it, hasPhoto) }
 
     fun experienceOrNull(): Int? = yearsExperience.trim().toIntOrNull()
+
+    /** The server only accepts new, pending, rejected or changes-requested applications. */
+    fun isApplicationResubmittable(): Boolean =
+        approvalStatus != "approved" && approvalStatus != "suspended"
 
     companion object {
         fun isHttpsUrl(value: String): Boolean = try {
