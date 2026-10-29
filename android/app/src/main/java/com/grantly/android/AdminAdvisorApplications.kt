@@ -39,7 +39,8 @@ internal data class AdminAdvisorApplication(
     val introVideoUrl: String = "",
     val introVideoStoragePath: String = "",
     val linkedinUrl: String = "",
-    val websiteUrl: String = ""
+    val websiteUrl: String = "",
+    val avatarStoragePath: String = ""
 )
 
 internal object AdminAdvisorApplicationRules {
@@ -203,7 +204,8 @@ internal object AdminAdvisorApplicationsRepository {
                         introVideoUrl = textField("intro_video_url", 2_048),
                         introVideoStoragePath = textField("intro_video_storage_path", 500),
                         linkedinUrl = textField("linkedin_url", 2_048),
-                        websiteUrl = textField("website_url", 2_048)
+                        websiteUrl = textField("website_url", 2_048),
+                        avatarStoragePath = textField("avatar_storage_path", 500)
                     ))
                 }
             }
@@ -283,7 +285,7 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
     var actionError by remember(userId) { mutableStateOf<String?>(null) }
     var working by remember(userId) { mutableStateOf(false) }
     var pendingDecision by remember(userId) { mutableStateOf<AdminAdvisorDecision?>(null) }
-    var openingVideoId by remember(userId) { mutableStateOf<String?>(null) }
+    var openingMediaId by remember(userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
     val uriHandler = LocalUriHandler.current
 
@@ -373,11 +375,42 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
                             application.yearsExperience?.let { Text("Experience: $it years") }
                             Text("Countries: " + application.countries.ifEmpty { listOf("Not provided") }.joinToString(", "))
                             Text("Languages: " + application.languages.ifEmpty { listOf("Not provided") }.joinToString(", "))
+                            // The avatar is private media, like the introduction video.
+                            // Sign only the selected applicant's exact object before opening it.
+                            if (application.avatarStoragePath.isNotBlank()) {
+                                TextButton(
+                                    enabled = !working && openingMediaId == null,
+                                    onClick = {
+                                        openingMediaId = "${application.id}:avatar"
+                                        actionError = null
+                                        scope.launch {
+                                            try {
+                                                val url = AdminAdvisorMediaRepository.signedAvatarUrl(
+                                                    userId, application
+                                                )
+                                                if (AuthRepository.session?.userId == userId) {
+                                                    uriHandler.openUri(url)
+                                                }
+                                            } catch (cancelled: CancellationException) {
+                                                throw cancelled
+                                            } catch (failure: Exception) {
+                                                actionError = failure.message ?: "Unable to open advisor photo."
+                                            } finally {
+                                                openingMediaId = null
+                                            }
+                                        }
+                                    }
+                                ) {
+                                    Text(if (openingMediaId == "${application.id}:avatar")
+                                        "Opening secure profile photo…"
+                                    else "View secure profile photo")
+                                }
+                            }
                             if (application.introVideoStoragePath.isNotBlank()) {
                                 TextButton(
-                                    enabled = !working && openingVideoId == null,
+                                    enabled = !working && openingMediaId == null,
                                     onClick = {
-                                        openingVideoId = application.id
+                                        openingMediaId = "${application.id}:video"
                                         actionError = null
                                         scope.launch {
                                             try {
@@ -392,12 +425,12 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
                                             } catch (failure: Exception) {
                                                 actionError = failure.message ?: "Unable to open introduction video."
                                             } finally {
-                                                openingVideoId = null
+                                                openingMediaId = null
                                             }
                                         }
                                     }
                                 ) {
-                                    Text(if (openingVideoId == application.id)
+                                    Text(if (openingMediaId == "${application.id}:video")
                                         "Opening secure introduction video…"
                                     else "Open secure introduction video")
                                 }
