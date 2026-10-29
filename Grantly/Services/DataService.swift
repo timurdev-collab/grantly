@@ -2458,6 +2458,10 @@ enum DataService {
     }
 
     /// Update the approved advisor's public portrait without changing approval fields.
+    static func withdrawMyAdvisorRole() async throws {
+        try await supabase.rpc("withdraw_my_advisor_role").execute()
+    }
+
     static func updateApprovedAdvisorAvatar(
         userId: UUID,
         imageData: Data
