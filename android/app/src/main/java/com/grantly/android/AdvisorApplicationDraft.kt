@@ -1,6 +1,7 @@
 package com.grantly.android
 
 import java.net.URI
+import java.net.URISyntaxException
 
 /**
  * iOS advisor application steps, kept independent of Compose and networking so
@@ -65,7 +66,8 @@ internal data class AdvisorApplicationDraft(
             val uri = URI(value.trim())
             uri.scheme.equals("https", ignoreCase = true) &&
                 !uri.host.isNullOrBlank() && uri.userInfo == null
-        } catch (_: IllegalArgumentException) {
+        } catch (_: URISyntaxException) {
+            // java.net.URI throws this checked exception for malformed input.
             false
         }
     }
