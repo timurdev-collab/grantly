@@ -47,6 +47,7 @@ class AdminAdvisorApplicationRulesTest {
         val items = listOf(application("pending"), application("unexpected"), application(""))
         assertEquals(2, AdminAdvisorApplicationRules.visible(items, "other").size)
         assertEquals(1, AdminAdvisorApplicationRules.visible(items, "pending").size)
-        assertEquals(1, AdminAdvisorApplicationRules.visible(items, "other", "test advisor").size + 1)
+        assertEquals(2, AdminAdvisorApplicationRules.visible(items, "other", "test advisor").size)
+        assertEquals(0, AdminAdvisorApplicationRules.visible(items, "other", "not found").size)
     }
 }
