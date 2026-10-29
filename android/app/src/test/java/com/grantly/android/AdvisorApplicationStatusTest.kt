@@ -10,6 +10,9 @@ class AdvisorApplicationStatusTest {
         assertEquals("Suspended", advisorStatusTitle("suspended"))
         assertEquals("Changes requested", advisorStatusTitle("changes_requested"))
         assertEquals("Pending review", advisorStatusTitle("pending"))
-        assertEquals("Pending review", advisorStatusTitle("unexpected"))
+        // Unknown and missing states must never be presented as an approved workflow.
+        assertEquals("Status unavailable", advisorStatusTitle("unexpected"))
+        assertEquals("Status unavailable", advisorStatusTitle(""))
+        assertEquals("Status unavailable", advisorStatusTitle("PENDING"))
     }
 }
