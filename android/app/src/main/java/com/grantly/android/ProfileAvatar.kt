@@ -154,6 +154,10 @@ internal object ProfileAvatarRepository {
         }
     }
 
+    /** Shared image preparation for advisor-media, without uploading to the public avatars bucket. */
+    internal suspend fun prepareAdvisorJpeg(context: Context, uri: Uri): ByteArray =
+        withContext(Dispatchers.IO) { resizedJpeg(boundedBytes(context, uri)) }
+
     suspend fun load(userId: String): Bitmap? = withContext(Dispatchers.IO) {
         val session = AuthRepository.activeSession()
         val id = accountId(userId)
