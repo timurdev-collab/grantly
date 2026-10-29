@@ -66,6 +66,17 @@ class AdminAdvisorApplicationRulesTest {
         assertEquals(emptyList<String>(), AdminAdvisorReviewRules.actionsFor(""))
     }
 
+    @Test fun administratorReviewLinksRequireSafeHttpsUrls() {
+        assertEquals("https://example.org/profile", AdminAdvisorReviewRules.safeExternalUrl(" https://example.org/profile "))
+        assertEquals("HTTPS://example.org", AdminAdvisorReviewRules.safeExternalUrl("HTTPS://example.org"))
+        assertEquals(null, AdminAdvisorReviewRules.safeExternalUrl("http://example.org"))
+        assertEquals(null, AdminAdvisorReviewRules.safeExternalUrl("javascript:alert(1)"))
+        assertEquals(null, AdminAdvisorReviewRules.safeExternalUrl("file:///etc/passwd"))
+        assertEquals(null, AdminAdvisorReviewRules.safeExternalUrl("https://user:secret@example.org"))
+        assertEquals(null, AdminAdvisorReviewRules.safeExternalUrl("https://"))
+        assertEquals(null, AdminAdvisorReviewRules.safeExternalUrl(""))
+    }
+
     @Test fun administratorDecisionsRejectInvalidTransitionsAndMissingNotes() {
         assertEquals(null, AdminAdvisorReviewRules.validationError("pending", "approve", ""))
         assertEquals(null, AdminAdvisorReviewRules.validationError("pending", "reject", "Reason"))
