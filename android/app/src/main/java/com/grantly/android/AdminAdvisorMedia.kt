@@ -46,6 +46,17 @@ internal object AdminAdvisorMediaRules {
             } else signed.toASCIIString()
         }.getOrNull()
     }
+
+    /** A signed link must resolve to the exact media object requested, not merely its bucket. */
+    fun signedUrlForPath(base: String, raw: String, expectedEncodedPath: String): String? {
+        if (expectedEncodedPath.isBlank() || expectedEncodedPath.startsWith('/') ||
+            expectedEncodedPath.contains('?') || expectedEncodedPath.contains('#')) return null
+        val url = signedUrl(base, raw) ?: return null
+        return runCatching {
+            if (URI(url).rawPath ==
+                "/storage/v1/object/sign/advisor-media/$expectedEncodedPath") url else null
+        }.getOrNull()
+    }
 }
 
 internal object AdminAdvisorMediaRepository {
@@ -101,7 +112,7 @@ internal object AdminAdvisorMediaRepository {
                 }
                 val json = JSONObject(response)
                 val raw = json.optString("signedURL").ifBlank { json.optString("signedUrl") }
-                AdminAdvisorMediaRules.signedUrl(base, raw)
+                AdminAdvisorMediaRules.signedUrlForPath(base, raw, encoded)
                     ?: throw IOException("The media service returned an invalid secure link.")
             } finally {
                 connection.disconnect()
