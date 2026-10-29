@@ -31,6 +31,7 @@ internal fun StudentProfileContent(userId: String) {
     var success by remember(userId) { mutableStateOf(false) }
     var reload by remember(userId) { mutableIntStateOf(0) }
     var showingAdminDrafts by remember(userId) { mutableStateOf(false) }
+    var showingAdminAdvisors by remember(userId) { mutableStateOf(false) }
     var showingAdvisorApplication by remember(userId) { mutableStateOf(false) }
     var advisorApplicationRefresh by remember(userId) { mutableIntStateOf(0) }
 
@@ -147,6 +148,14 @@ internal fun StudentProfileContent(userId: String) {
         if (showingAdminDrafts) {
             Spacer(Modifier.height(12.dp))
             AdminDraftQueueContent(userId = userId)
+        }
+        OutlinedButton(
+            onClick = { showingAdminAdvisors = !showingAdminAdvisors },
+            modifier = Modifier.fillMaxWidth()
+        ) { Text(if (showingAdminAdvisors) "Hide advisor applications" else "Review advisor applications") }
+        if (showingAdminAdvisors) {
+            Spacer(Modifier.height(12.dp))
+            AdminAdvisorApplicationsContent(userId = userId)
         }
         Spacer(Modifier.height(16.dp))
     }
