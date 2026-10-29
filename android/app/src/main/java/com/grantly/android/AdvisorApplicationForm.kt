@@ -265,8 +265,8 @@ internal fun AdvisorApplicationFormContent(
 
     if (!draft.isApplicationResubmittable()) {
         Text(
-            "This advisor profile is " + draft.approvalStatus +
-                ". Approved and suspended profiles cannot be resubmitted as new applications.",
+            "This advisor profile has status: " + draft.approvalStatus +
+                ". Applications in this status cannot be resubmitted. Approved and suspended advisors need a separate profile editor.",
             style = MaterialTheme.typography.bodyMedium
         )
         Spacer(Modifier.height(8.dp))
