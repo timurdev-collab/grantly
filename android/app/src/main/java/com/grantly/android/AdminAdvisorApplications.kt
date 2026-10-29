@@ -283,6 +283,7 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
     var actionError by remember(userId) { mutableStateOf<String?>(null) }
     var working by remember(userId) { mutableStateOf(false) }
     var pendingDecision by remember(userId) { mutableStateOf<AdminAdvisorDecision?>(null) }
+    var openingVideoId by remember(userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
     val uriHandler = LocalUriHandler.current
 
@@ -372,12 +373,38 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
                             application.yearsExperience?.let { Text("Experience: $it years") }
                             Text("Countries: " + application.countries.ifEmpty { listOf("Not provided") }.joinToString(", "))
                             Text("Languages: " + application.languages.ifEmpty { listOf("Not provided") }.joinToString(", "))
-                            if (application.introVideoStoragePath.isNotBlank() && application.introVideoUrl.isBlank()) {
-                                Text("Introduction video uploaded; secure playback preview is not yet available on Android.",
-                                    style = MaterialTheme.typography.bodySmall)
+                            if (application.introVideoStoragePath.isNotBlank()) {
+                                TextButton(
+                                    enabled = !working && openingVideoId == null,
+                                    onClick = {
+                                        openingVideoId = application.id
+                                        actionError = null
+                                        scope.launch {
+                                            try {
+                                                val url = AdminAdvisorMediaRepository.signedIntroVideoUrl(
+                                                    userId, application
+                                                )
+                                                if (AuthRepository.session?.userId == userId) {
+                                                    uriHandler.openUri(url)
+                                                }
+                                            } catch (cancelled: CancellationException) {
+                                                throw cancelled
+                                            } catch (failure: Exception) {
+                                                actionError = failure.message ?: "Unable to open introduction video."
+                                            } finally {
+                                                openingVideoId = null
+                                            }
+                                        }
+                                    }
+                                ) {
+                                    Text(if (openingVideoId == application.id)
+                                        "Opening secure introduction video…"
+                                    else "Open secure introduction video")
+                                }
                             }
                             listOf(
-                                "introduction video" to application.introVideoUrl,
+                                "introduction video" to
+                                    (if (application.introVideoStoragePath.isBlank()) application.introVideoUrl else ""),
                                 "LinkedIn" to application.linkedinUrl,
                                 "website" to application.websiteUrl
                             ).forEach { (label, rawUrl) ->
