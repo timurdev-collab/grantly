@@ -523,18 +523,6 @@ private struct AdminAdvisorExperienceView: View {
                     .foregroundStyle(Theme.muted)
                 }
 
-                Section("Explore EduT") {
-                    Button {
-                        showingStudentExperience = true
-                    } label: {
-                        Label(
-                            "Browse scholarships and applications",
-                            systemImage: "graduationcap.fill"
-                        )
-                    }
-                    .accessibilityHint("Opens all student features. Your advisor account remains active.")
-                }
-
                 Section("Advisor tools") {
                     NavigationLink {
                         MessagesView()
@@ -876,6 +864,18 @@ private struct AdvisorPortalView: View {
                             )
                         }
                     }
+                }
+
+                Section("Explore EduT") {
+                    Button {
+                        showingStudentExperience = true
+                    } label: {
+                        Label(
+                            "Browse scholarships and applications",
+                            systemImage: "graduationcap.fill"
+                        )
+                    }
+                    .accessibilityHint("Opens all student features. Your advisor account remains active.")
                 }
 
                 Section("Advisor tools") {
