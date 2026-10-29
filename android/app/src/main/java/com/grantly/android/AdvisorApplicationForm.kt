@@ -196,6 +196,8 @@ internal fun AdvisorApplicationFormContent(
     var step by remember(userId) { mutableIntStateOf(0) }
     var photo by remember(userId) { mutableStateOf<ByteArray?>(null) }
     var loading by remember(userId) { mutableStateOf(true) }
+    var loadFailed by remember(userId) { mutableStateOf(false) }
+    var loadAttempt by remember(userId) { mutableIntStateOf(0) }
     var preparingPhoto by remember(userId) { mutableStateOf(false) }
     var submitting by remember(userId) { mutableStateOf(false) }
     var error by remember(userId) { mutableStateOf<String?>(null) }
@@ -216,8 +218,9 @@ internal fun AdvisorApplicationFormContent(
             }
         }
     }
-    LaunchedEffect(userId) {
+    LaunchedEffect(userId, loadAttempt) {
         loading = true
+        loadFailed = false
         error = null
         try {
             val existing = AdvisorApplicationRepository.load(userId)
@@ -227,6 +230,7 @@ internal fun AdvisorApplicationFormContent(
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (failure: Exception) {
+            loadFailed = true
             error = failure.message ?: "Unable to load your advisor application."
         } finally { loading = false }
     }
@@ -247,6 +251,15 @@ internal fun AdvisorApplicationFormContent(
     if (error != null) {
         Text(error.orEmpty(), color = MaterialTheme.colorScheme.error)
         Spacer(Modifier.height(12.dp))
+    }
+    if (loadFailed) {
+        // A failed read must not silently turn an existing application into a blank
+        // draft that the user can accidentally submit over their saved details.
+        Text("Your saved application could not be loaded. Editing is disabled until it can be retrieved.",
+            style = MaterialTheme.typography.bodySmall)
+        Spacer(Modifier.height(10.dp))
+        OutlinedButton(onClick = { loadAttempt++ }) { Text("Retry loading application") }
+        return
     }
 
     @Composable
