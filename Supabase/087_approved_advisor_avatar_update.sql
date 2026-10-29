@@ -14,7 +14,7 @@ begin
   end if;
 
   if p_avatar_storage_path !~
-     ('^' || lower(v_user::text) || '/avatar/[0-9a-f-]{36}\\.jpg$') then
+     ('^' || lower(v_user::text) || '/avatar/[0-9a-f-]{36}[.]jpg$') then
     raise exception 'Invalid advisor avatar path' using errcode = '22023';
   end if;
 
