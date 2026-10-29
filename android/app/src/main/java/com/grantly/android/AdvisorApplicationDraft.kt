@@ -63,9 +63,9 @@ internal data class AdvisorApplicationDraft(
 
     fun experienceOrNull(): Int? = yearsExperience.trim().toIntOrNull()
 
-    /** The server only accepts new, pending, rejected or changes-requested applications. */
+    /** Fail closed for unrecognized server states; only these statuses can apply again. */
     fun isApplicationResubmittable(): Boolean =
-        approvalStatus != "approved" && approvalStatus != "suspended"
+        approvalStatus == null || approvalStatus in setOf("pending", "rejected", "changes_requested")
 
     companion object {
         fun isHttpsUrl(value: String): Boolean = try {
