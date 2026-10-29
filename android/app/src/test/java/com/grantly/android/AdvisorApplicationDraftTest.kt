@@ -27,6 +27,15 @@ class AdvisorApplicationDraftTest {
             .completeIssue(hasPhoto = false))
     }
 
+    @Test fun blocksApprovedAdvisorApplicationResubmission() {
+        assertFalse(valid.copy(approvalStatus = "approved").isApplicationResubmittable())
+        assertFalse(valid.copy(approvalStatus = "suspended").isApplicationResubmittable())
+        for (status in listOf(null, "pending", "rejected", "changes_requested")) {
+            assertTrue("Expected status to allow application: $status",
+                valid.copy(approvalStatus = status).isApplicationResubmittable())
+        }
+    }
+
     @Test fun requiresProfessionalPhotoAndIdentity() {
         assertEquals("Please enter your full name.",
             valid.copy(displayName = " ").validationIssue(0, true))
