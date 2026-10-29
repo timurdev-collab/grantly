@@ -50,6 +50,25 @@ class AdminAdvisorApplicationRulesTest {
         assertEquals(2, AdminAdvisorApplicationRules.visible(items, "other", "test advisor").size)
         assertEquals(0, AdminAdvisorApplicationRules.visible(items, "other", "not found").size)
     }
+    @Test fun administratorQueuePagesMatchesWithoutDroppingOrReordering() {
+        val items = (1..45).map { index ->
+            application(if (index % 2 == 0) "pending" else "approved")
+                .copy(name = "Advisor $index")
+        }
+        val pending = AdminAdvisorApplicationRules.visible(items, "pending")
+        assertEquals(22, pending.size)
+        assertEquals(20, AdminAdvisorApplicationRules.page(pending, 20).size)
+        assertEquals("Advisor 2", AdminAdvisorApplicationRules.page(pending, 20).first().name)
+        assertEquals("Advisor 40", AdminAdvisorApplicationRules.page(pending, 20).last().name)
+        assertEquals(22, AdminAdvisorApplicationRules.page(pending, 40).size)
+        assertEquals(0, AdminAdvisorApplicationRules.page(pending, -1).size)
+        assertEquals(0, AdminAdvisorApplicationRules.page(pending, 0).size)
+        assertEquals(22, AdminAdvisorApplicationRules.page(pending, 1000).size)
+        val searched = AdminAdvisorApplicationRules.visible(items, "all", "Advisor 4")
+        assertEquals(7, searched.size)
+        assertEquals(7, AdminAdvisorApplicationRules.page(searched, 20).size)
+    }
+
     @Test fun administratorReviewActionsFollowIosStatusTransitions() {
         assertEquals(
             listOf("approve", "request_changes", "reject"),
