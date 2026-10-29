@@ -83,6 +83,11 @@ internal fun StudentProfileContent(userId: String) {
     Spacer(Modifier.height(14.dp))
     // Match iOS: profile photos are stored separately from private academic details.
     ProfileAvatarContent(userId = userId, fullName = saved.fullName)
+    // Advisor applications are readable for the owner, including pending students.
+    // Submission is a separate iOS-only workflow until Android photo/media parity lands.
+    if (saved.role == "student" || saved.role == "advisor") {
+        AdvisorApplicationStatusContent(userId = userId)
+    }
     Text("Academic profile · ${saved.completion}% complete",
         fontWeight = FontWeight.SemiBold, color = profileForest)
     Spacer(Modifier.height(8.dp))
