@@ -21,7 +21,8 @@ internal data class AdvisorApplicationDraft(
     val introVideoUrl: String = "",
     val linkedinUrl: String = "",
     val websiteUrl: String = "",
-    val avatarStoragePath: String? = null
+    val avatarStoragePath: String? = null,
+    val avatarUrl: String? = null
 ) {
     fun csv(value: String): List<String> =
         value.split(',').map { it.trim() }.filter { it.isNotEmpty() }
@@ -30,7 +31,7 @@ internal data class AdvisorApplicationDraft(
         0 -> when {
             displayName.isBlank() -> "Please enter your full name."
             title.isBlank() -> "Please enter your professional title."
-            !hasPhoto && avatarStoragePath.isNullOrBlank() ->
+            !hasPhoto && avatarStoragePath.isNullOrBlank() && avatarUrl.isNullOrBlank() ->
                 "Please add a professional profile photo."
             yearsExperience.isNotBlank() &&
                 (yearsExperience.trim().toIntOrNull()?.let { it in 0..80 } != true) ->
