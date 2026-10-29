@@ -75,7 +75,8 @@ internal object AdvisorApplicationStatusRepository {
             if (rows.length() == 0) return@withContext null
             val row = rows.getJSONObject(0)
             AdvisorApplicationStatus(
-                approvalStatus = row.optString("approval_status", "pending"),
+                // Missing server status must not be misreported as pending review.
+                approvalStatus = if (row.isNull("approval_status")) "" else row.optString("approval_status", ""),
                 version = row.optInt("application_version", 1).coerceAtLeast(1),
                 reviewNote = row.optString("review_note", "").takeUnless { row.isNull("review_note") }.orEmpty()
             )
