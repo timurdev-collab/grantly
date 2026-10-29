@@ -2457,6 +2457,24 @@ enum DataService {
         return publicURL.absoluteString
     }
 
+    /// Update the approved advisor's public portrait without changing approval fields.
+    static func updateApprovedAdvisorAvatar(
+        userId: UUID,
+        imageData: Data
+    ) async throws {
+        let path = try await uploadAdvisorAvatar(
+            userId: userId,
+            imageData: imageData
+        )
+        struct AvatarChange: Encodable {
+            let p_avatar_storage_path: String
+        }
+        try await supabase.rpc(
+            "update_my_advisor_avatar",
+            params: AvatarChange(p_avatar_storage_path: path)
+        ).execute()
+    }
+
     static func updateCommunityProfile(
         userId: UUID,
         displayName: String,
