@@ -113,7 +113,7 @@ internal object AdvisorApplicationRepository {
 
     suspend fun submit(userId: String, draft: AdvisorApplicationDraft, photo: ByteArray?) =
         withContext(Dispatchers.IO) {
-            val issue = draft.completeIssue(photo != null)
+            val issue = draft.submissionIssue(photo != null)
             if (issue != null) throw IllegalArgumentException(issue)
             val session = AuthRepository.activeSession()
             ensureAccount(userId)
