@@ -222,6 +222,10 @@ internal object ProfileAvatarRepository {
             }
         } finally { storage.disconnect() }
 
+        // A photo upload can finish after logout or an account switch. Never follow it
+        // with a profile mutation for a session that is no longer active.
+        accountId(userId)
+
         // Match the existing iOS implementation: the community profile owns the avatar URL.
         val update = connection("$base/rest/v1/community_profiles?id=eq.$id",
             "PATCH", session.accessToken, key)
