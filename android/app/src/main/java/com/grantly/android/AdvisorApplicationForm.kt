@@ -104,7 +104,9 @@ internal object AdvisorApplicationRepository {
                 websiteUrl = row.valueOrEmpty("website_url"),
                 avatarStoragePath = row.valueOrEmpty("avatar_storage_path").ifBlank { null },
                 avatarUrl = row.valueOrEmpty("avatar_url").ifBlank { null },
-                approvalStatus = row.valueOrEmpty("approval_status").ifBlank { null }
+                // A returned row with no recognized status is not a new application.
+                // Keep it non-null so unsupported states fail closed in the form.
+                approvalStatus = row.valueOrEmpty("approval_status")
             )
         } finally { request.disconnect() }
     }
