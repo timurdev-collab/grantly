@@ -103,7 +103,8 @@ internal object AdvisorApplicationRepository {
                 linkedinUrl = row.valueOrEmpty("linkedin_url"),
                 websiteUrl = row.valueOrEmpty("website_url"),
                 avatarStoragePath = row.valueOrEmpty("avatar_storage_path").ifBlank { null },
-                avatarUrl = row.valueOrEmpty("avatar_url").ifBlank { null }
+                avatarUrl = row.valueOrEmpty("avatar_url").ifBlank { null },
+                approvalStatus = row.valueOrEmpty("approval_status").ifBlank { null }
             )
         } finally { request.disconnect() }
     }
@@ -259,6 +260,20 @@ internal fun AdvisorApplicationFormContent(
             style = MaterialTheme.typography.bodySmall)
         Spacer(Modifier.height(10.dp))
         OutlinedButton(onClick = { loadAttempt++ }) { Text("Retry loading application") }
+        return
+    }
+
+    if (!draft.isApplicationResubmittable()) {
+        Text(
+            "This advisor profile is " + draft.approvalStatus +
+                ". Approved and suspended profiles cannot be resubmitted as new applications.",
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            "Editing an approved advisor profile is not yet available in this Android preview.",
+            style = MaterialTheme.typography.bodySmall
+        )
         return
     }
 
