@@ -82,14 +82,18 @@ class GuestAuthFlowSmokeTest {
         assertNotNull("Returning from recovery should restore the sign-in-only password recovery link",
             forgotPassword)
 
-        // Verify the sign-in submission action is also reachable. It remains
-        // disabled without credentials, so this test never contacts the backend.
+        // The submit button is ABOVE "Forgot password?" in the sign-in form.
+        // Swipe DOWN (finger from top to bottom) to scroll the page UP toward it.
+        // The old upward swipe scrolled farther below the button and caused a
+        // false navigation failure even when the sign-in screen was restored.
+        // The button is disabled without credentials; no backend request occurs.
         var signInAction = device.wait(Until.findObject(By.text("Sign in")), 2_000)
         repeat(4) {
             if (signInAction == null) {
                 val width = device.displayWidth
                 val height = device.displayHeight
-                device.swipe(width / 2, height * 4 / 5, width / 2, height / 4, 24)
+                device.swipe(width / 2, height / 4, width / 2, height * 4 / 5, 24)
+                device.waitForIdle(1_000)
                 signInAction = device.wait(Until.findObject(By.text("Sign in")), 2_000)
             }
         }
