@@ -456,6 +456,10 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
                             if (application.reviewNote.isNotBlank()) {
                                 Text("Previous review note: ${application.reviewNote}")
                             }
+                            AdminAdvisorReviewHistoryContent(
+                                userId = userId,
+                                advisorId = application.id
+                            )
                             val actions = AdminAdvisorReviewRules.actionsFor(application.status)
                             if (actions.isNotEmpty()) {
                                 OutlinedTextField(
