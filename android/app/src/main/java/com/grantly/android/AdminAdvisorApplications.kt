@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
@@ -19,7 +20,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.UUID
 
-/** Read-only administrator advisor application queue; approvals are not implemented here. */
+/** Administrator advisor application queue backed by the existing secured review RPCs. */
 internal data class AdminAdvisorApplication(
     val id: String,
     val name: String,
@@ -29,7 +30,16 @@ internal data class AdminAdvisorApplication(
     val version: Int,
     val specialties: List<String>,
     val bio: String,
-    val reviewNote: String
+    val reviewNote: String,
+    val shortBio: String = "",
+    val mentoringApproach: String = "",
+    val yearsExperience: Int? = null,
+    val countries: List<String> = emptyList(),
+    val languages: List<String> = emptyList(),
+    val introVideoUrl: String = "",
+    val introVideoStoragePath: String = "",
+    val linkedinUrl: String = "",
+    val websiteUrl: String = ""
 )
 
 internal object AdminAdvisorApplicationRules {
@@ -70,6 +80,16 @@ internal object AdminAdvisorReviewRules {
         "approved" -> listOf("suspend")
         "suspended" -> listOf("restore")
         else -> emptyList()
+    }
+
+    /** Never open untrusted schemes from administrator review data. */
+    fun safeExternalUrl(raw: String): String? {
+        val value = raw.trim()
+        if (!value.startsWith("https://", ignoreCase = true)) return null
+        return value.takeIf { runCatching {
+            val url = URL(it)
+            url.host.isNotBlank() && url.userInfo == null
+        }.getOrDefault(false) }
     }
 
     fun label(action: String): String = when (action) {
@@ -157,7 +177,13 @@ internal object AdminAdvisorApplicationsRepository {
                     if (runCatching { UUID.fromString(id) }.isFailure) {
                         throw IOException("Advisor queue returned an invalid advisor ID.")
                     }
-                    val specialties = row.optJSONArray("specialties") ?: JSONArray()
+                    fun listField(key: String): List<String> {
+                        val values = row.optJSONArray(key) ?: JSONArray()
+                        return (0 until minOf(values.length(), 12))
+                            .mapNotNull { values.optString(it).take(80).takeIf(String::isNotBlank) }
+                    }
+                    fun textField(key: String, limit: Int): String =
+                        if (row.isNull(key)) "" else row.optString(key).take(limit)
                     add(AdminAdvisorApplication(
                         id = id,
                         name = row.optString("display_name").take(120),
@@ -165,10 +191,19 @@ internal object AdminAdvisorApplicationsRepository {
                         organization = row.optString("organization").take(120),
                         status = row.optString("approval_status"),
                         version = row.optInt("application_version", 1).coerceAtLeast(1),
-                        specialties = (0 until minOf(specialties.length(), 12))
-                            .mapNotNull { specialties.optString(it).take(80).takeIf(String::isNotBlank) },
-                        bio = row.optString("bio").take(1_000),
-                        reviewNote = row.optString("review_note").take(500)
+                        specialties = listField("specialties"),
+                        bio = textField("bio", 1_000),
+                        reviewNote = textField("review_note", 500),
+                        shortBio = textField("short_bio", 500),
+                        mentoringApproach = textField("mentoring_approach", 1_000),
+                        yearsExperience = if (row.isNull("years_experience")) null
+                            else row.optInt("years_experience").takeIf { it in 0..80 },
+                        countries = listField("countries"),
+                        languages = listField("languages"),
+                        introVideoUrl = textField("intro_video_url", 2_048),
+                        introVideoStoragePath = textField("intro_video_storage_path", 500),
+                        linkedinUrl = textField("linkedin_url", 2_048),
+                        websiteUrl = textField("website_url", 2_048)
                     ))
                 }
             }
@@ -249,6 +284,7 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
     var working by remember(userId) { mutableStateOf(false) }
     var pendingDecision by remember(userId) { mutableStateOf<AdminAdvisorDecision?>(null) }
     val scope = rememberCoroutineScope()
+    val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(userId, refresh) {
         loading = true
@@ -326,7 +362,31 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
                             if (application.specialties.isNotEmpty()) {
                                 Text("Specialties: " + application.specialties.joinToString(", "))
                             }
-                            if (application.bio.isNotBlank()) Text(application.bio)
+                            if (application.shortBio.isNotBlank()) {
+                                Text("Summary: ${application.shortBio}")
+                            }
+                            Text("Background: " + application.bio.ifBlank { "Not provided" })
+                            if (application.mentoringApproach.isNotBlank()) {
+                                Text("How they help: ${application.mentoringApproach}")
+                            }
+                            application.yearsExperience?.let { Text("Experience: $it years") }
+                            Text("Countries: " + application.countries.ifEmpty { listOf("Not provided") }.joinToString(", "))
+                            Text("Languages: " + application.languages.ifEmpty { listOf("Not provided") }.joinToString(", "))
+                            if (application.introVideoStoragePath.isNotBlank() && application.introVideoUrl.isBlank()) {
+                                Text("Introduction video uploaded; secure playback preview is not yet available on Android.",
+                                    style = MaterialTheme.typography.bodySmall)
+                            }
+                            listOf(
+                                "introduction video" to application.introVideoUrl,
+                                "LinkedIn" to application.linkedinUrl,
+                                "website" to application.websiteUrl
+                            ).forEach { (label, rawUrl) ->
+                                AdminAdvisorReviewRules.safeExternalUrl(rawUrl)?.let { url ->
+                                    TextButton(onClick = { uriHandler.openUri(url) }, enabled = !working) {
+                                        Text("Open $label")
+                                    }
+                                }
+                            }
                             if (application.reviewNote.isNotBlank()) {
                                 Text("Previous review note: ${application.reviewNote}")
                             }
@@ -372,7 +432,7 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
             text = {
                 Text("Confirm this decision for " +
                     decision.application.name.ifBlank { "the selected applicant" } +
-                    (if (decision.note.isBlank()) "." else "\\nReview note: " + decision.note))
+                    (if (decision.note.isBlank()) "." else "\nReview note: " + decision.note))
             },
             confirmButton = {
                 TextButton(
