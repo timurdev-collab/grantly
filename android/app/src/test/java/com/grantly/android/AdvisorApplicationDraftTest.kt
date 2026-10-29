@@ -40,6 +40,22 @@ class AdvisorApplicationDraftTest {
         }
     }
 
+    @Test fun repositoryValidationBlocksUnsupportedStatesBeforePhotoUpload() {
+        for (status in listOf("approved", "suspended", "", "unexpected_future_status")) {
+            assertEquals(
+                "This advisor application cannot be resubmitted in its current status.",
+                valid.copy(approvalStatus = status).submissionIssue(hasPhoto = true)
+            )
+        }
+        for (status in listOf(null, "pending", "rejected", "changes_requested")) {
+            assertNull(valid.copy(approvalStatus = status).submissionIssue(hasPhoto = true))
+        }
+        assertEquals(
+            "Please add a professional profile photo.",
+            valid.submissionIssue(hasPhoto = false)
+        )
+    }
+
     @Test fun requiresProfessionalPhotoAndIdentity() {
         assertEquals("Please enter your full name.",
             valid.copy(displayName = " ").validationIssue(0, true))
