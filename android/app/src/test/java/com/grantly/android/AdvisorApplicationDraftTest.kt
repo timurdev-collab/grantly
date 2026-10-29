@@ -31,6 +31,9 @@ class AdvisorApplicationDraftTest {
         assertFalse(valid.copy(approvalStatus = "approved").isApplicationResubmittable())
         assertFalse(valid.copy(approvalStatus = "suspended").isApplicationResubmittable())
         assertFalse(valid.copy(approvalStatus = "unexpected_future_status").isApplicationResubmittable())
+        // A persisted row with a missing/blank status is not a new application.
+        assertFalse(valid.copy(approvalStatus = "").isApplicationResubmittable())
+        assertFalse(valid.copy(approvalStatus = " ").isApplicationResubmittable())
         for (status in listOf(null, "pending", "rejected", "changes_requested")) {
             assertTrue("Expected status to allow application: $status",
                 valid.copy(approvalStatus = status).isApplicationResubmittable())
