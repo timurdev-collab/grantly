@@ -32,13 +32,34 @@ internal data class AdminAdvisorApplication(
 )
 
 internal object AdminAdvisorApplicationRules {
-    val filters = listOf("all", "pending", "changes_requested", "approved", "rejected", "suspended")
+    val filters = listOf("all", "pending", "changes_requested", "approved", "rejected", "suspended", "other")
+    private val knownStatuses = filters.filterNot { it == "all" || it == "other" }.toSet()
 
-    fun visible(items: List<AdminAdvisorApplication>, filter: String): List<AdminAdvisorApplication> =
-        if (filter == "all") items else items.filter { it.status == filter }
+    fun visible(
+        items: List<AdminAdvisorApplication>,
+        filter: String,
+        query: String = ""
+    ): List<AdminAdvisorApplication> {
+        val search = query.trim()
+        return items.filter { application ->
+            val statusMatches = when (filter) {
+                "all" -> true
+                "other" -> application.status !in knownStatuses
+                else -> application.status == filter
+            }
+            statusMatches && (search.isEmpty() || listOf(
+                application.name, application.title, application.organization,
+                application.specialties.joinToString(" ")
+            ).any { it.contains(search, ignoreCase = true) })
+        }
+    }
 
     fun label(status: String): String =
-        if (status == "all") "All" else advisorStatusTitle(status)
+        when (status) {
+            "all" -> "All"
+            "other" -> "Other"
+            else -> advisorStatusTitle(status)
+        }
 }
 
 internal object AdminAdvisorApplicationsRepository {
@@ -130,6 +151,7 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var filter by remember(userId) { mutableStateOf("pending") }
+    var search by remember(userId) { mutableStateOf("") }
     var expandedId by remember(userId) { mutableStateOf<String?>(null) }
 
     LaunchedEffect(userId, refresh) {
@@ -168,13 +190,21 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
                 )
             }
         }
+        OutlinedTextField(
+            value = search,
+            onValueChange = { search = it },
+            label = { Text("Search applicants") },
+            placeholder = { Text("Name, title, organization or specialty") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
         if (loading) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         if (error != null) Text(error.orEmpty(), color = MaterialTheme.colorScheme.error)
         if (!loading && error == null) {
-            val visible = AdminAdvisorApplicationRules.visible(applications, filter)
+            val visible = AdminAdvisorApplicationRules.visible(applications, filter, search)
             Text("Showing ${visible.size} of ${applications.size} loaded applications.",
                 style = MaterialTheme.typography.labelSmall)
-            if (visible.isEmpty()) Text("No advisor applications match this status.")
+            if (visible.isEmpty()) Text("No advisor applications match these filters.")
             visible.forEach { application ->
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     Column(
