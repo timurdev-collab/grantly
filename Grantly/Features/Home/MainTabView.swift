@@ -716,6 +716,8 @@ private struct AdvisorPortalView: View {
     @State private var chatDestination: AdvisorChatDestination?
     @State private var callSession: AdvisorCallSession?
     @State private var showingStudentExperience = false
+    @State private var showingWithdrawConfirmation = false
+    @State private var withdrawing = false
 
     private var pending: [AdvisorStudent] {
         students.filter { $0.status == "requested" }
@@ -755,6 +757,16 @@ private struct AdvisorPortalView: View {
                     .padding(.vertical, 8)
                 }
                 .listRowBackground(Theme.pageBackground)
+
+                Section {
+                    Button {
+                        showingStudentExperience = true
+                    } label: {
+                        Label("Switch to Student Mode", systemImage: "graduationcap.fill")
+                            .font(.headline)
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
 
                 Section("Overview") {
                     HStack(spacing: 12) {
@@ -898,6 +910,15 @@ private struct AdvisorPortalView: View {
                     }
                 }
 
+                Section {
+                    Button(role: .destructive) {
+                        showingWithdrawConfirmation = true
+                    } label: {
+                        Label("Withdraw from advisor role", systemImage: "person.crop.circle.badge.minus")
+                    }
+                    .disabled(withdrawing)
+                }
+
                 if let errorMessage {
                     Section {
                         Text(errorMessage)
@@ -924,9 +945,33 @@ private struct AdvisorPortalView: View {
             .sheet(item: $callSession) { session in
                 AdvisorCallPreparationView(session: session)
             }
+            .confirmationDialog(
+                "Withdraw from advisor role?",
+                isPresented: $showingWithdrawConfirmation
+            ) {
+                Button("Withdraw from advisor role", role: .destructive) {
+                    Task { await withdrawAdvisor() }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Your EduT account and scholarships remain available. Active students and consultations must be resolved first.")
+            }
             .fullScreenCover(isPresented: $showingStudentExperience) {
                 AdvisorStudentExperienceView(profile: $profile)
             }
+        }
+    }
+
+    @MainActor
+    private func withdrawAdvisor() async {
+        withdrawing = true
+        defer { withdrawing = false }
+        do {
+            try await DataService.withdrawMyAdvisorRole()
+            let id = try await supabase.auth.session.user.id
+            profile = try await DataService.currentProfile(userId: id)
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 
