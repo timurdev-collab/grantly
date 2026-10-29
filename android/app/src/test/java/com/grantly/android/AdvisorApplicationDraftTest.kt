@@ -30,6 +30,7 @@ class AdvisorApplicationDraftTest {
     @Test fun blocksApprovedAdvisorApplicationResubmission() {
         assertFalse(valid.copy(approvalStatus = "approved").isApplicationResubmittable())
         assertFalse(valid.copy(approvalStatus = "suspended").isApplicationResubmittable())
+        assertFalse(valid.copy(approvalStatus = "unexpected_future_status").isApplicationResubmittable())
         for (status in listOf(null, "pending", "rejected", "changes_requested")) {
             assertTrue("Expected status to allow application: $status",
                 valid.copy(approvalStatus = status).isApplicationResubmittable())
