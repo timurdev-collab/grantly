@@ -23,6 +23,21 @@ class AdminAdvisorMediaRulesTest {
     }
 
 
+    @Test fun advisorAvatarUsesTheSamePrivateObjectChecksAsIntroVideo() {
+        val avatarPath = "$advisorId/avatar/headshot 2026.jpg"
+        val encoded = AdminAdvisorMediaRules.encodedStoragePath(advisorId, avatarPath)
+        assertEquals("$advisorId/avatar/headshot%202026.jpg", encoded)
+        val signed = "$base/storage/v1/object/sign/advisor-media/$encoded?token=abc"
+        assertEquals(signed, AdminAdvisorMediaRules.signedUrlForPath(base, signed, encoded!!))
+        assertEquals(null, AdminAdvisorMediaRules.signedUrlForPath(
+            base, "$base/storage/v1/object/sign/advisor-media/$advisorId/avatar/other.jpg?token=abc",
+            encoded
+        ))
+        assertEquals(null, AdminAdvisorMediaRules.encodedStoragePath(
+            advisorId, "00000000-0000-0000-0000-000000000002/avatar/headshot.jpg"
+        ))
+    }
+
     @Test fun signedMediaUrlMustMatchTheExactRequestedObject() {
         val requested = "$advisorId/intro/video%20one.mp4"
         val signed = "$base/storage/v1/object/sign/advisor-media/$requested?token=abc"
