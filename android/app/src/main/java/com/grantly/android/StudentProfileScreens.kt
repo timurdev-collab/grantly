@@ -31,6 +31,8 @@ internal fun StudentProfileContent(userId: String) {
     var success by remember(userId) { mutableStateOf(false) }
     var reload by remember(userId) { mutableIntStateOf(0) }
     var showingAdminDrafts by remember(userId) { mutableStateOf(false) }
+    var showingAdvisorApplication by remember(userId) { mutableStateOf(false) }
+    var advisorApplicationRefresh by remember(userId) { mutableIntStateOf(0) }
 
     LaunchedEffect(userId, reload) {
         loading = true
@@ -83,10 +85,32 @@ internal fun StudentProfileContent(userId: String) {
     Spacer(Modifier.height(14.dp))
     // Match iOS: profile photos are stored separately from private academic details.
     ProfileAvatarContent(userId = userId, fullName = saved.fullName)
-    // Advisor applications are readable for the owner, including pending students.
-    // Submission is a separate iOS-only workflow until Android photo/media parity lands.
+    // Match iOS: students may apply and approved advisors may edit their application.
+    // Status and submission use the existing RLS-protected advisor endpoints.
     if (saved.role == "student" || saved.role == "advisor") {
-        AdvisorApplicationStatusContent(userId = userId)
+        key(advisorApplicationRefresh) {
+            AdvisorApplicationStatusContent(userId = userId)
+        }
+        OutlinedButton(
+            onClick = { showingAdvisorApplication = !showingAdvisorApplication },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(if (showingAdvisorApplication) "Close advisor application"
+                else if (saved.role == "advisor") "Edit advisor application"
+                else "Apply as an advisor")
+        }
+        if (showingAdvisorApplication) {
+            Spacer(Modifier.height(12.dp))
+            AdvisorApplicationFormContent(
+                userId = userId,
+                defaultName = saved.fullName,
+                onSubmitted = {
+                    showingAdvisorApplication = false
+                    advisorApplicationRefresh++
+                }
+            )
+        }
+        Spacer(Modifier.height(12.dp))
     }
     Text("Academic profile · ${saved.completion}% complete",
         fontWeight = FontWeight.SemiBold, color = profileForest)
