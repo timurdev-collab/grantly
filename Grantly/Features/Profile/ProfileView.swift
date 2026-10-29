@@ -890,6 +890,15 @@ struct ProfileView: View {
                 imageData: jpegData
             )
 
+            // Advisor portraits are stored independently from community avatars.
+            // Keep the public advisor listing in sync when approval is active.
+            if profile?.role == "advisor" {
+                try await DataService.updateApprovedAdvisorAvatar(
+                    userId: userId,
+                    imageData: jpegData
+                )
+            }
+
             status = L10n.string("Profile photo updated.")
         } catch {
             status = error.localizedDescription

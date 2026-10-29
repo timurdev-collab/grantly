@@ -132,6 +132,7 @@ private struct StudentMainTabs: View {
     @Environment(\.colorScheme) private var colorScheme
     @Binding var profile: StudentProfile?
     var adminReturnAction: (() -> Void)? = nil
+    var returnLabel: String = "Admin"
 
     @State private var selection: MainTab = .home
     @State private var networkMonitor = NetworkMonitor()
@@ -229,7 +230,7 @@ private struct StudentMainTabs: View {
         .overlay(alignment: .topLeading) {
             if let adminReturnAction {
                 Button(action: adminReturnAction) {
-                    Label("Admin", systemImage: "shield.fill")
+                    Label(returnLabel, systemImage: returnLabel == "Advisor" ? "person.crop.circle.badge.checkmark" : "shield.fill")
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 11)
                         .frame(height: 34)
@@ -714,6 +715,9 @@ private struct AdvisorPortalView: View {
     @State private var errorMessage: String?
     @State private var chatDestination: AdvisorChatDestination?
     @State private var callSession: AdvisorCallSession?
+    @State private var showingStudentExperience = false
+    @State private var showingWithdrawConfirmation = false
+    @State private var withdrawing = false
 
     private var pending: [AdvisorStudent] {
         students.filter { $0.status == "requested" }
@@ -753,6 +757,16 @@ private struct AdvisorPortalView: View {
                     .padding(.vertical, 8)
                 }
                 .listRowBackground(Theme.pageBackground)
+
+                Section {
+                    Button {
+                        showingStudentExperience = true
+                    } label: {
+                        Label("Switch to Student Mode", systemImage: "graduationcap.fill")
+                            .font(.headline)
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
 
                 Section("Overview") {
                     HStack(spacing: 12) {
@@ -864,6 +878,18 @@ private struct AdvisorPortalView: View {
                     }
                 }
 
+                Section("Explore EduT") {
+                    Button {
+                        showingStudentExperience = true
+                    } label: {
+                        Label(
+                            "Browse scholarships and applications",
+                            systemImage: "graduationcap.fill"
+                        )
+                    }
+                    .accessibilityHint("Opens all student features. Your advisor account remains active.")
+                }
+
                 Section("Advisor tools") {
                     NavigationLink {
                         MessagesView()
@@ -878,10 +904,19 @@ private struct AdvisorPortalView: View {
                         ProfileView(profile: $profile, showsNavigationBar: true)
                     } label: {
                         Label(
-                            "Profile & settings",
+                            "My profile, photo & account settings",
                             systemImage: "person.crop.circle.fill"
                         )
                     }
+                }
+
+                Section {
+                    Button(role: .destructive) {
+                        showingWithdrawConfirmation = true
+                    } label: {
+                        Label("Withdraw from advisor role", systemImage: "person.crop.circle.badge.minus")
+                    }
+                    .disabled(withdrawing)
                 }
 
                 if let errorMessage {
@@ -910,6 +945,33 @@ private struct AdvisorPortalView: View {
             .sheet(item: $callSession) { session in
                 AdvisorCallPreparationView(session: session)
             }
+            .confirmationDialog(
+                "Withdraw from advisor role?",
+                isPresented: $showingWithdrawConfirmation
+            ) {
+                Button("Withdraw from advisor role", role: .destructive) {
+                    Task { await withdrawAdvisor() }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Your EduT account and scholarships remain available. Active students and consultations must be resolved first.")
+            }
+            .fullScreenCover(isPresented: $showingStudentExperience) {
+                AdvisorStudentExperienceView(profile: $profile)
+            }
+        }
+    }
+
+    @MainActor
+    private func withdrawAdvisor() async {
+        withdrawing = true
+        defer { withdrawing = false }
+        do {
+            try await DataService.withdrawMyAdvisorRole()
+            let id = try await supabase.auth.session.user.id
+            profile = try await DataService.currentProfile(userId: id)
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 
@@ -998,6 +1060,20 @@ private struct AdvisorPortalView: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+/// Keeps the advisor role unchanged while exposing normal EduT student features.
+private struct AdvisorStudentExperienceView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var profile: StudentProfile?
+
+    var body: some View {
+        StudentMainTabs(
+            profile: $profile,
+            adminReturnAction: { dismiss() },
+            returnLabel: "Advisor"
+        )
     }
 }
 
