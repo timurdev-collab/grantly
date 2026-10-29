@@ -61,6 +61,14 @@ internal data class AdvisorApplicationDraft(
     fun completeIssue(hasPhoto: Boolean): String? =
         (0..2).firstNotNullOfOrNull { validationIssue(it, hasPhoto) }
 
+    /** Validate again at the repository boundary, before uploading any private media. */
+    fun submissionIssue(hasPhoto: Boolean): String? =
+        if (!isApplicationResubmittable()) {
+            "This advisor application cannot be resubmitted in its current status."
+        } else {
+            completeIssue(hasPhoto)
+        }
+
     fun experienceOrNull(): Int? = yearsExperience.trim().toIntOrNull()
 
     /** Fail closed for unrecognized server states; only these statuses can apply again. */
