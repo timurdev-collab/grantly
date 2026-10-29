@@ -27,9 +27,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.UUID
 
-/** Read-only view of the user's own advisor application, as in iOS ProfileView.
- * Submission and media upload are intentionally NOT advertised as implemented.
- */
+/** Read-only status view of the user's own advisor application, as in iOS ProfileView. */
 internal data class AdvisorApplicationStatus(
     val approvalStatus: String,
     val version: Int,
@@ -119,7 +117,7 @@ internal fun AdvisorApplicationStatusContent(userId: String) {
     } else if (error != null) {
         Text(error.orEmpty(), color = Color(0xFFB3261E))
     } else if (status == null) {
-        Text("No advisor application found. Applications cannot yet be submitted from Android.")
+        Text("No advisor application found. You can apply using the form below.")
     } else {
         val current = status!!
         Text(advisorStatusTitle(current.approvalStatus), fontWeight = FontWeight.SemiBold)
