@@ -35,11 +35,12 @@ internal data class AdvisorApplicationStatus(
 )
 
 internal fun advisorStatusTitle(status: String): String = when (status) {
+    "pending" -> "Pending review"
     "approved" -> "Approved"
     "rejected" -> "Rejected"
     "suspended" -> "Suspended"
     "changes_requested" -> "Changes requested"
-    else -> "Pending review"
+    else -> "Status unavailable"
 }
 
 internal object AdvisorApplicationStatusRepository {
