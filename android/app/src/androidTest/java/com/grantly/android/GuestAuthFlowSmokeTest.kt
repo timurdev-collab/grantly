@@ -95,22 +95,24 @@ class GuestAuthFlowSmokeTest {
         assertNotNull("Returning from recovery should restore the sign-in-only password recovery link",
             forgotPassword)
 
-        // The submit button is ABOVE "Forgot password?" in the sign-in form.
-        // Swipe DOWN (finger from top to bottom) to scroll the page UP toward it.
-        // The old upward swipe scrolled farther below the button and caused a
-        // false navigation failure even when the sign-in screen was restored.
-        // The button is disabled without credentials; no backend request occurs.
-        var signInAction = device.wait(Until.findObject(By.text("Sign in")), 2_000)
-        repeat(4) {
-            if (signInAction == null) {
+        // Verify a second sign-in-only control rather than the disabled submit
+        // button: Compose/UIAutomator may omit disabled buttons from its visible
+        // accessibility tree, especially after a LazyColumn mode transition.
+        // Both controls must be present to distinguish sign-in from recovery
+        // and signup without entering credentials or mutating server state.
+        var signupAction = device.wait(
+            Until.findObject(By.text("New to EduT? Create an account")), 2_000)
+        repeat(5) {
+            if (signupAction == null) {
                 val width = device.displayWidth
                 val height = device.displayHeight
                 device.swipe(width / 2, height / 4, width / 2, height * 4 / 5, 24)
                 device.waitForIdle(1_000)
-                signInAction = device.wait(Until.findObject(By.text("Sign in")), 2_000)
+                signupAction = device.wait(
+                    Until.findObject(By.text("New to EduT? Create an account")), 2_000)
             }
         }
-        assertNotNull("Returning from recovery should restore a reachable sign-in action",
-            signInAction)
+        assertNotNull("Returning from recovery should restore the sign-in signup link",
+            signupAction)
     }
 }
