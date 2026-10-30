@@ -1,5 +1,6 @@
 package com.grantly.android
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -33,10 +34,12 @@ internal fun StudentProfileContent(userId: String) {
     var showingAdminDrafts by remember(userId) { mutableStateOf(false) }
     var showingAdminAdvisors by remember(userId) { mutableStateOf(false) }
     var showingAdvisorApplication by remember(userId) { mutableStateOf(false) }
+    var showingAdvisorPortal by remember(userId) { mutableStateOf(false) }
     var advisorApplicationRefresh by remember(userId) { mutableIntStateOf(0) }
 
     LaunchedEffect(userId, reload) {
         loading = true
+        profile = null // Fail closed while revalidating the role and profile.
         error = null
         try {
             val result = StudentProfileRepository.load()
@@ -44,11 +47,14 @@ internal fun StudentProfileContent(userId: String) {
                 profile = result
                 draft = result
                 editing = false
+                showingAdvisorPortal = false
             }
         } catch (cancelled: CancellationException) {
             // Navigating away cancels the request; it is not a profile-load failure.
             throw cancelled
         } catch (failure: Exception) {
+            profile = null
+            editing = false
             error = failure.message ?: "Unable to load your academic profile."
         } finally {
             loading = false
@@ -74,6 +80,13 @@ internal fun StudentProfileContent(userId: String) {
         Spacer(Modifier.height(14.dp))
     }
     val saved = profile ?: return
+    BackHandler(enabled = showingAdvisorPortal && saved.role == "advisor") {
+        showingAdvisorPortal = false
+    }
+    if (saved.role == "advisor" && showingAdvisorPortal) {
+        AdvisorPortalContent(userId = userId, onBack = { showingAdvisorPortal = false })
+        return
+    }
     if (success) {
         Text("Profile saved.", color = profileForest, fontSize = 13.sp)
         Spacer(Modifier.height(12.dp))
@@ -86,6 +99,13 @@ internal fun StudentProfileContent(userId: String) {
     Spacer(Modifier.height(14.dp))
     // Match iOS: profile photos are stored separately from private academic details.
     ProfileAvatarContent(userId = userId, fullName = saved.fullName)
+    if (saved.role == "advisor") {
+        Spacer(Modifier.height(12.dp))
+        Button(
+            onClick = { showingAdvisorPortal = true },
+            modifier = Modifier.fillMaxWidth()
+        ) { Text("Open Advisor Portal") }
+    }
     // Students can apply; advisors can inspect their application status.
     // Approved advisor profile editing is a separate workflow not yet implemented here.
     // Status and submission use the existing RLS-protected advisor endpoints.
@@ -136,37 +156,7 @@ internal fun StudentProfileContent(userId: String) {
     Text("Countries: ${saved.targetCountries.ifBlank { "Not set" }}", color = profileInk)
     Spacer(Modifier.height(16.dp))
 
-    // iOS routes approved advisors to a dedicated portal. Android exposes the
-    // advisor's student assignments and a read-only incoming consultation queue.
-    if (saved.role == "advisor") {
-        var showingAdvisorStudents by remember(userId) { mutableStateOf(false) }
-        var showingAdvisorConsultations by remember(userId) { mutableStateOf(false) }
-        HorizontalDivider()
-        Spacer(Modifier.height(14.dp))
-        OutlinedButton(
-            onClick = { showingAdvisorStudents = !showingAdvisorStudents },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(if (showingAdvisorStudents) "Hide advisor students" else "My advisor students")
-        }
-        if (showingAdvisorStudents) {
-            Spacer(Modifier.height(12.dp))
-            AdvisorStudentsContent(userId = userId)
-        }
-        Spacer(Modifier.height(8.dp))
-        OutlinedButton(
-            onClick = { showingAdvisorConsultations = !showingAdvisorConsultations },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(if (showingAdvisorConsultations) "Hide incoming consultations"
-                else "Incoming consultations")
-        }
-        if (showingAdvisorConsultations) {
-            Spacer(Modifier.height(12.dp))
-            AdvisorIncomingConsultationsContent(userId = userId)
-        }
-        Spacer(Modifier.height(14.dp))
-    }
+    // Advisor tools live in a separate portal; no duplicate role controls here.
 
     // Only a successfully loaded admin role can reveal the read-only queue.
     // The queue also rechecks the role and relies on existing server-side RLS.
