@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -17,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
@@ -133,6 +137,10 @@ internal fun AdvisorStudentsContent(userId: String) {
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var filter by remember(userId) { mutableStateOf("all") }
     var visibleLimit by remember(userId) { mutableIntStateOf(20) }
+    var pendingDecision by remember(userId) { mutableStateOf<Pair<AdvisorStudentItem, String>?>(null) }
+    var busyAssignment by remember(userId) { mutableStateOf<String?>(null) }
+    var actionError by remember(userId) { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(userId, refresh) {
         loading = true
@@ -154,8 +162,9 @@ internal fun AdvisorStudentsContent(userId: String) {
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Advisor portal · My students", style = MaterialTheme.typography.titleLarge)
-        Text("Read-only preview. Accepting or declining registrations is not yet available on Android.",
+        Text("Registration actions use the existing advisor-authorized service. Confirm each decision before proceeding.",
             style = MaterialTheme.typography.bodySmall)
+        if (actionError != null) Text(actionError.orEmpty(), color = MaterialTheme.colorScheme.error)
         if (loading) {
             CircularProgressIndicator()
         } else if (error != null) {
@@ -189,6 +198,17 @@ internal fun AdvisorStudentsContent(userId: String) {
                         if (student.targetCountries.isNotEmpty()) {
                             Text("Study destinations: ${student.targetCountries.joinToString(", ")}")
                         }
+                        val actions = when (student.status) {
+                            "requested" -> listOf("accept", "decline")
+                            "active" -> listOf("end")
+                            else -> emptyList()
+                        }
+                        actions.forEach { action ->
+                            OutlinedButton(
+                                onClick = { actionError = null; pendingDecision = student to action },
+                                enabled = busyAssignment == null
+                            ) { Text(AdvisorStudentActionRules.label(action)) }
+                        }
                     }
                 }
             }
@@ -202,5 +222,39 @@ internal fun AdvisorStudentsContent(userId: String) {
             Text("Refresh advisor students")
         }
         Spacer(Modifier.height(8.dp))
+    }
+    pendingDecision?.let { (student, action) ->
+        AlertDialog(
+            onDismissRequest = { if (busyAssignment == null) pendingDecision = null },
+            title = { Text(AdvisorStudentActionRules.label(action) + "?") },
+            text = { Text("Apply this decision to ${student.fullName.ifBlank { "this student" }}? This changes their registration status.") },
+            confirmButton = {
+                TextButton(enabled = busyAssignment == null, onClick = {
+                    if (busyAssignment != null) return@TextButton
+                    busyAssignment = student.assignmentId
+                    scope.launch {
+                        try {
+                            AdvisorStudentActionsRepository.perform(userId, student, action)
+                            actionError = null
+                            pendingDecision = null
+                            refresh++
+                        } catch (cancelled: CancellationException) {
+                            throw cancelled
+                        } catch (failure: Exception) {
+                            actionError = failure.message ?: "Unable to update registration."
+                            pendingDecision = null
+                            refresh++
+                        } finally {
+                            busyAssignment = null
+                        }
+                    }
+                }) { Text("Confirm") }
+            },
+            dismissButton = {
+                TextButton(enabled = busyAssignment == null, onClick = { pendingDecision = null }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
