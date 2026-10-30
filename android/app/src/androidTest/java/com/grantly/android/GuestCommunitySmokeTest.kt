@@ -21,6 +21,28 @@ import org.junit.runner.RunWith
 class GuestCommunitySmokeTest {
     @get:Rule val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
+    @Test fun guestProfileNavigationNeverExposesAdvisorTab() {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        assertNotNull("EduT Home should launch",
+            device.wait(Until.findObject(By.text("EduT")), 45_000))
+        assertFalse("Guest must not see the advisor-only tab",
+            device.hasObject(By.text("Advisor")))
+
+        val profile = device.wait(Until.findObject(By.text("Profile")), 15_000)
+        assertNotNull("Guest should be able to open Profile", profile)
+        profile!!.click()
+        device.waitForIdle(5_000)
+        assertFalse("Visiting Profile must not grant advisor access",
+            device.hasObject(By.text("Advisor")))
+
+        val home = device.wait(Until.findObject(By.text("Home")), 15_000)
+        assertNotNull("Guest should be able to return Home", home)
+        home!!.click()
+        device.waitForIdle(5_000)
+        assertFalse("Returning Home must not expose advisor tools",
+            device.hasObject(By.text("Advisor")))
+    }
+
     @Test fun guestCommunityRequiresSignInAndSystemBackReturnsHome() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         device.waitForIdle(5_000)
