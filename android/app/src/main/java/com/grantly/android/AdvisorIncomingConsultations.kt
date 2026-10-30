@@ -1,5 +1,7 @@
 package com.grantly.android
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -53,6 +56,9 @@ internal object AdvisorIncomingConsultationRules {
     fun visible(items: List<AdvisorIncomingConsultation>, filter: String): List<AdvisorIncomingConsultation> =
         when (filter) {
             "open" -> items.filter { isOpen(it.status) }
+            "new" -> items.filter { it.status == "requested" }
+            "payment" -> items.filter { it.status == "awaiting_payment" }
+            "ready" -> items.filter { it.status in setOf("paid", "confirmed") }
             "closed" -> items.filterNot { isOpen(it.status) }
             else -> items
         }
@@ -185,11 +191,20 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
         } else {
             Text("${requests.count { AdvisorIncomingConsultationRules.isOpen(it.status) }} open · ${requests.size} total",
                 fontWeight = FontWeight.SemiBold)
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                listOf("open", "closed", "all").forEach { option ->
-                    OutlinedButton(onClick = { filter = option; visibleLimit = 20 }) {
-                        Text(option.replaceFirstChar { it.uppercase() })
-                    }
+            Row(
+                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                listOf(
+                    "open" to "Open", "new" to "New", "payment" to "Awaiting payment",
+                    "ready" to "Ready", "closed" to "Closed", "all" to "All"
+                ).forEach { (option, label) ->
+                    val count = AdvisorIncomingConsultationRules.visible(requests, option).size
+                    FilterChip(
+                        selected = filter == option,
+                        onClick = { filter = option; visibleLimit = 20 },
+                        label = { Text("$label ($count)") }
+                    )
                 }
             }
             val filtered = AdvisorIncomingConsultationRules.visible(requests, filter)
