@@ -143,6 +143,24 @@ class AdvisorIncomingConsultationRulesTest {
         }
     }
 
+    @Test fun contactLinksRejectInvalidDomainLabelsAndLocalOnlyNumbers() {
+        listOf(
+            ".student@example.com", "student.@example.com",
+            "student..name@example.com", "student@-example.com",
+            "student@example-.com", "student@example..com",
+            "student@${"a".repeat(64)}.com"
+        ).forEach { address ->
+            assertEquals(null, AdvisorIncomingConsultationRules.emailLink("paid", address))
+        }
+        listOf("0123456789", "+0123456789", "0015551234567").forEach { phone ->
+            assertEquals(null, AdvisorIncomingConsultationRules.whatsappLink("paid", phone))
+        }
+        assertEquals("first.last@example.co.uk",
+            AdvisorIncomingConsultationRules.emailLink("confirmed", "first.last@example.co.uk"))
+        assertEquals("https://wa.me/15551234567",
+            AdvisorIncomingConsultationRules.whatsappLink("completed", "+1 (555) 123-4567"))
+    }
+
     @Test fun pageLimitsAreBoundedAndDoNotMutateInput() {
         val items = (1..50).map { item(it.toString(), "requested") }
         assertEquals(0, AdvisorIncomingConsultationRules.page(items, -1).size)
