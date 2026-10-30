@@ -56,8 +56,48 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
     var loading by remember(userId) { mutableStateOf(true) }
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var refresh by remember(userId) { mutableIntStateOf(0) }
+    var accessVerified by remember(userId) { mutableStateOf(false) }
+    var accessError by remember(userId) { mutableStateOf<String?>(null) }
+    var accessRetry by remember(userId) { mutableIntStateOf(0) }
 
     BackHandler(enabled = section != "overview") { section = "overview" }
+
+    // Verify approval before composing any advisor tools, not merely the role.
+    // Server-side RLS/RPC authorization remains authoritative for every request.
+    LaunchedEffect(userId, accessRetry) {
+        accessVerified = false
+        accessError = null
+        try {
+            if (AuthRepository.session?.userId != userId) {
+                throw IOException("Your account changed. Sign in again.")
+            }
+            val role = StudentProfileRepository.load().role
+            val status = AdvisorApplicationStatusRepository.load(userId)?.approvalStatus
+            if (!AdvisorProfessionalProfileRules.canView(role, status) ||
+                AuthRepository.session?.userId != userId) {
+                throw IOException("An approved advisor account is required.")
+            }
+            accessVerified = true
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Exception) {
+            accessError = failure.message ?: "Unable to verify advisor access."
+        }
+    }
+
+    if (!accessVerified) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            OutlinedButton(onClick = onBack) { Text("Back to profile") }
+            Text("Advisor Portal", style = MaterialTheme.typography.headlineMedium)
+            if (accessError == null) {
+                CircularProgressIndicator()
+            } else {
+                Text(accessError.orEmpty(), color = MaterialTheme.colorScheme.error)
+                OutlinedButton(onClick = { accessRetry++ }) { Text("Retry advisor verification") }
+            }
+        }
+        return
+    }
 
     LaunchedEffect(userId, section, refresh) {
         if (section != "overview") return@LaunchedEffect
