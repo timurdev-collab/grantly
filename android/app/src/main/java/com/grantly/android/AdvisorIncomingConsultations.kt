@@ -9,18 +9,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
@@ -161,6 +165,10 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var filter by remember(userId) { mutableStateOf("open") }
     var visibleLimit by remember(userId) { mutableIntStateOf(20) }
+    var pendingAction by remember(userId) { mutableStateOf<Pair<AdvisorIncomingConsultation, String>?>(null) }
+    var actionBusy by remember(userId) { mutableStateOf(false) }
+    var actionError by remember(userId) { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(userId, refresh) {
         loading = true
@@ -180,10 +188,50 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
         }
     }
 
+    val pending = pendingAction
+    if (pending != null) {
+        AlertDialog(
+            onDismissRequest = { if (!actionBusy) pendingAction = null },
+            title = { Text(AdvisorConsultationActionRules.label(pending.second)) },
+            text = {
+                Text("Update ${pending.first.studentName.ifBlank { "this student's" }} consultation " +
+                    "from ${AdvisorIncomingConsultationRules.statusLabel(pending.first.status)} " +
+                    "to ${AdvisorIncomingConsultationRules.statusLabel(pending.second)}? " +
+                    "Only EduT administrators can verify payments.")
+            },
+            confirmButton = {
+                TextButton(enabled = !actionBusy, onClick = {
+                    scope.launch {
+                        actionBusy = true
+                        actionError = null
+                        try {
+                            AdvisorConsultationActionsRepository.perform(userId, pending.first, pending.second)
+                            pendingAction = null
+                            refresh++
+                        } catch (cancelled: CancellationException) {
+                            throw cancelled
+                        } catch (failure: Exception) {
+                            pendingAction = null
+                            actionError = failure.message ?: "Could not update consultation."
+                        } finally {
+                            actionBusy = false
+                        }
+                    }
+                }) { Text(if (actionBusy) "Updating..." else "Confirm") }
+            },
+            dismissButton = {
+                TextButton(enabled = !actionBusy, onClick = { pendingAction = null }) { Text("Cancel") }
+            }
+        )
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Advisor portal · Consultation requests", style = MaterialTheme.typography.titleLarge)
-        Text("Read-only preview. EduT administrators verify payments; this screen cannot mark a request as paid.",
+        Text("EduT administrators verify payments. Advisors can confirm paid consultations and mark confirmed consultations completed.",
             style = MaterialTheme.typography.bodySmall)
+        if (actionError != null) {
+            Text(actionError.orEmpty(), color = MaterialTheme.colorScheme.error)
+        }
         if (loading) {
             CircularProgressIndicator()
         } else if (error != null) {
@@ -221,6 +269,13 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
                         if (request.preferredStart.isNotBlank() && request.preferredStart != "null") {
                             Text("Preferred time (as supplied): ${request.preferredStart.take(35)}",
                                 style = MaterialTheme.typography.bodySmall)
+                        }
+                        val nextStatus = AdvisorConsultationActionRules.nextStatus(request.status)
+                        if (nextStatus != null) {
+                            OutlinedButton(enabled = !actionBusy && !loading, onClick = {
+                                actionError = null
+                                pendingAction = request to nextStatus
+                            }) { Text(AdvisorConsultationActionRules.label(nextStatus)) }
                         }
                         if (!AdvisorIncomingConsultationRules.contactUnlocked(request.status)) {
                             Text("Contact details remain locked until payment is verified.",
