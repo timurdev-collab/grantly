@@ -136,10 +136,11 @@ internal fun StudentProfileContent(userId: String) {
     Text("Countries: ${saved.targetCountries.ifBlank { "Not set" }}", color = profileInk)
     Spacer(Modifier.height(16.dp))
 
-    // iOS routes approved advisors to a dedicated portal. Android now offers a
-    // read-only overview of their registrations without mutating assignments.
+    // iOS routes approved advisors to a dedicated portal. Android exposes the
+    // advisor's student assignments and a read-only incoming consultation queue.
     if (saved.role == "advisor") {
         var showingAdvisorStudents by remember(userId) { mutableStateOf(false) }
+        var showingAdvisorConsultations by remember(userId) { mutableStateOf(false) }
         HorizontalDivider()
         Spacer(Modifier.height(14.dp))
         OutlinedButton(
@@ -151,6 +152,18 @@ internal fun StudentProfileContent(userId: String) {
         if (showingAdvisorStudents) {
             Spacer(Modifier.height(12.dp))
             AdvisorStudentsContent(userId = userId)
+        }
+        Spacer(Modifier.height(8.dp))
+        OutlinedButton(
+            onClick = { showingAdvisorConsultations = !showingAdvisorConsultations },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(if (showingAdvisorConsultations) "Hide incoming consultations"
+                else "Incoming consultations")
+        }
+        if (showingAdvisorConsultations) {
+            Spacer(Modifier.height(12.dp))
+            AdvisorIncomingConsultationsContent(userId = userId)
         }
         Spacer(Modifier.height(14.dp))
     }
