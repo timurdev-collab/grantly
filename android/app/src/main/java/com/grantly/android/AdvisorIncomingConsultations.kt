@@ -55,15 +55,18 @@ internal data class AdvisorIncomingConsultation(
 )
 
 internal object AdvisorIncomingConsultationRules {
-    fun isOpen(status: String): Boolean = status !in setOf("completed", "cancelled")
+    fun isOpen(status: String): Boolean = status in setOf("requested", "contacted", "awaiting_payment", "paid", "confirmed")
+    fun isKnown(status: String): Boolean = isOpen(status) || status in setOf("completed", "cancelled")
     fun contactUnlocked(status: String): Boolean = status in setOf("paid", "confirmed", "completed")
     fun visible(items: List<AdvisorIncomingConsultation>, filter: String): List<AdvisorIncomingConsultation> =
         when (filter) {
             "open" -> items.filter { isOpen(it.status) }
             "new" -> items.filter { it.status == "requested" }
+            "contacted" -> items.filter { it.status == "contacted" }
             "payment" -> items.filter { it.status == "awaiting_payment" }
             "ready" -> items.filter { it.status in setOf("paid", "confirmed") }
-            "closed" -> items.filterNot { isOpen(it.status) }
+            "closed" -> items.filter { it.status in setOf("completed", "cancelled") }
+            "other" -> items.filterNot { isKnown(it.status) }
             else -> items
         }
     fun page(items: List<AdvisorIncomingConsultation>, count: Int): List<AdvisorIncomingConsultation> =
@@ -244,8 +247,9 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 listOf(
-                    "open" to "Open", "new" to "New", "payment" to "Awaiting payment",
-                    "ready" to "Ready", "closed" to "Closed", "all" to "All"
+                    "open" to "Open", "new" to "New", "contacted" to "Contacted",
+                    "payment" to "Awaiting payment", "ready" to "Ready",
+                    "closed" to "Closed", "other" to "Other", "all" to "All"
                 ).forEach { (option, label) ->
                     val count = AdvisorIncomingConsultationRules.visible(requests, option).size
                     FilterChip(
