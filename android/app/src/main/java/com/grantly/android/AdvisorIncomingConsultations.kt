@@ -52,13 +52,23 @@ internal data class AdvisorIncomingConsultation(
     val priceCents: Int,
     val currency: String,
     val preferredStart: String,
-    val createdAt: String
+    val createdAt: String,
+    // Contact details are retained only for administrator-verified payment states.
+    val contactEmail: String? = null,
+    val whatsappNumber: String? = null
 )
 
 internal object AdvisorIncomingConsultationRules {
     fun isOpen(status: String): Boolean = status in setOf("requested", "contacted", "awaiting_payment", "paid", "confirmed")
     fun isKnown(status: String): Boolean = isOpen(status) || status in setOf("completed", "cancelled")
     fun contactUnlocked(status: String): Boolean = status in setOf("paid", "confirmed", "completed")
+    fun verifiedContact(status: String, raw: String?, maxLength: Int): String? {
+        if (!contactUnlocked(status)) return null
+        val value = raw?.trim()?.takeIf { it.isNotEmpty() && !it.equals("null", ignoreCase = true) }
+            ?: return null
+        if (value.length > maxLength || value.any { it.isISOControl() }) return null
+        return value
+    }
     fun visible(items: List<AdvisorIncomingConsultation>, filter: String): List<AdvisorIncomingConsultation> =
         when (filter) {
             "open" -> items.filter { isOpen(it.status) }
@@ -147,19 +157,26 @@ internal object AdvisorIncomingConsultationsRepository {
                     val row = rows.optJSONObject(index) ?: continue
                     val requestId = row.optString("id")
                     if (runCatching { UUID.fromString(requestId) }.isFailure) continue
-                    // Deliberately discard contact_email, whatsapp_number and notes.
-                    // The iOS flow only unlocks contact details after verified payment.
+                    // Never retain contact data for unverified payment states.
+                    // Notes remain excluded from the advisor queue model.
+                    val status = row.optString("status").take(40)
                     add(AdvisorIncomingConsultation(
                         id = requestId,
                         studentName = row.optString("student_name").take(120),
                         serviceTitle = row.optString("service_title").take(120),
                         topic = row.optString("topic").take(400),
-                        status = row.optString("status").take(40),
+                        status = status,
                         durationMinutes = row.optInt("duration_minutes").coerceAtLeast(0),
                         priceCents = row.optInt("quoted_price_cents").coerceAtLeast(0),
                         currency = row.optString("currency").take(8).ifBlank { "USD" },
                         preferredStart = row.optString("preferred_start").take(40),
-                        createdAt = row.optString("created_at").take(40)
+                        createdAt = row.optString("created_at").take(40),
+                        contactEmail = AdvisorIncomingConsultationRules.verifiedContact(
+                            status, row.optString("contact_email", ""), 254
+                        ),
+                        whatsappNumber = AdvisorIncomingConsultationRules.verifiedContact(
+                            status, row.optString("whatsapp_number", ""), 32
+                        )
                     ))
                 }
             }
@@ -304,8 +321,18 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
                             Text("Contact details remain locked until payment is verified.",
                                 style = MaterialTheme.typography.bodySmall)
                         } else {
-                            Text("Payment verified. Contact links are not yet available in Android.",
-                                style = MaterialTheme.typography.bodySmall)
+                            Text("Payment verified · Student contact",
+                                style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                            if (request.contactEmail != null) {
+                                Text("Email: ${request.contactEmail}", style = MaterialTheme.typography.bodySmall)
+                            }
+                            if (request.whatsappNumber != null) {
+                                Text("WhatsApp: ${request.whatsappNumber}", style = MaterialTheme.typography.bodySmall)
+                            }
+                            if (request.contactEmail == null && request.whatsappNumber == null) {
+                                Text("No contact details were returned. Refresh or use Messages.",
+                                    style = MaterialTheme.typography.bodySmall)
+                            }
                         }
                     }
                 }
