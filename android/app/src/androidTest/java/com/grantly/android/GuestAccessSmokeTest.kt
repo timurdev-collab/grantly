@@ -6,6 +6,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Rule
 import org.junit.Test
@@ -24,6 +25,11 @@ class GuestAccessSmokeTest {
         device.waitForIdle(5_000)
         assertNotNull("EduT should launch",
             device.wait(Until.findObject(By.text("EduT")), 45_000))
+
+        // Advisor navigation must not be offered to a guest, even though
+        // advisor discovery remains available from Home.
+        assertFalse("Guest must not see the advisor-only portal tab",
+            device.hasObject(By.text("Advisor")))
 
         val messages = device.wait(Until.findObject(By.text("Messages")), 10_000)
         assertNotNull("Messages tab should be visible", messages)
