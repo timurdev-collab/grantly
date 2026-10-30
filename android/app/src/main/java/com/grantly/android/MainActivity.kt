@@ -134,11 +134,12 @@ private fun EduTApp() {
     LaunchedEffect(tab, selectedScholarship?.id, showingAdvisors, showingCommunity, showingNotifications, authNavigationVersion) {
         pageScroll.scrollToItem(0, 0)
     }
-    BackHandler(enabled = selectedScholarship != null || showingAdvisors || showingCommunity || showingNotifications) {
+    BackHandler(enabled = selectedScholarship != null || showingAdvisors || showingCommunity || showingNotifications || tab == Tab.Advisor) {
         when {
             selectedScholarship != null -> selectedScholarship = null
             showingCommunity -> showingCommunity = false
             showingNotifications -> showingNotifications = false
+            tab == Tab.Advisor -> tab = Tab.Profile
             else -> showingAdvisors = false
         }
     }
