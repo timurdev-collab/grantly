@@ -56,6 +56,28 @@ class AdvisorIncomingConsultationRulesTest {
         assertEquals(items, AdvisorIncomingConsultationRules.visible(items, "all"))
     }
 
+    @Test fun searchIsCaseInsensitiveTrimmedAndPreservesServerOrder() {
+        val items = listOf(
+            item("1", "requested").copy(studentName = "Amina Karim"),
+            item("2", "paid").copy(serviceTitle = "Visa Strategy"),
+            item("3", "confirmed").copy(topic = "Graduate VISA options"),
+            item("4", "cancelled").copy(studentName = "Elsewhere")
+        )
+        assertEquals(listOf("1", "2", "3", "4"),
+            AdvisorIncomingConsultationRules.search(items, "  ").map { it.id })
+        assertEquals(listOf("2", "3"),
+            AdvisorIncomingConsultationRules.search(items, "  vIsA ").map { it.id })
+        assertEquals(listOf("1"),
+            AdvisorIncomingConsultationRules.search(items, "AMINA").map { it.id })
+        assertTrue(AdvisorIncomingConsultationRules.search(items, "not present").isEmpty())
+        assertEquals(4, items.size)
+    }
+
+    @Test fun searchCannotUseCharactersBeyondInputLimit() {
+        val items = listOf(item("1", "requested").copy(topic = "A".repeat(100) + "hidden"))
+        assertEquals(listOf("1"), AdvisorIncomingConsultationRules.search(items, "A".repeat(100) + "extra").map { it.id })
+    }
+
     @Test fun contactIsNeverUnlockedForUnverifiedPayment() {
         listOf("requested", "contacted", "awaiting_payment", "cancelled", "unknown")
             .forEach { assertFalse(AdvisorIncomingConsultationRules.contactUnlocked(it)) }
