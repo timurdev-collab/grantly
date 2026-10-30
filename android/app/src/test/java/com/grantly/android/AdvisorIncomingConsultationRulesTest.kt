@@ -36,17 +36,23 @@ class AdvisorIncomingConsultationRulesTest {
             item("1", "requested"), item("2", "awaiting_payment"),
             item("3", "paid"), item("4", "confirmed"),
             item("5", "completed"), item("6", "cancelled"),
-            item("7", "unexpected"), item("8", "requested")
+            item("7", "unexpected"), item("8", "requested"),
+            item("9", "contacted")
         )
         assertEquals(listOf("1", "8"),
             AdvisorIncomingConsultationRules.visible(items, "new").map { it.id })
+        assertEquals(listOf("9"),
+            AdvisorIncomingConsultationRules.visible(items, "contacted").map { it.id })
         assertEquals(listOf("2"),
             AdvisorIncomingConsultationRules.visible(items, "payment").map { it.id })
         assertEquals(listOf("3", "4"),
             AdvisorIncomingConsultationRules.visible(items, "ready").map { it.id })
         assertEquals(listOf("5", "6"),
             AdvisorIncomingConsultationRules.visible(items, "closed").map { it.id })
-        assertEquals(6, AdvisorIncomingConsultationRules.visible(items, "open").size)
+        assertEquals(listOf("7"),
+            AdvisorIncomingConsultationRules.visible(items, "other").map { it.id })
+        assertEquals(listOf("1", "2", "3", "4", "8", "9"),
+            AdvisorIncomingConsultationRules.visible(items, "open").map { it.id })
         assertEquals(items, AdvisorIncomingConsultationRules.visible(items, "all"))
     }
 
@@ -68,7 +74,10 @@ class AdvisorIncomingConsultationRulesTest {
     @Test fun unknownStatusesAreNotPresentedAsVerified() {
         assertEquals("Unknown status", AdvisorIncomingConsultationRules.statusLabel("pending_transfer"))
         assertEquals("Awaiting payment", AdvisorIncomingConsultationRules.statusLabel("awaiting_payment"))
-        assertTrue(AdvisorIncomingConsultationRules.isOpen("pending_transfer"))
+        assertFalse(AdvisorIncomingConsultationRules.isOpen("pending_transfer"))
+        assertFalse(AdvisorIncomingConsultationRules.isKnown("pending_transfer"))
+        assertTrue(AdvisorIncomingConsultationRules.isKnown("contacted"))
+        assertTrue(AdvisorIncomingConsultationRules.isOpen("contacted"))
         assertFalse(AdvisorIncomingConsultationRules.isOpen("cancelled"))
     }
 }
