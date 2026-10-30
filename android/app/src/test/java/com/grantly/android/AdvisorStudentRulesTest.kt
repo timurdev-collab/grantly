@@ -36,4 +36,25 @@ class AdvisorStudentRulesTest {
         assertEquals(0, AdvisorStudentRules.page(requested, -1).size)
         assertEquals(0, AdvisorStudentRules.page(requested, 0).size)
     }
+
+    @Test fun advisorActionsAreRestrictedToExpectedRegistrationStates() {
+        assertEquals(true, AdvisorStudentActionRules.allowed("requested", "accept"))
+        assertEquals(true, AdvisorStudentActionRules.allowed("requested", "decline"))
+        assertEquals(true, AdvisorStudentActionRules.allowed("active", "end"))
+        for (status in listOf("declined", "ended", "unknown", "", "requested")) {
+            assertEquals(false, AdvisorStudentActionRules.allowed(status, "end"))
+        }
+        assertEquals(false, AdvisorStudentActionRules.allowed("active", "accept"))
+        assertEquals(false, AdvisorStudentActionRules.allowed("active", "decline"))
+        assertEquals(false, AdvisorStudentActionRules.allowed("requested", "delete"))
+        assertEquals(false, AdvisorStudentActionRules.allowed("unknown", "accept"))
+    }
+
+    @Test fun advisorActionResultsMatchExistingRpcStatusTransitions() {
+        assertEquals("active", AdvisorStudentActionRules.resultingStatus("accept"))
+        assertEquals("declined", AdvisorStudentActionRules.resultingStatus("decline"))
+        assertEquals("ended", AdvisorStudentActionRules.resultingStatus("end"))
+        assertEquals("", AdvisorStudentActionRules.resultingStatus("delete"))
+        assertEquals("End advising", AdvisorStudentActionRules.label("end"))
+    }
 }
