@@ -55,21 +55,22 @@ class GuestAuthFlowSmokeTest {
             Until.findObject(By.text("Already have an account? Sign in")), 10_000)
         assertNotNull("Signup should offer sign-in", backToLogin)
         backToLogin.click()
-        // The single-item LazyColumn may retain a lower viewport position
-        // during an auth-mode transition. Search toward the top before treating
-        // an off-screen heading as a failed navigation. The assertion still
-        // requires the actual sign-in heading; no backend calls are made.
-        var returnedHeading = device.wait(Until.findObject(By.text("Welcome back")), 2_000)
+        // The auth forms share a LazyColumn item. The sign-in heading may be
+        // outside UIAutomator's visible viewport after the mode transition,
+        // especially on small emulators. Verify the sign-in-only recovery action
+        // instead; it cannot be shown by the signup form. Scroll down through
+        // the form if the new list has reset to its top.
+        var returnedSignInLink = device.wait(Until.findObject(By.text("Forgot password?")), 3_000)
         repeat(5) {
-            if (returnedHeading == null) {
+            if (returnedSignInLink == null) {
                 val width = device.displayWidth
                 val height = device.displayHeight
-                device.swipe(width / 2, height / 4, width / 2, height * 4 / 5, 24)
+                device.swipe(width / 2, height * 4 / 5, width / 2, height / 4, 24)
                 device.waitForIdle(1_000)
-                returnedHeading = device.wait(Until.findObject(By.text("Welcome back")), 2_000)
+                returnedSignInLink = device.wait(Until.findObject(By.text("Forgot password?")), 2_000)
             }
         }
-        assertNotNull("Sign-in screen should return after signup", returnedHeading)
+        assertNotNull("Sign-in-only recovery link should return after signup", returnedSignInLink)
 
         val forgot = device.wait(Until.findObject(By.text("Forgot password?")), 10_000)
         assertNotNull("Password recovery should be reachable", forgot)
