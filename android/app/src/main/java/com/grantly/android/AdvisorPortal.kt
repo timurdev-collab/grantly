@@ -64,6 +64,8 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
 
     // Verify approval before composing any advisor tools, not merely the role.
     // Server-side RLS/RPC authorization remains authoritative for every request.
+    // Refreshing the overview also rechecks approval; a revoked advisor must
+    // not keep using a previously verified portal session.
     LaunchedEffect(userId, accessRetry) {
         accessVerified = false
         accessError = null
@@ -162,7 +164,7 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
                     CircularProgressIndicator()
                 } else if (error != null) {
                     Text(error.orEmpty(), color = MaterialTheme.colorScheme.error)
-                    OutlinedButton(onClick = { refresh++ }) { Text("Retry overview") }
+                    OutlinedButton(onClick = { accessRetry++; refresh++ }) { Text("Retry overview") }
                 } else {
                     val snapshot = counts
                     if (snapshot != null) {
@@ -184,7 +186,7 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
                     OutlinedButton(onClick = { section = "consultations" }, modifier = Modifier.fillMaxWidth()) {
                         Text("Review consultations")
                     }
-                    OutlinedButton(onClick = { refresh++ }, modifier = Modifier.fillMaxWidth()) {
+                    OutlinedButton(onClick = { accessRetry++; refresh++ }, modifier = Modifier.fillMaxWidth()) {
                         Text("Refresh overview")
                     }
                 }
