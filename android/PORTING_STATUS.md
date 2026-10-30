@@ -4,6 +4,7 @@ Updated: 2026-10-25. Source branch: `feature/android-compose-foundation`.
 Design and behavior reference (read-only): `design/home-concept-02`.
 
 ## Implemented in Android source
+- Advisor-role profile now has a read-only **My advisor students** overview using the existing identity-scoped `advisor_my_students` RPC, with requested/active counts, status filters, and 20-at-a-time display. It rechecks the advisor role, blocks HTTP redirects and bounds response size. This is not the iOS Advisor Portal: accepting/declining registrations, ending advising, consultations, calls and authenticated device testing remain outstanding.
 - Compose home layout and bottom navigation.
 - Home 'Closing soon' now reads the first 100 published scholarship results sorted by the existing Deadline RPC, filters invalid/missing/past ISO dates locally, and displays up to three clickable upcoming scholarships with official-source caution. This is a read-only catalog preview, not an exhaustive deadline index or a reminder service; it needs live API/device verification.
 - Read-only scholarship discovery through the existing public Supabase RPC.
