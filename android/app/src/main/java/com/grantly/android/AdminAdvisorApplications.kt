@@ -66,6 +66,10 @@ internal object AdminAdvisorApplicationRules {
         }
     }
 
+    /** Counts reflect the current search, including unknown statuses in Other. */
+    fun count(items: List<AdminAdvisorApplication>, filter: String, query: String = ""): Int =
+        visible(items, filter, query).size
+
     /** Render a bounded number of matches to keep the review screen responsive. */
     fun page(items: List<AdminAdvisorApplication>, limit: Int): List<AdminAdvisorApplication> =
         items.take(limit.coerceIn(0, 300))
@@ -327,13 +331,19 @@ internal fun AdminAdvisorApplicationsContent(userId: String) {
                 FilterChip(
                     selected = filter == option,
                     onClick = { filter = option; visibleLimit = 20; expandedId = null; reviewNote = ""; actionError = null },
-                    label = { Text(AdminAdvisorApplicationRules.label(option)) }
+                    label = {
+                        val label = AdminAdvisorApplicationRules.label(option)
+                        val count = if (!loading && error == null)
+                            " (${AdminAdvisorApplicationRules.count(applications, option, search)})"
+                        else ""
+                        Text(label + count)
+                    }
                 )
             }
         }
         OutlinedTextField(
             value = search,
-            onValueChange = { search = it; visibleLimit = 20; expandedId = null; reviewNote = ""; actionError = null },
+            onValueChange = { search = it.take(120); visibleLimit = 20; expandedId = null; reviewNote = ""; actionError = null },
             label = { Text("Search applicants") },
             placeholder = { Text("Name, title, organization or specialty") },
             singleLine = true,
