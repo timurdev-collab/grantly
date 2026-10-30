@@ -99,7 +99,8 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
             listOf(
                 "overview" to "Overview",
                 "students" to "My students",
-                "consultations" to "Consultations"
+                "consultations" to "Consultations",
+                "professional" to "Professional profile"
             ).forEach { (value, label) ->
                 FilterChip(
                     selected = section == value,
@@ -115,6 +116,7 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
         when (section) {
             "students" -> AdvisorStudentsContent(userId)
             "consultations" -> AdvisorIncomingConsultationsContent(userId)
+            "professional" -> AdvisorProfessionalProfileContent(userId)
             else -> {
                 if (loading) {
                     CircularProgressIndicator()
