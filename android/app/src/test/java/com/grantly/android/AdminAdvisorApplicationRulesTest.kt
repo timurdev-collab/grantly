@@ -69,6 +69,23 @@ class AdminAdvisorApplicationRulesTest {
         assertEquals(7, AdminAdvisorApplicationRules.page(searched, 20).size)
     }
 
+    @Test fun queueStatusCountsRespectSearchAndUnknownStatuses() {
+        val items = listOf(
+            application("pending").copy(name = "Amina"),
+            application("pending").copy(name = "John"),
+            application("approved").copy(name = "Amina"),
+            application("unknown").copy(name = "Amina"),
+            application("").copy(name = "Other person")
+        )
+        assertEquals(5, AdminAdvisorApplicationRules.count(items, "all"))
+        assertEquals(2, AdminAdvisorApplicationRules.count(items, "pending"))
+        assertEquals(2, AdminAdvisorApplicationRules.count(items, "other"))
+        assertEquals(3, AdminAdvisorApplicationRules.count(items, "all", "amina"))
+        assertEquals(1, AdminAdvisorApplicationRules.count(items, "pending", "AMINA"))
+        assertEquals(1, AdminAdvisorApplicationRules.count(items, "other", "Amina"))
+        assertEquals(0, AdminAdvisorApplicationRules.count(items, "rejected", "Amina"))
+    }
+
     @Test fun administratorReviewActionsFollowIosStatusTransitions() {
         assertEquals(
             listOf("approve", "request_changes", "reject"),
