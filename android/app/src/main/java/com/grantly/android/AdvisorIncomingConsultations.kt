@@ -15,6 +15,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -40,7 +41,7 @@ import java.net.URL
 import java.util.Locale
 import java.util.UUID
 
-/** Advisor-only, read-only consultation queue. No payment or status mutations are performed. */
+/** Advisor-only consultation queue. Payment verification remains administrator-only. */
 internal data class AdvisorIncomingConsultation(
     val id: String,
     val studentName: String,
@@ -69,6 +70,14 @@ internal object AdvisorIncomingConsultationRules {
             "other" -> items.filterNot { isKnown(it.status) }
             else -> items
         }
+    fun search(items: List<AdvisorIncomingConsultation>, query: String): List<AdvisorIncomingConsultation> {
+        val needle = query.trim().take(100).lowercase(Locale.ROOT)
+        if (needle.isEmpty()) return items
+        return items.filter { request ->
+            listOf(request.studentName, request.serviceTitle, request.topic)
+                .any { it.lowercase(Locale.ROOT).contains(needle) }
+        }
+    }
     fun page(items: List<AdvisorIncomingConsultation>, count: Int): List<AdvisorIncomingConsultation> =
         items.take(count.coerceAtLeast(0))
     fun statusLabel(status: String): String = when (status) {
@@ -167,6 +176,7 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var filter by remember(userId) { mutableStateOf("open") }
+    var searchText by remember(userId) { mutableStateOf("") }
     var visibleLimit by remember(userId) { mutableIntStateOf(20) }
     var pendingAction by remember(userId) { mutableStateOf<Pair<AdvisorIncomingConsultation, String>?>(null) }
     var actionBusy by remember(userId) { mutableStateOf(false) }
@@ -240,8 +250,17 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
         } else if (error != null) {
             Text(error.orEmpty(), color = MaterialTheme.colorScheme.error)
         } else {
-            Text("${requests.count { AdvisorIncomingConsultationRules.isOpen(it.status) }} open · ${requests.size} total",
+            val searched = AdvisorIncomingConsultationRules.search(requests, searchText)
+            Text("${searched.count { AdvisorIncomingConsultationRules.isOpen(it.status) }} open · ${searched.size} matching of ${requests.size} total",
                 fontWeight = FontWeight.SemiBold)
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { searchText = it.take(100); visibleLimit = 20 },
+                label = { Text("Search consultations") },
+                placeholder = { Text("Student, service, or topic") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
             Row(
                 modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -251,7 +270,7 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
                     "payment" to "Awaiting payment", "ready" to "Ready",
                     "closed" to "Closed", "other" to "Other", "all" to "All"
                 ).forEach { (option, label) ->
-                    val count = AdvisorIncomingConsultationRules.visible(requests, option).size
+                    val count = AdvisorIncomingConsultationRules.visible(searched, option).size
                     FilterChip(
                         selected = filter == option,
                         onClick = { filter = option; visibleLimit = 20 },
@@ -259,8 +278,8 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
                     )
                 }
             }
-            val filtered = AdvisorIncomingConsultationRules.visible(requests, filter)
-            if (filtered.isEmpty()) Text("No consultations in this category.")
+            val filtered = AdvisorIncomingConsultationRules.visible(searched, filter)
+            if (filtered.isEmpty()) Text(if (searchText.isNotBlank()) "No consultations match this search and filter." else "No consultations in this category.")
             AdvisorIncomingConsultationRules.page(filtered, visibleLimit).forEach { request ->
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
