@@ -118,6 +118,31 @@ class AdvisorIncomingConsultationRulesTest {
             "completed", "+".repeat(41), 40))
     }
 
+    @Test fun contactLinksRequireVerifiedPaymentAndValidAddresses() {
+        listOf("requested", "contacted", "awaiting_payment", "cancelled", "unknown").forEach { status ->
+            assertEquals(null, AdvisorIncomingConsultationRules.emailLink(status, "student@example.com"))
+            assertEquals(null, AdvisorIncomingConsultationRules.whatsappLink(status, "+1 (555) 123-4567"))
+        }
+        listOf("paid", "confirmed", "completed").forEach { status ->
+            assertEquals("student@example.com",
+                AdvisorIncomingConsultationRules.emailLink(status, " student@example.com "))
+            assertEquals("https://wa.me/15551234567",
+                AdvisorIncomingConsultationRules.whatsappLink(status, "+1 (555) 123-4567"))
+        }
+    }
+
+    @Test fun contactLinksRejectUnsafeOrMalformedValues() {
+        listOf("no-at-sign", "user@localhost", "user@@example.com", "user name@example.com",
+            "user@example.com?subject=secret", "a".repeat(65) + "@example.com",
+            "student@example.com\nBcc:other@example.com").forEach {
+            assertEquals(null, AdvisorIncomingConsultationRules.emailLink("paid", it))
+        }
+        listOf("1234567", "0".repeat(10), "+1234\n567890", "12345;67890",
+            "+1234567890123456", "https://wa.me/15551234567", "+").forEach {
+            assertEquals(null, AdvisorIncomingConsultationRules.whatsappLink("confirmed", it))
+        }
+    }
+
     @Test fun pageLimitsAreBoundedAndDoNotMutateInput() {
         val items = (1..50).map { item(it.toString(), "requested") }
         assertEquals(0, AdvisorIncomingConsultationRules.page(items, -1).size)
