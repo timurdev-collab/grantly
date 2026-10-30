@@ -16,6 +16,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,9 +38,10 @@ import org.json.JSONObject
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Locale
 import java.util.UUID
 
-/** Read-only first step toward the iOS advisor portal; student management is not implemented. */
+/** Advisor student registrations; changes require advisor-scoped RPCs and confirmation. */
 internal data class AdvisorStudentItem(
     val assignmentId: String,
     val studentId: String,
@@ -57,10 +59,20 @@ internal object AdvisorStudentRules {
         when (filter) {
             "all" -> items
             "past" -> items.filter { it.status in setOf("declined", "ended") }
+            "other" -> items.filterNot { it.status in setOf("requested", "active", "declined", "ended") }
             "requested", "active" -> items.filter { it.status == filter }
             else -> emptyList()
         }
     fun count(items: List<AdvisorStudentItem>, filter: String): Int = visible(items, filter).size
+    fun search(items: List<AdvisorStudentItem>, query: String): List<AdvisorStudentItem> {
+        val needle = query.trim().take(100).lowercase(Locale.ROOT)
+        if (needle.isEmpty()) return items
+        return items.filter { student ->
+            sequenceOf(student.fullName, student.degreeLevel, student.intendedMajor)
+                .plus(student.targetCountries.asSequence())
+                .any { it.lowercase(Locale.ROOT).contains(needle) }
+        }
+    }
     fun page(items: List<AdvisorStudentItem>, limit: Int): List<AdvisorStudentItem> =
         items.take(limit.coerceAtLeast(0))
 }
@@ -146,6 +158,7 @@ internal fun AdvisorStudentsContent(userId: String) {
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var refresh by remember(userId) { mutableIntStateOf(0) }
     var filter by remember(userId) { mutableStateOf("all") }
+    var searchText by remember(userId) { mutableStateOf("") }
     var visibleLimit by remember(userId) { mutableIntStateOf(20) }
     var pendingDecision by remember(userId) { mutableStateOf<Pair<AdvisorStudentItem, String>?>(null) }
     var busyAssignment by remember(userId) { mutableStateOf<String?>(null) }
@@ -180,28 +193,38 @@ internal fun AdvisorStudentsContent(userId: String) {
         } else if (error != null) {
             Text(error.orEmpty(), color = MaterialTheme.colorScheme.error)
         } else {
-            Text("${AdvisorStudentRules.pending(students)} requests · ${AdvisorStudentRules.active(students)} active",
+            val searched = AdvisorStudentRules.search(students, searchText)
+            Text("${AdvisorStudentRules.pending(searched)} requests · ${AdvisorStudentRules.active(searched)} active · ${searched.size} matching of ${students.size} total",
                 fontWeight = FontWeight.SemiBold)
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { searchText = it.take(100); visibleLimit = 20 },
+                label = { Text("Search students") },
+                placeholder = { Text("Name, degree, major, or destination") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
             Row(
                 modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 listOf(
                     "all" to "All", "requested" to "Requests",
-                    "active" to "Active", "past" to "Past"
+                    "active" to "Active", "past" to "Past", "other" to "Other"
                 ).forEach { (option, label) ->
                     FilterChip(
                         selected = filter == option,
                         onClick = { filter = option; visibleLimit = 20 },
-                        label = { Text("$label (${AdvisorStudentRules.count(students, option)})") }
+                        label = { Text("$label (${AdvisorStudentRules.count(searched, option)})") }
                     )
                 }
             }
-            val filtered = AdvisorStudentRules.visible(students, filter)
-            if (filtered.isEmpty()) Text(when (filter) {
+            val filtered = AdvisorStudentRules.visible(searched, filter)
+            if (filtered.isEmpty()) Text(if (searchText.isNotBlank()) "No students match this search and filter." else when (filter) {
                 "requested" -> "No pending registration requests."
                 "active" -> "Students you accept will appear here."
                 "past" -> "No past registrations yet."
+                "other" -> "No registrations with other statuses."
                 else -> "No students in this category."
             })
             AdvisorStudentRules.page(filtered, visibleLimit).forEach { student ->
