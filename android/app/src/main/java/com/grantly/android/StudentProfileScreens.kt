@@ -21,7 +21,7 @@ private val profileInk = Color(0xFF19372B)
 
 /** Signed-in academic profile, backed by the existing private student_profiles table. */
 @Composable
-internal fun StudentProfileContent(userId: String) {
+internal fun StudentProfileContent(userId: String, onOpenMessages: () -> Unit = {}) {
     val scope = rememberCoroutineScope()
     var profile by remember(userId) { mutableStateOf<StudentProfileDraft?>(null) }
     var draft by remember(userId) { mutableStateOf(StudentProfileDraft()) }
@@ -84,7 +84,11 @@ internal fun StudentProfileContent(userId: String) {
         showingAdvisorPortal = false
     }
     if (saved.role == "advisor" && showingAdvisorPortal) {
-        AdvisorPortalContent(userId = userId, onBack = { showingAdvisorPortal = false })
+        AdvisorPortalContent(
+            userId = userId,
+            onBack = { showingAdvisorPortal = false },
+            onOpenMessages = onOpenMessages
+        )
         return
     }
     if (success) {

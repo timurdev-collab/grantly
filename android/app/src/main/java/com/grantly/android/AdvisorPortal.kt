@@ -50,7 +50,7 @@ internal data class AdvisorPortalCounts(
 }
 
 @Composable
-internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit) {
+internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMessages: () -> Unit) {
     var section by remember(userId) { mutableStateOf("overview") }
     var counts by remember(userId) { mutableStateOf<AdvisorPortalCounts?>(null) }
     var loading by remember(userId) { mutableStateOf(true) }
@@ -138,12 +138,15 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit) {
                     OutlinedButton(onClick = { section = "consultations" }, modifier = Modifier.fillMaxWidth()) {
                         Text("Review consultations")
                     }
+                    OutlinedButton(onClick = onOpenMessages, modifier = Modifier.fillMaxWidth()) {
+                        Text("Open Messages")
+                    }
                     OutlinedButton(onClick = { refresh++ }, modifier = Modifier.fillMaxWidth()) {
                         Text("Refresh overview")
                     }
                 }
                 Text(
-                    "Messaging remains in the Messages tab. Video calls and full iOS advisor navigation are not yet available in this Android preview.",
+                    "Messages opens the existing advisor inbox. Video calls and full iOS advisor navigation are not yet available in this Android preview.",
                     style = MaterialTheme.typography.bodySmall
                 )
             }

@@ -176,11 +176,16 @@ private fun EduTApp() {
                             )
                             tab == Tab.Applications -> SavedScholarshipsContent()
                             tab == Tab.Messages -> AdvisorMessagesContent()
-                            tab == Tab.Profile -> AuthContent(onNavigate = {
-                                // Login/signup/recovery share a long scrollable page. Return to the
-                                // heading when switching modes instead of leaving it off-screen.
-                                authNavigationVersion += 1
-                            })
+                            tab == Tab.Profile -> AuthContent(
+                                onNavigate = {
+                                    // Login/signup/recovery share a long scrollable page.
+                                    authNavigationVersion += 1
+                                },
+                                onOpenMessages = {
+                                    // Advisor Portal messages use the existing, role-gated tab.
+                                    tab = Tab.Messages
+                                }
+                            )
                             else -> PlaceholderContent(tab)
                         }
                         // Offer a direct authentication route on all guest-gated destinations.
