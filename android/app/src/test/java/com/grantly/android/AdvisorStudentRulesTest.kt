@@ -54,6 +54,50 @@ class AdvisorStudentRulesTest {
         assertEquals(0, AdvisorStudentRules.page(requested, 0).size)
     }
 
+
+    @Test fun searchMatchesNameDegreeMajorAndDestinationsWithoutReordering() {
+        val items = listOf(
+            student("requested", "1").copy(fullName = "Amina Karim"),
+            student("active", "2").copy(degreeLevel = "Master", targetCountries = listOf("Japan")),
+            student("ended", "3").copy(intendedMajor = "Visa Policy", targetCountries = listOf("Canada")),
+            student("declined", "4").copy(fullName = "Another student", targetCountries = listOf("Korea"))
+        )
+        assertEquals(listOf("1", "2", "3", "4"),
+            AdvisorStudentRules.search(items, "  ").map { it.studentId })
+        assertEquals(listOf("1"),
+            AdvisorStudentRules.search(items, " AMINA ").map { it.studentId })
+        assertEquals(listOf("2"),
+            AdvisorStudentRules.search(items, "mAsTeR").map { it.studentId })
+        assertEquals(listOf("3"),
+            AdvisorStudentRules.search(items, "visa").map { it.studentId })
+        assertEquals(listOf("2"),
+            AdvisorStudentRules.search(items, "JAPAN").map { it.studentId })
+        assertEquals(emptyList<AdvisorStudentItem>(),
+            AdvisorStudentRules.search(items, "not present"))
+        assertEquals(4, items.size)
+    }
+
+    @Test fun searchAndOtherFilterKeepUnexpectedStatusesVisibleButNotActionable() {
+        val items = listOf(
+            student("requested", "1").copy(fullName = "Amina"),
+            student("suspended", "2").copy(fullName = "Amina"),
+            student("ended", "3").copy(fullName = "Amina"),
+            student("unexpected", "4").copy(fullName = "Elsewhere")
+        )
+        val matches = AdvisorStudentRules.search(items, "amina")
+        assertEquals(listOf("1", "2", "3"), matches.map { it.studentId })
+        assertEquals(listOf("2"), AdvisorStudentRules.visible(matches, "other").map { it.studentId })
+        assertEquals(1, AdvisorStudentRules.count(matches, "other"))
+        assertEquals(false, AdvisorStudentActionRules.allowed("suspended", "accept"))
+        assertEquals(false, AdvisorStudentActionRules.allowed("suspended", "end"))
+    }
+
+    @Test fun searchIgnoresInputBeyondTheUiLimit() {
+        val items = listOf(student("active", "1").copy(fullName = "A".repeat(100) + "hidden"))
+        assertEquals(listOf("1"),
+            AdvisorStudentRules.search(items, "A".repeat(100) + "extra").map { it.studentId })
+    }
+
     @Test fun advisorActionsAreRestrictedToExpectedRegistrationStates() {
         assertEquals(true, AdvisorStudentActionRules.allowed("requested", "accept"))
         assertEquals(true, AdvisorStudentActionRules.allowed("requested", "decline"))
