@@ -75,15 +75,25 @@ internal object AdvisorIncomingConsultationRules {
     // Only construct external contact links from verified-payment records and valid values.
     fun emailLink(status: String, raw: String?): String? {
         val email = verifiedContact(status, raw, 254) ?: return null
-        if (email.substringBefore('@').length > 64) return null
-        if (!Regex("""[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+""").matches(email)) return null
+        val local = email.substringBefore('@')
+        val domain = email.substringAfter('@', "")
+        if (local.length > 64 || local.startsWith('.') || local.endsWith('.') ||
+            ".." in local) return null
+        if (!Regex("""[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+""").matches(local)) return null
+        val labels = domain.split('.')
+        if (labels.size < 2 || labels.any { label ->
+                label.isEmpty() || label.length > 63 || label.startsWith('-') ||
+                    label.endsWith('-') || !Regex("""[A-Za-z0-9-]+""").matches(label)
+            }) return null
         return email
     }
     fun whatsappLink(status: String, raw: String?): String? {
         val number = verifiedContact(status, raw, 40) ?: return null
         if (!Regex("""\+?[0-9][0-9 ()-]*""").matches(number)) return null
         val digits = number.filter { it in '0'..'9' }
-        if (digits.length !in 8..15 || digits.all { it == '0' }) return null
+        // WhatsApp wa.me requires an international number, without a trunk-prefix zero.
+        // Do not guess a country code for local-only numbers.
+        if (digits.length !in 8..15 || digits.startsWith('0')) return null
         return "https://wa.me/$digits"
     }
     fun visible(items: List<AdvisorIncomingConsultation>, filter: String): List<AdvisorIncomingConsultation> =
