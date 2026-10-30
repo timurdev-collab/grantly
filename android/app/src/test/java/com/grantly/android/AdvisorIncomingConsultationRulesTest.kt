@@ -85,6 +85,39 @@ class AdvisorIncomingConsultationRulesTest {
             .forEach { assertTrue(AdvisorIncomingConsultationRules.contactUnlocked(it)) }
     }
 
+    @Test fun contactValuesAreDiscardedUntilPaymentIsVerified() {
+        listOf("requested", "contacted", "awaiting_payment", "cancelled", "unknown")
+            .forEach { status ->
+                assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
+                    status, "student@example.com", 254))
+                assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
+                    status, "+15551234567", 32))
+            }
+        listOf("paid", "confirmed", "completed").forEach { status ->
+            assertEquals("student@example.com",
+                AdvisorIncomingConsultationRules.verifiedContact(
+                    status, "  student@example.com  ", 254))
+            assertEquals("+15551234567",
+                AdvisorIncomingConsultationRules.verifiedContact(
+                    status, "+15551234567", 32))
+        }
+    }
+
+    @Test fun verifiedContactRejectsEmptyOversizedOrUnsafeValues() {
+        assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
+            "paid", null, 254))
+        assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
+            "paid", " null ", 254))
+        assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
+            "paid", "   ", 254))
+        assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
+            "paid", "a".repeat(255), 254))
+        assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
+            "confirmed", "test\\nsecond", 254))
+        assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
+            "completed", "+".repeat(33), 32))
+    }
+
     @Test fun pageLimitsAreBoundedAndDoNotMutateInput() {
         val items = (1..50).map { item(it.toString(), "requested") }
         assertEquals(0, AdvisorIncomingConsultationRules.page(items, -1).size)
