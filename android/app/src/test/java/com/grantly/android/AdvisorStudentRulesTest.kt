@@ -4,6 +4,18 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class AdvisorStudentRulesTest {
+    @Test fun studentQueueRequiresApprovedAdvisorStatus() {
+        assertEquals(true, AdvisorStudentRules.canAccess("advisor", "approved"))
+        for (status in listOf("pending", "changes_requested", "rejected",
+            "suspended", "unknown", "")) {
+            assertEquals(false, AdvisorStudentRules.canAccess("advisor", status))
+        }
+        assertEquals(false, AdvisorStudentRules.canAccess("advisor", null))
+        for (role in listOf("student", "admin", "", "unknown")) {
+            assertEquals(false, AdvisorStudentRules.canAccess(role, "approved"))
+        }
+    }
+
     private fun student(status: String, id: String) = AdvisorStudentItem(
         assignmentId = id,
         studentId = id,
