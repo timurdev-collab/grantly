@@ -90,9 +90,17 @@ private fun EduTApp() {
     // both the signed-in role and approved application status. On lookup errors,
     // fail closed; the Profile screen remains available for retry.
     var advisorTabVerified by remember(session?.userId) { mutableStateOf(false) }
+    // An account change must never leave a different user on an advisor-only page.
     LaunchedEffect(session?.userId) {
-        advisorTabVerified = false
         if (tab == Tab.Advisor) tab = Tab.Profile
+    }
+    // Recheck role and approval when Profile is revisited, so an advisor who
+    // switches roles (or whose approval is revoked) does not keep a stale tab.
+    // Do not clear verification on Profile -> Advisor: that transition itself
+    // changes the key below and would otherwise immediately close the portal.
+    LaunchedEffect(session?.userId, tab == Tab.Profile) {
+        if (tab == Tab.Advisor) return@LaunchedEffect
+        advisorTabVerified = false
         val currentUserId = session?.userId ?: return@LaunchedEffect
         try {
             val role = StudentProfileRepository.load().role
