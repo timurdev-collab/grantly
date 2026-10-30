@@ -113,7 +113,7 @@ class AdvisorIncomingConsultationRulesTest {
         assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
             "paid", "a".repeat(255), 254))
         assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
-            "confirmed", "test\\nsecond", 254))
+            "confirmed", "test\nsecond", 254))
         assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
             "completed", "+".repeat(33), 32))
     }
