@@ -115,7 +115,7 @@ class AdvisorIncomingConsultationRulesTest {
         assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
             "confirmed", "test\nsecond", 254))
         assertEquals(null, AdvisorIncomingConsultationRules.verifiedContact(
-            "completed", "+".repeat(33), 32))
+            "completed", "+".repeat(41), 40))
     }
 
     @Test fun pageLimitsAreBoundedAndDoNotMutateInput() {
