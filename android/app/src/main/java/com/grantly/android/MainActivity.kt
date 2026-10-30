@@ -43,6 +43,7 @@ private enum class Tab(val title: String, val icon: ImageVector) {
     Discover("Explore", Icons.Outlined.Search),
     Applications("Applications", Icons.Outlined.Assignment),
     Messages("Messages", Icons.Outlined.ChatBubbleOutline),
+    Advisor("Advisor", Icons.Outlined.PeopleOutline),
     Profile("Profile", Icons.Outlined.PersonOutline)
 }
 
@@ -85,6 +86,28 @@ private fun EduTApp() {
         }
     }
     val session = AuthRepository.session
+    // The extra Advisor destination is visible only after independently checking
+    // both the signed-in role and approved application status. On lookup errors,
+    // fail closed; the Profile screen remains available for retry.
+    var advisorTabVerified by remember(session?.userId) { mutableStateOf(false) }
+    LaunchedEffect(session?.userId) {
+        advisorTabVerified = false
+        if (tab == Tab.Advisor) tab = Tab.Profile
+        val currentUserId = session?.userId ?: return@LaunchedEffect
+        try {
+            val role = StudentProfileRepository.load().role
+            if (role == "advisor") {
+                val status = AdvisorApplicationStatusRepository.load(currentUserId)?.approvalStatus
+                if (AuthRepository.session?.userId == currentUserId) {
+                    advisorTabVerified = AdvisorProfessionalProfileRules.canView(role, status)
+                }
+            }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            advisorTabVerified = false
+        }
+    }
     var unreadNotifications by remember(session?.userId) { mutableIntStateOf(0) }
     // Refresh when Home becomes visible, including after returning from the inbox.
     // No background polling or push delivery is implied by this badge.
@@ -124,7 +147,7 @@ private fun EduTApp() {
             containerColor = Ivory,
             bottomBar = {
                 NavigationBar(containerColor = Ivory, tonalElevation = 0.dp) {
-                    Tab.entries.forEach { item ->
+                    Tab.entries.filter { it != Tab.Advisor || advisorTabVerified }.forEach { item ->
                         NavigationBarItem(
                             selected = item == tab,
                             onClick = { tab = item; selectedScholarship = null; showingAdvisors = false; showingCommunity = false; showingNotifications = false },
@@ -176,6 +199,12 @@ private fun EduTApp() {
                             )
                             tab == Tab.Applications -> SavedScholarshipsContent()
                             tab == Tab.Messages -> AdvisorMessagesContent()
+                            tab == Tab.Advisor && advisorTabVerified && session != null ->
+                                AdvisorPortalContent(
+                                    userId = session.userId,
+                                    onBack = { tab = Tab.Profile },
+                                    onOpenMessages = { tab = Tab.Messages }
+                                )
                             tab == Tab.Profile -> AuthContent(
                                 onNavigate = {
                                     // Login/signup/recovery share a long scrollable page.
