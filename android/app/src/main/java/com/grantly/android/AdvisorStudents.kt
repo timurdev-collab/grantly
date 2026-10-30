@@ -1,7 +1,10 @@
 package com.grantly.android
 
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -10,6 +13,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -50,7 +54,13 @@ internal object AdvisorStudentRules {
     fun pending(items: List<AdvisorStudentItem>): Int = items.count { it.status == "requested" }
     fun active(items: List<AdvisorStudentItem>): Int = items.count { it.status == "active" }
     fun visible(items: List<AdvisorStudentItem>, filter: String): List<AdvisorStudentItem> =
-        items.filter { filter == "all" || it.status == filter }
+        when (filter) {
+            "all" -> items
+            "past" -> items.filter { it.status in setOf("declined", "ended") }
+            "requested", "active" -> items.filter { it.status == filter }
+            else -> emptyList()
+        }
+    fun count(items: List<AdvisorStudentItem>, filter: String): Int = visible(items, filter).size
     fun page(items: List<AdvisorStudentItem>, limit: Int): List<AdvisorStudentItem> =
         items.take(limit.coerceAtLeast(0))
 }
@@ -172,19 +182,28 @@ internal fun AdvisorStudentsContent(userId: String) {
         } else {
             Text("${AdvisorStudentRules.pending(students)} requests · ${AdvisorStudentRules.active(students)} active",
                 fontWeight = FontWeight.SemiBold)
-            androidx.compose.foundation.layout.Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                listOf("all", "requested", "active").forEach { option ->
-                    OutlinedButton(onClick = { filter = option; visibleLimit = 20 }) {
-                        Text(when (option) {
-                            "all" -> "All"
-                            "requested" -> "Requests"
-                            else -> "Active"
-                        })
-                    }
+            Row(
+                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                listOf(
+                    "all" to "All", "requested" to "Requests",
+                    "active" to "Active", "past" to "Past"
+                ).forEach { (option, label) ->
+                    FilterChip(
+                        selected = filter == option,
+                        onClick = { filter = option; visibleLimit = 20 },
+                        label = { Text("$label (${AdvisorStudentRules.count(students, option)})") }
+                    )
                 }
             }
             val filtered = AdvisorStudentRules.visible(students, filter)
-            if (filtered.isEmpty()) Text("No students in this category.")
+            if (filtered.isEmpty()) Text(when (filter) {
+                "requested" -> "No pending registration requests."
+                "active" -> "Students you accept will appear here."
+                "past" -> "No past registrations yet."
+                else -> "No students in this category."
+            })
             AdvisorStudentRules.page(filtered, visibleLimit).forEach { student ->
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(14.dp),
