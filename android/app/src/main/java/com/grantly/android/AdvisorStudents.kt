@@ -53,6 +53,10 @@ internal data class AdvisorStudentItem(
 )
 
 internal object AdvisorStudentRules {
+    // Role alone is insufficient: suspended or unapproved advisors must not read student records.
+    fun canAccess(role: String, approvalStatus: String?): Boolean =
+        AdvisorProfessionalProfileRules.canView(role, approvalStatus)
+
     fun pending(items: List<AdvisorStudentItem>): Int = items.count { it.status == "requested" }
     fun active(items: List<AdvisorStudentItem>): Int = items.count { it.status == "active" }
     fun visible(items: List<AdvisorStudentItem>, filter: String): List<AdvisorStudentItem> =
@@ -81,7 +85,14 @@ internal object AdvisorStudentsRepository {
     suspend fun load(userId: String): List<AdvisorStudentItem> = withContext(Dispatchers.IO) {
         val session = AuthRepository.activeSession()
         if (session.userId != userId) throw IOException("Your account changed. Refresh the advisor portal.")
-        if (StudentProfileRepository.load().role != "advisor" ||
+        val role = StudentProfileRepository.load().role
+        if (role != "advisor" || AuthRepository.session?.userId != userId) {
+            throw IOException("An approved advisor account is required.")
+        }
+        // Recheck approval for every queue read, including the read before an
+        // accept/decline/end mutation. Never rely on a previously verified tab.
+        val approval = AdvisorApplicationStatusRepository.load(userId)?.approvalStatus
+        if (!AdvisorStudentRules.canAccess(role, approval) ||
             AuthRepository.session?.userId != userId) {
             throw IOException("An approved advisor account is required.")
         }
