@@ -108,6 +108,10 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
                 )
             }
         }
+        // Keep the advisor inbox accessible even when overview loading fails.
+        OutlinedButton(onClick = onOpenMessages, modifier = Modifier.fillMaxWidth()) {
+            Text("Open Messages")
+        }
         when (section) {
             "students" -> AdvisorStudentsContent(userId)
             "consultations" -> AdvisorIncomingConsultationsContent(userId)
@@ -137,9 +141,6 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
                     }
                     OutlinedButton(onClick = { section = "consultations" }, modifier = Modifier.fillMaxWidth()) {
                         Text("Review consultations")
-                    }
-                    OutlinedButton(onClick = onOpenMessages, modifier = Modifier.fillMaxWidth()) {
-                        Text("Open Messages")
                     }
                     OutlinedButton(onClick = { refresh++ }, modifier = Modifier.fillMaxWidth()) {
                         Text("Refresh overview")
