@@ -136,6 +136,25 @@ internal fun StudentProfileContent(userId: String) {
     Text("Countries: ${saved.targetCountries.ifBlank { "Not set" }}", color = profileInk)
     Spacer(Modifier.height(16.dp))
 
+    // iOS routes approved advisors to a dedicated portal. Android now offers a
+    // read-only overview of their registrations without mutating assignments.
+    if (saved.role == "advisor") {
+        var showingAdvisorStudents by remember(userId) { mutableStateOf(false) }
+        HorizontalDivider()
+        Spacer(Modifier.height(14.dp))
+        OutlinedButton(
+            onClick = { showingAdvisorStudents = !showingAdvisorStudents },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(if (showingAdvisorStudents) "Hide advisor students" else "My advisor students")
+        }
+        if (showingAdvisorStudents) {
+            Spacer(Modifier.height(12.dp))
+            AdvisorStudentsContent(userId = userId)
+        }
+        Spacer(Modifier.height(14.dp))
+    }
+
     // Only a successfully loaded admin role can reveal the read-only queue.
     // The queue also rechecks the role and relies on existing server-side RLS.
     if (saved.role == "admin") {
