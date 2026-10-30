@@ -135,7 +135,14 @@ internal object AdvisorIncomingConsultationsRepository {
         if (session.userId != userId || AuthRepository.session?.userId != userId) {
             throw IOException("Your account changed. Sign in again.")
         }
-        if (StudentProfileRepository.load().role != "advisor" ||
+        val role = StudentProfileRepository.load().role
+        if (role != "advisor" || AuthRepository.session?.userId != userId) {
+            throw IOException("An approved advisor account is required.")
+        }
+        // Revalidate approval for every queue read, including the re-read before
+        // status mutations. A stale role alone must not expose consultation data.
+        val approval = AdvisorApplicationStatusRepository.load(userId)?.approvalStatus
+        if (!AdvisorProfessionalProfileRules.canView(role, approval) ||
             AuthRepository.session?.userId != userId) {
             throw IOException("An approved advisor account is required.")
         }
