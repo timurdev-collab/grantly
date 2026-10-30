@@ -27,16 +27,20 @@ class GuestCommunitySmokeTest {
         assertNotNull("EduT Home should launch",
             device.wait(Until.findObject(By.text("EduT")), 45_000))
 
-        // The Community card is below the Home recommendations on smaller devices.
-        // Scroll the Home content rather than assuming the card is initially visible.
-        var community = device.wait(Until.findObject(By.text("Explore community →")), 2_000)
-        repeat(6) {
-            if (community == null) {
-                device.swipe(
-                    device.displayWidth / 2, device.displayHeight * 3 / 4,
-                    device.displayWidth / 2, device.displayHeight / 4, 30
-                )
-                community = device.wait(Until.findObject(By.text("Explore community →")), 3_000)
+        // Prefer the Home quick destination, which is visible before the
+        // long recommendations list finishes loading. The lower Community
+        // card remains a fallback on narrower emulator configurations.
+        var community = device.wait(Until.findObject(By.text("Community")), 8_000)
+        if (community == null) {
+            community = device.wait(Until.findObject(By.text("Explore community →")), 2_000)
+            repeat(8) {
+                if (community == null) {
+                    device.swipe(
+                        device.displayWidth / 2, device.displayHeight * 3 / 4,
+                        device.displayWidth / 2, device.displayHeight / 4, 30
+                    )
+                    community = device.wait(Until.findObject(By.text("Explore community →")), 2_000)
+                }
             }
         }
         assertNotNull("Home should expose Community navigation", community)
