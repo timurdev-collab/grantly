@@ -25,6 +25,23 @@ class AdvisorStudentRulesTest {
         assertEquals(0, AdvisorStudentRules.visible(items, "suspended").size)
     }
 
+    @Test fun pastFilterIncludesOnlyFinishedRegistrations() {
+        val items = listOf(
+            student("requested", "1"), student("active", "2"),
+            student("declined", "3"), student("ended", "4"),
+            student("unknown", "5")
+        )
+        assertEquals(listOf("3", "4"),
+            AdvisorStudentRules.visible(items, "past").map { it.studentId })
+        assertEquals(2, AdvisorStudentRules.count(items, "past"))
+        assertEquals(1, AdvisorStudentRules.count(items, "requested"))
+        assertEquals(1, AdvisorStudentRules.count(items, "active"))
+        assertEquals(5, AdvisorStudentRules.count(items, "all"))
+        assertEquals(0, AdvisorStudentRules.count(items, "unrecognized"))
+        assertEquals(emptyList<AdvisorStudentItem>(),
+            AdvisorStudentRules.visible(items, "unrecognized"))
+    }
+
     @Test fun pagingKeepsServerOrderAndDoesNotDropPendingStudents() {
         val items = (1..45).map { student(if (it % 2 == 0) "requested" else "active", "$it") }
         val requested = AdvisorStudentRules.visible(items, "requested")
