@@ -175,7 +175,7 @@ internal object AdvisorIncomingConsultationsRepository {
                             status, row.optString("contact_email", ""), 254
                         ),
                         whatsappNumber = AdvisorIncomingConsultationRules.verifiedContact(
-                            status, row.optString("whatsapp_number", ""), 32
+                            status, row.optString("whatsapp_number", ""), 40
                         )
                     ))
                 }
