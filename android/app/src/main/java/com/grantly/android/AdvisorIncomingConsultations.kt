@@ -1,0 +1,231 @@
+package com.grantly.android
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.Locale
+import java.util.UUID
+
+/** Advisor-only, read-only consultation queue. No payment or status mutations are performed. */
+internal data class AdvisorIncomingConsultation(
+    val id: String,
+    val studentName: String,
+    val serviceTitle: String,
+    val topic: String,
+    val status: String,
+    val durationMinutes: Int,
+    val priceCents: Int,
+    val currency: String,
+    val preferredStart: String,
+    val createdAt: String
+)
+
+internal object AdvisorIncomingConsultationRules {
+    fun isOpen(status: String): Boolean = status !in setOf("completed", "cancelled")
+    fun contactUnlocked(status: String): Boolean = status in setOf("paid", "confirmed", "completed")
+    fun visible(items: List<AdvisorIncomingConsultation>, filter: String): List<AdvisorIncomingConsultation> =
+        when (filter) {
+            "open" -> items.filter { isOpen(it.status) }
+            "closed" -> items.filterNot { isOpen(it.status) }
+            else -> items
+        }
+    fun page(items: List<AdvisorIncomingConsultation>, count: Int): List<AdvisorIncomingConsultation> =
+        items.take(count.coerceAtLeast(0))
+    fun statusLabel(status: String): String = when (status) {
+        "requested" -> "Requested"
+        "contacted" -> "Contacted"
+        "awaiting_payment" -> "Awaiting payment"
+        "paid" -> "Payment verified"
+        "confirmed" -> "Confirmed"
+        "completed" -> "Completed"
+        "cancelled" -> "Cancelled"
+        else -> "Unknown status"
+    }
+}
+
+internal object AdvisorIncomingConsultationsRepository {
+    suspend fun load(userId: String): List<AdvisorIncomingConsultation> = withContext(Dispatchers.IO) {
+        val session = AuthRepository.activeSession()
+        if (session.userId != userId || AuthRepository.session?.userId != userId) {
+            throw IOException("Your account changed. Sign in again.")
+        }
+        if (StudentProfileRepository.load().role != "advisor" ||
+            AuthRepository.session?.userId != userId) {
+            throw IOException("An approved advisor account is required.")
+        }
+        val base = BuildConfig.SUPABASE_URL.trimEnd('/')
+        val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
+        if (!base.startsWith("https://") || key.isBlank()) {
+            throw IOException("Advisor consultations are not configured.")
+        }
+        val connection = URL("$base/rest/v1/rpc/advisor_consultation_requests_for_me")
+            .openConnection() as HttpURLConnection
+        connection.instanceFollowRedirects = false
+        try {
+            connection.requestMethod = "POST"
+            connection.connectTimeout = 12_000
+            connection.readTimeout = 15_000
+            connection.doOutput = true
+            connection.setRequestProperty("apikey", key)
+            connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+            connection.setRequestProperty("Accept", "application/json")
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.outputStream.use { it.write("{}".toByteArray(Charsets.UTF_8)) }
+            val code = connection.responseCode
+            if (code !in 200..299) {
+                throw IOException(if (code == 401 || code == 403)
+                    "Advisor access denied. Sign in again."
+                else "Could not load consultations (HTTP $code).")
+            }
+            val body = connection.inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
+                val buffer = CharArray(4096)
+                val result = StringBuilder()
+                while (true) {
+                    val count = reader.read(buffer)
+                    if (count < 0) break
+                    result.append(buffer, 0, count)
+                    if (result.length > 512_000) throw IOException("Consultation response is too large.")
+                }
+                result.toString()
+            }
+            val rows = JSONArray(body.ifBlank { "[]" })
+            if (rows.length() > 300) throw IOException("Too many consultations for this preview.")
+            if (AuthRepository.session?.userId != userId) {
+                throw IOException("Your account changed. Refresh the advisor portal.")
+            }
+            buildList {
+                for (index in 0 until rows.length()) {
+                    val row = rows.optJSONObject(index) ?: continue
+                    val requestId = row.optString("id")
+                    if (runCatching { UUID.fromString(requestId) }.isFailure) continue
+                    // Deliberately discard contact_email, whatsapp_number and notes.
+                    // The iOS flow only unlocks contact details after verified payment.
+                    add(AdvisorIncomingConsultation(
+                        id = requestId,
+                        studentName = row.optString("student_name").take(120),
+                        serviceTitle = row.optString("service_title").take(120),
+                        topic = row.optString("topic").take(400),
+                        status = row.optString("status").take(40),
+                        durationMinutes = row.optInt("duration_minutes").coerceAtLeast(0),
+                        priceCents = row.optInt("quoted_price_cents").coerceAtLeast(0),
+                        currency = row.optString("currency").take(8).ifBlank { "USD" },
+                        preferredStart = row.optString("preferred_start").take(40),
+                        createdAt = row.optString("created_at").take(40)
+                    ))
+                }
+            }
+        } finally {
+            connection.disconnect()
+        }
+    }
+}
+
+@Composable
+internal fun AdvisorIncomingConsultationsContent(userId: String) {
+    var requests by remember(userId) { mutableStateOf<List<AdvisorIncomingConsultation>>(emptyList()) }
+    var loading by remember(userId) { mutableStateOf(true) }
+    var error by remember(userId) { mutableStateOf<String?>(null) }
+    var refresh by remember(userId) { mutableIntStateOf(0) }
+    var filter by remember(userId) { mutableStateOf("open") }
+    var visibleLimit by remember(userId) { mutableIntStateOf(20) }
+
+    LaunchedEffect(userId, refresh) {
+        loading = true
+        error = null
+        try {
+            val result = AdvisorIncomingConsultationsRepository.load(userId)
+            if (AuthRepository.session?.userId == userId) requests = result
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Exception) {
+            if (AuthRepository.session?.userId == userId) {
+                error = failure.message ?: "Unable to load consultations."
+                requests = emptyList()
+            }
+        } finally {
+            if (AuthRepository.session?.userId == userId) loading = false
+        }
+    }
+
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text("Advisor portal · Consultation requests", style = MaterialTheme.typography.titleLarge)
+        Text("Read-only preview. EduT administrators verify payments; this screen cannot mark a request as paid.",
+            style = MaterialTheme.typography.bodySmall)
+        if (loading) {
+            CircularProgressIndicator()
+        } else if (error != null) {
+            Text(error.orEmpty(), color = MaterialTheme.colorScheme.error)
+        } else {
+            Text("${requests.count { AdvisorIncomingConsultationRules.isOpen(it.status) }} open · ${requests.size} total",
+                fontWeight = FontWeight.SemiBold)
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                listOf("open", "closed", "all").forEach { option ->
+                    OutlinedButton(onClick = { filter = option; visibleLimit = 20 }) {
+                        Text(option.replaceFirstChar { it.uppercase() })
+                    }
+                }
+            }
+            val filtered = AdvisorIncomingConsultationRules.visible(requests, filter)
+            if (filtered.isEmpty()) Text("No consultations in this category.")
+            AdvisorIncomingConsultationRules.page(filtered, visibleLimit).forEach { request ->
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        Text(request.studentName.ifBlank { "Student" }, fontWeight = FontWeight.SemiBold)
+                        Text(AdvisorIncomingConsultationRules.statusLabel(request.status))
+                        Text(request.serviceTitle.ifBlank { "Consultation" })
+                        if (request.topic.isNotBlank()) Text(request.topic, style = MaterialTheme.typography.bodySmall)
+                        Text("${request.durationMinutes} min · ${request.currency.uppercase(Locale.US)} " +
+                            String.format(Locale.US, "%.2f", request.priceCents / 100.0))
+                        if (request.preferredStart.isNotBlank() && request.preferredStart != "null") {
+                            Text("Preferred (UTC): ${request.preferredStart.take(16)}",
+                                style = MaterialTheme.typography.bodySmall)
+                        }
+                        if (!AdvisorIncomingConsultationRules.contactUnlocked(request.status)) {
+                            Text("Contact details remain locked until payment is verified.",
+                                style = MaterialTheme.typography.bodySmall)
+                        } else {
+                            Text("Payment verified. Contact links are not yet available in Android.",
+                                style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                }
+            }
+            if (filtered.size > visibleLimit) {
+                OutlinedButton(onClick = { visibleLimit += 20 }, modifier = Modifier.fillMaxWidth()) {
+                    Text("Load 20 more consultations")
+                }
+            }
+        }
+        OutlinedButton(onClick = { refresh++ }, enabled = !loading, modifier = Modifier.fillMaxWidth()) {
+            Text("Refresh consultations")
+        }
+        Spacer(Modifier.height(8.dp))
+    }
+}
