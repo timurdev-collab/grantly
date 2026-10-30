@@ -1,5 +1,7 @@
 package com.grantly.android
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
@@ -68,6 +71,20 @@ internal object AdvisorIncomingConsultationRules {
             ?: return null
         if (value.length > maxLength || value.any { it.isISOControl() }) return null
         return value
+    }
+    // Only construct external contact links from verified-payment records and valid values.
+    fun emailLink(status: String, raw: String?): String? {
+        val email = verifiedContact(status, raw, 254) ?: return null
+        if (email.substringBefore('@').length > 64) return null
+        if (!Regex("""[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+""").matches(email)) return null
+        return email
+    }
+    fun whatsappLink(status: String, raw: String?): String? {
+        val number = verifiedContact(status, raw, 40) ?: return null
+        if (!Regex("""\+?[0-9][0-9 ()-]*""").matches(number)) return null
+        val digits = number.filter { it in '0'..'9' }
+        if (digits.length !in 8..15 || digits.all { it == '0' }) return null
+        return "https://wa.me/$digits"
     }
     fun visible(items: List<AdvisorIncomingConsultation>, filter: String): List<AdvisorIncomingConsultation> =
         when (filter) {
@@ -199,6 +216,7 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
     var actionBusy by remember(userId) { mutableStateOf(false) }
     var actionError by remember(userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(userId, refresh) {
         loading = true
@@ -325,9 +343,25 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
                                 style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
                             if (request.contactEmail != null) {
                                 Text("Email: ${request.contactEmail}", style = MaterialTheme.typography.bodySmall)
+                                val email = AdvisorIncomingConsultationRules.emailLink(request.status, request.contactEmail)
+                                if (email != null) {
+                                    OutlinedButton(onClick = {
+                                        runCatching {
+                                            context.startActivity(Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null)))
+                                        }.onFailure { actionError = "No email app is available on this device." }
+                                    }) { Text("Email student") }
+                                }
                             }
                             if (request.whatsappNumber != null) {
                                 Text("WhatsApp: ${request.whatsappNumber}", style = MaterialTheme.typography.bodySmall)
+                                val link = AdvisorIncomingConsultationRules.whatsappLink(request.status, request.whatsappNumber)
+                                if (link != null) {
+                                    OutlinedButton(onClick = {
+                                        runCatching {
+                                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
+                                        }.onFailure { actionError = "Could not open WhatsApp contact link." }
+                                    }) { Text("Contact via WhatsApp") }
+                                }
                             }
                             if (request.contactEmail == null && request.whatsappNumber == null) {
                                 Text("No contact details were returned. Refresh or use Messages.",
