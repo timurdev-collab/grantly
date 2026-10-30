@@ -31,6 +31,25 @@ class AdvisorIncomingConsultationRulesTest {
         assertEquals(items, AdvisorIncomingConsultationRules.visible(items, "all"))
     }
 
+    @Test fun focusedFiltersPreserveOrderAndNeverTreatUnknownAsPaid() {
+        val items = listOf(
+            item("1", "requested"), item("2", "awaiting_payment"),
+            item("3", "paid"), item("4", "confirmed"),
+            item("5", "completed"), item("6", "cancelled"),
+            item("7", "unexpected"), item("8", "requested")
+        )
+        assertEquals(listOf("1", "8"),
+            AdvisorIncomingConsultationRules.visible(items, "new").map { it.id })
+        assertEquals(listOf("2"),
+            AdvisorIncomingConsultationRules.visible(items, "payment").map { it.id })
+        assertEquals(listOf("3", "4"),
+            AdvisorIncomingConsultationRules.visible(items, "ready").map { it.id })
+        assertEquals(listOf("5", "6"),
+            AdvisorIncomingConsultationRules.visible(items, "closed").map { it.id })
+        assertEquals(6, AdvisorIncomingConsultationRules.visible(items, "open").size)
+        assertEquals(items, AdvisorIncomingConsultationRules.visible(items, "all"))
+    }
+
     @Test fun contactIsNeverUnlockedForUnverifiedPayment() {
         listOf("requested", "contacted", "awaiting_payment", "cancelled", "unknown")
             .forEach { assertFalse(AdvisorIncomingConsultationRules.contactUnlocked(it)) }
