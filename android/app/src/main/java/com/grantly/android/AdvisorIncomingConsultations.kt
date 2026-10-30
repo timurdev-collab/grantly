@@ -204,7 +204,7 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
                         Text("${request.durationMinutes} min · ${request.currency.uppercase(Locale.US)} " +
                             String.format(Locale.US, "%.2f", request.priceCents / 100.0))
                         if (request.preferredStart.isNotBlank() && request.preferredStart != "null") {
-                            Text("Preferred (UTC): ${request.preferredStart.take(16)}",
+                            Text("Preferred time (as supplied): ${request.preferredStart.take(35)}",
                                 style = MaterialTheme.typography.bodySmall)
                         }
                         if (!AdvisorIncomingConsultationRules.contactUnlocked(request.status)) {
