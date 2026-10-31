@@ -302,19 +302,17 @@ private fun HomeContent(
     ) {
         Icon(Icons.Outlined.Search, null, tint = Forest)
         Spacer(Modifier.width(11.dp))
-        Text("Search scholarships, countries...", color = Ink.copy(alpha = .65f), fontSize = 14.sp)
+        Text("Search scholarships, countries, majors", color = Ink.copy(alpha = .65f), fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
         Spacer(Modifier.weight(1f))
-        Icon(Icons.Outlined.ArrowForward, null, tint = Forest)
+        Icon(Icons.Outlined.Tune, contentDescription = null, tint = Forest)
     }
     Spacer(Modifier.height(18.dp))
     // Mirror the iOS Home quick destinations; degree filters remain available in Discover.
     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(9.dp)) {
         listOf(
             Triple("For you", true, { onDiscover("All") }),
-            Triple("Advisors", false, onAdvisors),
-            // Keep Community within the initial viewport without hiding Advisors.
-            Triple("Community", false, onCommunity),
             Triple("Applications", false, onApplications),
+            Triple("Advisors", false, onAdvisors),
             Triple("Profile", false, onProfile)
         ).forEach { (label, selected, action) ->
             Surface(
