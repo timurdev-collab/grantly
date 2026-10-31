@@ -39,7 +39,7 @@ class GuestHomeDestinationsSmokeTest {
         assertNotNull("Guest notification inbox should provide Back to Home", back)
         back.click()
         assertNotNull("Home search should reappear",
-            device.wait(Until.findObject(By.text("Search scholarships, countries...")), 15_000))
+            device.wait(Until.findObject(By.textContains("Search scholarships, countries")), 15_000))
     }
 
     @Test fun advisorShortcutShowsGuestSignInGate() {
