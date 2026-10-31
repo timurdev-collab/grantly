@@ -17,6 +17,9 @@ import java.util.concurrent.atomic.AtomicLong
  * away, sign-out, or Activity teardown. No recording is enabled here.
  */
 internal object AdvisorLiveKitRoomRules {
+    fun shouldInvalidatePendingJoin(pendingUserId: String?, currentUserId: String?): Boolean =
+        pendingUserId != null && pendingUserId != currentUserId
+
     fun requireNotLeft(joinGeneration: Long, currentGeneration: Long) {
         if (joinGeneration != currentGeneration) {
             throw IOException("The video call was closed before it could connect.")
@@ -65,6 +68,8 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
     // A Leave action must invalidate an in-flight connect BEFORE waiting for the
     // mutex: otherwise a slow connection could start capture after the user left.
     private val leaveGeneration = AtomicLong(0)
+    // Visible to account-change callbacks while a slow join holds the mutex.
+    @Volatile private var pendingJoinUserId: String? = null
     private var activeRoom: Room? = null
     private var activeUserId: String? = null
 
@@ -78,6 +83,7 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
         try {
             requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
             if (activeRoom != null) throw IOException("A video call is already in progress.")
+            pendingJoinUserId = expectedUserId
 
             // Fetch only for a pre-existing, currently authorized call session.
             val credentials = AdvisorCallPreparationRepository.credentialsForExistingCall(
@@ -110,6 +116,7 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
                 throw failure
             }
         } finally {
+            pendingJoinUserId = null
             lock.unlock()
         }
     }
@@ -155,6 +162,13 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
 
     /** Caller must invoke this when the authenticated account changes. */
     suspend fun leaveIfAccountChanged() {
+        // Invalidate an in-flight join BEFORE waiting for its mutex. Otherwise a
+        // slow LiveKit connection can start capture after account switching.
+        if (AdvisorLiveKitRoomRules.shouldInvalidatePendingJoin(
+                pendingJoinUserId, AuthRepository.session?.userId
+            )) {
+            leaveGeneration.incrementAndGet()
+        }
         lock.lock()
         try {
             val userId = activeUserId
