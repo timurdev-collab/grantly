@@ -60,7 +60,7 @@ the encrypted session. Sign-out clears local credentials before contacting the s
 If Keystore storage is unavailable, the app keeps an in-memory session only. The
 persistence flow has not yet been verified on a physical Android device.
 
-The iOS `design/home-concept-02` HomeView currently emphasizes scholarship matches, deadlines and advisors; Android's Community shortcut is an additional preview entry point, not verified iOS Home visual parity.
+The iOS `design/home-concept-02` HomeView emphasizes scholarship matches, deadlines and advisors. Android now follows its four Home quick destinations in order (For you, Applications, Advisors, Profile) and matches the search prompt; Community remains reachable through a separate card below the scholarship sections. Other visual and behavioral differences remain, so this does not establish Home feature parity.
 
 A successful `Android Debug APK` GitHub Actions build proves compilation only, not
 feature parity, server availability, account behavior or device compatibility.
