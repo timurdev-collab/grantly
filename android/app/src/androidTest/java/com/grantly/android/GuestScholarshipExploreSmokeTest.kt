@@ -26,7 +26,7 @@ class GuestScholarshipExploreSmokeTest {
             device.wait(Until.findObject(By.text("EduT")), 45_000))
 
         val searchShortcut = device.wait(
-            Until.findObject(By.text("Search scholarships, countries...")), 15_000)
+            Until.findObject(By.textContains("Search scholarships, countries")), 15_000)
         assertNotNull("Home should expose scholarship search", searchShortcut)
         searchShortcut.click()
 
