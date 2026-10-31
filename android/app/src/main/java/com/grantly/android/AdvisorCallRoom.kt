@@ -122,7 +122,8 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
         current.events.collect { event ->
             trackVersion++
             if (event is RoomEvent.Disconnected) {
-                session.leave()
+                // Updating room state cancels this effect; finish release first.
+                withContext(NonCancellable) { session.leave() }
                 room = null
                 error = "The call disconnected. You can try joining again."
             }
