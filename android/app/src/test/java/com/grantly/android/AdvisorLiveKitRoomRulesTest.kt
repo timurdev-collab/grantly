@@ -33,6 +33,64 @@ class AdvisorLiveKitRoomRulesTest {
         }
     }
 
+    @Test fun allowsCaptureOnlyForCurrentAccountWithFreshPermissions() {
+        AdvisorLiveKitRoomRules.requireCaptureStillAuthorized(
+            joinGeneration = 8,
+            currentGeneration = 8,
+            expectedUserId = "advisor-1",
+            currentUserId = "advisor-1",
+            captureConsent = true,
+            microphoneGranted = true,
+            cameraGranted = true
+        )
+    }
+
+    @Test fun rejectsAccountSwitchOrSignOutBeforeMediaCapture() {
+        for (current in listOf("advisor-2", null)) {
+            assertThrows(IOException::class.java) {
+                AdvisorLiveKitRoomRules.requireCaptureStillAuthorized(
+                    joinGeneration = 8,
+                    currentGeneration = 8,
+                    expectedUserId = "advisor-1",
+                    currentUserId = current,
+                    captureConsent = true,
+                    microphoneGranted = true,
+                    cameraGranted = true
+                )
+            }
+        }
+    }
+
+    @Test fun rejectsPermissionsRevokedDuringConnection() {
+        for ((mic, camera) in listOf(false to true, true to false)) {
+            assertThrows(IOException::class.java) {
+                AdvisorLiveKitRoomRules.requireCaptureStillAuthorized(
+                    joinGeneration = 8,
+                    currentGeneration = 8,
+                    expectedUserId = "advisor-1",
+                    currentUserId = "advisor-1",
+                    captureConsent = true,
+                    microphoneGranted = mic,
+                    cameraGranted = camera
+                )
+            }
+        }
+    }
+
+    @Test fun rejectsLeaveRequestedDuringConnectionEvenWithPermissions() {
+        assertThrows(IOException::class.java) {
+            AdvisorLiveKitRoomRules.requireCaptureStillAuthorized(
+                joinGeneration = 8,
+                currentGeneration = 9,
+                expectedUserId = "advisor-1",
+                currentUserId = "advisor-1",
+                captureConsent = true,
+                microphoneGranted = true,
+                cameraGranted = true
+            )
+        }
+    }
+
     @Test fun rejectsMissingMicrophoneOrCameraPermission() {
         for (microphoneGranted in listOf(false, true)) {
             for (cameraGranted in listOf(false, true)) {
