@@ -10,12 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.io.Reader
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -33,6 +35,35 @@ internal data class AdvisorDirectoryItem(
     val featured: Boolean
 )
 
+/**
+ * A directory request carries the current account's bearer token. Bound its
+ * response and discard it if the account changes before the result is consumed.
+ * Server-side RLS remains authoritative for directory visibility.
+ */
+internal object AdvisorDirectoryResponseRules {
+    const val MAX_CHARS = 1_048_576
+
+    fun requireSameAccount(expectedUserId: String, currentUserId: String?) {
+        if (expectedUserId != currentUserId) {
+            throw IOException("Your account changed. Please sign in again.")
+        }
+    }
+
+    fun readBounded(reader: Reader): String {
+        val buffer = CharArray(4096)
+        val result = StringBuilder()
+        while (true) {
+            val count = reader.read(buffer)
+            if (count < 0) break
+            if (count > MAX_CHARS - result.length) {
+                throw IOException("Advisor directory response is too large.")
+            }
+            result.append(buffer, 0, count)
+        }
+        return result.toString()
+    }
+}
+
 internal object AdvisorDirectoryRepository {
     private fun JSONObject.text(key: String): String =
         if (isNull(key)) "" else optString(key, "")
@@ -46,6 +77,7 @@ internal object AdvisorDirectoryRepository {
 
     suspend fun list(): List<AdvisorDirectoryItem> = withContext(Dispatchers.IO) {
         val session = AuthRepository.activeSession()
+        AdvisorDirectoryResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
         val base = BuildConfig.SUPABASE_URL.trimEnd('/')
         val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
         if (!base.startsWith("https://") || key.isBlank()) {
@@ -64,6 +96,7 @@ internal object AdvisorDirectoryRepository {
             connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
             connection.setRequestProperty("Content-Type", "application/json")
             connection.setRequestProperty("Accept", "application/json")
+            AdvisorDirectoryResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
             connection.outputStream.use { it.write("{}".toByteArray(Charsets.UTF_8)) }
             val status = connection.responseCode
             if (status !in 200..299) {
@@ -72,7 +105,10 @@ internal object AdvisorDirectoryRepository {
                     else "Advisor directory unavailable (HTTP $status)."
                 )
             }
-            val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use {
+                AdvisorDirectoryResponseRules.readBounded(it)
+            }
+            AdvisorDirectoryResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
             val rows = JSONArray(response)
             buildList {
                 for (index in 0 until rows.length()) {
@@ -123,6 +159,8 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
         try {
             val result = AdvisorDirectoryRepository.list()
             if (AuthRepository.session?.userId == userId) advisors = result
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (failure: Exception) {
             if (AuthRepository.session?.userId == userId) {
                 error = failure.message ?: "Unable to load advisors."
