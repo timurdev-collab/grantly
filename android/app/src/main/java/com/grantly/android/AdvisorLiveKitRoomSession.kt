@@ -7,6 +7,7 @@ import io.livekit.android.LiveKit
 import io.livekit.android.room.Room
 import kotlinx.coroutines.sync.Mutex
 import java.io.IOException
+import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Source-only LiveKit connection lifecycle for an EXISTING advisor call.
@@ -16,6 +17,12 @@ import java.io.IOException
  * away, sign-out, or Activity teardown. No recording is enabled here.
  */
 internal object AdvisorLiveKitRoomRules {
+    fun requireNotLeft(joinGeneration: Long, currentGeneration: Long) {
+        if (joinGeneration != currentGeneration) {
+            throw IOException("The video call was closed before it could connect.")
+        }
+    }
+
     fun requireCaptureReady(
         captureConsent: Boolean,
         microphoneGranted: Boolean,
@@ -36,6 +43,9 @@ internal object AdvisorLiveKitRoomRules {
  */
 internal class AdvisorLiveKitRoomSession(private val context: Context) {
     private val lock = Mutex()
+    // A Leave action must invalidate an in-flight connect BEFORE waiting for the
+    // mutex: otherwise a slow connection could start capture after the user left.
+    private val leaveGeneration = AtomicLong(0)
     private var activeRoom: Room? = null
     private var activeUserId: String? = null
 
@@ -44,8 +54,10 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
         expectedUserId: String,
         captureConsent: Boolean
     ): Room {
+        val joinGeneration = leaveGeneration.get()
         lock.lock()
         try {
+            AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration, leaveGeneration.get())
             AdvisorLiveKitRoomRules.requireCaptureReady(
                 captureConsent,
                 context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) ==
@@ -66,15 +78,19 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
                 expectedUserId, AuthRepository.session?.userId
             )
 
+            AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration, leaveGeneration.get())
             val room = LiveKit.create(context.applicationContext)
             try {
                 room.connect(credentials.url, credentials.token)
+                AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration, leaveGeneration.get())
                 AdvisorCallPreparationRules.requireSameAccount(
                     expectedUserId, AuthRepository.session?.userId
                 )
-                // Publish only after consent and Android permissions were checked.
+                // Never begin capture after a Leave request during a slow connect.
                 room.localParticipant.setMicrophoneEnabled(true)
+                AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration, leaveGeneration.get())
                 room.localParticipant.setCameraEnabled(true)
+                AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration, leaveGeneration.get())
                 AdvisorCallPreparationRules.requireSameAccount(
                     expectedUserId, AuthRepository.session?.userId
                 )
@@ -96,6 +112,8 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
 
     /** Call on Back, navigation away, sign-out, and lifecycle teardown. */
     suspend fun leave() {
+        // Invalidate a pending join immediately, even while it owns the mutex.
+        leaveGeneration.incrementAndGet()
         lock.lock()
         try {
             val room = activeRoom
