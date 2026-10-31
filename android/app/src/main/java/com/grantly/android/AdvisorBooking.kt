@@ -45,6 +45,32 @@ internal object AdvisorBookingRequestRules {
         }
     }
 
+    /** Keep malformed contact details out of the booking form and the RPC request. */
+    fun validEmail(value: String): Boolean {
+        val email = value.trim()
+        if (email.length !in 6..254 || email.any(Char::isWhitespace)) return false
+        val at = email.indexOf('@')
+        if (at <= 0 || at != email.lastIndexOf('@')) return false
+        val local = email.substring(0, at)
+        val domain = email.substring(at + 1)
+        if (local.length > 64 || local.startsWith('.') || local.endsWith('.') || ".." in local) return false
+        val allowedLocalSymbols = "!#$%&'*+-/=?^_`{|}~."
+        if (local.any { !it.isLetterOrDigit() && it !in allowedLocalSymbols }) return false
+        val labels = domain.split('.')
+        return labels.size >= 2 && labels.last().length >= 2 && labels.all { label ->
+            label.isNotEmpty() && label.length <= 63 &&
+                label.first().isLetterOrDigit() && label.last().isLetterOrDigit() &&
+                label.all { it.isLetterOrDigit() || it == '-' }
+        }
+    }
+
+    fun validWhatsAppNumber(value: String): Boolean {
+        val phone = value.trim()
+        if (phone.length !in 7..40 || phone.any { !it.isDigit() && it !in " +()-." }) return false
+        if (phone.count { it == '+' } > 1 || ('+' in phone && !phone.startsWith('+'))) return false
+        return phone.count(Char::isDigit) in 7..15
+    }
+
     fun read(reader: java.io.Reader): String {
         val buffer = CharArray(4096)
         val result = StringBuilder()
@@ -164,6 +190,12 @@ internal object AdvisorBookingRepository {
     ) {
         val expectedUserId = AuthRepository.session?.userId
             ?: throw IOException("Sign in to request a consultation.")
+        if (!AdvisorBookingRequestRules.validEmail(email)) {
+            throw IOException("Enter a valid contact email address.")
+        }
+        if (!AdvisorBookingRequestRules.validWhatsAppNumber(whatsapp)) {
+            throw IOException("Enter a valid WhatsApp number with country code.")
+        }
         if (preferredStartMillis < System.currentTimeMillis() + 15 * 60_000L) {
             throw IOException("Please choose a consultation time at least 15 minutes from now.")
         }
@@ -343,10 +375,15 @@ internal fun AdvisorBookingContent(advisor: AdvisorDirectoryItem, onViewRequests
             modifier = Modifier.clickable { contactConsent = !contactConsent },
             style = MaterialTheme.typography.bodySmall)
     }
-    val validEmail = email.trim().let {
-        it.contains("@") && it.substringAfter("@").contains(".") && it.none(Char::isWhitespace)
+    val validEmail = AdvisorBookingRequestRules.validEmail(email)
+    val validPhone = AdvisorBookingRequestRules.validWhatsAppNumber(whatsapp)
+    if (email.isNotBlank() && !validEmail) {
+        Text("Enter a valid email address.", color = MaterialTheme.colorScheme.error)
     }
-    val validPhone = whatsapp.count(Char::isDigit) in 7..15
+    if (whatsapp.isNotBlank() && !validPhone) {
+        Text("Enter 7–15 digits with country code; letters are not allowed.",
+            color = MaterialTheme.colorScheme.error)
+    }
     val canSubmit = serviceId != null && validEmail && validPhone &&
         topic.trim().length in 3..240 && notes.length <= 2000 && contactConsent &&
         validPreferredTime && !busy && !loading
