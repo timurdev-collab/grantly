@@ -302,9 +302,20 @@ private fun HomeContent(
     ) {
         Icon(Icons.Outlined.Search, null, tint = Forest)
         Spacer(Modifier.width(11.dp))
-        Text("Search scholarships, countries, majors", color = Ink.copy(alpha = .65f), fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Spacer(Modifier.weight(1f))
-        Icon(Icons.Outlined.Tune, contentDescription = null, tint = Forest)
+        Text(
+            "Search scholarships, countries, majors",
+            modifier = Modifier.weight(1f),
+            color = Ink.copy(alpha = .65f),
+            fontSize = 14.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Box(
+            Modifier.size(32.dp).background(Forest, RoundedCornerShape(50)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(Icons.Outlined.Tune, contentDescription = null, tint = Ivory, modifier = Modifier.size(18.dp))
+        }
     }
     Spacer(Modifier.height(18.dp))
     // Mirror the iOS Home quick destinations; degree filters remain available in Discover.
