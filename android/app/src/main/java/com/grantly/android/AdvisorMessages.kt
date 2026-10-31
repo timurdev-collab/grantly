@@ -39,6 +39,25 @@ internal data class AdvisorMessage(
     val createdAt: String
 )
 
+/** Bounds authenticated messaging responses before JSON parsing. */
+internal object AdvisorMessageResponseRules {
+    const val MAX_CHARS = 1_048_576
+
+    fun read(reader: java.io.Reader): String {
+        val buffer = CharArray(4096)
+        val result = StringBuilder()
+        while (true) {
+            val count = reader.read(buffer)
+            if (count < 0) break
+            if (result.length + count > MAX_CHARS) {
+                throw IOException("Messaging response is too large. Please try again.")
+            }
+            result.append(buffer, 0, count)
+        }
+        return result.toString()
+    }
+}
+
 internal object AdvisorMessagesRepository {
     private fun validId(value: String): String = try {
         UUID.fromString(value).toString()
@@ -84,7 +103,14 @@ internal object AdvisorMessagesRepository {
                         else -> "Messaging request failed (HTTP " + status + "). Check access or try again."
                     })
                 }
-                connection.inputStream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }.orEmpty()
+                val response = connection.inputStream?.bufferedReader(Charsets.UTF_8)
+                    ?.use { AdvisorMessageResponseRules.read(it) }.orEmpty()
+                // A network response from the previous signed-in account must not
+                // be delivered to a newly signed-in account.
+                if (AuthRepository.session?.userId != session.userId) {
+                    throw IOException("Your account changed. Sign in again.")
+                }
+                response
             } finally {
                 connection.disconnect()
             }
