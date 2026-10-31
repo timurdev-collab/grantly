@@ -200,10 +200,19 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
         }
     }
 
+    /**
+     * Call synchronously from Back or ON_STOP before scheduling coroutine cleanup.
+     * This invalidates an in-flight Join even when the UI coroutine cannot run yet.
+     * Always follow with leave() to disconnect and release the room.
+     */
+    fun invalidatePendingJoin() {
+        leaveGeneration.incrementAndGet()
+    }
+
     /** Call on Back, navigation away, sign-out, and lifecycle teardown. */
     suspend fun leave() {
         // Invalidate a pending join immediately, even while it owns the mutex.
-        leaveGeneration.incrementAndGet()
+        invalidatePendingJoin()
         lock.lock()
         try {
             val room = activeRoom
