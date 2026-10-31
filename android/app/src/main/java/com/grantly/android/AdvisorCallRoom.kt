@@ -58,6 +58,9 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
     }
     var room by remember(userId, call.id) { mutableStateOf<Room?>(null) }
     var joining by remember(userId, call.id) { mutableStateOf(false) }
+    var microphoneEnabled by remember(userId, call.id) { mutableStateOf(true) }
+    var cameraEnabled by remember(userId, call.id) { mutableStateOf(true) }
+    var changingMedia by remember(userId, call.id) { mutableStateOf(false) }
     var consent by remember(userId, call.id) { mutableStateOf(false) }
     var error by remember(userId, call.id) { mutableStateOf<String?>(null) }
     var permissionVersion by remember(userId, call.id) { mutableIntStateOf(0) }
@@ -159,6 +162,8 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                         try {
                             val connected = session.joinExistingCall(call.id, userId, captureConsent = true)
                             if (AuthRepository.session?.userId == userId) {
+                                microphoneEnabled = true
+                                cameraEnabled = true
                                 room = connected
                             } else {
                                 session.leave()
@@ -191,13 +196,55 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 AdvisorVideoTrack(room = connected, track = remote,
                     modifier = Modifier.fillMaxWidth().height(220.dp))
             }
-            Text("Your camera preview")
-            if (local != null) {
+            Text(if (cameraEnabled) "Your camera preview" else "Your camera is off")
+            if (cameraEnabled && local != null) {
                 AdvisorVideoTrack(room = connected, track = local,
                     modifier = Modifier.fillMaxWidth().height(130.dp), mirror = true)
             } else {
-                Text("Camera preview unavailable.")
+                if (cameraEnabled) Text("Camera preview unavailable.")
             }
+            OutlinedButton(
+                enabled = !changingMedia,
+                onClick = {
+                    if (!changingMedia) {
+                        changingMedia = true
+                        val enable = !microphoneEnabled
+                        scope.launch {
+                            try {
+                                session.setMicrophoneEnabled(userId, enable)
+                                if (room === connected) microphoneEnabled = enable
+                            } catch (cancelled: CancellationException) {
+                                throw cancelled
+                            } catch (failure: Exception) {
+                                error = failure.message ?: "Unable to change microphone."
+                            } finally {
+                                changingMedia = false
+                            }
+                        }
+                    }
+                }
+            ) { Text(if (microphoneEnabled) "Mute microphone" else "Unmute microphone") }
+            OutlinedButton(
+                enabled = !changingMedia,
+                onClick = {
+                    if (!changingMedia) {
+                        changingMedia = true
+                        val enable = !cameraEnabled
+                        scope.launch {
+                            try {
+                                session.setCameraEnabled(userId, enable)
+                                if (room === connected) cameraEnabled = enable
+                            } catch (cancelled: CancellationException) {
+                                throw cancelled
+                            } catch (failure: Exception) {
+                                error = failure.message ?: "Unable to change camera."
+                            } finally {
+                                changingMedia = false
+                            }
+                        }
+                    }
+                }
+            ) { Text(if (cameraEnabled) "Turn camera off" else "Turn camera on") }
             OutlinedButton(onClick = {
                 scope.launch {
                     session.leave()
