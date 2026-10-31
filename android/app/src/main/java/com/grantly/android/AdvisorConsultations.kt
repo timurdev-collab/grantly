@@ -47,6 +47,10 @@ internal object AdvisorConsultationsRepository {
 
     private suspend fun rpc(name: String, payload: JSONObject): JSONArray = withContext(Dispatchers.IO) {
         val session = AuthRepository.activeSession()
+        val expectedUserId = session.userId
+        AdvisorConsultationResponseRules.requireSameAccount(
+            expectedUserId, AuthRepository.session?.userId
+        )
         val base = BuildConfig.SUPABASE_URL.trimEnd('/')
         val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
         if (!base.startsWith("https://") || key.isBlank()) {
@@ -68,7 +72,13 @@ internal object AdvisorConsultationsRepository {
             connection.setRequestProperty("Authorization", "Bearer " + session.accessToken)
             connection.setRequestProperty("Content-Type", "application/json")
             connection.setRequestProperty("Accept", "application/json")
+            AdvisorConsultationResponseRules.requireSameAccount(
+                expectedUserId, AuthRepository.session?.userId
+            )
             connection.outputStream.use { it.write(payload.toString().toByteArray(Charsets.UTF_8)) }
+            AdvisorConsultationResponseRules.requireSameAccount(
+                expectedUserId, AuthRepository.session?.userId
+            )
             val status = connection.responseCode
             if (status !in 200..299) {
                 throw IOException(
@@ -76,8 +86,13 @@ internal object AdvisorConsultationsRepository {
                     else "Consultation information unavailable (HTTP " + status + ")."
                 )
             }
-            val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-            if (response.isBlank()) JSONArray() else JSONArray(response)
+            val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use {
+                AdvisorConsultationResponseRules.readBounded(it)
+            }
+            AdvisorConsultationResponseRules.requireSameAccount(
+                expectedUserId, AuthRepository.session?.userId
+            )
+            if (response.isBlank()) JSONArray() else JSONArray(response
         } finally {
             connection.disconnect()
         }
