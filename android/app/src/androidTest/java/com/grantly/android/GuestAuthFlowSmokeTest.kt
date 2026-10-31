@@ -33,14 +33,17 @@ class GuestAuthFlowSmokeTest {
 
         val showPassword = device.wait(Until.findObject(By.desc("Show password")), 10_000)
         assertNotNull("Sign-in should allow password visibility to be toggled", showPassword)
-        // UIAutomator may resolve the Compose button's accessibility wrapper rather
-        // than its clickable text child. Prefer the visible label when available.
-        // Still require the updated accessibility description after the tap.
-        val showLabel = device.wait(Until.findObject(By.text("Show")), 3_000)
-        (showLabel ?: showPassword).click()
-        device.waitForIdle(5_000)
+        // Tap the accessible Compose TextButton, not its nested text label.
+        // On some emulator images a UIAutomator click on the text-only node
+        // does not dispatch the parent button's onClick callback.
+        showPassword.click()
         assertNotNull("Sign-in should allow hiding the password again",
             device.wait(Until.findObject(By.desc("Hide password")), 10_000))
+        val hidePassword = device.wait(Until.findObject(By.desc("Hide password")), 5_000)
+        assertNotNull("Password visibility toggle should remain interactive", hidePassword)
+        hidePassword.click()
+        assertNotNull("Password should be concealed after toggling back",
+            device.wait(Until.findObject(By.desc("Show password")), 10_000))
 
         val signup = device.wait(
             Until.findObject(By.text("New to EduT? Create an account")), 10_000)
