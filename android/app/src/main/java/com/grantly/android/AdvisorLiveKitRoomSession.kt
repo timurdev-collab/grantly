@@ -10,11 +10,11 @@ import java.io.IOException
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * Source-only LiveKit connection lifecycle for an EXISTING advisor call.
+ * LiveKit connection lifecycle for an EXISTING advisor call.
  *
- * Not wired to a Join button. The caller must obtain explicit capture consent,
- * request Android camera/microphone permissions, and call leave() on navigation
- * away, sign-out, or Activity teardown. No recording is enabled here.
+ * The call screen must obtain explicit capture consent and OS permissions,
+ * and invoke leave() on navigation, sign-out, or Activity teardown.
+ * No recording is enabled here. Authenticated device calls are not verified.
  */
 internal object AdvisorLiveKitRoomRules {
     fun shouldInvalidatePendingJoin(pendingUserId: String?, currentUserId: String?): Boolean =
@@ -36,6 +36,26 @@ internal object AdvisorLiveKitRoomRules {
         }
         if (!microphoneGranted || !cameraGranted) {
             throw IOException("Camera and microphone permissions are required for this video call.")
+        }
+    }
+
+    /** Muting is always allowed while the current account owns the room.
+     * Re-enabling capture additionally requires the relevant OS permission.
+     */
+    fun requireMediaChangeAuthorized(
+        requestedGeneration: Long,
+        currentGeneration: Long,
+        expectedUserId: String,
+        activeUserId: String?,
+        currentUserId: String?,
+        enabling: Boolean,
+        permissionGranted: Boolean
+    ) {
+        requireNotLeft(requestedGeneration, currentGeneration)
+        AdvisorCallPreparationRules.requireSameAccount(expectedUserId, activeUserId)
+        AdvisorCallPreparationRules.requireSameAccount(expectedUserId, currentUserId)
+        if (enabling && !permissionGranted) {
+            throw IOException("Media permission was revoked. Leave the call and grant it again.")
         }
     }
 
@@ -137,6 +157,47 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
             cameraGranted = context.checkSelfPermission(Manifest.permission.CAMERA) ==
                 PackageManager.PERMISSION_GRANTED
         )
+    }
+
+    /** Media toggles are serialized with Leave and never act on a released room. */
+    suspend fun setMicrophoneEnabled(expectedUserId: String, enabled: Boolean) {
+        setMediaEnabled(expectedUserId, microphone = true, enabled = enabled)
+    }
+
+    suspend fun setCameraEnabled(expectedUserId: String, enabled: Boolean) {
+        setMediaEnabled(expectedUserId, microphone = false, enabled = enabled)
+    }
+
+    private suspend fun setMediaEnabled(expectedUserId: String, microphone: Boolean, enabled: Boolean) {
+        val requestedGeneration = leaveGeneration.get()
+        lock.lock()
+        try {
+            val room = activeRoom ?: throw IOException("The call has already ended.")
+            val permission = if (microphone) Manifest.permission.RECORD_AUDIO else Manifest.permission.CAMERA
+            AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
+                requestedGeneration = requestedGeneration,
+                currentGeneration = leaveGeneration.get(),
+                expectedUserId = expectedUserId,
+                activeUserId = activeUserId,
+                currentUserId = AuthRepository.session?.userId,
+                enabling = enabled,
+                permissionGranted = context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
+            )
+            if (microphone) {
+                room.localParticipant.setMicrophoneEnabled(enabled)
+            } else {
+                room.localParticipant.setCameraEnabled(enabled)
+            }
+            // Leave can invalidate a media operation while LiveKit is suspending.
+            // Turn capture back off before returning control to the waiting Leave.
+            if (enabled && requestedGeneration != leaveGeneration.get()) {
+                if (microphone) room.localParticipant.setMicrophoneEnabled(false)
+                else room.localParticipant.setCameraEnabled(false)
+            }
+            AdvisorLiveKitRoomRules.requireNotLeft(requestedGeneration, leaveGeneration.get())
+        } finally {
+            lock.unlock()
+        }
     }
 
     /** Call on Back, navigation away, sign-out, and lifecycle teardown. */
