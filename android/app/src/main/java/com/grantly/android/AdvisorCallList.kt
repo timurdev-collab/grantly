@@ -148,6 +148,7 @@ internal fun AdvisorCallListContent(userId: String) {
     var loading by remember(userId) { mutableStateOf(true) }
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var refresh by remember(userId) { mutableIntStateOf(0) }
+    var selectedCall by remember(userId) { mutableStateOf<AdvisorCallListItem?>(null) }
 
     LaunchedEffect(userId, refresh) {
         loading = true
@@ -167,10 +168,15 @@ internal fun AdvisorCallListContent(userId: String) {
         }
     }
 
+    if (selectedCall != null) {
+        AdvisorCallRoomContent(call = selectedCall!!, userId = userId, onClose = { selectedCall = null })
+        return
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Advisor calls", style = MaterialTheme.typography.titleLarge)
         Text(
-            "Existing calls for your active student relationships. This preview cannot start or join calls yet.",
+            "Existing calls for your active student relationships. Joining requires explicit camera/microphone consent and permission; authenticated calls are not yet device-verified.",
             style = MaterialTheme.typography.bodySmall
         )
         OutlinedButton(onClick = { refresh++ }) { Text("Refresh calls") }
@@ -184,6 +190,7 @@ internal fun AdvisorCallListContent(userId: String) {
                         Text(call.studentName.ifBlank { "Student" }, fontWeight = FontWeight.SemiBold)
                         Text("Call status: ${AdvisorCallListRules.label(call.status)}")
                         Text("Scheduled: ${AdvisorCallListRules.displayTime(call.scheduledFor)}")
+                        OutlinedButton(onClick = { selectedCall = call }) { Text("Open call room") }
                         if (call.recordingRequested) {
                             Text("Recording was requested; this preview does not enable recording.")
                         }
