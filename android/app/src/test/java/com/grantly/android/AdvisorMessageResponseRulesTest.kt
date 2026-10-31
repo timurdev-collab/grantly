@@ -8,6 +8,22 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AdvisorMessageResponseRulesTest {
+    @Test fun sameAccountAllowsMessagingRequest() {
+        AdvisorMessageResponseRules.requireSameAccount("student-a", "student-a")
+    }
+
+    @Test fun switchingAccountsRejectsMessagingRequest() {
+        val failure = assertThrows(IOException::class.java) {
+            AdvisorMessageResponseRules.requireSameAccount("student-a", "student-b")
+        }
+        assertTrue(failure.message.orEmpty().contains("account changed"))
+    }
+
+    @Test fun signingOutRejectsMessagingRequest() {
+        assertThrows(IOException::class.java) {
+            AdvisorMessageResponseRules.requireSameAccount("student-a", null)
+        }
+    }
     @Test fun emptyAndOrdinaryResponsesArePreserved() {
         assertEquals("", AdvisorMessageResponseRules.read(StringReader("")))
         assertEquals("[{\"body\":\"hello\"}]",
