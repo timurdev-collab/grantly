@@ -31,6 +31,35 @@ import java.util.UUID
 
 private const val ADVISOR_TERMS_VERSION = "2026-10-04.v1"
 
+/** Account isolation and bounded responses for sensitive consultation requests. */
+internal object AdvisorBookingRequestRules {
+    private const val MAX_RESPONSE_CHARS = 1_048_576
+
+    fun requireActiveAccount(
+        expectedUserId: String,
+        authenticatedUserId: String,
+        currentUserId: String?
+    ) {
+        if (expectedUserId != authenticatedUserId || expectedUserId != currentUserId) {
+            throw IOException("Your account changed. Please sign in again.")
+        }
+    }
+
+    fun read(reader: java.io.Reader): String {
+        val buffer = CharArray(4096)
+        val result = StringBuilder()
+        while (true) {
+            val count = reader.read(buffer)
+            if (count < 0) break
+            if (result.length + count > MAX_RESPONSE_CHARS) {
+                throw IOException("Booking response is too large. Please try again.")
+            }
+            result.append(buffer, 0, count)
+        }
+        return result.toString()
+    }
+}
+
 /** Legal wording and policy version must stay synchronized with the iOS booking flow. */
 private enum class AdvisorPolicy(val title: String, val content: String) {
     Terms("Terms & Conditions", """Advisor services are provided by independent advisors through EduT. A consultation request does not charge you and does not guarantee a booking until payment and scheduling are confirmed.
@@ -61,9 +90,16 @@ private enum class AdvisorPolicy(val title: String, val content: String) {
 }
 
 internal object AdvisorBookingRepository {
-    private suspend fun rpc(name: String, body: JSONObject): String = withContext(Dispatchers.IO) {
+    private suspend fun rpc(expectedUserId: String, name: String, body: JSONObject): String {
         require(name in setOf("accept_advisor_booking_terms", "submit_advisor_consultation_request"))
         val session = AuthRepository.activeSession()
+        AdvisorBookingRequestRules.requireActiveAccount(
+            expectedUserId, session.userId, AuthRepository.session?.userId
+        )
+        return withContext(Dispatchers.IO) {
+        AdvisorBookingRequestRules.requireActiveAccount(
+            expectedUserId, session.userId, AuthRepository.session?.userId
+        )
         val base = BuildConfig.SUPABASE_URL.trimEnd('/')
         val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
         if (!base.startsWith("https://") || key.isBlank()) throw IOException("Booking is not configured.")
@@ -80,11 +116,15 @@ internal object AdvisorBookingRepository {
             connection.setRequestProperty("Authorization", "Bearer " + session.accessToken)
             connection.setRequestProperty("Content-Type", "application/json")
             connection.setRequestProperty("Accept", "application/json")
+            // Do not submit a stale account's contact details or policy acceptance.
+            AdvisorBookingRequestRules.requireActiveAccount(
+                expectedUserId, session.userId, AuthRepository.session?.userId
+            )
             connection.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
             val status = connection.responseCode
             if (status !in 200..299) {
                 val detail = connection.errorStream?.bufferedReader(Charsets.UTF_8)
-                    ?.use { it.readText() }.orEmpty()
+                    ?.use { AdvisorBookingRequestRules.read(it) }.orEmpty()
                 val message = runCatching { JSONObject(detail).optString("message") }.getOrNull()
                     ?.take(180)?.takeIf { it.isNotBlank() }
                 throw IOException(
@@ -92,19 +132,27 @@ internal object AdvisorBookingRepository {
                     else message ?: "Booking request failed (HTTP " + status + ")."
                 )
             }
-            connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            val response = connection.inputStream.bufferedReader(Charsets.UTF_8)
+                .use { AdvisorBookingRequestRules.read(it) }
+            AdvisorBookingRequestRules.requireActiveAccount(
+                expectedUserId, session.userId, AuthRepository.session?.userId
+            )
+            response
         } finally {
             connection.disconnect()
+        }
         }
     }
 
     suspend fun accept(advisorId: String): String {
+        val expectedUserId = AuthRepository.session?.userId
+            ?: throw IOException("Sign in to request a consultation.")
         val payload = JSONObject()
             .put("p_advisor_id", UUID.fromString(advisorId).toString())
             .put("p_terms_version", ADVISOR_TERMS_VERSION)
             .put("p_privacy_version", ADVISOR_TERMS_VERSION)
             .put("p_refund_policy_version", ADVISOR_TERMS_VERSION)
-        val rows = JSONArray(rpc("accept_advisor_booking_terms", payload))
+        val rows = JSONArray(rpc(expectedUserId, "accept_advisor_booking_terms", payload))
         val value = rows.optJSONObject(0)?.optString("acceptance_id").orEmpty()
         return runCatching { UUID.fromString(value).toString() }
             .getOrElse { throw IOException("Acceptance was not recorded. Please try again.") }
@@ -114,6 +162,8 @@ internal object AdvisorBookingRepository {
         advisorId: String, serviceId: String, acceptanceId: String,
         email: String, whatsapp: String, topic: String, notes: String, preferredStartMillis: Long
     ) {
+        val expectedUserId = AuthRepository.session?.userId
+            ?: throw IOException("Sign in to request a consultation.")
         if (preferredStartMillis < System.currentTimeMillis() + 15 * 60_000L) {
             throw IOException("Please choose a consultation time at least 15 minutes from now.")
         }
@@ -131,7 +181,7 @@ internal object AdvisorBookingRepository {
             .put("p_topic", topic.trim())
             .put("p_notes", notes.trim())
             .put("p_contact_consent", true)
-        rpc("submit_advisor_consultation_request", payload)
+        rpc(expectedUserId, "submit_advisor_consultation_request", payload)
     }
 }
 
