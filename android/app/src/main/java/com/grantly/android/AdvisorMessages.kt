@@ -43,6 +43,12 @@ internal data class AdvisorMessage(
 internal object AdvisorMessageResponseRules {
     const val MAX_CHARS = 1_048_576
 
+    fun requireSameAccount(expectedUserId: String, currentUserId: String?) {
+        if (expectedUserId != currentUserId) {
+            throw IOException("Your account changed. Please sign in again.")
+        }
+    }
+
     fun read(reader: java.io.Reader): String {
         val buffer = CharArray(4096)
         val result = StringBuilder()
@@ -71,7 +77,9 @@ internal object AdvisorMessagesRepository {
         method: String = "POST"
     ): String {
         val session = AuthRepository.activeSession()
+        AdvisorMessageResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
         return withContext(Dispatchers.IO) {
+            AdvisorMessageResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
             val base = BuildConfig.SUPABASE_URL.trimEnd('/')
             val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
             if (!base.startsWith("https://") || key.isBlank()) {
@@ -92,6 +100,9 @@ internal object AdvisorMessagesRepository {
                 if (path == "/rest/v1/messages") {
                     connection.setRequestProperty("Prefer", "return=minimal")
                 }
+                // A signed-out or switched account must not send a stale message,
+                // read receipt, or conversation-creation request.
+                AdvisorMessageResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
                 connection.outputStream.use {
                     it.write(body.toString().toByteArray(Charsets.UTF_8))
                 }
@@ -107,9 +118,9 @@ internal object AdvisorMessagesRepository {
                     ?.use { AdvisorMessageResponseRules.read(it) }.orEmpty()
                 // A network response from the previous signed-in account must not
                 // be delivered to a newly signed-in account.
-                if (AuthRepository.session?.userId != session.userId) {
-                    throw IOException("Your account changed. Sign in again.")
-                }
+                AdvisorMessageResponseRules.requireSameAccount(
+                    session.userId, AuthRepository.session?.userId
+                )
                 response
             } finally {
                 connection.disconnect()
