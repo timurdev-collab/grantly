@@ -16,6 +16,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.UUID
 
+/** Reject stale safety responses after an account switch. */
+internal object AdvisorMessageSafetyResponseRules {
+    fun requireSameAccount(expectedUserId: String, currentUserId: String?) {
+        if (expectedUserId != currentUserId) {
+            throw IOException("Your account changed. Please sign in again.")
+        }
+    }
+}
+
 /** iOS-equivalent safety controls backed by existing RLS-protected tables. */
 internal object AdvisorMessageSafetyRepository {
     private val reasons = setOf("Spam", "Harassment", "Inappropriate content", "Scam or fraud", "Other")
@@ -62,7 +71,13 @@ internal object AdvisorMessageSafetyRepository {
                         else -> "Safety action failed (HTTP " + status + "). Please retry."
                     })
                 }
-                connection.inputStream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }.orEmpty()
+                // Bound server responses and never surface data from a previous account.
+                val response = connection.inputStream?.bufferedReader(Charsets.UTF_8)
+                    ?.use { AdvisorMessageResponseRules.read(it) }.orEmpty()
+                AdvisorMessageSafetyResponseRules.requireSameAccount(
+                    session.userId, AuthRepository.session?.userId
+                )
+                response
             } finally {
                 connection.disconnect()
             }
