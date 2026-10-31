@@ -68,4 +68,66 @@ class AdvisorCallPreparationRulesTest {
             AdvisorCallPreparationRules.readBounded(StringReader("a".repeat(32769)))
         }
     }
+
+    @Test fun rejectsNonCanonicalCallIds() {
+        for (invalid in listOf("1-1-1-1-1", " 01234567-1234-1234-1234-123456789abc",
+            "01234567-1234-1234-1234-123456789abc ", "01234567123412341234123456789abc")) {
+            assertThrows(IOException::class.java) {
+                AdvisorCallPreparationRules.validCallId(invalid)
+            }
+        }
+    }
+
+    @Test fun requiresActiveRelationshipAndCallParticipant() {
+        val callId = "01234567-1234-4abc-8def-0123456789ab"
+        val assignmentId = "12345678-1234-4abc-8def-0123456789ab"
+        val studentId = "23456789-1234-4abc-8def-0123456789ab"
+        val advisorId = "34567890-1234-4abc-8def-0123456789ab"
+        for (status in listOf("requested", "scheduled", "active")) {
+            AdvisorCallPreparationRules.requireJoinableCall(
+                callId, callId, status, assignmentId, assignmentId, "active",
+                studentId, advisorId, studentId
+            )
+            AdvisorCallPreparationRules.requireJoinableCall(
+                callId, callId, status, assignmentId, assignmentId, "active",
+                studentId, advisorId, advisorId
+            )
+        }
+        for (status in listOf("ended", "cancelled", "", "unknown")) {
+            assertThrows(IOException::class.java) {
+                AdvisorCallPreparationRules.requireJoinableCall(
+                    callId, callId, status, assignmentId, assignmentId, "active",
+                    studentId, advisorId, studentId
+                )
+            }
+        }
+        for (assignmentStatus in listOf("requested", "ended", "declined", "")) {
+            assertThrows(IOException::class.java) {
+                AdvisorCallPreparationRules.requireJoinableCall(
+                    callId, callId, "active", assignmentId, assignmentId,
+                    assignmentStatus, studentId, advisorId, studentId
+                )
+            }
+        }
+        for (badValue in listOf("00000000-1234-4abc-8def-0123456789ab", "")) {
+            assertThrows(IOException::class.java) {
+                AdvisorCallPreparationRules.requireJoinableCall(
+                    callId, badValue, "active", assignmentId, assignmentId, "active",
+                    studentId, advisorId, studentId
+                )
+            }
+            assertThrows(IOException::class.java) {
+                AdvisorCallPreparationRules.requireJoinableCall(
+                    callId, callId, "active", assignmentId, badValue, "active",
+                    studentId, advisorId, studentId
+                )
+            }
+        }
+        assertThrows(IOException::class.java) {
+            AdvisorCallPreparationRules.requireJoinableCall(
+                callId, callId, "active", assignmentId, assignmentId, "active",
+                studentId, advisorId, "45678901-1234-4abc-8def-0123456789ab"
+            )
+        }
+    }
 }
