@@ -96,7 +96,8 @@ internal object AdvisorMessagesRepository {
             "get_my_conversation_summaries",
             "get_messages_page",
             "mark_conversation_read",
-            "ensure_advisor_direct_conversation"
+            "ensure_advisor_direct_conversation",
+            "ensure_advisor_conversation"
         ))
         return request("/rest/v1/rpc/" + name, params)
     }
@@ -155,6 +156,27 @@ internal object AdvisorMessagesRepository {
             .put("conversation_id", validId(conversationId))
             .put("sender_id", userId)
             .put("body", body))
+    }
+
+    /**
+     * Open a conversation for an active assigned student, using the same
+     * existing RPC as the iOS advisor portal. The server remains authoritative:
+     * it checks both relationship membership and current active status.
+     */
+    suspend fun startStudentChat(userId: String, assignmentId: String): String {
+        val validAssignmentId = validId(assignmentId)
+        val current = AdvisorStudentsRepository.load(userId)
+        if (current.none {
+                it.assignmentId == validAssignmentId && AdvisorStudentRules.canMessage(it)
+            } || AuthRepository.session?.userId != userId) {
+            throw IOException("Messaging requires an active advisor-student relationship.")
+        }
+        val raw = rpc("ensure_advisor_conversation",
+            JSONObject().put("p_assignment_id", validAssignmentId))
+        if (AuthRepository.session?.userId != userId) {
+            throw IOException("Your account changed. Please sign in again.")
+        }
+        return validId(raw.trim().trim('"'))
     }
 
     suspend fun startAdvisorChat(advisorId: String): String {

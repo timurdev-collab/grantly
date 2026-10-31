@@ -26,6 +26,17 @@ class AdvisorStudentRulesTest {
         targetCountries = listOf("Korea")
     )
 
+    @Test fun messagingIsOnlyAvailableForActiveStudentsWithValidIdentifiers() {
+        val validId = "b5b0b011-23bd-49d8-a5a1-11d820b15a7e"
+        val active = student("active", validId)
+        assertEquals(true, AdvisorStudentRules.canMessage(active))
+        for (status in listOf("requested", "declined", "ended", "suspended", "unknown", "")) {
+            assertEquals(false, AdvisorStudentRules.canMessage(active.copy(status = status)))
+        }
+        assertEquals(false, AdvisorStudentRules.canMessage(active.copy(assignmentId = "invalid")))
+        assertEquals(false, AdvisorStudentRules.canMessage(active.copy(studentId = "")))
+    }
+
     @Test fun pendingAndActiveCountsNeverTreatUnknownStatusesAsActive() {
         val items = listOf(student("requested", "1"), student("active", "2"),
             student("requested", "3"), student("unknown", "4"))

@@ -1,5 +1,6 @@
 package com.grantly.android
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
@@ -56,6 +57,11 @@ internal object AdvisorStudentRules {
     // Role alone is insufficient: suspended or unapproved advisors must not read student records.
     fun canAccess(role: String, approvalStatus: String?): Boolean =
         AdvisorProfessionalProfileRules.canView(role, approvalStatus)
+
+    fun canMessage(student: AdvisorStudentItem): Boolean =
+        student.status == "active" &&
+            runCatching { UUID.fromString(student.assignmentId) }.isSuccess &&
+            runCatching { UUID.fromString(student.studentId) }.isSuccess
 
     fun pending(items: List<AdvisorStudentItem>): Int = items.count { it.status == "requested" }
     fun active(items: List<AdvisorStudentItem>): Int = items.count { it.status == "active" }
@@ -174,6 +180,7 @@ internal fun AdvisorStudentsContent(userId: String) {
     var pendingDecision by remember(userId) { mutableStateOf<Pair<AdvisorStudentItem, String>?>(null) }
     var busyAssignment by remember(userId) { mutableStateOf<String?>(null) }
     var actionError by remember(userId) { mutableStateOf<String?>(null) }
+    var selectedConversation by remember(userId) { mutableStateOf<AdvisorConversation?>(null) }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(userId, refresh) {
@@ -192,6 +199,20 @@ internal fun AdvisorStudentsContent(userId: String) {
         } finally {
             if (AuthRepository.session?.userId == userId) loading = false
         }
+    }
+
+    // The conversation is presented in-place, like the iOS advisor chat sheet.
+    // System Back returns to the student queue instead of exiting the app.
+    BackHandler(enabled = selectedConversation != null) {
+        selectedConversation = null
+        refresh++
+    }
+    selectedConversation?.let { conversation ->
+        TextButton(onClick = { selectedConversation = null; refresh++ }) {
+            Text("← My students")
+        }
+        AdvisorMessageThreadContent(conversation.id, conversation.title, conversation.otherUserId)
+        return
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -261,6 +282,40 @@ internal fun AdvisorStudentsContent(userId: String) {
                                 onClick = { actionError = null; pendingDecision = student to action },
                                 enabled = busyAssignment == null
                             ) { Text(AdvisorStudentActionRules.label(action)) }
+                        }
+                        if (AdvisorStudentRules.canMessage(student)) {
+                            OutlinedButton(
+                                enabled = busyAssignment == null && !loading,
+                                onClick = {
+                                    if (busyAssignment != null) return@OutlinedButton
+                                    busyAssignment = student.assignmentId
+                                    actionError = null
+                                    scope.launch {
+                                        try {
+                                            val conversationId = AdvisorMessagesRepository.startStudentChat(
+                                                userId, student.assignmentId
+                                            )
+                                            if (AuthRepository.session?.userId == userId) {
+                                                selectedConversation = AdvisorConversation(
+                                                    id = conversationId,
+                                                    title = student.fullName.ifBlank { "Student" },
+                                                    otherUserId = student.studentId,
+                                                    lastMessage = "",
+                                                    unreadCount = 0,
+                                                    lastMessageAt = ""
+                                                )
+                                            }
+                                        } catch (cancelled: CancellationException) {
+                                            throw cancelled
+                                        } catch (failure: Exception) {
+                                            actionError = failure.message ?: "Unable to open student conversation."
+                                            refresh++
+                                        } finally {
+                                            busyAssignment = null
+                                        }
+                                    }
+                                }
+                            ) { Text(if (busyAssignment == student.assignmentId) "Opening..." else "Message student") }
                         }
                     }
                 }
