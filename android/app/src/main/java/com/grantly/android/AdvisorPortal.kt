@@ -142,6 +142,7 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
                 "overview" to "Overview",
                 "students" to "My students",
                 "consultations" to "Consultations",
+                "calls" to "Calls",
                 "professional" to "Professional profile"
             ).forEach { (value, label) ->
                 FilterChip(
@@ -158,6 +159,7 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
         when (section) {
             "students" -> AdvisorStudentsContent(userId)
             "consultations" -> AdvisorIncomingConsultationsContent(userId)
+            "calls" -> AdvisorCallListContent(userId)
             "professional" -> AdvisorProfessionalProfileContent(userId)
             else -> {
                 if (loading) {
@@ -191,7 +193,7 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
                     }
                 }
                 Text(
-                    "Messages opens the existing advisor inbox. Video calls and full iOS advisor navigation are not yet available in this Android preview.",
+                    "Messages opens the existing advisor inbox. Calls lists existing eligible sessions but cannot join them yet. Full iOS advisor navigation is not available in this Android preview.",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
