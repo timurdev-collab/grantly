@@ -20,6 +20,32 @@ class AdvisorMessageSafetyResponseRulesTest {
         }
     }
 
+    @Test fun safetyMutationAcceptsOnlyTheInitiatingAccount() {
+        AdvisorMessageSafetyResponseRules.requireActiveRequestAccount(
+            "advisor-a", "advisor-a", "advisor-a"
+        )
+        assertThrows(IOException::class.java) {
+            AdvisorMessageSafetyResponseRules.requireActiveRequestAccount(
+                "advisor-a", "advisor-b", "advisor-b"
+            )
+        }
+        assertThrows(IOException::class.java) {
+            AdvisorMessageSafetyResponseRules.requireActiveRequestAccount(
+                "advisor-a", "advisor-b", "advisor-a"
+            )
+        }
+        assertThrows(IOException::class.java) {
+            AdvisorMessageSafetyResponseRules.requireActiveRequestAccount(
+                "advisor-a", "advisor-a", "advisor-b"
+            )
+        }
+        assertThrows(IOException::class.java) {
+            AdvisorMessageSafetyResponseRules.requireActiveRequestAccount(
+                "advisor-a", "advisor-a", null
+            )
+        }
+    }
+
     @Test fun safetyResponseUsesExistingBoundedReader() {
         assertEquals("[{}]", AdvisorMessageResponseRules.read(StringReader("[{}]")))
         assertThrows(IOException::class.java) {
