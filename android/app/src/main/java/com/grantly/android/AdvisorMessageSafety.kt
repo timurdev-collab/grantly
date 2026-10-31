@@ -23,6 +23,17 @@ internal object AdvisorMessageSafetyResponseRules {
             throw IOException("Your account changed. Please sign in again.")
         }
     }
+
+    // Bind a safety action to the identity that prepared its user-scoped payload.
+    // Checking only the final response is too late for POST/DELETE requests.
+    fun requireActiveRequestAccount(
+        expectedUserId: String,
+        authenticatedUserId: String,
+        currentUserId: String?
+    ) {
+        requireSameAccount(expectedUserId, authenticatedUserId)
+        requireSameAccount(expectedUserId, currentUserId)
+    }
 }
 
 /** iOS-equivalent safety controls backed by existing RLS-protected tables. */
@@ -36,9 +47,20 @@ internal object AdvisorMessageSafetyRepository {
         throw IOException("Invalid account or message identifier.")
     }
 
-    private suspend fun request(path: String, method: String, body: JSONObject? = null): String {
+    private suspend fun request(
+        expectedUserId: String,
+        path: String,
+        method: String,
+        body: JSONObject? = null
+    ): String {
         val session = AuthRepository.activeSession()
+        AdvisorMessageSafetyResponseRules.requireActiveRequestAccount(
+            expectedUserId, session.userId, AuthRepository.session?.userId
+        )
         return withContext(Dispatchers.IO) {
+            AdvisorMessageSafetyResponseRules.requireActiveRequestAccount(
+                expectedUserId, session.userId, AuthRepository.session?.userId
+            )
             val base = BuildConfig.SUPABASE_URL.trimEnd('/')
             val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
             if (!base.startsWith("https://") || key.isBlank()) {
@@ -54,6 +76,10 @@ internal object AdvisorMessageSafetyRepository {
                 connection.setRequestProperty("apikey", key)
                 connection.setRequestProperty("Authorization", "Bearer " + session.accessToken)
                 connection.setRequestProperty("Accept", "application/json")
+                // Recheck immediately before sending a request that may mutate server data.
+                AdvisorMessageSafetyResponseRules.requireActiveRequestAccount(
+                    expectedUserId, session.userId, AuthRepository.session?.userId
+                )
                 if (body != null) {
                     connection.doOutput = true
                     connection.setRequestProperty("Content-Type", "application/json")
@@ -74,8 +100,8 @@ internal object AdvisorMessageSafetyRepository {
                 // Bound server responses and never surface data from a previous account.
                 val response = connection.inputStream?.bufferedReader(Charsets.UTF_8)
                     ?.use { AdvisorMessageResponseRules.read(it) }.orEmpty()
-                AdvisorMessageSafetyResponseRules.requireSameAccount(
-                    session.userId, AuthRepository.session?.userId
+                AdvisorMessageSafetyResponseRules.requireActiveRequestAccount(
+                    expectedUserId, session.userId, AuthRepository.session?.userId
                 )
                 response
             } finally {
@@ -86,7 +112,7 @@ internal object AdvisorMessageSafetyRepository {
 
     suspend fun blockedUserIds(): Set<String> {
         val me = validId(AuthRepository.activeSession().userId)
-        val rows = JSONArray(request(
+        val rows = JSONArray(request(me,
             "/rest/v1/user_blocks?select=blocked_id&blocker_id=eq." + me,
             "GET"
         ))
@@ -102,14 +128,14 @@ internal object AdvisorMessageSafetyRepository {
         val me = validId(AuthRepository.activeSession().userId)
         val other = validId(userId)
         require(me != other) { "You cannot block yourself." }
-        request("/rest/v1/user_blocks", "POST",
+        request(me, "/rest/v1/user_blocks", "POST",
             JSONObject().put("blocker_id", me).put("blocked_id", other))
     }
 
     suspend fun unblock(userId: String) {
         val me = validId(AuthRepository.activeSession().userId)
         val other = validId(userId)
-        request("/rest/v1/user_blocks?blocker_id=eq." + me + "&blocked_id=eq." + other, "DELETE")
+        request(me, "/rest/v1/user_blocks?blocker_id=eq." + me + "&blocked_id=eq." + other, "DELETE")
     }
 
     suspend fun report(userId: String, messageId: String?, reason: String, details: String) {
@@ -118,7 +144,7 @@ internal object AdvisorMessageSafetyRepository {
         require(me != other) { "You cannot report yourself." }
         require(reason in reasons) { "Select a valid report reason." }
         require(details.length <= 1000) { "Report details must be at most 1,000 characters." }
-        request("/rest/v1/safety_reports", "POST",
+        request(me, "/rest/v1/safety_reports", "POST",
             JSONObject()
                 .put("reporter_id", me)
                 .put("reported_user_id", other)
