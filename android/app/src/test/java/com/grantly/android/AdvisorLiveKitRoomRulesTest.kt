@@ -125,4 +125,63 @@ class AdvisorLiveKitRoomRulesTest {
             }
         }
     }
+
+    @Test fun allowsMutingWithoutCapturePermission() {
+        AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
+            requestedGeneration = 11,
+            currentGeneration = 11,
+            expectedUserId = "advisor-1",
+            activeUserId = "advisor-1",
+            currentUserId = "advisor-1",
+            enabling = false,
+            permissionGranted = false
+        )
+    }
+
+    @Test fun allowsUnmutingWithPermissionAndSameAccount() {
+        AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
+            requestedGeneration = 11,
+            currentGeneration = 11,
+            expectedUserId = "advisor-1",
+            activeUserId = "advisor-1",
+            currentUserId = "advisor-1",
+            enabling = true,
+            permissionGranted = true
+        )
+    }
+
+    @Test fun rejectsUnmutingAfterPermissionRevocation() {
+        assertThrows(IOException::class.java) {
+            AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
+                requestedGeneration = 11,
+                currentGeneration = 11,
+                expectedUserId = "advisor-1",
+                activeUserId = "advisor-1",
+                currentUserId = "advisor-1",
+                enabling = true,
+                permissionGranted = false
+            )
+        }
+    }
+
+    @Test fun rejectsMediaChangesAfterLeaveOrAccountChange() {
+        val invalid = listOf(
+            Triple(12L, "advisor-1", "advisor-1"),
+            Triple(11L, "advisor-2", "advisor-1"),
+            Triple(11L, "advisor-1", null)
+        )
+        for ((generation, active, signedIn) in invalid) {
+            assertThrows(IOException::class.java) {
+                AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
+                    requestedGeneration = 11,
+                    currentGeneration = generation,
+                    expectedUserId = "advisor-1",
+                    activeUserId = active,
+                    currentUserId = signedIn,
+                    enabling = false,
+                    permissionGranted = true
+                )
+            }
+        }
+    }
 }
