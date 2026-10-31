@@ -96,6 +96,26 @@ internal object AdvisorIncomingConsultationRules {
         if (digits.length !in 8..15 || digits.startsWith('0')) return null
         return "https://wa.me/$digits"
     }
+    // An external contact action must re-read the server record. A cached paid
+    // consultation must not authorize a link after payment or access changes.
+    fun currentEmailLink(
+        cached: AdvisorIncomingConsultation,
+        refreshed: AdvisorIncomingConsultation?
+    ): String? {
+        if (refreshed == null || refreshed.id != cached.id) return null
+        val cachedLink = emailLink(cached.status, cached.contactEmail) ?: return null
+        val freshLink = emailLink(refreshed.status, refreshed.contactEmail)
+        return freshLink?.takeIf { it == cachedLink }
+    }
+    fun currentWhatsAppLink(
+        cached: AdvisorIncomingConsultation,
+        refreshed: AdvisorIncomingConsultation?
+    ): String? {
+        if (refreshed == null || refreshed.id != cached.id) return null
+        val cachedLink = whatsappLink(cached.status, cached.whatsappNumber) ?: return null
+        val freshLink = whatsappLink(refreshed.status, refreshed.whatsappNumber)
+        return freshLink?.takeIf { it == cachedLink }
+    }
     fun visible(items: List<AdvisorIncomingConsultation>, filter: String): List<AdvisorIncomingConsultation> =
         when (filter) {
             "open" -> items.filter { isOpen(it.status) }
@@ -231,6 +251,7 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
     var visibleLimit by remember(userId) { mutableIntStateOf(20) }
     var pendingAction by remember(userId) { mutableStateOf<Pair<AdvisorIncomingConsultation, String>?>(null) }
     var actionBusy by remember(userId) { mutableStateOf(false) }
+    var contactBusy by remember(userId) { mutableStateOf(false) }
     var actionError by remember(userId) { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -362,22 +383,62 @@ internal fun AdvisorIncomingConsultationsContent(userId: String) {
                                 Text("Email: ${request.contactEmail}", style = MaterialTheme.typography.bodySmall)
                                 val email = AdvisorIncomingConsultationRules.emailLink(request.status, request.contactEmail)
                                 if (email != null) {
-                                    OutlinedButton(onClick = {
-                                        runCatching {
-                                            context.startActivity(Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", email, null)))
-                                        }.onFailure { actionError = "No email app is available on this device." }
-                                    }) { Text("Email student") }
+                                    OutlinedButton(enabled = !contactBusy && !actionBusy, onClick = {
+                                        scope.launch {
+                                            contactBusy = true
+                                            actionError = null
+                                            try {
+                                                val refreshed = AdvisorIncomingConsultationsRepository.load(userId)
+                                                    .firstOrNull { it.id == request.id }
+                                                val current = AdvisorIncomingConsultationRules.currentEmailLink(request, refreshed)
+                                                if (current == null || AuthRepository.session?.userId != userId) {
+                                                    actionError = "Contact access changed. Refresh consultations."
+                                                    refresh++
+                                                } else {
+                                                    runCatching {
+                                                        context.startActivity(Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", current, null)))
+                                                    }.onFailure { actionError = "No email app is available on this device." }
+                                                }
+                                            } catch (cancelled: CancellationException) {
+                                                throw cancelled
+                                            } catch (failure: Exception) {
+                                                actionError = "Could not verify contact access. Refresh consultations."
+                                            } finally {
+                                                contactBusy = false
+                                            }
+                                        }
+                                    }) { Text(if (contactBusy) "Verifying contact..." else "Email student") }
                                 }
                             }
                             if (request.whatsappNumber != null) {
                                 Text("WhatsApp: ${request.whatsappNumber}", style = MaterialTheme.typography.bodySmall)
                                 val link = AdvisorIncomingConsultationRules.whatsappLink(request.status, request.whatsappNumber)
                                 if (link != null) {
-                                    OutlinedButton(onClick = {
-                                        runCatching {
-                                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
-                                        }.onFailure { actionError = "Could not open WhatsApp contact link." }
-                                    }) { Text("Contact via WhatsApp") }
+                                    OutlinedButton(enabled = !contactBusy && !actionBusy, onClick = {
+                                        scope.launch {
+                                            contactBusy = true
+                                            actionError = null
+                                            try {
+                                                val refreshed = AdvisorIncomingConsultationsRepository.load(userId)
+                                                    .firstOrNull { it.id == request.id }
+                                                val current = AdvisorIncomingConsultationRules.currentWhatsAppLink(request, refreshed)
+                                                if (current == null || AuthRepository.session?.userId != userId) {
+                                                    actionError = "Contact access changed. Refresh consultations."
+                                                    refresh++
+                                                } else {
+                                                    runCatching {
+                                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(current)))
+                                                    }.onFailure { actionError = "Could not open WhatsApp contact link." }
+                                                }
+                                            } catch (cancelled: CancellationException) {
+                                                throw cancelled
+                                            } catch (failure: Exception) {
+                                                actionError = "Could not verify contact access. Refresh consultations."
+                                            } finally {
+                                                contactBusy = false
+                                            }
+                                        }
+                                    }) { Text(if (contactBusy) "Verifying contact..." else "Contact via WhatsApp") }
                                 }
                             }
                             if (request.contactEmail == null && request.whatsappNumber == null) {
