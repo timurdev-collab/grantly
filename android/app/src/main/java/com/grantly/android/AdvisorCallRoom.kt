@@ -75,8 +75,9 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
     }
 
     fun close() {
-        // Invalidate pending joins immediately by initiating leave before
-        // dismissing the screen; disposal also guarantees final cleanup.
+        // Invalidate the Join synchronously, before navigation can cancel UI work.
+        // Coroutine teardown still disconnects and releases any connected room.
+        session.invalidatePendingJoin()
         scope.launch { session.leave() }
         onClose()
     }
@@ -93,7 +94,13 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
     }
     DisposableEffect(owner, session) {
         val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                // Permissions may have changed in system Settings while paused.
+                permissionVersion++
+            }
             if (event == Lifecycle.Event.ON_STOP) {
+                // Never wait for a scheduled coroutine to invalidate a slow Join.
+                session.invalidatePendingJoin()
                 scope.launch {
                     session.leave()
                     room = null
