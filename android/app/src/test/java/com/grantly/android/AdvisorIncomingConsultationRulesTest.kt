@@ -161,6 +161,39 @@ class AdvisorIncomingConsultationRulesTest {
             AdvisorIncomingConsultationRules.whatsappLink("completed", "+1 (555) 123-4567"))
     }
 
+    @Test fun contactActionsRequireFreshMatchingVerifiedRecord() {
+        val cached = item("one", "paid").copy(
+            contactEmail = "student@example.com",
+            whatsappNumber = "+15551234567"
+        )
+        assertEquals("student@example.com",
+            AdvisorIncomingConsultationRules.currentEmailLink(cached, cached))
+        assertEquals("https://wa.me/15551234567",
+            AdvisorIncomingConsultationRules.currentWhatsAppLink(cached, cached))
+        assertEquals(null, AdvisorIncomingConsultationRules.currentEmailLink(cached, null))
+        assertEquals(null, AdvisorIncomingConsultationRules.currentWhatsAppLink(cached, null))
+        assertEquals(null, AdvisorIncomingConsultationRules.currentEmailLink(
+            cached, cached.copy(id = "other")))
+        assertEquals(null, AdvisorIncomingConsultationRules.currentWhatsAppLink(
+            cached, cached.copy(id = "other")))
+        listOf("requested", "awaiting_payment", "cancelled", "unknown").forEach { status ->
+            assertEquals(null, AdvisorIncomingConsultationRules.currentEmailLink(
+                cached, cached.copy(status = status)))
+            assertEquals(null, AdvisorIncomingConsultationRules.currentWhatsAppLink(
+                cached, cached.copy(status = status)))
+        }
+        assertEquals(null, AdvisorIncomingConsultationRules.currentEmailLink(
+            cached, cached.copy(contactEmail = "different@example.com")))
+        assertEquals(null, AdvisorIncomingConsultationRules.currentWhatsAppLink(
+            cached, cached.copy(whatsappNumber = "+15550001111")))
+        assertEquals("student@example.com",
+            AdvisorIncomingConsultationRules.currentEmailLink(
+                cached, cached.copy(status = "confirmed")))
+        assertEquals("https://wa.me/15551234567",
+            AdvisorIncomingConsultationRules.currentWhatsAppLink(
+                cached, cached.copy(status = "completed")))
+    }
+
     @Test fun pageLimitsAreBoundedAndDoNotMutateInput() {
         val items = (1..50).map { item(it.toString(), "requested") }
         assertEquals(0, AdvisorIncomingConsultationRules.page(items, -1).size)
