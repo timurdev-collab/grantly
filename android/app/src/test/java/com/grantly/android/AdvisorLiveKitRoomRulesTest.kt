@@ -5,6 +5,16 @@ import org.junit.Test
 import java.io.IOException
 
 class AdvisorLiveKitRoomRulesTest {
+    @Test fun allowsJoinWhenNoLeaveWasRequested() {
+        AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration = 4, currentGeneration = 4)
+    }
+
+    @Test fun rejectsStaleJoinAfterLeaveOrNavigationAway() {
+        assertThrows(IOException::class.java) {
+            AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration = 4, currentGeneration = 5)
+        }
+    }
+
     @Test fun allowsExplicitConsentWithBothCapturePermissions() {
         AdvisorLiveKitRoomRules.requireCaptureReady(
             captureConsent = true,
