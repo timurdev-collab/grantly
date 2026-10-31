@@ -5,6 +5,26 @@ import org.junit.Test
 import java.io.IOException
 
 class AdvisorLiveKitRoomRulesTest {
+    @Test fun invalidatesPendingJoinForSwitchedAccountOrSignOut() {
+        for (current in listOf("student-2", null)) {
+            org.junit.Assert.assertTrue(
+                AdvisorLiveKitRoomRules.shouldInvalidatePendingJoin("advisor-1", current)
+            )
+        }
+    }
+
+    @Test fun preservesPendingJoinForSameAccountAndNoPendingJoin() {
+        org.junit.Assert.assertFalse(
+            AdvisorLiveKitRoomRules.shouldInvalidatePendingJoin("advisor-1", "advisor-1")
+        )
+        org.junit.Assert.assertFalse(
+            AdvisorLiveKitRoomRules.shouldInvalidatePendingJoin(null, "advisor-1")
+        )
+        org.junit.Assert.assertFalse(
+            AdvisorLiveKitRoomRules.shouldInvalidatePendingJoin(null, null)
+        )
+    }
+
     @Test fun allowsJoinWhenNoLeaveWasRequested() {
         AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration = 4, currentGeneration = 4)
     }
