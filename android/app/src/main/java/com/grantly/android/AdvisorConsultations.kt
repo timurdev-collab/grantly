@@ -92,7 +92,7 @@ internal object AdvisorConsultationsRepository {
             AdvisorConsultationResponseRules.requireSameAccount(
                 expectedUserId, AuthRepository.session?.userId
             )
-            if (response.isBlank()) JSONArray() else JSONArray(response
+            if (response.isBlank()) JSONArray() else JSONArray(response)
         } finally {
             connection.disconnect()
         }
