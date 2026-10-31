@@ -35,6 +35,25 @@ internal object AdvisorLiveKitRoomRules {
             throw IOException("Camera and microphone permissions are required for this video call.")
         }
     }
+
+    /**
+     * Permissions or the signed-in account may change while credentials and the
+     * LiveKit connection are loading. Recheck immediately before each capture
+     * transition, not only when Join was first tapped.
+     */
+    fun requireCaptureStillAuthorized(
+        joinGeneration: Long,
+        currentGeneration: Long,
+        expectedUserId: String,
+        currentUserId: String?,
+        captureConsent: Boolean,
+        microphoneGranted: Boolean,
+        cameraGranted: Boolean
+    ) {
+        requireNotLeft(joinGeneration, currentGeneration)
+        AdvisorCallPreparationRules.requireSameAccount(expectedUserId, currentUserId)
+        requireCaptureReady(captureConsent, microphoneGranted, cameraGranted)
+    }
 }
 
 /**
@@ -57,17 +76,7 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
         val joinGeneration = leaveGeneration.get()
         lock.lock()
         try {
-            AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration, leaveGeneration.get())
-            AdvisorLiveKitRoomRules.requireCaptureReady(
-                captureConsent,
-                context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) ==
-                    PackageManager.PERMISSION_GRANTED,
-                context.checkSelfPermission(Manifest.permission.CAMERA) ==
-                    PackageManager.PERMISSION_GRANTED
-            )
-            AdvisorCallPreparationRules.requireSameAccount(
-                expectedUserId, AuthRepository.session?.userId
-            )
+            requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
             if (activeRoom != null) throw IOException("A video call is already in progress.")
 
             // Fetch only for a pre-existing, currently authorized call session.
@@ -82,18 +91,13 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
             val room = LiveKit.create(context.applicationContext)
             try {
                 room.connect(credentials.url, credentials.token)
-                AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration, leaveGeneration.get())
-                AdvisorCallPreparationRules.requireSameAccount(
-                    expectedUserId, AuthRepository.session?.userId
-                )
-                // Never begin capture after a Leave request during a slow connect.
+                // A user can revoke permissions or switch accounts during a
+                // slow connection. Recheck before BOTH media operations.
+                requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
                 room.localParticipant.setMicrophoneEnabled(true)
-                AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration, leaveGeneration.get())
+                requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
                 room.localParticipant.setCameraEnabled(true)
-                AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration, leaveGeneration.get())
-                AdvisorCallPreparationRules.requireSameAccount(
-                    expectedUserId, AuthRepository.session?.userId
-                )
+                requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
                 activeRoom = room
                 activeUserId = expectedUserId
                 return room
@@ -108,6 +112,24 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
         } finally {
             lock.unlock()
         }
+    }
+
+    private fun requireCaptureStillAuthorized(
+        joinGeneration: Long,
+        expectedUserId: String,
+        captureConsent: Boolean
+    ) {
+        AdvisorLiveKitRoomRules.requireCaptureStillAuthorized(
+            joinGeneration = joinGeneration,
+            currentGeneration = leaveGeneration.get(),
+            expectedUserId = expectedUserId,
+            currentUserId = AuthRepository.session?.userId,
+            captureConsent = captureConsent,
+            microphoneGranted = context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) ==
+                PackageManager.PERMISSION_GRANTED,
+            cameraGranted = context.checkSelfPermission(Manifest.permission.CAMERA) ==
+                PackageManager.PERMISSION_GRANTED
+        )
     }
 
     /** Call on Back, navigation away, sign-out, and lifecycle teardown. */
