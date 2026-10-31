@@ -24,12 +24,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import io.livekit.android.compose.VideoRenderer
+import io.livekit.android.renderer.TextureViewRenderer
+import io.livekit.android.events.collect
 import io.livekit.android.events.RoomEvent
 import io.livekit.android.room.Room
 import io.livekit.android.room.track.VideoTrack
@@ -37,7 +39,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -187,12 +188,12 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 .mapNotNull { it.second as? VideoTrack }.firstOrNull()
             Text(if (remote == null) "Waiting for the other participant's video..." else "Participant video")
             if (remote != null) {
-                VideoRenderer(room = connected, videoTrack = remote,
+                AdvisorVideoTrack(room = connected, track = remote,
                     modifier = Modifier.fillMaxWidth().height(220.dp))
             }
             Text("Your camera preview")
             if (local != null) {
-                VideoRenderer(room = connected, videoTrack = local,
+                AdvisorVideoTrack(room = connected, track = local,
                     modifier = Modifier.fillMaxWidth().height(130.dp), mirror = true)
             } else {
                 Text("Camera preview unavailable.")
@@ -206,4 +207,22 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
         }
         if (error != null) Text(error.orEmpty(), color = MaterialTheme.colorScheme.error)
     }
+}
+
+/** Use the LiveKit SDK's renderer directly; no separate Compose Components dependency. */
+@Composable
+private fun AdvisorVideoTrack(room: Room, track: VideoTrack, modifier: Modifier, mirror: Boolean = false) {
+    val context = LocalContext.current
+    val renderer = remember(room) {
+        TextureViewRenderer(context).also { room.initVideoRenderer(it) }
+    }
+    DisposableEffect(renderer, track, mirror) {
+        renderer.setMirror(mirror)
+        track.addRenderer(renderer)
+        onDispose { track.removeRenderer(renderer) }
+    }
+    DisposableEffect(renderer) {
+        onDispose { renderer.release() }
+    }
+    AndroidView(factory = { renderer }, modifier = modifier)
 }
