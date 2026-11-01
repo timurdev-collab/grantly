@@ -1,6 +1,10 @@
 package com.grantly.android
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
@@ -18,7 +22,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class GuestSignInShortcutsSmokeTest {
-    @get:Rule val activityRule = ActivityScenarioRule(MainActivity::class.java)
+    @get:Rule val composeRule = createAndroidComposeRule<MainActivity>()
 
     private fun deviceOnHome(): UiDevice {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
@@ -66,24 +70,14 @@ class GuestSignInShortcutsSmokeTest {
 
     @Test fun guestCommunityCanOpenSignInDirectly() {
         val device = deviceOnHome()
-        // iOS Home has four quick destinations. Community remains reachable
-        // from its own card below the scholarship recommendations.
-        var community = device.wait(Until.findObject(By.desc("Open Community from Home")), 2_000)
-        repeat(10) {
-            if (community == null) {
-                device.swipe(
-                    device.displayWidth / 2, device.displayHeight * 3 / 4,
-                    device.displayWidth / 2, device.displayHeight / 4, 30
-                )
-                community = device.wait(Until.findObject(By.desc("Open Community from Home")), 2_000)
-            }
-        }
-        assertNotNull("Home should show the Community card", community)
-        // Tap the accessible clickable card itself, not a possibly clipped child label.
-        community!!.click()
-        assertNotNull("Community gate should be visible",
-            device.wait(Until.findObject(
-                By.text("Sign in from the Profile tab to view community posts.")), 15_000))
+        // Compose scrolls the actual clickable card into view before tapping.
+        // UiAutomator can locate a partly clipped card and tap outside its hitbox.
+        composeRule.onNodeWithContentDescription("Open Community from Home")
+            .performScrollTo()
+            .performClick()
+        composeRule.onNodeWithText(
+            "Sign in from the Profile tab to view community posts."
+        ).assertExists()
         assertSignInShortcut(device)
     }
 
