@@ -18,6 +18,9 @@ import java.time.temporal.ChronoUnit
  * malformed or missing deadlines as calendar dates.
  */
 internal object HomeDeadlineRules {
+    /** iOS Home only features scholarships with verified status. */
+    fun isVerified(status: String?): Boolean = status == "verified"
+
     fun parseDate(value: String?): LocalDate? {
         val raw = value?.trim() ?: return null
         if (raw.length < 10 || (raw.length > 10 && raw[10] != 'T' && raw[10] != ' ')) return null
@@ -59,7 +62,9 @@ internal fun HomeClosingSoonContent(onSelect: (Scholarship) -> Unit) {
             val today = LocalDate.now()
             val page = ScholarshipRepository.search(sort = "Deadline", limit = 100)
             upcoming = page.items.mapNotNull { scholarship ->
-                val date = HomeDeadlineRules.parseDate(scholarship.deadline)
+                val date = if (HomeDeadlineRules.isVerified(scholarship.verificationStatus))
+                    HomeDeadlineRules.parseDate(scholarship.deadline)
+                else null
                 if (date != null && !date.isBefore(today)) scholarship to date else null
             }.sortedBy { it.second }.take(3).map { it.first }
         } catch (cancelled: CancellationException) {
