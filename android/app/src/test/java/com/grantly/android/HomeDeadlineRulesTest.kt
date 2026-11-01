@@ -1,0 +1,36 @@
+package com.grantly.android
+
+import java.time.LocalDate
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class HomeDeadlineRulesTest {
+    @Test fun acceptsPublishedDateAndTimestampFormats() {
+        val date = LocalDate.of(2026, 11, 2)
+        assertEquals(date, HomeDeadlineRules.parseDate("2026-11-02"))
+        assertEquals(date, HomeDeadlineRules.parseDate("2026-11-02T23:59:00Z"))
+        assertEquals(date, HomeDeadlineRules.parseDate(" 2026-11-02 23:59:00+00:00 "))
+    }
+
+    @Test fun rejectsRollingMalformedAndNonexistentDates() {
+        for (value in listOf(null, "", "Rolling", "2026-11", "2026-11-02garbage", "2026-02-30", "2026-13-01")) {
+            assertNull("Invalid deadline should not get an urgency label: $value",
+                HomeDeadlineRules.parseDate(value))
+        }
+    }
+
+    @Test fun usesCalendarDaysAndMatchesIosUrgencyWording() {
+        val today = LocalDate.of(2026, 11, 2)
+        assertEquals(0L, HomeDeadlineRules.daysUntil(today, today))
+        assertEquals("Today", HomeDeadlineRules.urgencyText(0))
+        assertEquals("1 day left", HomeDeadlineRules.urgencyText(
+            HomeDeadlineRules.daysUntil(today.plusDays(1), today)))
+        assertEquals("7 days left", HomeDeadlineRules.urgencyText(7))
+        assertEquals("8 days left", HomeDeadlineRules.urgencyText(8))
+        assertTrue(HomeDeadlineRules.isUrgent(7))
+        assertFalse(HomeDeadlineRules.isUrgent(8))
+    }
+}
