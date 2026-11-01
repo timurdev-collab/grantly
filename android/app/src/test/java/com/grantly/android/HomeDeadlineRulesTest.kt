@@ -8,6 +8,14 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HomeDeadlineRulesTest {
+    @Test fun onlyVerifiedScholarshipsAreEligibleForClosingSoon() {
+        assertTrue(HomeDeadlineRules.isVerified("verified"))
+        for (status in listOf(null, "", "pending", "rejected", "unverified")) {
+            assertFalse("Unverified scholarships must not appear: $status",
+                HomeDeadlineRules.isVerified(status))
+        }
+    }
+
     @Test fun acceptsPublishedDateAndTimestampFormats() {
         val date = LocalDate.of(2026, 11, 2)
         assertEquals(date, HomeDeadlineRules.parseDate("2026-11-02"))
