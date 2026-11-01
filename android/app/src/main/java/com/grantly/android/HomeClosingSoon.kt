@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
 
@@ -23,9 +24,15 @@ internal object HomeDeadlineRules {
 
     fun parseDate(value: String?): LocalDate? {
         val raw = value?.trim() ?: return null
-        if (raw.length < 10 || (raw.length > 10 && raw[10] != 'T' && raw[10] != ' ')) return null
+        // Do not accept a plausible date prefix followed by a malformed time.
+        // Scholarship APIs publish both date-only values and ISO timestamps.
+        // Keep the provider's calendar date rather than shifting it to device time.
         return try {
-            LocalDate.parse(raw.substring(0, 10))
+            if (raw.length == 10) {
+                LocalDate.parse(raw)
+            } else {
+                LocalDate.from(DateTimeFormatter.ISO_DATE_TIME.parse(raw.replace(' ', 'T')))
+            }
         } catch (_: DateTimeParseException) {
             null
         }
