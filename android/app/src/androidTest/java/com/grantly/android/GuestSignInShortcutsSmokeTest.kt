@@ -1,10 +1,6 @@
 package com.grantly.android
 
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
@@ -22,7 +18,7 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class GuestSignInShortcutsSmokeTest {
-    @get:Rule val composeRule = createAndroidComposeRule<MainActivity>()
+    @get:Rule val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     private fun deviceOnHome(): UiDevice {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
@@ -70,14 +66,32 @@ class GuestSignInShortcutsSmokeTest {
 
     @Test fun guestCommunityCanOpenSignInDirectly() {
         val device = deviceOnHome()
-        // Compose scrolls the actual clickable card into view before tapping.
-        // UiAutomator can locate a partly clipped card and tap outside its hitbox.
-        composeRule.onNodeWithContentDescription("Open Community from Home")
-            .performScrollTo()
-            .performClick()
-        composeRule.onNodeWithText(
-            "Sign in from the Profile tab to view community posts."
-        ).assertExists()
+        // Community is below the Home recommendations. UiAutomator can find
+        // a partly clipped card, so move it into the central viewport first.
+        var community = device.wait(Until.findObject(By.desc("Open Community from Home")), 2_000)
+        for (attempt in 0 until 12) {
+            val bounds = community?.visibleBounds
+            if (bounds != null &&
+                bounds.centerY() in (device.displayHeight / 3)..(device.displayHeight * 2 / 3)
+            ) break
+            device.swipe(
+                device.displayWidth / 2, device.displayHeight * 3 / 4,
+                device.displayWidth / 2, device.displayHeight / 4, 30
+            )
+            community = device.wait(Until.findObject(By.desc("Open Community from Home")), 2_000)
+        }
+        assertNotNull("Home should show the Community card", community)
+        community!!.click()
+        val gateText = By.text("Sign in from the Profile tab to view community posts.")
+        var gate = device.wait(Until.findObject(gateText), 4_000)
+        // A click on a clipped card can be ignored during layout settling.
+        // Retry once only if the Home card is still present.
+        if (gate == null) {
+            device.waitForIdle(2_000)
+            device.findObject(By.desc("Open Community from Home"))?.click()
+            gate = device.wait(Until.findObject(gateText), 15_000)
+        }
+        assertNotNull("Community gate should be visible", gate)
         assertSignInShortcut(device)
     }
 
