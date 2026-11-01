@@ -20,6 +20,9 @@ internal enum class HomeLanguage(val code: String, val title: String, val flag: 
             entries.firstOrNull { it.code == code } ?: ENGLISH
     }
 
+    /** Match the iOS AppLanguage layout direction on the Home preview only. */
+    val isRightToLeft: Boolean get() = this == ARABIC
+
     val labels: HomeLabels
         get() = when (this) {
             ENGLISH -> HomeLabels("Good morning", "Good afternoon", "Good evening",
