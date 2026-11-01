@@ -211,7 +211,7 @@ private fun EduTApp() {
                                     tab = Tab.Discover
                                 },
                                 onApplications = { tab = Tab.Applications },
-                                onProfile = { tab = Tab.Profile },
+                                onProfile = { tab = Tab.Profile; authNavigationVersion += 1 },
                                 onAdvisors = { showingAdvisors = true },
                                 onCommunity = { showingCommunity = true },
                                 onNotifications = { showingNotifications = true },
@@ -388,7 +388,7 @@ private fun HomeContent(
     key(refreshVersion) {
         PersonalizedMatchesContent(
             onSelect = onScholarshipSelect,
-            onOpenProfile = { tab = Tab.Profile; authNavigationVersion += 1 }
+            onOpenProfile = onProfile
         )
     }
     Spacer(Modifier.height(20.dp))
