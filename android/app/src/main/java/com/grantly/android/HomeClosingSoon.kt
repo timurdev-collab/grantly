@@ -11,6 +11,34 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
+import java.time.temporal.ChronoUnit
+
+/**
+ * Mirrors the iOS Home closing-soon urgency wording without treating rolling,
+ * malformed or missing deadlines as calendar dates.
+ */
+internal object HomeDeadlineRules {
+    fun parseDate(value: String?): LocalDate? {
+        val raw = value?.trim() ?: return null
+        if (raw.length < 10 || (raw.length > 10 && raw[10] != 'T' && raw[10] != ' ')) return null
+        return try {
+            LocalDate.parse(raw.substring(0, 10))
+        } catch (_: DateTimeParseException) {
+            null
+        }
+    }
+
+    fun daysUntil(date: LocalDate, today: LocalDate): Long =
+        ChronoUnit.DAYS.between(today, date)
+
+    fun urgencyText(days: Long): String = when {
+        days <= 0L -> "Today"
+        days == 1L -> "1 day left"
+        else -> "$days days left"
+    }
+
+    fun isUrgent(days: Long): Boolean = days <= 7L
+}
 
 /**
  * Home deadline preview backed by the same published-scholarship search RPC as Explore.
@@ -31,9 +59,7 @@ internal fun HomeClosingSoonContent(onSelect: (Scholarship) -> Unit) {
             val today = LocalDate.now()
             val page = ScholarshipRepository.search(sort = "Deadline", limit = 100)
             upcoming = page.items.mapNotNull { scholarship ->
-                val date = scholarship.deadline?.take(10)?.let {
-                    try { LocalDate.parse(it) } catch (_: DateTimeParseException) { null }
-                }
+                val date = HomeDeadlineRules.parseDate(scholarship.deadline)
                 if (date != null && !date.isBefore(today)) scholarship to date else null
             }.sortedBy { it.second }.take(3).map { it.first }
         } catch (cancelled: CancellationException) {
@@ -80,6 +106,19 @@ internal fun HomeClosingSoonContent(onSelect: (Scholarship) -> Unit) {
                             color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.labelMedium
                         )
+                        HomeDeadlineRules.parseDate(scholarship.deadline)?.let { date ->
+                            val days = HomeDeadlineRules.daysUntil(date, LocalDate.now())
+                            if (days >= 0) {
+                                Spacer(Modifier.height(3.dp))
+                                Text(
+                                    HomeDeadlineRules.urgencyText(days),
+                                    color = if (HomeDeadlineRules.isUrgent(days))
+                                        MaterialTheme.colorScheme.error
+                                    else MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
+                        }
                     }
                 }
             }
