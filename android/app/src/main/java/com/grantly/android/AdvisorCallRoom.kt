@@ -84,6 +84,7 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
     }
 
     fun close() {
+        consent = false
         // Invalidate the Join synchronously, before navigation can cancel UI work.
         // Coroutine teardown still disconnects and releases any connected room.
         session.invalidatePendingJoin()
@@ -108,6 +109,8 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 permissionVersion++
             }
             if (event == Lifecycle.Event.ON_STOP) {
+                // Returning from the background requires a new capture opt-in.
+                consent = false
                 // Never wait for a scheduled coroutine to invalidate a slow Join.
                 session.invalidatePendingJoin()
                 scope.launch {
@@ -130,6 +133,7 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 context.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
                 context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
             if (!stillAuthorized) {
+                consent = false
                 session.leave()
                 room = null
                 error = "Call ended because your account or permissions changed."
@@ -145,6 +149,7 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 // Updating room state cancels this effect; finish release first.
                 withContext(NonCancellable) { session.leave() }
                 room = null
+                consent = false
                 error = "The call disconnected. You can try joining again."
             }
         }
@@ -196,6 +201,8 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                             error = failure.message ?: "Unable to join the call."
                         } finally {
                             joining = false
+                            // A failed or cancelled Join must not silently reuse consent.
+                            if (room == null) consent = false
                         }
                     }
                 }
@@ -267,6 +274,9 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 }
             ) { Text(if (cameraEnabled) "Turn camera off" else "Turn camera on") }
             OutlinedButton(onClick = {
+                // Invalidate immediately, before asynchronous teardown starts.
+                consent = false
+                session.invalidatePendingJoin()
                 scope.launch {
                     session.leave()
                     room = null
