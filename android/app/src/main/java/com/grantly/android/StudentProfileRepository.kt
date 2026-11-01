@@ -8,6 +8,7 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
+import java.io.Reader
 import java.util.UUID
 
 /**
@@ -33,6 +34,31 @@ internal data class StudentProfileDraft(
         val fields = listOf(fullName, nationality, residenceCountry, graduationYear,
             gpaValue, ielts, intendedMajor, targetCountries)
         return fields.count { it.isNotBlank() } * 100 / fields.size
+    }
+}
+
+/** Limits private profile responses and rejects results from a different account. */
+internal object StudentProfileResponseRules {
+    const val MAX_CHARS = 131_072
+
+    fun requireSameAccount(expectedUserId: String, currentUserId: String?) {
+        if (expectedUserId != currentUserId) {
+            throw IOException("Your account changed. Please sign in again.")
+        }
+    }
+
+    fun readBounded(reader: Reader): String {
+        val result = StringBuilder()
+        val buffer = CharArray(4096)
+        while (true) {
+            val count = reader.read(buffer)
+            if (count < 0) break
+            if (count > MAX_CHARS - result.length) {
+                throw IOException("Profile response is too large.")
+            }
+            result.append(buffer, 0, count)
+        }
+        return result.toString()
     }
 }
 
@@ -130,6 +156,7 @@ internal object StudentProfileRepository {
     }
 
     private fun request(method: String, session: AuthSession, payload: JSONObject? = null): JSONArray {
+        StudentProfileResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
         val (base, key) = validateConfig()
         val id = try { UUID.fromString(session.userId).toString() }
             catch (_: IllegalArgumentException) { throw IOException("Invalid account identifier.") }
@@ -147,6 +174,7 @@ internal object StudentProfileRepository {
             connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
             connection.setRequestProperty("Accept", "application/json")
             if (method == "PATCH") {
+                StudentProfileResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
                 connection.doOutput = true
                 connection.setRequestProperty("Content-Type", "application/json")
                 connection.setRequestProperty("Prefer", "return=representation")
@@ -154,6 +182,7 @@ internal object StudentProfileRepository {
                     it.write((payload ?: JSONObject()).toString().toByteArray(Charsets.UTF_8))
                 }
             }
+            StudentProfileResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
             val status = connection.responseCode
             if (status !in 200..299) {
                 throw IOException(when (status) {
@@ -161,7 +190,10 @@ internal object StudentProfileRepository {
                     else -> "Unable to ${if (method == "GET") "load" else "save"} profile (HTTP $status)."
                 })
             }
-            val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use {
+                StudentProfileResponseRules.readBounded(it)
+            }
+            StudentProfileResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
             return JSONArray(response.ifBlank { "[]" })
         } finally {
             connection.disconnect()
@@ -171,6 +203,7 @@ internal object StudentProfileRepository {
     suspend fun load(): StudentProfileDraft = withContext(Dispatchers.IO) {
         val session = AuthRepository.activeSession()
         val rows = request("GET", session)
+        StudentProfileResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
         if (rows.length() != 1) throw IOException("Your academic profile is not available yet.")
         read(rows.getJSONObject(0))
     }
@@ -181,6 +214,7 @@ internal object StudentProfileRepository {
         return withContext(Dispatchers.IO) {
             val session = AuthRepository.activeSession()
             val rows = request("PATCH", session, payload)
+            StudentProfileResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
             if (rows.length() != 1) {
                 throw IOException("Your profile was not updated. Please refresh and try again.")
             }
