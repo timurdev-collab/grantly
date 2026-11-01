@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
 private fun EduTApp() {
     var tab by remember { mutableStateOf(Tab.Home) }
     var requestedDegree by remember { mutableStateOf("All") }
+    var homeRefreshVersion by remember { mutableIntStateOf(0) }
     var selectedScholarship by remember { mutableStateOf<Scholarship?>(null) }
     var showingAdvisors by remember { mutableStateOf(false) }
     var showingCommunity by remember { mutableStateOf(false) }
@@ -119,7 +120,7 @@ private fun EduTApp() {
     var unreadNotifications by remember(session?.userId) { mutableIntStateOf(0) }
     // Refresh when Home becomes visible, including after returning from the inbox.
     // No background polling or push delivery is implied by this badge.
-    LaunchedEffect(session?.userId, tab, showingNotifications) {
+    LaunchedEffect(session?.userId, tab, showingNotifications, homeRefreshVersion) {
         if (session == null) {
             unreadNotifications = 0
         } else if (tab == Tab.Home && !showingNotifications) {
@@ -190,6 +191,8 @@ private fun EduTApp() {
                                 onBack = { selectedScholarship = null }
                             )
                             tab == Tab.Home -> HomeContent(
+                                refreshVersion = homeRefreshVersion,
+                                onRefresh = { homeRefreshVersion++ },
                                 onDiscover = { degree ->
                                     requestedDegree = degree
                                     tab = Tab.Discover
@@ -253,6 +256,8 @@ private fun EduTApp() {
 
 @Composable
 private fun HomeContent(
+    refreshVersion: Int,
+    onRefresh: () -> Unit,
     onDiscover: (String) -> Unit,
     onApplications: () -> Unit,
     onProfile: () -> Unit,
@@ -270,7 +275,10 @@ private fun HomeContent(
         Text("EduT", fontSize = 21.sp, fontWeight = FontWeight.Bold, color = Forest)
         Spacer(Modifier.weight(1f))
         Text("🌐", fontSize = 19.sp)
-        Spacer(Modifier.width(16.dp))
+        Spacer(Modifier.width(4.dp))
+        IconButton(onClick = onRefresh) {
+            Icon(Icons.Outlined.Refresh, contentDescription = "Refresh Home", tint = Forest)
+        }
         IconButton(onClick = onNotifications) {
             BadgedBox(badge = {
                 NotificationBadgeRules.label(unreadNotifications)?.let { label ->
@@ -341,18 +349,22 @@ private fun HomeContent(
         }
     }
     Spacer(Modifier.height(25.dp))
-    HomeFeaturedScholarshipContent(
-        onSelect = onScholarshipSelect,
-        onExplore = { onDiscover("All") }
-    )
+    // Recreate only the read-only Home data sections when the user refreshes.
+    // Their existing LaunchedEffects reload from the current authenticated session.
+    key(refreshVersion) {
+        HomeFeaturedScholarshipContent(
+            onSelect = onScholarshipSelect,
+            onExplore = { onDiscover("All") }
+        )
+    }
     Spacer(Modifier.height(25.dp))
     Text("Picked for you", fontFamily = FontFamily.Serif, fontSize = 28.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
-    PersonalizedMatchesContent(onSelect = onScholarshipSelect)
+    key(refreshVersion) { PersonalizedMatchesContent(onSelect = onScholarshipSelect) }
     Spacer(Modifier.height(20.dp))
     Text("Closing soon", fontFamily = FontFamily.Serif, fontSize = 26.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
-    HomeClosingSoonContent(onSelect = onScholarshipSelect)
+    key(refreshVersion) { HomeClosingSoonContent(onSelect = onScholarshipSelect) }
     Spacer(Modifier.height(26.dp))
     Column(Modifier.fillMaxWidth().background(Sage, RoundedCornerShape(22.dp)).clickable(onClick = onAdvisors).padding(20.dp)) {
         Text("Need a little guidance?", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
