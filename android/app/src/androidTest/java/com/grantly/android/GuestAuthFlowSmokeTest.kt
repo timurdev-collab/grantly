@@ -19,6 +19,23 @@ import org.junit.runner.RunWith
 class GuestAuthFlowSmokeTest {
     @get:Rule val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
+    private fun togglePasswordVisibility(device: UiDevice, from: String, to: String) {
+        val button = device.wait(Until.findObject(By.desc(from)), 10_000)
+        assertNotNull("Password toggle '$from' should be available", button)
+        button!!.click()
+        if (device.wait(Until.findObject(By.desc(to)), 3_000) == null) {
+            // Only retry if the original state is still present. This prevents
+            // a delayed first click from accidentally reversing a successful toggle.
+            val unchanged = device.wait(Until.findObject(By.desc(from)), 2_000)
+            if (unchanged != null) {
+                val bounds = unchanged.visibleBounds
+                device.click(bounds.centerX(), bounds.centerY())
+            }
+            assertNotNull("Password toggle should change to '$to'",
+                device.wait(Until.findObject(By.desc(to)), 10_000))
+        }
+    }
+
     @Test fun guestCanNavigateSignupAndPasswordRecovery() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         device.waitForIdle(5_000)
@@ -31,19 +48,11 @@ class GuestAuthFlowSmokeTest {
         assertNotNull("Sign-in screen should open",
             device.wait(Until.findObject(By.text("Welcome back")), 20_000))
 
-        val showPassword = device.wait(Until.findObject(By.desc("Show password")), 10_000)
-        assertNotNull("Sign-in should allow password visibility to be toggled", showPassword)
-        // Tap the accessible Compose TextButton, not its nested text label.
-        // On some emulator images a UIAutomator click on the text-only node
-        // does not dispatch the parent button's onClick callback.
-        showPassword.click()
-        assertNotNull("Sign-in should allow hiding the password again",
-            device.wait(Until.findObject(By.desc("Hide password")), 10_000))
-        val hidePassword = device.wait(Until.findObject(By.desc("Hide password")), 5_000)
-        assertNotNull("Password visibility toggle should remain interactive", hidePassword)
-        hidePassword.click()
-        assertNotNull("Password should be concealed after toggling back",
-            device.wait(Until.findObject(By.desc("Show password")), 10_000))
+        // A Compose accessibility-node click can be dropped while the screen
+        // settles on CI emulators. Verify the state transition and retry once
+        // using the button's visible center, never by blindly tapping twice.
+        togglePasswordVisibility(device, "Show password", "Hide password")
+        togglePasswordVisibility(device, "Hide password", "Show password")
 
         val signup = device.wait(
             Until.findObject(By.text("New to EduT? Create an account")), 10_000)
