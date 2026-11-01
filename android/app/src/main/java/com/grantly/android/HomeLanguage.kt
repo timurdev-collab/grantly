@@ -51,6 +51,19 @@ internal enum class HomeLanguage(val code: String, val title: String, val flag: 
                 "Für dich", "Bewerbungen", "Beratung", "Profil", "Für dich ausgewählt", "Baldiger Bewerbungsschluss")
         }
 
+    /** The navigation bar follows the selected language; destination screens remain English. */
+    val navigationLabels: HomeNavigationLabels
+        get() = when (this) {
+            ENGLISH -> HomeNavigationLabels("Home", "Explore", "Messages", "Advisor")
+            RUSSIAN -> HomeNavigationLabels("Главная", "Поиск", "Сообщения", "Советники")
+            VIETNAMESE -> HomeNavigationLabels("Trang chủ", "Khám phá", "Tin nhắn", "Cố vấn")
+            ARABIC -> HomeNavigationLabels("الرئيسية", "استكشف", "الرسائل", "مستشار")
+            CHINESE -> HomeNavigationLabels("首页", "探索", "消息", "顾问")
+            FRENCH -> HomeNavigationLabels("Accueil", "Explorer", "Messages", "Conseiller")
+            SPANISH -> HomeNavigationLabels("Inicio", "Explorar", "Mensajes", "Asesor")
+            GERMAN -> HomeNavigationLabels("Start", "Entdecken", "Nachrichten", "Beratung")
+        }
+
     /** Home-only guidance and Community cards; other screens remain untranslated. */
     val secondaryLabels: HomeSecondaryLabels
         get() = when (this) {
@@ -119,4 +132,11 @@ internal data class HomeSecondaryLabels(
     val communityTitle: String,
     val communityDescription: String,
     val communityAction: String
+)
+
+internal data class HomeNavigationLabels(
+    val home: String,
+    val explore: String,
+    val messages: String,
+    val advisor: String
 )
