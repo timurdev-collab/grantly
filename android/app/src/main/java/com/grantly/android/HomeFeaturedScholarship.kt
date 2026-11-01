@@ -63,10 +63,9 @@ internal fun HomeFeaturedScholarshipContent(
                 val today = LocalDate.now()
                 featured = ScholarshipRepository.search(sort = "Deadline", limit = 100)
                     .items.mapNotNull { scholarship ->
-                        val date = scholarship.deadline?.take(10)?.let { raw ->
-                            runCatching { LocalDate.parse(raw) }.getOrNull()
-                        }
-                        if (date != null && !date.isBefore(today)) scholarship to date else null
+                        HomeDeadlineRules.eligibleUpcomingDate(
+                            scholarship.verificationStatus, scholarship.deadline, today
+                        )?.let { date -> scholarship to date }
                     }
                     .minByOrNull { it.second }?.first
             }
