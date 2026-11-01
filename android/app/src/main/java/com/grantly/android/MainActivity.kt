@@ -77,6 +77,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun EduTApp() {
     var tab by remember { mutableStateOf(Tab.Home) }
+    // Share the saved Home language with navigation, without implying that
+    // the remaining destinations have been fully localized.
+    val appContext = LocalContext.current
+    val languagePreferences = remember(appContext) {
+        appContext.getSharedPreferences("edut_home_language", Context.MODE_PRIVATE)
+    }
+    var selectedLanguage by remember {
+        mutableStateOf(HomeLanguage.fromCode(languagePreferences.getString("language", "en")))
+    }
     var requestedDegree by remember { mutableStateOf("All") }
     var homeRefreshVersion by remember { mutableIntStateOf(0) }
     var selectedScholarship by remember { mutableStateOf<Scholarship?>(null) }
@@ -178,7 +187,18 @@ private fun EduTApp() {
                             selected = item == tab,
                             onClick = { tab = item; selectedScholarship = null; showingAdvisors = false; showingCommunity = false; showingNotifications = false },
                             icon = { Icon(item.icon, contentDescription = null) },
-                            label = { Text(item.title, fontSize = 10.sp, maxLines = 1) },
+                            label = {
+                                val navigation = selectedLanguage.navigationLabels
+                                val title = when (item) {
+                                    Tab.Home -> navigation.home
+                                    Tab.Discover -> navigation.explore
+                                    Tab.Applications -> selectedLanguage.labels.applications
+                                    Tab.Messages -> navigation.messages
+                                    Tab.Advisor -> navigation.advisor
+                                    Tab.Profile -> selectedLanguage.labels.profile
+                                }
+                                Text(title, fontSize = 10.sp, maxLines = 1)
+                            },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = Forest,
                                 selectedTextColor = Forest,
@@ -210,6 +230,11 @@ private fun EduTApp() {
                                 onBack = { selectedScholarship = null }
                             )
                             tab == Tab.Home -> HomeContent(
+                                selectedLanguage = selectedLanguage,
+                                onLanguageSelected = { option ->
+                                    selectedLanguage = option
+                                    languagePreferences.edit().putString("language", option.code).apply()
+                                },
                                 refreshVersion = homeRefreshVersion,
                                 onRefresh = { homeRefreshVersion++ },
                                 onDiscover = { degree ->
@@ -287,6 +312,8 @@ private fun EduTApp() {
 
 @Composable
 private fun HomeContent(
+    selectedLanguage: HomeLanguage,
+    onLanguageSelected: (HomeLanguage) -> Unit,
     refreshVersion: Int,
     onRefresh: () -> Unit,
     onDiscover: (String) -> Unit,
@@ -298,13 +325,6 @@ private fun HomeContent(
     unreadNotifications: Int,
     onScholarshipSelect: (Scholarship) -> Unit
 ) {
-    val context = LocalContext.current
-    val preferences = remember(context) {
-        context.getSharedPreferences("edut_home_language", Context.MODE_PRIVATE)
-    }
-    var selectedLanguage by remember {
-        mutableStateOf(HomeLanguage.fromCode(preferences.getString("language", "en")))
-    }
     var languageMenuExpanded by remember { mutableStateOf(false) }
     val labels = selectedLanguage.labels
     val secondary = selectedLanguage.secondaryLabels
@@ -338,8 +358,7 @@ private fun HomeContent(
                     DropdownMenuItem(
                         text = { Text("${option.flag} ${option.title}") },
                         onClick = {
-                            selectedLanguage = option
-                            preferences.edit().putString("language", option.code).apply()
+                            onLanguageSelected(option)
                             languageMenuExpanded = false
                         },
                         trailingIcon = {
@@ -351,7 +370,7 @@ private fun HomeContent(
                 }
                 HorizontalDivider()
                 Text(
-                    "Home labels only · Other screens remain in English",
+                    "Home and navigation labels only · Other screens remain in English",
                     modifier = Modifier.padding(12.dp),
                     fontSize = 11.sp,
                     color = Ink.copy(alpha = .65f)
