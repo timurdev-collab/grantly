@@ -1,5 +1,6 @@
 package com.grantly.android
 
+import android.content.Context
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -21,21 +22,29 @@ import org.junit.runner.RunWith
 class GuestCommunitySmokeTest {
     @get:Rule val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
+    /** Navigation labels are translated even though destination pages are not. */
+    private fun selectedLanguage(): HomeLanguage {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val preferences = context.getSharedPreferences("edut_home_language", Context.MODE_PRIVATE)
+        return HomeLanguage.fromCode(preferences.getString("language", "en"))
+    }
+
     @Test fun guestProfileNavigationNeverExposesAdvisorTab() {
+        val language = selectedLanguage()
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         assertNotNull("EduT Home should launch",
             device.wait(Until.findObject(By.text("EduT")), 45_000))
         assertFalse("Guest must not see the advisor-only tab",
-            device.hasObject(By.text("Advisor")))
+            device.hasObject(By.text(language.navigationLabels.advisor)))
 
-        val profile = device.wait(Until.findObject(By.text("Profile")), 15_000)
+        val profile = device.wait(Until.findObject(By.text(language.labels.profile)), 15_000)
         assertNotNull("Guest should be able to open Profile", profile)
         profile!!.click()
         device.waitForIdle(5_000)
         assertFalse("Visiting Profile must not grant advisor access",
             device.hasObject(By.text("Advisor")))
 
-        val home = device.wait(Until.findObject(By.text("Home")), 15_000)
+        val home = device.wait(Until.findObject(By.text(language.navigationLabels.home)), 15_000)
         assertNotNull("Guest should be able to return Home", home)
         home!!.click()
         device.waitForIdle(5_000)
