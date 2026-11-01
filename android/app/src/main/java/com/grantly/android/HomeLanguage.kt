@@ -47,6 +47,51 @@ internal enum class HomeLanguage(val code: String, val title: String, val flag: 
                 "Stipendien für\ndeinen nächsten Schritt.", "Stipendien, Länder und Fächer suchen",
                 "Für dich", "Bewerbungen", "Beratung", "Profil", "Für dich ausgewählt", "Baldiger Bewerbungsschluss")
         }
+
+    /** Home-only guidance and Community cards; other screens remain untranslated. */
+    val secondaryLabels: HomeSecondaryLabels
+        get() = when (this) {
+            ENGLISH -> HomeSecondaryLabels(
+                "Need a little guidance?", "Browse verified educational advisors (sign-in required).",
+                "Browse advisors →", "Community",
+                "Explore Community posts, Stories and Shorts. Publishing requires a visible profile; video features are still in testing.",
+                "Explore community →")
+            RUSSIAN -> HomeSecondaryLabels(
+                "Нужна помощь?", "Найдите проверенных консультантов по образованию (нужен вход в аккаунт).",
+                "Найти консультантов →", "Сообщество",
+                "Читайте публикации, истории и короткие видео. Для публикации нужен открытый профиль; видеофункции еще тестируются.",
+                "Открыть сообщество →")
+            VIETNAMESE -> HomeSecondaryLabels(
+                "Bạn cần tư vấn?", "Tìm cố vấn giáo dục đã được xác minh (cần đăng nhập).",
+                "Xem cố vấn →", "Cộng đồng",
+                "Khám phá bài viết, tin và video ngắn. Cần hồ sơ công khai để đăng bài; tính năng video vẫn đang thử nghiệm.",
+                "Khám phá cộng đồng →")
+            ARABIC -> HomeSecondaryLabels(
+                "هل تحتاج إلى إرشاد؟", "تصفح المستشارين التعليميين المعتمدين (يتطلب تسجيل الدخول).",
+                "تصفح المستشارين ←", "المجتمع",
+                "استكشف المنشورات والقصص والمقاطع القصيرة. يتطلب النشر ملفا شخصيا ظاهرا؛ ميزات الفيديو قيد الاختبار.",
+                "استكشف المجتمع ←")
+            CHINESE -> HomeSecondaryLabels(
+                "需要一些指导吗？", "浏览已认证的教育顾问（需要登录）。",
+                "浏览顾问 →", "社区",
+                "浏览社区帖子、动态和短视频。发布内容需要公开个人资料；视频功能仍在测试中。",
+                "探索社区 →")
+            FRENCH -> HomeSecondaryLabels(
+                "Besoin de conseils ?", "Consultez des conseillers en éducation vérifiés (connexion requise).",
+                "Voir les conseillers →", "Communauté",
+                "Découvrez les publications, stories et vidéos courtes. Un profil visible est requis pour publier ; la vidéo est encore en test.",
+                "Explorer la communauté →")
+            SPANISH -> HomeSecondaryLabels(
+                "¿Necesitas orientación?", "Consulta asesores educativos verificados (requiere iniciar sesión).",
+                "Ver asesores →", "Comunidad",
+                "Explora publicaciones, historias y videos cortos. Para publicar necesitas un perfil visible; el video sigue en pruebas.",
+                "Explorar la comunidad →")
+            GERMAN -> HomeSecondaryLabels(
+                "Brauchst du Unterstützung?", "Entdecke geprüfte Bildungsberater (Anmeldung erforderlich).",
+                "Berater ansehen →", "Community",
+                "Entdecke Beiträge, Stories und Kurzvideos. Zum Veröffentlichen brauchst du ein sichtbares Profil; Videos werden noch getestet.",
+                "Community entdecken →")
+        }
 }
 
 internal data class HomeLabels(
@@ -61,4 +106,14 @@ internal data class HomeLabels(
     val profile: String,
     val pickedForYou: String,
     val closingSoon: String
+)
+
+
+internal data class HomeSecondaryLabels(
+    val guidanceTitle: String,
+    val guidanceDescription: String,
+    val guidanceAction: String,
+    val communityTitle: String,
+    val communityDescription: String,
+    val communityAction: String
 )
