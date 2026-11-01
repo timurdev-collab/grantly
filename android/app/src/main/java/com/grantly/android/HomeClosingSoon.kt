@@ -31,6 +31,12 @@ internal object HomeDeadlineRules {
         }
     }
 
+    /** Shared Home hero and Closing soon policy: never promote unverified or expired listings. */
+    fun eligibleUpcomingDate(status: String?, deadline: String?, today: LocalDate): LocalDate? {
+        if (!isVerified(status)) return null
+        return parseDate(deadline)?.takeUnless { it.isBefore(today) }
+    }
+
     fun daysUntil(date: LocalDate, today: LocalDate): Long =
         ChronoUnit.DAYS.between(today, date)
 
@@ -62,10 +68,9 @@ internal fun HomeClosingSoonContent(onSelect: (Scholarship) -> Unit) {
             val today = LocalDate.now()
             val page = ScholarshipRepository.search(sort = "Deadline", limit = 100)
             upcoming = page.items.mapNotNull { scholarship ->
-                val date = if (HomeDeadlineRules.isVerified(scholarship.verificationStatus))
-                    HomeDeadlineRules.parseDate(scholarship.deadline)
-                else null
-                if (date != null && !date.isBefore(today)) scholarship to date else null
+                HomeDeadlineRules.eligibleUpcomingDate(
+                    scholarship.verificationStatus, scholarship.deadline, today
+                )?.let { date -> scholarship to date }
             }.sortedBy { it.second }.take(3).map { it.first }
         } catch (cancelled: CancellationException) {
             throw cancelled
