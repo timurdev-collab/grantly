@@ -30,6 +30,22 @@ class HomeDeadlineRulesTest {
         }
     }
 
+    @Test fun heroAndClosingSoonShareVerifiedUpcomingPolicy() {
+        val today = LocalDate.of(2026, 11, 2)
+        assertEquals(today, HomeDeadlineRules.eligibleUpcomingDate(
+            "verified", "2026-11-02", today))
+        assertEquals(today.plusDays(3), HomeDeadlineRules.eligibleUpcomingDate(
+            "verified", "2026-11-05T23:59:00Z", today))
+        for (status in listOf(null, "", "pending", "unverified", "rejected")) {
+            assertNull("Unverified Home listing must be excluded: $status",
+                HomeDeadlineRules.eligibleUpcomingDate(status, "2026-11-05", today))
+        }
+        for (deadline in listOf(null, "", "Rolling", "2026-11-01", "2026-02-30")) {
+            assertNull("Invalid or expired Home deadline must be excluded: $deadline",
+                HomeDeadlineRules.eligibleUpcomingDate("verified", deadline, today))
+        }
+    }
+
     @Test fun usesCalendarDaysAndMatchesIosUrgencyWording() {
         val today = LocalDate.of(2026, 11, 2)
         assertEquals(0L, HomeDeadlineRules.daysUntil(today, today))
