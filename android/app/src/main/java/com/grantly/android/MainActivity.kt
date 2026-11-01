@@ -305,6 +305,7 @@ private fun HomeContent(
     }
     var languageMenuExpanded by remember { mutableStateOf(false) }
     val labels = selectedLanguage.labels
+    val secondary = selectedLanguage.secondaryLabels
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(32.dp).background(Forest, RoundedCornerShape(50)), contentAlignment = Alignment.Center) {
@@ -446,22 +447,22 @@ private fun HomeContent(
     key(refreshVersion) { HomeClosingSoonContent(onSelect = onScholarshipSelect) }
     Spacer(Modifier.height(26.dp))
     Column(Modifier.fillMaxWidth().background(Sage, RoundedCornerShape(22.dp)).clickable(onClick = onAdvisors).padding(20.dp)) {
-        Text("Need a little guidance?", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
+        Text(secondary.guidanceTitle, fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
         Spacer(Modifier.height(7.dp))
-        Text("Browse verified educational advisors (sign-in required).", fontSize = 13.sp, color = Ink)
+        Text(secondary.guidanceDescription, fontSize = 13.sp, color = Ink)
         Spacer(Modifier.height(8.dp))
-        Text("Browse advisors →", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
+        Text(secondary.guidanceAction, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     }
     Spacer(Modifier.height(16.dp))
     Column(Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(22.dp))
         .clickable(onClick = onCommunity)
         .semantics { contentDescription = "Open Community from Home" }
         .padding(20.dp)) {
-        Text("Community", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
+        Text(secondary.communityTitle, fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
         Spacer(Modifier.height(7.dp))
-        Text("Explore Community posts, Stories and Shorts. Publishing requires a visible profile; video features are still in testing.", fontSize = 13.sp, color = Ink)
+        Text(secondary.communityDescription, fontSize = 13.sp, color = Ink)
         Spacer(Modifier.height(8.dp))
-        Text("Explore community →", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
+        Text(secondary.communityAction, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     }
 }
 
