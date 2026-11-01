@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.*
@@ -66,6 +67,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EduTApp() {
     var tab by remember { mutableStateOf(Tab.Home) }
@@ -175,7 +177,10 @@ private fun EduTApp() {
                 }
             }
         ) { padding ->
-            LazyColumn(state = pageScroll, modifier = Modifier.fillMaxSize().padding(padding)) {
+            // Keep the same scrollable page for every destination; enable the
+            // iOS-style pull gesture only on the actual Home root.
+            val pageContent: @Composable () -> Unit = {
+                LazyColumn(state = pageScroll, modifier = Modifier.fillMaxSize()) {
                 item {
                     Column(Modifier.padding(22.dp)) {
                         if (tab != Tab.Home) {
@@ -249,6 +254,18 @@ private fun EduTApp() {
                         }
                     }
                 }
+                }
+            }
+            if (tab == Tab.Home && !showingAdvisors && !showingCommunity &&
+                !showingNotifications && selectedScholarship == null
+            ) {
+                PullToRefreshBox(
+                    isRefreshing = false,
+                    onRefresh = { homeRefreshVersion += 1 },
+                    modifier = Modifier.fillMaxSize().padding(padding)
+                ) { pageContent() }
+            } else {
+                Box(Modifier.fillMaxSize().padding(padding)) { pageContent() }
             }
         }
     }
