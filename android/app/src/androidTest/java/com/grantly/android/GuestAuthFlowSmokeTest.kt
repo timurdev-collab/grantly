@@ -1,6 +1,8 @@
 package com.grantly.android
 
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -34,11 +36,10 @@ class GuestAuthFlowSmokeTest {
         assertNotNull("EduT should launch",
             device.wait(Until.findObject(By.text("EduT")), 45_000))
 
-        val profile = device.wait(Until.findObject(By.text("Profile")), 10_000)
-        assertNotNull("Profile tab should be visible", profile)
-        profile.click()
-        assertNotNull("Sign-in screen should open",
-            device.wait(Until.findObject(By.text("Welcome back")), 20_000))
+        // Navigate through Compose semantics rather than an occasionally dropped
+        // UIAutomator click. Both Home and bottom-nav Profile entries open sign-in.
+        composeRule.onAllNodesWithText("Profile").onFirst().performClick()
+        composeRule.onNodeWithText("Sign in with your existing EduT account.").assertExists()
 
         // Use synchronized Compose semantics for the interactive visibility control.
         togglePasswordVisibility("Show password", "Hide password")
