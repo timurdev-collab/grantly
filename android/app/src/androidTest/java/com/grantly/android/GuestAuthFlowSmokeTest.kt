@@ -1,6 +1,5 @@
 package com.grantly.android
 
-import androidx.compose.ui.test.assertExists
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
