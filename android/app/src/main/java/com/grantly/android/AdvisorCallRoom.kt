@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -52,6 +53,7 @@ import kotlinx.coroutines.withContext
 internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, onClose: () -> Unit) {
     val context = LocalContext.current
     val owner = LocalLifecycleOwner.current
+    val view = LocalView.current
     val scope = rememberCoroutineScope()
     val session = remember(userId, call.id) {
         AdvisorLiveKitRoomSession(context.applicationContext)
@@ -69,6 +71,13 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
     val requestPermissions = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissionVersion++ }
+    // Keep the display awake only during an active call, restoring the prior
+    // window state on Leave, disconnect, or navigation away.
+    DisposableEffect(room, view) {
+        val wasKeepingScreenOn = view.keepScreenOn
+        if (room != null) view.keepScreenOn = true
+        onDispose { view.keepScreenOn = wasKeepingScreenOn }
+    }
     val permissionsGranted = remember(permissionVersion, context) {
         context.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
             context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
@@ -148,6 +157,11 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
         Text("Status: " + AdvisorCallListRules.label(call.status))
         Text("No recording is started by this Android screen.",
             style = MaterialTheme.typography.bodySmall)
+        if (call.recordingRequested) {
+            Text("Recording was requested for this call, but this Android preview does not record or grant recording consent.",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall)
+        }
         if (room == null) {
             androidx.compose.foundation.layout.Row {
                 Checkbox(checked = consent, onCheckedChange = { consent = it }, enabled = !joining)
