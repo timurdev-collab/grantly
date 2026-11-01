@@ -24,6 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontFamily
@@ -404,7 +406,10 @@ private fun HomeContent(
         Text("Browse advisors →", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     }
     Spacer(Modifier.height(16.dp))
-    Column(Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(22.dp)).clickable(onClick = onCommunity).padding(20.dp)) {
+    Column(Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(22.dp))
+        .clickable(onClick = onCommunity)
+        .semantics { contentDescription = "Open Community from Home" }
+        .padding(20.dp)) {
         Text("Community", fontFamily = FontFamily.Serif, fontSize = 23.sp, color = Forest)
         Spacer(Modifier.height(7.dp))
         Text("Explore Community posts, Stories and Shorts. Publishing requires a visible profile; video features are still in testing.", fontSize = 13.sp, color = Ink)

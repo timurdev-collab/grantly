@@ -68,17 +68,18 @@ class GuestSignInShortcutsSmokeTest {
         val device = deviceOnHome()
         // iOS Home has four quick destinations. Community remains reachable
         // from its own card below the scholarship recommendations.
-        var community = device.wait(Until.findObject(By.text("Explore community →")), 2_000)
+        var community = device.wait(Until.findObject(By.desc("Open Community from Home")), 2_000)
         repeat(10) {
             if (community == null) {
                 device.swipe(
                     device.displayWidth / 2, device.displayHeight * 3 / 4,
                     device.displayWidth / 2, device.displayHeight / 4, 30
                 )
-                community = device.wait(Until.findObject(By.text("Explore community →")), 2_000)
+                community = device.wait(Until.findObject(By.desc("Open Community from Home")), 2_000)
             }
         }
         assertNotNull("Home should show the Community card", community)
+        // Tap the accessible clickable card itself, not a possibly clipped child label.
         community!!.click()
         assertNotNull("Community gate should be visible",
             device.wait(Until.findObject(
