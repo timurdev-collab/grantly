@@ -47,6 +47,30 @@ class AdvisorLiveKitRoomRulesTest {
         )
     }
 
+    @Test fun disablesCaptureAfterAccountSwitchEvenWithoutLeaveCallback() {
+        for (current in listOf("student-2", null)) {
+            org.junit.Assert.assertTrue(
+                AdvisorLiveKitRoomRules.shouldDisableCaptureAfterMediaChange(
+                    requestedGeneration = 11, currentGeneration = 11,
+                    expectedUserId = "advisor-1", currentUserId = current
+                )
+            )
+        }
+    }
+
+    @Test fun disablesCaptureAfterLeaveAndPreservesCurrentAccountMedia() {
+        org.junit.Assert.assertTrue(
+            AdvisorLiveKitRoomRules.shouldDisableCaptureAfterMediaChange(
+                11, 12, "advisor-1", "advisor-1"
+            )
+        )
+        org.junit.Assert.assertFalse(
+            AdvisorLiveKitRoomRules.shouldDisableCaptureAfterMediaChange(
+                11, 11, "advisor-1", "advisor-1"
+            )
+        )
+    }
+
     @Test fun allowsJoinWhenNoLeaveWasRequested() {
         AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration = 4, currentGeneration = 4)
     }
