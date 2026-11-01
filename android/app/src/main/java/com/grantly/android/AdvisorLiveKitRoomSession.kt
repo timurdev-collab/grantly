@@ -26,6 +26,14 @@ internal object AdvisorLiveKitRoomRules {
     ): Boolean = shouldInvalidatePendingJoin(pendingUserId, currentUserId) ||
         shouldInvalidatePendingJoin(activeUserId, currentUserId)
 
+    /** A session may change while a LiveKit media toggle is suspended. */
+    fun shouldDisableCaptureAfterMediaChange(
+        requestedGeneration: Long,
+        currentGeneration: Long,
+        expectedUserId: String,
+        currentUserId: String?
+    ): Boolean = requestedGeneration != currentGeneration || expectedUserId != currentUserId
+
     fun requireNotLeft(joinGeneration: Long, currentGeneration: Long) {
         if (joinGeneration != currentGeneration) {
             throw IOException("The video call was closed before it could connect.")
@@ -196,11 +204,15 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
             }
             // Leave can invalidate a media operation while LiveKit is suspending.
             // Turn capture back off before returning control to the waiting Leave.
-            if (enabled && requestedGeneration != leaveGeneration.get()) {
+            if (enabled && AdvisorLiveKitRoomRules.shouldDisableCaptureAfterMediaChange(
+                    requestedGeneration, leaveGeneration.get(), expectedUserId,
+                    AuthRepository.session?.userId
+                )) {
                 if (microphone) room.localParticipant.setMicrophoneEnabled(false)
                 else room.localParticipant.setCameraEnabled(false)
             }
             AdvisorLiveKitRoomRules.requireNotLeft(requestedGeneration, leaveGeneration.get())
+            AdvisorCallPreparationRules.requireSameAccount(expectedUserId, AuthRepository.session?.userId)
         } finally {
             lock.unlock()
         }
