@@ -1,6 +1,9 @@
 package com.grantly.android
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.compose.ui.test.assertExists
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
@@ -17,23 +20,13 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class GuestAuthFlowSmokeTest {
-    @get:Rule val activityRule = ActivityScenarioRule(MainActivity::class.java)
+    @get:Rule val composeRule = createAndroidComposeRule<MainActivity>()
 
-    private fun togglePasswordVisibility(device: UiDevice, from: String, to: String) {
-        val button = device.wait(Until.findObject(By.desc(from)), 10_000)
-        assertNotNull("Password toggle '$from' should be available", button)
-        button!!.click()
-        if (device.wait(Until.findObject(By.desc(to)), 3_000) == null) {
-            // Only retry if the original state is still present. This prevents
-            // a delayed first click from accidentally reversing a successful toggle.
-            val unchanged = device.wait(Until.findObject(By.desc(from)), 2_000)
-            if (unchanged != null) {
-                val bounds = unchanged.visibleBounds
-                device.click(bounds.centerX(), bounds.centerY())
-            }
-            assertNotNull("Password toggle should change to '$to'",
-                device.wait(Until.findObject(By.desc(to)), 10_000))
-        }
+    private fun togglePasswordVisibility(from: String, to: String) {
+        // Compose's test action runs on the UI thread and waits for recomposition.
+        // UIAutomator accessibility-node taps were intermittently dropped in CI.
+        composeRule.onNodeWithContentDescription(from).assertExists().performClick()
+        composeRule.onNodeWithContentDescription(to).assertExists()
     }
 
     @Test fun guestCanNavigateSignupAndPasswordRecovery() {
@@ -48,11 +41,9 @@ class GuestAuthFlowSmokeTest {
         assertNotNull("Sign-in screen should open",
             device.wait(Until.findObject(By.text("Welcome back")), 20_000))
 
-        // A Compose accessibility-node click can be dropped while the screen
-        // settles on CI emulators. Verify the state transition and retry once
-        // using the button's visible center, never by blindly tapping twice.
-        togglePasswordVisibility(device, "Show password", "Hide password")
-        togglePasswordVisibility(device, "Hide password", "Show password")
+        // Use synchronized Compose semantics for the interactive visibility control.
+        togglePasswordVisibility("Show password", "Hide password")
+        togglePasswordVisibility("Hide password", "Show password")
 
         val signup = device.wait(
             Until.findObject(By.text("New to EduT? Create an account")), 10_000)
