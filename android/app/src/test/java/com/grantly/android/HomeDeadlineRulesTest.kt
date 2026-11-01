@@ -50,6 +50,28 @@ class HomeDeadlineRulesTest {
         }
     }
 
+    @Test fun personalizedHeroSkipsInvalidTopMatchesBeforeChoosingAnEligibleOne() {
+        val today = LocalDate.of(2026, 11, 2)
+        data class Candidate(val status: String?, val deadline: String?)
+        val candidates = listOf(
+            Candidate("pending", "2026-11-03"),
+            Candidate("verified", "Rolling"),
+            Candidate("verified", "2026-11-01"),
+            Candidate("verified", "2026-11-04")
+        )
+        val selected = candidates.firstOrNull { candidate ->
+            HomeDeadlineRules.eligibleUpcomingDate(
+                candidate.status, candidate.deadline, today
+            ) != null
+        }
+        assertEquals("2026-11-04", selected?.deadline)
+        assertNull(candidates.take(3).firstOrNull { candidate ->
+            HomeDeadlineRules.eligibleUpcomingDate(
+                candidate.status, candidate.deadline, today
+            ) != null
+        })
+    }
+
     @Test fun usesCalendarDaysAndMatchesIosUrgencyWording() {
         val today = LocalDate.of(2026, 11, 2)
         assertEquals(0L, HomeDeadlineRules.daysUntil(today, today))
