@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.io.Reader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.time.Instant
@@ -53,6 +54,33 @@ internal data class NotificationPage(
     val items: List<EduTNotification>,
     val hasMore: Boolean
 )
+
+/** Bounds untrusted notification responses and prevents cross-account results. */
+internal object NotificationResponseRules {
+    const val MAX_BADGE_CHARS = 32_768
+    const val MAX_INBOX_CHARS = 524_288
+
+    fun requireSameAccount(expectedUserId: String, currentUserId: String?) {
+        if (expectedUserId != currentUserId) {
+            throw IOException("Your account changed. Please sign in again.")
+        }
+    }
+
+    fun readBounded(reader: Reader, maxChars: Int): String {
+        require(maxChars > 0) { "Response limit must be positive." }
+        val result = StringBuilder()
+        val buffer = CharArray(4096)
+        while (true) {
+            val count = reader.read(buffer)
+            if (count < 0) break
+            if (count > maxChars - result.length) {
+                throw IOException("Notification response is too large.")
+            }
+            result.append(buffer, 0, count)
+        }
+        return result.toString()
+    }
+}
 
 internal object NotificationInboxRepository {
     private suspend fun accountId(): Pair<AuthSession, String> {
@@ -101,8 +129,11 @@ internal object NotificationInboxRepository {
                 if (status == 401 || status == 403) "Sign in again to view notifications."
                 else "Unable to load unread notifications (HTTP $status)."
             )
-            JSONArray(connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() })
-                .length().coerceIn(0, 10)
+            val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use {
+                NotificationResponseRules.readBounded(it, NotificationResponseRules.MAX_BADGE_CHARS)
+            }
+            NotificationResponseRules.requireSameAccount(userId, AuthRepository.session?.userId)
+            JSONArray(response).length().coerceIn(0, 10)
         } finally {
             connection.disconnect()
         }
@@ -124,9 +155,11 @@ internal object NotificationInboxRepository {
                     if (status == 401 || status == 403) "Sign in again to view notifications."
                     else "Unable to load notifications (HTTP $status)."
                 )
-                val rows = JSONArray(
-                    connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-                )
+                val response = connection.inputStream.bufferedReader(Charsets.UTF_8).use {
+                    NotificationResponseRules.readBounded(it, NotificationResponseRules.MAX_INBOX_CHARS)
+                }
+                NotificationResponseRules.requireSameAccount(userId, AuthRepository.session?.userId)
+                val rows = JSONArray(response)
                 val items = buildList {
                     for (i in 0 until minOf(limit, rows.length())) {
                         val row = rows.optJSONObject(i) ?: continue
@@ -168,6 +201,7 @@ internal object NotificationInboxRepository {
             connection.setRequestProperty("Content-Type", "application/json")
             connection.setRequestProperty("Prefer", "return=minimal")
             val payload = JSONObject().put("read_at", Instant.now().toString())
+            NotificationResponseRules.requireSameAccount(userId, AuthRepository.session?.userId)
             connection.outputStream.use {
                 it.write(payload.toString().toByteArray(Charsets.UTF_8))
             }
@@ -176,6 +210,7 @@ internal object NotificationInboxRepository {
                 if (status == 401 || status == 403) "You cannot update these notifications."
                 else "Unable to mark notifications read (HTTP $status)."
             )
+            NotificationResponseRules.requireSameAccount(userId, AuthRepository.session?.userId)
         } finally {
             connection.disconnect()
         }
