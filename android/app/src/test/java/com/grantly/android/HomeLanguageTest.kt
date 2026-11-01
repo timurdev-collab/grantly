@@ -11,6 +11,12 @@ class HomeLanguageTest {
         assertEquals(8, HomeLanguage.entries.map { it.code }.toSet().size)
     }
 
+    @Test fun arabicIsTheOnlyRightToLeftLanguage() {
+        HomeLanguage.entries.forEach { language ->
+            assertEquals(language == HomeLanguage.ARABIC, language.isRightToLeft)
+        }
+    }
+
     @Test fun unknownOrMissingPreferenceFallsBackToEnglish() {
         assertEquals(HomeLanguage.ENGLISH, HomeLanguage.fromCode(null))
         assertEquals(HomeLanguage.ENGLISH, HomeLanguage.fromCode("invalid"))
