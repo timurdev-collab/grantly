@@ -49,20 +49,23 @@ class GuestCommunitySmokeTest {
         assertNotNull("EduT Home should launch",
             device.wait(Until.findObject(By.text("EduT")), 45_000))
 
-        // Prefer the Home quick destination, which is visible before the
-        // long recommendations list finishes loading. The lower Community
-        // card remains a fallback on narrower emulator configurations.
-        var community = device.wait(Until.findObject(By.text("Community")), 8_000)
-        if (community == null) {
-            community = device.wait(Until.findObject(By.text("Explore community →")), 2_000)
-            repeat(8) {
-                if (community == null) {
-                    device.swipe(
-                        device.displayWidth / 2, device.displayHeight * 3 / 4,
-                        device.displayWidth / 2, device.displayHeight / 4, 30
-                    )
-                    community = device.wait(Until.findObject(By.text("Explore community →")), 2_000)
-                }
+        // Home labels are localized, so never look up this card by its
+        // English title. Its stable accessibility description belongs to the
+        // clickable surface and works for all eight Home preview languages.
+        // The card follows variable-length scholarship sections, so scroll
+        // until it is exposed rather than assuming a fixed position.
+        var community = device.wait(
+            Until.findObject(By.desc("Open Community from Home")), 2_000
+        )
+        repeat(16) {
+            if (community == null) {
+                device.swipe(
+                    device.displayWidth / 2, device.displayHeight * 3 / 4,
+                    device.displayWidth / 2, device.displayHeight / 4, 30
+                )
+                community = device.wait(
+                    Until.findObject(By.desc("Open Community from Home")), 1_000
+                )
             }
         }
         assertNotNull("Home should expose Community navigation", community)
