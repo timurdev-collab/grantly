@@ -33,6 +33,7 @@ class GuestHomeLanguagePersistenceSmokeTest {
             ).assertExists().performClick()
             composeRule.onNodeWithText("🇷🇺 Русский").assertExists().performClick()
             composeRule.onNodeWithText("Нужна помощь?").assertExists()
+            composeRule.onNodeWithText("Главная").assertExists()
             assertEquals("ru", preferences.getString("language", null))
 
             composeRule.activityRule.scenario.recreate()
