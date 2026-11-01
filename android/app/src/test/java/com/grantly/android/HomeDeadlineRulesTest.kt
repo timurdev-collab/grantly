@@ -21,10 +21,14 @@ class HomeDeadlineRulesTest {
         assertEquals(date, HomeDeadlineRules.parseDate("2026-11-02"))
         assertEquals(date, HomeDeadlineRules.parseDate("2026-11-02T23:59:00Z"))
         assertEquals(date, HomeDeadlineRules.parseDate(" 2026-11-02 23:59:00+00:00 "))
+        assertEquals(date, HomeDeadlineRules.parseDate("2026-11-02T23:59:00.123Z"))
+        assertEquals(date, HomeDeadlineRules.parseDate("2026-11-02T23:59:00+08:00"))
     }
 
     @Test fun rejectsRollingMalformedAndNonexistentDates() {
-        for (value in listOf(null, "", "Rolling", "2026-11", "2026-11-02garbage", "2026-02-30", "2026-13-01")) {
+        for (value in listOf(null, "", "Rolling", "2026-11", "2026-11-02garbage", "2026-02-30", "2026-13-01",
+            "2026-11-02Tgarbage", "2026-11-02T99:99:99Z",
+            "2026-11-02T23:59:00garbage", "2026-11-02 23:59:00+99:00")) {
             assertNull("Invalid deadline should not get an urgency label: $value",
                 HomeDeadlineRules.parseDate(value))
         }
