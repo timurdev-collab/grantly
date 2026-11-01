@@ -20,6 +20,12 @@ internal object AdvisorLiveKitRoomRules {
     fun shouldInvalidatePendingJoin(pendingUserId: String?, currentUserId: String?): Boolean =
         pendingUserId != null && pendingUserId != currentUserId
 
+    /** An active room must invalidate in-flight media toggles before waiting for the mutex. */
+    fun shouldInvalidateRoomForAccountChange(
+        pendingUserId: String?, activeUserId: String?, currentUserId: String?
+    ): Boolean = shouldInvalidatePendingJoin(pendingUserId, currentUserId) ||
+        shouldInvalidatePendingJoin(activeUserId, currentUserId)
+
     fun requireNotLeft(joinGeneration: Long, currentGeneration: Long) {
         if (joinGeneration != currentGeneration) {
             throw IOException("The video call was closed before it could connect.")
@@ -91,7 +97,7 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
     // Visible to account-change callbacks while a slow join holds the mutex.
     @Volatile private var pendingJoinUserId: String? = null
     private var activeRoom: Room? = null
-    private var activeUserId: String? = null
+    @Volatile private var activeUserId: String? = null
 
     suspend fun joinExistingCall(
         callId: String,
@@ -234,8 +240,8 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
     suspend fun leaveIfAccountChanged() {
         // Invalidate an in-flight join BEFORE waiting for its mutex. Otherwise a
         // slow LiveKit connection can start capture after account switching.
-        if (AdvisorLiveKitRoomRules.shouldInvalidatePendingJoin(
-                pendingJoinUserId, AuthRepository.session?.userId
+        if (AdvisorLiveKitRoomRules.shouldInvalidateRoomForAccountChange(
+                pendingJoinUserId, activeUserId, AuthRepository.session?.userId
             )) {
             leaveGeneration.incrementAndGet()
         }

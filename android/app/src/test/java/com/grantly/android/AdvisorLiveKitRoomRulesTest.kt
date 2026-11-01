@@ -13,6 +13,28 @@ class AdvisorLiveKitRoomRulesTest {
         }
     }
 
+    @Test fun invalidatesActiveRoomMediaWhenAccountSwitchesOrSignsOut() {
+        for (current in listOf("student-2", null)) {
+            org.junit.Assert.assertTrue(
+                AdvisorLiveKitRoomRules.shouldInvalidateRoomForAccountChange(
+                    pendingUserId = null, activeUserId = "advisor-1", currentUserId = current
+                )
+            )
+        }
+    }
+
+    @Test fun preservesActiveRoomWhenAccountIsUnchangedOrNoRoomExists() {
+        org.junit.Assert.assertFalse(
+            AdvisorLiveKitRoomRules.shouldInvalidateRoomForAccountChange(null, "advisor-1", "advisor-1")
+        )
+        org.junit.Assert.assertFalse(
+            AdvisorLiveKitRoomRules.shouldInvalidateRoomForAccountChange(null, null, null)
+        )
+        org.junit.Assert.assertTrue(
+            AdvisorLiveKitRoomRules.shouldInvalidateRoomForAccountChange("advisor-1", null, null)
+        )
+    }
+
     @Test fun preservesPendingJoinForSameAccountAndNoPendingJoin() {
         org.junit.Assert.assertFalse(
             AdvisorLiveKitRoomRules.shouldInvalidatePendingJoin("advisor-1", "advisor-1")
