@@ -25,7 +25,7 @@ class GuestHomeLanguageMenuSmokeTest {
         composeRule.onNodeWithText("🇷🇺 Русский").assertExists()
         composeRule.onNodeWithText("🇨🇳 中文").assertExists()
         composeRule.onNodeWithText(
-            "Home labels only · Other screens remain in English"
+            "Home and navigation labels only · Other screens remain in English"
         ).assertExists()
     }
 }
