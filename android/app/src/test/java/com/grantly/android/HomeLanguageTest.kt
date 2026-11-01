@@ -36,6 +36,24 @@ class HomeLanguageTest {
         }
     }
 
+    @Test fun allNavigationDestinationsHaveLabelsForEachLanguage() {
+        HomeLanguage.entries.forEach { language ->
+            val nav = language.navigationLabels
+            assertTrue(nav.home.isNotBlank())
+            assertTrue(nav.explore.isNotBlank())
+            assertTrue(nav.messages.isNotBlank())
+            assertTrue(nav.advisor.isNotBlank())
+            assertTrue(language.labels.applications.isNotBlank())
+            assertTrue(language.labels.profile.isNotBlank())
+        }
+        assertEquals("Home", HomeLanguage.ENGLISH.navigationLabels.home)
+        assertEquals("Explore", HomeLanguage.ENGLISH.navigationLabels.explore)
+        assertEquals("Messages", HomeLanguage.ENGLISH.navigationLabels.messages)
+        assertEquals("Advisor", HomeLanguage.ENGLISH.navigationLabels.advisor)
+        assertEquals("Главная", HomeLanguage.RUSSIAN.navigationLabels.home)
+        assertEquals("首页", HomeLanguage.CHINESE.navigationLabels.home)
+    }
+
     @Test fun allHomeGuidanceAndCommunityLabelsAreTranslated() {
         HomeLanguage.entries.forEach { language ->
             val labels = language.secondaryLabels
