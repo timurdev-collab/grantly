@@ -126,12 +126,20 @@ private fun EduTApp() {
         if (session == null) {
             unreadNotifications = 0
         } else if (tab == Tab.Home && !showingNotifications) {
+            // The account can change while the badge request is in flight.
+            // Never apply a previous user's unread count to the new session.
+            val requestedUserId = session.userId
             try {
-                unreadNotifications = NotificationInboxRepository.unreadBadgeCount()
+                val count = NotificationInboxRepository.unreadBadgeCount()
+                if (AuthRepository.session?.userId == requestedUserId) {
+                    unreadNotifications = count
+                }
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (_: Exception) {
-                unreadNotifications = 0
+                if (AuthRepository.session?.userId == requestedUserId) {
+                    unreadNotifications = 0
+                }
             }
         }
     }
