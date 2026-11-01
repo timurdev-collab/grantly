@@ -160,7 +160,10 @@ internal object PersonalizedMatchesRepository {
 }
 
 @Composable
-internal fun PersonalizedMatchesContent(onSelect: (Scholarship) -> Unit) {
+internal fun PersonalizedMatchesContent(
+    onSelect: (Scholarship) -> Unit,
+    onOpenProfile: () -> Unit
+) {
     val userId = AuthRepository.session?.userId
     var matches by remember(userId) { mutableStateOf<List<PersonalizedMatch>>(emptyList()) }
     var loading by remember(userId) { mutableStateOf(userId != null) }
@@ -187,10 +190,14 @@ internal fun PersonalizedMatchesContent(onSelect: (Scholarship) -> Unit) {
     }
 
     when {
-        userId == null -> Text(
-            "Sign in and complete your academic profile to unlock personalized matches.",
-            style = MaterialTheme.typography.bodyMedium
-        )
+        userId == null -> {
+            Text(
+                "Sign in and complete your academic profile to unlock personalized matches.",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Spacer(Modifier.height(8.dp))
+            OutlinedButton(onClick = onOpenProfile) { Text("Sign in to personalize") }
+        }
         loading -> CircularProgressIndicator()
         error != null -> {
             Text(error ?: "", color = MaterialTheme.colorScheme.error)
@@ -198,6 +205,7 @@ internal fun PersonalizedMatchesContent(onSelect: (Scholarship) -> Unit) {
         }
         matches.isEmpty() -> {
             Text("No personalized results yet. Complete your profile and try again.")
+            OutlinedButton(onClick = onOpenProfile) { Text("Complete profile") }
             OutlinedButton(onClick = { refresh++ }) { Text("Refresh matches") }
         }
         else -> {

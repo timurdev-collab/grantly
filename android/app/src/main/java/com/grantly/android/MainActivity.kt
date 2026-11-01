@@ -385,7 +385,9 @@ private fun HomeContent(
     Spacer(Modifier.height(25.dp))
     Text("Picked for you", fontFamily = FontFamily.Serif, fontSize = 28.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
-    key(refreshVersion) { PersonalizedMatchesContent(onSelect = onScholarshipSelect) }
+    key(refreshVersion) {
+        PersonalizedMatchesContent(onSelect = onScholarshipSelect, onOpenProfile = onProfile)
+    }
     Spacer(Modifier.height(20.dp))
     Text("Closing soon", fontFamily = FontFamily.Serif, fontSize = 26.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
