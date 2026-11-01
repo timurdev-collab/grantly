@@ -46,63 +46,21 @@ class GuestAuthFlowSmokeTest {
         togglePasswordVisibility("Show password", "Hide password")
         togglePasswordVisibility("Hide password", "Show password")
 
-        val signup = device.wait(
-            Until.findObject(By.text("New to EduT? Create an account")), 10_000)
-        assertNotNull("Signup action should be available", signup)
-        signup.click()
-        assertNotNull("Signup screen should open",
-            device.wait(Until.findObject(By.text("Create your account")), 10_000))
-        assertNotNull("Signup should start with its password concealed",
-            device.wait(Until.findObject(By.desc("Show password")), 10_000))
+        // Compose semantics invoke the actual click actions and synchronize with
+        // recomposition. UIAutomator taps on these form links were intermittently
+        // dropped, even when the accessibility node was present.
+        composeRule.onNodeWithText("New to EduT? Create an account")
+            .assertExists().performClick()
+        composeRule.onNodeWithText("Create your account").assertExists()
+        composeRule.onNodeWithContentDescription("Show password").assertExists()
 
-        val backToLogin = device.wait(
-            Until.findObject(By.text("Already have an account? Sign in")), 10_000)
-        assertNotNull("Signup should offer sign-in", backToLogin)
-        backToLogin.click()
-        // The auth forms share a LazyColumn item. The sign-in heading may be
-        // outside UIAutomator's visible viewport after the mode transition,
-        // especially on small emulators. Verify the sign-in-only recovery action
-        // instead; it cannot be shown by the signup form. Scroll down through
-        // the form if the new list has reset to its top.
-        var returnedSignInLink = device.wait(Until.findObject(By.text("Forgot password?")), 3_000)
-        repeat(5) {
-            if (returnedSignInLink == null) {
-                val width = device.displayWidth
-                val height = device.displayHeight
-                device.swipe(width / 2, height * 4 / 5, width / 2, height / 4, 24)
-                device.waitForIdle(1_000)
-                returnedSignInLink = device.wait(Until.findObject(By.text("Forgot password?")), 2_000)
-            }
-        }
-        assertNotNull("Sign-in-only recovery link should return after signup", returnedSignInLink)
-
-        val forgot = device.wait(Until.findObject(By.text("Forgot password?")), 10_000)
-        assertNotNull("Password recovery should be reachable", forgot)
-        forgot.click()
-        assertNotNull("Recovery screen should open",
-            device.wait(Until.findObject(By.text("Reset password")), 10_000))
-        val backFromRecovery = device.wait(Until.findObject(By.text("Back to sign in")), 10_000)
-        assertNotNull("Recovery should allow returning to sign-in", backFromRecovery)
-        backFromRecovery.click()
-        // The heading can be outside UIAutomator's visible Compose viewport after
-        // switching from the shorter recovery form. Verify sign-in-only actions
-        // instead: neither is present on the recovery or signup screen.
-        var forgotPassword = device.wait(Until.findObject(By.text("Forgot password?")), 3_000)
-        repeat(5) {
-            if (forgotPassword == null) {
-                val width = device.displayWidth
-                val height = device.displayHeight
-                device.swipe(width / 2, height * 4 / 5, width / 2, height / 4, 24)
-                device.waitForIdle(1_000)
-                forgotPassword = device.wait(Until.findObject(By.text("Forgot password?")), 2_000)
-            }
-        }
-        assertNotNull("Returning from recovery should restore the sign-in-only password recovery link",
-            forgotPassword)
-
-        // The signup action was already opened and verified earlier in this test.
-        // On this return path, the recovery link uniquely identifies sign-in;
-        // a second off-screen signup assertion only retests LazyColumn scrolling
-        // and can fail on small emulator viewports without an auth regression.
+        composeRule.onNodeWithText("Already have an account? Sign in")
+            .assertExists().performClick()
+        // Sign-in-only recovery action verifies the form changed back, even if
+        // its heading is outside the emulator's visible scroll viewport.
+        composeRule.onNodeWithText("Forgot password?").assertExists().performClick()
+        composeRule.onNodeWithText("Reset password").assertExists()
+        composeRule.onNodeWithText("Back to sign in").assertExists().performClick()
+        composeRule.onNodeWithText("Forgot password?").assertExists()
     }
 }
