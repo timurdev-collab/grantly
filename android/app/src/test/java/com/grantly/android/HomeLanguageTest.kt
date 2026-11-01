@@ -29,4 +29,20 @@ class HomeLanguageTest {
             assertTrue(labels.closingSoon.isNotBlank())
         }
     }
+
+    @Test fun allHomeGuidanceAndCommunityLabelsAreTranslated() {
+        HomeLanguage.entries.forEach { language ->
+            val labels = language.secondaryLabels
+            assertTrue(labels.guidanceTitle.isNotBlank())
+            assertTrue(labels.guidanceDescription.isNotBlank())
+            assertTrue(labels.guidanceAction.isNotBlank())
+            assertTrue(labels.communityTitle.isNotBlank())
+            assertTrue(labels.communityDescription.isNotBlank())
+            assertTrue(labels.communityAction.isNotBlank())
+            if (language != HomeLanguage.ENGLISH) {
+                assertTrue(labels.guidanceTitle != HomeLanguage.ENGLISH.secondaryLabels.guidanceTitle)
+                assertTrue(labels.communityDescription != HomeLanguage.ENGLISH.secondaryLabels.communityDescription)
+            }
+        }
+    }
 }
