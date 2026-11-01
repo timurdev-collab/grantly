@@ -386,7 +386,10 @@ private fun HomeContent(
     Text("Picked for you", fontFamily = FontFamily.Serif, fontSize = 28.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
     key(refreshVersion) {
-        PersonalizedMatchesContent(onSelect = onScholarshipSelect, onOpenProfile = onProfile)
+        PersonalizedMatchesContent(
+            onSelect = onScholarshipSelect,
+            onOpenProfile = { tab = Tab.Profile; authNavigationVersion += 1 }
+        )
     }
     Spacer(Modifier.height(20.dp))
     Text("Closing soon", fontFamily = FontFamily.Serif, fontSize = 26.sp, color = Ink)

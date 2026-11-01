@@ -6,6 +6,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -196,7 +198,12 @@ internal fun PersonalizedMatchesContent(
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(Modifier.height(8.dp))
-            OutlinedButton(onClick = onOpenProfile) { Text("Sign in to personalize") }
+            OutlinedButton(
+                onClick = onOpenProfile,
+                modifier = Modifier.semantics {
+                    contentDescription = "Open Profile for personalized scholarships"
+                }
+            ) { Text("Sign in to personalize") }
         }
         loading -> CircularProgressIndicator()
         error != null -> {

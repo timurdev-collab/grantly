@@ -112,18 +112,20 @@ class GuestSignInShortcutsSmokeTest {
         val device = deviceOnHome()
         // This call-to-action sits below the featured scholarship hero.
         // The guest test never submits credentials or changes backend data.
-        var personalize = device.wait(Until.findObject(By.text("Sign in to personalize")), 2_000)
+        var personalize = device.wait(Until.findObject(By.desc("Open Profile for personalized scholarships")), 2_000)
         repeat(10) {
             if (personalize == null) {
                 device.swipe(
                     device.displayWidth / 2, device.displayHeight * 3 / 4,
                     device.displayWidth / 2, device.displayHeight / 4, 30
                 )
-                personalize = device.wait(Until.findObject(By.text("Sign in to personalize")), 2_000)
+                personalize = device.wait(Until.findObject(By.desc("Open Profile for personalized scholarships")), 2_000)
             }
         }
         assertNotNull("Guest recommendations should link directly to Profile", personalize)
         personalize!!.click()
+        assertNotNull("Personalization shortcut should open the Profile heading",
+            device.wait(Until.findObject(By.text("Welcome back")), 15_000))
         assertNotNull("Personalization shortcut should open sign-in",
             device.wait(Until.findObject(
                 By.text("Sign in with your existing EduT account.")), 15_000))
