@@ -9,11 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.io.Reader
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -25,6 +27,31 @@ internal data class PersonalizedMatch(
     val reasons: List<String>,
     val blockers: List<String>
 )
+
+/** Protect bearer-token matching results against oversized responses and account switches. */
+internal object PersonalizedMatchResponseRules {
+    const val MAX_CHARS = 1_048_576
+
+    fun requireSameAccount(expectedUserId: String, currentUserId: String?) {
+        if (expectedUserId != currentUserId) {
+            throw IOException("Your account changed. Please sign in again.")
+        }
+    }
+
+    fun readBounded(reader: Reader): String {
+        val result = StringBuilder()
+        val buffer = CharArray(4096)
+        while (true) {
+            val count = reader.read(buffer)
+            if (count < 0) break
+            if (count > MAX_CHARS - result.length) {
+                throw IOException("Personalized matches response is too large.")
+            }
+            result.append(buffer, 0, count)
+        }
+        return result.toString()
+    }
+}
 
 internal object PersonalizedMatchesRepository {
     private fun JSONArray?.strings(): List<String> =
@@ -74,6 +101,7 @@ internal object PersonalizedMatchesRepository {
     suspend fun top(limit: Int = 4): List<PersonalizedMatch> = withContext(Dispatchers.IO) {
         require(limit in 1..20)
         val session = AuthRepository.activeSession()
+        PersonalizedMatchResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
         val base = BuildConfig.SUPABASE_URL.trimEnd('/')
         val key = BuildConfig.SUPABASE_PUBLISHABLE_KEY
         if (!base.startsWith("https://") || key.isBlank()) {
@@ -93,6 +121,7 @@ internal object PersonalizedMatchesRepository {
             connection.setRequestProperty("Content-Type", "application/json")
             connection.setRequestProperty("Accept", "application/json")
             val payload = JSONObject().put("p_offset", 0).put("p_limit", limit)
+            PersonalizedMatchResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
             connection.outputStream.use {
                 it.write(payload.toString().toByteArray(Charsets.UTF_8))
             }
@@ -104,9 +133,10 @@ internal object PersonalizedMatchesRepository {
                 )
             }
             val response = connection.inputStream.bufferedReader(Charsets.UTF_8)
-                .use { it.readText() }
+                .use { PersonalizedMatchResponseRules.readBounded(it) }
+            PersonalizedMatchResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
             val rows = if (response.isBlank()) JSONArray() else JSONArray(response)
-            buildList {
+            val matches = buildList {
                 for (i in 0 until rows.length()) {
                     val row = rows.optJSONObject(i) ?: continue
                     val item = row.optJSONObject("scholarship")?.let(::scholarship) ?: continue
@@ -121,6 +151,8 @@ internal object PersonalizedMatchesRepository {
                     )
                 }
             }
+            PersonalizedMatchResponseRules.requireSameAccount(session.userId, AuthRepository.session?.userId)
+            matches
         } finally {
             connection.disconnect()
         }
@@ -143,6 +175,8 @@ internal fun PersonalizedMatchesContent(onSelect: (Scholarship) -> Unit) {
         try {
             val fetched = PersonalizedMatchesRepository.top()
             if (AuthRepository.session?.userId == userId) matches = fetched
+        } catch (cancelled: CancellationException) {
+            throw cancelled
         } catch (failure: Exception) {
             if (AuthRepository.session?.userId == userId) {
                 error = failure.message ?: "Unable to load matches."
