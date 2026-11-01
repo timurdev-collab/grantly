@@ -53,4 +53,6 @@ dependencies {
     androidTestImplementation("androidx.test:runner:1.6.2")
     androidTestImplementation("androidx.test:rules:1.6.1")
     androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
+    // Compose semantics actions are synchronized with recomposition; avoid flaky UIAutomator taps.
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 }
