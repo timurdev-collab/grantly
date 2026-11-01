@@ -42,14 +42,14 @@ class GuestCommunitySmokeTest {
         profile!!.click()
         device.waitForIdle(5_000)
         assertFalse("Visiting Profile must not grant advisor access",
-            device.hasObject(By.text("Advisor")))
+            device.hasObject(By.text(language.navigationLabels.advisor)))
 
         val home = device.wait(Until.findObject(By.text(language.navigationLabels.home)), 15_000)
         assertNotNull("Guest should be able to return Home", home)
         home!!.click()
         device.waitForIdle(5_000)
         assertFalse("Returning Home must not expose advisor tools",
-            device.hasObject(By.text("Advisor")))
+            device.hasObject(By.text(language.navigationLabels.advisor)))
     }
 
     @Test fun guestCommunityRequiresSignInAndSystemBackReturnsHome() {
