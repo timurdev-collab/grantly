@@ -314,14 +314,13 @@ private fun HomeContent(
         Text("EduT", fontSize = 21.sp, fontWeight = FontWeight.Bold, color = Forest)
         Spacer(Modifier.weight(1f))
         Box {
-            IconButton(onClick = { languageMenuExpanded = true }) {
-                Text(
-                    "🌐",
-                    fontSize = 19.sp,
-                    modifier = Modifier.semantics {
-                        contentDescription = "Home language preview: ${selectedLanguage.title}"
-                    }
-                )
+            IconButton(
+                onClick = { languageMenuExpanded = true },
+                modifier = Modifier.semantics {
+                    contentDescription = "Home language preview: ${selectedLanguage.title}"
+                }
+            ) {
+                Text("🌐", fontSize = 19.sp)
             }
             DropdownMenu(
                 expanded = languageMenuExpanded,
