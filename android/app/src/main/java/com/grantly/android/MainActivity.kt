@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.sp
 
 private val Forest = Color(0xFF123E30)
@@ -307,6 +309,11 @@ private fun HomeContent(
     val labels = selectedLanguage.labels
     val secondary = selectedLanguage.secondaryLabels
 
+    // Mirror Home content for Arabic as on iOS, without changing other English-only screens.
+    CompositionLocalProvider(
+        LocalLayoutDirection provides if (selectedLanguage.isRightToLeft)
+            LayoutDirection.Rtl else LayoutDirection.Ltr
+    ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(32.dp).background(Forest, RoundedCornerShape(50)), contentAlignment = Alignment.Center) {
             Icon(Icons.Outlined.School, contentDescription = null, tint = Ivory, modifier = Modifier.size(19.dp))
@@ -464,6 +471,7 @@ private fun HomeContent(
         Spacer(Modifier.height(8.dp))
         Text(secondary.communityAction, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     }
+    } // Home-only layout direction
 }
 
 @Composable
