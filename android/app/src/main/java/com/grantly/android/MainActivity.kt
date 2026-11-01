@@ -3,6 +3,7 @@ package com.grantly.android
 import android.os.Bundle
 import java.util.Calendar
 import android.content.Intent
+import android.content.Context
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.CancellationException
@@ -23,6 +24,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -294,6 +296,16 @@ private fun HomeContent(
     unreadNotifications: Int,
     onScholarshipSelect: (Scholarship) -> Unit
 ) {
+    val context = LocalContext.current
+    val preferences = remember(context) {
+        context.getSharedPreferences("edut_home_language", Context.MODE_PRIVATE)
+    }
+    var selectedLanguage by remember {
+        mutableStateOf(HomeLanguage.fromCode(preferences.getString("language", "en")))
+    }
+    var languageMenuExpanded by remember { mutableStateOf(false) }
+    val labels = selectedLanguage.labels
+
     Row(verticalAlignment = Alignment.CenterVertically) {
         Box(Modifier.size(32.dp).background(Forest, RoundedCornerShape(50)), contentAlignment = Alignment.Center) {
             Icon(Icons.Outlined.School, contentDescription = null, tint = Ivory, modifier = Modifier.size(19.dp))
@@ -301,8 +313,44 @@ private fun HomeContent(
         Spacer(Modifier.width(10.dp))
         Text("EduT", fontSize = 21.sp, fontWeight = FontWeight.Bold, color = Forest)
         Spacer(Modifier.weight(1f))
-        Text("🌐", fontSize = 19.sp)
-        Spacer(Modifier.width(4.dp))
+        Box {
+            IconButton(onClick = { languageMenuExpanded = true }) {
+                Text(
+                    "🌐",
+                    fontSize = 19.sp,
+                    modifier = Modifier.semantics {
+                        contentDescription = "Home language preview: ${selectedLanguage.title}"
+                    }
+                )
+            }
+            DropdownMenu(
+                expanded = languageMenuExpanded,
+                onDismissRequest = { languageMenuExpanded = false }
+            ) {
+                HomeLanguage.entries.forEach { option ->
+                    DropdownMenuItem(
+                        text = { Text("${option.flag} ${option.title}") },
+                        onClick = {
+                            selectedLanguage = option
+                            preferences.edit().putString("language", option.code).apply()
+                            languageMenuExpanded = false
+                        },
+                        trailingIcon = {
+                            if (option == selectedLanguage) {
+                                Icon(Icons.Outlined.Check, contentDescription = null)
+                            }
+                        }
+                    )
+                }
+                HorizontalDivider()
+                Text(
+                    "Home labels only · Other screens remain in English",
+                    modifier = Modifier.padding(12.dp),
+                    fontSize = 11.sp,
+                    color = Ink.copy(alpha = .65f)
+                )
+            }
+        }
         IconButton(onClick = onRefresh) {
             Icon(Icons.Outlined.Refresh, contentDescription = "Refresh Home", tint = Forest)
         }
@@ -323,13 +371,13 @@ private fun HomeContent(
     Spacer(Modifier.height(29.dp))
     val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     val greeting = when {
-        hour < 12 -> "Good morning"
-        hour < 17 -> "Good afternoon"
-        else -> "Good evening"
+        hour < 12 -> labels.goodMorning
+        hour < 17 -> labels.goodAfternoon
+        else -> labels.goodEvening
     }
     Text(greeting, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = Forest)
     Spacer(Modifier.height(8.dp))
-    Text("Scholarships picked\nfor your next chapter.", fontFamily = FontFamily.Serif, fontSize = 35.sp, lineHeight = 39.sp, color = Ink)
+    Text(labels.hero, fontFamily = FontFamily.Serif, fontSize = 35.sp, lineHeight = 39.sp, color = Ink)
     Spacer(Modifier.height(20.dp))
     Row(
         Modifier.fillMaxWidth().background(Color.White, RoundedCornerShape(18.dp)).clickable { onDiscover("All") }.padding(17.dp),
@@ -338,7 +386,7 @@ private fun HomeContent(
         Icon(Icons.Outlined.Search, null, tint = Forest)
         Spacer(Modifier.width(11.dp))
         Text(
-            "Search scholarships, countries, majors",
+            labels.search,
             modifier = Modifier.weight(1f),
             color = Ink.copy(alpha = .65f),
             fontSize = 14.sp,
@@ -356,10 +404,10 @@ private fun HomeContent(
     // Mirror the iOS Home quick destinations; degree filters remain available in Discover.
     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(9.dp)) {
         listOf(
-            Triple("For you", true, { onDiscover("All") }),
-            Triple("Applications", false, onApplications),
-            Triple("Advisors", false, onAdvisors),
-            Triple("Profile", false, onProfile)
+            Triple(labels.forYou, true, { onDiscover("All") }),
+            Triple(labels.applications, false, onApplications),
+            Triple(labels.advisors, false, onAdvisors),
+            Triple(labels.profile, false, onProfile)
         ).forEach { (label, selected, action) ->
             Surface(
                 onClick = action,
@@ -385,7 +433,7 @@ private fun HomeContent(
         )
     }
     Spacer(Modifier.height(25.dp))
-    Text("Picked for you", fontFamily = FontFamily.Serif, fontSize = 28.sp, color = Ink)
+    Text(labels.pickedForYou, fontFamily = FontFamily.Serif, fontSize = 28.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
     key(refreshVersion) {
         PersonalizedMatchesContent(
@@ -394,7 +442,7 @@ private fun HomeContent(
         )
     }
     Spacer(Modifier.height(20.dp))
-    Text("Closing soon", fontFamily = FontFamily.Serif, fontSize = 26.sp, color = Ink)
+    Text(labels.closingSoon, fontFamily = FontFamily.Serif, fontSize = 26.sp, color = Ink)
     Spacer(Modifier.height(7.dp))
     key(refreshVersion) { HomeClosingSoonContent(onSelect = onScholarshipSelect) }
     Spacer(Modifier.height(26.dp))
