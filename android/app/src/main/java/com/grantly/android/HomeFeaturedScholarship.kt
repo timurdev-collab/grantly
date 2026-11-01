@@ -40,8 +40,18 @@ internal fun HomeFeaturedScholarshipContent(
         eligibilityWarning = null
         try {
             // A failed private matching request must not prevent public discovery.
+            val today = LocalDate.now()
+            // Personalized matches can include unverified, rolling or expired
+            // opportunities. Apply the same published-date policy as the
+            // public Home hero before promoting a recommendation.
             val match = if (userId == null) null else try {
-                PersonalizedMatchesRepository.top(limit = 1).firstOrNull()
+                PersonalizedMatchesRepository.top(limit = 5).firstOrNull { candidate ->
+                    HomeDeadlineRules.eligibleUpcomingDate(
+                        candidate.scholarship.verificationStatus,
+                        candidate.scholarship.deadline,
+                        today
+                    ) != null
+                }
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (_: Exception) {
@@ -60,7 +70,6 @@ internal fun HomeFeaturedScholarshipContent(
                     }
                 }
             } else {
-                val today = LocalDate.now()
                 featured = ScholarshipRepository.search(sort = "Deadline", limit = 100)
                     .items.mapNotNull { scholarship ->
                         HomeDeadlineRules.eligibleUpcomingDate(
