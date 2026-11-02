@@ -186,11 +186,37 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
                 }
                 // A user can revoke permissions or switch accounts during a
                 // slow connection. Recheck before BOTH media operations.
-                requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
-                room.localParticipant.setMicrophoneEnabled(true)
-                requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
-                room.localParticipant.setCameraEnabled(true)
-                requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
+                // A failed, cancelled or timed-out initial capture enable can
+                // leave a track running before the Room is disconnected. Roll
+                // back both attempted tracks before releasing the Room.
+                var microphoneAttempted = false
+                var cameraAttempted = false
+                AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+                    enabling = true,
+                    operation = {
+                        AdvisorLiveKitRoomRules.withJoinTimeout {
+                            requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
+                            microphoneAttempted = true
+                            room.localParticipant.setMicrophoneEnabled(true)
+                            requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
+                            cameraAttempted = true
+                            room.localParticipant.setCameraEnabled(true)
+                            requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
+                        }
+                    },
+                    rollback = {
+                        // Attempt microphone cleanup even if camera cleanup fails.
+                        try {
+                            if (cameraAttempted) {
+                                withTimeout(2_000L) { room.localParticipant.setCameraEnabled(false) }
+                            }
+                        } finally {
+                            if (microphoneAttempted) {
+                                withTimeout(2_000L) { room.localParticipant.setMicrophoneEnabled(false) }
+                            }
+                        }
+                    }
+                )
                 activeRoom = room
                 activeUserId = expectedUserId
                 return room
