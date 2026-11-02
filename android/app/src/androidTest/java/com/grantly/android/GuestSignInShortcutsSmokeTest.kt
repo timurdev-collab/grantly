@@ -121,22 +121,34 @@ class GuestSignInShortcutsSmokeTest {
         val device = deviceOnHome()
         // This call-to-action sits below the featured scholarship hero.
         // The guest test never submits credentials or changes backend data.
-        var personalize = device.wait(Until.findObject(By.desc("Open Profile for personalized scholarships")), 2_000)
-        repeat(10) {
-            if (personalize == null) {
-                device.swipe(
-                    device.displayWidth / 2, device.displayHeight * 3 / 4,
-                    device.displayWidth / 2, device.displayHeight / 4, 30
-                )
-                personalize = device.wait(Until.findObject(By.desc("Open Profile for personalized scholarships")), 2_000)
-            }
+        val shortcutSelector = By.desc("Open Profile for personalized scholarships")
+        var personalize = device.wait(Until.findObject(shortcutSelector), 2_000)
+        // UiAutomator can discover the semantics node before the button is
+        // fully in view. A tap on a clipped or moving target may be ignored.
+        for (attempt in 0 until 12) {
+            val bounds = personalize?.visibleBounds
+            if (bounds != null &&
+                bounds.centerY() in (device.displayHeight / 3)..(device.displayHeight * 2 / 3)
+            ) break
+            device.swipe(
+                device.displayWidth / 2, device.displayHeight * 3 / 4,
+                device.displayWidth / 2, device.displayHeight / 4, 30
+            )
+            personalize = device.wait(Until.findObject(shortcutSelector), 2_000)
         }
         assertNotNull("Guest recommendations should link directly to Profile", personalize)
         personalize!!.click()
+        val signInSelector = By.text("Sign in with your existing EduT account.")
+        var signIn = device.wait(Until.findObject(signInSelector), 5_000)
+        // Retry only if the original Home shortcut is still visible. Do not
+        // conceal a real navigation failure by accepting an unrelated screen.
+        if (signIn == null && device.hasObject(shortcutSelector)) {
+            device.waitForIdle(2_000)
+            device.findObject(shortcutSelector)?.click()
+            signIn = device.wait(Until.findObject(signInSelector), 15_000)
+        }
+        assertNotNull("Personalization shortcut should open sign-in", signIn)
         assertNotNull("Personalization shortcut should open the Profile heading",
             device.wait(Until.findObject(By.text("Welcome back")), 15_000))
-        assertNotNull("Personalization shortcut should open sign-in",
-            device.wait(Until.findObject(
-                By.text("Sign in with your existing EduT account.")), 15_000))
     }
 }
