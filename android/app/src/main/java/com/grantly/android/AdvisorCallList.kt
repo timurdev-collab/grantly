@@ -28,6 +28,7 @@ import org.json.JSONArray
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLEncoder
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -63,13 +64,31 @@ internal object AdvisorCallListRules {
     private const val PAGE_SIZE = 100
     private const val MAX_SCANNED_ROWS = 300
 
-    /** Scan a bounded number of recent server rows; some may belong to inactive assignments. */
-    fun scanOffsets(): IntProgression = 0 until MAX_SCANNED_ROWS step PAGE_SIZE
+    /** Scan at most three server pages; some rows may belong to inactive assignments. */
+    fun scanPages(): IntRange = 0 until (MAX_SCANNED_ROWS / PAGE_SIZE)
 
-    fun shouldScanNext(fetchedRows: Int, visibleRows: Int, nextOffset: Int): Boolean =
-        fetchedRows == PAGE_SIZE && visibleRows < PAGE_SIZE && nextOffset < MAX_SCANNED_ROWS
+    fun shouldScanNext(fetchedRows: Int, visibleRows: Int, pageIndex: Int): Boolean =
+        fetchedRows == PAGE_SIZE && visibleRows < PAGE_SIZE &&
+            pageIndex + 1 < MAX_SCANNED_ROWS / PAGE_SIZE
 
-    /** Offset pages can overlap when calls change while loading; never count the same call twice. */
+    /**
+     * Keyset cursor follows the server's created_at DESC, id DESC ordering.
+     * Offset paging can skip calls if new rows are inserted between requests.
+     * Encode the entire PostgREST filter so timestamp offsets cannot be
+     * misinterpreted as query separators.
+     */
+    fun nextPageFilter(createdAt: String, callId: String): String {
+        val timestamp = try { OffsetDateTime.parse(createdAt).toString() } catch (_: Exception) {
+            throw IOException("Invalid call list page cursor.")
+        }
+        val id = try { AdvisorCallPreparationRules.validCallId(callId) } catch (_: Exception) {
+            throw IOException("Invalid call list page cursor.")
+        }
+        val expression = "or=(created_at.lt.$timestamp,and(created_at.eq.$timestamp,id.lt.$id))"
+        return "&or=" + URLEncoder.encode(expression.removePrefix("or="), "UTF-8")
+    }
+
+    /** Defensive deduplication if the server returns overlapping rows. */
     fun appendUnique(
         items: MutableList<AdvisorCallListItem>,
         seenIds: MutableSet<String>,
@@ -117,17 +136,21 @@ internal object AdvisorCallListRepository {
             if (!base.startsWith("https://") || key.isBlank()) {
                 throw IOException("Call service is not configured.")
             }
-            // RLS restricts call rows to participants. A single 100-row query can
-            // hide eligible calls when newer rows belong to ended assignments.
-            // Scan up to 300 recent rows, returning at most 100 eligible calls.
+            // RLS restricts call rows to participants. Scan up to 300 recent
+            // rows with a stable keyset cursor, returning at most 100 eligible
+            // calls even when newer rows arrive during pagination.
             val eligibleCalls = ArrayList<AdvisorCallListItem>(100)
             val seenCallIds = HashSet<String>()
-            for (offset in AdvisorCallListRules.scanOffsets()) {
+            var cursor: Pair<String, String>? = null
+            for (pageIndex in AdvisorCallListRules.scanPages()) {
                 AdvisorCallPreparationRules.requireSameAccount(expectedUserId, AuthRepository.session?.userId)
+                val pageFilter = cursor?.let { (createdAt, callId) ->
+                    AdvisorCallListRules.nextPageFilter(createdAt, callId)
+                }.orEmpty()
                 val url = "$base/rest/v1/advisor_call_sessions" +
                     "?select=id,assignment_id,status,scheduled_for,created_at,recording_requested" +
                     "&status=in.(requested,scheduled,active)&order=created_at.desc,id.desc" +
-                    "&limit=100&offset=$offset"
+                    "&limit=100$pageFilter"
                 val connection = URL(url).openConnection() as HttpURLConnection
                 connection.instanceFollowRedirects = false
                 val fetchedRows = try {
@@ -162,6 +185,11 @@ internal object AdvisorCallListRepository {
                         throw IOException("Unexpected call list response.")
                     }
                     if (rows.length() > 100) throw IOException("Unexpected call list size.")
+                    if (rows.length() > 0) {
+                        val last = rows.optJSONObject(rows.length() - 1)
+                            ?: throw IOException("Unexpected call list cursor.")
+                        cursor = last.optString("created_at") to last.optString("id")
+                    }
                     for (index in 0 until rows.length()) {
                         val row = rows.optJSONObject(index) ?: continue
                         val callId = row.optString("id")
@@ -182,7 +210,7 @@ internal object AdvisorCallListRepository {
                 } finally {
                     connection.disconnect()
                 }
-                if (!AdvisorCallListRules.shouldScanNext(fetchedRows, eligibleCalls.size, offset + 100)) break
+                if (!AdvisorCallListRules.shouldScanNext(fetchedRows, eligibleCalls.size, pageIndex)) break
             }
             eligibleCalls
         }
