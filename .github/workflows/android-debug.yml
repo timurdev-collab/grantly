@@ -28,6 +28,16 @@ jobs:
           gradle-version: '8.10.2'
       - name: Run Android JVM unit tests
         run: gradle :app:testDebugUnitTest --stacktrace
+      - name: Upload JVM test diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edut-android-jvm-test-diagnostics
+          path: |
+            android/app/build/test-results/testDebugUnitTest/
+            android/app/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: warn
+          retention-days: 7
       - name: Build Android debug APK
         run: gradle :app:assembleDebug --stacktrace
       - name: Upload installable debug APK
