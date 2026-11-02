@@ -60,9 +60,18 @@ internal object AdvisorCallListRules {
         else -> "Unavailable"
     }
 
+    private const val PAGE_SIZE = 100
+    private const val MAX_SCANNED_ROWS = 300
+
+    /** Scan a bounded number of recent server rows; some may belong to inactive assignments. */
+    fun scanOffsets(): IntProgression = 0 until MAX_SCANNED_ROWS step PAGE_SIZE
+
+    fun shouldScanNext(fetchedRows: Int, visibleRows: Int, nextOffset: Int): Boolean =
+        fetchedRows == PAGE_SIZE && visibleRows < PAGE_SIZE && nextOffset < MAX_SCANNED_ROWS
+
     /** Render at most one page of calls initially to keep the portal responsive. */
     fun page(items: List<AdvisorCallListItem>, limit: Int): List<AdvisorCallListItem> =
-        items.take(limit.coerceIn(0, 100))
+        items.take(limit.coerceIn(0, PAGE_SIZE))
 
     private val scheduledTimeFormat =
         DateTimeFormatter.ofPattern("MMM d, yyyy h:mm a XXX", Locale.ENGLISH)
@@ -97,53 +106,58 @@ internal object AdvisorCallListRepository {
             if (!base.startsWith("https://") || key.isBlank()) {
                 throw IOException("Call service is not configured.")
             }
-            // Existing RLS restricts the call rows to participants. Client-side
-            // filtering additionally excludes ended assignments and call states.
-            val url = "$base/rest/v1/advisor_call_sessions" +
-                "?select=id,assignment_id,status,scheduled_for,created_at,recording_requested" +
-                "&status=in.(requested,scheduled,active)&order=created_at.desc&limit=100"
-            val connection = URL(url).openConnection() as HttpURLConnection
-            connection.instanceFollowRedirects = false
-            try {
-                connection.requestMethod = "GET"
-                connection.connectTimeout = 12_000
-                connection.readTimeout = 15_000
-                connection.setRequestProperty("apikey", key)
-                connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
-                connection.setRequestProperty("Accept", "application/json")
+            // RLS restricts call rows to participants. A single 100-row query can
+            // hide eligible calls when newer rows belong to ended assignments.
+            // Scan up to 300 recent rows, returning at most 100 eligible calls.
+            val eligibleCalls = ArrayList<AdvisorCallListItem>(100)
+            for (offset in AdvisorCallListRules.scanOffsets()) {
                 AdvisorCallPreparationRules.requireSameAccount(expectedUserId, AuthRepository.session?.userId)
-                val code = connection.responseCode
-                if (code !in 200..299) {
-                    throw IOException(if (code == 401 || code == 403)
-                        "Call access denied. Sign in again."
-                    else "Unable to load advisor calls (HTTP $code).")
-                }
-                val body = connection.inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
-                    val buffer = CharArray(4096)
-                    val result = StringBuilder()
-                    while (true) {
-                        val count = reader.read(buffer)
-                        if (count < 0) break
-                        if (result.length + count > 131_072) {
-                            throw IOException("Call list response is too large.")
-                        }
-                        result.append(buffer, 0, count)
+                val url = "$base/rest/v1/advisor_call_sessions" +
+                    "?select=id,assignment_id,status,scheduled_for,created_at,recording_requested" +
+                    "&status=in.(requested,scheduled,active)&order=created_at.desc,id.desc" +
+                    "&limit=100&offset=$offset"
+                val connection = URL(url).openConnection() as HttpURLConnection
+                connection.instanceFollowRedirects = false
+                val fetchedRows = try {
+                    connection.requestMethod = "GET"
+                    connection.connectTimeout = 12_000
+                    connection.readTimeout = 15_000
+                    connection.setRequestProperty("apikey", key)
+                    connection.setRequestProperty("Authorization", "Bearer ${session.accessToken}")
+                    connection.setRequestProperty("Accept", "application/json")
+                    AdvisorCallPreparationRules.requireSameAccount(expectedUserId, AuthRepository.session?.userId)
+                    val code = connection.responseCode
+                    if (code !in 200..299) {
+                        throw IOException(if (code == 401 || code == 403)
+                            "Call access denied. Sign in again."
+                        else "Unable to load advisor calls (HTTP $code).")
                     }
-                    result.toString()
-                }
-                AdvisorCallPreparationRules.requireSameAccount(expectedUserId, AuthRepository.session?.userId)
-                val rows = try { JSONArray(body) } catch (_: Exception) {
-                    throw IOException("Unexpected call list response.")
-                }
-                if (rows.length() > 100) throw IOException("Unexpected call list size.")
-                buildList {
+                    val body = connection.inputStream.bufferedReader(Charsets.UTF_8).use { reader ->
+                        val buffer = CharArray(4096)
+                        val result = StringBuilder()
+                        while (true) {
+                            val count = reader.read(buffer)
+                            if (count < 0) break
+                            if (result.length + count > 131_072) {
+                                throw IOException("Call list response is too large.")
+                            }
+                            result.append(buffer, 0, count)
+                        }
+                        result.toString()
+                    }
+                    AdvisorCallPreparationRules.requireSameAccount(expectedUserId, AuthRepository.session?.userId)
+                    val rows = try { JSONArray(body) } catch (_: Exception) {
+                        throw IOException("Unexpected call list response.")
+                    }
+                    if (rows.length() > 100) throw IOException("Unexpected call list size.")
                     for (index in 0 until rows.length()) {
                         val row = rows.optJSONObject(index) ?: continue
                         val callId = row.optString("id")
                         val assignmentId = row.optString("assignment_id")
                         val status = row.optString("status")
                         if (!AdvisorCallListRules.isVisible(callId, assignmentId, status, active.keys)) continue
-                        add(AdvisorCallListItem(
+                        if (eligibleCalls.size >= 100) break
+                        eligibleCalls.add(AdvisorCallListItem(
                             id = callId,
                             assignmentId = assignmentId,
                             studentName = active[assignmentId]?.fullName.orEmpty().take(120),
@@ -153,10 +167,13 @@ internal object AdvisorCallListRepository {
                             recordingRequested = row.optBoolean("recording_requested", false)
                         ))
                     }
+                    rows.length()
+                } finally {
+                    connection.disconnect()
                 }
-            } finally {
-                connection.disconnect()
+                if (!AdvisorCallListRules.shouldScanNext(fetchedRows, eligibleCalls.size, offset + 100)) break
             }
+            eligibleCalls
         }
     }
 }
