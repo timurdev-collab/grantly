@@ -566,4 +566,32 @@ class AdvisorLiveKitRoomRulesTest {
         assertEquals(1, cancellation.suppressed.size)
         assertTrue(cancellation.suppressed[0] is IOException)
     }
+
+    @Test fun failedJoinCleanupStillReleasesAfterDisconnectTimeout() = runBlocking {
+        val original = IOException("Join failed")
+        var released = false
+        AdvisorLiveKitRoomRules.cleanupFailedJoin(
+            originalFailure = original,
+            disconnect = { delay(1_000L) },
+            release = { released = true },
+            cleanupTimeoutMillis = 30L
+        )
+        assertTrue(released)
+        assertEquals(1, original.suppressed.size)
+        assertTrue(original.suppressed[0] is TimeoutCancellationException)
+    }
+
+    @Test fun failedJoinCleanupBoundsReleaseAndPreservesOriginalFailure() = runBlocking {
+        val original = CancellationException("Screen closed")
+        var disconnectAttempted = false
+        AdvisorLiveKitRoomRules.cleanupFailedJoin(
+            originalFailure = original,
+            disconnect = { disconnectAttempted = true },
+            release = { delay(1_000L) },
+            cleanupTimeoutMillis = 30L
+        )
+        assertTrue(disconnectAttempted)
+        assertEquals(1, original.suppressed.size)
+        assertTrue(original.suppressed[0] is TimeoutCancellationException)
+    }
 }
