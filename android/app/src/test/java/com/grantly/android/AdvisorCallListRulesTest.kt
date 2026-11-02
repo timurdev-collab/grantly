@@ -57,4 +57,23 @@ class AdvisorCallListRulesTest {
             AdvisorCallListRules.displayTime("2026-11-01T10:00:00", ZoneId.of("Asia/Ho_Chi_Minh"))
         )
     }
+
+    @Test fun pagesCallCardsWithoutLosingOrReorderingRows() {
+        val calls = List(45) { index ->
+            AdvisorCallListItem(
+                id = callId,
+                assignmentId = assignmentId,
+                studentName = "Student $index",
+                status = "scheduled",
+                scheduledFor = "",
+                createdAt = "",
+                recordingRequested = false
+            )
+        }
+        assertEquals(emptyList<AdvisorCallListItem>(), AdvisorCallListRules.page(calls, -1))
+        assertEquals(calls.take(20), AdvisorCallListRules.page(calls, 20))
+        assertEquals(calls.take(40), AdvisorCallListRules.page(calls, 40))
+        assertEquals(calls, AdvisorCallListRules.page(calls, 60))
+        assertEquals(calls, AdvisorCallListRules.page(calls, 500))
+    }
 }
