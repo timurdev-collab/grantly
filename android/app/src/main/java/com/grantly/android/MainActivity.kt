@@ -133,6 +133,20 @@ private fun EduTApp() {
                 val status = AdvisorApplicationStatusRepository.load(currentUserId)?.approvalStatus
                 if (AuthRepository.session?.userId == currentUserId) {
                     advisorTabVerified = AdvisorProfessionalProfileRules.canView(role, status)
+                    // iOS opens the advisor experience first. On Android, do so
+                    // only after the initial successful approval check and only
+                    // while the user is still on the Home root. Do not interrupt
+                    // a scholarship, inbox, or other destination opened during
+                    // the asynchronous role lookup.
+                    if (AdvisorNavigationRules.shouldOpenAdvisorOnFirstVerifiedHome(
+                            roleCheckedForSession = advisorRoleChecked,
+                            approvedAdvisor = advisorTabVerified,
+                            onHomeRoot = tab == Tab.Home &&
+                                selectedScholarship == null &&
+                                !showingAdvisors && !showingCommunity && !showingNotifications
+                        )) {
+                        tab = Tab.Advisor
+                    }
                 }
             }
         } catch (cancelled: CancellationException) {
