@@ -58,6 +58,16 @@ class AdvisorCallListRulesTest {
         )
     }
 
+    @Test fun boundedServerScanContinuesPastFilteredRows() {
+        assertEquals(listOf(0, 100, 200), AdvisorCallListRules.scanOffsets().toList())
+        assertTrue(AdvisorCallListRules.shouldScanNext(100, 0, 100))
+        assertTrue(AdvisorCallListRules.shouldScanNext(100, 42, 200))
+        assertFalse(AdvisorCallListRules.shouldScanNext(99, 0, 100))
+        assertFalse(AdvisorCallListRules.shouldScanNext(100, 100, 100))
+        assertFalse(AdvisorCallListRules.shouldScanNext(100, 25, 300))
+        assertFalse(AdvisorCallListRules.shouldScanNext(0, 0, 100))
+    }
+
     @Test fun pagesCallCardsWithoutLosingOrReorderingRows() {
         val calls = List(45) { index ->
             AdvisorCallListItem(
