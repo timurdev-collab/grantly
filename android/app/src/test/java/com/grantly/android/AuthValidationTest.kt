@@ -29,12 +29,11 @@ class AuthValidationTest {
         listOf(
             "student@@example.com",
             "student@dept@example.com",
-            "student\${c}@example.com",
-            "student@example\${c}.com",
-            "student\${c}@example.com"
+            "student\t@example.com",
+            "student@example\n.com",
+            "student\u0000@example.com"
         ).forEach { assertFalse("Unexpectedly valid: $it", AuthValidation.isValidEmail(it)) }
     }
-
     @Test fun rejectsEmailsLongerThan254Characters() {
         val email = "a".repeat(243) + "@example.com" // 255 characters
         assertEquals(255, email.length)
