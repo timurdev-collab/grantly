@@ -432,4 +432,63 @@ class AdvisorLiveKitRoomRulesTest {
         assertEquals(1, rollbackCount)
         org.junit.Assert.assertFalse(captureEnabled)
     }
+
+    @Test fun initialJoinRollbackDisablesMicrophoneEvenWhenCameraDisableFails() = runBlocking {
+        val disabled = mutableListOf<String>()
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.rollbackInitialCapture(
+                microphoneAttempted = true,
+                cameraAttempted = true,
+                disableMicrophone = { disabled += "microphone" },
+                disableCamera = {
+                    disabled += "camera"
+                    throw IOException("Camera rollback failed")
+                }
+            )
+        }.exceptionOrNull()
+        assertTrue(failure is IOException)
+        assertEquals(listOf("camera", "microphone"), disabled)
+    }
+
+    @Test fun initialJoinRollbackSkipsTracksThatWereNeverAttempted() = runBlocking {
+        val disabled = mutableListOf<String>()
+        AdvisorLiveKitRoomRules.rollbackInitialCapture(
+            microphoneAttempted = true,
+            cameraAttempted = false,
+            disableMicrophone = { disabled += "microphone" },
+            disableCamera = { disabled += "camera" }
+        )
+        assertEquals(listOf("microphone"), disabled)
+    }
+
+    @Test fun initialJoinMediaTimeoutTriggersCaptureRollback() = runBlocking {
+        var microphoneEnabled = false
+        var rollbackCount = 0
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+                enabling = true,
+                operation = {
+                    AdvisorLiveKitRoomRules.withJoinTimeout(10L) {
+                        microphoneEnabled = true
+                        delay(1_000L)
+                    }
+                },
+                rollback = {
+                    AdvisorLiveKitRoomRules.rollbackInitialCapture(
+                        microphoneAttempted = true,
+                        cameraAttempted = false,
+                        disableMicrophone = {
+                            microphoneEnabled = false
+                            rollbackCount++
+                        },
+                        disableCamera = { error("Camera was not attempted") }
+                    )
+                }
+            )
+        }.exceptionOrNull()
+        assertTrue(failure is IOException)
+        assertTrue(failure?.message?.contains("timed out") == true)
+        assertEquals(1, rollbackCount)
+        org.junit.Assert.assertFalse(microphoneEnabled)
+    }
 }
