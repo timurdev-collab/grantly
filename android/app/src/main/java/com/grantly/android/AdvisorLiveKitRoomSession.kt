@@ -37,8 +37,10 @@ internal object AdvisorLiveKitRoomRules {
         requestedGeneration: Long,
         currentGeneration: Long,
         expectedUserId: String,
-        currentUserId: String?
-    ): Boolean = requestedGeneration != currentGeneration || expectedUserId != currentUserId
+        currentUserId: String?,
+        permissionGranted: Boolean = true
+    ): Boolean = requestedGeneration != currentGeneration ||
+        expectedUserId != currentUserId || !permissionGranted
 
     fun requireNotLeft(joinGeneration: Long, currentGeneration: Long) {
         if (joinGeneration != currentGeneration) {
@@ -232,15 +234,27 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
             }
             // Leave can invalidate a media operation while LiveKit is suspending.
             // Turn capture back off before returning control to the waiting Leave.
+            // The OS permission can be revoked while the SDK's suspend call is
+            // enabling capture. Disable it before the waiting Leave can acquire
+            // the mutex, and report the revoked permission to the caller.
+            val permissionStillGranted = context.checkSelfPermission(permission) ==
+                PackageManager.PERMISSION_GRANTED
             if (enabled && AdvisorLiveKitRoomRules.shouldDisableCaptureAfterMediaChange(
                     requestedGeneration, leaveGeneration.get(), expectedUserId,
-                    AuthRepository.session?.userId
+                    AuthRepository.session?.userId, permissionStillGranted
                 )) {
                 if (microphone) room.localParticipant.setMicrophoneEnabled(false)
                 else room.localParticipant.setCameraEnabled(false)
             }
-            AdvisorLiveKitRoomRules.requireNotLeft(requestedGeneration, leaveGeneration.get())
-            AdvisorCallPreparationRules.requireSameAccount(expectedUserId, AuthRepository.session?.userId)
+            AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
+                requestedGeneration = requestedGeneration,
+                currentGeneration = leaveGeneration.get(),
+                expectedUserId = expectedUserId,
+                activeUserId = activeUserId,
+                currentUserId = AuthRepository.session?.userId,
+                enabling = enabled,
+                permissionGranted = permissionStillGranted
+            )
         } finally {
             lock.unlock()
         }
