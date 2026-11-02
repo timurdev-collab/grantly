@@ -88,7 +88,16 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
         // Invalidate the Join synchronously, before navigation can cancel UI work.
         // Coroutine teardown still disconnects and releases any connected room.
         session.invalidatePendingJoin()
-        scope.launch { session.leave() }
+        scope.launch {
+            try {
+                session.leave()
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (_: Exception) {
+                // Navigation must not crash if the SDK fails during disconnect.
+                // leave() still clears its room reference and attempts release.
+            }
+        }
         onClose()
     }
     BackHandler { close() }
@@ -99,7 +108,14 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
         try {
             awaitCancellation()
         } finally {
-            withContext(NonCancellable) { session.leave() }
+            withContext(NonCancellable) {
+                try {
+                    session.leave()
+                } catch (_: Exception) {
+                    // The screen is being disposed; teardown must not crash the app.
+                    // leave() attempts room release even after disconnect fails.
+                }
+            }
         }
     }
     DisposableEffect(owner, session) {
@@ -116,6 +132,10 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 scope.launch {
                     try {
                         session.leave()
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (_: Exception) {
+                        error = "Call cleanup encountered an error. Restart the app before joining again."
                     } finally {
                         // A disconnect failure must not leave a stale call on screen.
                         room = null
