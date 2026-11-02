@@ -64,6 +64,33 @@ internal object AdvisorLiveKitRoomRules {
         throw IOException("The video call connection timed out. Please try again.")
     }
 
+    /**
+     * LiveKit may have enabled hardware capture before a suspended SDK call
+     * fails or is cancelled. Always attempt a bounded rollback before returning
+     * the original failure; this also covers cancellation during Join/media UI
+     * teardown, when the caller's coroutine is no longer active.
+     */
+    suspend fun withCaptureRollbackOnFailure(
+        enabling: Boolean,
+        operation: suspend () -> Unit,
+        rollback: suspend () -> Unit
+    ) {
+        try {
+            operation()
+        } catch (failure: Throwable) {
+            if (enabling) {
+                withContext(NonCancellable) {
+                    try {
+                        withTimeout(5_000L) { rollback() }
+                    } catch (rollbackFailure: Throwable) {
+                        if (rollbackFailure !== failure) failure.addSuppressed(rollbackFailure)
+                    }
+                }
+            }
+            throw failure
+        }
+    }
+
     fun requireCaptureReady(
         captureConsent: Boolean,
         microphoneGranted: Boolean,
@@ -227,11 +254,17 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
                 enabling = enabled,
                 permissionGranted = context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
             )
-            if (microphone) {
-                room.localParticipant.setMicrophoneEnabled(enabled)
-            } else {
-                room.localParticipant.setCameraEnabled(enabled)
-            }
+            AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+                enabling = enabled,
+                operation = {
+                    if (microphone) room.localParticipant.setMicrophoneEnabled(enabled)
+                    else room.localParticipant.setCameraEnabled(enabled)
+                },
+                rollback = {
+                    if (microphone) room.localParticipant.setMicrophoneEnabled(false)
+                    else room.localParticipant.setCameraEnabled(false)
+                }
+            )
             // Leave can invalidate a media operation while LiveKit is suspending.
             // Turn capture back off before returning control to the waiting Leave.
             // The OS permission can be revoked while the SDK's suspend call is
