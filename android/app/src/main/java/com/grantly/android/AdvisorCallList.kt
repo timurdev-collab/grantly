@@ -69,6 +69,17 @@ internal object AdvisorCallListRules {
     fun shouldScanNext(fetchedRows: Int, visibleRows: Int, nextOffset: Int): Boolean =
         fetchedRows == PAGE_SIZE && visibleRows < PAGE_SIZE && nextOffset < MAX_SCANNED_ROWS
 
+    /** Offset pages can overlap when calls change while loading; never count the same call twice. */
+    fun appendUnique(
+        items: MutableList<AdvisorCallListItem>,
+        seenIds: MutableSet<String>,
+        item: AdvisorCallListItem
+    ): Boolean {
+        if (items.size >= PAGE_SIZE || !seenIds.add(item.id)) return false
+        items.add(item)
+        return true
+    }
+
     /** Render at most one page of calls initially to keep the portal responsive. */
     fun page(items: List<AdvisorCallListItem>, limit: Int): List<AdvisorCallListItem> =
         items.take(limit.coerceIn(0, PAGE_SIZE))
@@ -110,6 +121,7 @@ internal object AdvisorCallListRepository {
             // hide eligible calls when newer rows belong to ended assignments.
             // Scan up to 300 recent rows, returning at most 100 eligible calls.
             val eligibleCalls = ArrayList<AdvisorCallListItem>(100)
+            val seenCallIds = HashSet<String>()
             for (offset in AdvisorCallListRules.scanOffsets()) {
                 AdvisorCallPreparationRules.requireSameAccount(expectedUserId, AuthRepository.session?.userId)
                 val url = "$base/rest/v1/advisor_call_sessions" +
@@ -156,8 +168,7 @@ internal object AdvisorCallListRepository {
                         val assignmentId = row.optString("assignment_id")
                         val status = row.optString("status")
                         if (!AdvisorCallListRules.isVisible(callId, assignmentId, status, active.keys)) continue
-                        if (eligibleCalls.size >= 100) break
-                        eligibleCalls.add(AdvisorCallListItem(
+                        AdvisorCallListRules.appendUnique(eligibleCalls, seenCallIds, AdvisorCallListItem(
                             id = callId,
                             assignmentId = assignmentId,
                             studentName = active[assignmentId]?.fullName.orEmpty().take(120),
