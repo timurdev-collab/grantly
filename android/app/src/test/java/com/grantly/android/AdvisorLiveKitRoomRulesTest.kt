@@ -371,4 +371,65 @@ class AdvisorLiveKitRoomRulesTest {
             failure?.suppressed?.any { it.message == "Rollback failed" } == true)
     }
 
+
+    @Test fun permissionRevokedAfterSdkEnableStillRollsBack() = runBlocking {
+        var captureEnabled = false
+        var rollbackCount = 0
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+                enabling = true,
+                operation = {
+                    // LiveKit completed enabling capture, but Android permission
+                    // was revoked while the SDK call was suspended.
+                    captureEnabled = true
+                    AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
+                        requestedGeneration = 11,
+                        currentGeneration = 11,
+                        expectedUserId = "advisor-1",
+                        activeUserId = "advisor-1",
+                        currentUserId = "advisor-1",
+                        enabling = true,
+                        permissionGranted = false
+                    )
+                },
+                rollback = {
+                    captureEnabled = false
+                    rollbackCount++
+                }
+            )
+        }.exceptionOrNull()
+        assertTrue(failure is IOException)
+        assertTrue(failure?.message?.contains("permission was revoked") == true)
+        assertEquals(1, rollbackCount)
+        org.junit.Assert.assertFalse(captureEnabled)
+    }
+
+    @Test fun leaveDuringSdkEnableStillRollsBack() = runBlocking {
+        var captureEnabled = false
+        var rollbackCount = 0
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+                enabling = true,
+                operation = {
+                    captureEnabled = true
+                    AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
+                        requestedGeneration = 11,
+                        currentGeneration = 12,
+                        expectedUserId = "advisor-1",
+                        activeUserId = "advisor-1",
+                        currentUserId = "advisor-1",
+                        enabling = true,
+                        permissionGranted = true
+                    )
+                },
+                rollback = {
+                    captureEnabled = false
+                    rollbackCount++
+                }
+            )
+        }.exceptionOrNull()
+        assertTrue(failure is IOException)
+        assertEquals(1, rollbackCount)
+        org.junit.Assert.assertFalse(captureEnabled)
+    }
 }
