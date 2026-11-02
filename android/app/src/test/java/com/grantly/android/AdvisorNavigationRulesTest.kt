@@ -26,6 +26,19 @@ class AdvisorNavigationRulesTest {
         ))
     }
 
+    @Test fun failedRoleLookupCanRetryOnHomeWithoutOpeningProfile() {
+        // A transient network failure must leave roleCheckedForSession false.
+        assertTrue(AdvisorNavigationRules.shouldVerifyRole(
+            isProfileVisible = false,
+            roleCheckedForSession = false
+        ))
+        // Once a lookup succeeds, ordinary Home refreshes must not refetch.
+        assertFalse(AdvisorNavigationRules.shouldVerifyRole(
+            isProfileVisible = false,
+            roleCheckedForSession = true
+        ))
+    }
+
     @Test fun firstApprovedAdvisorHomeEntryOpensPortal() {
         assertTrue(AdvisorNavigationRules.shouldOpenAdvisorOnFirstVerifiedHome(
             roleCheckedForSession = false,
