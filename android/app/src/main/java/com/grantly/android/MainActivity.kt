@@ -114,10 +114,11 @@ private fun EduTApp() {
     }
     // Recheck role and approval when Profile is revisited, so an advisor who
     // switches roles (or whose approval is revoked) does not keep a stale tab.
-    // Do not clear verification on Profile -> Advisor: that transition itself
-    // changes the key below and would otherwise immediately close the portal.
+    // Leaving Profile must not clear a successfully verified Advisor destination:
+    // this effect also restarts on Profile -> Home/Messages/Advisor transitions.
+    // Account changes separately reset verification through remember(userId).
     LaunchedEffect(session?.userId, tab == Tab.Profile) {
-        if (tab == Tab.Advisor) return@LaunchedEffect
+        if (tab != Tab.Profile) return@LaunchedEffect
         advisorTabVerified = false
         val currentUserId = session?.userId ?: return@LaunchedEffect
         try {
