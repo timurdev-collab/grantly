@@ -1,6 +1,11 @@
 package com.grantly.android
 
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Assert.assertThrows
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import java.io.IOException
 
@@ -230,4 +235,27 @@ class AdvisorLiveKitRoomRulesTest {
             }
         }
     }
+    @Test fun boundedJoinReturnsNormallyWhenNetworkCompletes() = runBlocking {
+        assertEquals("connected", AdvisorLiveKitRoomRules.withJoinTimeout(1_000L) {
+            "connected"
+        })
+    }
+
+    @Test fun boundedJoinTurnsTimeoutIntoRetryableError() = runBlocking {
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withJoinTimeout(10L) { delay(1_000L) }
+        }.exceptionOrNull()
+        assertTrue(failure is IOException)
+        assertTrue(failure?.message?.contains("timed out") == true)
+    }
+
+    @Test fun boundedJoinPreservesCallerCancellation() = runBlocking {
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withJoinTimeout(1_000L) {
+                throw CancellationException("Call screen closed")
+            }
+        }.exceptionOrNull()
+        assertTrue(failure is CancellationException)
+    }
+
 }

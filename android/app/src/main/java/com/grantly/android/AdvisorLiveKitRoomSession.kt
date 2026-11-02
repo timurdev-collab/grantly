@@ -5,6 +5,10 @@ import android.content.Context
 import android.content.pm.PackageManager
 import io.livekit.android.LiveKit
 import io.livekit.android.room.Room
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.sync.Mutex
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicLong
@@ -38,6 +42,19 @@ internal object AdvisorLiveKitRoomRules {
         if (joinGeneration != currentGeneration) {
             throw IOException("The video call was closed before it could connect.")
         }
+    }
+
+    /** Bound credential retrieval and LiveKit connection attempts to avoid an
+     * indefinite spinner when a network request never completes. The caller's
+     * own cancellation is preserved; only this timeout becomes a retryable error.
+     */
+    suspend fun <T> withJoinTimeout(
+        timeoutMillis: Long = 30_000L,
+        operation: suspend () -> T
+    ): T = try {
+        withTimeout(timeoutMillis) { operation() }
+    } catch (_: TimeoutCancellationException) {
+        throw IOException("The video call connection timed out. Please try again.")
     }
 
     fun requireCaptureReady(
@@ -120,9 +137,9 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
             pendingJoinUserId = expectedUserId
 
             // Fetch only for a pre-existing, currently authorized call session.
-            val credentials = AdvisorCallPreparationRepository.credentialsForExistingCall(
-                callId, expectedUserId
-            )
+            val credentials = AdvisorLiveKitRoomRules.withJoinTimeout {
+                AdvisorCallPreparationRepository.credentialsForExistingCall(callId, expectedUserId)
+            }
             AdvisorCallPreparationRules.requireSameAccount(
                 expectedUserId, AuthRepository.session?.userId
             )
@@ -130,7 +147,9 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
             AdvisorLiveKitRoomRules.requireNotLeft(joinGeneration, leaveGeneration.get())
             val room = LiveKit.create(context.applicationContext)
             try {
-                room.connect(credentials.url, credentials.token)
+                AdvisorLiveKitRoomRules.withJoinTimeout {
+                    room.connect(credentials.url, credentials.token)
+                }
                 // A user can revoke permissions or switch accounts during a
                 // slow connection. Recheck before BOTH media operations.
                 requireCaptureStillAuthorized(joinGeneration, expectedUserId, captureConsent)
@@ -142,10 +161,14 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
                 activeUserId = expectedUserId
                 return room
             } catch (failure: Throwable) {
-                try {
-                    room.disconnect()
-                } finally {
-                    room.release()
+                // A timeout/cancelled Join must still release the Room even if
+                // its coroutine is already cancelled.
+                withContext(NonCancellable) {
+                    try {
+                        room.disconnect()
+                    } finally {
+                        room.release()
+                    }
                 }
                 throw failure
             }
