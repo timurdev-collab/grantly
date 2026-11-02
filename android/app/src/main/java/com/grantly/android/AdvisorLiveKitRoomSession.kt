@@ -124,6 +124,27 @@ internal object AdvisorLiveKitRoomRules {
         }
     }
 
+    /** Preserve the real Join failure even if disconnect or release also fails.
+     * Both cleanup steps must be attempted; SDK teardown must not hide the
+     * original authentication, permission, cancellation or network error.
+     */
+    suspend fun cleanupFailedJoin(
+        originalFailure: Throwable,
+        disconnect: suspend () -> Unit,
+        release: suspend () -> Unit
+    ) {
+        try {
+            disconnect()
+        } catch (cleanupFailure: Throwable) {
+            if (cleanupFailure !== originalFailure) originalFailure.addSuppressed(cleanupFailure)
+        }
+        try {
+            release()
+        } catch (cleanupFailure: Throwable) {
+            if (cleanupFailure !== originalFailure) originalFailure.addSuppressed(cleanupFailure)
+        }
+    }
+
     fun requireCaptureReady(
         captureConsent: Boolean,
         microphoneGranted: Boolean,
@@ -253,11 +274,11 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
                 // A timeout/cancelled Join must still release the Room even if
                 // its coroutine is already cancelled.
                 withContext(NonCancellable) {
-                    try {
-                        room.disconnect()
-                    } finally {
-                        room.release()
-                    }
+                    AdvisorLiveKitRoomRules.cleanupFailedJoin(
+                        originalFailure = failure,
+                        disconnect = { room.disconnect() },
+                        release = { room.release() }
+                    )
                 }
                 throw failure
             }
