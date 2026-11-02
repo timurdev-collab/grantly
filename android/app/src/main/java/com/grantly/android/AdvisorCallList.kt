@@ -60,6 +60,10 @@ internal object AdvisorCallListRules {
         else -> "Unavailable"
     }
 
+    /** Render at most one page of calls initially to keep the portal responsive. */
+    fun page(items: List<AdvisorCallListItem>, limit: Int): List<AdvisorCallListItem> =
+        items.take(limit.coerceIn(0, 100))
+
     private val scheduledTimeFormat =
         DateTimeFormatter.ofPattern("MMM d, yyyy h:mm a XXX", Locale.ENGLISH)
 
@@ -163,9 +167,11 @@ internal fun AdvisorCallListContent(userId: String) {
     var loading by remember(userId) { mutableStateOf(true) }
     var error by remember(userId) { mutableStateOf<String?>(null) }
     var refresh by remember(userId) { mutableIntStateOf(0) }
+    var visibleLimit by remember(userId) { mutableIntStateOf(20) }
     var selectedCall by remember(userId) { mutableStateOf<AdvisorCallListItem?>(null) }
 
     LaunchedEffect(userId, refresh) {
+        visibleLimit = 20
         loading = true
         error = null
         calls = emptyList()
@@ -199,7 +205,7 @@ internal fun AdvisorCallListContent(userId: String) {
             loading -> CircularProgressIndicator()
             error != null -> Text(error.orEmpty(), color = MaterialTheme.colorScheme.error)
             calls.isEmpty() -> Text("No available calls for your active students.")
-            else -> calls.forEach { call ->
+            else -> AdvisorCallListRules.page(calls, visibleLimit).forEach { call ->
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         Text(call.studentName.ifBlank { "Student" }, fontWeight = FontWeight.SemiBold)
@@ -211,6 +217,11 @@ internal fun AdvisorCallListContent(userId: String) {
                         }
                     }
                 }
+            }
+        }
+        if (!loading && error == null && calls.size > visibleLimit) {
+            OutlinedButton(onClick = { visibleLimit = (visibleLimit + 20).coerceAtMost(100) }) {
+                Text("Show more calls")
             }
         }
         Spacer(Modifier.height(6.dp))
