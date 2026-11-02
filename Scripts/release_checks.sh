@@ -44,7 +44,7 @@ if ! grep -A1 -q "<key>NSPrivacyTracking</key>" Grantly/PrivacyInfo.xcprivacy; t
   exit 1
 fi
 
-if ! grep -q "MARKETING_VERSION: 1.0.0" project.yml; then
+if ! grep -q "MARKETING_VERSION: 1.0.1" project.yml; then
   echo "Marketing version is not configured in project.yml."
   exit 1
 fi
