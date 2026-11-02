@@ -68,6 +68,33 @@ class AdvisorCallListRulesTest {
         assertFalse(AdvisorCallListRules.shouldScanNext(0, 0, 100))
     }
 
+    @Test fun overlappingServerPagesDoNotDuplicateCallsOrConsumeThePageQuota() {
+        val calls = mutableListOf<AdvisorCallListItem>()
+        val seen = mutableSetOf<String>()
+        val first = AdvisorCallListItem(
+            id = callId,
+            assignmentId = assignmentId,
+            studentName = "Student",
+            status = "scheduled",
+            scheduledFor = "",
+            createdAt = "",
+            recordingRequested = false
+        )
+        assertTrue(AdvisorCallListRules.appendUnique(calls, seen, first))
+        assertFalse(AdvisorCallListRules.appendUnique(calls, seen, first))
+        assertEquals(1, calls.size)
+        assertEquals(1, seen.size)
+
+        repeat(99) { index ->
+            assertTrue(AdvisorCallListRules.appendUnique(calls, seen, first.copy(id = "call-$index")))
+        }
+        assertEquals(100, calls.size)
+        assertFalse(AdvisorCallListRules.appendUnique(calls, seen, first.copy(id = "overflow")))
+        assertEquals(100, calls.size)
+        assertFalse("overflow" in seen)
+        assertEquals(callId, calls.first().id)
+    }
+
     @Test fun pagesCallCardsWithoutLosingOrReorderingRows() {
         val calls = List(45) { index ->
             AdvisorCallListItem(
