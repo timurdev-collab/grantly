@@ -193,7 +193,7 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
                     }
                 }
                 Text(
-                    "Messages opens the existing advisor inbox. Calls lists existing eligible sessions but cannot join them yet. Full iOS advisor navigation is not available in this Android preview.",
+                    "Messages opens the existing advisor inbox. Calls can attempt to join existing eligible sessions with explicit camera/microphone consent; real two-person calling is not yet verified. Full iOS advisor navigation is not available in this Android preview.",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
