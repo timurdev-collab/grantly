@@ -110,6 +110,8 @@ private fun EduTApp() {
     var advisorTabVerified by remember(session?.userId) { mutableStateOf(false) }
     // Verify restored sessions on Home once, then refresh when Profile is revisited.
     var advisorRoleChecked by remember(session?.userId) { mutableStateOf(false) }
+    // A transient lookup error must be retryable from Home without signing out.
+    var advisorRoleLookupFailed by remember(session?.userId) { mutableStateOf(false) }
     // An account change must never leave a different user on an advisor-only page.
     LaunchedEffect(session?.userId) {
         if (tab == Tab.Advisor) tab = Tab.Profile
@@ -120,12 +122,13 @@ private fun EduTApp() {
     // this effect also restarts on Profile -> Home/Messages/Advisor transitions.
     // A restored session still needs its first role lookup while Home is visible.
     // Account changes reset both flags through remember(userId).
-    LaunchedEffect(session?.userId, tab == Tab.Profile) {
+    LaunchedEffect(session?.userId, tab == Tab.Profile, homeRefreshVersion) {
         if (!AdvisorNavigationRules.shouldVerifyRole(
                 isProfileVisible = tab == Tab.Profile,
                 roleCheckedForSession = advisorRoleChecked
             )) return@LaunchedEffect
         advisorTabVerified = false
+        advisorRoleLookupFailed = false
         val currentUserId = session?.userId ?: return@LaunchedEffect
         try {
             val role = StudentProfileRepository.load().role
@@ -149,13 +152,16 @@ private fun EduTApp() {
                     }
                 }
             }
+            // Only a completed lookup counts. A failed network request should
+            // remain eligible for a Home pull-to-refresh or Profile retry.
+            advisorRoleChecked = true
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (_: Exception) {
             advisorTabVerified = false
+            advisorRoleChecked = false
+            advisorRoleLookupFailed = true
         }
-        // Do not mark a cancelled lookup as checked; the next destination can retry.
-        advisorRoleChecked = true
     }
     var unreadNotifications by remember(session?.userId) { mutableIntStateOf(0) }
     // Refresh when Home becomes visible, including after returning from the inbox.
