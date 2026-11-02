@@ -25,4 +25,36 @@ class AdvisorNavigationRulesTest {
             roleCheckedForSession = true
         ))
     }
+
+    @Test fun firstApprovedAdvisorHomeEntryOpensPortal() {
+        assertTrue(AdvisorNavigationRules.shouldOpenAdvisorOnFirstVerifiedHome(
+            roleCheckedForSession = false,
+            approvedAdvisor = true,
+            onHomeRoot = true
+        ))
+    }
+
+    @Test fun verificationDoesNotInterruptOtherDestinations() {
+        assertFalse(AdvisorNavigationRules.shouldOpenAdvisorOnFirstVerifiedHome(
+            roleCheckedForSession = false,
+            approvedAdvisor = true,
+            onHomeRoot = false
+        ))
+    }
+
+    @Test fun returningToHomeAfterRoleWasCheckedDoesNotForceAdvisorPortal() {
+        assertFalse(AdvisorNavigationRules.shouldOpenAdvisorOnFirstVerifiedHome(
+            roleCheckedForSession = true,
+            approvedAdvisor = true,
+            onHomeRoot = true
+        ))
+    }
+
+    @Test fun guestOrUnapprovedAdvisorCannotAutoOpenPortal() {
+        assertFalse(AdvisorNavigationRules.shouldOpenAdvisorOnFirstVerifiedHome(
+            roleCheckedForSession = false,
+            approvedAdvisor = false,
+            onHomeRoot = true
+        ))
+    }
 }
