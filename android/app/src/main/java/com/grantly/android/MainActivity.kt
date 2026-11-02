@@ -121,7 +121,10 @@ private fun EduTApp() {
     // A restored session still needs its first role lookup while Home is visible.
     // Account changes reset both flags through remember(userId).
     LaunchedEffect(session?.userId, tab == Tab.Profile) {
-        if (tab != Tab.Profile && advisorRoleChecked) return@LaunchedEffect
+        if (!AdvisorNavigationRules.shouldVerifyRole(
+                isProfileVisible = tab == Tab.Profile,
+                roleCheckedForSession = advisorRoleChecked
+            )) return@LaunchedEffect
         advisorTabVerified = false
         val currentUserId = session?.userId ?: return@LaunchedEffect
         try {
