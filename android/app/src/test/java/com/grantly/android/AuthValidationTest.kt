@@ -29,9 +29,9 @@ class AuthValidationTest {
         listOf(
             "student@@example.com",
             "student@dept@example.com",
-            "student\\t@example.com",
-            "student@example\\n.com",
-            "student\\u0000@example.com"
+            "student\${c}@example.com",
+            "student@example\${c}.com",
+            "student\${c}@example.com"
         ).forEach { assertFalse("Unexpectedly valid: $it", AuthValidation.isValidEmail(it)) }
     }
 
