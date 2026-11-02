@@ -91,6 +91,25 @@ internal object AdvisorLiveKitRoomRules {
         }
     }
 
+    /**
+     * Initial Join can fail after one or both LiveKit capture calls have
+     * started. Disable every attempted track, even if disabling video fails.
+     * Each track gets its own timeout so a hung video rollback does not skip
+     * microphone cleanup.
+     */
+    suspend fun rollbackInitialCapture(
+        microphoneAttempted: Boolean,
+        cameraAttempted: Boolean,
+        disableMicrophone: suspend () -> Unit,
+        disableCamera: suspend () -> Unit
+    ) {
+        try {
+            if (cameraAttempted) withTimeout(2_000L) { disableCamera() }
+        } finally {
+            if (microphoneAttempted) withTimeout(2_000L) { disableMicrophone() }
+        }
+    }
+
     fun requireCaptureReady(
         captureConsent: Boolean,
         microphoneGranted: Boolean,
@@ -205,16 +224,12 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
                         }
                     },
                     rollback = {
-                        // Attempt microphone cleanup even if camera cleanup fails.
-                        try {
-                            if (cameraAttempted) {
-                                withTimeout(2_000L) { room.localParticipant.setCameraEnabled(false) }
-                            }
-                        } finally {
-                            if (microphoneAttempted) {
-                                withTimeout(2_000L) { room.localParticipant.setMicrophoneEnabled(false) }
-                            }
-                        }
+                        AdvisorLiveKitRoomRules.rollbackInitialCapture(
+                            microphoneAttempted = microphoneAttempted,
+                            cameraAttempted = cameraAttempted,
+                            disableMicrophone = { room.localParticipant.setMicrophoneEnabled(false) },
+                            disableCamera = { room.localParticipant.setCameraEnabled(false) }
+                        )
                     }
                 )
                 activeRoom = room
