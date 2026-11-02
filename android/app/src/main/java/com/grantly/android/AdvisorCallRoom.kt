@@ -139,9 +139,16 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 context.checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
             if (!stillAuthorized) {
                 consent = false
-                session.leave()
-                room = null
                 error = "Call ended because your account or permissions changed."
+                // A failed SDK disconnect must not leave the call UI active.
+                session.invalidatePendingJoin()
+                try {
+                    session.leave()
+                } finally {
+                    room = null
+                    joining = false
+                    changingMedia = false
+                }
                 break
             }
         }
@@ -151,11 +158,18 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
         current.events.collect { event ->
             trackVersion++
             if (event is RoomEvent.Disconnected) {
-                // Updating room state cancels this effect; finish release first.
-                withContext(NonCancellable) { session.leave() }
-                room = null
                 consent = false
                 error = "The call disconnected. You can try joining again."
+                session.invalidatePendingJoin()
+                // Updating room state cancels this effect; finish release first.
+                // Even if SDK disconnect throws, never leave a stale call UI.
+                try {
+                    withContext(NonCancellable) { session.leave() }
+                } finally {
+                    room = null
+                    joining = false
+                    changingMedia = false
+                }
             }
         }
     }
