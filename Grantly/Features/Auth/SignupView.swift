@@ -183,7 +183,7 @@ struct SignupView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 54)
                 .background(Theme.premiumForest)
-                .foregroundStyle(Theme.premiumIvory)
+                .foregroundStyle(Theme.editorialCream)
                 .clipShape(
                     RoundedRectangle(
                         cornerRadius: 18,
