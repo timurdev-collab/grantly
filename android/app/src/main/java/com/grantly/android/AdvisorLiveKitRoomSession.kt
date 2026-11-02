@@ -125,21 +125,23 @@ internal object AdvisorLiveKitRoomRules {
     }
 
     /** Preserve the real Join failure even if disconnect or release also fails.
-     * Both cleanup steps must be attempted; SDK teardown must not hide the
-     * original authentication, permission, cancellation or network error.
+     * Bound each suspending cleanup step separately: a stalled disconnect must
+     * not prevent release from being attempted. A blocking SDK call that never
+     * suspends cannot be interrupted by a coroutine timeout.
      */
     suspend fun cleanupFailedJoin(
         originalFailure: Throwable,
         disconnect: suspend () -> Unit,
-        release: suspend () -> Unit
+        release: suspend () -> Unit,
+        cleanupTimeoutMillis: Long = 5_000L
     ) {
         try {
-            disconnect()
+            withTimeout(cleanupTimeoutMillis) { disconnect() }
         } catch (cleanupFailure: Throwable) {
             if (cleanupFailure !== originalFailure) originalFailure.addSuppressed(cleanupFailure)
         }
         try {
-            release()
+            withTimeout(cleanupTimeoutMillis) { release() }
         } catch (cleanupFailure: Throwable) {
             if (cleanupFailure !== originalFailure) originalFailure.addSuppressed(cleanupFailure)
         }
