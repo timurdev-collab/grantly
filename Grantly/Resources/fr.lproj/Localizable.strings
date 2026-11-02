@@ -731,3 +731,7 @@
 "Withdraw from advisor role" = "Quitter le rôle de conseiller";
 "Withdraw from advisor role?" = "Quitter le rôle de conseiller ?";
 "Your EduT account and scholarships remain available. Active students and consultations must be resolved first." = "Votre compte EduT et vos bourses restent accessibles. Terminez d'abord les suivis et consultations en cours.";
+"Privacy and tracking overview" = "Confidentialité et suivi";
+"EduT uses account and academic information for scholarship matching and saved applications. Advisor profiles and messages are shared according to the features you use." = "EduT utilise les données du compte et du parcours scolaire pour les bourses et candidatures enregistrées. Les profils de conseillers et messages sont partagés selon les fonctionnalités utilisées.";
+"The native app may store sign-in sessions and preferences. External scholarship websites may use their own cookies and tracking tools." = "L’application peut stocker les sessions et préférences. Les sites externes de bourses peuvent utiliser leurs propres cookies et outils de suivi.";
+"Privacy Policy, Terms of Service and Cookies Notice are under review. Contact and publication details will be provided before the next App Store release." = "La politique de confidentialité, les conditions d’utilisation et l’avis relatif aux cookies sont en cours de révision. Les coordonnées et informations de publication seront fournies avant la prochaine version App Store.";
