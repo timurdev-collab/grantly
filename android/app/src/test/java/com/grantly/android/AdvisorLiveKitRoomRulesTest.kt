@@ -65,6 +65,40 @@ class AdvisorLiveKitRoomRulesTest {
         }
     }
 
+    @Test fun disablesCaptureWhenPermissionRevokedDuringSuspendedEnable() {
+        // The initial permission preflight can pass, then the user can revoke
+        // access while LiveKit is enabling the camera or microphone.
+        org.junit.Assert.assertTrue(
+            AdvisorLiveKitRoomRules.shouldDisableCaptureAfterMediaChange(
+                requestedGeneration = 11,
+                currentGeneration = 11,
+                expectedUserId = "advisor-1",
+                currentUserId = "advisor-1",
+                permissionGranted = false
+            )
+        )
+        org.junit.Assert.assertFalse(
+            AdvisorLiveKitRoomRules.shouldDisableCaptureAfterMediaChange(
+                requestedGeneration = 11,
+                currentGeneration = 11,
+                expectedUserId = "advisor-1",
+                currentUserId = "advisor-1",
+                permissionGranted = true
+            )
+        )
+        assertThrows(IOException::class.java) {
+            AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
+                requestedGeneration = 11,
+                currentGeneration = 11,
+                expectedUserId = "advisor-1",
+                activeUserId = "advisor-1",
+                currentUserId = "advisor-1",
+                enabling = true,
+                permissionGranted = false
+            )
+        }
+    }
+
     @Test fun disablesCaptureAfterLeaveAndPreservesCurrentAccountMedia() {
         org.junit.Assert.assertTrue(
             AdvisorLiveKitRoomRules.shouldDisableCaptureAfterMediaChange(
