@@ -64,6 +64,20 @@ internal object AdvisorLiveKitRoomRules {
         throw IOException("The video call connection timed out. Please try again.")
     }
 
+    /** Bound a suspended SDK media toggle so it cannot indefinitely hold the
+     * room mutex and prevent Leave from cleaning up the call. Caller-initiated
+     * cancellation must still propagate to the capture rollback handler.
+     */
+    suspend fun <T> withMediaTimeout(
+        timeoutMillis: Long = 30_000L,
+        operation: suspend () -> T
+    ): T = try {
+        withTimeout(timeoutMillis) { operation() }
+    } catch (_: TimeoutCancellationException) {
+        currentCoroutineContext().ensureActive()
+        throw IOException("Camera or microphone operation timed out. Please leave the call and try again.")
+    }
+
     /**
      * LiveKit may have enabled hardware capture before a suspended SDK call
      * fails or is cancelled. Always attempt a bounded rollback before returning
@@ -301,21 +315,22 @@ internal class AdvisorLiveKitRoomSession(private val context: Context) {
             AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
                 enabling = enabled,
                 operation = {
-                    if (microphone) room.localParticipant.setMicrophoneEnabled(enabled)
-                    else room.localParticipant.setCameraEnabled(enabled)
-                    // The SDK can suspend while permission, account or call state
-                    // changes. Treat that as a failed enable so bounded,
-                    // NonCancellable rollback runs before Leave acquires the lock.
-                    AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
-                        requestedGeneration = requestedGeneration,
-                        currentGeneration = leaveGeneration.get(),
-                        expectedUserId = expectedUserId,
-                        activeUserId = activeUserId,
-                        currentUserId = AuthRepository.session?.userId,
-                        enabling = enabled,
-                        permissionGranted = context.checkSelfPermission(permission) ==
-                            PackageManager.PERMISSION_GRANTED
-                    )
+                    AdvisorLiveKitRoomRules.withMediaTimeout {
+                        if (microphone) room.localParticipant.setMicrophoneEnabled(enabled)
+                        else room.localParticipant.setCameraEnabled(enabled)
+                        // A suspended SDK call can outlive permission or account
+                        // changes. Keep this check inside the timeout/rollback.
+                        AdvisorLiveKitRoomRules.requireMediaChangeAuthorized(
+                            requestedGeneration = requestedGeneration,
+                            currentGeneration = leaveGeneration.get(),
+                            expectedUserId = expectedUserId,
+                            activeUserId = activeUserId,
+                            currentUserId = AuthRepository.session?.userId,
+                            enabling = enabled,
+                            permissionGranted = context.checkSelfPermission(permission) ==
+                                PackageManager.PERMISSION_GRANTED
+                        )
+                    }
                 },
                 rollback = {
                     if (microphone) room.localParticipant.setMicrophoneEnabled(false)
