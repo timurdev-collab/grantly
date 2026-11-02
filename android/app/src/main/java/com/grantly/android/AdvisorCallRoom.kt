@@ -144,6 +144,12 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 session.invalidatePendingJoin()
                 try {
                     session.leave()
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (_: Exception) {
+                    // An SDK teardown failure must not crash the permission
+                    // watchdog or hide that capture may need a restart.
+                    error = "Call cleanup encountered an error. Restart the app before joining again."
                 } finally {
                     room = null
                     joining = false
@@ -165,6 +171,11 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 // Even if SDK disconnect throws, never leave a stale call UI.
                 try {
                     withContext(NonCancellable) { session.leave() }
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (_: Exception) {
+                    // Keep the UI recoverable if LiveKit disconnect/release fails.
+                    error = "Call cleanup encountered an error. Restart the app before joining again."
                 } finally {
                     room = null
                     joining = false
