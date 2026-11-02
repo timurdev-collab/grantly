@@ -5,6 +5,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.ZoneId
+import java.net.URLDecoder
 
 class AdvisorCallListRulesTest {
     private val callId = "01234567-1234-4abc-8def-0123456789ab"
@@ -59,13 +60,33 @@ class AdvisorCallListRulesTest {
     }
 
     @Test fun boundedServerScanContinuesPastFilteredRows() {
-        assertEquals(listOf(0, 100, 200), AdvisorCallListRules.scanOffsets().toList())
-        assertTrue(AdvisorCallListRules.shouldScanNext(100, 0, 100))
-        assertTrue(AdvisorCallListRules.shouldScanNext(100, 42, 200))
-        assertFalse(AdvisorCallListRules.shouldScanNext(99, 0, 100))
-        assertFalse(AdvisorCallListRules.shouldScanNext(100, 100, 100))
-        assertFalse(AdvisorCallListRules.shouldScanNext(100, 25, 300))
-        assertFalse(AdvisorCallListRules.shouldScanNext(0, 0, 100))
+        assertEquals(listOf(0, 1, 2), AdvisorCallListRules.scanPages().toList())
+        assertTrue(AdvisorCallListRules.shouldScanNext(100, 0, 0))
+        assertTrue(AdvisorCallListRules.shouldScanNext(100, 42, 1))
+        assertFalse(AdvisorCallListRules.shouldScanNext(99, 0, 0))
+        assertFalse(AdvisorCallListRules.shouldScanNext(100, 100, 0))
+        assertFalse(AdvisorCallListRules.shouldScanNext(100, 25, 2))
+        assertFalse(AdvisorCallListRules.shouldScanNext(0, 0, 0))
+    }
+
+    @Test fun keysetCursorKeepsTimestampAndIdOrderingAcrossNewInserts() {
+        val filter = AdvisorCallListRules.nextPageFilter("2026-11-02T13:21:05.123456+00:00", callId)
+        assertTrue(filter.startsWith("&or="))
+        val decoded = URLDecoder.decode(filter.removePrefix("&or="), "UTF-8")
+        assertEquals(
+            "(created_at.lt.2026-11-02T13:21:05.123456Z," +
+                "and(created_at.eq.2026-11-02T13:21:05.123456Z,id.lt.$callId))",
+            decoded
+        )
+        assertFalse(filter.contains("+00:00"))
+        assertFalse(filter.contains("&id="))
+    }
+
+    @Test fun keysetCursorRejectsMalformedServerValues() {
+        assertTrue(runCatching { AdvisorCallListRules.nextPageFilter("bad-time", callId) }.isFailure)
+        assertTrue(runCatching {
+            AdvisorCallListRules.nextPageFilter("2026-11-02T13:21:05Z", "bad-id")
+        }.isFailure)
     }
 
     @Test fun overlappingServerPagesDoNotDuplicateCallsOrConsumeThePageQuota() {
