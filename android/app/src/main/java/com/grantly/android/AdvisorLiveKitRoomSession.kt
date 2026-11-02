@@ -7,6 +7,8 @@ import io.livekit.android.LiveKit
 import io.livekit.android.room.Room
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.sync.Mutex
@@ -54,6 +56,9 @@ internal object AdvisorLiveKitRoomRules {
     ): T = try {
         withTimeout(timeoutMillis) { operation() }
     } catch (_: TimeoutCancellationException) {
+        // An enclosing screen/job timeout must remain cancellation, not a
+        // retryable network error. Only our own timeout is converted.
+        currentCoroutineContext().ensureActive()
         throw IOException("The video call connection timed out. Please try again.")
     }
 
