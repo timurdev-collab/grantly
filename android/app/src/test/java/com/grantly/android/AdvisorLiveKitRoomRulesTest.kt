@@ -308,4 +308,65 @@ class AdvisorLiveKitRoomRulesTest {
         assertTrue(failure is CancellationException)
     }
 
+    @Test fun captureEnableFailureRollsBackAndPreservesOriginalError() = runBlocking {
+        val original = IOException("SDK failed after enabling")
+        var rollbackCount = 0
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+                enabling = true,
+                operation = { throw original },
+                rollback = { rollbackCount++ }
+            )
+        }.exceptionOrNull()
+        assertTrue(failure === original)
+        assertEquals(1, rollbackCount)
+    }
+
+    @Test fun cancelledCaptureEnableStillRollsBack() = runBlocking {
+        var rollbackCount = 0
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+                enabling = true,
+                operation = { throw CancellationException("Screen closed") },
+                rollback = { rollbackCount++ }
+            )
+        }.exceptionOrNull()
+        assertTrue(failure is CancellationException)
+        assertEquals(1, rollbackCount)
+    }
+
+    @Test fun successfulCaptureAndFailedDisableDoNotTriggerRollback() = runBlocking {
+        var operations = 0
+        var rollbacks = 0
+        AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+            enabling = true,
+            operation = { operations++ },
+            rollback = { rollbacks++ }
+        )
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+                enabling = false,
+                operation = { throw IOException("Mute failed") },
+                rollback = { rollbacks++ }
+            )
+        }.exceptionOrNull()
+        assertTrue(failure is IOException)
+        assertEquals(1, operations)
+        assertEquals(0, rollbacks)
+    }
+
+    @Test fun rollbackFailureIsSuppressedWithoutMaskingEnableFailure() = runBlocking {
+        val original = IOException("Enable failed")
+        val rollback = IOException("Rollback failed")
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+                enabling = true,
+                operation = { throw original },
+                rollback = { throw rollback }
+            )
+        }.exceptionOrNull()
+        assertTrue(failure === original)
+        assertTrue(original.suppressed.contains(rollback))
+    }
+
 }
