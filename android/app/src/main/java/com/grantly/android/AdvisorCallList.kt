@@ -28,6 +28,10 @@ import org.json.JSONArray
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 /** Read-only call history for active advisor/student assignments. No call is created or joined. */
 internal data class AdvisorCallListItem(
@@ -56,8 +60,19 @@ internal object AdvisorCallListRules {
         else -> "Unavailable"
     }
 
-    fun displayTime(value: String): String =
-        value.take(40).replace('T', ' ').ifBlank { "Not scheduled" }
+    private val scheduledTimeFormat =
+        DateTimeFormatter.ofPattern("MMM d, yyyy h:mm a XXX", Locale.ENGLISH)
+
+    /** Supabase timestamps include an offset; show the actual device-local instant. */
+    fun displayTime(value: String, zone: ZoneId = ZoneId.systemDefault()): String {
+        if (value.isBlank() || value == "null") return "Not scheduled"
+        return runCatching {
+            OffsetDateTime.parse(value).atZoneSameInstant(zone).format(scheduledTimeFormat)
+        }.getOrElse {
+            // Preserve bounded legacy/unparseable values without inventing a timezone.
+            value.take(40).replace('T', ' ')
+        }
+    }
 }
 
 internal object AdvisorCallListRepository {
