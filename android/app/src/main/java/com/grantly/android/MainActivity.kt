@@ -108,6 +108,8 @@ private fun EduTApp() {
     // both the signed-in role and approved application status. On lookup errors,
     // fail closed; the Profile screen remains available for retry.
     var advisorTabVerified by remember(session?.userId) { mutableStateOf(false) }
+    // Verify restored sessions on Home once, then refresh when Profile is revisited.
+    var advisorRoleChecked by remember(session?.userId) { mutableStateOf(false) }
     // An account change must never leave a different user on an advisor-only page.
     LaunchedEffect(session?.userId) {
         if (tab == Tab.Advisor) tab = Tab.Profile
@@ -116,9 +118,10 @@ private fun EduTApp() {
     // switches roles (or whose approval is revoked) does not keep a stale tab.
     // Leaving Profile must not clear a successfully verified Advisor destination:
     // this effect also restarts on Profile -> Home/Messages/Advisor transitions.
-    // Account changes separately reset verification through remember(userId).
+    // A restored session still needs its first role lookup while Home is visible.
+    // Account changes reset both flags through remember(userId).
     LaunchedEffect(session?.userId, tab == Tab.Profile) {
-        if (tab != Tab.Profile) return@LaunchedEffect
+        if (tab != Tab.Profile && advisorRoleChecked) return@LaunchedEffect
         advisorTabVerified = false
         val currentUserId = session?.userId ?: return@LaunchedEffect
         try {
@@ -134,6 +137,8 @@ private fun EduTApp() {
         } catch (_: Exception) {
             advisorTabVerified = false
         }
+        // Do not mark a cancelled lookup as checked; the next destination can retry.
+        advisorRoleChecked = true
     }
     var unreadNotifications by remember(session?.userId) { mutableIntStateOf(0) }
     // Refresh when Home becomes visible, including after returning from the inbox.
