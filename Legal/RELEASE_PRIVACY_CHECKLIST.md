@@ -1,0 +1,14 @@
+# Privacy and legal release gates — EduT 1.0.1
+- [ ] Confirm controller legal name, address, privacy/support email and entity jurisdiction.
+- [ ] Inventory actual collected fields, SDKs, analytics, crash logs, IPs, webview cookies and notification processors.
+- [ ] Confirm Supabase region, third-party subprocessors, international transfers and DPA arrangements.
+- [ ] Establish processing purposes, lawful bases, opt-in/opt-out mechanisms, retention, backups and security breach process.
+- [ ] Decide minimum age and enforce minor protections.
+- [ ] Verify advisor marketplace fees, terms, cancellations, refund obligations, consumer rights, dispute procedure and payment collection.
+- [ ] Review user data sharing and in-app permissions, including photo/document upload, contact sharing, push notifications and advisor messaging.
+- [ ] Publish finalized policy pages on stable HTTPS URLs and populate App Store Connect Privacy Policy URL.
+- [ ] Add readily accessible links from app settings and sign-up; provide consent/acknowledgement controls where legally required.
+- [ ] Review App Store App Privacy nutrition-label answers against production SDKs and backend.
+- [ ] Test complete account deletion, including advisor accounts and storage; verify any legally required retained data.
+- [ ] Have qualified counsel review GDPR/EU, Vietnam, applicable US state law, marketplace/consumer and minors exposure for intended distribution.
+- [ ] Do not market drafts as binding policies or claim legal compliance without verification.
