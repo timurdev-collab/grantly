@@ -114,9 +114,14 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 // Never wait for a scheduled coroutine to invalidate a slow Join.
                 session.invalidatePendingJoin()
                 scope.launch {
-                    session.leave()
-                    room = null
-                    joining = false
+                    try {
+                        session.leave()
+                    } finally {
+                        // A disconnect failure must not leave a stale call on screen.
+                        room = null
+                        joining = false
+                        changingMedia = false
+                    }
                 }
             }
         }
@@ -274,12 +279,23 @@ internal fun AdvisorCallRoomContent(call: AdvisorCallListItem, userId: String, o
                 }
             ) { Text(if (cameraEnabled) "Turn camera off" else "Turn camera on") }
             OutlinedButton(onClick = {
-                // Invalidate immediately, before asynchronous teardown starts.
+                // Invalidate synchronously so an in-flight media toggle cannot
+                // re-enable capture before the Leave coroutine gets scheduled.
                 consent = false
                 session.invalidatePendingJoin()
                 scope.launch {
-                    session.leave()
-                    room = null
+                    try {
+                        session.leave()
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (_: Exception) {
+                        error = "Call cleanup encountered an error. Restart the app before joining again."
+                    } finally {
+                        // The session releases its Room even if disconnect fails.
+                        room = null
+                        joining = false
+                        changingMedia = false
+                    }
                 }
             }) { Text("Leave call and stop camera/microphone") }
         }
