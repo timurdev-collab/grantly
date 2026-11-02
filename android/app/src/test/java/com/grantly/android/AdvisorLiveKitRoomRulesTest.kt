@@ -551,7 +551,13 @@ class AdvisorLiveKitRoomRulesTest {
             }
         )
         assertEquals(listOf("disconnect", "release"), attempted)
-        assertEquals(listOf(disconnectFailure, releaseFailure), original.suppressed.toList())
+        // Coroutine stacktrace recovery may copy an exception while preserving
+        // its type and message; do not require reference identity here.
+        assertEquals(
+            listOf("Disconnect failed", "Release failed"),
+            original.suppressed.map { it.message }
+        )
+        assertTrue(original.suppressed.all { it is IOException })
     }
 
     @Test fun failedJoinCleanupPreservesCancellationAndSuccessfulTeardown() = runBlocking {
