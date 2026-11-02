@@ -4,8 +4,10 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertThrows
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.junit.Test
 import java.io.IOException
 
@@ -247,6 +249,20 @@ class AdvisorLiveKitRoomRulesTest {
         }.exceptionOrNull()
         assertTrue(failure is IOException)
         assertTrue(failure?.message?.contains("timed out") == true)
+    }
+
+    @Test fun boundedJoinDoesNotMaskEnclosingTimeout() = runBlocking {
+        // The parent may cancel a join before its 30-second network limit.
+        // This must propagate cancellation, not become a retryable IOException.
+        val failure = runCatching {
+            withTimeout(20L) {
+                AdvisorLiveKitRoomRules.withJoinTimeout(30_000L) {
+                    delay(1_000L)
+                }
+            }
+        }.exceptionOrNull()
+        assertTrue("Parent cancellation must not be converted to IOException",
+            failure is TimeoutCancellationException)
     }
 
     @Test fun boundedJoinPreservesCallerCancellation() = runBlocking {
