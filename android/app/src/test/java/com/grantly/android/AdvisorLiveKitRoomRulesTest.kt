@@ -533,4 +533,37 @@ class AdvisorLiveKitRoomRulesTest {
         assertEquals(1, rollbackCount)
         org.junit.Assert.assertFalse(microphoneEnabled)
     }
+
+    @Test fun failedJoinCleanupAttemptsReleaseAfterDisconnectFailure() = runBlocking {
+        val original = IOException("Credential request failed")
+        val disconnectFailure = IOException("Disconnect failed")
+        val releaseFailure = IOException("Release failed")
+        val attempted = mutableListOf<String>()
+        AdvisorLiveKitRoomRules.cleanupFailedJoin(
+            originalFailure = original,
+            disconnect = {
+                attempted += "disconnect"
+                throw disconnectFailure
+            },
+            release = {
+                attempted += "release"
+                throw releaseFailure
+            }
+        )
+        assertEquals(listOf("disconnect", "release"), attempted)
+        assertEquals(listOf(disconnectFailure, releaseFailure), original.suppressed.toList())
+    }
+
+    @Test fun failedJoinCleanupPreservesCancellationAndSuccessfulTeardown() = runBlocking {
+        val cancellation = CancellationException("Call screen closed")
+        var released = false
+        AdvisorLiveKitRoomRules.cleanupFailedJoin(
+            originalFailure = cancellation,
+            disconnect = { throw IOException("SDK disconnect failed") },
+            release = { released = true }
+        )
+        assertTrue(released)
+        assertEquals(1, cancellation.suppressed.size)
+        assertTrue(cancellation.suppressed[0] is IOException)
+    }
 }
