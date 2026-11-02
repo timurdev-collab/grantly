@@ -258,7 +258,8 @@ private fun EduTApp() {
                                 scholarship = selectedScholarship!!,
                                 onBack = { selectedScholarship = null }
                             )
-                            tab == Tab.Home -> HomeContent(
+                            tab == Tab.Home -> {
+                                HomeContent(
                                 selectedLanguage = selectedLanguage,
                                 onLanguageSelected = { option ->
                                     selectedLanguage = option
@@ -277,7 +278,19 @@ private fun EduTApp() {
                                 onNotifications = { showingNotifications = true },
                                 unreadNotifications = unreadNotifications,
                                 onScholarshipSelect = { selectedScholarship = it }
-                            )
+                                )
+                                if (advisorRoleLookupFailed && session != null) {
+                                    Spacer(Modifier.height(12.dp))
+                                    Text(
+                                        "We couldn't verify your account role. You can retry without signing out.",
+                                        color = MaterialTheme.colorScheme.error,
+                                        fontSize = 13.sp
+                                    )
+                                    OutlinedButton(onClick = { homeRefreshVersion++ }) {
+                                        Text("Retry account verification")
+                                    }
+                                }
+                            }
                             tab == Tab.Discover -> ScholarshipDiscoverContent(
                                 initialDegree = requestedDegree,
                                 onSelect = { selectedScholarship = it }
