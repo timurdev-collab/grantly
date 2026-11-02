@@ -308,6 +308,48 @@ class AdvisorLiveKitRoomRulesTest {
         assertTrue(failure is CancellationException)
     }
 
+    @Test fun boundedMediaToggleCompletesWhenSdkReturns() = runBlocking {
+        assertEquals("muted", AdvisorLiveKitRoomRules.withMediaTimeout(1_000L) {
+            "muted"
+        })
+    }
+
+    @Test fun stalledMediaEnableTimesOutAndTriggersRollback() = runBlocking {
+        var rollbackCount = 0
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withCaptureRollbackOnFailure(
+                enabling = true,
+                operation = {
+                    AdvisorLiveKitRoomRules.withMediaTimeout(10L) { delay(1_000L) }
+                },
+                rollback = { rollbackCount++ }
+            )
+        }.exceptionOrNull()
+        assertTrue(failure is IOException)
+        assertTrue(failure?.message?.contains("operation timed out") == true)
+        assertEquals(1, rollbackCount)
+    }
+
+    @Test fun mediaTogglePreservesCallerCancellation() = runBlocking {
+        val failure = runCatching {
+            AdvisorLiveKitRoomRules.withMediaTimeout(1_000L) {
+                throw CancellationException("Call screen closed")
+            }
+        }.exceptionOrNull()
+        assertTrue(failure is CancellationException)
+    }
+
+    @Test fun mediaToggleDoesNotMaskParentTimeout() = runBlocking {
+        val failure = runCatching {
+            withTimeout(20L) {
+                AdvisorLiveKitRoomRules.withMediaTimeout(30_000L) {
+                    delay(1_000L)
+                }
+            }
+        }.exceptionOrNull()
+        assertTrue(failure is TimeoutCancellationException)
+    }
+
     @Test fun captureEnableFailureRollsBackAndPreservesOriginalError() = runBlocking {
         val original = IOException("SDK failed after enabling")
         var rollbackCount = 0
