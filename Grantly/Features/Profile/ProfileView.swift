@@ -1224,6 +1224,15 @@ private struct PrivacyAndSafetyView: View {
                     .foregroundStyle(Theme.muted)
             }
 
+            Section("Privacy and tracking overview") {
+                Text("EduT uses account and academic information for scholarship matching and saved applications. Advisor profiles and messages are shared according to the features you use.")
+                    .foregroundStyle(Theme.muted)
+                Text("The native app may store sign-in sessions and preferences. External scholarship websites may use their own cookies and tracking tools.")
+                    .foregroundStyle(Theme.muted)
+                Text("Privacy Policy, Terms of Service and Cookies Notice are under review. Contact and publication details will be provided before the next App Store release.")
+                    .foregroundStyle(Theme.muted)
+            }
+
             Section("Account control") {
                 Text("You can permanently delete your EduT account from Profile. Deleting the authentication account also removes linked profile and user-owned app data according to the database relationships.")
                     .foregroundStyle(Theme.muted)
