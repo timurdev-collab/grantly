@@ -764,8 +764,11 @@ private struct AdvisorPortalView: View {
                     } label: {
                         Label("Switch to Student Mode", systemImage: "graduationcap.fill")
                             .font(.headline)
+                            .foregroundStyle(Theme.editorialCream)
+                            .frame(maxWidth: .infinity, minHeight: 48)
+                            .background(Theme.premiumForest, in: Capsule())
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.plain)
                 }
 
                 Section("Overview") {
@@ -1172,8 +1175,12 @@ private struct AdvisorIncomingConsultationRow: View {
                     if let whatsappURL {
                         Link(destination: whatsappURL) {
                             Label("WhatsApp", systemImage: "message.fill")
+                            .foregroundStyle(Theme.editorialCream)
+                            .padding(.horizontal, 12)
+                            .frame(minHeight: 40)
+                            .background(Theme.premiumForest, in: Capsule())
                         }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(.plain)
                     }
 
                     if let emailURL {
