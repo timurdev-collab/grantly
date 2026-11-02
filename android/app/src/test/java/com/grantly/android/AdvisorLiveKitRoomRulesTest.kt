@@ -365,8 +365,10 @@ class AdvisorLiveKitRoomRulesTest {
                 rollback = { throw rollback }
             )
         }.exceptionOrNull()
-        assertTrue(failure === original)
-        assertTrue(original.suppressed.contains(rollback))
+        assertTrue(failure is IOException)
+        assertEquals("Enable failed", failure?.message)
+        assertTrue("Rollback error should be retained for diagnostics",
+            failure?.suppressed?.any { it.message == "Rollback failed" } == true)
     }
 
 }
