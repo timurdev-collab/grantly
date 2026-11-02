@@ -11,6 +11,11 @@ internal object AuthValidation {
     fun isValidEmail(value: String): Boolean {
         val email = normalizedEmail(value)
         if (email.isEmpty() || email.length > 254) return false
+        // Reject malformed addresses before making an authentication request.
+        // A second @ or embedded control/whitespace character cannot be part
+        // of the unquoted addresses supported by EduT's sign-in form.
+        if (email.count { it == '@' } != 1 ||
+            email.any { it.isWhitespace() || Character.isISOControl(it) }) return false
         val at = email.lastIndexOf('@')
         if (at <= 0 || at == email.lastIndex) return false
         val local = email.substring(0, at)
