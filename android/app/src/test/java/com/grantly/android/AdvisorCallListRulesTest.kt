@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.ZoneId
 
 class AdvisorCallListRulesTest {
     private val callId = "01234567-1234-4abc-8def-0123456789ab"
@@ -34,7 +35,26 @@ class AdvisorCallListRulesTest {
         assertEquals("Active", AdvisorCallListRules.label("active"))
         assertEquals("Unavailable", AdvisorCallListRules.label("ended"))
         assertEquals("Not scheduled", AdvisorCallListRules.displayTime(""))
-        assertEquals("2026-11-01 10:00:00Z", AdvisorCallListRules.displayTime("2026-11-01T10:00:00Z"))
+        assertEquals("Not scheduled", AdvisorCallListRules.displayTime("null"))
         assertEquals(40, AdvisorCallListRules.displayTime("a".repeat(100)).length)
+    }
+
+    @Test fun convertsUtcScheduleToDeviceTimezoneWithExplicitOffset() {
+        val scheduled = "2026-11-01T10:00:00Z"
+        assertEquals(
+            "Nov 1, 2026 5:00 PM +07:00",
+            AdvisorCallListRules.displayTime(scheduled, ZoneId.of("Asia/Ho_Chi_Minh"))
+        )
+        assertEquals(
+            "Nov 1, 2026 2:00 AM -08:00",
+            AdvisorCallListRules.displayTime(scheduled, ZoneId.of("America/Los_Angeles"))
+        )
+    }
+
+    @Test fun preservesBoundedLegacyTimestampWhenTimezoneIsUnknown() {
+        assertEquals(
+            "2026-11-01 10:00:00",
+            AdvisorCallListRules.displayTime("2026-11-01T10:00:00", ZoneId.of("Asia/Ho_Chi_Minh"))
+        )
     }
 }
