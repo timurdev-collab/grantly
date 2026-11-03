@@ -393,53 +393,6 @@ struct AdvisorStudent: Codable, Identifiable {
 
 
 
-struct LiveKitCallCredentials: Codable {
-    let url: String
-    let token: String
-    let roomName: String
-
-    enum CodingKeys: String, CodingKey {
-        case url, token
-        case roomName = "room_name"
-    }
-}
-
-struct AdvisorCallSession: Codable, Identifiable {
-    let id: UUID
-    let assignmentId: UUID
-    let conversationId: UUID?
-    let startedBy: UUID
-    let roomName: String
-    let status: String
-    let scheduledFor: String?
-    let startedAt: String?
-    let endedAt: String?
-    let screenShareAllowed: Bool
-    let recordingRequested: Bool
-    let recordingConsentStudent: Bool
-    let recordingConsentAdvisor: Bool
-    let createdAt: String
-    let updatedAt: String
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case assignmentId = "assignment_id"
-        case conversationId = "conversation_id"
-        case startedBy = "started_by"
-        case roomName = "room_name"
-        case status
-        case scheduledFor = "scheduled_for"
-        case startedAt = "started_at"
-        case endedAt = "ended_at"
-        case screenShareAllowed = "screen_share_allowed"
-        case recordingRequested = "recording_requested"
-        case recordingConsentStudent = "recording_consent_student"
-        case recordingConsentAdvisor = "recording_consent_advisor"
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-    }
-}
-
 enum SocialPostKind: String, Codable, CaseIterable, Identifiable {
     case post
     case story
