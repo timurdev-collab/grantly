@@ -76,6 +76,25 @@ class MainActivitySmokeTest {
             device.wait(Until.findObject(By.text("Messages")), 10_000))
     }
 
+    @Test fun systemBackFromProfileReturnsHomeWithoutExiting() {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        device.waitForIdle(5_000)
+        assertNotNull("EduT Home should launch",
+            device.wait(Until.findObject(By.textContains("Scholarships picked")), 45_000))
+
+        val profile = device.wait(Until.findObject(By.text("Profile")), 15_000)
+        assertNotNull("Profile tab should be available", profile)
+        profile.click()
+        assertNotNull("Profile should retain the EduT app shell",
+            device.wait(Until.findObject(By.text("EduT")), 15_000))
+
+        device.pressBack()
+        assertNotNull("System Back should return to Home from Profile",
+            device.wait(Until.findObject(By.textContains("Scholarships picked")), 15_000))
+        assertNotNull("Activity should remain open with primary navigation",
+            device.wait(Until.findObject(By.text("Profile")), 10_000))
+    }
+
     @Test fun homeOpensAndPrimaryNavigationRemainsUsable() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         // A cold API-35 emulator may take longer to expose Compose semantics.
