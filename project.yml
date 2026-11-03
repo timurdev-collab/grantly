@@ -17,9 +17,6 @@ packages:
   Supabase:
     url: https://github.com/supabase/supabase-swift.git
     from: 2.55.2
-  LiveKit:
-    url: https://github.com/livekit/client-sdk-swift.git
-    from: 2.17.0
 targets:
   EduT:
     type: application
@@ -42,8 +39,6 @@ targets:
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-        NSCameraUsageDescription: EduT uses your camera for advisor video calls.
-        NSMicrophoneUsageDescription: EduT uses your microphone for advisor video calls.
         NSAppTransportSecurity:
           NSAllowsArbitraryLoads: false
         APP_ENVIRONMENT: $(APP_ENVIRONMENT)
@@ -88,8 +83,6 @@ targets:
     dependencies:
       - package: Supabase
         product: Supabase
-      - package: LiveKit
-        product: LiveKit
 
   EduTTests:
     type: bundle.unit-test
