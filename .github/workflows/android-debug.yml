@@ -54,6 +54,16 @@ jobs:
         run: |
           test -s app/build/outputs/apk/debug/app-debug.apk
           unzip -t app/build/outputs/apk/debug/app-debug.apk > /dev/null
+      - name: Verify packaged APK has no calling permissions
+        run: |
+          APK=app/build/outputs/apk/debug/app-debug.apk
+          AAPT="$(find "$ANDROID_HOME/build-tools" -maxdepth 2 -type f -name aapt | sort -V | tail -n 1)"
+          test -x "$AAPT"
+          "$AAPT" dump permissions "$APK" > /tmp/edut-apk-permissions.txt
+          if grep -E 'android.permission.(CAMERA|RECORD_AUDIO|MODIFY_AUDIO_SETTINGS)' /tmp/edut-apk-permissions.txt; then
+            echo "Discontinued calling permissions found in packaged APK."
+            exit 1
+          fi
       - name: Generate APK SHA-256 checksum
         run: (cd app/build/outputs/apk/debug && sha256sum app-debug.apk > app-debug.apk.sha256 && sha256sum -c app-debug.apk.sha256)
       - name: Upload installable debug APK
