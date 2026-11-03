@@ -11,7 +11,6 @@ struct ApplicationWorkspaceView: View {
     @State private var documents: [ApplicationDocument] = []
     @State private var status = "Planning"
     @State private var reference = ""
-    @State private var notes = ""
     @State private var personalDeadline = Date()
     @State private var hasPersonalDeadline = false
     @State private var reminderEnabled = true
@@ -70,7 +69,6 @@ struct ApplicationWorkspaceView: View {
                     statusCard
                     deadlineCard
                     checklistCard
-                    documentVaultCard
                     applicationDetailsCard
                     officialPortalCard
                 }
@@ -99,19 +97,6 @@ struct ApplicationWorkspaceView: View {
                 if let portalURL {
                     InAppBrowser(url: portalURL)
                         .ignoresSafeArea()
-                }
-            }
-            .fileImporter(
-                isPresented: $showingFileImporter,
-                allowedContentTypes: [.pdf, .image],
-                allowsMultipleSelection: false
-            ) { result in
-                switch result {
-                case .success(let urls):
-                    guard let url = urls.first else { return }
-                    Task { await importDocument(from: url) }
-                case .failure(let error):
-                    errorMessage = error.localizedDescription
                 }
             }
             .alert(
@@ -567,22 +552,6 @@ struct ApplicationWorkspaceView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Notes")
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
-
-                TextField(
-                    "Add portal notes, document reminders or next steps",
-                    text: $notes,
-                    axis: .vertical
-                )
-                .lineLimit(3...7)
-                .padding(12)
-                .background(Theme.surfaceRaised)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-
             if let submitted = item?.submittedAt {
                 DetailLine(
                     label: "Submitted",
@@ -688,7 +657,6 @@ struct ApplicationWorkspaceView: View {
 
             status = item?.applicationStatus ?? "Planning"
             reference = item?.applicationReference ?? ""
-            notes = item?.notes ?? ""
             reminderEnabled = item?.reminderEnabled ?? true
             documentsComplete = item?.documentsComplete ?? false
 
@@ -722,7 +690,7 @@ struct ApplicationWorkspaceView: View {
             try await DataService.updateApplicationWorkspace(
                 scholarshipId: scholarship.id,
                 reference: reference,
-                notes: notes,
+                notes: "",
                 personalDeadline: hasPersonalDeadline
                     ? databaseDate(personalDeadline)
                     : nil,
