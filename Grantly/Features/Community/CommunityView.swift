@@ -1333,9 +1333,6 @@ struct AdvisorConsultationBookingView: View {
         whatsappNumber.trimmingCharacters(
             in: .whitespacesAndNewlines
         ).count >= 7 &&
-        topic.trimmingCharacters(
-            in: .whitespacesAndNewlines
-        ).count >= 3 &&
         consent &&
         !submitting
     }
@@ -1652,21 +1649,9 @@ struct AdvisorConsultationBookingView: View {
                         .font(.headline.bold())
                         .foregroundStyle(Theme.premiumInk)
 
-                    TextField(
-                        "Example: scholarship application strategy",
-                        text: $topic,
-                        axis: .vertical
-                    )
-                    .lineLimit(2...4)
-                    .textFieldStyle(.roundedBorder)
-
-                    TextField(
-                        "Additional notes (optional)",
-                        text: $notes,
-                        axis: .vertical
-                    )
-                    .lineLimit(3...7)
-                    .textFieldStyle(.roundedBorder)
+                    Text("The selected service is used to coordinate your consultation. You do not need to provide notes or a written topic.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.premiumMuted)
                 }
                 .padding(16)
                 .background(Theme.surface)
@@ -1985,12 +1970,8 @@ struct AdvisorConsultationBookingView: View {
                 ),
                 preferredStart: preferredStart,
                 timezone: TimeZone.current.identifier,
-                topic: topic.trimmingCharacters(
-                    in: .whitespacesAndNewlines
-                ),
-                notes: notes.trimmingCharacters(
-                    in: .whitespacesAndNewlines
-                ),
+                topic: "Advisor consultation",
+                notes: "",
                 contactConsent: consent,
                 termsAcceptanceId: termsAcceptanceID!,
                 termsVersion: termsVersion,
