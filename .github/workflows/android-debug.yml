@@ -55,7 +55,7 @@ jobs:
           test -s app/build/outputs/apk/debug/app-debug.apk
           unzip -t app/build/outputs/apk/debug/app-debug.apk > /dev/null
       - name: Generate APK SHA-256 checksum
-        run: sha256sum app/build/outputs/apk/debug/app-debug.apk > app/build/outputs/apk/debug/app-debug.apk.sha256
+        run: (cd app/build/outputs/apk/debug && sha256sum app-debug.apk > app-debug.apk.sha256 && sha256sum -c app-debug.apk.sha256)
       - name: Upload installable debug APK
         if: success()
         uses: actions/upload-artifact@v4
