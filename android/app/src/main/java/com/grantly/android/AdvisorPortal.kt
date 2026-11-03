@@ -142,7 +142,6 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
                 "overview" to "Overview",
                 "students" to "My students",
                 "consultations" to "Consultations",
-                "calls" to "Calls",
                 "professional" to "Professional profile"
             ).forEach { (value, label) ->
                 FilterChip(
@@ -159,7 +158,6 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
         when (section) {
             "students" -> AdvisorStudentsContent(userId)
             "consultations" -> AdvisorIncomingConsultationsContent(userId)
-            "calls" -> AdvisorCallListContent(userId)
             "professional" -> AdvisorProfessionalProfileContent(userId)
             else -> {
                 if (loading) {
@@ -193,7 +191,7 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
                     }
                 }
                 Text(
-                    "Messages opens the existing advisor inbox. Calls can attempt to join existing eligible sessions with explicit camera/microphone consent; real two-person calling is not yet verified. Full iOS advisor navigation is not available in this Android preview.",
+                    "Messages opens the existing advisor inbox. In-app video calling has been discontinued. Full iOS advisor navigation is not available in this Android preview.",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
