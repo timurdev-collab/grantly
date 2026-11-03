@@ -26,6 +26,16 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
+      - name: Enforce discontinued calling feature boundary
+        run: |
+          if grep -RniE 'io[.]livekit|LiveKit[[:space:]]*\(|livekit-token|AdvisorCallRoomContent|AdvisorLiveKitRoomSession' app/src/main app/build.gradle.kts; then
+            echo "Discontinued audio/video calling code was reintroduced."
+            exit 1
+          fi
+          if grep -Eq 'android[.]permission[.](CAMERA|RECORD_AUDIO|MODIFY_AUDIO_SETTINGS)' app/src/main/AndroidManifest.xml; then
+            echo "Calling-related media permissions were reintroduced."
+            exit 1
+          fi
       - name: Run Android JVM unit tests
         run: gradle :app:testDebugUnitTest --stacktrace
       - name: Upload JVM test diagnostics on failure
