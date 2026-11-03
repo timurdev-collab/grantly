@@ -320,25 +320,6 @@ struct AdvisorsView: View {
                     .buttonStyle(.plain)
 
                 }
-                    } label: {
-                        Label(
-                            L10n.string("Video"),
-                            systemImage: "video.fill"
-                        )
-                        .font(.caption.weight(.semibold))
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 40)
-                        .background(Theme.premiumSageSoft)
-                        .foregroundStyle(actionInk)
-                        .clipShape(
-                            RoundedRectangle(
-                                cornerRadius: 13,
-                                style: .continuous
-                            )
-                        )
-                    }
-                    .buttonStyle(.plain)
-                }
             }
         }
         .padding(14)
