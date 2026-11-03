@@ -6,7 +6,7 @@
 
 **Operator:** Timur Hasanov (the "Operator", "we", "us", or "our"). EduT Scholarship ("EduT") is an application provided by this individual developer. The Operator may update this notice if the service is subsequently operated by a registered business.
 
-**Privacy contact:** [WORKING EMAIL ADDRESS MONITORED FOR PRIVACY REQUESTS]
+**Privacy contact:** timur_dev@icloud.com
 
 This Privacy Policy explains what information EduT collects, why and how it is used, with whom it may be shared, and what choices you have. It covers the EduT mobile application and services we operate, including scholarship tools, community features, and advisor functionality. External scholarship websites and services have their own privacy practices.
 
@@ -97,7 +97,7 @@ We may update this policy when app features, vendors, legal requirements, or pra
 
 ## 11. Contact
 
-**Privacy contact:** [WORKING EMAIL ADDRESS MONITORED FOR PRIVACY REQUESTS]
+**Privacy contact:** timur_dev@icloud.com
 
 **Data controller / operator:** Timur Hasanov
 
