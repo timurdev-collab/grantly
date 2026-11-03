@@ -2270,8 +2270,7 @@ enum DataService {
         intendedMajor: String,
         degreeLevel: String,
         targetRegions: [String],
-        targetCountries: [String],
-        familyIncomeUSD: Double?
+        targetCountries: [String]
     ) async throws {
         struct Row: Encodable {
             let full_name: String
@@ -2285,7 +2284,6 @@ enum DataService {
             let degree_level: String
             let target_regions: [String]
             let target_countries: [String]
-            let family_income_usd: Double?
         }
 
         let row = Row(
@@ -2299,8 +2297,7 @@ enum DataService {
             intended_major: intendedMajor,
             degree_level: degreeLevel,
             target_regions: targetRegions,
-            target_countries: targetCountries,
-            family_income_usd: familyIncomeUSD
+            target_countries: targetCountries
         )
 
         try await supabase
