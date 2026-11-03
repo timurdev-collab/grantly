@@ -4,8 +4,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        // Required by LiveKit Android SDK transitive dependencies.
-        maven { url = uri("https://jitpack.io") }
     }
 }
 rootProject.name = "EduTAndroid"
