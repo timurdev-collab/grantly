@@ -4,7 +4,7 @@
 
 **Effective date:** The date this policy is first published on EduT's public website.
 
-**Operator:** [FULL LEGAL NAME OF INDIVIDUAL APP DEVELOPER / APP STORE SELLER] (the "Operator", "we", "us", or "our"). EduT Scholarship ("EduT") is an application provided by this individual developer. The Operator may update this notice if the service is subsequently operated by a registered business.
+**Operator:** Timur Hasanov (the "Operator", "we", "us", or "our"). EduT Scholarship ("EduT") is an application provided by this individual developer. The Operator may update this notice if the service is subsequently operated by a registered business.
 
 **Privacy contact:** [WORKING EMAIL ADDRESS MONITORED FOR PRIVACY REQUESTS]
 
@@ -99,7 +99,7 @@ We may update this policy when app features, vendors, legal requirements, or pra
 
 **Privacy contact:** [WORKING EMAIL ADDRESS MONITORED FOR PRIVACY REQUESTS]
 
-**Data controller / operator:** [FULL LEGAL NAME OF INDIVIDUAL APP DEVELOPER / APP STORE SELLER]
+**Data controller / operator:** Timur Hasanov
 
 If legally required for the countries in which EduT operates, additional contact, representative, or address information will be supplied.
 
