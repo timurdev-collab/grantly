@@ -701,9 +701,9 @@ struct ProfileView: View {
                             Text($0.isEmpty ? "Not selected" : $0)
                         }
                     }
-                }
 
-                Section("Study destinations (optional)") {
+                    Text("Study destinations (optional)")
+                        .font(.caption.weight(.semibold))
                     TextField(
                         "Target regions, comma separated",
                         text: $targetRegions
@@ -714,7 +714,7 @@ struct ProfileView: View {
                         text: $targetCountries
                     )
 
-                }
+                    }
                 }
                 Section("Profile photo (optional)") {
                     HStack(spacing: 14) {
