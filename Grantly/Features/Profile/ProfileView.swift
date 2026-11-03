@@ -21,7 +21,7 @@ struct ProfileView: View {
     @State private var degreeLevel = "Bachelor"
     @State private var targetRegions = ""
     @State private var targetCountries = ""
-    @State private var familyIncome = ""
+    @State private var wantsPersonalizedMatching = false
     @State private var bio = ""
     @State private var visible = true
     @State private var status = ""
@@ -42,7 +42,6 @@ struct ProfileView: View {
 
     private var profileCompletion: Int {
         let fields = [
-            fullName,
             nationality,
             residenceCountry,
             graduationYear,
@@ -665,8 +664,19 @@ struct ProfileView: View {
     private var editProfileSheet: some View {
         NavigationStack {
             Form {
-                Section("Student profile") {
-                    TextField("Full name", text: $fullName)
+                Section("Basic profile (optional)") {
+                    Text("You can skip this form and explore scholarships without sharing personal or academic details.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                    TextField("Full name (optional)", text: $fullName)
+                }
+
+                Section("Personalized scholarship matching (optional)") {
+                    Toggle("Add academic details for matching", isOn: $wantsPersonalizedMatching)
+                    if wantsPersonalizedMatching {
+                    Text("Only enter details you want to use for scholarship matching. Leave any field blank to skip it.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
                     TextField("Nationality", text: $nationality)
                     TextField("Country of residence", text: $residenceCountry)
 
@@ -693,7 +703,7 @@ struct ProfileView: View {
                     }
                 }
 
-                Section("Preferences") {
+                Section("Study destinations (optional)") {
                     TextField(
                         "Target regions, comma separated",
                         text: $targetRegions
@@ -704,14 +714,11 @@ struct ProfileView: View {
                         text: $targetCountries
                     )
 
-                    TextField(
-                        "Family annual income, USD",
-                        text: $familyIncome
-                    )
-                    .keyboardType(.decimalPad)
-                }
+                 }
 
-                Section("Profile photo") {
+                }
+                }
+                Section("Profile photo (optional)") {
                     HStack(spacing: 14) {
                         ZStack {
                             Circle()
@@ -788,12 +795,7 @@ struct ProfileView: View {
                             }
                         }
                     }
-                    .disabled(
-                        saving ||
-                        fullName
-                            .trimmingCharacters(in: .whitespacesAndNewlines)
-                            .isEmpty
-                    )
+                    .disabled(saving)
                 }
             }
         }
@@ -828,7 +830,10 @@ struct ProfileView: View {
         degreeLevel = p.degreeLevel ?? "Bachelor"
         targetRegions = p.targetRegions?.joined(separator: ", ") ?? ""
         targetCountries = p.targetCountries?.joined(separator: ", ") ?? ""
-        familyIncome = p.familyIncomeUSD.map { String($0) } ?? ""
+        wantsPersonalizedMatching = [
+            p.nationality, p.intendedMajor, p.residenceCountry, p.degreeLevel
+        ].contains { !($0 ?? "").isEmpty } ||
+        p.gpaValue != nil || p.ielts != nil
 
         if let community = try? await DataService.currentCommunityProfile(
             userId: userId
@@ -972,8 +977,7 @@ struct ProfileView: View {
                 degreeLevel: degreeLevel,
                 targetRegions: csv(targetRegions),
                 targetCountries: csv(targetCountries),
-                familyIncomeUSD: Double(familyIncome)
-            )
+             )
 
             try await DataService.updateCommunityProfile(
                 userId: userId,
