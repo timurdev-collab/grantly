@@ -1569,27 +1569,10 @@ private struct AdvisorApplicationView: View {
 
     private var expertiseStep: some View {
         Group {
-            Section("Your introduction") {
-                TextField(
-                    "One-line summary",
-                    text: $shortBio,
-                    axis: .vertical
-                )
-                .lineLimit(2...3)
-
-                TextField(
-                    "Professional background and experience",
-                    text: $bio,
-                    axis: .vertical
-                )
-                .lineLimit(5...10)
-
-                TextField(
-                    "How will you help students?",
-                    text: $mentoringApproach,
-                    axis: .vertical
-                )
-                .lineLimit(4...8)
+            Section("Profile information") {
+                Text("EduT no longer requests written biographies or personal introductions. Your advisor listing uses your title, experience, and expertise instead.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             Section("Expertise") {
@@ -1775,10 +1758,6 @@ private struct AdvisorApplicationView: View {
         }
 
         if step == 1 {
-            if bio.trimmed.count < 80 {
-                return L10n.string("Please add a little more detail to your professional background.")
-            }
-
             if csvValues(specialties).isEmpty {
                 return L10n.string("Please add at least one specialty.")
             }
@@ -1888,9 +1867,9 @@ private struct AdvisorApplicationView: View {
                 displayName: displayName.trimmed,
                 title: title.trimmed,
                 organization: organization.trimmed,
-                shortBio: shortBio.trimmed,
-                bio: bio.trimmed,
-                mentoringApproach: mentoringApproach.trimmed,
+                shortBio: "",
+                bio: "Professional educational advisor. Profile expertise and credentials are provided through the structured advisor application.",
+                mentoringApproach: "",
                 yearsExperience: Int(yearsExperience),
                 specialties: csvValues(specialties),
                 countries: csvValues(countries),
