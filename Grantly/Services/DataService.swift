@@ -301,63 +301,6 @@ enum DataService {
             .value
     }
 
-    static func liveKitCallCredentials(
-        callId: UUID
-    ) async throws -> LiveKitCallCredentials {
-        struct Body: Encodable {
-            let call_id: UUID
-        }
-
-        return try await supabase.functions.invoke(
-            "livekit-token",
-            options: FunctionInvokeOptions(
-                body: Body(call_id: callId)
-            )
-        )
-    }
-
-    static func createAdvisorCallSession(
-        assignmentId: UUID,
-        recordingRequested: Bool = false
-    ) async throws -> AdvisorCallSession {
-        struct Params: Encodable {
-            let p_assignment_id: UUID
-            let p_recording_requested: Bool
-        }
-
-        return try await supabase
-            .rpc(
-                "create_advisor_call_session",
-                params: Params(
-                    p_assignment_id: assignmentId,
-                    p_recording_requested: recordingRequested
-                )
-            )
-            .execute()
-            .value
-    }
-
-    static func setAdvisorCallRecordingConsent(
-        callId: UUID,
-        consent: Bool
-    ) async throws -> AdvisorCallSession {
-        struct Params: Encodable {
-            let p_call_id: UUID
-            let p_consent: Bool
-        }
-
-        return try await supabase
-            .rpc(
-                "set_advisor_call_recording_consent",
-                params: Params(
-                    p_call_id: callId,
-                    p_consent: consent
-                )
-            )
-            .execute()
-            .value
-    }
-
     static func availableAdvisors() async throws -> [AdvisorDirectoryProfile] {
         let rows: [AdvisorDirectoryProfile] = try await supabase
             .rpc("available_advisors")
