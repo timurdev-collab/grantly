@@ -14,7 +14,6 @@ struct StudentProfile: Codable, Identifiable {
     var degreeLevel: String?
     var targetRegions: [String]?
     var targetCountries: [String]?
-    var familyIncomeUSD: Double?
     var role: String
 
     enum CodingKeys: String, CodingKey {
@@ -30,7 +29,6 @@ struct StudentProfile: Codable, Identifiable {
         case degreeLevel = "degree_level"
         case targetRegions = "target_regions"
         case targetCountries = "target_countries"
-        case familyIncomeUSD = "family_income_usd"
         case role
     }
 }
