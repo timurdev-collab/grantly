@@ -108,6 +108,20 @@
             </array>
         </dict>
 
+        <!-- Advisor-authored professional biographies, introductions and service descriptions -->
+        <dict>
+            <key>NSPrivacyCollectedDataType</key>
+            <string>NSPrivacyCollectedDataTypeOtherUserContent</string>
+            <key>NSPrivacyCollectedDataTypeLinked</key>
+            <true/>
+            <key>NSPrivacyCollectedDataTypeTracking</key>
+            <false/>
+            <key>NSPrivacyCollectedDataTypePurposes</key>
+            <array>
+                <string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string>
+            </array>
+        </dict>
+
         <!-- Academic/profile attributes such as degree, GPA, IELTS and study preferences -->
         <dict>
             <key>NSPrivacyCollectedDataType</key>
