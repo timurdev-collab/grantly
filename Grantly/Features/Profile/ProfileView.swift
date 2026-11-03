@@ -204,7 +204,7 @@ struct ProfileView: View {
 
             VStack(alignment: .leading, spacing: 9) {
                 HStack {
-                    Text(L10n.string("Profile completeness"))
+                    Text(L10n.string("Optional matching details"))
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(Theme.premiumInk)
 
@@ -949,12 +949,13 @@ struct ProfileView: View {
         status = ""
         defer { saving = false }
 
-        if let value = Double(ielts), !(0...9).contains(value) {
+        if wantsPersonalizedMatching, let value = Double(ielts), !(0...9).contains(value) {
             status = L10n.string("IELTS must be between 0 and 9.")
             return
         }
 
-        if let gpa = Double(gpaValue),
+        if wantsPersonalizedMatching,
+           let gpa = Double(gpaValue),
            let scale = Double(gpaScale),
            (scale <= 0 || gpa < 0 || gpa > scale) {
             status = L10n.string("Please check your GPA and GPA scale.")
