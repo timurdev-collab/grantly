@@ -459,7 +459,7 @@ struct ScholarshipDetailView: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Theme.ink)
 
-                    Text("Open the official form inside EduT, keep your checklist, confirmation number, notes and progress together, then return to check the official portal status.")
+                    Text("Open the official form inside EduT, keep your checklist, confirmation number and progress together, then return to check the official portal status.")
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
                         .lineSpacing(3)
