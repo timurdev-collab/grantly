@@ -197,13 +197,20 @@ private fun EduTApp() {
     LaunchedEffect(tab, selectedScholarship?.id, showingAdvisors, showingCommunity, showingNotifications, authNavigationVersion) {
         pageScroll.scrollToItem(0, 0)
     }
-    BackHandler(enabled = selectedScholarship != null || showingAdvisors || showingCommunity || showingNotifications || tab == Tab.Advisor) {
+    // Android system Back should close the active detail/overlay first, then
+    // return from a secondary root tab to Home instead of exiting the app.
+    // Preserve the Advisor Portal's explicit return to Profile.
+    BackHandler(
+        enabled = selectedScholarship != null || showingAdvisors ||
+            showingCommunity || showingNotifications || tab != Tab.Home
+    ) {
         when {
             selectedScholarship != null -> selectedScholarship = null
             showingCommunity -> showingCommunity = false
             showingNotifications -> showingNotifications = false
+            showingAdvisors -> showingAdvisors = false
             tab == Tab.Advisor -> tab = Tab.Profile
-            else -> showingAdvisors = false
+            tab != Tab.Home -> tab = Tab.Home
         }
     }
     MaterialTheme(colorScheme = lightColorScheme(primary = Forest, background = Ivory, surface = Ivory)) {
