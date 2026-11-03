@@ -4,12 +4,25 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
-// Reuse client-safe public settings from the existing iOS project.
+// Read the explicit iOS Debug configuration as a compatibility fallback, not the
+// first matching value anywhere in project.yml (which also defines staging).
+// Android-specific Gradle properties can override both public client settings.
 val iosSettings = rootProject.file("../project.yml").takeIf { it.exists() }?.readLines().orEmpty()
-val catalogUrl = iosSettings.firstOrNull { it.trim().startsWith("SUPABASE_URL: https://") }
+val debugSettings = iosSettings.dropWhile { it.trim() != "Debug:" }
+    .drop(1).takeWhile { it.startsWith("          ") }
+fun debugSetting(name: String): String = debugSettings
+    .firstOrNull { it.trim().startsWith("$name: ") }
     ?.substringAfter(": ")?.trim().orEmpty()
-val catalogPublicKey = iosSettings.firstOrNull { it.trim().startsWith("SUPABASE_PUBLISHABLE_KEY: sb_publishable_") }
-    ?.substringAfter(": ")?.trim().orEmpty()
+val catalogUrl = providers.gradleProperty("edutSupabaseUrl").orNull
+    ?: debugSetting("SUPABASE_URL")
+val catalogPublicKey = providers.gradleProperty("edutSupabasePublishableKey").orNull
+    ?: debugSetting("SUPABASE_PUBLISHABLE_KEY")
+require(catalogUrl.startsWith("https://") && catalogUrl.endsWith(".supabase.co")) {
+    "Missing or invalid Android Supabase URL (edutSupabaseUrl)"
+}
+require(catalogPublicKey.startsWith("sb_publishable_")) {
+    "Missing Android publishable key (edutSupabasePublishableKey); never use a secret/service-role key"
+}
 
 android {
     namespace = "com.grantly.android"
