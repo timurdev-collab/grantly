@@ -22,8 +22,6 @@ struct ApplicationWorkspaceView: View {
     @State private var successMessage: String?
     @State private var showingPortal = false
     @State private var showingFileImporter = false
-    @State private var showingNewTask = false
-    @State private var newTaskTitle = ""
 
     private let statuses = [
         "Planning",
@@ -98,22 +96,6 @@ struct ApplicationWorkspaceView: View {
                     InAppBrowser(url: portalURL)
                         .ignoresSafeArea()
                 }
-            }
-            .alert(
-                "Add checklist item",
-                isPresented: $showingNewTask
-            ) {
-                TextField("Task", text: $newTaskTitle)
-
-                Button("Add") {
-                    Task { await addCustomTask() }
-                }
-
-                Button("Cancel", role: .cancel) {
-                    newTaskTitle = ""
-                }
-            } message: {
-                Text("Add a requirement or preparation step for this application.")
             }
             .alert(
                 "Application Center",
@@ -366,19 +348,6 @@ struct ApplicationWorkspaceView: View {
                     .foregroundStyle(Theme.ink)
 
                 Spacer()
-
-                Button {
-                    showingNewTask = true
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.caption.bold())
-                        .foregroundStyle(Theme.orangeSoft)
-                        .frame(width: 30, height: 30)
-                        .background(Theme.surfaceRaised)
-                        .clipShape(Circle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Add checklist item")
 
                 Toggle("", isOn: $documentsComplete)
                     .labelsHidden()
@@ -727,35 +696,6 @@ struct ApplicationWorkspaceView: View {
             successMessage = "Status updated to \(newStatus)."
         } catch {
             status = oldStatus
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    @MainActor
-    private func addCustomTask() async {
-        let cleaned = newTaskTitle.trimmingCharacters(
-            in: .whitespacesAndNewlines
-        )
-
-        guard !cleaned.isEmpty else {
-            return
-        }
-
-        do {
-            let nextPosition =
-                (tasks.map(\.position).max() ?? 0) + 10
-
-            try await DataService.addApplicationTask(
-                scholarshipId: scholarship.id,
-                title: cleaned,
-                position: nextPosition
-            )
-
-            newTaskTitle = ""
-            tasks = try await DataService.applicationTasks(
-                scholarshipId: scholarship.id
-            )
-        } catch {
             errorMessage = error.localizedDescription
         }
     }
