@@ -1194,7 +1194,7 @@ private struct PrivacyAndSafetyView: View {
         List {
             Section("Your data") {
                 Label(
-                    "Your academic profile and family income are private to your account.",
+                    "Your optional academic profile is private to your account. EduT does not ask for family income.",
                     systemImage: "lock.shield"
                 )
 
