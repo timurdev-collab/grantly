@@ -22,8 +22,6 @@ struct ProfileView: View {
     @State private var targetRegions = ""
     @State private var targetCountries = ""
     @State private var wantsPersonalizedMatching = false
-    @State private var bio = ""
-    @State private var visible = true
     @State private var status = ""
     @State private var saving = false
     @State private var showingDeleteAccount = false
@@ -441,86 +439,6 @@ struct ProfileView: View {
         )
     }
 
-    private var communityCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Community profile")
-                    .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
-
-                Spacer()
-
-                Label(
-                    visible ? "Community visible" : "Community hidden",
-                    systemImage: visible ? "eye.fill" : "eye.slash.fill"
-                )
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.blueSoft)
-            }
-
-            Text(
-                bio.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    ? L10n.string("Add a short bio so other students know your study interests.")
-                    : bio
-            )
-            .font(.subheadline)
-            .foregroundStyle(Theme.ink)
-            .lineSpacing(3)
-
-            HStack(spacing: 8) {
-                Image(systemName: "lock.fill")
-                    .foregroundStyle(Theme.muted)
-
-                Text("GPA, IELTS, income and residence details are never copied into your public community profile.")
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
-            }
-
-            NavigationLink {
-                CommunityView()
-            } label: {
-                Label(
-                    L10n.string("Open Student Community"),
-                    systemImage: "person.3.fill"
-                )
-                .font(.subheadline.weight(.semibold))
-                .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .background(Theme.surfaceRaised)
-                .foregroundStyle(Theme.ink)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .buttonStyle(.plain)
-            .accessibilityHint(
-                "Browse student profiles, messages, and safety controls"
-            )
-
-            NavigationLink {
-                MessagesView()
-            } label: {
-                Label(
-                    "Messages",
-                    systemImage: "bubble.left.and.bubble.right.fill"
-                )
-                .font(.subheadline.weight(.semibold))
-                .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .background(Theme.surfaceRaised)
-                .foregroundStyle(Theme.ink)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .buttonStyle(.plain)
-            .accessibilityHint("Open your private conversations")
-        }
-        .padding(14)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .overlay(
-            RoundedRectangle(cornerRadius: 15)
-                .stroke(Theme.ink.opacity(0.05))
-        )
-    }
-
     private var settingsSheet: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
@@ -836,8 +754,6 @@ struct ProfileView: View {
         if let community = try? await DataService.currentCommunityProfile(
             userId: userId
         ) {
-            bio = community.bio ?? ""
-            visible = community.isVisible ?? true
             avatarURL = community.avatarUrl
         }
     }
