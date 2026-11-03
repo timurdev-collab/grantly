@@ -122,21 +122,6 @@
             </array>
         </dict>
 
-        <!-- Family-income information used for scholarship matching -->
-        <dict>
-            <key>NSPrivacyCollectedDataType</key>
-            <string>NSPrivacyCollectedDataTypeOtherFinancialInfo</string>
-            <key>NSPrivacyCollectedDataTypeLinked</key>
-            <true/>
-            <key>NSPrivacyCollectedDataTypeTracking</key>
-            <false/>
-            <key>NSPrivacyCollectedDataTypePurposes</key>
-            <array>
-                <string>NSPrivacyCollectedDataTypePurposeProductPersonalization</string>
-                <string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string>
-            </array>
-        </dict>
-
         <!-- Academic/profile attributes such as degree, GPA, IELTS and study preferences -->
         <dict>
             <key>NSPrivacyCollectedDataType</key>
