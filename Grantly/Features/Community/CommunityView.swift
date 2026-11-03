@@ -1,8 +1,6 @@
 import AVKit
 import SwiftUI
-import LiveKit
 import UIKit
-import Combine
 
 struct AdvisorsView: View {
     @Environment(\.colorScheme) private var editorialScheme
@@ -18,7 +16,6 @@ struct AdvisorsView: View {
     @State private var requestingAdvisorID: UUID?
     @State private var errorMessage: String?
     @State private var chatDestination: AdvisorChatDestination?
-    @State private var callSession: AdvisorCallSession?
     @State private var search = ""
 
     private var filteredAdvisors: [AdvisorDirectoryProfile] {
@@ -258,9 +255,6 @@ struct AdvisorsView: View {
                 )
             }
         }
-        .sheet(item: $callSession) { session in
-            AdvisorCallPreparationView(session: session)
-        }
     }
 
     private func currentRegistrationCard(
@@ -325,10 +319,7 @@ struct AdvisorsView: View {
                     }
                     .buttonStyle(.plain)
 
-                    Button {
-                        Task {
-                            await prepareVideoCall(registration)
-                        }
+                }
                     } label: {
                         Label(
                             L10n.string("Video"),
@@ -642,20 +633,6 @@ struct AdvisorsView: View {
                 otherUserId: registration.advisorId,
                 title: registration.advisorName
             )
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    @MainActor
-    private func prepareVideoCall(
-        _ registration: AdvisorRegistration
-    ) async {
-        do {
-            callSession =
-                try await DataService.createAdvisorCallSession(
-                    assignmentId: registration.assignmentId
-                )
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -2151,323 +2128,6 @@ struct AdvisorChatDestination: Identifiable {
     let title: String
 
     var id: UUID { conversationId }
-}
-
-struct AdvisorCallPreparationView: View {
-    @Environment(\.dismiss) private var dismiss
-    @State var session: AdvisorCallSession
-    @StateObject private var call = AdvisorCallController()
-    @State private var recordingConsent = false
-    @State private var savingConsent = false
-    @State private var errorMessage: String?
-
-    var body: some View {
-        NavigationStack {
-            ZStack {
-                Theme.pageBackground
-                    .ignoresSafeArea()
-
-                VStack(spacing: 16) {
-                    ZStack(alignment: .bottomTrailing) {
-                        LiveKitTrackView(track: call.remoteVideoTrack)
-                            .background(Theme.surface)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                            .overlay {
-                                if call.remoteVideoTrack == nil {
-                                    VStack(spacing: 10) {
-                                        Image(systemName: "video.fill")
-                                            .font(.system(size: 28))
-                                            .foregroundStyle(Theme.accentSoft)
-
-                                        Text(
-                                            call.connected
-                                                ? "Waiting for the other participant"
-                                                : "Preparing secure video call"
-                                        )
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(Theme.premiumInk)
-                                    }
-                                }
-                            }
-
-                        LiveKitTrackView(track: call.localVideoTrack)
-                            .frame(width: 112, height: 154)
-                            .background(Theme.surfaceRaised)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .stroke(
-                                        Theme.ink.opacity(0.08),
-                                        lineWidth: 1
-                                    )
-                            )
-                            .padding(12)
-                    }
-                    .frame(maxHeight: .infinity)
-
-                    HStack(spacing: 12) {
-                        callControl(
-                            icon: call.microphoneEnabled
-                                ? "mic.fill"
-                                : "mic.slash.fill",
-                            active: call.microphoneEnabled
-                        ) {
-                            Task { await call.toggleMicrophone() }
-                        }
-
-                        callControl(
-                            icon: call.cameraEnabled
-                                ? "video.fill"
-                                : "video.slash.fill",
-                            active: call.cameraEnabled
-                        ) {
-                            Task { await call.toggleCamera() }
-                        }
-
-                        callControl(
-                            icon: "rectangle.on.rectangle",
-                            active: call.screenSharing
-                        ) {
-                            Task { await call.toggleScreenShare() }
-                        }
-
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "phone.down.fill")
-                                .font(.system(size: 18, weight: .bold))
-                                .frame(width: 52, height: 52)
-                                .background(Color.red)
-                                .foregroundStyle(.white)
-                                .clipShape(Circle())
-                        }
-                    }
-
-                    Toggle(
-                        "Allow session recording",
-                        isOn: $recordingConsent
-                    )
-                    .tint(Theme.accent)
-                    .onChange(of: recordingConsent) {
-                        Task { await updateRecordingConsent() }
-                    }
-
-                    Text(
-                        "Recording requires explicit consent from both the student and advisor. Screen sharing uses the iOS system capture permission."
-                    )
-                    .font(.caption)
-                    .foregroundStyle(Theme.premiumMuted)
-
-                    if let message = errorMessage ?? call.errorMessage {
-                        Text(message)
-                            .font(.caption)
-                            .foregroundStyle(.red)
-                    }
-                }
-                .padding()
-            }
-            .navigationTitle("Advisor Video Call")
-            .navigationBarTitleDisplayMode(.inline)
-            .task {
-                await connect()
-            }
-        }
-    }
-
-    private func callControl(
-        icon: String,
-        active: Bool,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button(action: action) {
-            Image(systemName: icon)
-                .font(.system(size: 17, weight: .semibold))
-                .frame(width: 52, height: 52)
-                .background(
-                    active
-                        ? Theme.accent
-                        : Theme.surfaceRaised
-                )
-                .foregroundStyle(
-                    active
-                        ? Theme.onAccent
-                        : Theme.ink
-                )
-                .clipShape(Circle())
-        }
-        .buttonStyle(.plain)
-    }
-
-    @MainActor
-    private func connect() async {
-        do {
-            let credentials =
-                try await DataService.liveKitCallCredentials(
-                    callId: session.id
-                )
-            try await call.connect(credentials)
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    @MainActor
-    private func updateRecordingConsent() async {
-        savingConsent = true
-        defer { savingConsent = false }
-
-        do {
-            session =
-                try await DataService
-                    .setAdvisorCallRecordingConsent(
-                        callId: session.id,
-                        consent: recordingConsent
-                    )
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-}
-
-private final class AdvisorCallController:
-    NSObject,
-    ObservableObject,
-    RoomDelegate,
-    @unchecked Sendable
-{
-    @Published var localVideoTrack: VideoTrack?
-    @Published var remoteVideoTrack: VideoTrack?
-    @Published var connected = false
-    @Published var cameraEnabled = false
-    @Published var microphoneEnabled = false
-    @Published var screenSharing = false
-    @Published var errorMessage: String?
-
-    lazy var room = Room(delegate: self)
-
-    @MainActor
-    func connect(
-        _ credentials: LiveKitCallCredentials
-    ) async throws {
-        do {
-            try await room.connect(
-                url: credentials.url,
-                token: credentials.token
-            )
-
-            try await room.localParticipant
-                .setCamera(enabled: true)
-            try await room.localParticipant
-                .setMicrophone(enabled: true)
-
-            connected = true
-            cameraEnabled = true
-            microphoneEnabled = true
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
-            throw error
-        }
-    }
-
-    @MainActor
-    func toggleCamera() async {
-        do {
-            let next = !cameraEnabled
-            try await room.localParticipant
-                .setCamera(enabled: next)
-            cameraEnabled = next
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    @MainActor
-    func toggleMicrophone() async {
-        do {
-            let next = !microphoneEnabled
-            try await room.localParticipant
-                .setMicrophone(enabled: next)
-            microphoneEnabled = next
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    @MainActor
-    func toggleScreenShare() async {
-        do {
-            let next = !screenSharing
-            try await room.localParticipant
-                .setScreenShare(enabled: next)
-            screenSharing = next
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    func room(
-        _: Room,
-        participant _: LocalParticipant,
-        didPublishTrack publication: LocalTrackPublication
-    ) {
-        guard let track = publication.track as? VideoTrack else {
-            return
-        }
-
-        DispatchQueue.main.async {
-            if publication.source == .camera {
-                self.localVideoTrack = track
-            }
-        }
-    }
-
-    func room(
-        _: Room,
-        participant _: RemoteParticipant,
-        didSubscribeTrack publication: RemoteTrackPublication
-    ) {
-        guard let track = publication.track as? VideoTrack else {
-            return
-        }
-
-        DispatchQueue.main.async {
-            self.remoteVideoTrack = track
-        }
-    }
-
-    func room(
-        _: Room,
-        participant _: RemoteParticipant,
-        didUnsubscribeTrack publication: RemoteTrackPublication
-    ) {
-        guard publication.track is VideoTrack else {
-            return
-        }
-
-        DispatchQueue.main.async {
-            self.remoteVideoTrack = nil
-        }
-    }
-}
-
-private struct LiveKitTrackView: UIViewRepresentable {
-    let track: VideoTrack?
-
-    func makeUIView(context: Context) -> VideoView {
-        let view = VideoView()
-        view.clipsToBounds = true
-        return view
-    }
-
-    func updateUIView(
-        _ uiView: VideoView,
-        context: Context
-    ) {
-        uiView.track = track
-    }
 }
 
 struct CommunityView: View {
