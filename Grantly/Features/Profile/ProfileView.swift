@@ -18,7 +18,7 @@ struct ProfileView: View {
     @State private var gpaScale = "10"
     @State private var ielts = ""
     @State private var intendedMajor = ""
-    @State private var degreeLevel = "Bachelor"
+    @State private var degreeLevel = ""
     @State private var targetRegions = ""
     @State private var targetCountries = ""
     @State private var wantsPersonalizedMatching = false
@@ -697,8 +697,8 @@ struct ProfileView: View {
                     TextField("Intended major", text: $intendedMajor)
 
                     Picker("Degree", selection: $degreeLevel) {
-                        ForEach(["Bachelor", "Master", "PhD"], id: \.self) {
-                            Text($0)
+                        ForEach(["", "Bachelor", "Master", "PhD"], id: \.self) {
+                            Text($0.isEmpty ? "Not selected" : $0)
                         }
                     }
                 }
@@ -713,8 +713,6 @@ struct ProfileView: View {
                         "Target countries, comma separated",
                         text: $targetCountries
                     )
-
-                 }
 
                 }
                 }
@@ -780,7 +778,7 @@ struct ProfileView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button("Skip for now") {
                         showingEditProfile = false
                     }
                 }
@@ -827,7 +825,7 @@ struct ProfileView: View {
         gpaScale = p.gpaScale.map { String($0) } ?? "10"
         ielts = p.ielts.map { String($0) } ?? ""
         intendedMajor = p.intendedMajor ?? ""
-        degreeLevel = p.degreeLevel ?? "Bachelor"
+        degreeLevel = p.degreeLevel ?? ""
         targetRegions = p.targetRegions?.joined(separator: ", ") ?? ""
         targetCountries = p.targetCountries?.joined(separator: ", ") ?? ""
         wantsPersonalizedMatching = [
@@ -976,8 +974,8 @@ struct ProfileView: View {
                 intendedMajor: intendedMajor.trimmingCharacters(in: .whitespacesAndNewlines),
                 degreeLevel: degreeLevel,
                 targetRegions: csv(targetRegions),
-                targetCountries: csv(targetCountries),
-             )
+                targetCountries: csv(targetCountries)
+            )
 
             try await DataService.updateCommunityProfile(
                 userId: userId,
