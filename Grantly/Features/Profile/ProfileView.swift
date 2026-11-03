@@ -962,33 +962,47 @@ struct ProfileView: View {
         }
 
         do {
+            // Only persist academic information after the student opts into matching.
+            // Turning matching off also clears previously stored academic fields.
             try await DataService.updateProfile(
                 userId: userId,
                 fullName: fullName.trimmingCharacters(in: .whitespacesAndNewlines),
-                nationality: nationality.trimmingCharacters(in: .whitespacesAndNewlines),
-                residenceCountry: residenceCountry.trimmingCharacters(in: .whitespacesAndNewlines),
-                graduationYear: Int(graduationYear),
-                gpaValue: Double(gpaValue),
-                gpaScale: Double(gpaScale),
-                ielts: Double(ielts),
-                intendedMajor: intendedMajor.trimmingCharacters(in: .whitespacesAndNewlines),
-                degreeLevel: degreeLevel,
-                targetRegions: csv(targetRegions),
-                targetCountries: csv(targetCountries)
+                nationality: wantsPersonalizedMatching ? nationality.trimmingCharacters(in: .whitespacesAndNewlines) : "",
+                residenceCountry: wantsPersonalizedMatching ? residenceCountry.trimmingCharacters(in: .whitespacesAndNewlines) : "",
+                graduationYear: wantsPersonalizedMatching ? Int(graduationYear) : nil,
+                gpaValue: wantsPersonalizedMatching ? Double(gpaValue) : nil,
+                gpaScale: wantsPersonalizedMatching && !gpaValue.isEmpty ? Double(gpaScale) : nil,
+                ielts: wantsPersonalizedMatching ? Double(ielts) : nil,
+                intendedMajor: wantsPersonalizedMatching ? intendedMajor.trimmingCharacters(in: .whitespacesAndNewlines) : "",
+                degreeLevel: wantsPersonalizedMatching ? degreeLevel : "",
+                targetRegions: wantsPersonalizedMatching ? csv(targetRegions) : [],
+                targetCountries: wantsPersonalizedMatching ? csv(targetCountries) : []
             )
 
             try await DataService.updateCommunityProfile(
                 userId: userId,
                 displayName: fullName.trimmingCharacters(in: .whitespacesAndNewlines),
-                nationality: nationality.trimmingCharacters(in: .whitespacesAndNewlines),
-                major: intendedMajor.trimmingCharacters(in: .whitespacesAndNewlines),
-                targetRegions: csv(targetRegions),
-                targetCountries: csv(targetCountries),
+                nationality: wantsPersonalizedMatching ? nationality.trimmingCharacters(in: .whitespacesAndNewlines) : "",
+                major: wantsPersonalizedMatching ? intendedMajor.trimmingCharacters(in: .whitespacesAndNewlines) : "",
+                targetRegions: wantsPersonalizedMatching ? csv(targetRegions) : [],
+                targetCountries: wantsPersonalizedMatching ? csv(targetCountries) : [],
                 bio: "",
                 isVisible: false
             )
 
             profile = try await DataService.currentProfile(userId: userId)
+            if !wantsPersonalizedMatching {
+                nationality = ""
+                residenceCountry = ""
+                graduationYear = ""
+                gpaValue = ""
+                gpaScale = "10"
+                ielts = ""
+                intendedMajor = ""
+                degreeLevel = ""
+                targetRegions = ""
+                targetCountries = ""
+            }
             status = L10n.string("Profile saved.")
         } catch {
             status = error.localizedDescription
