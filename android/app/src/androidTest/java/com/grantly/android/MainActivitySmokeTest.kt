@@ -19,6 +19,25 @@ import org.junit.runner.RunWith
 class MainActivitySmokeTest {
     @get:Rule val activityRule = ActivityScenarioRule(MainActivity::class.java)
 
+    @Test fun systemBackFromExploreReturnsHomeWithoutExiting() {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        device.waitForIdle(5_000)
+        assertNotNull("EduT Home should launch",
+            device.wait(Until.findObject(By.textContains("Scholarships picked")), 45_000))
+
+        val explore = device.wait(Until.findObject(By.text("Explore")), 15_000)
+        assertNotNull("Explore tab should be available", explore)
+        explore.click()
+        assertNotNull("Explore destination should open",
+            device.wait(Until.findObject(By.text("Discover")), 15_000))
+
+        device.pressBack()
+        assertNotNull("System Back should return to Home",
+            device.wait(Until.findObject(By.textContains("Scholarships picked")), 15_000))
+        assertNotNull("Activity should remain open with primary navigation",
+            device.wait(Until.findObject(By.text("Explore")), 10_000))
+    }
+
     @Test fun homeOpensAndPrimaryNavigationRemainsUsable() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         // A cold API-35 emulator may take longer to expose Compose semantics.
