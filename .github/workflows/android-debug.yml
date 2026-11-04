@@ -69,8 +69,11 @@ jobs:
           APK=app/build/outputs/apk/debug/app-debug.apk
           AAPT="$(find "$ANDROID_HOME/build-tools" -maxdepth 2 -type f -name aapt | sort -V | tail -n 1)"
           test -x "$AAPT"
+          "$AAPT" dump badging "$APK" > /tmp/edut-apk-badging.txt
+          grep -q "^package: name='com.grantly.android' " /tmp/edut-apk-badging.txt
+          grep -q "^sdkVersion:'26'" /tmp/edut-apk-badging.txt
           "$AAPT" dump permissions "$APK" > /tmp/edut-apk-permissions.txt
-          if grep -E 'android.permission.(CAMERA|RECORD_AUDIO|MODIFY_AUDIO_SETTINGS)' /tmp/edut-apk-permissions.txt; then
+          if grep -E 'android[.]permission[.](CAMERA|RECORD_AUDIO|MODIFY_AUDIO_SETTINGS)' /tmp/edut-apk-permissions.txt; then
             echo "Discontinued calling permissions found in packaged APK."
             exit 1
           fi
