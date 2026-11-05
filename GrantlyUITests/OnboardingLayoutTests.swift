@@ -6,25 +6,38 @@ final class OnboardingLayoutTests: XCTestCase {
     }
 
     @MainActor
-    func testOnboardingNavigationAndSignInRemainReachable() throws {
+    func testSingleWelcomePageAndSignInRemainReachable() throws {
         let app = XCUIApplication()
         app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
 
         let primary = app.buttons["onboarding.primary"]
         let signIn = app.buttons["onboarding.signIn"]
-        XCTAssertTrue(primary.waitForExistence(timeout: 20))
 
-        for page in 1...3 {
-            XCTAssertTrue(primary.isHittable, "Primary action must remain reachable on page \(page)")
-            XCTAssertTrue(signIn.isHittable, "Returning users must be able to sign in on every page")
-            capture("Onboarding-\(page)")
-            if page < 3 { primary.tap() }
-        }
+        XCTAssertTrue(primary.waitForExistence(timeout: 20))
+        XCTAssertTrue(primary.isHittable, "Get started must be reachable on the single welcome page")
+        XCTAssertTrue(signIn.isHittable, "Returning users must be able to sign in")
+        XCTAssertTrue(app.windows.firstMatch.frame.contains(primary.frame), "Primary control must fit on screen")
+        XCTAssertTrue(app.windows.firstMatch.frame.contains(signIn.frame), "Sign-in control must fit on screen")
+        capture("Onboarding-single-page")
 
         signIn.tap()
         XCTAssertTrue(app.staticTexts["auth.login.title"].waitForExistence(timeout: 10))
         capture("Sign-in")
+    }
+
+    @MainActor
+    func testGetStartedOpensAccountCreation() throws {
+        let app = XCUIApplication()
+        app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launch()
+
+        let primary = app.buttons["onboarding.primary"]
+        XCTAssertTrue(primary.waitForExistence(timeout: 20))
+        XCTAssertTrue(primary.isHittable)
+        primary.tap()
+        XCTAssertTrue(app.staticTexts["Create your account"].waitForExistence(timeout: 10))
+        capture("Create-account")
     }
 
     @MainActor
@@ -37,16 +50,13 @@ final class OnboardingLayoutTests: XCTestCase {
         app.launch()
 
         let primary = app.buttons["onboarding.primary"]
+        let signIn = app.buttons["onboarding.signIn"]
         XCTAssertTrue(primary.waitForExistence(timeout: 20))
-        for page in 1...3 {
-            XCTAssertTrue(primary.isHittable)
-            let signIn = app.buttons["onboarding.signIn"]
-            XCTAssertTrue(signIn.isHittable)
-            XCTAssertTrue(app.windows.firstMatch.frame.contains(signIn.frame), "The complete sign-in control must fit on screen")
-            XCTAssertTrue(app.windows.firstMatch.frame.contains(primary.frame), "The complete primary control must fit on screen")
-            capture("Onboarding-large-text-\(page)")
-            if page < 3 { primary.tap() }
-        }
+        XCTAssertTrue(primary.isHittable, "Get started must remain accessible with large text")
+        XCTAssertTrue(signIn.isHittable, "Sign in must remain accessible with large text")
+        XCTAssertTrue(app.windows.firstMatch.frame.contains(signIn.frame), "The complete sign-in control must fit on screen")
+        XCTAssertTrue(app.windows.firstMatch.frame.contains(primary.frame), "The complete primary control must fit on screen")
+        capture("Onboarding-large-text")
     }
 
     @MainActor
