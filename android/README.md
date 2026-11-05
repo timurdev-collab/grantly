@@ -29,6 +29,32 @@ GitHub Actions artifacts expire after 14 days; the artifact for the newest succe
 
 LiveKit video/audio calling is discontinued. Do not add call sessions, call rooms, call-token requests, camera/microphone permissions, or LiveKit dependencies. Preserve text messaging, advisor biographies, and advisor YouTube introduction links. The legacy server endpoint is outside the Android release workflow; its deployed state must be assessed separately, without modifying production infrastructure.
 
+## Authenticated parity verification (disposable accounts only)
+
+The green debug-APK and guest emulator workflows are **not** evidence that these flows work.
+Use separate disposable student and approved-advisor accounts, plus a disposable account
+reserved for deletion. Never use a production person's records or real payments. Record
+the APK commit SHA, Android OS/device, account role, steps, expected result, actual result,
+and a redacted screenshot/log for every test. Do not paste credentials or access tokens
+into issues, screenshots or CI logs.
+
+| Journey | Verification steps | Pass criteria |
+| --- | --- | --- |
+| Authentication | Sign up, sign in, force-stop/relaunch, refresh an expired session, sign out, request password reset | Correct session restoration and recovery; no private content after sign-out |
+| Scholarships | Search, filter, inspect eligibility, save/unsave, compare profile-based matches | Consistent results, correct account-scoped saves and clear match caveats |
+| Applications | Update status/notes, tasks/due dates, upload/delete a disposable document | Changes persist after relaunch; no other user's private records are visible |
+| Community | Create/edit/delete text post, like/comment/report, publish photo and MP4, interrupt upload | Visibility/RLS respected; no orphaned public posts; interruption and rollback behavior recorded |
+| Messaging | Send and receive text between disposable users, refresh/relaunch, block/report where offered | Correct recipient isolation; no audio/video calling entry points |
+| Advisors | View biography and YouTube introduction, request consultation, inspect approved-advisor portal, test permitted student/consultation transitions | Role and approval gates respected; status changes match server responses; no call UI |
+| Account deletion | Delete the deletion-only disposable account and attempt to sign in again | Server confirms deletion before local credentials are cleared; account cannot authenticate |
+| Privacy and permissions | Inspect public Community profile vs private academic profile; inspect installed app permissions | No private GPA/IELTS/income exposure; no camera/microphone/calling permissions |
+
+Repeat critical journeys on a physical Android device. Mark each row **not tested** until
+there is actual evidence; distinguish a failed test from an untested feature. Approved-advisor
+profile editing and server-side atomic status enforcement cannot be fixed by bypassing
+backend authorization in the Android client. Preserve text messaging, advisor biographies
+and YouTube links; do not restore LiveKit or any audio/video calling features.
+
 ## Required release gates
 
 - Compare student, advisor and administrator screens and navigation with iOS; close remaining visual, accessibility, localization and functional gaps.
