@@ -1,0 +1,383 @@
+{
+  "package_version": 1,
+  "prepared_at_utc": "2026-10-24",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "scope": "Official programme evidence for staging review; not approved or applied",
+  "baseline_staging_readback": {
+    "observed_at_utc": "2026-10-24T02:23:39.496599Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_values": 207,
+    "reviewer_attributed": 0,
+    "source_candidates": 636,
+    "admin_logs": 8,
+    "auth_uid": null,
+    "is_admin": false
+  },
+  "published_records_investigated": [
+    {
+      "id": "8016dd8d-1697-4e3d-9859-7455c8a4ce99",
+      "title": "Yenching Academy Scholarship",
+      "action": "correct_existing_needs_review",
+      "fields": [
+        {
+          "field_name": "application_cycle",
+          "proposed_value": "September 2027 cohort",
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm",
+          "evidence_note": "Applications opened September 1 2026.",
+          "accepted": false
+        },
+        {
+          "field_name": "deadline",
+          "proposed_value": "2026-11-30",
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm",
+          "evidence_note": "9:00 am Beijing time; partner-university preselection may close earlier.",
+          "accepted": false
+        },
+        {
+          "field_name": "degree_levels",
+          "proposed_value": [
+            "Master"
+          ],
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm",
+          "evidence_note": "Interdisciplinary China Studies master's degree.",
+          "accepted": false
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "proposed_value": "International route: non-Chinese citizens with valid passport; HMT route has separate requirements",
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm",
+          "evidence_note": "Do not use ALL as unrestricted eligibility.",
+          "accepted": false
+        },
+        {
+          "field_name": "min_ielts",
+          "proposed_value": 7,
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm",
+          "evidence_note": "IELTS Academic overall 7.0, with exemptions for qualifying international applicants.",
+          "accepted": false
+        },
+        {
+          "field_name": "toefl_ibt_min",
+          "proposed_value": 100,
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm",
+          "evidence_note": "TOEFL iBT overall 100; 2027 source explicitly lists accepted test modes and score-report rules.",
+          "accepted": false
+        },
+        {
+          "field_name": "sat_required",
+          "proposed_value": false,
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm",
+          "evidence_note": "SAT is not listed as a requirement.",
+          "accepted": false
+        },
+        {
+          "field_name": "funding_details",
+          "proposed_value": "Tuition, accommodation, monthly stipend, one round-trip fare, field-study costs",
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm",
+          "evidence_note": "Do not invent stipend amount.",
+          "accepted": false
+        }
+      ],
+      "provenance_current": 0
+    },
+    {
+      "id": "b9b20deb-9312-4a0f-a70d-feb75d2abdb1",
+      "title": "KAIST International Student Scholarship",
+      "action": "reconcile_duplicate_then_correct",
+      "duplicate_with": "efd87e68-3a6e-4736-bb8a-5916575b55d7",
+      "fields": [
+        {
+          "field_name": "application_cycle",
+          "proposed_value": "2027 undergraduate entry",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+          "evidence_note": "Early and regular tracks are distinct.",
+          "accepted": false
+        },
+        {
+          "field_name": "deadline",
+          "proposed_value": "2027-01-14",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+          "evidence_note": "Regular Fall 2027 deadline 18:00 KST; early deadline 2026-10-22 has passed; single deadline field should not conceal tracks.",
+          "accepted": false
+        },
+        {
+          "field_name": "deadline_notes",
+          "proposed_value": "Early 2026-10-22 18:00 KST (closed); regular 2027-01-14 18:00 KST; no separate scholarship application",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+          "evidence_note": "Scholarship follows admissions application.",
+          "accepted": false
+        },
+        {
+          "field_name": "stipend",
+          "proposed_value": "KRW 350,000/month",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+          "evidence_note": "Full tuition 8 semesters, health insurance, GPA >2.7/4.3 after freshman year.",
+          "accepted": false
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "proposed_value": "Foreign citizens meeting KAIST international admissions nationality/parental or education conditions",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub02",
+          "evidence_note": "Korean dual citizens ineligible.",
+          "accepted": false
+        },
+        {
+          "field_name": "min_ielts",
+          "proposed_value": "Review as recommended admission benchmark, not universal mandatory scholarship threshold",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+          "evidence_note": "Do not convert recommended IELTS 6.5 into an unconditional minimum without current 2027 guide.",
+          "accepted": false
+        },
+        {
+          "field_name": "sat_required",
+          "proposed_value": false,
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+          "evidence_note": "No evidence that SAT specifically is mandatory; distinguish other exam evidence from SAT.",
+          "accepted": false
+        }
+      ],
+      "provenance_current": 0
+    },
+    {
+      "id": "efd87e68-3a6e-4736-bb8a-5916575b55d7",
+      "title": "KAIST Scholarship for International Undergraduate Students",
+      "action": "reconcile_duplicate_then_correct",
+      "duplicate_with": "b9b20deb-9312-4a0f-a70d-feb75d2abdb1",
+      "fields": [
+        {
+          "field_name": "deadline",
+          "proposed_value": "2027-01-14",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+          "evidence_note": "The current 2026-10-22 deadline is the expired early track, not the last available 2027 intake deadline.",
+          "accepted": false
+        },
+        {
+          "field_name": "deadline_notes",
+          "proposed_value": "Early 2026-10-22 18:00 KST closed; regular 2027-01-14 18:00 KST; no separate scholarship application",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+          "evidence_note": "Admission dates, not standalone scholarship deadlines.",
+          "accepted": false
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "proposed_value": "Qualifying non-Korean citizens; parental/education eligibility applies",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub02",
+          "evidence_note": "Do not advertise unrestricted ALL.",
+          "accepted": false
+        },
+        {
+          "field_name": "tuition_coverage",
+          "proposed_value": "Full tuition exemption for 8 semesters",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+          "evidence_note": "Maintain GPA above 2.7/4.3 after freshman year.",
+          "accepted": false
+        },
+        {
+          "field_name": "stipend",
+          "proposed_value": "KRW 350,000/month and health insurance",
+          "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+          "evidence_note": "No separate scholarship application.",
+          "accepted": false
+        }
+      ],
+      "provenance_current": 11
+    },
+    {
+      "id": "65815cac-512b-4017-ba95-ba4039c47654",
+      "title": "KAIST Scholarship for International Graduate Students",
+      "action": "correct_existing_needs_review",
+      "fields": [
+        {
+          "field_name": "application_cycle",
+          "proposed_value": "Spring 2027 closed; Fall 2027 dates TBA",
+          "source_url": "https://admission.kaist.ac.kr/intl-graduate/Admission/YearlyTimelines",
+          "evidence_note": "Spring application August 18 to September 1, 2026; Fall 2027 not announced.",
+          "accepted": false
+        },
+        {
+          "field_name": "deadline",
+          "proposed_value": null,
+          "source_url": "https://admission.kaist.ac.kr/intl-graduate/Admission/YearlyTimelines",
+          "evidence_note": "Do not invent Fall 2027 application deadline.",
+          "accepted": false
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "proposed_value": "International applicants meeting KAIST non-Korean citizenship and other admission rules",
+          "source_url": "https://admission.kaist.ac.kr/intl-graduate/Admission/Eligibility",
+          "evidence_note": "Korean citizenship excluded.",
+          "accepted": false
+        },
+        {
+          "field_name": "min_ielts",
+          "proposed_value": 6.5,
+          "source_url": "https://admission.kaist.ac.kr/intl-graduate/Admission/Eligibility",
+          "evidence_note": "IELTS Academic 6.5 admission threshold, subject to documented exemptions.",
+          "accepted": false
+        },
+        {
+          "field_name": "toefl_ibt_min",
+          "proposed_value": "83 before Jan 21 2026; 4.5 for tests on or after Jan 21 2026",
+          "source_url": "https://admission.kaist.ac.kr/intl-graduate/Admission/Eligibility",
+          "evidence_note": "Official KAIST admissions page shows two TOEFL scales; do not combine them.",
+          "accepted": false
+        },
+        {
+          "field_name": "funding_details",
+          "proposed_value": "Full tuition, national health insurance, monthly stipend varies by department and research involvement",
+          "source_url": "https://admission.kaist.ac.kr/intl-graduate/FinancialSupport/Scholarship/KAISTScholarship/",
+          "evidence_note": "No universal fixed stipend.",
+          "accepted": false
+        },
+        {
+          "field_name": "degree_levels",
+          "proposed_value": [
+            "Master",
+            "PhD"
+          ],
+          "source_url": "https://admission.kaist.ac.kr/intl-graduate/FinancialSupport/Scholarship/KAISTScholarship/",
+          "evidence_note": "KGPS and KPS are competitive subaward routes, not automatically additional umbrella records.",
+          "accepted": false
+        }
+      ],
+      "provenance_current": 0
+    },
+    {
+      "id": "21866729-2e48-4281-a4fa-5b5df578e03a",
+      "title": "Global Korea Scholarship",
+      "action": "correct_existing_needs_review",
+      "fields": [
+        {
+          "field_name": "application_cycle",
+          "proposed_value": "2027 undergraduate guidelines published September 9 and 23 2026; 2027 graduate guidelines not yet established",
+          "source_url": "https://www.studyinkorea.go.kr/ko/notice/scholarshipsList.do",
+          "evidence_note": "Different undergraduate and graduate application calendars.",
+          "accepted": false
+        },
+        {
+          "field_name": "deadline",
+          "proposed_value": null,
+          "source_url": "https://www.studyinkorea.go.kr/ko/notice/scholarshipsList.do",
+          "evidence_note": "Embassy/university track deadlines vary; no universal deadline.",
+          "accepted": false
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "proposed_value": "Eligible designated non-Korean citizenship categories; check 2027 programme/country guidelines",
+          "source_url": "https://www.studyinkorea.go.kr/ko/notice/scholarshipsList.do",
+          "evidence_note": "Applicant and parents generally require non-Korean citizenship; country quotas apply.",
+          "accepted": false
+        },
+        {
+          "field_name": "funding_details",
+          "proposed_value": "Airfare, Korean-language training, tuition and monthly allowance subject to GKS track",
+          "source_url": "https://www.studyinkorea.go.kr/ko/notice/scholarshipsList.do",
+          "evidence_note": "Do not assume identical support for all routes.",
+          "accepted": false
+        },
+        {
+          "field_name": "degree_levels",
+          "proposed_value": [
+            "Bachelor",
+            "Master",
+            "PhD"
+          ],
+          "source_url": "https://www.studyinkorea.go.kr/ko/notice/scholarshipsList.do",
+          "evidence_note": "Record umbrella scope; cycle status separately by degree.",
+          "accepted": false
+        }
+      ],
+      "provenance_current": 5
+    },
+    {
+      "id": "1eff53d8-8f3e-4892-88c9-e3665fa63bff",
+      "title": "CAS-ANSO Scholarship (Degree Program)",
+      "action": "maintain_historical_cycle_no_2027_inference",
+      "fields": [
+        {
+          "field_name": "application_cycle",
+          "proposed_value": "2026 degree-program call",
+          "source_url": "https://www.anso.org.cn/programmes/talent/scholarship/202510/t20251015_786021.html",
+          "evidence_note": "Opened October 15 2025.",
+          "accepted": false
+        },
+        {
+          "field_name": "deadline",
+          "proposed_value": "2026-01-31",
+          "source_url": "https://www.anso.org.cn/programmes/talent/scholarship/202510/t20251015_786021.html",
+          "evidence_note": "2026 deadline Beijing time; expired.",
+          "accepted": false
+        },
+        {
+          "field_name": "deadline_notes",
+          "proposed_value": "2027 application cycle not yet officially confirmed; retain 2026 historical deadline without implying open status",
+          "source_url": "https://www.anso.org.cn/programmes/talent/scholarship/202510/t20251015_786021.html",
+          "evidence_note": "No 2027 deadline found on official programme call.",
+          "accepted": false
+        },
+        {
+          "field_name": "degree_levels",
+          "proposed_value": [
+            "Master",
+            "PhD"
+          ],
+          "source_url": "https://www.anso.org.cn/programmes/talent/scholarship/202510/t20251015_786021.html",
+          "evidence_note": "USTC and UCAS degree programme; do not confuse with nondegree CAS-ANSO Fellowship.",
+          "accepted": false
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "proposed_value": "Check current official nationality and programme restrictions before setting ALL",
+          "source_url": "https://www.anso.org.cn/programmes/talent/scholarship/202510/t20251015_786021.html",
+          "evidence_note": "Programme requires eligibility under international USTC/UCAS admissions.",
+          "accepted": false
+        }
+      ],
+      "provenance_current": 9
+    }
+  ],
+  "candidate_routes": [
+    {
+      "title": "KAIST Global Presidential Scholarship (KGPS)",
+      "official_url": "https://admission.kaist.ac.kr/intl-graduate/FinancialSupport/Scholarship/KAISTScholarship/",
+      "degree": "Master or integrated Master-PhD",
+      "funding": "Full tuition and KRW 1,000,000/month for four regular semesters",
+      "selection": "Automatic consideration among KAIST scholarship applicants; competitive department-head recommendation",
+      "status": "candidate_only",
+      "duplicate_guard": "Subaward within existing KAIST graduate scholarship; do not independently count until identity and overlap adjudicated."
+    },
+    {
+      "title": "KAIST Prestige Scholarship for International Ph.D. Students (KPS)",
+      "official_url": "https://admission.kaist.ac.kr/intl-graduate/FinancialSupport/Scholarship/KAISTScholarship/",
+      "degree": "PhD or integrated Master-PhD in PhD stage",
+      "funding": "Full tuition and KRW 300,000/month for eight regular semesters",
+      "selection": "Competitive department-head recommendation and college-dean decision",
+      "status": "candidate_only",
+      "duplicate_guard": "Subaward within existing KAIST graduate scholarship; no automatic extra count."
+    },
+    {
+      "title": "Jardine-Fulbright Postgraduate Scholarship Scheme",
+      "official_url": "https://www.jardine-foundation.org/our-stories/foundation-news/2025/launching-new-partnership-with-fulbright-university-vietnam",
+      "degree": "Master's at Fulbright University Vietnam",
+      "funding": "Tuition-fee support; contingent on academic progress",
+      "selection": "Vietnamese postgraduate students; academic, leadership, contribution and need criteria",
+      "status": "hold_cycle_unconfirmed",
+      "duplicate_guard": "Distinct from discontinued Jardine Oxford/Cambridge undergraduate scheme; verify 2027 call before drafting."
+    }
+  ],
+  "safeguards": [
+    "No direct SQL scholarship writes; use authenticated admin review and audited publication only.",
+    "Every field suggestion is unaccepted; no verified flags or provenance rows inserted.",
+    "Two KAIST undergraduate records share an official programme URL; reconcile before counting.",
+    "Separate programme deadlines from admissions deadlines and distinguish open from closed cycles.",
+    "Do not fabricate IELTS/TOEFL/SAT minima or infer new application cycles.",
+    "No production changes before staging approval and relevant CI."
+  ],
+  "staging_edits_succeeded": 0,
+  "publications_succeeded": 0
+}

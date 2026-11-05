@@ -1,0 +1,932 @@
+{
+  "document_type": "UNAPPLIED_CATALOG_QA_EVIDENCE",
+  "project": "cbzriyarlvpmtfbjgede",
+  "repo": "timurdev-collab/grantly",
+  "observed_utc": "2026-10-23T14:24:03Z",
+  "scope": "Staging-only research; no admin approval or publication",
+  "before_readback": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_logs": 8
+  },
+  "published_corrections": [
+    {
+      "id": "8016dd8d-1697-4e3d-9859-7455c8a4ce99",
+      "title": "Yenching Academy Scholarship",
+      "status": "published",
+      "verification_status": "needs_review",
+      "source": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm",
+      "proposed_fields": {
+        "official_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm",
+        "application_cycle": "September 2027 intake",
+        "deadline": "2026-11-30",
+        "deadline_notes": "International and HMT routes: 09:00 Beijing time; partner university applicants may face earlier internal nomination; mainland Chinese route separately governed.",
+        "min_ielts": 7,
+        "english_test_notes": "TOEFL iBT 100 or listed equivalents; exemptions for qualifying international native English speakers / graduates of English-taught degrees; special rules for HMT and mainland candidates; tests after 2025-09-01.",
+        "eligibility_notes": "International route requires non-Chinese citizenship and valid passport; ALL is too broad unless route restrictions are represented."
+      },
+      "evidence": [
+        {
+          "field": "deadline",
+          "summary": "2027 international and HMT deadline is 2026-11-30 09:00 Beijing",
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm"
+        },
+        {
+          "field": "min_ielts",
+          "summary": "IELTS Academic 7.0 and TOEFL iBT 100 subject to exemptions",
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm"
+        },
+        {
+          "field": "funding",
+          "summary": "Tuition, accommodation, monthly stipend, one round trip and field study costs",
+          "source_url": "https://yenchingacademy.pku.edu.cn/ADMISSIONS.htm"
+        }
+      ]
+    },
+    {
+      "id": "d6b96d66-202c-4b0f-b717-93fc15fca977",
+      "title": "VLIRUOS ICP Connect Study Scholarships",
+      "status": "published",
+      "verification_status": "curated",
+      "source": "https://www.vliruos.be/get-funded/study-scholarships",
+      "proposed_fields": {
+        "application_cycle": "2027/28 call announced open on current official page; programme-specific start and deadline dates",
+        "deadline": null,
+        "eligibility_notes": "Eligible nationality AND current residence among 25 countries; age restrictions; at most one ICP Connect scholarship application per year.",
+        "degree_levels": [
+          "Bachelor",
+          "Master"
+        ],
+        "funding_notes": "Full tuition, travel, insurance, board and lodging for awardees; no blanket guarantee."
+      },
+      "evidence": [
+        {
+          "field": "application_cycle",
+          "summary": "Official programme listing states 2027/28 scholarship call is open",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships"
+        },
+        {
+          "field": "eligible_nationalities",
+          "summary": "Official list enumerates 25 countries and requires current residence in an eligible country",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list"
+        }
+      ]
+    },
+    {
+      "id": "f6c9b73a-7e62-4a7e-86dd-448b79de4f42",
+      "title": "VLIR-UOS Training Scholarship",
+      "status": "published",
+      "verification_status": "needs_review",
+      "source": "https://www.vliruos.be/get-funded/study-scholarships",
+      "proposed_fields": {
+        "review_note": "Generic homepage cannot establish a current, specific Master's training scholarship; do not conflate training with ICP Connect degree programmes. Verify identity before updating or archiving.",
+        "eligible_nationalities": "ALL currently unsupported for ICP Connect; do not replace with country list until programme identity established."
+      },
+      "evidence": [
+        {
+          "field": "identity",
+          "summary": "Current study scholarship page lists ICP Connect degree programmes; generic training record requires independent official programme source.",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships"
+        }
+      ]
+    },
+    {
+      "id": "17db5eb2-ff40-470d-bf83-2de0185a2416",
+      "title": "McGill University Entrance Scholarship",
+      "status": "published",
+      "verification_status": "curated",
+      "source": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships",
+      "proposed_fields": {
+        "deadline": null,
+        "deadline_notes": "Major entrance award regional deadlines: Jan 21 outside Canada; Feb 7 rest of Canada; Mar 7 Quebec CEGEP; year not explicit on the standing deadline table. One-year CAD 3,000 award has automatic consideration, not separate scholarship application.",
+        "eligibility_notes": "Major CAD 12,000/year award restricted to Canadian citizens/permanent residents; other award tiers have separate eligibility."
+      },
+      "evidence": [
+        {
+          "field": "funding",
+          "summary": "One-year CAD 3,000; major CAD 3,000–12,000 annually renewable with conditions; highest tier nationality-restricted.",
+          "source_url": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships"
+        },
+        {
+          "field": "deadline_notes",
+          "summary": "Regional major entrance deadlines are January 21, February 7 and March 7, without year shown on standing page.",
+          "source_url": "https://www.mcgill.ca/studentaid/scholarships-aid/future-undergrads/entrance-scholarships/application-instructions"
+        }
+      ]
+    }
+  ],
+  "private_draft_priority": {
+    "id": "44de9aef-2a2e-479e-9ab9-181e8ce50561",
+    "title": "ANU University Research Scholarship (2027 stipend)",
+    "source": "https://research.anu.edu.au/postgraduate-research-candidates/research-degree-scholarships",
+    "deadline_note": "Domestic 2027 start Round 1 explicitly moved to 2026-10-26 23:59 Canberra due to outage; international Round 1 closed 2026-08-31; Round 2 closes 2027-04-15. Some detailed scholarship page body still says Oct 31; explicit outage notice takes precedence pending reviewer.",
+    "funding_note": "Stipend distinct from tuition waiver; existing draft correctly avoids automatically treating stipend as full tuition.",
+    "status": "draft; no source audit success; 4 unaccepted provenance; no reviewer attribution"
+  },
+  "additional_programme_specific_candidates": [
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Bachelor of Applied Computer Science (2027/28)",
+      "programme_name": "Bachelor of Applied Computer Science",
+      "provider": "VLIRUOS",
+      "host_institution": "Thomas More, Geel",
+      "country": "Belgium",
+      "degree": "Bachelor",
+      "cycle": "2027/28",
+      "applications_open": "2026-10-30",
+      "deadline": "2027-01-15",
+      "official_programme_url": "https://www.vliruos.be/get-funded/bachelor-applied-computer-science",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "19–35 inclusive on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/bachelor-applied-computer-science",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Bachelor of Hotel Management (2027/28)",
+      "programme_name": "Bachelor of Hotel Management",
+      "provider": "VLIRUOS",
+      "host_institution": "VIVES Noord",
+      "country": "Belgium",
+      "degree": "Bachelor",
+      "cycle": "2027/28",
+      "applications_open": "2026-11-10",
+      "deadline": "2027-01-31",
+      "official_programme_url": "https://www.vliruos.be/get-funded/bachelor-hotel-management",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "19–35 inclusive on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/bachelor-hotel-management",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Master of Science in Aquaculture (IMAQUA) (2027/28)",
+      "programme_name": "Master of Science in Aquaculture (IMAQUA)",
+      "provider": "VLIRUOS",
+      "host_institution": "Ghent University",
+      "country": "Belgium",
+      "degree": "Master",
+      "cycle": "2027/28",
+      "applications_open": "2026-10-01",
+      "deadline": "2027-02-28",
+      "official_programme_url": "https://www.vliruos.be/get-funded/master-aquaculture-imaqua",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "For initial masters <=35 on 2027-01-01; advanced masters <=45 on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/master-aquaculture-imaqua",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Master of Science in Food Technology (2027/28)",
+      "programme_name": "Master of Science in Food Technology",
+      "provider": "VLIRUOS",
+      "host_institution": "KU Leuven / Ghent University",
+      "country": "Belgium",
+      "degree": "Master",
+      "cycle": "2027/28",
+      "applications_open": "2026-10-12",
+      "deadline": "2027-02-01",
+      "official_programme_url": "https://www.vliruos.be/get-funded/master-science-food-technology",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "For initial masters <=35 on 2027-01-01; advanced masters <=45 on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/master-science-food-technology",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Master of Science in Marine and Lacustrine Science and Management (2027/28)",
+      "programme_name": "Master of Science in Marine and Lacustrine Science and Management",
+      "provider": "VLIRUOS",
+      "host_institution": "VUB / Ghent University / University of Antwerp",
+      "country": "Belgium",
+      "degree": "Master",
+      "cycle": "2027/28",
+      "applications_open": "2026-11-01",
+      "deadline": "2027-02-01",
+      "official_programme_url": "https://www.vliruos.be/get-funded/master-science-marine-and-lacustrine-science-and-management",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "For initial masters <=35 on 2027-01-01; advanced masters <=45 on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/master-science-marine-and-lacustrine-science-and-management",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Master of Science in Transportation Sciences - Road Safety (2027/28)",
+      "programme_name": "Master of Science in Transportation Sciences - Road Safety",
+      "provider": "VLIRUOS",
+      "host_institution": "Hasselt University",
+      "country": "Belgium",
+      "degree": "Master",
+      "cycle": "2027/28",
+      "applications_open": "2026-10-15",
+      "deadline": "2027-02-01",
+      "official_programme_url": "https://www.vliruos.be/get-funded/master-transportation-sciences-road-safety",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "For initial masters <=35 on 2027-01-01; advanced masters <=45 on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/master-transportation-sciences-road-safety",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Master of Science in Nutrition and Food Systems (2027/28)",
+      "programme_name": "Master of Science in Nutrition and Food Systems",
+      "provider": "VLIRUOS",
+      "host_institution": "Ghent University",
+      "country": "Belgium",
+      "degree": "Master",
+      "cycle": "2027/28",
+      "applications_open": "2026-10-01",
+      "deadline": "2027-02-28",
+      "official_programme_url": "https://www.vliruos.be/get-funded/master-science-nutrition-and-food-systems",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "For initial masters <=35 on 2027-01-01; advanced masters <=45 on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/master-science-nutrition-and-food-systems",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Master of Science in Sustainable Land Management (2027/28)",
+      "programme_name": "Master of Science in Sustainable Land Management",
+      "provider": "VLIRUOS",
+      "host_institution": "Ghent University / VUB",
+      "country": "Belgium",
+      "degree": "Master",
+      "cycle": "2027/28",
+      "applications_open": "2026-11-01",
+      "deadline": "2027-02-28",
+      "official_programme_url": "https://www.vliruos.be/get-funded/master-science-sustainable-land-management",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "For initial masters <=35 on 2027-01-01; advanced masters <=45 on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/master-science-sustainable-land-management",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Master of Science in Tropical Biodiversity and Ecosystems (Mundus tropicalis / TROPIMUNDO) (2027/28)",
+      "programme_name": "Master of Science in Tropical Biodiversity and Ecosystems (Mundus tropicalis / TROPIMUNDO)",
+      "provider": "VLIRUOS",
+      "host_institution": "VUB",
+      "country": "Belgium",
+      "degree": "Master",
+      "cycle": "2027/28",
+      "applications_open": "2026-09-01",
+      "deadline": "2026-11-30",
+      "official_programme_url": "https://www.vliruos.be/get-funded/master-science-tropical-biodiversity-and-ecosystems-mundus-tropicalis-co-tropimundo",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "For initial masters <=35 on 2027-01-01; advanced masters <=45 on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/master-science-tropical-biodiversity-and-ecosystems-mundus-tropicalis-co-tropimundo",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Master of Science in Development Evaluation and Management (2027/28)",
+      "programme_name": "Master of Science in Development Evaluation and Management",
+      "provider": "VLIRUOS",
+      "host_institution": "University of Antwerp",
+      "country": "Belgium",
+      "degree": "Master",
+      "cycle": "2027/28",
+      "applications_open": "not stated",
+      "deadline": "not stated",
+      "official_programme_url": "https://www.vliruos.be/get-funded/master-development-evaluation-and-management",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "For initial masters <=35 on 2027-01-01; advanced masters <=45 on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/master-development-evaluation-and-management",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Master in Globalisation and Development (2027/28)",
+      "programme_name": "Master in Globalisation and Development",
+      "provider": "VLIRUOS",
+      "host_institution": "University of Antwerp",
+      "country": "Belgium",
+      "degree": "Master",
+      "cycle": "2027/28",
+      "applications_open": "not stated",
+      "deadline": "not stated",
+      "official_programme_url": "https://www.vliruos.be/get-funded/master-globalisation-and-development",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "For initial masters <=35 on 2027-01-01; advanced masters <=45 on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/master-globalisation-and-development",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    },
+    {
+      "candidate_name": "VLIRUOS ICP Connect — Master in Governance and Development (2027/28)",
+      "programme_name": "Master in Governance and Development",
+      "provider": "VLIRUOS",
+      "host_institution": "University of Antwerp",
+      "country": "Belgium",
+      "degree": "Master",
+      "cycle": "2027/28",
+      "applications_open": "not stated",
+      "deadline": "not stated",
+      "official_programme_url": "https://www.vliruos.be/get-funded/master-governance-and-development",
+      "funding": "Full tuition, living expenses, travel and insurance for selected ICP Connect scholars; not an unconditional award",
+      "nationality_and_residence": "Both nationality and current residence must be within the 25-country official eligibility list",
+      "eligible_countries": [
+        "Benin",
+        "Burkina Faso",
+        "Burundi",
+        "Cameroon",
+        "DR Congo",
+        "Ethiopia",
+        "Guinea",
+        "Kenya",
+        "Madagascar",
+        "Mozambique",
+        "Niger",
+        "Senegal",
+        "South Africa",
+        "Tanzania",
+        "Uganda",
+        "Zimbabwe",
+        "Morocco",
+        "Palestine",
+        "Bolivia",
+        "Cuba",
+        "Ecuador",
+        "Peru",
+        "Indonesia",
+        "Philippines",
+        "Vietnam"
+      ],
+      "age_rule": "For initial masters <=35 on 2027-01-01; advanced masters <=45 on 2027-01-01",
+      "english_requirements": "No programme-specific IELTS/TOEFL minimum established from scholarship page; check host admissions",
+      "sat": "Not specified as a scholarship requirement",
+      "evidence": [
+        {
+          "field": "cycle_and_deadline",
+          "source_url": "https://www.vliruos.be/get-funded/master-governance-and-development",
+          "summary": "Programme-specific 2027/28 application dates are displayed near the page heading; where '-' is shown, deadline remains unknown."
+        },
+        {
+          "field": "funding",
+          "source_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "summary": "ICP Connect scholarships cover tuition, living costs, travel and insurance."
+        },
+        {
+          "field": "nationality_and_residence",
+          "source_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "summary": "Candidates need eligible nationality and residence in one of the 25 listed countries."
+        }
+      ],
+      "preliminary_exact_title_match_in_staging": false,
+      "manual_semantic_duplicate_review_required": true,
+      "publish_ready": false
+    }
+  ],
+  "programme_count": 12,
+  "known_not_offered_2027_28": [
+    "International MSc Agro- and Environmental Nematology",
+    "International MSc Rural Development",
+    "Master of Human Settlements",
+    "Master of Cultural Anthropology and Development Studies",
+    "Master of Epidemiology",
+    "Master of Statistics and Data Science",
+    "Master of Science in Sustainable Development",
+    "Master of Science in Water Resources Engineering"
+  ],
+  "exclusion_source": "https://www.vliruos.be/get-funded/study-scholarships",
+  "duplicate_screen": "Exact title and key-phrase search of staging scholarships and source candidates found no programme-specific matches. Existing ICP Connect umbrella published record exists; full semantic and application-route duplicate assessment remains required.",
+  "source_caveats": [
+    "Three Antwerp advanced-master pages omit exact dates; keep unknown.",
+    "Some programme pages have an outdated '28 eligible countries' fragment; current official country list and umbrella show 25.",
+    "Umbrella 2027/28 call is labelled open, but individual programmes have future opening dates; retain per-programme status.",
+    "Do not infer IELTS, TOEFL or SAT scores where not stated; confirm institution-specific admissions rules.",
+    "No staging mutation, verification promotion, provenance acceptance, publication or archival is authorized in current session."
+  ],
+  "gates": {
+    "auth_uid": null,
+    "is_admin": false,
+    "CI_required": true,
+    "authenticated_admin_review_required": true,
+    "semantic_duplicate_screen_required": true,
+    "independent_readback_required": true
+  },
+  "actual_database_edits": 0,
+  "actual_new_publications": 0
+}

@@ -1,0 +1,828 @@
+{
+  "kind": "official_source_reconciliation",
+  "date_utc": "2026-10-24",
+  "scope": "staging-only; no direct production writes",
+  "staging_project": "cbzriyarlvpmtfbjgede",
+  "before": {
+    "readback_at_utc": "2026-10-24T20:20:49.714487Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "private_drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_value_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_action_logs": 8
+  },
+  "after": {
+    "readback_at_utc": "2026-10-24T20:22:25.015397Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "private_drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_value_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_action_logs": 8
+  },
+  "records": [
+    {
+      "scholarship_id": "6b9104ae-8be9-47d0-a972-c05dee118b38",
+      "title": "Norway Quota Scheme",
+      "source_url": "https://www.regjeringen.no/no/dokumenter/Rundskriv-om-kvoteordningen/id2458725/",
+      "disposition": "authorized_archival_review",
+      "field_reviews": [
+        {
+          "field_name": "status",
+          "action": "archive_review",
+          "proposed_value": "archived",
+          "evidence_summary": "Norwegian Ministry of Education stated no new entrants to the Quota Scheme from 2016/17, with narrow legacy exceptions.",
+          "provenance_url": "https://www.regjeringen.no/no/dokumenter/Rundskriv-om-kvoteordningen/id2458725/"
+        },
+        {
+          "field_name": "application_cycle",
+          "action": "replace",
+          "proposed_value": "Discontinued for new applicants since 2016/17",
+          "evidence_summary": "2015 government circular provides wind-down rules, not a current application call.",
+          "provenance_url": "https://www.regjeringen.no/no/dokumenter/Rundskriv-om-kvoteordningen/id2458725/"
+        },
+        {
+          "field_name": "deadline",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "No new intake deadline; do not fabricate a 2027 deadline.",
+          "provenance_url": "https://www.regjeringen.no/no/dokumenter/Rundskriv-om-kvoteordningen/id2458725/"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "correct_after_archive",
+          "proposed_value": null,
+          "evidence_summary": "Former scheme targeted specified developing, Western Balkan, Eastern European and Central Asian countries, not unrestricted ALL.",
+          "provenance_url": "https://www.regjeringen.no/no/dokumenter/Rundskriv-om-kvoteordningen/id2458725/"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "historical_correction",
+          "proposed_value": null,
+          "evidence_summary": "Original programme was tied to State Educational Loan Fund and not universally an unconditional nonrepayable grant.",
+          "provenance_url": "https://www.regjeringen.no/no/dokumenter/Rundskriv-om-kvoteordningen/id2458725/"
+        }
+      ],
+      "notes": "Do not equate NORPART or later Norwegian partnership programmes with the discontinued Quota Scheme."
+    },
+    {
+      "scholarship_id": "100c8969-e315-4430-ad40-a52d6873dc53",
+      "title": "KTH Royal Institute of Technology Computer Science Masters Award",
+      "source_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827",
+      "disposition": "identity_reconciliation_with_published_KTH_Scholarship",
+      "field_reviews": [
+        {
+          "field_name": "title",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "KTH publishes a named KTH Scholarship, not this independently named Computer Science Masters Award.",
+          "provenance_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "review",
+          "proposed_value": "Full tuition only if matched to KTH Scholarship",
+          "evidence_summary": "KTH Scholarship waives tuition; not living costs.",
+          "provenance_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827"
+        },
+        {
+          "field_name": "tuition_coverage",
+          "action": "review",
+          "proposed_value": "Full Master's tuition at KTH subject to eligible programmes",
+          "evidence_summary": "Only if this record is proven to represent KTH Scholarship.",
+          "provenance_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827"
+        },
+        {
+          "field_name": "stipend",
+          "action": "remove_if_matched",
+          "proposed_value": null,
+          "evidence_summary": "KTH Scholarship does not include living costs.",
+          "provenance_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827"
+        },
+        {
+          "field_name": "deadline",
+          "action": "review",
+          "proposed_value": "2027-01-15",
+          "evidence_summary": "2027 KTH Scholarship application closes 15 January 2027; do not assign until identity reconciled.",
+          "provenance_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "review",
+          "proposed_value": null,
+          "evidence_summary": "Only tuition-fee-liable eligible applicants with KTH programme first choice, not unrestricted ALL.",
+          "provenance_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827"
+        }
+      ],
+      "notes": "Already published KTH Scholarship id 8a0f238c-c74a-435c-b59f-4ea4d40a94e2; avoid duplicate."
+    },
+    {
+      "scholarship_id": "38dcbee8-8772-477d-9f60-c64394c924df",
+      "title": "Lund University Global Scholarship",
+      "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship",
+      "disposition": "correct_existing",
+      "field_reviews": [
+        {
+          "field_name": "funding_type",
+          "action": "replace",
+          "proposed_value": "Partial or full tuition waiver; no living stipend",
+          "evidence_summary": "Official award covers a variable percentage of tuition, not full living costs.",
+          "provenance_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship"
+        },
+        {
+          "field_name": "tuition_coverage",
+          "action": "replace",
+          "proposed_value": "Part or all of tuition fees, percentage determined by faculty/programme budget",
+          "evidence_summary": "University says tuition-only, potentially full or partial.",
+          "provenance_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship"
+        },
+        {
+          "field_name": "stipend",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "Living expenses are explicitly excluded.",
+          "provenance_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "replace_semantics",
+          "proposed_value": "Tuition-fee-liable citizens outside EU/EEA/Switzerland",
+          "evidence_summary": "Scholarship is not open to unrestricted ALL citizenships.",
+          "provenance_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship"
+        },
+        {
+          "field_name": "degree_levels",
+          "action": "review",
+          "proposed_value": "Master; exceptional selected Bachelor programmes",
+          "evidence_summary": "Certain Bachelor programmes in Development Studies, Mathematics, Physics and Physical Geography can qualify.",
+          "provenance_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship"
+        },
+        {
+          "field_name": "deadline",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "Last stated scholarship deadline was 16 February 2026; exact 2027 scholarship deadline not announced.",
+          "provenance_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship"
+        },
+        {
+          "field_name": "application_cycle",
+          "action": "replace",
+          "proposed_value": "Autumn 2027 degree admission; scholarship portal typically opens February 2027",
+          "evidence_summary": "Do not conflate 15 January degree admissions with scholarship deadline.",
+          "provenance_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "scholarship_id": "f6c9b73a-7e62-4a7e-86dd-448b79de4f42",
+      "title": "VLIR-UOS Training Scholarship",
+      "source_url": "https://www.vliruos.be/get-funded/calls/icp-connect-2027-2028",
+      "disposition": "identity_reconciliation",
+      "field_reviews": [
+        {
+          "field_name": "title",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "Training Scholarship is not automatically the same programme as ICP Connect Study Scholarships.",
+          "provenance_url": "https://www.vliruos.be/get-funded/calls/icp-connect-2027-2028"
+        },
+        {
+          "field_name": "degree_levels",
+          "action": "review",
+          "proposed_value": null,
+          "evidence_summary": "2027 ICP Connect call includes specified degree programmes; cannot transfer those levels to generic training scholarship.",
+          "provenance_url": "https://www.vliruos.be/get-funded/calls/icp-connect-2027-2028"
+        },
+        {
+          "field_name": "deadline",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "ICP Connect umbrella submission deadline 28 February 2027 is not verified for this Training Scholarship.",
+          "provenance_url": "https://www.vliruos.be/get-funded/calls/icp-connect-2027-2028"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "review",
+          "proposed_value": null,
+          "evidence_summary": "VLIR ICP Connect is country-restricted; not universal ALL. Specific Training Scholarship eligibility remains to be confirmed.",
+          "provenance_url": "https://www.vliruos.be/get-funded/calls/icp-connect-2027-2028"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "review",
+          "proposed_value": null,
+          "evidence_summary": "Full funding for 2027 ICP Connect must not be assumed for separate training scholarship.",
+          "provenance_url": "https://www.vliruos.be/get-funded/calls/icp-connect-2027-2028"
+        }
+      ],
+      "notes": "Separate curated ICP Connect published id d6b96d66-202c-4b0f-b717-93fc15fca977. 2027 call webpage and eligible-country list appear inconsistent about Mali; hold country array."
+    },
+    {
+      "scholarship_id": "f710ef9d-de77-43f4-9876-e2187a5f1500",
+      "title": "University of Copenhagen Masters International Scholarship",
+      "source_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students",
+      "disposition": "canonical_programme_identity_review",
+      "field_reviews": [
+        {
+          "field_name": "title",
+          "action": "review",
+          "proposed_value": "University of Copenhagen Danish Government Scholarship",
+          "evidence_summary": "Only rename after confirming record corresponds to the official Danish Government Scholarship at UCPH.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        },
+        {
+          "field_name": "degree_levels",
+          "action": "retain",
+          "proposed_value": [
+            "Master"
+          ],
+          "evidence_summary": "Official UCPH Danish Government Scholarship is for admitted Master's students.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "replace",
+          "proposed_value": "Competitive full or partial tuition waiver and/or living-cost grant",
+          "evidence_summary": "Coverage varies by faculty; not a universal full tuition and stipend.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        },
+        {
+          "field_name": "tuition_coverage",
+          "action": "replace",
+          "proposed_value": "Full or partial waiver depending on faculty and selection",
+          "evidence_summary": "Some faculties grant only partial tuition; no guaranteed stipend.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "replace_semantics",
+          "proposed_value": "Eligible non-EU/EEA/Swiss citizens with qualifying study residence permits",
+          "evidence_summary": "UCPH excludes specified categories; not unrestricted ALL.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        },
+        {
+          "field_name": "deadline",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "Automatic consideration during Master's admission; faculty-specific admissions deadlines, not separate universal scholarship date.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        }
+      ],
+      "notes": "Separate national Danish Government Scholarship published; avoid umbrella duplication."
+    },
+    {
+      "scholarship_id": "2facb27a-61de-4ba1-8dd6-9333981c18b0",
+      "title": "University of Copenhagen Phd International Scholarship",
+      "source_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students",
+      "disposition": "identity_unverified_hold",
+      "field_reviews": [
+        {
+          "field_name": "title",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "UCPH's Danish Government Scholarship page applies to Master's degrees, not a universal PhD scholarship.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        },
+        {
+          "field_name": "degree_levels",
+          "action": "hold",
+          "proposed_value": [
+            "PhD"
+          ],
+          "evidence_summary": "No separately named universal UCPH PhD scholarship established from this official source.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "Do not infer full tuition and stipend from Master's scheme or salaried PhD employment.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No verified scholarship-specific nationality rule.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        },
+        {
+          "field_name": "deadline",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "No universal PhD scholarship application deadline verified.",
+          "provenance_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "scholarship_id": "b36270fe-ee01-4b72-a16b-43ed9c38cb63",
+      "title": "University of Vienna Masters International Scholarship",
+      "source_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+      "disposition": "identity_unverified_hold",
+      "field_reviews": [
+        {
+          "field_name": "title",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "University lists specific merit and research grants; not this generic named scholarship.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No universal fully funded Master's scholarship confirmed.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        },
+        {
+          "field_name": "tuition_coverage",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No official evidence for guaranteed full tuition plus €1,050 monthly.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        },
+        {
+          "field_name": "stipend",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No official evidence of €1,050/month.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        },
+        {
+          "field_name": "deadline",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "No programme-specific call and deadline established.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "Eligibility varies by specific University of Vienna or external award.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "scholarship_id": "95c37992-9fd3-40bb-9f43-07603368cb0c",
+      "title": "University of Vienna Phd International Scholarship",
+      "source_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+      "disposition": "identity_unverified_hold",
+      "field_reviews": [
+        {
+          "field_name": "title",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No single institution-wide named PhD International Scholarship identified.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "Do not conflate doctoral employment or research grants with universal full scholarship.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        },
+        {
+          "field_name": "tuition_coverage",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No proof for guaranteed full tuition and €1,050 monthly.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        },
+        {
+          "field_name": "stipend",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No official monthly amount confirmed.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        },
+        {
+          "field_name": "deadline",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "No programme-specific 2027 application deadline confirmed.",
+          "provenance_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "scholarship_id": "4f03189f-1bf8-4b91-a3e7-3ce012dfbac9",
+      "title": "Stipendium Hungaricum",
+      "source_url": "https://stipendiumhungaricum.hu/apply/",
+      "disposition": "correct_existing",
+      "field_reviews": [
+        {
+          "field_name": "application_cycle",
+          "action": "replace",
+          "proposed_value": "2026/27 historical cycle; 2027/28 call not yet verified",
+          "evidence_summary": "Official portal displays 2026/27 calls.",
+          "provenance_url": "https://stipendiumhungaricum.hu/apply/"
+        },
+        {
+          "field_name": "deadline",
+          "action": "review",
+          "proposed_value": "2026-01-15",
+          "evidence_summary": "Official 2026/27 deadline was 15 January 2026 at 14:00 CET; don't present as upcoming 2027 deadline.",
+          "provenance_url": "https://stipendiumhungaricum.hu/apply/"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "replace_semantics",
+          "proposed_value": "Eligible sending-partner countries and eligible programmes per bilateral agreement",
+          "evidence_summary": "ALL and Vietnam combined is incorrect; nomination by sending partner is required.",
+          "provenance_url": "https://stipendiumhungaricum.hu/apply/"
+        },
+        {
+          "field_name": "tuition_coverage",
+          "action": "retain",
+          "proposed_value": "Tuition waiver",
+          "evidence_summary": "Official benefits include tuition-free study.",
+          "provenance_url": "https://stipendiumhungaricum.hu/apply/"
+        },
+        {
+          "field_name": "stipend",
+          "action": "clarify",
+          "proposed_value": "Monthly stipend plus accommodation contribution and health insurance",
+          "evidence_summary": "Funding contributes to expenses and should not be advertised as guaranteeing all living costs.",
+          "provenance_url": "https://stipendiumhungaricum.hu/apply/"
+        },
+        {
+          "field_name": "degree_levels",
+          "action": "retain",
+          "proposed_value": [
+            "Bachelor",
+            "Master",
+            "PhD"
+          ],
+          "evidence_summary": "Official 2026/27 calls include Bachelor, Master and doctoral programmes.",
+          "provenance_url": "https://stipendiumhungaricum.hu/apply/"
+        },
+        {
+          "field_name": "min_ielts",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No universal IELTS minimum established; host programmes may differ.",
+          "provenance_url": "https://stipendiumhungaricum.hu/apply/"
+        },
+        {
+          "field_name": "sat_required",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No universal SAT requirement established.",
+          "provenance_url": "https://stipendiumhungaricum.hu/apply/"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "scholarship_id": "8def200f-88af-4f2a-8665-f7a514737d31",
+      "title": "University of Helsinki Masters Excellence Scholarship",
+      "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+      "disposition": "duplicate_identity_review",
+      "field_reviews": [
+        {
+          "field_name": "title",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "Official named University of Helsinki scholarship programme consists of 50% and 100% tuition waivers.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "review",
+          "proposed_value": "Partial or full tuition fee waiver only",
+          "evidence_summary": "Tuition waivers are competitive and mostly 50%.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        },
+        {
+          "field_name": "tuition_coverage",
+          "action": "review",
+          "proposed_value": "50% or 100% waiver; most 50%",
+          "evidence_summary": "No living-expense grant.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "review_semantics",
+          "proposed_value": "Tuition-fee-liable non-EU/EEA/Swiss Master's applicants",
+          "evidence_summary": "EU tuition-free status is not a scholarship.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        },
+        {
+          "field_name": "deadline",
+          "action": "review",
+          "proposed_value": "2027-01-19",
+          "evidence_summary": "Autumn 2027 Master's application ends 19 January 2027; this is admission and waiver application combined.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        },
+        {
+          "field_name": "application_cycle",
+          "action": "review",
+          "proposed_value": "Autumn 2027 Master's intake",
+          "evidence_summary": "Application for waiver is part of Master's admission.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        }
+      ],
+      "notes": "Potential duplicate of published University of Helsinki International Scholarship id 67821593-89ce-4176-991d-845ec3590c72."
+    },
+    {
+      "scholarship_id": "b8891f50-acfe-4315-a3d7-ec3d74e7cff2",
+      "title": "University of Helsinki Masters International Scholarship",
+      "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+      "disposition": "duplicate_identity_review",
+      "field_reviews": [
+        {
+          "field_name": "title",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No independent named programme beyond University's tuition-waiver scholarship confirmed.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "review",
+          "proposed_value": "50% or 100% tuition waiver only",
+          "evidence_summary": "Most grants cover 50%; not guaranteed living support.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        },
+        {
+          "field_name": "tuition_coverage",
+          "action": "review",
+          "proposed_value": "50% or 100% tuition waiver; most 50%",
+          "evidence_summary": "Official Helsinki scholarship page.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "review_semantics",
+          "proposed_value": "Tuition-fee-liable non-EU/EEA/Swiss applicants",
+          "evidence_summary": "ALL is misleading.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        },
+        {
+          "field_name": "deadline",
+          "action": "review",
+          "proposed_value": "2027-01-19",
+          "evidence_summary": "Degree admission and waiver application share this deadline.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        },
+        {
+          "field_name": "stipend",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "University explicitly says no living-expense scholarships.",
+          "provenance_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme"
+        }
+      ],
+      "notes": "Reconcile against 67821593-89ce-4176-991d-845ec3590c72 and 8def200f-88af-4f2a-8665-f7a514737d31."
+    },
+    {
+      "scholarship_id": "58307b7b-eda6-4b36-9cf2-ad5ff18bc67b",
+      "title": "University of Oulu International Scholarship",
+      "source_url": "https://www.oulu.fi/en/apply/how-apply/university-oulu-tuition-fees-and-scholarships-for-international-applicants",
+      "disposition": "review_existing_2027_cycle",
+      "field_reviews": [
+        {
+          "field_name": "application_cycle",
+          "action": "replace",
+          "proposed_value": "2027/28 entrants; continuing-student waivers start in second year",
+          "evidence_summary": "Official 2027/28 fee and scholarship policy published.",
+          "provenance_url": "https://www.oulu.fi/en/apply/how-apply/university-oulu-tuition-fees-and-scholarships-for-international-applicants"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "retain",
+          "proposed_value": "Partial",
+          "evidence_summary": "No 100% tuition scholarship; discounts are separate.",
+          "provenance_url": "https://www.oulu.fi/en/apply/how-apply/university-oulu-tuition-fees-and-scholarships-for-international-applicants"
+        },
+        {
+          "field_name": "tuition_coverage",
+          "action": "review",
+          "proposed_value": "Programme-specific partial tuition waiver from second year, contingent on 60 ECTS and required Finnish studies",
+          "evidence_summary": "Not a first-year automatic scholarship.",
+          "provenance_url": "https://www.oulu.fi/en/apply/how-apply/university-oulu-tuition-fees-and-scholarships-for-international-applicants"
+        },
+        {
+          "field_name": "eligible_nationalities",
+          "action": "review_semantics",
+          "proposed_value": "Tuition-fee-liable non-EU/EEA/Swiss students",
+          "evidence_summary": "EU tuition exemption is not a grant.",
+          "provenance_url": "https://www.oulu.fi/en/apply/how-apply/university-oulu-tuition-fees-and-scholarships-for-international-applicants"
+        },
+        {
+          "field_name": "deadline",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "Continuing-student scholarship is progress-based, not a universal separate first-year deadline.",
+          "provenance_url": "https://www.oulu.fi/en/apply/how-apply/university-oulu-tuition-fees-and-scholarships-for-international-applicants"
+        },
+        {
+          "field_name": "degree_levels",
+          "action": "review",
+          "proposed_value": [
+            "Bachelor",
+            "Master"
+          ],
+          "evidence_summary": "Official 2027/28 tables cover both Bachelor and Master programme waivers; assess whether umbrella entry should represent both.",
+          "provenance_url": "https://www.oulu.fi/en/apply/how-apply/university-oulu-tuition-fees-and-scholarships-for-international-applicants"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "scholarship_id": "45e3aebe-4c0b-4259-9bfc-0ee6addb67fd",
+      "title": "CEU Global Teaching Fellowship",
+      "source_url": "https://www.ceu.edu/financialaid",
+      "disposition": "identity_unverified_hold",
+      "field_reviews": [
+        {
+          "field_name": "title",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "General CEU financial aid page does not establish this independently named fellowship.",
+          "provenance_url": "https://www.ceu.edu/financialaid"
+        },
+        {
+          "field_name": "degree_levels",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No reliable programme-specific evidence for combined Master/PhD eligibility.",
+          "provenance_url": "https://www.ceu.edu/financialaid"
+        },
+        {
+          "field_name": "funding_type",
+          "action": "hold",
+          "proposed_value": null,
+          "evidence_summary": "No evidence for universal full tuition and stipend.",
+          "provenance_url": "https://www.ceu.edu/financialaid"
+        },
+        {
+          "field_name": "deadline",
+          "action": "retain_null",
+          "proposed_value": null,
+          "evidence_summary": "No current fellowship-specific call identified.",
+          "provenance_url": "https://www.ceu.edu/financialaid"
+        }
+      ],
+      "notes": ""
+    }
+  ],
+  "leads": [
+    {
+      "name": "Ingvar Kamprad Scholarship — Industrial Design",
+      "country": "Sweden",
+      "provider": "Lund University",
+      "official_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/ingvar-kamprad-scholarship",
+      "deadline": "2027-02-01",
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "Two distinct award components under one named programme: two living grants SEK 128,400 per year for two years (admitted Industrial Design students); two tuition grants SEK 270,000 per year for two years (non-EU/EEA admitted students).",
+      "status": "private_draft_candidate",
+      "duplicate_check": "Exact title/official URL not found in targeted scholarship and candidate searches; broader semantic screening required."
+    },
+    {
+      "name": "Lund ARUA Scholarship",
+      "country": "Sweden",
+      "provider": "Lund University",
+      "official_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/african-research-universities-alliance-arua-scholarship",
+      "deadline": null,
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "Up to 90% tuition; no living costs; non-EU/EEA fee-liable applicants with eligible ARUA-university background, Lund first choice.",
+      "status": "private_draft_candidate",
+      "duplicate_check": "Targeted title match absent; confirm broader semantic matches and eligibility university list. 2027 scholarship portal opens around February; exact deadline unconfirmed."
+    },
+    {
+      "name": "KTH Joint Programme Scholarship",
+      "country": "Sweden",
+      "provider": "KTH",
+      "official_url": "https://www.kth.se/en/studies/2.25746/kth-joint-programme-scholarship-1.611327",
+      "deadline": null,
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "Tuition for eligible joint-programme period spent at KTH; no living costs.",
+      "status": "private_draft_candidate_hold_2027_cycle",
+      "duplicate_check": "Targeted title match absent. Only 15 April 2026 historical deadline confirmed; do not reuse for 2027."
+    },
+    {
+      "name": "KTH One-Year Scholarship",
+      "country": "Sweden",
+      "provider": "KTH",
+      "official_url": "https://www.kth.se/en/studies/master/admissions/scholarships",
+      "deadline": null,
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "Second-year tuition coverage for eligible current KTH Master's students.",
+      "status": "identity_confirmed_details_pending",
+      "duplicate_check": "Targeted title match absent; programme-specific call and cycle still required."
+    },
+    {
+      "name": "KTH India Scholarship",
+      "country": "Sweden",
+      "provider": "KTH",
+      "official_url": "https://www.kth.se/en/studies/master/admissions/scholarships",
+      "deadline": null,
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "KTH confirms a distinct India-targeted scholarship; funding details and deadline not independently established in this run.",
+      "status": "identity_confirmed_details_pending",
+      "duplicate_check": "Targeted title match absent; avoid inventing funding or deadline."
+    },
+    {
+      "name": "University of Oulu Nokia Master's Thesis Scholarship",
+      "country": "Finland",
+      "provider": "University of Oulu",
+      "official_url": "https://edu.oulu.fi/en/news/cse-itee-call-for-masters-thesis-scholarships-2026-2027-sponsored-nokia",
+      "deadline": null,
+      "degree_levels": [
+        "Master"
+      ],
+      "funding": "Targeted Master's thesis support for specified Oulu computing and biomedical engineering programmes; exact award amount/deadline not independently verified.",
+      "status": "hold_due_to_source_timeout",
+      "duplicate_check": "Targeted title match absent. Transient source fetch failure is not discontinuation."
+    }
+  ],
+  "urgent_private_drafts": [
+    {
+      "id": "27968090-2edf-464d-9236-76f5186b741b",
+      "title": "EPFL-WISH Foundation Fellowship",
+      "deadline": "2026-10-25",
+      "official_url": "https://wish-foundation.epfl.ch/masters-projects-abroad/",
+      "source_verified": "Autumn 25 Oct 2026 23:59 CET; spring 11 Apr 2027; generally max CHF 5,000; enrolled EPFL female Master's project abroad.",
+      "provenance_count": 3,
+      "successful_audit": false,
+      "blocker": "Authenticated reviewer and successful source audit required."
+    },
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "title": "Gordon and Isabel Humphrey Scholarship",
+      "deadline": "2026-10-25",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/gordon-and-isabel-humphrey-scholarship",
+      "source_verified": "AUD 41,100/year 2027 rate, 3.5 years, eligible Engineering PhD offer for 2027, domestic/international.",
+      "provenance_count": 2,
+      "successful_audit": false,
+      "blocker": "Authenticated reviewer and successful source audit required."
+    },
+    {
+      "id": "cea12dff-0230-4a13-bbd8-0fb894f75bc5",
+      "title": "Computing and Information Systems PhD Scholarship",
+      "deadline": "2026-11-01",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/computing-and-information-systems-phd-scholarship",
+      "source_verified": "100% fee remission and AUD 20,000/year top-up for up to 3.5 years; only University of Melbourne Master of Computer Science graduates entering specified PhD.",
+      "provenance_count": 0,
+      "successful_audit": true,
+      "blocker": "Reviewer provenance missing and admin session absent."
+    }
+  ],
+  "review_count": 75,
+  "record_count": 13,
+  "lead_count": 6,
+  "source_conflicts": [
+    "VLIR ICP Connect 2027/28 page describes Mali as recently added while separate 2027-31 25-country list excludes Mali; do not silently pick a list.",
+    "KTH scholarship details may vary by faculty/programme; do not assign one universal IELTS/TOEFL/SAT requirement.",
+    "Lund Global 2027 scholarship closing date not yet confirmed; 15 January is degree admission, not scholarship application."
+  ],
+  "auth_blocker": {
+    "auth_uid": null,
+    "is_admin": false,
+    "readiness_rpc": "Admin access required",
+    "publish_rpc": "Admin access required",
+    "required_workflow": "Sign in through an actual Supabase Auth account with student_profiles.role=admin, then use audited admin review and publication functions. Do not spoof auth context or bypass RLS."
+  },
+  "actions": {
+    "staging_edits": 0,
+    "new_published": 0,
+    "new_drafts": 0,
+    "new_provenance": 0,
+    "archived": 0,
+    "production_changes": 0
+  },
+  "next_steps": [
+    "Admin review and audited archive of Norwegian Quota Scheme",
+    "Correct Lund Global tuition-only and eligibility",
+    "Reconcile KTH generic record with already published canonical KTH Scholarship",
+    "Reconcile Helsinki three overlapping published records",
+    "Prepare Ingvar Kamprad and Lund ARUA private drafts after full duplicate screening",
+    "Resolve authentic admin session and source audit for urgent 25 October drafts"
+  ]
+}

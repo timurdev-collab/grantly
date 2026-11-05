@@ -1,0 +1,622 @@
+{
+  "run_utc": "2026-10-24T19:22:12Z",
+  "environment": "staging_only",
+  "project": "cbzriyarlvpmtfbjgede",
+  "repo": "timurdev-collab/grantly",
+  "before_readback": {
+    "at_utc": "2026-10-24T19:22:12.648737Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 636,
+    "admin_logs": 8
+  },
+  "summary": {
+    "published_records_investigated": 10,
+    "field_review_proposals": 62,
+    "successful_staging_edits": 0,
+    "new_publications": 0,
+    "new_drafts": 0,
+    "new_provenance": 0,
+    "archived": 0,
+    "remaining_to_1000": 603
+  },
+  "published_record_reviews": [
+    {
+      "id": "5ff8fe41-22e3-4371-bed1-56210c8cc6af",
+      "title": "Brunei Darussalam Government Scholarship",
+      "country": "Brunei",
+      "disposition": "retain as canonical pending authenticated duplicate adjudication",
+      "proposals": [
+        {
+          "field": "degree_levels",
+          "action": "correct",
+          "proposed_or_check": "Include diploma in descriptive eligibility; check supported degree taxonomy before editing array",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": "2026/27 call includes diploma, bachelor's and master's, not PhD."
+        },
+        {
+          "field": "eligible_nationalities",
+          "action": "correct",
+          "proposed_or_check": "Replace ALL with non-Bruneian foreign first-time applicants; exclude Brunei nationals and permanent residents",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        },
+        {
+          "field": "deadline",
+          "action": "retain",
+          "proposed_or_check": "Retain 2026-02-15 as 2026/27 historical deadline; 2027/28 inbound call not yet confirmed",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        },
+        {
+          "field": "min_ielts",
+          "action": "retain",
+          "proposed_or_check": "Retain 6.0 as one accepted English-language route, not universally required IELTS",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": "Alternative GCE/IGCSE or TOEFL 550."
+        },
+        {
+          "field": "description",
+          "action": "correct",
+          "proposed_or_check": "Disclose TOEFL 550 as legacy non-iBT score, age caps 25/35, no universal SAT",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        },
+        {
+          "field": "official_url",
+          "action": "retain",
+          "proposed_or_check": "Retain programme-specific MFA page; distinguish MOE outbound 2027/28 scheme",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        }
+      ]
+    },
+    {
+      "id": "f0d0509a-9e66-4719-9f7d-de8f59adebcd",
+      "title": "Brunei Government Scholarship",
+      "country": "Brunei",
+      "disposition": "probable duplicate of 5ff8fe41-22e3-4371-bed1-56210c8cc6af; audited authorized reconciliation only",
+      "proposals": [
+        {
+          "field": "title",
+          "action": "review",
+          "proposed_or_check": "Confirm this is BDGS inbound scholarship, not separate MOE outbound award",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        },
+        {
+          "field": "official_url",
+          "action": "correct",
+          "proposed_or_check": "Replace generic moe.gov.bn homepage with MFA programme-specific URL only if identity confirmed",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        },
+        {
+          "field": "degree_levels",
+          "action": "correct",
+          "proposed_or_check": "Add diploma in text; do not invent PhD",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        },
+        {
+          "field": "eligible_nationalities",
+          "action": "correct",
+          "proposed_or_check": "Current ALL misstates Bruneian exclusions",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        },
+        {
+          "field": "accommodation",
+          "action": "correct",
+          "proposed_or_check": "MFA provides residential college accommodation",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        },
+        {
+          "field": "health_insurance",
+          "action": "correct",
+          "proposed_or_check": "MFA provides comprehensive insurance",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        },
+        {
+          "field": "deadline",
+          "action": "correct",
+          "proposed_or_check": "2026-02-15 historical; no confirmed 2027/28 inbound deadline",
+          "source_url": "https://www.mfa.gov.bn/pages/online-bdgs.aspx",
+          "evidence_note": ""
+        }
+      ]
+    },
+    {
+      "id": "d33cdd8d-4051-4c17-abf7-9f04bf5d8936",
+      "title": "Romanian Government Scholarship",
+      "country": "Romania",
+      "disposition": "correct canonical published MFA programme after authenticated review",
+      "proposals": [
+        {
+          "field": "eligible_nationalities",
+          "action": "correct",
+          "proposed_or_check": "Non-EU foreign nationals subject to official exclusions, not ALL",
+          "source_url": "https://scholarships.studyinromania.gov.ro/scholarship-about",
+          "evidence_note": ""
+        },
+        {
+          "field": "application_cycle",
+          "action": "correct",
+          "proposed_or_check": "2026/2027",
+          "source_url": "https://scholarships.studyinromania.gov.ro/scholarship-about",
+          "evidence_note": ""
+        },
+        {
+          "field": "deadline",
+          "action": "correct",
+          "proposed_or_check": "2026-03-31 (closed); do not invent 2027/28 deadline",
+          "source_url": "https://scholarships.studyinromania.gov.ro/scholarship-about",
+          "evidence_note": ""
+        },
+        {
+          "field": "degree_levels",
+          "action": "retain",
+          "proposed_or_check": "Retain Bachelor, Master, PhD; doctoral applicants need tutor agreement and interview",
+          "source_url": "https://scholarships.studyinromania.gov.ro/scholarship-about",
+          "evidence_note": ""
+        },
+        {
+          "field": "fields",
+          "action": "correct",
+          "proposed_or_check": "Exclude medicine, dentistry and pharmacy",
+          "source_url": "https://scholarships.studyinromania.gov.ro/scholarship-about",
+          "evidence_note": ""
+        },
+        {
+          "field": "description",
+          "action": "correct",
+          "proposed_or_check": "Bachelor/Master taught only in Romanian; PhD may be in approved foreign language; preparatory Romanian year as applicable",
+          "source_url": "https://scholarships.studyinromania.gov.ro/scholarship-about",
+          "evidence_note": ""
+        },
+        {
+          "field": "accommodation",
+          "action": "correct",
+          "proposed_or_check": "Dormitory subsidy is subject to available places, not guaranteed accommodation",
+          "source_url": "https://scholarships.studyinromania.gov.ro/scholarship-about",
+          "evidence_note": ""
+        },
+        {
+          "field": "funding_type",
+          "action": "review",
+          "proposed_or_check": "Tuition and monthly scholarship provided; do not promise complete living costs or guaranteed housing",
+          "source_url": "https://scholarships.studyinromania.gov.ro/scholarship-about",
+          "evidence_note": ""
+        }
+      ]
+    },
+    {
+      "id": "7630a734-ac8d-4f05-b13d-6de3d7c26e99",
+      "title": "King Fahd University of Petroleum and Minerals Scholarship",
+      "country": "Saudi Arabia",
+      "disposition": "reconcile with second generic KFUPM record; separate undergraduate vs graduate routes",
+      "proposals": [
+        {
+          "field": "degree_levels",
+          "action": "correct",
+          "proposed_or_check": "Graduate full scholarships: PhD/direct-entry PhD and select MS; undergraduate scholarship is a separate route",
+          "source_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "evidence_note": ""
+        },
+        {
+          "field": "tuition_coverage",
+          "action": "correct",
+          "proposed_or_check": "No tuition for funded graduate scholars; self-sponsored graduate students pay fees",
+          "source_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "evidence_note": ""
+        },
+        {
+          "field": "stipend",
+          "action": "correct",
+          "proposed_or_check": "Amount depends on scholarship category; no single universal cash amount",
+          "source_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "evidence_note": ""
+        },
+        {
+          "field": "health_insurance",
+          "action": "correct",
+          "proposed_or_check": "Medical and dental care provided to scholarship recipients",
+          "source_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "evidence_note": ""
+        },
+        {
+          "field": "min_ielts",
+          "action": "review",
+          "proposed_or_check": "PhD IELTS 6.5 / TOEFL iBT 80; thesis-MS IELTS 6.0 / TOEFL iBT 70; scalar field cannot represent both",
+          "source_url": "https://cgis.kfupm.edu.sa/admission/admissionrequirement",
+          "evidence_note": ""
+        },
+        {
+          "field": "deadline",
+          "action": "review",
+          "proposed_or_check": "Graduate MS thesis/PhD admissions listed 2026-11-23 through 2027-01-20; do not label as separate scholarship deadline",
+          "source_url": "https://cgis.kfupm.edu.sa/home",
+          "evidence_note": ""
+        },
+        {
+          "field": "eligible_nationalities",
+          "action": "correct",
+          "proposed_or_check": "International graduate applicants can qualify; not automatic for every applicant",
+          "source_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "evidence_note": ""
+        },
+        {
+          "field": "description",
+          "action": "correct",
+          "proposed_or_check": "Direct-entry PhD five-year programme has scholarship for first four years; include conditional selection",
+          "source_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "evidence_note": ""
+        }
+      ]
+    },
+    {
+      "id": "5b89eb0d-7139-4186-bba3-e146e058f21b",
+      "title": "King Fahd University Scholarship",
+      "country": "Saudi Arabia",
+      "disposition": "probable umbrella duplicate; review whether to repurpose for distinct KFUPM undergraduate scholarship",
+      "proposals": [
+        {
+          "field": "title",
+          "action": "review",
+          "proposed_or_check": "Match to distinct undergraduate international scholarship or reconcile with graduate record; avoid double counting",
+          "source_url": "https://www3.kfupm.edu.sa/study/international-students/fees-and-scholarships",
+          "evidence_note": ""
+        },
+        {
+          "field": "degree_levels",
+          "action": "correct",
+          "proposed_or_check": "Undergraduate international tuition waiver and graduate scholarship differ; current combined Bachelor/Master/PhD is misleading",
+          "source_url": "https://www3.kfupm.edu.sa/study/international-students/fees-and-scholarships",
+          "evidence_note": ""
+        },
+        {
+          "field": "tuition_coverage",
+          "action": "review",
+          "proposed_or_check": "For qualifying international undergraduates living outside Saudi Arabia, tuition waived",
+          "source_url": "https://www3.kfupm.edu.sa/study/international-students/fees-and-scholarships",
+          "evidence_note": ""
+        },
+        {
+          "field": "stipend",
+          "action": "correct",
+          "proposed_or_check": "Undergraduate benefits MAY include stipend, housing, books, medical; do not guarantee all",
+          "source_url": "https://www3.kfupm.edu.sa/study/international-students/fees-and-scholarships",
+          "evidence_note": ""
+        },
+        {
+          "field": "eligible_nationalities",
+          "action": "correct",
+          "proposed_or_check": "Eligibility for overseas international undergraduates differs from graduate applicants",
+          "source_url": "https://www3.kfupm.edu.sa/study/international-students/fees-and-scholarships",
+          "evidence_note": ""
+        },
+        {
+          "field": "deadline",
+          "action": "review",
+          "proposed_or_check": "Undergraduate admission timeline distinct from graduate; no universal scholarship deadline",
+          "source_url": "https://cgis.kfupm.edu.sa/home",
+          "evidence_note": ""
+        },
+        {
+          "field": "official_url",
+          "action": "correct",
+          "proposed_or_check": "Use exact programme page after identity confirmed",
+          "source_url": "https://www3.kfupm.edu.sa/study/international-students/fees-and-scholarships",
+          "evidence_note": ""
+        },
+        {
+          "field": "min_ielts",
+          "action": "review",
+          "proposed_or_check": "No single graduate/undergraduate IELTS value; do not copy graduate requirements to undergraduate record",
+          "source_url": "https://cgis.kfupm.edu.sa/admission/admissionrequirement",
+          "evidence_note": ""
+        }
+      ]
+    },
+    {
+      "id": "c9a43168-a89e-40d2-b6f7-4ed2221977b1",
+      "title": "Thailand Government TICA Scholarship",
+      "country": "Thailand",
+      "disposition": "correct TIPP umbrella; 23 listed host courses are not 23 separate scholarship programmes",
+      "proposals": [
+        {
+          "field": "title",
+          "action": "correct",
+          "proposed_or_check": "Use Thailand International Postgraduate Programme (TIPP) if identity confirmed",
+          "source_url": "https://tica-thaigov.mfa.go.th/en/page/long-term-scholarships",
+          "evidence_note": ""
+        },
+        {
+          "field": "eligible_nationalities",
+          "action": "correct",
+          "proposed_or_check": "Not ALL: full-support and partial-support eligible-country lists differ",
+          "source_url": "https://tica-thaigov.mfa.go.th/en/page/list-of-eligible-countries-for-tipp",
+          "evidence_note": ""
+        },
+        {
+          "field": "degree_levels",
+          "action": "retain",
+          "proposed_or_check": "Master's TIPP, programme-specific courses and durations",
+          "source_url": "https://tica-thaigov.mfa.go.th/en/content/tipp2027?menu=6a9fb7974127085db3339e43&page=5f4e22204784115e3a56f142",
+          "evidence_note": ""
+        },
+        {
+          "field": "application_cycle",
+          "action": "correct",
+          "proposed_or_check": "2027 course list exists; exact programme deadlines marked TBC",
+          "source_url": "https://tica-thaigov.mfa.go.th/en/content/tipp2027?menu=6a9fb7974127085db3339e43&page=5f4e22204784115e3a56f142",
+          "evidence_note": ""
+        },
+        {
+          "field": "deadline",
+          "action": "retain",
+          "proposed_or_check": "Leave null until official 2027 deadlines announced; 2026 deadline was Feb 23",
+          "source_url": "https://tica-thaigov.mfa.go.th/en/content/tipp2027?menu=6a9fb7974127085db3339e43&page=5f4e22204784115e3a56f142",
+          "evidence_note": ""
+        },
+        {
+          "field": "funding_type",
+          "action": "review",
+          "proposed_or_check": "Full-support and partial-support categories differ by nationality; avoid unconditional fully funded classification",
+          "source_url": "https://tica-thaigov.mfa.go.th/en/page/list-of-eligible-countries-for-tipp",
+          "evidence_note": ""
+        },
+        {
+          "field": "description",
+          "action": "correct",
+          "proposed_or_check": "23 2027 host courses are listed with different institutions; nomination and course conditions require current guidelines",
+          "source_url": "https://tica-thaigov.mfa.go.th/en/content/tipp2027?menu=6a9fb7974127085db3339e43&page=5f4e22204784115e3a56f142",
+          "evidence_note": ""
+        }
+      ]
+    },
+    {
+      "id": "663c9ab0-312c-4662-80c9-db0db40a29e4",
+      "title": "Oman Government Scholarship",
+      "country": "Oman",
+      "disposition": "generic umbrella; map to 2026/27 HEAC scholarship codes before any canonical award decision",
+      "proposals": [
+        {
+          "field": "eligible_nationalities",
+          "action": "correct",
+          "proposed_or_check": "HEAC government-funded scholarships require Omani nationality or specified children-of-Omani-women exception, not ALL",
+          "source_url": "https://www.heac.gov.om/uploads/464ccdeff7fbc9b1.pdf",
+          "evidence_note": ""
+        },
+        {
+          "field": "application_cycle",
+          "action": "correct",
+          "proposed_or_check": "2026/2027",
+          "source_url": "https://www.heac.gov.om/uploads/464ccdeff7fbc9b1.pdf",
+          "evidence_note": ""
+        },
+        {
+          "field": "deadline",
+          "action": "review",
+          "proposed_or_check": "HEAC initial registration Apr 29-Jun 4 2026; not necessarily every individual scholarship application deadline",
+          "source_url": "https://www.heac.gov.om/uploads/464ccdeff7fbc9b1.pdf",
+          "evidence_note": ""
+        },
+        {
+          "field": "degree_levels",
+          "action": "retain",
+          "proposed_or_check": "Undergraduate HEAC system; verify specific award code before publication",
+          "source_url": "https://www.heac.gov.om/uploads/464ccdeff7fbc9b1.pdf",
+          "evidence_note": ""
+        },
+        {
+          "field": "funding_type",
+          "action": "review",
+          "proposed_or_check": "Internal/external scholarships and study grants have variable terms; no universal full tuition plus stipend",
+          "source_url": "https://www.heac.gov.om/uploads/464ccdeff7fbc9b1.pdf",
+          "evidence_note": ""
+        },
+        {
+          "field": "official_url",
+          "action": "correct",
+          "proposed_or_check": "Replace generic ministry homepage with HEAC guide and ultimately programme-code page",
+          "source_url": "https://www.heac.gov.om/uploads/464ccdeff7fbc9b1.pdf",
+          "evidence_note": ""
+        }
+      ]
+    },
+    {
+      "id": "e0d153dd-39fa-46f8-b402-5434c6884aed",
+      "title": "AIMS Computer Science Masters Award",
+      "country": "South Africa",
+      "disposition": "generic programme identity unverified; do not equate with Google DeepMind without review",
+      "proposals": [
+        {
+          "field": "title",
+          "action": "review",
+          "proposed_or_check": "Confirm separately named award; official Google DeepMind AIMS AI-for-Science MSc already has a private draft",
+          "source_url": "https://ai.aims.ac.za/apply",
+          "evidence_note": ""
+        },
+        {
+          "field": "eligible_nationalities",
+          "action": "review",
+          "proposed_or_check": "Do not assume ALL from the Google DeepMind scheme; that scheme requires African citizenship and residence with displacement exception",
+          "source_url": "https://ai.aims.ac.za/apply",
+          "evidence_note": ""
+        },
+        {
+          "field": "deadline",
+          "action": "retain",
+          "proposed_or_check": "Do not copy 2026-03-06 Google DeepMind deadline to unidentified award",
+          "source_url": "https://ai.aims.ac.za/apply",
+          "evidence_note": ""
+        },
+        {
+          "field": "official_url",
+          "action": "review",
+          "proposed_or_check": "Generic aims.ac.za insufficient for programme-specific verification",
+          "source_url": "https://ai.aims.ac.za/apply",
+          "evidence_note": ""
+        }
+      ]
+    },
+    {
+      "id": "fa5e8050-a019-4a3e-9b14-00b94ad6f663",
+      "title": "AIMS Masters Excellence Scholarship",
+      "country": "South Africa",
+      "disposition": "generic award identity unverified",
+      "proposals": [
+        {
+          "field": "title",
+          "action": "review",
+          "proposed_or_check": "Verify independently named Masters Excellence Scholarship, not generic Masters funding",
+          "source_url": "https://ai.aims.ac.za/",
+          "evidence_note": ""
+        },
+        {
+          "field": "eligible_nationalities",
+          "action": "review",
+          "proposed_or_check": "No evidence supports ALL for this title",
+          "source_url": "https://ai.aims.ac.za/apply",
+          "evidence_note": ""
+        },
+        {
+          "field": "deadline",
+          "action": "retain",
+          "proposed_or_check": "Do not invent a 2027 call from historical 2026 DeepMind cycle",
+          "source_url": "https://ai.aims.ac.za/apply",
+          "evidence_note": ""
+        },
+        {
+          "field": "official_url",
+          "action": "review",
+          "proposed_or_check": "Replace homepage only after identity established",
+          "source_url": "https://ai.aims.ac.za/",
+          "evidence_note": ""
+        }
+      ]
+    },
+    {
+      "id": "44da191e-aed6-4082-8f65-c270f93d7f18",
+      "title": "AIMS Masters International Scholarship",
+      "country": "South Africa",
+      "disposition": "generic award identity unverified; overlaps existing DeepMind AI stream",
+      "proposals": [
+        {
+          "field": "title",
+          "action": "review",
+          "proposed_or_check": "Check whether this is generic AI for Science/Google DeepMind stream, not independent scholarship",
+          "source_url": "https://ai.aims.ac.za/",
+          "evidence_note": ""
+        },
+        {
+          "field": "eligible_nationalities",
+          "action": "review",
+          "proposed_or_check": "Existing named DeepMind route requires African citizenship; ALL is unsupported for generic listing",
+          "source_url": "https://ai.aims.ac.za/apply",
+          "evidence_note": ""
+        },
+        {
+          "field": "deadline",
+          "action": "retain",
+          "proposed_or_check": "Do not publish a new 2027 deadline; confirmed DeepMind 2026/27 deadline March 6 2026",
+          "source_url": "https://ai.aims.ac.za/apply",
+          "evidence_note": ""
+        },
+        {
+          "field": "official_url",
+          "action": "review",
+          "proposed_or_check": "Current homepage is not programme-specific",
+          "source_url": "https://ai.aims.ac.za/apply",
+          "evidence_note": ""
+        }
+      ]
+    }
+  ],
+  "existing_draft_review": {
+    "id": "4384fa7b-a925-450c-b208-a0421aa2f80b",
+    "title": "Google DeepMind Scholarship – AIMS AI for Science 2026–27",
+    "status": "draft",
+    "verification_status": "curated",
+    "deadline": "2026-03-06",
+    "source": "https://ai.aims.ac.za/apply",
+    "source_audit_success_at": null,
+    "provenance_rows": 0,
+    "reviewer_attributed_provenance": 0,
+    "action": "Do not duplicate or publish as open; 2026/27 cycle closed, 2027/28 call not established."
+  },
+  "leads": [
+    {
+      "title": "Brunei Government Scholarship Scheme (General) — overseas study 2027/28",
+      "source": "https://www.moe.gov.bn/blog/2026/10/17/surat-pemberitahuan-ministry-of-education-for-his-majesty-the-sultan-and-yang-di-pertuan-negara-brunei-darussalam-governments-scholarship-scheme-general-for-the-academic-session-2027-2028/",
+      "identity": "distinct from inbound BDGS",
+      "cycle": "2027/28",
+      "opening": "around January 2027",
+      "deadline": null,
+      "status": "hold",
+      "reason": "outbound programme for Bruneian applicants; exact award/eligibility and closing date require scheme documents; do not confuse with foreign-student scholarship"
+    },
+    {
+      "title": "KFUPM International Undergraduate Scholarship",
+      "source": "https://www3.kfupm.edu.sa/study/international-students/fees-and-scholarships",
+      "identity": "separate from graduate full scholarship",
+      "cycle": "2027 admission details require verification",
+      "deadline": null,
+      "status": "reconcile_existing_published",
+      "reason": "Generic KFUPM listing already covers undergraduate; automatic distinct count prohibited"
+    },
+    {
+      "title": "KFUPM Graduate Full Scholarship",
+      "source": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+      "identity": "PhD/direct PhD/select MS",
+      "cycle": "graduate admission window 2026-11-23 to 2027-01-20",
+      "deadline": null,
+      "status": "reconcile_existing_published",
+      "reason": "Admission deadline not separate scholarship deadline; generic published record overlaps"
+    },
+    {
+      "title": "TICA Bilateral Long-Term Scholarships",
+      "source": "https://tica-thaigov.mfa.go.th/en/page/long-term-scholarships",
+      "identity": "separate from TIPP, primarily neighbouring countries",
+      "cycle": null,
+      "deadline": null,
+      "status": "hold",
+      "reason": "No current programme-specific 2027 call or deadline established"
+    },
+    {
+      "title": "TICA Trilateral Long-Term Scholarships",
+      "source": "https://tica-thaigov.mfa.go.th/en/page/long-term-scholarships",
+      "identity": "doctoral trilateral cooperation",
+      "cycle": null,
+      "deadline": null,
+      "status": "hold",
+      "reason": "No current programme-specific 2027 call or deadline established"
+    }
+  ],
+  "controls": {
+    "authenticated_user": null,
+    "is_admin": false,
+    "db_role": "postgres",
+    "promotion": "requires is_admin or genuine auth.role service_role; no bypass",
+    "publication": "requires is_admin and readiness",
+    "candidate_statuses": {
+      "pending": 625,
+      "ignored": 11,
+      "accepted": 0
+    },
+    "field_provenance": "Source-linked proposed values in this JSON only; no database provenance records created",
+    "staging_only": true,
+    "production_changes": 0,
+    "duplicate_policy": "no new drafts until semantic matching against published, drafts and source candidates",
+    "http_policy": "transient failures not evidence of discontinuation",
+    "ci": "commit requires validation; do not merge/deploy without CI"
+  }
+}

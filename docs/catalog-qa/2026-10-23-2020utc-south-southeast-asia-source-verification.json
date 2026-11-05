@@ -1,0 +1,333 @@
+{
+  "run_date_utc": "2026-10-23",
+  "run_window": "2026-10-23 20:20 UTC onwards",
+  "environment": "Supabase staging cbzriyarlvpmtfbjgede",
+  "status": "review_evidence_only_not_approved",
+  "policy": "Do not write to staging via unauthenticated management role. Reviewer must confirm field-level source provenance, audit freshness, duplicate identity, application cycle, and use authenticated admin approval. No production changes.",
+  "baseline": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_action_logs": 8,
+    "auth_uid": null,
+    "is_admin": false,
+    "checked_at_utc": "2026-10-23 20:20:43"
+  },
+  "published_records": [
+    {
+      "id": "8cf9de06-a379-4b6b-8617-c2a15712b195",
+      "title": "LUMS National Outreach Programme",
+      "provenance_count": 5,
+      "action": "CORRECT_WITH_REVIEW",
+      "official_source": "https://nop.lums.edu.pk/how-to-apply-nop",
+      "evidence": {
+        "application_cycle": "2027 NOP SCS / September 2028 university entry",
+        "scs_application_deadline": "2027-02-23",
+        "scs_documents_deadline": "2027-02-25",
+        "undergraduate_admission": "January–February 2028 (exact date pending)",
+        "degree_levels": [
+          "Bachelor"
+        ],
+        "eligibility": "At least 80% Matric/O-Level-equivalent marks and demonstrated financial need; outreach targets students across Pakistan; admission remains merit-based.",
+        "funding": "Fully funded NOP scholarship for eligible admitted undergraduate students, subject to annual need reassessment; living/book/hostel support may apply according to assessment.",
+        "tests": "No universal IELTS/TOEFL/SAT score established by the cited NOP scholarship page; separate admission test may apply."
+      },
+      "notes": "Do not use 2027-02-23 as September 2027 degree admission deadline. Remove unrestricted ALL eligibility without inventing a citizenship rule."
+    },
+    {
+      "id": "34af3577-5c9f-4113-b509-86fc2b10c008",
+      "title": "Indian Council for Cultural Relations (ICCR) Scholarship",
+      "provenance_count": 0,
+      "action": "CORRECT_WITH_REVIEW",
+      "official_sources": [
+        "https://iccr.gov.in/index.php/iccr-scholarship/indian-council-cultural-relations-scholarship",
+        "https://a2ascholarships.iccr.gov.in/assets/site/docs/Timeline-AY-2026-27.pdf",
+        "https://a2ascholarships.iccr.gov.in/home/register"
+      ],
+      "evidence": {
+        "application_cycle": "2026/27 completed; 2027/28 unannounced",
+        "application_window_2026": "2026-02-27 to 2026-04-15",
+        "degree_levels": [
+          "Bachelor",
+          "Master",
+          "PhD"
+        ],
+        "eligibility": "Foreign students through country-specific ICCR schemes and Indian missions; 18 separate schemes; NOT unrestricted ALL.",
+        "funding": "Tuition, monthly allowance, housing allowance, certain travel, contingency and thesis support depending on scheme; students must meet medical insurance obligations.",
+        "fields": "STEM and non-STEM, with medicine/paramedical exclusions; AYUSH separate schemes.",
+        "tests": "No universal numerical IELTS/TOEFL/SAT requirement established by these pages."
+      },
+      "notes": "Umbrella ICCR award, avoid generating duplicate programmes by treating all sub-schemes as identical. The timeline PDF contains a 2025 typo in a 2026 second-round row; do not propagate it."
+    },
+    {
+      "id": "a816f159-5564-4c5c-87c0-b39409690c79",
+      "title": "IIT Bombay International Graduate Scholarship",
+      "provenance_count": 0,
+      "action": "IDENTITY_REVIEW",
+      "official_sources": [
+        "https://s3.ieor.iitb.ac.in/index.php/admissions/phd",
+        "https://acad.iitb.ac.in/index.php/admissions/research"
+      ],
+      "evidence": {
+        "funding": "Some selected international PhD candidates may receive IIT Bombay teaching assistantships; NOT universal guaranteed full tuition and stipend for every Master's/PhD student.",
+        "eligibility": "Institute admission/assistantship categories differ, including self-financed foreign nationals with no institute support.",
+        "tests": "No universal IELTS/TOEFL/SAT numerical minimum established."
+      },
+      "notes": "Current link marked dead in staging; do not infer scholarship discontinued from dead link. Historic IIT foreign TA brochure with Rs 25k/28k is not current-cycle funding evidence."
+    },
+    {
+      "id": "d42efd88-bedc-4346-b883-237b3a9d96d8",
+      "title": "IIT Bombay Masters Excellence Scholarship",
+      "provenance_count": 0,
+      "action": "UNVERIFIED_GENERIC_AWARD_IDENTITY",
+      "official_sources": [
+        "https://acad.iitb.ac.in/index.php/admissions/research",
+        "https://s3.ieor.iitb.ac.in/index.php/admissions/phd"
+      ],
+      "evidence": {
+        "funding": "Department/category-dependent financial assistance; unsupported generic guarantee of full tuition and stipend.",
+        "deadline": "No scholarship-specific current deadline established.",
+        "tests": "No universal IELTS/TOEFL/SAT/SAT threshold established."
+      },
+      "notes": "Homepage-only source; do not publish correction or archive before confirming programme identity and relationship to TA employment."
+    },
+    {
+      "id": "6ba8a99f-2107-4d9e-9b95-7f4158650401",
+      "title": "IIT Bombay Masters International Scholarship",
+      "provenance_count": 0,
+      "action": "UNVERIFIED_GENERIC_AWARD_IDENTITY",
+      "official_sources": [
+        "https://acad.iitb.ac.in/index.php/admissions/research",
+        "https://s3.ieor.iitb.ac.in/index.php/admissions/phd"
+      ],
+      "evidence": {
+        "funding": "Department/category-dependent financial assistance; unsupported generic guarantee of full tuition and stipend.",
+        "deadline": "No scholarship-specific current deadline established.",
+        "tests": "No universal IELTS/TOEFL/SAT/SAT threshold established."
+      },
+      "notes": "Homepage-only source; do not publish correction or archive before confirming programme identity and relationship to TA employment."
+    },
+    {
+      "id": "700b8004-fb0b-4246-8b8a-d383b25edbdf",
+      "title": "IIT Bombay Phd Excellence Scholarship",
+      "provenance_count": 0,
+      "action": "UNVERIFIED_GENERIC_AWARD_IDENTITY",
+      "official_sources": [
+        "https://acad.iitb.ac.in/index.php/admissions/research",
+        "https://s3.ieor.iitb.ac.in/index.php/admissions/phd"
+      ],
+      "evidence": {
+        "funding": "Department/category-dependent financial assistance; unsupported generic guarantee of full tuition and stipend.",
+        "deadline": "No scholarship-specific current deadline established.",
+        "tests": "No universal IELTS/TOEFL/SAT/SAT threshold established."
+      },
+      "notes": "Homepage-only source; do not publish correction or archive before confirming programme identity and relationship to TA employment."
+    },
+    {
+      "id": "44daaaf2-e51c-4f68-80d4-5baa19573f9b",
+      "title": "IIT Bombay Phd International Scholarship",
+      "provenance_count": 0,
+      "action": "UNVERIFIED_GENERIC_AWARD_IDENTITY",
+      "official_sources": [
+        "https://acad.iitb.ac.in/index.php/admissions/research",
+        "https://s3.ieor.iitb.ac.in/index.php/admissions/phd"
+      ],
+      "evidence": {
+        "funding": "Department/category-dependent financial assistance; unsupported generic guarantee of full tuition and stipend.",
+        "deadline": "No scholarship-specific current deadline established.",
+        "tests": "No universal IELTS/TOEFL/SAT/SAT threshold established."
+      },
+      "notes": "Homepage-only source; do not publish correction or archive before confirming programme identity and relationship to TA employment."
+    },
+    {
+      "id": "31b9a432-6477-444a-87ba-9b931bc870d2",
+      "title": "Universiti Malaya Scholarship",
+      "provenance_count": 0,
+      "action": "REPLACE_GENERIC_DESCRIPTION_AFTER_RECONCILIATION",
+      "official_sources": [
+        "https://aasd.um.edu.my/financial-aid-for-postgraduate",
+        "https://umresearch.um.edu.my/wp-content/uploads/2024/08/UM-Bright-Scholarship_vers1%40230724-LATEST-1.pdf"
+      ],
+      "evidence": {
+        "named_award": "UM Bright Scholarship",
+        "degree_levels": [
+          "PhD"
+        ],
+        "funding": "RM 3,500 monthly for 42 months; seven-semester fee waiver in 2024 programme terms; visa/flight/insurance/accommodation not covered.",
+        "application_cycle": "Annual cycles: end-April for October intake and end-September for February intake per current UM aid page.",
+        "eligibility": "Eligible local and international full-time PhD-by-research candidates; university-selected fields."
+      },
+      "notes": "Generic published Master/PhD fully-funded claim unsupported; verify 2026/27 terms and identity before update. UMSS graduate research assistantship is a separate scheme, not a universal scholarship."
+    },
+    {
+      "id": "5f168983-db6b-45ca-96fa-a1f33d9436dd",
+      "title": "National University of Malaysia Scholarship",
+      "provenance_count": 0,
+      "action": "IDENTITY_REVIEW",
+      "official_sources": [
+        "https://www.ukm.my/pusatsiswazah/en-scholarship-bnc-zakat2021/",
+        "https://www.ukm.my/pusatsiswazah/wp-content/uploads/2021/07/General-Terms-and-Specific-Conditions-UKM-Vice-Chancellor-Scholarship.pdf"
+      ],
+      "evidence": {
+        "named_awards": [
+          "UKM Vice-Chancellor Gold",
+          "UKM Vice-Chancellor Silver"
+        ],
+        "degree_levels": [
+          "PhD"
+        ],
+        "eligibility": "UKM 2021 conditions restrict to full-time research PhD and exclude concurrent sponsorship.",
+        "funding": "Historic 2021 Gold: fees + RM 3,200/month + RM 300/month housing + travel/visa; not established as current 2026/27 funding.",
+        "cycle": "UKM graduate centre says no scholarship currently offered; 2027/28 call unconfirmed."
+      },
+      "notes": "No evidence to label institution's whole programme permanently discontinued; historical terms are not current rates."
+    },
+    {
+      "id": "c9a43168-a89e-40d2-b6f7-4ed2221977b1",
+      "title": "Thailand Government TICA Scholarship",
+      "provenance_count": 0,
+      "action": "CORRECT_WITH_REVIEW",
+      "official_sources": [
+        "https://tica-thaigov.mfa.go.th/en/content/tipp-2027?menu=6a9fb7974127085db3339e43&page=5f4e22204784115e3a56f142",
+        "https://tica-thaigov.mfa.go.th/en/page/list-of-eligible-countries-for-tipp"
+      ],
+      "evidence": {
+        "named_programme": "Thailand International Postgraduate Programme (TIPP)",
+        "degree_levels": [
+          "Master"
+        ],
+        "application_cycle": "2026 programme; 2027 programme deadline not established",
+        "deadline": "2026 individual courses have different deadlines; example 2026-02-23",
+        "eligible_nationalities": "Specific eligible countries/territories, differentiated full vs partial support; NOT ALL",
+        "funding": "Full or partial support depending on country and course; do not advertise universally full funding."
+      },
+      "notes": "Programme-specific deadlines and country restrictions; no 2027 date extrapolation."
+    },
+    {
+      "id": "622f8ee2-a19f-48d9-8916-adea4fd897eb",
+      "title": "Ateneo de Manila Scholarship",
+      "provenance_count": 0,
+      "action": "IDENTITY_REVIEW",
+      "official_source": "https://global.ateneo.edu/sites/all/themes/ateneoglobal/images/pdf/Ateneo_Viewbook_v2.pdf",
+      "evidence": {
+        "degree_levels": [
+          "Bachelor"
+        ],
+        "funding": "Historical financial-aid tiers 25%, 50%, 75%, or 100% tuition and fees; some allowances/dorm aid may apply. NOT guaranteed full tuition + living.",
+        "deadline": "Current 2027 deadline not confirmed",
+        "eligibility": "Need- and merit-assessed."
+      },
+      "notes": "Viewbook is old, do not treat as proof of a current call; locate current undergraduate admission/financial aid page before publishing."
+    }
+  ],
+  "proposed_new_candidates": [
+    {
+      "title": "Universiti Malaya Bright Scholarship",
+      "country": "Malaysia",
+      "degree_levels": [
+        "PhD"
+      ],
+      "funding": "Full PhD research fee waiver (seven semesters) and RM 3,500/month for 42 months under 2024 programme terms",
+      "eligibility": "Local and international full-time PhD research candidates",
+      "cycle": "Two annual cycles; confirm specific next intake before publishing",
+      "official_sources": [
+        "https://aasd.um.edu.my/financial-aid-for-postgraduate",
+        "https://umresearch.um.edu.my/wp-content/uploads/2024/08/UM-Bright-Scholarship_vers1%40230724-LATEST-1.pdf"
+      ],
+      "duplicate_screen": "No exact title in staging scholarships or source candidate title search; generic Universiti Malaya Scholarship already published. Identity reconciliation required.",
+      "decision": "PREPARE_PRIVATE_DRAFT_ONLY_AFTER_ADMIN_REVIEW"
+    },
+    {
+      "title": "PTE x Universiti Malaya Scholarship 2026",
+      "country": "Malaysia",
+      "degree_levels": null,
+      "funding": "Up to GBP 3,000 tuition award; do not claim full funding",
+      "eligibility": "International applicants; specific degree-level eligibility and PTE score/selection requirements must be verified in the current award's full terms",
+      "deadline": "2026-12-31",
+      "official_sources": [
+        "https://aasd.um.edu.my/financial-aid-for-postgraduate",
+        "https://www.um.edu.my/news/universiti-malaya-and-pearson-strengthen-partnership-as-pte-scholarship-enters-third-year"
+      ],
+      "duplicate_screen": "No exact title in staging scholarships or source candidate title search; not the same as UM Bright.",
+      "decision": "HOLD_UNTIL_DEGREE_AND_PTE_REQUIREMENTS_VERIFIED"
+    },
+    {
+      "title": "UKM Vice-Chancellor Gold Scholarship",
+      "country": "Malaysia",
+      "degree_levels": [
+        "PhD"
+      ],
+      "funding": "Historical 2021 terms: tuition/fees plus RM 3,200/month and RM 300 housing/month",
+      "eligibility": "Full-time PhD by research, local or international, no other sponsorship",
+      "deadline": null,
+      "official_sources": [
+        "https://www.ukm.my/pusatsiswazah/wp-content/uploads/2021/07/General-Terms-and-Specific-Conditions-UKM-Vice-Chancellor-Scholarship.pdf",
+        "https://www.ukm.my/pusatsiswazah/en-scholarship-bnc-zakat2021/"
+      ],
+      "duplicate_screen": "No exact title in staging; generic UKM record published",
+      "decision": "HOLD_NO_CURRENT_OPEN_CALL"
+    },
+    {
+      "title": "UKM Vice-Chancellor Silver Scholarship",
+      "country": "Malaysia",
+      "degree_levels": [
+        "PhD"
+      ],
+      "funding": "Historical UKM scholarship, exact current package unverified",
+      "eligibility": "Full-time PhD by research, local or international, no other sponsorship",
+      "deadline": null,
+      "official_sources": [
+        "https://www.ukm.my/pusatsiswazah/wp-content/uploads/2021/07/General-Terms-and-Specific-Conditions-UKM-Vice-Chancellor-Scholarship.pdf",
+        "https://www.ukm.my/pusatsiswazah/en-scholarship-bnc-zakat2021/"
+      ],
+      "duplicate_screen": "No exact title in staging; generic UKM record published",
+      "decision": "HOLD_NO_CURRENT_OPEN_CALL"
+    }
+  ],
+  "non_grant_exclusions": [
+    "UM PTPTN Education Loan Scheme",
+    "UM RHB Commodity Murabahah Education Financing",
+    "IIT Bombay teaching/research assistantships must be identified as conditional work-funded support, not unconditional grants"
+  ],
+  "duplicate_check_scope": "Staging scholarship and source candidate titles, selected official programme URLs; NOT a complete semantic duplicate clearance.",
+  "field_provenance_requirements": "Each accepted field should have programme-specific official URL, evidence excerpt, value, confidence and authenticated reviewer attribution. Never set verified_at without review.",
+  "authenticated_workflow": "Supabase/057_draft_review_publication_gate.sql requires public.is_admin(); Supabase/060_field_provenance.sql requires public.is_admin() for provenance writes. Use signed-in application admin UI (Grantly/Features/Admin/DraftScholarshipReviewView.swift) to review, audit, accept provenance and publish. Current Supabase management connection auth.uid()=NULL, is_admin()=false; no bypass.",
+  "staging_changes": 0,
+  "publications": 0,
+  "archives": 0,
+  "production_changes": 0,
+  "urgent_private_drafts": [
+    {
+      "id": "27968090-2edf-464d-9236-76f5186b741b",
+      "title": "EPFL-WISH Foundation Fellowship for Master's Projects Abroad",
+      "deadline": "2026-10-25 23:59 CET",
+      "next_deadline": "2027-04-11 23:59 CET",
+      "source": "https://wish-foundation.epfl.ch/masters-projects-abroad/",
+      "official_evidence": {
+        "funding": "Complementary grant, generally maximum CHF 5,000; variable by project duration, location and foundation budget. NOT a full Master's degree tuition scholarship.",
+        "eligibility": "Female students already enrolled in an EPFL Master's programme undertaking approved Master's project abroad, project not completed by deadline; Master's average 5.0 or higher is a selection criterion.",
+        "documents": "Two recommendation letters (at least one EPFL faculty), motivation letter, host confirmation, transcript, video, financial plan when relevant."
+      },
+      "staging_audit": "link_status exact but last_successful_check_at NULL; authenticated source audit and reviewer-attributed provenance required",
+      "action": "KEEP_PRIVATE_UNTIL_ADMIN_APPROVAL"
+    },
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "title": "Gordon and Isabel Humphrey Scholarship",
+      "deadline": "2026-10-25",
+      "source": "https://scholarships.unimelb.edu.au/awards/gordon-and-isabel-humphrey-scholarship",
+      "official_evidence": {
+        "funding": "AUD 41,100/year pro-rata 2027 rate for up to 3.5 years, AUD 2,000 interstate/AUD 3,000 overseas relocation allowance, OSHC for eligible international visa holders; do NOT assume full tuition coverage.",
+        "eligibility": "Already received 2027 PhD Engineering course offer, domestic and international candidates; separate application with personal statement.",
+        "application_cycle": "2027 commencement"
+      },
+      "staging_audit": "link_status exact but last_successful_check_at NULL; authenticated source audit and reviewer-attributed provenance required",
+      "action": "KEEP_PRIVATE_UNTIL_ADMIN_APPROVAL"
+    }
+  ]
+}

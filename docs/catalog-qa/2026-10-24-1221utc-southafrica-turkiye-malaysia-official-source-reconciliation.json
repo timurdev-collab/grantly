@@ -1,0 +1,651 @@
+{
+  "generated_at_utc": "2026-10-24T12:21:27Z",
+  "staging_project": "cbzriyarlvpmtfbjgede",
+  "staging_before": {
+    "observed_at_utc": "2026-10-24T12:21:27.508807Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance_total": 557,
+    "provenance_accepted": 207,
+    "provenance_reviewer_attributed": 0,
+    "source_candidates": 636,
+    "admin_action_logs": 8
+  },
+  "authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "authenticated_publication_available": false
+  },
+  "published_records": [
+    {
+      "id": "62fb7982-8251-4c8e-aed0-2747a014fe02",
+      "title": "Mandela Rhodes Scholarship",
+      "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+      "identity_assessment": "Named current scholarship; existing 2028 deadline correct.",
+      "field_proposals": [
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "African citizenship only",
+          "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+          "reason": "Staging ALL is wrong.",
+          "review_required": true
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": "Honours and Master's (taxonomy review required)",
+          "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+          "reason": "Official supports one-year Honours and up to two-year Master's.",
+          "review_required": true
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2028 intake; apply 9 March–14 April 2027",
+          "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+          "reason": "Exact 2028 cycle.",
+          "review_required": true
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "14 April 2027 23:59 GMT+2; references required",
+          "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+          "reason": "Retain existing 2027-04-14 deadline.",
+          "review_required": true
+        },
+        {
+          "field": "min_ielts",
+          "proposed_value": null,
+          "source_url": "https://www.mandelarhodes.org/scholarship/apply/",
+          "reason": "No numerical scholarship-specific IELTS threshold; keep null.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    },
+    {
+      "id": "385f8c8f-3c0b-4059-a527-6e809521068a",
+      "title": "University of Cape Town Mastercard Foundation",
+      "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+      "identity_assessment": "Real UCT programme, 2027 open postgraduate track.",
+      "field_proposals": [
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "African citizens including South Africa",
+          "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "reason": "ALL inaccurate.",
+          "review_required": true
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": "First Bachelor's, Health Sciences PG Diploma, Honours, coursework Master's; excludes research-only Master's/PhD",
+          "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "reason": "Award-specific degree eligibility.",
+          "review_required": true
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2026-10-31",
+          "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "reason": "Postgraduate scholarship deadline; UG closed 30 Sep 2026.",
+          "review_required": true
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "2027 UG: 30 Sep 2026 closed; 2027 PG: 31 Oct 2026; separate UCT admission required",
+          "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "reason": "Avoid universal deadline.",
+          "review_required": true
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2027 intake; PG open until 31 Oct 2026",
+          "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "reason": "Programme-specific cycle.",
+          "review_required": true
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "reason": "Replace homepage.",
+          "review_required": true
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Tuition, laptop, accommodation, living expenses, medical aid, visa where applicable, annual travel",
+          "source_url": "https://www.news.uct.ac.za/article/-2026-08-21-the-mastercard-foundation-scholars-program-is-looking-for-you",
+          "reason": "Selected award benefits, not automatic.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    },
+    {
+      "id": "930c19cd-a1f8-44e1-b34b-0a21834653bd",
+      "title": "University of Cape Town Masters International Scholarship",
+      "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+      "identity_assessment": "Generic record; no distinct programme established.",
+      "field_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed_value": null,
+          "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+          "reason": "Do not treat UCT domestic postgraduate aid or Mastercard as generic international Master's award.",
+          "review_required": true
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": null,
+          "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+          "reason": "Full funding not substantiated for a named universal programme.",
+          "review_required": true
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": null,
+          "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+          "reason": "No universal full tuition plus stipend confirmed.",
+          "review_required": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": null,
+          "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+          "reason": "Depends on identified award; domestic UCT aid limited to SA citizens and PR.",
+          "review_required": true
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+          "reason": "No universal deadline; do not transplant 10 Nov 2026 domestic deadline.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    },
+    {
+      "id": "19ee0a8b-3d9b-45c1-a238-71c1c71176b0",
+      "title": "University of Cape Town Scholarship",
+      "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+      "identity_assessment": "Umbrella listing; reconcile named awards.",
+      "field_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed_value": null,
+          "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+          "reason": "General funding page does not identify one award.",
+          "review_required": true
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": null,
+          "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+          "reason": "Cannot claim general full tuition.",
+          "review_required": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": null,
+          "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+          "reason": "Eligibility differs by programme.",
+          "review_required": true
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+          "reason": "Do not assign named domestic postgraduate bursary deadline to umbrella.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    },
+    {
+      "id": "b8705df2-c728-464b-92a1-17905f718ba2",
+      "title": "University of Cape Town Undergraduate International Scholarship",
+      "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+      "identity_assessment": "Generic international UG record without named award.",
+      "field_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed_value": null,
+          "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "reason": "No distinct scholarship identified; Mastercard programme is separate.",
+          "review_required": true
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": null,
+          "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "reason": "Blanket fully funded claim unsupported.",
+          "review_required": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": null,
+          "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "reason": "Cannot assume ALL; Mastercard is African-only.",
+          "review_required": true
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": null,
+          "source_url": "https://www.uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+          "reason": "Full tuition plus stipend not verified for generic award.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    },
+    {
+      "id": "3a2fdcfa-7f59-4eb6-825e-bd8ffb5e7f5b",
+      "title": "MasterCard Foundation at University of Pretoria",
+      "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+      "identity_assessment": "Duplicates private draft 67dc6528-42a1-4844-b676-faf2af87e1c8; reconcile first.",
+      "field_proposals": [
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "African youth with socioeconomic barriers; refugee and IDP eligibility conditional",
+          "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+          "reason": "ALL inaccurate.",
+          "review_required": true
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": "Undergraduate, Honours, Master's (taxonomy review for Honours)",
+          "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+          "reason": "Official application eligibility.",
+          "review_required": true
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+          "reason": "Official page conflicts: apply until 30 Jun 2026 vs UP UG 31 Aug/PG 30 Sep; scholarship vs admission dates unclear.",
+          "review_required": true
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "2027 forms; conflicting dates require administrator confirmation",
+          "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+          "reason": "Do not choose one unsupported deadline.",
+          "review_required": true
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2027 intake; official deadline conflict",
+          "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+          "reason": "2027 forms linked.",
+          "review_required": true
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+          "source_url": "https://www.up.ac.za/mastercard-foundation-scholars-program/how-apply",
+          "reason": "Programme-specific application source.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    },
+    {
+      "id": "462a4590-2510-49ef-b5e2-a98b324324e4",
+      "title": "University of Pretoria Postgraduate Bursary",
+      "source_url": "https://www.up.ac.za/funding-site/funding/masters-and-doctoral-bursary-conditions",
+      "identity_assessment": "Faculty nomination bursary, not guaranteed full funding.",
+      "field_proposals": [
+        {
+          "field": "funding_type",
+          "proposed_value": "Competitive variable bursary; not guaranteed",
+          "source_url": "https://www.up.ac.za/funding-site/funding/masters-and-doctoral-bursary-conditions",
+          "reason": "Funding depends on faculty budgets.",
+          "review_required": true
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": null,
+          "source_url": "https://www.up.ac.za/funding-site/funding/masters-and-doctoral-bursary-conditions",
+          "reason": "No universal full tuition plus stipend.",
+          "review_required": true
+        },
+        {
+          "field": "stipend",
+          "proposed_value": null,
+          "source_url": "https://www.up.ac.za/funding-site/funding/masters-and-doctoral-bursary-conditions",
+          "reason": "No universal stipend rate.",
+          "review_required": true
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2026 faculty nomination; no separate student application",
+          "source_url": "https://www.up.ac.za/funding-site/funding/masters-and-doctoral-bursary-conditions",
+          "reason": "Official conditions.",
+          "review_required": true
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://www.up.ac.za/funding-site/funding/masters-and-doctoral-bursary-conditions",
+          "reason": "Metadata page date not a student deadline.",
+          "review_required": true
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.up.ac.za/funding-site/funding/masters-and-doctoral-bursary-conditions",
+          "source_url": "https://www.up.ac.za/funding-site/funding/masters-and-doctoral-bursary-conditions",
+          "reason": "Replace generic link.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    },
+    {
+      "id": "995a730b-1a00-424c-837c-a53113c0c245",
+      "title": "Sabanci University Full Scholarship",
+      "source_url": "https://iro.sabanciuniv.edu/en/tuition-fee",
+      "identity_assessment": "Generic undergraduate record overlaps curated Sabanci international award; reconcile.",
+      "field_proposals": [
+        {
+          "field": "funding_type",
+          "proposed_value": "2026/27 international undergraduate tuition waivers: 25%,40%,50%,60%,75%",
+          "source_url": "https://iro.sabanciuniv.edu/en/tuition-fee",
+          "reason": "Current official percentages; no universal full award.",
+          "review_required": true
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Tuition waiver only; separately awarded dormitory scholarship covers housing",
+          "source_url": "https://iro.sabanciuniv.edu/en/degree-students/frequently-asked-questions/tuition-fees-and-scholarships",
+          "reason": "No guaranteed living allowance.",
+          "review_required": true
+        },
+        {
+          "field": "stipend",
+          "proposed_value": null,
+          "source_url": "https://iro.sabanciuniv.edu/en/degree-students/frequently-asked-questions/tuition-fees-and-scholarships",
+          "reason": "No universal cash stipend established.",
+          "review_required": true
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2026/27 admission; automatic scholarship evaluation",
+          "source_url": "https://iro.sabanciuniv.edu/en/degree-students/frequently-asked-questions/tuition-fees-and-scholarships",
+          "reason": "No separate scholarship application.",
+          "review_required": true
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://iro.sabanciuniv.edu/en/tuition-fee",
+          "source_url": "https://iro.sabanciuniv.edu/en/tuition-fee",
+          "reason": "Exact international undergraduate fee/award page.",
+          "review_required": true
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://iro.sabanciuniv.edu/en/degree-students/frequently-asked-questions/tuition-fees-and-scholarships",
+          "reason": "No independent scholarship deadline established.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    },
+    {
+      "id": "31b9a432-6477-444a-87ba-9b931bc870d2",
+      "title": "Universiti Malaya Scholarship",
+      "source_url": "https://www.um.edu.my/scholarships-and-financial-assistancers",
+      "identity_assessment": "Generic Master's/PhD full scholarship lacks named programme.",
+      "field_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed_value": null,
+          "source_url": "https://www.um.edu.my/scholarships-and-financial-assistancers",
+          "reason": "University describes multiple financial-aid schemes, not one universal award.",
+          "review_required": true
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": null,
+          "source_url": "https://www.um.edu.my/scholarships-and-financial-assistancers",
+          "reason": "No guaranteed full funding established.",
+          "review_required": true
+        },
+        {
+          "field": "stipend",
+          "proposed_value": null,
+          "source_url": "https://www.um.edu.my/scholarships-and-financial-assistancers",
+          "reason": "No universal postgraduate stipend.",
+          "review_required": true
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": null,
+          "source_url": "https://www.um.edu.my/scholarships-and-financial-assistancers",
+          "reason": "Varies by named scheme.",
+          "review_required": true
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": null,
+          "source_url": "https://medicine.um.edu.my/events/call-for-applications-faculty-of-medicine-postgraduate-scholarship-scheme-fompss-semester-1-session-2025-2026",
+          "reason": "2025 Faculty of Medicine scholarship was local-only; cannot assign ALL universally.",
+          "review_required": true
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://www.um.edu.my/scholarships-and-financial-assistancers",
+          "reason": "No universal deadline.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    },
+    {
+      "id": "5f168983-db6b-45ca-96fa-a1f33d9436dd",
+      "title": "National University of Malaysia Scholarship",
+      "source_url": "https://www.ukm.my/pusatsiswazah/en-scholarship-bnc-zakat2021/",
+      "identity_assessment": "UKM Graduate Centre says no scholarship offered in its current announcement; historical Vice-Chancellor rules not proof of live call.",
+      "field_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed_value": null,
+          "source_url": "https://www.ukm.my/pusatsiswazah/en-scholarship-bnc-zakat2021/",
+          "reason": "Current named award and opening not confirmed.",
+          "review_required": true
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": null,
+          "source_url": "https://www.ukm.my/pusatsiswazah/en-scholarship-bnc-zakat2021/",
+          "reason": "No current full-funding offer substantiated.",
+          "review_required": true
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": null,
+          "source_url": "https://www.ukm.my/pusatsiswazah/en-scholarship-bnc-zakat2021/",
+          "reason": "Historical award terms cannot be universalized.",
+          "review_required": true
+        },
+        {
+          "field": "stipend",
+          "proposed_value": null,
+          "source_url": "https://www.ukm.my/pusatsiswazah/en-scholarship-bnc-zakat2021/",
+          "reason": "Current rate unknown.",
+          "review_required": true
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "2027 call unconfirmed; not declared discontinued",
+          "source_url": "https://www.ukm.my/pusatsiswazah/en-scholarship-bnc-zakat2021/",
+          "reason": "Do not infer closure from historical page.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    },
+    {
+      "id": "3e56cbdf-bba4-41db-a58d-fefa4b75e675",
+      "title": "Oppenheimer Memorial Trust Scholarship",
+      "source_url": "https://www.omt.org.za/postgraduate-study",
+      "identity_assessment": "Real postgraduate scholarship; discretionary amounts and cycle-specific deadlines.",
+      "field_proposals": [
+        {
+          "field": "funding_type",
+          "proposed_value": "Variable discretionary postgraduate award",
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "reason": "Not guaranteed fully funded.",
+          "review_required": true
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": null,
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "reason": "No standard full tuition and stipend promise.",
+          "review_required": true
+        },
+        {
+          "field": "stipend",
+          "proposed_value": null,
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "reason": "No universal stipend.",
+          "review_required": true
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2026-08-31",
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "reason": "Jan–Jun 2027 start application closed.",
+          "review_required": true
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "Jan–Jun 2027 start; applications 1 Jun–31 Aug 2026; next cycle unconfirmed",
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "reason": "Preserve historical cycle.",
+          "review_required": true
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": "Master's, doctoral; postdoctoral outside degree taxonomy",
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "reason": "Award types explicitly listed.",
+          "review_required": true
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.omt.org.za/postgraduate-study",
+          "source_url": "https://www.omt.org.za/postgraduate-study",
+          "reason": "Exact programme page.",
+          "review_required": true
+        }
+      ],
+      "status": "unapplied_research_only"
+    }
+  ],
+  "leads": [
+    {
+      "title": "UCT Postgraduate Financial Aid Bursary 2027",
+      "provider": "University of Cape Town",
+      "country": "South Africa",
+      "degree_levels": [
+        "Honours",
+        "Master",
+        "PhD"
+      ],
+      "funding": "Variable cost-of-study contributions; not universally full",
+      "deadline": "2026-11-10",
+      "application_cycle": "2027",
+      "nationality": "South African citizens and permanent residents",
+      "official_url": "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding-bursaries-scholarships/uct-merit-and-need-awards",
+      "duplicate_screen": "No exact title found; reconcile generic UCT records",
+      "decision": "private_draft_candidate_pending_admin"
+    },
+    {
+      "title": "University of Pretoria 2027 Doctoral Research Bursary",
+      "provider": "University of Pretoria",
+      "country": "South Africa",
+      "degree_levels": [
+        "PhD"
+      ],
+      "funding": "Check attached official PDF before asserting amount",
+      "deadline": "2026-09-18",
+      "application_cycle": "2027 closed",
+      "nationality": "All nationalities, subject to full-time registration and conditions",
+      "official_url": "https://www.up.ac.za/funding-site/funding/2027-new-application-doctoral-research-bursary",
+      "duplicate_screen": "No exact title found; distinguish generic UP postgraduate bursary",
+      "decision": "hold_closed_and_pdf_verification"
+    },
+    {
+      "title": "Sabancı University Graduate Full Scholarship 2026/27",
+      "provider": "Sabancı University",
+      "country": "Türkiye",
+      "degree_levels": [
+        "Master",
+        "PhD"
+      ],
+      "funding": "Full tuition waiver plus degree-dependent cash, dormitory, insurance and transport support",
+      "deadline": null,
+      "application_cycle": "2026/27",
+      "nationality": "Graduate applicants subject to programme eligibility",
+      "official_url": "https://www.sabanciuniv.edu/tr/lisansustu-burslari",
+      "duplicate_screen": "No exact title found; do not confuse with UG scholarships",
+      "decision": "private_draft_candidate_after_deadline_and_english_source_review"
+    },
+    {
+      "title": "Shaun Johnson Memorial Scholarship",
+      "provider": "Mandela Rhodes Foundation / Leverhulme Trust",
+      "country": "United Kingdom",
+      "degree_levels": [
+        "PhD"
+      ],
+      "funding": "Requires further confirmation",
+      "deadline": null,
+      "application_cycle": "Next round opens April 2027",
+      "nationality": "Mandela Rhodes alumni starting new PhD in UK",
+      "official_url": "https://www.mandelarhodes.org/alumni/sjms/",
+      "duplicate_screen": "No exact title found; semantic screening pending",
+      "decision": "hold_funding_deadline"
+    },
+    {
+      "title": "Universiti Malaya Faculty of Medicine Postgraduate Scholarship Scheme",
+      "provider": "Universiti Malaya Faculty of Medicine",
+      "country": "Malaysia",
+      "degree_levels": [
+        "Master",
+        "PhD"
+      ],
+      "funding": "Tuition fees for eligible local research students",
+      "deadline": "2025-08-29",
+      "application_cycle": "2025/26 historical; 2026/27 not confirmed",
+      "nationality": "Local research students only",
+      "official_url": "https://medicine.um.edu.my/events/call-for-applications-faculty-of-medicine-postgraduate-scholarship-scheme-fompss-semester-1-session-2025-2026",
+      "duplicate_screen": "No exact title found; not a current call",
+      "decision": "hold_historical"
+    }
+  ],
+  "existing_draft_review": {
+    "id": "67dc6528-42a1-4844-b676-faf2af87e1c8",
+    "title": "Mastercard Foundation Scholars Program at the University of Pretoria",
+    "status": "draft",
+    "verification_status": "verified",
+    "deadline": null,
+    "blocker": "Published duplicate and conflicting official dates; authenticated review required"
+  },
+  "safeguards": [
+    "Unapplied proposals only; no field provenance accepted or records verified.",
+    "No archival from transient 403, historical calls or umbrella overlap.",
+    "Do not invent IELTS/TOEFL/SAT thresholds.",
+    "Authenticate admin and log reviewed field provenance; run source audits and CI before publication."
+  ],
+  "summary": {
+    "investigations": 11,
+    "field_proposals": 61,
+    "leads": 5,
+    "staging_edits": 0,
+    "publications": 0
+  }
+}

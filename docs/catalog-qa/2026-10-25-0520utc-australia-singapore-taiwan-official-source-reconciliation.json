@@ -1,0 +1,422 @@
+{
+  "generated_at": "2026-10-25T05:22:06Z",
+  "project": "cbzriyarlvpmtfbjgede",
+  "scope": "Staging-only source research; no database edits",
+  "before": {
+    "at": "2026-10-25T05:20:59.349502Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 637,
+    "admin_logs": 8
+  },
+  "after": {
+    "at": "2026-10-25T05:22:06.680596Z",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_provenance": 0,
+    "source_candidates": 637,
+    "admin_logs": 8
+  },
+  "records_reviewed": [
+    {
+      "id": "96d13afb-23f2-4b74-83e9-7920d09c192d",
+      "title": "ANU Masters International Scholarship",
+      "finding": "Generic A$30k fully-funded claim not supported as one named scholarship; ANU University Research Scholarship is a stipend award (A$40,475 in 2027) for research degrees; tuition support is separate; Round 1 international closed 31 Aug 2026; Round 2 15 Apr 2027.",
+      "official_source": "https://study.anu.edu.au/scholarships/find-scholarship/anu-university-research-scholarships",
+      "fields_to_review": [
+        "title",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "application_cycle",
+        "degree_levels"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "a3e51324-acae-43ce-b711-01b5c299e900",
+      "title": "ANU PhD International Scholarship",
+      "finding": "Generic full tuition plus A$30k is not a verified named award; ANU University Research Scholarship pays A$40,475 annual 2027 stipend, PhD 3.5 years; international 2027 Round 1 closed 31 Aug 2026; 15 Apr 2027 is Round 2, not a universal deadline.",
+      "official_source": "https://study.anu.edu.au/scholarships/find-scholarship/anu-university-research-scholarships",
+      "fields_to_review": [
+        "title",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "application_cycle"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "7385caff-9493-4889-b1c0-70858627227c",
+      "title": "Melbourne Research Scholarship",
+      "finding": "Existing named award is real; official page states A$39,500 stipend 2026 and automatic consideration. Distinguish fee offset only from stipend-plus-fee awards. Do not replace 2026 MRS stipend with separate RTP 2027 A$41,100 figure without matching source.",
+      "official_source": "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship",
+      "fields_to_review": [
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "application_cycle",
+        "deadline_notes"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "7666f8a6-c053-429e-b16f-b5bcd57197f6",
+      "title": "University of Melbourne Masters Excellence Scholarship",
+      "finding": "Generic full tuition + A$28k unsupported; reconcile with named Melbourne Research Scholarship and RTP; both only for research masters, not all coursework masters; 2027 RTP stipend A$41,100 not generic award.",
+      "official_source": "https://scholarships.unimelb.edu.au/awards/research-training-program-scholarship",
+      "fields_to_review": [
+        "title",
+        "degree_levels",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline_notes"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "2c56e7a9-12cc-4161-bf31-65ff0979a5cf",
+      "title": "University of Melbourne Phd International Scholarship",
+      "finding": "Generic full tuition + A$28k unsupported as independently named scheme; reconcile with Melbourne Research Scholarship and RTP; competitive stipend, no universal automatic living allowance.",
+      "official_source": "https://scholarships.unimelb.edu.au/awards/graduate-research-scholarships",
+      "fields_to_review": [
+        "title",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline_notes"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "adcebe7b-1c81-4b36-8407-10ad306b0726",
+      "title": "University of Queensland Scholarship",
+      "finding": "Generic full tuition + A$30k requires identity review; official UQGRSS/RTP 2026 stipend A$39,220, indexed; PhD/MPhil/research doctorate only, domestic/international, nomination and supervisor supported EOI. International round closing 22 Mar 2027 on official schedule.",
+      "official_source": "https://scholarships.uq.edu.au/scholarship/graduate-school-scholarships-uqgss-%E2%80%93-includes-rtp",
+      "fields_to_review": [
+        "title",
+        "degree_levels",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "application_cycle"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "994bc38a-5d7e-4e81-9e6a-b4e852f1b743",
+      "title": "University of Sydney Masters Excellence Scholarship",
+      "finding": "Generic title not independently verified; official international RTP/USYDIS only for higher degree by research, not all masters. 2027 stipend A$44,293, RTP fee offset covers 100% tuition and OSHC, 2027 periods 3/4 deadline 18 Dec 2026.",
+      "official_source": "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html",
+      "fields_to_review": [
+        "title",
+        "degree_levels",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "application_cycle"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "f49ddcfe-93fb-42e5-ac78-be2970e5d9fb",
+      "title": "University of Sydney Phd International Scholarship",
+      "finding": "Generic title needs named-programme reconciliation with RTP/USYDIS; stipend A$44,293 2027, paired fee offset 100% up to 14 research periods; deadlines differ by research period: 11 Sep 2026 (early) and 18 Dec 2026 (later).",
+      "official_source": "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html",
+      "fields_to_review": [
+        "title",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "application_cycle"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "73541d09-6e8e-40c0-b87c-74f00e47c728",
+      "title": "UNSW Scientia Scholarship",
+      "finding": "Do NOT archive as discontinued: UNSW published a new Scientia PhD project on 8 Oct 2026 explicitly under Scientia PhD Scholarship Scheme. That project is domestic-only and offers A$39,991 2027 annual stipend plus A$25k one-off mobility grant. Generic A$50k/A$10k figures not applicable to that project; scheme-wide eligibility and deadline require verification.",
+      "official_source": "https://www.unsw.edu.au/research/hdr/our-projects/tumour-remodelling-across-space-time",
+      "fields_to_review": [
+        "title",
+        "funding_type",
+        "stipend",
+        "eligible_nationalities",
+        "application_cycle",
+        "deadline_notes"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "0f12ae03-b115-46a7-b9a0-27e878bb25ed",
+      "title": "NUS Masters Excellence Scholarship",
+      "finding": "Generic named award not confirmed. NUS Research Scholarship supports research masters (faculty-specific admission, some faculty masters scholarships restricted to Singapore citizens/PR); international research masters stipend S$2,900/month from 1 Jan 2026, full tuition waiver, not all taught masters.",
+      "official_source": "https://nusgs.nus.edu.sg/scholarships/nus-research-scholarship",
+      "fields_to_review": [
+        "title",
+        "degree_levels",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline_notes"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "44ae81c3-5bf1-477b-ab85-30880609b1cf",
+      "title": "NUS Phd International Scholarship",
+      "finding": "Generic title may overlap named NUS Research Scholarship; full tuition plus S$3,000/month international PhD from Jan 2026; S$500/month possible after PhD QE; faculty deadlines and Graduate Assistantship requirements apply.",
+      "official_source": "https://nusgs.nus.edu.sg/scholarships/nus-research-scholarship",
+      "fields_to_review": [
+        "title",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline_notes"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "eee04496-2e70-4418-9909-51c7c23a7576",
+      "title": "NUS Undergraduate Excellence Scholarship",
+      "finding": "Generic title must be matched to a named NUS scholarship. NUS International Undergraduate Scholarship already exists as a PRIVATE draft; 100% subsidised tuition only after MOE Tuition Grant, S$5,800 annual living, S$5,000 accommodation, S$1,750 one-time computer; 3-year Tuition Grant service bond applies.",
+      "official_source": "https://nus.edu.sg/oam/scholarships/scholarships-for-freshmen-singapore-permanent-residents/nus-international-undergraduate-scholarship",
+      "fields_to_review": [
+        "title",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "eligible_nationalities",
+        "deadline_notes"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "91d0f9ae-3739-4882-afb2-f9c1cb4a6351",
+      "title": "NUS ASEAN Undergraduate Scholarship",
+      "finding": "Named programme verified; existing listed subsidised tuition and allowances match official. IMPORTANT mandatory MOE Tuition Grant normally carries 3-year Singapore work bond; medicine/dentistry have distinct bonds. No separate scholarship application; do not assign universal IELTS/TOEFL/SAT or guessed deadline.",
+      "official_source": "https://nus.edu.sg/oam/scholarships/scholarships-for-freshmen-international-students/asean-undergraduate-scholarship",
+      "fields_to_review": [
+        "tuition_coverage",
+        "eligible_nationalities",
+        "deadline_notes",
+        "application_cycle"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "94f29107-9957-4ac2-ba80-4d307613a1d0",
+      "title": "NUS Research Scholarship",
+      "finding": "Named scholarship and existing 2026 stipend details align official page: S$3,000 international PhD, S$2,900 international research Masters; tuition waiver; additional S$500 possible post-QE. Graduate Assistantship requirement and faculty-specific admissions. Review for authenticated provenance, do not blindly mark verified.",
+      "official_source": "https://nusgs.nus.edu.sg/scholarships/nus-research-scholarship",
+      "fields_to_review": [
+        "degree_levels",
+        "stipend",
+        "deadline_notes",
+        "application_cycle"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "65d89dc3-1b09-41f9-ac1f-00889956e1c9",
+      "title": "Yale-NUS Scholarship",
+      "finding": "Confirmed obsolete for new applicants: Yale-NUS stopped admitting new cohorts after Class of 2025 and college closed 30 June 2025. Needs authorized audited archive; do not relabel as NUS College scholarship.",
+      "official_source": "https://www.yale-nus.edu.sg/about-yale-nus/",
+      "fields_to_review": [
+        "cycle_status",
+        "deadline_notes",
+        "official_url"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "17bec752-6686-44d8-9183-a90a783f7850",
+      "title": "Taiwan ICDF Scholarship",
+      "finding": "Same TaiwanICDF International Higher Education Scholarship Program as other published ICDF record; official 2027 applications 1 Dec 2026–15 Mar 2027; eligible beneficiary countries only; Bachelor limited to diplomatic allies; institution-specific language requirements, no universal TaiwanICDF IELTS/TOEFL minimum. Do not duplicate.",
+      "official_source": "https://www.icdf.org.tw/wSite/ct?ctNode=31566&mp=2&xItem=69338",
+      "fields_to_review": [
+        "title",
+        "deadline",
+        "application_cycle",
+        "eligible_nationalities",
+        "degree_levels",
+        "min_ielts",
+        "deadline_notes"
+      ],
+      "review_only": true
+    },
+    {
+      "id": "2b1dee1e-1acb-44c9-87de-fffcd2f225f0",
+      "title": "Taiwan Scholarship (ICDF)",
+      "finding": "Duplicate candidate of Taiwan ICDF Scholarship, not the separate MOE Taiwan Scholarship; official 2027 window 1 Dec 2026–15 Mar 2027. Eligible beneficiary countries only; only designated partner programmes, Bachelor diplomatic allies only. Archive only via authenticated audited duplicate resolution.",
+      "official_source": "https://www.icdf.org.tw/wSite/ct?ctNode=31567&mp=1&xItem=12510",
+      "fields_to_review": [
+        "title",
+        "deadline",
+        "application_cycle",
+        "eligible_nationalities",
+        "degree_levels",
+        "official_url",
+        "deadline_notes"
+      ],
+      "review_only": true
+    }
+  ],
+  "field_review_items": 97,
+  "private_draft_candidates": [
+    {
+      "title": "University of Sydney Vice-Chancellor's International Scholarships Scheme",
+      "degree": "Bachelor / coursework Master",
+      "funding": "One-time A$5,000–60,000 depending on tier, not recurring full tuition",
+      "deadline": "2026-11-16",
+      "deadline_note": "Semester 1 2027 Round 3 requires unconditional offer by date; later Semester 2 rounds 2027-02-15, 2027-03-22, 2027-05-03; automatic consideration",
+      "official_url": "https://www.sydney.edu.au/scholarships/e/vice-chancellor-international-scholarships-scheme.html",
+      "duplicate_screen": "No exact-title scholarship match in targeted staging SQL; broader semantic and candidate screening required",
+      "publication_status": "Research-only; not inserted"
+    },
+    {
+      "title": "NUS President's Graduate Fellowship",
+      "degree": "PhD",
+      "funding": "Full tuition; international S$3,900/month from Jan 2026; one-time up to S$750 air travel and S$1,000 settling in for eligible international students",
+      "deadline": null,
+      "deadline_note": "Nomination-only, faculty-specific; do not invent a universal closing date",
+      "official_url": "https://nusgs.nus.edu.sg/scholarships/presidents-graduate-fellowship/",
+      "duplicate_screen": "No exact-title scholarship match in targeted staging SQL; broader semantic and candidate screening required",
+      "publication_status": "Research-only; not inserted"
+    },
+    {
+      "title": "University of Melbourne Human Rights Scholarship",
+      "degree": "Master by Research / PhD",
+      "funding": "Full fee offset, A$44,500 annual 2026 stipend, relocation, OSHC for eligible international students",
+      "deadline": "2026-10-31",
+      "deadline_note": "2026 application for prospective graduate researchers in Human Rights; next cycle not inferred",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/human-rights-scholarship",
+      "duplicate_screen": "No exact-title scholarship match in targeted staging SQL; broader semantic and candidate screening required",
+      "publication_status": "Research-only; not inserted"
+    },
+    {
+      "title": "University of Melbourne Schiavon Journalism Research Scholarship",
+      "degree": "PhD",
+      "funding": "A$41,100/year 2027 stipend for up to 3.5 years; relocation and eligible OSHC; tuition not explicitly listed on award page",
+      "deadline": null,
+      "deadline_note": "Current official page says open; no fixed closing date established; journalism PhD only",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/schiavon-journalism-research-scholarship",
+      "duplicate_screen": "No exact-title scholarship match in targeted staging SQL; broader semantic and candidate screening required",
+      "publication_status": "Research-only; not inserted"
+    },
+    {
+      "title": "University of Melbourne Fay Marles Scholarship",
+      "degree": "Master by Research / PhD",
+      "funding": "A$39,500/year 2026 stipend, relocation; domestic students with disadvantaged circumstances only; do not imply tuition waiver",
+      "deadline": "2026-10-31",
+      "deadline_note": "Australian citizen/permanent resident or New Zealand citizen; application required",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/fay-marles-scholarship",
+      "duplicate_screen": "No exact-title scholarship match in targeted staging SQL; broader semantic and candidate screening required",
+      "publication_status": "Research-only; not inserted"
+    },
+    {
+      "title": "University of Melbourne Sir John and Lady Higgins Research Scholarship",
+      "degree": "Master by Research / PhD",
+      "funding": "A$49,500/year 2026 stipend plus relocation; no standalone tuition waiver confirmed",
+      "deadline": "2026-10-31",
+      "deadline_note": "Australian citizens or permanent residents; chemistry/biochemistry research relevant to pastoral and agricultural industries",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/sir-john-and-lady-higgins-research-scholarship",
+      "duplicate_screen": "No exact-title scholarship match in targeted staging SQL; broader semantic and candidate screening required",
+      "publication_status": "Research-only; not inserted"
+    }
+  ],
+  "existing_drafts_reviewed": [
+    {
+      "id": "44de9aef-2a2e-479e-9ab9-181e8ce50561",
+      "title": "ANU University Research Scholarship (2027 stipend)",
+      "provenance": 4,
+      "reviewer_provenance": 0,
+      "successful_source_audit": false,
+      "deadline": "2027-04-15",
+      "note": "A$40,475/year 2027 matches official; do not conflate stipend with separate tuition waiver",
+      "status": "private"
+    },
+    {
+      "id": "cf22a230-5223-4f2e-9b02-2b305cbc8459",
+      "title": "NUS International Undergraduate Scholarship",
+      "provenance": 1,
+      "reviewer_provenance": 0,
+      "successful_source_audit": false,
+      "deadline": null,
+      "note": "Scholarship requires MOE Tuition Grant work bond; 100% subsidised tuition not unsubsidised fees",
+      "status": "private"
+    },
+    {
+      "id": "32f47c20-4556-4938-8a7b-7079bfdf5a3c",
+      "title": "NUS Science & Technology Undergraduate Scholarship",
+      "provenance": 1,
+      "reviewer_provenance": 0,
+      "successful_source_audit": false,
+      "deadline": null,
+      "note": "Asian countries/regions except Singapore; specific computing/engineering/science degrees, MOE Tuition Grant bond",
+      "status": "private"
+    },
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "title": "Gordon and Isabel Humphrey Scholarship (Melbourne)",
+      "provenance": 2,
+      "reviewer_provenance": 0,
+      "successful_source_audit": false,
+      "deadline": "2026-10-25",
+      "note": "2027 PhD Engineering, A$41,100 stipend, no tuition waiver stated on award page; deadline today",
+      "status": "private"
+    },
+    {
+      "id": "67669846-79ee-4e02-a62e-1234c15d2861",
+      "title": "ANU Chancellor's International Scholarship",
+      "provenance": 2,
+      "reviewer_provenance": 0,
+      "successful_source_audit": false,
+      "deadline": null,
+      "note": "Separate tuition discount programme; not ANU University Research Scholarship",
+      "status": "private"
+    }
+  ],
+  "authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "db_role": "postgres",
+    "source": "SQL readback",
+    "legitimate_workflow": "Admin-authenticated review, field provenance, candidate promotion and publication; no eligible authenticated session in connector",
+    "edge_functions": "No separate authenticated admin publication endpoint among existing staging functions"
+  },
+  "notable_risk": "Do not mark UNSW Scientia discontinued: official UNSW project published 8 Oct 2026 explicitly under Scientia PhD scheme.",
+  "actions": {
+    "staging_edits": 0,
+    "publications": 0,
+    "new_database_drafts": 0,
+    "archived": 0,
+    "provenance_inserted": 0,
+    "production_changes": 0
+  },
+  "notes": [
+    "Published needs_review is 309 at both snapshots, not October 21 historical 308.",
+    "TaiwanICDF 2027 application dates are on official ICDF site, but linked downloadable programme list is still labeled 2026; do not reuse as 2027 list.",
+    "Never treat TaiwanICDF as universally open to all nationalities; university-specific language requirements are not universal ICDF IELTS/TOEFL minima.",
+    "No failed URL fetch interpreted as discontinued.",
+    "Lead screening is exact-title only; no new candidate counted as published.",
+    "All proposed field reviews need source-specific authenticated human approval and provenance before verification.",
+    "No production change without staging and CI validation."
+  ]
+}

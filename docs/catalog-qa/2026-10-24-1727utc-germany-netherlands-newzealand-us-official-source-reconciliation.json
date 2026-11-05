@@ -1,0 +1,1154 @@
+{
+  "run_utc": "2026-10-24T17:29:03Z",
+  "project": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "environment": "staging_only",
+  "readback": {
+    "before_utc": "2026-10-24T17:27:21.947639Z",
+    "after_utc": "2026-10-24T17:29:03.046629Z",
+    "before": {
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_provenance": 0,
+      "source_candidates": 636,
+      "admin_logs": 8
+    },
+    "after": {
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_provenance": 0,
+      "source_candidates": 636,
+      "admin_logs": 8
+    }
+  },
+  "research_method": "Official programme-specific sources checked October 24, 2026; staged published titles, private drafts and targeted candidate-title duplicates independently queried. Proposed values are NOT database edits or verified statuses. Do not treat missing page as discontinuation; only two programmes have affirmative discontinuation evidence.",
+  "published_investigations": [
+    {
+      "id": "93c35e5c-3b49-41c9-a861-340c5e1cd117",
+      "title": "Friedrich Ebert Foundation Scholarship",
+      "country": "Germany",
+      "action": "correct_after_authenticated_review",
+      "field_review": [
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Eligibility is conditional, not unrestricted; foreign applicants must already study in Germany, demonstrate German proficiency and meet other criteria",
+          "evidence": "FES foreign-student requirements specify enrolment in Germany and German-language applications",
+          "source_url": "https://www.fes.de/studienfoerderung/information-in-english",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Application deadlines differ by study stage; Bachelor's before final three semesters, Master's by end of first semester; consult relevant scholarship programme",
+          "evidence": "FES publishes study-stage-specific latest application points",
+          "source_url": "https://www.fes.de/studienfoerderung/information-in-english",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "EUR 992/month for foreign students or EUR 1500/month for postgraduates; eligible family and health benefits are conditional",
+          "evidence": "FES official benefits table; existing amount is broadly aligned, retain conditionality",
+          "source_url": "https://www.fes.de/studienfoerderung/information-in-english",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Nationality and application-stage qualifiers absent; no universal IELTS/TOEFL/SAT score documented.",
+      "official_sources": [
+        "https://www.fes.de/studienfoerderung/information-in-english"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "32bdbc52-bdfa-4b27-a16a-59a2d8e71d46",
+      "title": "KAAD Scholarship",
+      "country": "Germany",
+      "action": "correct_after_authenticated_review",
+      "field_review": [
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Applicants normally from and residing in eligible developing/emerging countries in Africa, Asia, Middle East and Latin America; Catholic/Christian affiliation or partner nomination conditions apply",
+          "evidence": "KAAD Programme 1 lists regions, residence, religion/partner criteria",
+          "source_url": "https://www.kaad.de/en/stipendien/stipendienprogramm-1",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Do not advertise guaranteed EUR 861/month plus tuition; verify actual Programme 1 award agreement and cost components",
+          "evidence": "KAAD Programme 1 official page does not substantiate universal EUR 861 plus tuition",
+          "source_url": "https://www.kaad.de/en/stipendien/stipendienprogramm-1",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Applications handled via KAAD partner committees; no universal 2027 deadline confirmed",
+          "evidence": "KAAD Programme 1 describes partner-committee route",
+          "source_url": "https://www.kaad.de/en/stipendien/stipendienprogramm-1",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "description",
+          "proposed_value": "KAAD states home-region reintegration expectation; otherwise scholarship may be considered a loan; disclose rather than mislabel unconditional grant",
+          "evidence": "Programme 1 explicit reintegration/loan clause",
+          "source_url": "https://www.kaad.de/en/stipendien/stipendienprogramm-1",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": "Master's and PhD plus eligible postgraduate/research stays; do not represent every research stay as a degree scholarship",
+          "evidence": "Programme 1 lists postgraduate, doctoral, postdoc and research routes",
+          "source_url": "https://www.kaad.de/en/stipendien/stipendienprogramm-1",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "The official terms contain a material loan/reintegration condition; keep classification pending confirmation.",
+      "official_sources": [
+        "https://www.kaad.de/en/stipendien/stipendienprogramm-1"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "9f107a19-c331-4855-9a52-03193d86f2f3",
+      "title": "Konrad Adenauer Foundation Scholarship",
+      "country": "Germany",
+      "action": "canonical_duplicate_review",
+      "field_review": [
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "International scholarship primarily for non-EU candidates; specific foreign-office rounds restrict regions; not universally unrestricted",
+          "evidence": "KAS International Talent Development eligibility and foreign-office routes",
+          "source_url": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Up to EUR 992/month for Bachelor's/Master's; up to EUR 1400/month doctoral; supplements conditional",
+          "evidence": "KAS official Financial Support section",
+          "source_url": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "No guaranteed full tuition: only exceptional partial tuition reimbursement up to EUR 750/semester; enrollment fees excluded",
+          "evidence": "KAS states exceptional partial tuition reimbursement",
+          "source_url": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": "Bachelor's possible after two semesters; four-semester Master's; PhD",
+          "evidence": "KAS official mandatory requirements and FAQ",
+          "source_url": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Domestic selection deadline July 15 annually 12:00 CET; foreign-office deadlines vary; not one global deadline",
+          "evidence": "KAS application route FAQ",
+          "source_url": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Same foundation programme as record 50a8e60a; reconcile before changing either.",
+      "official_sources": [
+        "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "50a8e60a-b5e2-43e3-acf0-483f00e092b8",
+      "title": "Konrad-Adenauer-Stiftung Scholarship",
+      "country": "Germany",
+      "action": "canonical_duplicate_review",
+      "field_review": [
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "International scholarship primarily for non-EU candidates; specific foreign-office rounds restrict regions; not universally unrestricted",
+          "evidence": "KAS International Talent Development eligibility and foreign-office routes",
+          "source_url": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Up to EUR 992/month for Bachelor's/Master's; up to EUR 1400/month doctoral; supplements conditional",
+          "evidence": "KAS official Financial Support section",
+          "source_url": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "No guaranteed full tuition: only exceptional partial tuition reimbursement up to EUR 750/semester; enrollment fees excluded",
+          "evidence": "KAS states exceptional partial tuition reimbursement",
+          "source_url": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": "Bachelor's possible after two semesters; four-semester Master's; PhD",
+          "evidence": "KAS official mandatory requirements and FAQ",
+          "source_url": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Domestic selection deadline July 15 annually 12:00 CET; foreign-office deadlines vary; not one global deadline",
+          "evidence": "KAS application route FAQ",
+          "source_url": "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Likely duplicate of record 9f107a19; use single canonical award after authenticated review.",
+      "official_sources": [
+        "https://www.kas.de/en/web/begabtenfoerderung-und-kultur/international-talent-development"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "d7a9d79d-3383-4b37-956c-3ec06e002340",
+      "title": "TU Munich Artificial Intelligence Masters Award",
+      "country": "Germany",
+      "action": "programme_identity_and_duplicate_review",
+      "field_review": [
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Unverified generic 'no tuition' claim; non-EU/EEA Bachelor's/Master's entrants generally pay tuition, doctoral programmes generally exempt",
+          "evidence": "TUM official tuition policy differentiates citizenship and degree",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Unverified generic EUR 900/month claim; named TUM international student scholarship is EUR 500-1800 one-time per semester, not EUR 900/month",
+          "evidence": "TUM named scholarship page, not evidence for six separate generic awards",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "evidence": "Replace generic TUM homepage only after confirming exact named programme identity",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "No universal deadline can be assigned until programme identity is established; TUM international student scholarship winter 2026/27 window was Oct 1-15, 2026",
+          "evidence": "Do not attach another programme's deadline to a generic award",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Six generic entries share identical stipend and tuition claims with no individually identified programme; compare existing curated Technical University of Munich International Scholarship 5039e1f8 before any correction or archival.",
+      "official_sources": [
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+        "https://www.tum.de/en/studies/fees/tuition",
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "0a43f5c8-a5ba-47a1-a0ef-84703aa8bb0e",
+      "title": "TU Munich Computer Science Phd Award",
+      "country": "Germany",
+      "action": "programme_identity_and_duplicate_review",
+      "field_review": [
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Unverified generic 'no tuition' claim; non-EU/EEA Bachelor's/Master's entrants generally pay tuition, doctoral programmes generally exempt",
+          "evidence": "TUM official tuition policy differentiates citizenship and degree",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Unverified generic EUR 900/month claim; named TUM international student scholarship is EUR 500-1800 one-time per semester, not EUR 900/month",
+          "evidence": "TUM named scholarship page, not evidence for six separate generic awards",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "evidence": "Replace generic TUM homepage only after confirming exact named programme identity",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "No universal deadline can be assigned until programme identity is established; TUM international student scholarship winter 2026/27 window was Oct 1-15, 2026",
+          "evidence": "Do not attach another programme's deadline to a generic award",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Six generic entries share identical stipend and tuition claims with no individually identified programme; compare existing curated Technical University of Munich International Scholarship 5039e1f8 before any correction or archival.",
+      "official_sources": [
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+        "https://www.tum.de/en/studies/fees/tuition",
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "0f253995-c846-4205-910b-ea22c9c215dc",
+      "title": "TU Munich Masters Excellence Scholarship",
+      "country": "Germany",
+      "action": "programme_identity_and_duplicate_review",
+      "field_review": [
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Unverified generic 'no tuition' claim; non-EU/EEA Bachelor's/Master's entrants generally pay tuition, doctoral programmes generally exempt",
+          "evidence": "TUM official tuition policy differentiates citizenship and degree",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Unverified generic EUR 900/month claim; named TUM international student scholarship is EUR 500-1800 one-time per semester, not EUR 900/month",
+          "evidence": "TUM named scholarship page, not evidence for six separate generic awards",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "evidence": "Replace generic TUM homepage only after confirming exact named programme identity",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "No universal deadline can be assigned until programme identity is established; TUM international student scholarship winter 2026/27 window was Oct 1-15, 2026",
+          "evidence": "Do not attach another programme's deadline to a generic award",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Six generic entries share identical stipend and tuition claims with no individually identified programme; compare existing curated Technical University of Munich International Scholarship 5039e1f8 before any correction or archival.",
+      "official_sources": [
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+        "https://www.tum.de/en/studies/fees/tuition",
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "5010fb18-3495-443f-a7a2-65a1e7d33161",
+      "title": "TU Munich Masters International Scholarship",
+      "country": "Germany",
+      "action": "programme_identity_and_duplicate_review",
+      "field_review": [
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Unverified generic 'no tuition' claim; non-EU/EEA Bachelor's/Master's entrants generally pay tuition, doctoral programmes generally exempt",
+          "evidence": "TUM official tuition policy differentiates citizenship and degree",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Unverified generic EUR 900/month claim; named TUM international student scholarship is EUR 500-1800 one-time per semester, not EUR 900/month",
+          "evidence": "TUM named scholarship page, not evidence for six separate generic awards",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "evidence": "Replace generic TUM homepage only after confirming exact named programme identity",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "No universal deadline can be assigned until programme identity is established; TUM international student scholarship winter 2026/27 window was Oct 1-15, 2026",
+          "evidence": "Do not attach another programme's deadline to a generic award",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Six generic entries share identical stipend and tuition claims with no individually identified programme; compare existing curated Technical University of Munich International Scholarship 5039e1f8 before any correction or archival.",
+      "official_sources": [
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+        "https://www.tum.de/en/studies/fees/tuition",
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "2e275173-a72a-47b4-ad77-d81ba7df9ba9",
+      "title": "TU Munich Phd Excellence Scholarship",
+      "country": "Germany",
+      "action": "programme_identity_and_duplicate_review",
+      "field_review": [
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Unverified generic 'no tuition' claim; non-EU/EEA Bachelor's/Master's entrants generally pay tuition, doctoral programmes generally exempt",
+          "evidence": "TUM official tuition policy differentiates citizenship and degree",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Unverified generic EUR 900/month claim; named TUM international student scholarship is EUR 500-1800 one-time per semester, not EUR 900/month",
+          "evidence": "TUM named scholarship page, not evidence for six separate generic awards",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "evidence": "Replace generic TUM homepage only after confirming exact named programme identity",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "No universal deadline can be assigned until programme identity is established; TUM international student scholarship winter 2026/27 window was Oct 1-15, 2026",
+          "evidence": "Do not attach another programme's deadline to a generic award",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Six generic entries share identical stipend and tuition claims with no individually identified programme; compare existing curated Technical University of Munich International Scholarship 5039e1f8 before any correction or archival.",
+      "official_sources": [
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+        "https://www.tum.de/en/studies/fees/tuition",
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "b3a00353-c4f2-48b7-bea1-544840301041",
+      "title": "TU Munich Phd International Scholarship",
+      "country": "Germany",
+      "action": "programme_identity_and_duplicate_review",
+      "field_review": [
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Unverified generic 'no tuition' claim; non-EU/EEA Bachelor's/Master's entrants generally pay tuition, doctoral programmes generally exempt",
+          "evidence": "TUM official tuition policy differentiates citizenship and degree",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Unverified generic EUR 900/month claim; named TUM international student scholarship is EUR 500-1800 one-time per semester, not EUR 900/month",
+          "evidence": "TUM named scholarship page, not evidence for six separate generic awards",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "evidence": "Replace generic TUM homepage only after confirming exact named programme identity",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "No universal deadline can be assigned until programme identity is established; TUM international student scholarship winter 2026/27 window was Oct 1-15, 2026",
+          "evidence": "Do not attach another programme's deadline to a generic award",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Six generic entries share identical stipend and tuition claims with no individually identified programme; compare existing curated Technical University of Munich International Scholarship 5039e1f8 before any correction or archival.",
+      "official_sources": [
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+        "https://www.tum.de/en/studies/fees/tuition",
+        "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "a2d6ecba-ca77-4d3d-b7e2-1cf26968b0ed",
+      "title": "Orange Knowledge Programme (OKP)",
+      "country": "Netherlands",
+      "action": "authorized_archive_review",
+      "field_review": [
+        {
+          "field": "cycle_status",
+          "proposed_value": "Programme ended December 2024; no new scholarship applications",
+          "evidence": "Nuffic official dated announcement of September 30, 2024",
+          "source_url": "https://www.nuffic.nl/en/news/nuffic-phases-out-most-activities-outside-europe-after-the-orange-knowledge-programme-ends",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "evidence": "No current 2027 scholarship deadline: historical programme ended",
+          "source_url": "https://www.nuffic.nl/en/news/nuffic-phases-out-most-activities-outside-europe-after-the-orange-knowledge-programme-ends",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Historically restricted to participating countries, not unrestricted; do not invent a complete country list",
+          "evidence": "Nuffic describes low/middle-income-country development programme",
+          "source_url": "https://www.nuffic.nl/en/news/nuffic-phases-out-most-activities-outside-europe-after-the-orange-knowledge-programme-ends",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Confirmed discontinued programme; never treat successor Erasmus+/NL Scholarship as the same award.",
+      "official_sources": [
+        "https://www.nuffic.nl/en/news/nuffic-phases-out-most-activities-outside-europe-after-the-orange-knowledge-programme-ends"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "ca1e3e04-690b-4e94-8505-f30a9f026efb",
+      "title": "Utrecht Excellence Scholarship",
+      "country": "Netherlands",
+      "action": "authorized_archive_review",
+      "field_review": [
+        {
+          "field": "cycle_status",
+          "proposed_value": "No new Utrecht Excellence Scholarship awards for programmes starting 2026-2027 onward",
+          "evidence": "Utrecht University explicit budget-cut closure notice",
+          "source_url": "https://www.uu.nl/en/masters/utrecht-excellence-scholarships",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "evidence": "University confirms no new applications from 2026-27",
+          "source_url": "https://www.uu.nl/en/masters/utrecht-excellence-scholarships",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Historically targeted non-EU/EEA applicants, not all nationalities",
+          "evidence": "Official Utrecht Excellence programme description",
+          "source_url": "https://www.uu.nl/en/masters/utrecht-excellence-scholarships",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Confirmed closure for new applicants; existing holders retain their awards; authenticated archival required.",
+      "official_sources": [
+        "https://www.uu.nl/en/masters/utrecht-excellence-scholarships"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "d0d0f071-0fa9-4024-b264-932dc6ee3f6d",
+      "title": "Amsterdam Excellence Scholarship",
+      "country": "Netherlands",
+      "action": "identity_and_status_hold",
+      "field_review": [
+        {
+          "field": "cycle_status",
+          "proposed_value": "Unconfirmed; historical named AES page not accessible, do not infer discontinuation from HTTP failure",
+          "evidence": "Official AES URL not retrievable; contemporary UvA faculty-specific Merit Scholarships exist",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Do not claim unrestricted until historical award eligibility is verified",
+          "evidence": "Current UvA Merit Scholarships restrict non-EU/EEA, but must not be automatically mapped to AES",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Historical EUR 25000 claim unconfirmed for 2027; do not conflate with 2026/27 Law AMS EUR 25900",
+          "evidence": "Law School current scholarship is separately named AMS",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Do not silently rename AES to Amsterdam Merit Scholarship or archive on failed fetch.",
+      "official_sources": [
+        "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+        "https://www.uva.nl/en/about-the-uva/organisation/faculties/amsterdam-law-school/education/scholarships/scholarships.html"
+      ],
+      "source_scope": "UvA faculty-specific AMS is distinct from unverified historical AES"
+    },
+    {
+      "id": "2357f2f3-bd5f-4831-b1ad-2e23fd279e2f",
+      "title": "TU Delft Excellence Scholarship",
+      "country": "Netherlands",
+      "action": "canonical_duplicate_and_programme_scope_review",
+      "field_review": [
+        {
+          "field": "title",
+          "proposed_value": "Reconcile with Justus & Louise van Effen Excellence Scholarships; no evidence these generic names are three distinct programmes",
+          "evidence": "TU Delft Geomatics page identifies the named excellence scholarship",
+          "source_url": "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "For 2027-29 MSc Geomatics, excellence scholarship deadline December 1, 2026; do not generalize faculty deadline to all TU Delft degrees",
+          "evidence": "Official Geomatics programme-specific admissions page",
+          "source_url": "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Funding amounts and international eligibility require current named-scholarship terms; generic full-tuition-plus-EUR-14000 not independently verified",
+          "evidence": "Geomatics page confirms limited awards but does not specify the full award value",
+          "source_url": "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "The 2027 Geomatics call says only two excellence scholarships for its faculty; canonical record reconciliation required.",
+      "official_sources": [
+        "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "f23f3f15-0297-4d35-9c71-999301c29bec",
+      "title": "TU Delft Masters Excellence Scholarship",
+      "country": "Netherlands",
+      "action": "canonical_duplicate_and_programme_scope_review",
+      "field_review": [
+        {
+          "field": "title",
+          "proposed_value": "Reconcile with Justus & Louise van Effen Excellence Scholarships; no evidence these generic names are three distinct programmes",
+          "evidence": "TU Delft Geomatics page identifies the named excellence scholarship",
+          "source_url": "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "For 2027-29 MSc Geomatics, excellence scholarship deadline December 1, 2026; do not generalize faculty deadline to all TU Delft degrees",
+          "evidence": "Official Geomatics programme-specific admissions page",
+          "source_url": "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Funding amounts and international eligibility require current named-scholarship terms; generic full-tuition-plus-EUR-14000 not independently verified",
+          "evidence": "Geomatics page confirms limited awards but does not specify the full award value",
+          "source_url": "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "The 2027 Geomatics call says only two excellence scholarships for its faculty; canonical record reconciliation required.",
+      "official_sources": [
+        "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "16769d2e-1b09-4472-896d-dc209e86ddd6",
+      "title": "TU Delft Masters International Scholarship",
+      "country": "Netherlands",
+      "action": "canonical_duplicate_and_programme_scope_review",
+      "field_review": [
+        {
+          "field": "title",
+          "proposed_value": "Reconcile with Justus & Louise van Effen Excellence Scholarships; no evidence these generic names are three distinct programmes",
+          "evidence": "TU Delft Geomatics page identifies the named excellence scholarship",
+          "source_url": "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "For 2027-29 MSc Geomatics, excellence scholarship deadline December 1, 2026; do not generalize faculty deadline to all TU Delft degrees",
+          "evidence": "Official Geomatics programme-specific admissions page",
+          "source_url": "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Funding amounts and international eligibility require current named-scholarship terms; generic full-tuition-plus-EUR-14000 not independently verified",
+          "evidence": "Geomatics page confirms limited awards but does not specify the full award value",
+          "source_url": "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "The 2027 Geomatics call says only two excellence scholarships for its faculty; canonical record reconciliation required.",
+      "official_sources": [
+        "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "47a131a5-c336-449b-9eb4-2c7f71f8a5b8",
+      "title": "University of Amsterdam Masters Excellence Scholarship",
+      "country": "Netherlands",
+      "action": "identity_and_duplicate_review",
+      "field_review": [
+        {
+          "field": "title",
+          "proposed_value": "No verified university-wide generic programme under this title; UvA awards faculty-specific scholarships",
+          "evidence": "UvA GSSS AMS and Law School AMS have distinct rules",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Not universally unrestricted for the named AMS programmes; GSSS AMS requires non-EU/EEA nationality",
+          "evidence": "GSSS eligibility",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "GSSS AMS grant equals tuition fee but is paid in monthly instalments, not a direct tuition waiver; do not generalize to all UvA Master's degrees",
+          "evidence": "GSSS AMS funding rules",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "GSSS AMS deadline Feb 15, 2027 23:59 CET; Law School AMS 2026/27 deadline Jan 15; neither applies to a generic UvA scholarship",
+          "evidence": "Faculty-specific deadline distinction",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Existing curated private GSSS AMS draft 7d2342df must not be duplicated or published as generic university-wide funding.",
+      "official_sources": [
+        "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+        "https://www.uva.nl/en/about-the-uva/organisation/faculties/amsterdam-law-school/education/scholarships/scholarships.html"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "cf582c4e-da47-43d5-8c12-5e9a12fc005a",
+      "title": "University of Amsterdam Masters International Scholarship",
+      "country": "Netherlands",
+      "action": "identity_and_duplicate_review",
+      "field_review": [
+        {
+          "field": "title",
+          "proposed_value": "No verified university-wide generic programme under this title; UvA awards faculty-specific scholarships",
+          "evidence": "UvA GSSS AMS and Law School AMS have distinct rules",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Not universally unrestricted for the named AMS programmes; GSSS AMS requires non-EU/EEA nationality",
+          "evidence": "GSSS eligibility",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "GSSS AMS grant equals tuition fee but is paid in monthly instalments, not a direct tuition waiver; do not generalize to all UvA Master's degrees",
+          "evidence": "GSSS AMS funding rules",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "GSSS AMS deadline Feb 15, 2027 23:59 CET; Law School AMS 2026/27 deadline Jan 15; neither applies to a generic UvA scholarship",
+          "evidence": "Faculty-specific deadline distinction",
+          "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Existing curated private GSSS AMS draft 7d2342df must not be duplicated or published as generic university-wide funding.",
+      "official_sources": [
+        "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+        "https://www.uva.nl/en/about-the-uva/organisation/faculties/amsterdam-law-school/education/scholarships/scholarships.html"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "85068aa3-53fb-416b-a878-31850b2cf88a",
+      "title": "University of Auckland International Scholarship",
+      "country": "New Zealand",
+      "action": "reconcile_existing_draft",
+      "field_review": [
+        {
+          "field": "title",
+          "proposed_value": "Reconcile generic undergraduate listing against named awards; existing 2027 International Student Excellence Scholarship draft is Master's-only",
+          "evidence": "University now publishes distinct international school-leaver and Master's awards",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Generic NZD 10000-20000 annually not substantiated as a single current named scholarship; Master's Excellence 2027 gives 25% first-year tuition",
+          "evidence": "Official 2027 scholarship page",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Do not reuse Master's 2027 offer-by-Oct-20/invitation-Oct-21/supplementary-Nov-4 deadlines for undergraduate awards",
+          "evidence": "Official named Master's award schedule",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": "Bachelor's generic identity unresolved; current named International Student Excellence Scholarship 2027 is Master's-only",
+          "evidence": "Programme-specific eligibility",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Existing private draft 0db4b799 is not a duplicate of an independently verified undergraduate award without reconciliation.",
+      "official_sources": [
+        "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+        "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "6add8e4a-d951-4925-a67c-fb46802deaf7",
+      "title": "University of Auckland Masters International Scholarship",
+      "country": "New Zealand",
+      "action": "programme_identity_review",
+      "field_review": [
+        {
+          "field": "funding_type",
+          "proposed_value": "Generic full tuition + NZD 27000/year is not supported for a named general Master's international scholarship",
+          "evidence": "Official 2027 Master's International Student Excellence award is 25% first-year tuition",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Named 2027 Master's award: 25% of first-year tuition, not guaranteed full tuition",
+          "evidence": "Official Master's programme-specific award",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Named award invited applicants with offer by Oct 20, 2026; supplementary form due Nov 4, 2026; do not apply deadline before matching identity",
+          "evidence": "Official 2027 invitation process",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "title",
+          "proposed_value": "Resolve whether generic listing is duplicate of existing 2027 Master's Excellence private draft 0db4b799",
+          "evidence": "Existing draft title match and official page",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Do not count generic master's listing and 2027 private draft as two independently named programmes.",
+      "official_sources": [
+        "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+        "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "01057f47-8ad1-4cae-b6cf-fedd1c43087e",
+      "title": "University of Auckland Phd International Scholarship",
+      "country": "New Zealand",
+      "action": "canonical_programme_reconciliation",
+      "field_review": [
+        {
+          "field": "title",
+          "proposed_value": "Reconcile generic PhD listing with named University of Auckland Doctoral Scholarship",
+          "evidence": "University official doctoral scholarship page",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/scholarship-types/postgraduate-scholarships/doctoral-scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "NZD 35468/year for 2026, CPI-adjusted; do not claim NZD 27000/year or assert a 2027 rate",
+          "evidence": "2026 rate and CPI clause confirmed",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/scholarship-types/postgraduate-scholarships/doctoral-scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Named doctoral scholarship covers tuition and applicable single-student health insurance for up to 42 months full-time equivalent",
+          "evidence": "Official doctoral scholarship terms",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/scholarship-types/postgraduate-scholarships/doctoral-scholarships.html",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "2027 rounds: Nov 1 2026; Feb 1 2027; May 1 2027; Aug 1 2027; no universal one-time deadline",
+          "evidence": "Official 2027 round table",
+          "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/scholarship-types/postgraduate-scholarships/doctoral-scholarships.html",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Current generic record materially understates the doctoral stipend and lacks the multiple rounds.",
+      "official_sources": [
+        "https://www.auckland.ac.nz/en/study/scholarships-and-awards/scholarship-types/postgraduate-scholarships/doctoral-scholarships.html"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "85a5f79c-000e-4bec-884c-5c3b445bb19e",
+      "title": "Victoria University of Wellington Scholarship",
+      "country": "New Zealand",
+      "action": "canonical_programme_reconciliation",
+      "field_review": [
+        {
+          "field": "degree_levels",
+          "proposed_value": "Named Wellington Doctoral Scholarship is PhD-only, not general Master's + PhD",
+          "evidence": "Official named doctoral award",
+          "source_url": "https://www.wgtn.ac.nz/scholarships/current/wellington-doctoral-scholarships",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "NZD 32000/year plus tuition, normally three years; generic NZD 25000 claim inaccurate for named doctoral award",
+          "evidence": "Official named doctoral award amount",
+          "source_url": "https://www.wgtn.ac.nz/scholarships/current/wellington-doctoral-scholarships",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "Three annual doctoral scholarship rounds close March 1, July 1 and November 1; next Nov 1, 2026",
+          "evidence": "Official doctoral scholarship dates",
+          "source_url": "https://www.wgtn.ac.nz/scholarships/current/wellington-doctoral-scholarships",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Domestic and international applicants eligible for named doctoral award; competitive selection",
+          "evidence": "Official scholarship eligibility",
+          "source_url": "https://www.wgtn.ac.nz/scholarships/current/wellington-doctoral-scholarships",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "The named Research Mobilisation Doctoral Scholarship is a separate domestic-only award and must not be conflated with general Wellington Doctoral Scholarship.",
+      "official_sources": [
+        "https://www.wgtn.ac.nz/scholarships/current/wellington-doctoral-scholarships",
+        "https://www.wgtn.ac.nz/scholarships/current/research-mobilisation-doctoral-scholarship"
+      ],
+      "source_scope": "official programme-specific source"
+    },
+    {
+      "id": "b253fed7-f9b8-47bd-90ef-f340c265afc9",
+      "title": "AAUW International Fellowship",
+      "country": "United States",
+      "action": "correct_after_authenticated_review",
+      "field_review": [
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Non-US citizens without US permanent-resident status, identifying as women; conditional foreign-country study exceptions",
+          "evidence": "AAUW citizenship and gender criteria",
+          "source_url": "https://www.aauw.org/resources/programs/fellowships-grants/aauw-international-fellowships/",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "fields",
+          "proposed_value": "2027-28 award restricted to eligible STEM degree programmes; not general Master's/PhD funding",
+          "evidence": "AAUW official 2027-28 field eligibility",
+          "source_url": "https://www.aauw.org/resources/programs/fellowships-grants/aauw-international-fellowships/",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "min_ielts",
+          "proposed_value": "6.5 (already correct), alternative TOEFL iBT 79 or other approved evidence/exemptions",
+          "evidence": "AAUW official language test minima",
+          "source_url": "https://www.aauw.org/resources/programs/fellowships-grants/aauw-international-fellowships/",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed_value": "2027-28 applications closed Sept 17, 2026 at 17:00 Eastern; next cycle not announced",
+          "evidence": "AAUW official timeline",
+          "source_url": "https://www.aauw.org/resources/programs/fellowships-grants/aauw-international-fellowships/",
+          "status": "proposed_not_applied"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "USD 20000 Master's or USD 25000 Doctorate (existing amount correct); two disbursements",
+          "evidence": "AAUW award details",
+          "source_url": "https://www.aauw.org/resources/programs/fellowships-grants/aauw-international-fellowships/",
+          "status": "proposed_not_applied"
+        }
+      ],
+      "reason": "Correct misleading unrestricted nationality and add STEM restriction; preserve current IELTS and stipend.",
+      "official_sources": [
+        "https://www.aauw.org/resources/programs/fellowships-grants/aauw-international-fellowships/"
+      ],
+      "source_scope": "official programme-specific source"
+    }
+  ],
+  "field_review_proposal_count": 89,
+  "named_leads": [
+    {
+      "title": "TUM Deutschlandstipendium",
+      "country": "Germany",
+      "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/deutschlandstipendium/application",
+      "funding": "EUR 300 per month",
+      "cycle": "2027/28 applications in summer 2027; exact dates not yet published",
+      "screening": "No exact-title staging scholarship match; potential source candidate TUM scholarships umbrella",
+      "status": "prepare_private_draft_after_auth"
+    },
+    {
+      "title": "TUM Oskar Karl Forster Scholarship",
+      "country": "Germany",
+      "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships",
+      "funding": "EUR 100-500 for learning materials",
+      "cycle": "2027 deadline unconfirmed",
+      "screening": "No exact-title staging scholarship match",
+      "status": "hold_application_cycle"
+    },
+    {
+      "title": "Justus & Louise van Effen Excellence Scholarships — TU Delft Geomatics route",
+      "country": "Netherlands",
+      "source_url": "https://www.tudelft.nl/en/education/programmes/masters/gm/msc-geomatics/admission-and-application/non-dutch-bsc-degree",
+      "funding": "Full current named-award value not independently established from reviewed faculty page",
+      "cycle": "December 1, 2026 for 2027 Geomatics scholarship eligibility",
+      "screening": "Three overlapping published TU Delft generic records; no new draft until canonical review",
+      "status": "canonical_review"
+    },
+    {
+      "title": "Amsterdam Merit Scholarship — Graduate School of Social Sciences",
+      "country": "Netherlands",
+      "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+      "funding": "Grant equal to tuition fee, paid monthly, not a waiver",
+      "cycle": "Feb 15, 2027 23:59 CET",
+      "screening": "Already private draft 7d2342df-e871-4197-b0ef-c11a01904ec5",
+      "status": "existing_draft_no_duplicate"
+    },
+    {
+      "title": "Amsterdam Merit Scholarship — Amsterdam Law School",
+      "country": "Netherlands",
+      "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/amsterdam-law-school/education/scholarships/scholarships.html",
+      "funding": "EUR 25900 for 2026/27",
+      "cycle": "Jan 15 deadline published for 2026/27; 2027/28 unconfirmed",
+      "screening": "Faculty-specific award; not duplicate of GSSS AMS; broader duplicate review pending",
+      "status": "hold_new_cycle"
+    },
+    {
+      "title": "Mr Julia Henriëtte Jaarsma-Adolfs Fund Scholarship — Amsterdam Law School",
+      "country": "Netherlands",
+      "source_url": "https://www.uva.nl/en/about-the-uva/organisation/faculties/amsterdam-law-school/education/scholarships/scholarships.html",
+      "funding": "EUR 25900 non-EU / EUR 12000 EU for 2026/27",
+      "cycle": "Jan 15 for 2026/27; next cycle unconfirmed",
+      "screening": "No exact-title scholarship match; 2027/28 unconfirmed",
+      "status": "hold_new_cycle"
+    },
+    {
+      "title": "Utrecht NL Scholarship — Master's",
+      "country": "Netherlands",
+      "source_url": "https://www.uu.nl/en/masters/general-information/application-and-admission/scholarships-and-grants/nl-scholarship",
+      "funding": "EUR 5000/10000/15000 one-time first-year 2026 intake",
+      "cycle": "Official page specifies September 2026 intake, not confirmed 2027",
+      "screening": "Separate from discontinued Utrecht Excellence Scholarship",
+      "status": "hold_new_cycle"
+    },
+    {
+      "title": "University of Auckland Doctoral Scholarship",
+      "country": "New Zealand",
+      "source_url": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/scholarship-types/postgraduate-scholarships/doctoral-scholarships.html",
+      "funding": "NZD 35468/year 2026 CPI-adjusted, tuition and applicable insurance",
+      "cycle": "Nov 1 2026; Feb 1/May 1/Aug 1 2027 rounds",
+      "screening": "Generic published Auckland PhD record 01057f47, reconcile rather than duplicate",
+      "status": "canonical_review"
+    },
+    {
+      "title": "University of Auckland China High Achievers Scholarship",
+      "country": "New Zealand",
+      "source_url": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "funding": "25% first-year Master's tuition",
+      "cycle": "2027 Semester 1/Quarter 2; offer by Oct 20 2026, invitation Oct 21; exact supplementary deadline requires award-specific check",
+      "screening": "No exact-title scholarship match",
+      "status": "prepare_after_individual_deadline"
+    },
+    {
+      "title": "University of Auckland India High Achievers Scholarship",
+      "country": "New Zealand",
+      "source_url": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "funding": "25% first-year Master's tuition",
+      "cycle": "2027 Semester 1/Quarter 2; offer by Oct 20 2026, invitation Oct 21; exact supplementary deadline requires award-specific check",
+      "screening": "No exact-title scholarship match",
+      "status": "prepare_after_individual_deadline"
+    },
+    {
+      "title": "University of Auckland Indonesia High Achievers Scholarship",
+      "country": "New Zealand",
+      "source_url": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "funding": "25% first-year Master's tuition",
+      "cycle": "2027 Semester 1/Quarter 2; offer by Oct 20 2026, invitation Oct 21; exact supplementary deadline requires award-specific check",
+      "screening": "No exact-title scholarship match",
+      "status": "prepare_after_individual_deadline"
+    },
+    {
+      "title": "University of Auckland USA High Achievers Scholarship",
+      "country": "New Zealand",
+      "source_url": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "funding": "25% first-year Master's tuition",
+      "cycle": "2027 Semester 1/Quarter 2; offer by Oct 20 2026, invitation Oct 21; exact supplementary deadline requires award-specific check",
+      "screening": "No exact-title scholarship match",
+      "status": "prepare_after_individual_deadline"
+    },
+    {
+      "title": "University of Auckland Vietnam High Achievers Scholarship",
+      "country": "New Zealand",
+      "source_url": "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding/extensive-range-of-scholarships-available.html",
+      "funding": "25% first-year Master's tuition",
+      "cycle": "2027 Semester 1/Quarter 2; offer by Oct 20 2026, invitation Oct 21; exact supplementary deadline requires award-specific check",
+      "screening": "No exact-title scholarship match",
+      "status": "prepare_after_individual_deadline"
+    },
+    {
+      "title": "Wellington Doctoral Scholarship",
+      "country": "New Zealand",
+      "source_url": "https://www.wgtn.ac.nz/scholarships/current/wellington-doctoral-scholarships",
+      "funding": "NZD 32000/year plus tuition, generally 3 years",
+      "cycle": "March 1, July 1, November 1 annual rounds; next Nov 1 2026",
+      "screening": "Existing generic Victoria University of Wellington record 85a5f79c; canonical reconciliation",
+      "status": "canonical_review"
+    },
+    {
+      "title": "Research Mobilisation Doctoral Scholarship",
+      "country": "New Zealand",
+      "source_url": "https://www.wgtn.ac.nz/scholarships/current/research-mobilisation-doctoral-scholarship",
+      "funding": "NZD 32000/year plus domestic tuition, 3 years",
+      "cycle": "Nov 1 2026 16:30 local; awarded once every 3 years",
+      "screening": "Domestic-only; distinct from Wellington Doctoral; no exact-title scholarship match",
+      "status": "prepare_private_draft_after_auth"
+    }
+  ],
+  "existing_private_draft_assessments": [
+    {
+      "id": "7d2342df-e871-4197-b0ef-c11a01904ec5",
+      "title": "Amsterdam Merit Scholarship — Graduate School of Social Sciences 2027–28",
+      "status": "private_curated",
+      "source": "https://www.uva.nl/en/about-the-uva/organisation/faculties/faculty-of-social-and-behavioural-sciences/education/social-sciences/scholarships.html",
+      "assessment": "2027-02-15 deadline and tuition-equivalent monthly-paid grant match official GSSS source. No successful audit and no reviewer-attributed provenance; not publication-ready."
+    },
+    {
+      "id": "0db4b799-59af-435b-8731-e7fc043dabbb",
+      "title": "University of Auckland International Student Excellence Scholarship (2027)",
+      "status": "private_curated",
+      "source": "https://www.auckland.ac.nz/en/study/scholarships-and-awards/find-a-scholarship/university-of-auckland-international-student-excellence-scholarship-844-all.htmlquot.html",
+      "assessment": "25% first-year tuition and Nov 4 2026 invited-applicant supplementary deadline match current programme-specific page; offer by Oct 20 prerequisite. Official page contains conflicting generic no-application-required boilerplate. No successful audit or reviewer provenance."
+    },
+    {
+      "id": "2f4b3d7d-e756-4f42-8749-283a179ba5ee",
+      "title": "Amsterdam Economics and Business Talent Fund",
+      "status": "private_curated",
+      "source": "https://www.uva.nl/en/programmes/masters/business-administration/tuition-fee/amsterdam-economics-and-business-talent-fund.html",
+      "assessment": "Cycle year, precise funding components and eligibility not confirmed in this run; do not publish."
+    }
+  ],
+  "quality_gates": {
+    "authenticated_user_id": null,
+    "is_admin": false,
+    "authenticated_publishing": "blocked",
+    "admin_review_provenance": "blocked",
+    "duplicate_screening": "targeted exact-title and candidate title; broader semantic review still required",
+    "source_audit": "no new audits written",
+    "ci_validation": "pending new commit workflow",
+    "production": "untouched"
+  },
+  "database_write_results": {
+    "successful_edits": 0,
+    "new_publications": 0,
+    "new_drafts": 0,
+    "archived": 0,
+    "new_provenance": 0
+  },
+  "remaining_to_1000": 603
+}

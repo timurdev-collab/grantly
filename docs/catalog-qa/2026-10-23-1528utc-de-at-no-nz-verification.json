@@ -1,0 +1,393 @@
+{
+  "audit_id": "grantly-staging-2026-10-23-1528utc-at-de-no-nz",
+  "created_for": "Authenticated human/CI review only; no direct publication or database mutations",
+  "staging_project": "cbzriyarlvpmtfbjgede",
+  "baseline_readback": {
+    "at_utc": "2026-10-23 15:28:01.144125+00",
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed": 0,
+    "source_candidates": 636,
+    "admin_logs": 8,
+    "auth_uid": null,
+    "is_admin": false
+  },
+  "review_policy": {
+    "field_evidence": "Official programme-specific pages only; evidence is proposed, NOT accepted or reviewer-attributed",
+    "language": "No universal IELTS, TOEFL or SAT minima established for the programmes below; leave null unless official scholarship-specific requirement is evidenced",
+    "publication": "No changes to production. No database writes without authenticated Grantly admin role, source audit, semantic duplicate review, provenance approval, readiness, staging validation and CI.",
+    "archive": "No archival without confirmed programme identity, evidence and authorized audited workflow",
+    "source_access": "A 403, 404, transient 500 or outdated link is not proof of discontinuation."
+  },
+  "published_record_corrections": [
+    {
+      "id": "5039e1f8-3dd7-4897-9ae1-2a80b9cc6b7d",
+      "title": "Technical University of Munich International Scholarship",
+      "existing_status": "published/curated",
+      "provenance_count": 0,
+      "existing_claim": "€7,560 per year",
+      "finding": "TUM's named Scholarship for International Students is a one-off €500–€1,800 per semester (reapplication possible). Winter 2026/27 application period 1–15 Oct 2026. Eligible enrolled TUM Bachelor students from semester 3, Master students from semester 2 (or first semester after TUM Bachelor), ineligible for BAföG due to nationality, merit and need. 2027 cycle not yet published. Distinguish this from TUM Deutschlandstipendium (€300/month).",
+      "field_provenance": [
+        {
+          "field": "stipend,tuition_coverage,degree_levels,eligibility,deadline,application_cycle,official_url",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "finding": "One-off €500–€1,800 per semester; 1–15 Oct 2026 winter call; not a universal €7,560 annual grant."
+        },
+        {
+          "field": "tuition_coverage",
+          "source_url": "https://www.tum.de/en/studies/fees/tuition",
+          "finding": "New non-EU/EEA Bachelor/Master students generally pay tuition unless exempt/waived."
+        }
+      ],
+      "proposed_action": "Correct existing record after authenticated evidence review, do NOT create a duplicate."
+    },
+    {
+      "id": "d7a9d79d-3383-4b37-956c-3ec06e002340",
+      "title": "TU Munich Artificial Intelligence Masters Award",
+      "existing_claim": "No tuition + €900/month stipend",
+      "evidence_status": "unsupported programme identity and funding",
+      "proposed_action": "Keep needs_review; require named programme-specific source; compare against TUM official schemes, fees, employment vs grants; reconcile duplicates through audited admin process.",
+      "field_provenance": [
+        {
+          "field": "tuition_coverage",
+          "source_url": "https://www.tum.de/en/studies/fees/tuition",
+          "finding": "New non-EU/EEA Bachelor's and Master's students generally pay tuition unless individually exempt or awarded waiver; PhD tuition exemption is not itself a scholarship."
+        },
+        {
+          "field": "stipend",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "finding": "Named TUM international-student scholarship is €500–€1,800 ONE-TIME per semester, not €900/month; no proof this generic record maps to that award."
+        }
+      ]
+    },
+    {
+      "id": "0a43f5c8-a5ba-47a1-a0ef-84703aa8bb0e",
+      "title": "TU Munich Computer Science Phd Award",
+      "existing_claim": "No tuition + €900/month stipend",
+      "evidence_status": "unsupported programme identity and funding",
+      "proposed_action": "Keep needs_review; require named programme-specific source; compare against TUM official schemes, fees, employment vs grants; reconcile duplicates through audited admin process.",
+      "field_provenance": [
+        {
+          "field": "tuition_coverage",
+          "source_url": "https://www.tum.de/en/studies/fees/tuition",
+          "finding": "New non-EU/EEA Bachelor's and Master's students generally pay tuition unless individually exempt or awarded waiver; PhD tuition exemption is not itself a scholarship."
+        },
+        {
+          "field": "stipend",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "finding": "Named TUM international-student scholarship is €500–€1,800 ONE-TIME per semester, not €900/month; no proof this generic record maps to that award."
+        }
+      ]
+    },
+    {
+      "id": "0f253995-c846-4205-910b-ea22c9c215dc",
+      "title": "TU Munich Masters Excellence Scholarship",
+      "existing_claim": "No tuition + €900/month stipend",
+      "evidence_status": "unsupported programme identity and funding",
+      "proposed_action": "Keep needs_review; require named programme-specific source; compare against TUM official schemes, fees, employment vs grants; reconcile duplicates through audited admin process.",
+      "field_provenance": [
+        {
+          "field": "tuition_coverage",
+          "source_url": "https://www.tum.de/en/studies/fees/tuition",
+          "finding": "New non-EU/EEA Bachelor's and Master's students generally pay tuition unless individually exempt or awarded waiver; PhD tuition exemption is not itself a scholarship."
+        },
+        {
+          "field": "stipend",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "finding": "Named TUM international-student scholarship is €500–€1,800 ONE-TIME per semester, not €900/month; no proof this generic record maps to that award."
+        }
+      ]
+    },
+    {
+      "id": "5010fb18-3495-443f-a7a2-65a1e7d33161",
+      "title": "TU Munich Masters International Scholarship",
+      "existing_claim": "No tuition + €900/month stipend",
+      "evidence_status": "unsupported programme identity and funding",
+      "proposed_action": "Keep needs_review; require named programme-specific source; compare against TUM official schemes, fees, employment vs grants; reconcile duplicates through audited admin process.",
+      "field_provenance": [
+        {
+          "field": "tuition_coverage",
+          "source_url": "https://www.tum.de/en/studies/fees/tuition",
+          "finding": "New non-EU/EEA Bachelor's and Master's students generally pay tuition unless individually exempt or awarded waiver; PhD tuition exemption is not itself a scholarship."
+        },
+        {
+          "field": "stipend",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "finding": "Named TUM international-student scholarship is €500–€1,800 ONE-TIME per semester, not €900/month; no proof this generic record maps to that award."
+        }
+      ]
+    },
+    {
+      "id": "2e275173-a72a-47b4-ad77-d81ba7df9ba9",
+      "title": "TU Munich Phd Excellence Scholarship",
+      "existing_claim": "No tuition + €900/month stipend",
+      "evidence_status": "unsupported programme identity and funding",
+      "proposed_action": "Keep needs_review; require named programme-specific source; compare against TUM official schemes, fees, employment vs grants; reconcile duplicates through audited admin process.",
+      "field_provenance": [
+        {
+          "field": "tuition_coverage",
+          "source_url": "https://www.tum.de/en/studies/fees/tuition",
+          "finding": "New non-EU/EEA Bachelor's and Master's students generally pay tuition unless individually exempt or awarded waiver; PhD tuition exemption is not itself a scholarship."
+        },
+        {
+          "field": "stipend",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "finding": "Named TUM international-student scholarship is €500–€1,800 ONE-TIME per semester, not €900/month; no proof this generic record maps to that award."
+        }
+      ]
+    },
+    {
+      "id": "b3a00353-c4f2-48b7-bea1-544840301041",
+      "title": "TU Munich Phd International Scholarship",
+      "existing_claim": "No tuition + €900/month stipend",
+      "evidence_status": "unsupported programme identity and funding",
+      "proposed_action": "Keep needs_review; require named programme-specific source; compare against TUM official schemes, fees, employment vs grants; reconcile duplicates through audited admin process.",
+      "field_provenance": [
+        {
+          "field": "tuition_coverage",
+          "source_url": "https://www.tum.de/en/studies/fees/tuition",
+          "finding": "New non-EU/EEA Bachelor's and Master's students generally pay tuition unless individually exempt or awarded waiver; PhD tuition exemption is not itself a scholarship."
+        },
+        {
+          "field": "stipend",
+          "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/scholarship-for-international-students-of-tum",
+          "finding": "Named TUM international-student scholarship is €500–€1,800 ONE-TIME per semester, not €900/month; no proof this generic record maps to that award."
+        }
+      ]
+    },
+    {
+      "id": "b36270fe-ee01-4b72-a16b-43ed9c38cb63",
+      "title": "University of Vienna Masters International Scholarship",
+      "provenance_count": 0,
+      "existing_claim": "Fully funded full tuition + €1,050/month",
+      "finding": "No official programme-specific source found for a universal Master's award matching this claim. University tuition depends on nationality/status; €1,050/month appears on a restricted PHYSICS PhD completion scholarship, not a general Master's scholarship.",
+      "field_provenance": [
+        {
+          "field": "tuition_coverage",
+          "source_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/amount-of-the-tuition-fee/students-union-fee",
+          "finding": "Non-EU/EEA students generally pay €726.72 tuition + €26.20 student union fee per semester, subject to exemptions."
+        },
+        {
+          "field": "stipend,degree_levels",
+          "source_url": "https://vds-physics.univie.ac.at/open-calls/completion-funding/",
+          "finding": "€1,050 monthly is a restricted doctoral completion scholarship; not general Master's support."
+        }
+      ],
+      "proposed_action": "Hold needs_review, establish exact named programme or recommend authorized archival after identity review."
+    },
+    {
+      "id": "95c37992-9fd3-40bb-9f43-07603368cb0c",
+      "title": "University of Vienna Phd International Scholarship",
+      "provenance_count": 0,
+      "existing_claim": "Fully funded full tuition + €1,050/month for unrestricted international PhD students",
+      "finding": "VDSP Physics completion scholarship (€1,050/month for up to six months) requires existing active Vienna Physics PhD enrollment and advanced thesis; it does NOT pay tuition/insurance and is not a general incoming PhD scholarship. Page has inconsistent Nov 2 vs Nov 9 deadline across indexed/current views and says 'Call is CLOSED'; hold deadline pending clarification.",
+      "field_provenance": [
+        {
+          "field": "funding,degree,eligibility,tuition",
+          "source_url": "https://vds-physics.univie.ac.at/open-calls/completion-funding/",
+          "finding": "Restricted completion stipend, no tuition or health cover, 6 months maximum; separate employment contract option must not be treated as a grant."
+        },
+        {
+          "field": "tuition_coverage",
+          "source_url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/amount-of-the-tuition-fee/students-union-fee",
+          "finding": "Tuition obligations and exemptions vary by nationality and employment."
+        }
+      ],
+      "proposed_action": "Do not transform generic award into VDSP without programme identity proof; keep needs_review."
+    },
+    {
+      "id": "7381255f-9599-48d5-a1f7-53adad30991e",
+      "title": "NTNU International Scholarship",
+      "provenance_count": 0,
+      "existing_claim": "No tuition fees for all students; NTNU scholarship for PhD",
+      "finding": "NTNU explicitly states it offers no tuition scholarships or discounts. Non-EU/EEA/Swiss Master's students generally pay tuition, with limited exemptions. PhD candidates are tuition-exempt, but salaried doctoral employment is not an independent scholarship.",
+      "field_provenance": [
+        {
+          "field": "tuition_coverage,eligible_nationalities",
+          "source_url": "https://www.ntnu.edu/studies/tuition-fee",
+          "finding": "Non-EU/EEA/Swiss tuition applies; NTNU offers no tuition scholarships."
+        },
+        {
+          "field": "programme_identity",
+          "source_url": "https://www.ntnu.edu/studies/financing-and-scholarships",
+          "finding": "NTNU generally does not offer scholarships or loans; third-party funding may exist."
+        }
+      ],
+      "proposed_action": "High-priority false-listing review; archive only through authenticated audited workflow once exact record identity is confirmed."
+    },
+    {
+      "id": "300da265-eedd-466c-b53b-565053f79b2c",
+      "title": "Waterloo International Experience Award",
+      "provenance_count": 0,
+      "existing_claim": "C$10,000 scholarship for talented students from developing countries",
+      "finding": "University of Waterloo's International Experience Award APPLICATION is an umbrella for approved outbound international travel by already enrolled undergraduate students. Typical awards C$500–2,500; not a C$10,000 general entrance scholarship and no developing-country restriction documented. Fall main deadline July 15, Winter Nov 15, Spring March 15 (year-independent recurring term deadlines).",
+      "field_provenance": [
+        {
+          "field": "funding,eligibility,deadline,official_url",
+          "source_url": "https://uwaterloo.ca/the-centre/forms-and-official-documents/forms-undergraduate-students/international-experience-award-application",
+          "finding": "C$500–2,500 typical; approved outbound travel and active undergraduate enrollment; term-based application dates."
+        }
+      ],
+      "proposed_action": "Correct funding and eligibility after verifying whether umbrella award is appropriate catalog unit; do not confuse with distinct C$1,500 President's International Experience Award."
+    }
+  ],
+  "private_draft_reviews": [
+    {
+      "id": "27968090-2edf-464d-9236-76f5186b741b",
+      "title": "EPFL-WISH Foundation Fellowship for Master’s Projects Abroad",
+      "deadline": "2026-10-25 23:59 CET",
+      "next_call": "2027-04-11 23:59 CET",
+      "funding": "Complementary up to CHF 5,000; not tuition waiver",
+      "eligibility": "Women enrolled in EPFL Master programme with authorized overseas thesis project not yet completed; Master average generally >=5.0/6; host confirmation and recommendations.",
+      "source_url": "https://wish-foundation.epfl.ch/masters-projects-abroad/",
+      "readiness": "No successful staging source audit; 3 provenance, 0 accepted, 0 reviewer-attributed; private; do not publish until authenticated review."
+    },
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "title": "Gordon and Isabel Humphrey Scholarship",
+      "deadline": "2026-10-25",
+      "funding": "A$41,100/year 2027 rate up to 3.5 years + relocation + eligible international health cover; no tuition waiver stated",
+      "eligibility": "2027 University of Melbourne PhD Engineering offer required",
+      "source_url": "https://scholarships.unimelb.edu.au/awards/gordon-and-isabel-humphrey-scholarship",
+      "readiness": "No successful staging source audit; 2 accepted values, 0 reviewer-attributed; private."
+    },
+    {
+      "id": "719cccf5-54e5-4680-a5c0-8e930a8a839c",
+      "title": "Mick Hitchcock PhD Scholarship in Microbiology",
+      "deadline": "2026-10-31",
+      "funding": "A$39,500/year 2026 full-time rate up to 3.5 years, not tuition",
+      "eligibility": "Incoming University of Melbourne PhD Medicine/Dentistry/Health Sciences with Microbiology project; domestic preference; automatic consideration through admission.",
+      "source_url": "https://scholarships.unimelb.edu.au/awards/mick-hitchcock-phd-scholarship-in-microbiology",
+      "readiness": "Prior successful staging source audit, but 0 field provenance; private."
+    }
+  ],
+  "new_programme_leads": [
+    {
+      "title": "TUM Deutschlandstipendium 2027/28",
+      "country": "Germany",
+      "degree_levels": [
+        "Bachelor",
+        "Master"
+      ],
+      "funding": "€300 per month",
+      "cycle": "2027/28",
+      "deadline": null,
+      "deadline_note": "Application dates to be announced summer 2027, not yet open.",
+      "eligibility": "Admitted/enrolled TUM students including internationals; German residence and bank account required to accept.",
+      "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/deutschlandstipendium/application",
+      "staging_duplicate_screen": "No exact title or programme URL match; TUM international scholarship is a DIFFERENT named scheme.",
+      "status": "proposal_only"
+    },
+    {
+      "title": "Andreas Tietze Memorial Fellowship in Turkish Studies 2027",
+      "country": "Austria",
+      "degree_levels": [
+        "Advanced PhD",
+        "Postdoctoral research"
+      ],
+      "funding": "€1,500 per month for 1–3 months; travel not reimbursed",
+      "cycle": "2027",
+      "deadline": "2026-11-30",
+      "eligibility": "Advanced doctoral candidates or early postdocs within five years of PhD in Turkish Studies; residence and research in Vienna during award.",
+      "source_url": "https://vihope.univie.ac.at/news/details-calls/atm-fellowship-2027",
+      "staging_duplicate_screen": "No exact title or URL match; not equivalent to generic University of Vienna PhD award.",
+      "status": "proposal_only"
+    },
+    {
+      "title": "University of Vienna Erasmus+ International PhD Mobility 2027",
+      "country": "Austria / partner destinations",
+      "degree_levels": [
+        "PhD enrolled"
+      ],
+      "funding": "€700 per month for 60–90 days plus travel €395–1,735",
+      "cycle": "January–June 2027 stays",
+      "deadline": "2026-11-20",
+      "eligibility": "Already enrolled University of Vienna PhD students after public thesis-topic presentation; approved stays at specified partner universities.",
+      "source_url": "https://international.univie.ac.at/en/phd-mobility/international-mobility-for-phd-students-at-the-university-of-vienna/erasmus-international-phd-mobility",
+      "staging_duplicate_screen": "No exact title or URL match; clearly mobility grant, not degree tuition.",
+      "status": "proposal_only"
+    },
+    {
+      "title": "Massey Toroa International NCEA Undergraduate Fee Scholarships 2027",
+      "country": "New Zealand",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "funding": "NZ$10,000 tuition reduction for one year",
+      "cycle": "Semester 1 February 2027",
+      "opens": "2026-11-01",
+      "deadline": "2027-01-31",
+      "eligibility": "New full-time on-campus international undergraduates graduating from a New Zealand high school with qualifying NCEA/equivalent and an offer in named degree programmes.",
+      "source_url": "https://www.massey.ac.nz/study/scholarships-and-awards/toroa-international-ncea-undergraduate-fee-scholarships-semester-1-february-2027/",
+      "staging_duplicate_screen": "No exact title or URL match.",
+      "status": "proposal_only_not_yet_open",
+      "source_discrepancy": "Official page currently displays 'Status: Closed' despite a future opening date 1 Nov 2026; do not label discontinued."
+    },
+    {
+      "title": "Waterloo President's International Experience Award",
+      "country": "Canada",
+      "degree_levels": [
+        "Bachelor enrolled"
+      ],
+      "funding": "C$1,500 toward approved international study/work/volunteer experience",
+      "cycle": "Recurring term-based",
+      "deadline": null,
+      "deadline_note": "Fall Oct 1, Winter Feb 1, Spring Jun 1; term-based rather than one 2027 intake deadline.",
+      "eligibility": "Current full-time Waterloo undergraduate who received President's Scholarship of Distinction in Year 1, maintained >=80% after Year 1, approved outbound experience.",
+      "source_url": "https://uwaterloo.ca/the-centre/forms-and-official-documents/forms-undergraduate-students/presidents-international-experience-award-application",
+      "staging_duplicate_screen": "No exact title/URL match, but overlaps generic published Waterloo International Experience Award; confirm separate award identity before any draft.",
+      "status": "proposal_only_semantic_review"
+    }
+  ],
+  "held_leads": [
+    {
+      "title": "VDSP Physics Completion Scholarship",
+      "reason": "Official page currently says 'Call is CLOSED' while future deadline appears as Nov 9, and indexed snippet showed Nov 2. Needs source reconciliation; employment-contract variant is NOT scholarship.",
+      "source_url": "https://vds-physics.univie.ac.at/open-calls/completion-funding/"
+    },
+    {
+      "title": "Massey Discovery Scholarships",
+      "reason": "Official future application window 9 Nov 2026–9 Jan 2027, but page has no benefit amount or programme-level eligibility; 'Closed' may mean not yet open.",
+      "source_url": "https://www.massey.ac.nz/study/scholarships-and-awards/discovery-scholarships/"
+    },
+    {
+      "title": "TUM Linde/MDSI Master's Scholarship",
+      "reason": "Official €1,000/month for up to 12 months, but last confirmed deadline 5 July 2026; no 2027 call established.",
+      "source_url": "https://www.tum.de/en/studies/fees-and-financial-aid/scholarships/tum-scholarships/linde-master-scholarship"
+    }
+  ],
+  "source_candidate_triage": {
+    "reviewed": "High-ranked staging pending candidates",
+    "risk": "Several high-score candidates are umbrella pages, duplicated taught/doctoral links, or COLFUTURO loan-scholarship pathways; never auto-promote or label loans as grants.",
+    "examples": [
+      {
+        "id": "a2ceebf5-59cf-4a46-aaf2-cf5714b8d27f",
+        "title": "COLFUTURO & Imperial Joint Graduate Loan-Scholarship",
+        "action": "hold_loan_component"
+      },
+      {
+        "id": "c641a25f-53f3-4477-9a1b-8a00f5a246d2",
+        "title": "COLFUTURO & Imperial Joint Graduate Loan-Scholarship",
+        "action": "duplicate_and_loan_review"
+      },
+      {
+        "id": "9f92ac5e-41bb-441d-98f7-5d3a80230991",
+        "title": "Scholarships awarded by TUM",
+        "action": "umbrella_only_do_not_promote"
+      }
+    ]
+  },
+  "results_this_run": {
+    "successful_staging_edits": 0,
+    "new_publications": 0,
+    "new_database_drafts": 0,
+    "archivals": 0,
+    "provenance_added": 0,
+    "production_changes": 0
+  },
+  "remaining_to_1000_from_baseline": 603
+}

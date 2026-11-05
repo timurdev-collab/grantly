@@ -1,0 +1,667 @@
+{
+  "kind": "grantly_staging_official_source_reconciliation",
+  "run_utc": "2026-10-25T02:23:00Z",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "staging_only": true,
+  "production_untouched": true,
+  "metrics": {
+    "before": {
+      "observed_utc": "2026-10-25T02:23:01.329251Z",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_attributed_provenance": 0,
+      "candidates": 636,
+      "admin_action_logs": 8,
+      "auth_uid": null,
+      "is_admin": false
+    },
+    "after": {
+      "observed_utc": "2026-10-25T02:24:14.575001Z",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_attributed_provenance": 0,
+      "candidates": 636,
+      "admin_action_logs": 8,
+      "auth_uid": null,
+      "is_admin": false
+    },
+    "independent_readbacks": true
+  },
+  "published_reviews": [
+    {
+      "id": "cc4f23a7-c3bd-4694-9940-79d72a4b06f0",
+      "title": "Argentine Government Scholarship",
+      "country": "Argentina",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "eligible_nationalities",
+        "deadline",
+        "official_url"
+      ],
+      "source_url": "https://www.conicet.gov.ar/publicacion-de-las-bases-de-la-convocatoria-de-becas-2026/",
+      "evidence_note": "Generic national award is not identified by programme-specific documentation; CONICET 2026 doctoral awards are separately named, have 2027 start, and 2026 deadlines. Do not relabel or imply CONICET eligibility without matching the programme.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "ac741fcd-aa80-4a31-b6e0-b2a1686c95fe",
+      "title": "University of Buenos Aires Scholarship",
+      "country": "Argentina",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "stipend",
+        "deadline",
+        "official_url"
+      ],
+      "source_url": "https://www.conicet.gov.ar/publicacion-de-las-bases-de-la-convocatoria-de-becas-2026/",
+      "evidence_note": "No UBA programme-specific funding call established. CONICET is external funding, not evidence of a universal UBA stipend. Retain review.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "a56fe345-2e59-4fd8-bbe1-a53e7a8c108d",
+      "title": "University of São Paulo Phd International Scholarship",
+      "country": "Brazil",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "stipend",
+        "tuition_coverage",
+        "deadline",
+        "eligible_nationalities"
+      ],
+      "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+      "evidence_note": "USP archaeology programme allocates CAPES/CNPq graduate awards subject to vacancies; no guaranteed FAPESP stipend for every USP PhD student.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "8bd752c7-41b8-4907-b285-000d06de74a8",
+      "title": "University of São Paulo (USP) Graduate Scholarship",
+      "country": "Brazil",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "stipend",
+        "deadline",
+        "eligible_nationalities"
+      ],
+      "source_url": "https://www.paginas.fe.usp.br/pgrad/selbolsa_inscricao/pgrad_selbolsa_inscricao.php",
+      "evidence_note": "Faculty of Education 2026/27 internal CAPES/CNPq selection occurred March 23–29, 2026; departmental calls are not one university-wide scholarship.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "ed89e879-9bb8-461b-b1e8-70f2c58c01a3",
+      "title": "University of São Paulo Masters International Scholarship",
+      "country": "Brazil",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "stipend",
+        "deadline",
+        "eligible_nationalities"
+      ],
+      "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+      "evidence_note": "CAPES/CNPq awards depend on specific postgraduate programme, availability and selection; no automatic FAPESP stipend for all international Master's applicants.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "40cc63cf-7c0c-4991-827b-af7426a14693",
+      "title": "Pontificia Universidad Católica de Chile Masters Excellence Scholarship",
+      "country": "Chile",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "degree_levels",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "official_url"
+      ],
+      "source_url": "https://doctoradofilosofia.uc.cl/apertura-becas-doctorado-nacional-anid-2027/",
+      "evidence_note": "UC 2027 ANID Doctorado Nacional evidence is for a separate doctoral external competition; cannot validate this generic Master's scholarship.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "6b7b8b60-dde1-4644-a4fe-bd048cb17f2c",
+      "title": "Pontificia Universidad Católica de Chile Scholarship",
+      "country": "Chile",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "degree_levels",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "official_url"
+      ],
+      "source_url": "https://astro.uc.cl/doctorado-en-astrofisica/",
+      "evidence_note": "UC Astrophysics 2027 PhD admission programme has specific conditional internal stipend/fee support, not proof of universal UC-wide full scholarship.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "3ccbea8c-7655-4645-b881-3f36b8433deb",
+      "title": "Pontificia Universidad Católica de Chile Computer Science Phd Award",
+      "country": "Chile",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "official_url"
+      ],
+      "source_url": "https://doctoradofilosofia.uc.cl/apertura-becas-doctorado-nacional-anid-2027/",
+      "evidence_note": "ANID national PhD programme has a Nov 27 2026 deadline, but it is external and cannot be copied to a generic UC computer science award.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "9fce5eed-12c0-42f6-930e-a407326fc0e6",
+      "title": "Pontificia Universidad Católica de Chile Masters International Scholarship",
+      "country": "Chile",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "official_url"
+      ],
+      "source_url": "https://doctoradofilosofia.uc.cl/apertura-becas-doctorado-nacional-anid-2027/",
+      "evidence_note": "No independently identified 2027 UC Master's award supporting universal tuition and stipend. Distinguish AGCID national external scholarships from UC awards.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "c90b2b17-9d04-4eeb-9b0a-dffe92bcc2e8",
+      "title": "Pontificia Universidad Católica de Chile Phd International Scholarship",
+      "country": "Chile",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "official_url"
+      ],
+      "source_url": "https://astro.uc.cl/doctorado-en-astrofisica/",
+      "evidence_note": "UC Astrophysics PhD provides conditional four-year support for admitted students with valid ANID applications; cannot generalize across all UC PhDs.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "f7afc176-0610-4109-af60-f8f5d79f95f4",
+      "title": "Pontificia Universidad Javeriana Scholarship",
+      "country": "Colombia",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "degree_levels",
+        "funding_type",
+        "tuition_coverage",
+        "eligible_nationalities",
+        "deadline",
+        "official_url"
+      ],
+      "source_url": "https://www.javeriana.edu.co/recursosdb/d/estudia-en-la-javeriana/convoctoria-beca-bachiller-destacado-segundo-semestre-de-2026-2-pdf",
+      "evidence_note": "Existing 2026-2 Bachiller Destacado private draft is a named, expired, distinct award; do not treat generic Javeriana listing as automatically full funded.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "1d95ebc8-2a57-4698-9e21-29b1f6a58df9",
+      "title": "Universidad de los Andes Scholarship",
+      "country": "Colombia",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "deadline",
+        "official_url"
+      ],
+      "source_url": "https://uniandes.edu.co/",
+      "evidence_note": "Generic university homepage is not programme-specific evidence of a universal full-tuition scholarship; identify current scheme before any verification.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "ce2d8a5f-4c84-4cb4-8f8c-02ebc1e4e0de",
+      "title": "EARTH University Scholarship",
+      "country": "Costa Rica",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "eligible_nationalities",
+        "deadline",
+        "official_url"
+      ],
+      "source_url": "https://www.earth.ac.cr/",
+      "evidence_note": "Institutional homepage only; need 2027 financial aid programme-specific rules, award scope, and nationality criteria.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "e3e76b8c-4456-41ec-af3b-ee33dab3fc8f",
+      "title": "Mexican Government Scholarship",
+      "country": "Mexico",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "eligible_nationalities",
+        "deadline",
+        "application_cycle",
+        "official_url"
+      ],
+      "source_url": "https://www.gob.mx/amexcid/documentos/becas-de-excelencia-del-gobierno-de-mexico-para-extranjeros-2026",
+      "evidence_note": "Official 2026 AMEXCID Excellence Scholarship for foreigners exists. Another published record titled Mexican Government AMEXCID Scholarship already exists (5ded3ae0-0b55-4f6c-83dd-e82487895ad4). Reconcile duplicate before updates; 2027 call not confirmed.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "0f63ea3c-823f-42f2-acdc-3382dce1a8ea",
+      "title": "Tecnológico de Monterrey Scholarship",
+      "country": "Mexico",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "degree_levels",
+        "funding_type",
+        "tuition_coverage",
+        "eligible_nationalities",
+        "deadline",
+        "sat_required",
+        "official_url"
+      ],
+      "source_url": "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+      "evidence_note": "Tec has separate grants, grant-plus-loan and Líderes del Mañana 2027 100% tuition scheme. Never label socio-economic loan component as a grant. For Líderes, PAA 1360 required; SAT not established as mandatory; national and LATAM applicant pools restricted.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "296900b4-6d13-4242-8d60-787d4c605b51",
+      "title": "UNAM Phd Excellence Scholarship",
+      "country": "Mexico",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "eligible_nationalities",
+        "official_url"
+      ],
+      "source_url": "https://www.politicas.posgrado.unam.mx/becas-y-apoyos/",
+      "evidence_note": "SECIHTI postgraduate grants are separately administered; UNAM students must apply and qualify, not an automatic named UNAM PhD Excellence award.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    },
+    {
+      "id": "9d4712cd-362c-41bc-9b2e-c53e1ca868cf",
+      "title": "UNAM Masters Excellence Scholarship",
+      "country": "Mexico",
+      "status": "published",
+      "verification_status": "needs_review",
+      "reviewed_fields": [
+        "programme_identity",
+        "funding_type",
+        "tuition_coverage",
+        "stipend",
+        "deadline",
+        "eligible_nationalities",
+        "official_url"
+      ],
+      "source_url": "https://www.politicas.posgrado.unam.mx/becas-y-apoyos/",
+      "evidence_note": "2026 SECIHTI Master's support is separate and application-based; 2026 reference monthly MXN 16047.99 at political/social sciences, not a guaranteed university-wide stipend.",
+      "proposed_action": "authenticated_programme_identity_and_field_reconciliation_only",
+      "database_edited": false
+    }
+  ],
+  "published_records_investigated": 17,
+  "field_review_proposals": 108,
+  "new_opportunities": [
+    {
+      "title": "AGCID República de Chile South-South Master's Scholarship 2027",
+      "country": "Chile",
+      "status": "private_draft_candidate_only",
+      "degree_levels": [
+        "Master"
+      ],
+      "application_cycle": "2027",
+      "deadline": "2026-10-30",
+      "deadline_type": "AGCID focal-point platform final deadline 23:59 Chile time; applicant national focal-point deadlines earlier, including Colombia 2026-10-15 17:00 and Peru 2026-10-21",
+      "funding": {
+        "tuition": "Full eligible Master's tuition and graduation fees, max 24 months",
+        "stipend": "CLP 600000/month for eligible in-country study, max 24 months",
+        "insurance": "Health/life/accident in Chile",
+        "airfare": false,
+        "books": "CLP 90000 one time in-country",
+        "thesis": "CLP 300000 one time conditional on grades and requirements"
+      },
+      "nationality": "Specified Latin American and Caribbean countries in 2027 PDF; not ALL",
+      "language": "Spanish proficiency where applicable; no numeric IELTS/TOEFL/SAT minimum established",
+      "application": "Only via designated home-country focal point with unconditional university acceptance; MBA and medical specialisations excluded",
+      "official_source": "https://appspublic.agci.cl/becas/horizontal/docs/cv_369/CONVOCATORIA%20REP%C3%9ABLICA%20DE%20CHILE%202027%20-%20FINAL%20OK.pdf",
+      "additional_sources": [
+        "https://appspublic.agci.cl/convocatorias/extranjeros.php",
+        "https://web.icetex.gov.co/-/becas-maestria-chile-agcid-2027",
+        "https://pisda.apci.gob.pe/webs/becas"
+      ],
+      "duplicate_screen": "No title/provider match in scholarships or source candidates for AGCID at 2026-10-25 staging readback; broader fuzzy screening required",
+      "evidence": [
+        {
+          "field": "deadline",
+          "source": "https://appspublic.agci.cl/becas/horizontal/docs/cv_369/CONVOCATORIA%20REP%C3%9ABLICA%20DE%20CHILE%202027%20-%20FINAL%20OK.pdf",
+          "excerpt": "Plataforma de Gestión de Becas AGCID ... 30 DE OCTUBRE DE 2026, A LAS 23:59 HRS DE CHILE; Punto Focal may close earlier"
+        },
+        {
+          "field": "stipend",
+          "source": "https://appspublic.agci.cl/becas/horizontal/docs/cv_369/CONVOCATORIA%20REP%C3%9ABLICA%20DE%20CHILE%202027%20-%20FINAL%20OK.pdf",
+          "excerpt": "Asignación mensual de manutención de seiscientos mil pesos chilenos ... hasta veinticuatro meses"
+        },
+        {
+          "field": "airfare",
+          "source": "https://appspublic.agci.cl/becas/horizontal/docs/cv_369/CONVOCATORIA%20REP%C3%9ABLICA%20DE%20CHILE%202027%20-%20FINAL%20OK.pdf",
+          "excerpt": "Enumerated benefits exclude airline tickets; applicant funds unlisted costs"
+        },
+        {
+          "field": "eligible_nationalities",
+          "source": "https://appspublic.agci.cl/becas/horizontal/docs/cv_369/CONVOCATORIA%20REP%C3%9ABLICA%20DE%20CHILE%202027%20-%20FINAL%20OK.pdf",
+          "excerpt": "Nationals of listed Latin American/Caribbean states, not unrestricted"
+        }
+      ]
+    },
+    {
+      "title": "AGCID Nelson Mandela South-South Master's Scholarship 2027",
+      "country": "Chile",
+      "status": "private_draft_candidate_only",
+      "degree_levels": [
+        "Master"
+      ],
+      "application_cycle": "2027",
+      "deadline": "2026-10-30",
+      "deadline_type": "Embassy/focal-point platform 23:59 Chile time; local submission may be earlier",
+      "funding": {
+        "tuition": "Full eligible Master's tuition and graduation fees max 24 months",
+        "stipend": "CLP 600000/month max 24 months",
+        "airfare": true,
+        "insurance": "Health/life/accident in Chile",
+        "books": "CLP 90000 once",
+        "thesis": "CLP 300000 once subject to grade >=5.5 and documentation"
+      },
+      "nationality": [
+        "Angola",
+        "Algeria",
+        "Botswana",
+        "Egypt",
+        "Ethiopia",
+        "Ghana",
+        "Kenya",
+        "Morocco",
+        "Mozambique",
+        "South Africa"
+      ],
+      "language": "Basic spoken and written Spanish; embassy proof required; IELTS/TOEFL/SAT not specified",
+      "application": "Only embassy/focal-point nomination with unconditional admission to listed Master's; exclude MBA and medical specialisations",
+      "official_source": "https://appspublic.agci.cl/becas/horizontal/docs/cv_367/CONVOCATORIA%20NELSON%20MANDELA%202027%20-%20FINAL%20OK.pdf",
+      "additional_sources": [
+        "https://appspublic.agci.cl/convocatorias/extranjeros.php"
+      ],
+      "duplicate_screen": "No exact title/provider match in staging scholarships or source candidates at 2026-10-25; verify fuzzy matching before promotion",
+      "evidence": [
+        {
+          "field": "deadline",
+          "source": "https://appspublic.agci.cl/becas/horizontal/docs/cv_367/CONVOCATORIA%20NELSON%20MANDELA%202027%20-%20FINAL%20OK.pdf",
+          "excerpt": "Embassy AGCID platform deadline 30 DE OCTUBRE DE 2026 23:59 Chile time"
+        },
+        {
+          "field": "eligible_nationalities",
+          "source": "https://appspublic.agci.cl/becas/horizontal/docs/cv_367/CONVOCATORIA%20NELSON%20MANDELA%202027%20-%20FINAL%20OK.pdf",
+          "excerpt": "Angola, Algeria, Botswana, Egypt, Ethiopia, Ghana, Kenya, Morocco, Mozambique, South Africa"
+        },
+        {
+          "field": "stipend",
+          "source": "https://appspublic.agci.cl/becas/horizontal/docs/cv_367/CONVOCATORIA%20NELSON%20MANDELA%202027%20-%20FINAL%20OK.pdf",
+          "excerpt": "Monthly CLP 600000 for up to 24 months"
+        },
+        {
+          "field": "airfare",
+          "source": "https://appspublic.agci.cl/becas/horizontal/docs/cv_367/CONVOCATORIA%20NELSON%20MANDELA%202027%20-%20FINAL%20OK.pdf",
+          "excerpt": "Roundtrip travel from capital of home country to Chile included"
+        }
+      ]
+    },
+    {
+      "title": "ANID Beca Doctorado Nacional 2027",
+      "country": "Chile",
+      "status": "private_draft_candidate_only",
+      "degree_levels": [
+        "PhD"
+      ],
+      "application_cycle": "2027",
+      "deadline": "2026-11-27",
+      "deadline_type": "13:00 continental Chile time, including recommendation letters",
+      "funding": {
+        "tuition": "Supports accredited doctoral study; precise 2027 amount must be verified from ANID official call",
+        "stipend": "2027 amount not verified; do not copy older 2025/26 figures",
+        "duration": "Up to 4 years plus possible 6-month thesis maintenance extension"
+      },
+      "nationality": "Chilean or foreign, with or without Chilean permanent residency, subject to call requirements",
+      "language": "Programme-specific; no blanket IELTS/TOEFL/SAT minimum established",
+      "application": "ANID application system; accredited Chilean PhD",
+      "official_source": "https://anid.cl/concursos/beca-de-doctorado-nacional-ano-academico-2027/",
+      "additional_sources": [
+        "https://doctoradofilosofia.uc.cl/apertura-becas-doctorado-nacional-anid-2027/",
+        "https://www.uai.cl/eventos/universidad/beca-de-doctorado-nacional-2027"
+      ],
+      "duplicate_screen": "No exact title match in staging scholarships/candidates; must compare against generic UC doctoral records but not relabel them",
+      "evidence": [
+        {
+          "field": "deadline",
+          "source": "https://anid.cl/concursos/beca-de-doctorado-nacional-ano-academico-2027/",
+          "excerpt": "Official call linked from UAI; Oct 9 opening, Nov 27 2026 13:00 close corroborated by UC and UAI"
+        },
+        {
+          "field": "degree_levels",
+          "source": "https://doctoradofilosofia.uc.cl/apertura-becas-doctorado-nacional-anid-2027/",
+          "excerpt": "Doctorado Nacional 2027 programme for doctoral studies"
+        }
+      ]
+    },
+    {
+      "title": "Tecnológico de Monterrey Líderes del Mañana Scholarship 2027",
+      "country": "Mexico",
+      "status": "private_draft_candidate_only",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "application_cycle": "August 2027",
+      "deadline": "2027-02-26",
+      "deadline_type": "National route non-health programmes; health-science registration closes 2027-02-12; LATAM track deadline needs confirmation",
+      "funding": {
+        "tuition": "100% undergraduate tuition",
+        "insurance": "Major medical insurance",
+        "books": "Semester materials/books allowance",
+        "stipend": "No general cash living stipend confirmed",
+        "loan": false
+      },
+      "nationality": "Mexican national route; LATAM route Belize, Costa Rica, El Salvador, Guatemala, Honduras, Nicaragua, Panama, Dominican Republic",
+      "eligibility": "<=22 years old, high-school GPA >=90/100, demonstrated social leadership, need for 100% tuition support, admission, PAA >=1360",
+      "tests": "PAA >=1360 required; SAT equivalence/acceptance for this specific programme not established, do not set sat_required=true",
+      "official_source": "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+      "additional_sources": [
+        "https://tec.mx/es/profesional/becas"
+      ],
+      "duplicate_screen": "One generic published Tec de Monterrey Scholarship (0f63ea3c-823f-42f2-acdc-3382dce1a8ea); distinguish named programme before draft",
+      "evidence": [
+        {
+          "field": "tuition_coverage",
+          "source": "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+          "excerpt": "100% undergraduate tuition scholarship"
+        },
+        {
+          "field": "deadline",
+          "source": "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+          "excerpt": "Feb 12 2027 Health Sciences; Feb 26 2027 other programmes for national route"
+        },
+        {
+          "field": "eligible_nationalities",
+          "source": "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+          "excerpt": "Mexico national route, 8 named countries in LATAM route"
+        },
+        {
+          "field": "sat_required",
+          "source": "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+          "excerpt": "PAA >=1360 listed; SAT requirement not established"
+        }
+      ]
+    },
+    {
+      "title": "CONICET Internal Doctoral Fellowships 2026 call / April 2027 start",
+      "country": "Argentina",
+      "status": "research_only_closed_cycle_not_publish_open",
+      "degree_levels": [
+        "PhD"
+      ],
+      "application_cycle": "2026 call for 2027 start",
+      "deadline": "2026-08-21",
+      "funding": {
+        "duration": "60 months",
+        "stipend": "Not verified in current source"
+      },
+      "nationality": "Call-specific; not established from press notice",
+      "official_source": "https://www.conicet.gov.ar/publicacion-de-las-bases-de-la-convocatoria-de-becas-2026/",
+      "duplicate_screen": "Not a replacement for generic Argentine Government Scholarship; avoid publishing closed cycle as open",
+      "evidence": [
+        {
+          "field": "deadline",
+          "source": "https://www.conicet.gov.ar/publicacion-de-las-bases-de-la-convocatoria-de-becas-2026/",
+          "excerpt": "Doctoral applications July 27–August 21, 2026; fellowship begins April 1, 2027"
+        },
+        {
+          "field": "duration",
+          "source": "https://www.conicet.gov.ar/publicacion-de-las-bases-de-la-convocatoria-de-becas-2026/",
+          "excerpt": "Doctoral fellowships 60 months"
+        }
+      ]
+    }
+  ],
+  "opportunities_assessed": 5,
+  "existing_private_drafts_assessed": [
+    {
+      "id": "ccce5655-e8b0-42a4-8349-94ce57669528",
+      "title": "ITAM Scholarship",
+      "status": "draft",
+      "verification_status": "verified",
+      "last_successful_check_at": "2026-10-04T02:57:55.797844Z",
+      "audit_failure_count": 0,
+      "provenance": 0,
+      "reviewer_provenance": 0,
+      "blockers": [
+        "No field provenance",
+        "No authenticated administrator session",
+        "Programme-specific current-cycle review and official conditions still required"
+      ],
+      "publication_attempted": false
+    },
+    {
+      "id": "b92a5b8d-b319-4912-b0b1-d504de46c1c7",
+      "title": "Beca Bachiller Destacado – 2026-2",
+      "status": "draft",
+      "verification_status": "verified",
+      "deadline": "2026-05-08",
+      "last_successful_check_at": null,
+      "audit_failure_count": 0,
+      "provenance": 0,
+      "reviewer_provenance": 0,
+      "blockers": [
+        "2026-2 cycle closed",
+        "No successful source audit",
+        "No field provenance",
+        "No authenticated administrator session"
+      ],
+      "publication_attempted": false
+    }
+  ],
+  "authenticated_workflow": {
+    "auth_uid": null,
+    "is_admin": false,
+    "publication_function": "publish_scholarship_draft",
+    "draft_update_function": "update_scholarship_draft",
+    "source_promotion_function": "promote_source_candidate_to_draft",
+    "service_role": false,
+    "publication_blocker": "Supabase management SQL session is not an authenticated admin session; admin-only RPCs and review/provenance acceptance cannot be legitimately executed here.",
+    "edge_function_review": "No admin scholarship publication Edge Function found among deployed functions.",
+    "no_bypass": true
+  },
+  "outcomes": {
+    "staging_edits": 0,
+    "new_drafts": 0,
+    "new_publications": 0,
+    "new_provenance": 0,
+    "archived": 0,
+    "production_edits": 0,
+    "remaining_to_1000": 603
+  },
+  "quality_rules": [
+    "Do not mark reviewed records verified from generic homepage or source-audit alone",
+    "AGCID 2027 two distinct programmes; do not merge Nelson Mandela with Republic of Chile",
+    "AGCID platform Oct 30 2026 deadline is NOT the individual applicant's deadline; national focal points can close earlier",
+    "AGCID Nelson Mandela includes airfare while Republic of Chile does not",
+    "Tec socioeconomic scholarship can contain a repayable loan; never present loan as grant",
+    "No default IELTS/TOEFL/SAT requirement without programme-specific documentation",
+    "Do not count individual awards, courses, routes, or applicant tracks as separate programmes without independent programme identity",
+    "Transient HTTP errors are not discontinuation evidence",
+    "Source excerpts and proposed fields are research artifacts only, not accepted field provenance"
+  ]
+}

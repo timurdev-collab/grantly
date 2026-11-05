@@ -1,0 +1,941 @@
+{
+  "schema_version": "catalog-qa-evidence-v1",
+  "run_utc": "2026-10-24T22:24:00Z",
+  "scope": "Official programme evidence and proposed staging changes only. No DB changes, no publication or archiving, no accepted provenance. Do not treat generic records as verified.",
+  "staging_project": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "snapshots": {
+    "before": {
+      "checked_at_utc": "2026-10-24T22:24:44.403788Z",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "provenance_accepted": 207,
+      "provenance_reviewed": 0,
+      "source_candidates": 636,
+      "admin_action_logs": 8
+    },
+    "after": {
+      "checked_at_utc": "2026-10-24T22:26:25.915128Z",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "provenance_accepted": 207,
+      "provenance_reviewed": 0,
+      "source_candidates": 636,
+      "admin_action_logs": 8
+    }
+  },
+  "published_records": [
+    {
+      "id": "a3ba152b-07f1-42d0-a748-165f6280a346",
+      "title": "KNUST Scholarship",
+      "issue": "Generic umbrella conflates two 2026/27 named tuition bursaries with different eligibility; not a single confirmed full-tuition award.",
+      "source": "knust_bursary",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "reconcile KNUST Bursary versus SRC KBN Bursary",
+          "evidence": "Two separately named calls exist.",
+          "source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "do not imply full tuition",
+          "evidence": "KNUST bursary is tuition support; amount not universally specified.",
+          "source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "do not use ALL for KNUST bursary",
+          "evidence": "Regular Ghanaian students only.",
+          "source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "2026-04-17 only if matched to KNUST Bursary",
+          "evidence": "Official 2026/27 KNUST Bursary call.",
+          "source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "status": "unapplied"
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "evidence": "Programme-specific source, only after identity match.",
+          "source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "d6b51232-8cf5-4c58-978b-32e7e10fa139",
+      "title": "Mastercard Foundation at KNUST",
+      "issue": "2025/26 call found, but 2026/27 deadline and Master's eligibility not established; stale homepage must not be treated as open.",
+      "source": "knust_mcf",
+      "field_review_proposals": [
+        {
+          "field": "application_cycle",
+          "proposed": "2025/26 last confirmed call; 2026/27 unknown",
+          "evidence": "Official call refers to 2025.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "2025-06-30 historical only",
+          "evidence": "Do not roll date forward.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "status": "unapplied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "verify Master's inclusion; do not infer",
+          "evidence": "Published Bachelor+Master not supported by reviewed call excerpts.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "confirm African target and detailed restrictions",
+          "evidence": "Do not preserve ALL as verified.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "status": "unapplied"
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "evidence": "Specific 2025/26 call; transient 502 during re-open is not discontinuation.",
+          "source_url": "https://mcf.knust.edu.gh/call-for-applications-for-mastercard-foundation-scholarship-2025-2026-academic-year/",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "3a4821f7-41e6-47a5-a9e6-8029ae5c5d38",
+      "title": "University of Ghana Masters Excellence Scholarship",
+      "issue": "No programme-specific named full-funding award established by the reviewed UG aid office.",
+      "source": "ug_finaid",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "unsubstantiated; seek specific named award",
+          "evidence": "UG SFAO lists multiple undergraduate aid schemes.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "do not assert fully funded Master's",
+          "evidence": "General SFAO aid focuses academic fees.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "not universally open",
+          "evidence": "General UG aid restricted to Ghanaian students.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "unconfirmed",
+          "evidence": "Do not borrow undergraduate 2026/27 deadlines.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "b69b9607-4cb2-43f7-bfa8-511a463bc46f",
+      "title": "University of Ghana Scholarship",
+      "issue": "Generic record mixes UG Sponsorship, SRC Yi Bi Boa and UGBS awards.",
+      "source": "ug_finaid",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "reconcile three named UG undergraduate schemes",
+          "evidence": "Distinct eligibility and award selection.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "fee support varies; living support not guaranteed",
+          "evidence": "SFAO says financial aid towards academic fees only.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "Ghanaian for general UG aid",
+          "evidence": "SFAO citizenship condition.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "undergraduate for documented UG SFAO schemes",
+          "evidence": "No blanket Master's programme evidenced.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "programme-specific; do not generalize",
+          "evidence": "UGBS 2026/27 deadline July 29; SRC 2026 deadline July 2.",
+          "source_url": "https://www.ug.edu.gh/financialaid/",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "5ded32f8-fb61-409f-8735-ced342f040f3",
+      "title": "University of Ghana Undergraduate Excellence Scholarship",
+      "issue": "No exact programme identity; blanket full tuition plus living unsupported.",
+      "source": "ug_ugbs",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "possible UGBS Scholars award but not confirmed",
+          "evidence": "Official call is limited to Business School Main Campus.",
+          "source_url": "https://www.ug.edu.gh/financialaid/node/63",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "financial support, exact award unknown",
+          "evidence": "Official call does not guarantee living costs.",
+          "source_url": "https://www.ug.edu.gh/financialaid/node/63",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "not ALL under general UG SFAO",
+          "evidence": "UG general aid requires Ghanaian citizenship.",
+          "source_url": "https://www.ug.edu.gh/financialaid/node/63",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "2026-07-29 only if UGBS match confirmed",
+          "evidence": "2026/27 UGBS deadline 15:00 Ghana time.",
+          "source_url": "https://www.ug.edu.gh/financialaid/node/63",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "3b6fb08d-5fad-47f2-a51d-c8b4e0350578",
+      "title": "United States International University Scholarship",
+      "issue": "Generic record fails to distinguish full, tuition-only, diversity, Exness Master's, EAC Master's and Mastercard schemes.",
+      "source": "usiu_aid",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "split/reconcile named programmes",
+          "evidence": "Distinct 2026 calls and benefits.",
+          "source_url": "https://www.usiu.ac.ke/financial-aid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "full package vs 100% tuition vs 50% must be separated",
+          "evidence": "Official USIU categories.",
+          "source_url": "https://www.usiu.ac.ke/financial-aid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "undergraduate generally, Exness/EAC Master's separately",
+          "evidence": "Programme-specific degrees.",
+          "source_url": "https://www.usiu.ac.ke/financial-aid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "Kenyan for July 2026 USIU undergraduate call; EAC except Kenya for EAC Master's",
+          "evidence": "Distinct official restrictions.",
+          "source_url": "https://www.usiu.ac.ke/financial-aid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "2026-07-15 undergraduate; 2026-09-10 EAC Master's; not universal",
+          "evidence": "Both deadlines closed.",
+          "source_url": "https://www.usiu.ac.ke/financial-aid/",
+          "status": "unapplied"
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://www.usiu.ac.ke/financial-aid/",
+          "evidence": "Programme-specific university aid page.",
+          "source_url": "https://www.usiu.ac.ke/financial-aid/",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "d2544152-70c8-4fd4-bcea-1e75302c6030",
+      "title": "University of Nairobi Masters Excellence Scholarship",
+      "issue": "Potential overlap with actual 2026/27 UoN Master's Scholarship; identity not yet matched.",
+      "source": "uonbi_masters",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "reconcile with UoN 2026/27 Master's Scholarship",
+          "evidence": "University named call exists.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "2026-07-31 historical only if matched",
+          "evidence": "September 2026 intake.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "do not assert ALL eligibility",
+          "evidence": "Must be recent UoN graduate 2024/25, health sciences 2022/23.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "Master only",
+          "evidence": "Full-time admitted applicants only.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "award value not established",
+          "evidence": "Do not assume full tuition+stipend.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "2c2c4aa5-2331-4608-86bb-3dbbe57c93cc",
+      "title": "University of Nairobi Scholarship",
+      "issue": "Generic umbrella not an independently named award.",
+      "source": "uonbi_masters",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "reconcile named Master's, Gandhi and SYLFF calls",
+          "evidence": "Separate schemes.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "varies; Gandhi explicitly partial",
+          "evidence": "No universal full-tuition programme.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "programme-specific Master's/PhD",
+          "evidence": "SYLFF includes PhD; UoN general Master's only.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "programme-specific historical dates only",
+          "evidence": "UoN Master's July 31, Gandhi Sept 11, SYLFF Mar 27 in 2026.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "56989aa4-daf2-4c58-94d9-5cff2f21a8f1",
+      "title": "University of Nairobi Undergraduate Excellence Scholarship",
+      "issue": "No exact programme-specific undergraduate award found in reviewed UoN scholarship notices.",
+      "source": "uonbi_masters",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "unsubstantiated; keep needs_review",
+          "evidence": "Reviewed named 2026/27 call is Master's only.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "do not infer Bachelor from Master's call",
+          "evidence": "Undergraduate identity unresolved.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "full tuition+stipend unsupported",
+          "evidence": "No matching award amounts.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "unknown",
+          "evidence": "Do not transplant Master's date.",
+          "source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "75273afa-f09e-423f-b288-0950e4aa8cd0",
+      "title": "MTN Foundation Scholarship",
+      "issue": "Published generic entry conflates three independently named Nigerian awards.",
+      "source": "mtn",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "reconcile STS, Scholarship for Blind Students, Top 10 UTME",
+          "evidence": "Three official award categories.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "Nigerian students for STS and SBS",
+          "evidence": "Not unrestricted ALL.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "NGN 300,000/year for 2026; not full tuition",
+          "evidence": "Award value specified.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "status": "unapplied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "current tertiary students, not universal new Bachelor entry",
+          "evidence": "STS 300-level; SBS 200/300-level; UTME automatic.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "2026 application deadline not independently confirmed",
+          "evidence": "Do not invent a 2027 deadline.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "status": "unapplied"
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://www.mtn.ng/scholarships/",
+          "evidence": "Specific MTN Foundation scholarship page.",
+          "source_url": "https://www.mtn.ng/scholarships/",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "afbd5e74-2ad3-4fbf-895e-bcacb3403b14",
+      "title": "Tony Elumelu Foundation Entrepreneurship",
+      "issue": "Non-refundable business seed capital is not an academic degree scholarship.",
+      "source": "tef",
+      "field_review_proposals": [
+        {
+          "field": "programme_type",
+          "proposed": "entrepreneurship grant; not degree scholarship",
+          "evidence": "US$5,000 seed funding for founders.",
+          "source_url": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "status": "unapplied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "not applicable; published Bachelor is misleading",
+          "evidence": "No degree study requirement.",
+          "source_url": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "African entrepreneurs from 54 African countries",
+          "evidence": "Not unrestricted global ALL.",
+          "source_url": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "non-refundable seed capital; not tuition",
+          "evidence": "Not education funding.",
+          "source_url": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "status": "unapplied"
+        },
+        {
+          "field": "catalog_action",
+          "proposed": "audited scope review, not automatic archive",
+          "evidence": "Requires authorized decision; not discontinued.",
+          "source_url": "https://www.tonyelumelufoundation.org/press-releases/apply-tef-entrepreneurship-programme-2026",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "31900b57-c6fb-4a8a-9e3e-e5743fab28e2",
+      "title": "University of Lagos Scholarship",
+      "issue": "Generic degree-funding promise cannot be substantiated by a specific programme.",
+      "source": "unilag",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "unsubstantiated; do not conflate with Erasmus mobility",
+          "evidence": "2026/27 KA171 is short credit mobility.",
+          "source_url": "https://unilag.edu.ng/unilag-announces-erasmus-ka171-student-mobility-opportunity-with-istanbul-kultur-university-iku-turkiye/",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "full tuition unconfirmed",
+          "evidence": "Erasmus mobility pays stipend/travel, not general degree tuition.",
+          "source_url": "https://unilag.edu.ng/unilag-announces-erasmus-ka171-student-mobility-opportunity-with-istanbul-kultur-university-iku-turkiye/",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "unconfirmed for generic scholarship",
+          "evidence": "2026-10-30 applies only to IKU mobility.",
+          "source_url": "https://unilag.edu.ng/unilag-announces-erasmus-ka171-student-mobility-opportunity-with-istanbul-kultur-university-iku-turkiye/",
+          "status": "unapplied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "do not claim Master coverage from mobility call",
+          "evidence": "Mobility is for existing undergraduates.",
+          "source_url": "https://unilag.edu.ng/unilag-announces-erasmus-ka171-student-mobility-opportunity-with-istanbul-kultur-university-iku-turkiye/",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "de8c4453-ba72-4aef-ae9a-c09b8677a148",
+      "title": "University of Lagos Undergraduate International Scholarship",
+      "issue": "No exact-title admission scholarship established; university advertises separate short Erasmus mobility.",
+      "source": "unilag",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "not validated; hold",
+          "evidence": "Official KA171 is for existing UNILAG students.",
+          "source_url": "https://unilag.edu.ng/unilag-announces-erasmus-ka171-student-mobility-opportunity-with-istanbul-kultur-university-iku-turkiye/",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "full tuition unsupported",
+          "evidence": "Mobility grant is EUR 800 monthly four months + EUR 1188 travel.",
+          "source_url": "https://unilag.edu.ng/unilag-announces-erasmus-ka171-student-mobility-opportunity-with-istanbul-kultur-university-iku-turkiye/",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "not globally open",
+          "evidence": "Requires enrollment at UNILAG.",
+          "source_url": "https://unilag.edu.ng/unilag-announces-erasmus-ka171-student-mobility-opportunity-with-istanbul-kultur-university-iku-turkiye/",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "2026-10-30 only for mobility, not generic award",
+          "evidence": "No date for claimed scholarship.",
+          "source_url": "https://unilag.edu.ng/unilag-announces-erasmus-ka171-student-mobility-opportunity-with-istanbul-kultur-university-iku-turkiye/",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "3b053164-a740-41ef-8605-e2a105f4a2e8",
+      "title": "University of Ibadan Scholarship",
+      "issue": "University bursary department homepage does not identify a universal degree scholarship.",
+      "source": "ibadan",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "unsubstantiated; obtain official named call",
+          "evidence": "Bursary department is an administrative finance unit.",
+          "source_url": "https://bursary.ui.edu.ng/",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "partial-to-full tuition not evidenced",
+          "evidence": "No programme-specific terms.",
+          "source_url": "https://bursary.ui.edu.ng/",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "ALL unverified",
+          "evidence": "No named scholarship eligibility.",
+          "source_url": "https://bursary.ui.edu.ng/",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "unknown",
+          "evidence": "No specific 2026/27 scholarship call.",
+          "source_url": "https://bursary.ui.edu.ng/",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "e3e887eb-1c14-4d63-91df-594c5b87c886",
+      "title": "Rwanda Government Scholarship",
+      "issue": "Generic government-funded university claim not established by Mastercard Foundation UR recruitment.",
+      "source": "ur",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "not equivalent to UR Mastercard Foundation programme",
+          "evidence": "Distinct funder; do not relabel.",
+          "source_url": "https://mcfsprecruitment.ur.ac.rw/",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "unverified",
+          "evidence": "No government-wide guarantee of tuition+living.",
+          "source_url": "https://mcfsprecruitment.ur.ac.rw/",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "ALL unverified",
+          "evidence": "Cannot infer from visa rules.",
+          "source_url": "https://mcfsprecruitment.ur.ac.rw/",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "unconfirmed",
+          "evidence": "UR MCF dates are separate programme.",
+          "source_url": "https://mcfsprecruitment.ur.ac.rw/",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    },
+    {
+      "id": "a7e941c3-1ed6-4a73-941f-b0e51c0eaad0",
+      "title": "University of Rwanda Scholarship",
+      "issue": "Potential overlap with Mastercard Foundation Scholars Program; identity must be confirmed before repurposing.",
+      "source": "ur",
+      "field_review_proposals": [
+        {
+          "field": "programme_identity",
+          "proposed": "reconcile against UR Mastercard Foundation Scholars Program",
+          "evidence": "Programme supports disadvantaged students.",
+          "source_url": "https://mcfsprecruitment.ur.ac.rw/",
+          "status": "unapplied"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "full support only if matched to Mastercard programme",
+          "evidence": "No blanket UR scholarship established.",
+          "source_url": "https://mcfsprecruitment.ur.ac.rw/",
+          "status": "unapplied"
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "UR Mastercard has separate undergraduate and postgraduate tracks",
+          "evidence": "Do not assume generic Bachelor-only.",
+          "source_url": "https://mcfsprecruitment.ur.ac.rw/",
+          "status": "unapplied"
+        },
+        {
+          "field": "deadline",
+          "proposed": "undergraduate 2026-10-12; postgraduate 2026-08-25, historical and programme-specific",
+          "evidence": "2026/27 applications closed.",
+          "source_url": "https://mcfsprecruitment.ur.ac.rw/",
+          "status": "unapplied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "do not infer unrestricted eligibility",
+          "evidence": "Official UR recruitment requires specific eligibility and student number.",
+          "source_url": "https://mcfsprecruitment.ur.ac.rw/",
+          "status": "unapplied"
+        }
+      ],
+      "decision": "hold_pending_authenticated_review"
+    }
+  ],
+  "scholarship_leads": [
+    {
+      "name": "KNUST Bursary",
+      "country": "Ghana",
+      "official_source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-knust-bursary-20262027-academic-year",
+      "cycle": "2026/27",
+      "deadline": "2026-04-17",
+      "benefit": "One-year tuition support; not guaranteed full fees",
+      "eligibility": "Ghanaian regular full-time students, non-final-year, CWA >=67 (or first-year WASSCE aggregate <=9); exclusions apply",
+      "decision": "reconcile_generic_KNUST_record;closed_cycle",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "KNUST SRC Ketewa Biara Nsua Bursary",
+      "country": "Ghana",
+      "official_source_url": "https://www.knust.edu.gh/index.php/announcements/general/call-applications-src-ketewa-biara-nsua-kbn-bursary-20262027-academic-year",
+      "cycle": "2026/27",
+      "deadline": "2026-04-17",
+      "benefit": "One-year partial academic fee bursary",
+      "eligibility": "Ghanaian full-time students including fee-paying/parallel; final-year excluded",
+      "decision": "reconcile_generic_KNUST_record;closed_cycle",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "University of Ghana SRC Yi Bi Boa Scholarship",
+      "country": "Ghana",
+      "official_source_url": "https://www.ug.edu.gh/financialaid/node/27",
+      "cycle": "2026/27",
+      "deadline": "2026-07-02",
+      "benefit": "Financial aid; amount not confirmed",
+      "eligibility": "UG SRC dues-paying continuing undergraduates with need, CGPA >=1.5",
+      "decision": "closed_cycle;check_cycle_specific_call",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "University of Ghana UGBS Scholars Scholarship",
+      "country": "Ghana",
+      "official_source_url": "https://www.ug.edu.gh/financialaid/node/63",
+      "cycle": "2026/27",
+      "deadline": "2026-07-29",
+      "benefit": "Financial support; amount not confirmed",
+      "eligibility": "Financially disadvantaged UG Business School Main Campus undergraduates",
+      "decision": "closed_cycle",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "University of Ghana UG Sponsorship",
+      "country": "Ghana",
+      "official_source_url": "https://www.ug.edu.gh/financialaid/node/29",
+      "cycle": "2026/27",
+      "deadline": null,
+      "benefit": "Academic fee support; not living stipend",
+      "eligibility": "Ghanaian UG continuing undergraduates demonstrating need and CGPA >=2.5",
+      "decision": "deadline_conflict_on_official_page_2026_27_heading_2025_body;hold",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "USIU-Africa Full Scholarship",
+      "country": "Kenya",
+      "official_source_url": "https://www.usiu.ac.ke/financial-aid/",
+      "cycle": "Fall 2026",
+      "deadline": "2026-07-15",
+      "benefit": "Tuition, books, laboratory fees, accommodation, meals",
+      "eligibility": "Kenyan first-time undergraduate applicants; KCSE B+ and B in English/Math; excluded Nursing/Pharmacy",
+      "decision": "closed_cycle;reconcile_generic_USIU",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "USIU-Africa Partial Scholarship",
+      "country": "Kenya",
+      "official_source_url": "https://www.usiu.ac.ke/financial-aid/",
+      "cycle": "Fall 2026",
+      "deadline": "2026-07-15",
+      "benefit": "100% tuition only; no housing/meals",
+      "eligibility": "Kenyan first-time undergraduate applicants; KCSE B and B- in English/Math",
+      "decision": "closed_cycle;reconcile_generic_USIU",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "USIU-Africa Diversity Scholarship",
+      "country": "Kenya",
+      "official_source_url": "https://www.usiu.ac.ke/financial-aid/",
+      "cycle": "Fall 2026",
+      "deadline": "2026-07-15",
+      "benefit": "100% tuition only",
+      "eligibility": "Kenyan first-time undergraduate applicants from marginalized communities/disability categories",
+      "decision": "closed_cycle;reconcile_generic_USIU",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "EAC Scholarship Programme at USIU-Africa",
+      "country": "Kenya",
+      "official_source_url": "https://www.usiu.ac.ke/financial-aid/",
+      "cycle": "2026 cohort 4",
+      "deadline": "2026-09-10",
+      "benefit": "Full tuition, EUR 380/month, airfare, EUR 200 arrival, EUR 650 materials, EUR 1500 research, insurance",
+      "eligibility": "EAC partner state nationals except Kenya, under 35, eligible three USIU Master's programmes",
+      "decision": "closed_cycle;reconcile_existing_programmes",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "University of Nairobi Master's Scholarship",
+      "country": "Kenya",
+      "official_source_url": "https://ssc.uonbi.ac.ke/news/advertisement-20262027-university-nairobi-scholarship",
+      "cycle": "September 2026 intake",
+      "deadline": "2026-07-31",
+      "benefit": "Amount not specified on reviewed notice",
+      "eligibility": "Recent UoN graduates, first or upper second, admitted full-time Master's; health sciences special graduation years",
+      "decision": "closed_cycle;reconcile_generic_UoN",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "Gandhi Smarak Nidhi Fund Master's Scholarship at UoN",
+      "country": "Kenya",
+      "official_source_url": "https://academics.uonbi.ac.ke/index.php/latest-news/gandhi-smarak-nidhi-fund-masters-scholarship-20262027-academic-year",
+      "cycle": "2026/27",
+      "deadline": "2026-09-11",
+      "benefit": "Partial scholarship; application fee KES 2000",
+      "eligibility": "Admitted UoN Master's applicants with upper-second Bachelor's or equivalent",
+      "decision": "closed_cycle",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "Sasakawa Young Leaders Fellowship Fund at UoN",
+      "country": "Kenya",
+      "official_source_url": "https://academics.uonbi.ac.ke/latest-news/advertisment-20262027-sasakawa-young-leaders-fellowship-fund-sylff-scholarship",
+      "cycle": "2026/27",
+      "deadline": "2026-03-27",
+      "benefit": "One PhD and two Master's awards; exact amount unconfirmed",
+      "eligibility": "Recent UoN graduates admitted to specified humanities/social science programmes",
+      "decision": "closed_cycle",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "MTN Foundation Science and Technology Scholarship",
+      "country": "Nigeria",
+      "official_source_url": "https://www.mtn.ng/scholarships/",
+      "cycle": "2026",
+      "deadline": null,
+      "benefit": "NGN 300000/year subject to renewal conditions",
+      "eligibility": "Nigerian 300-level science/technology students, qualifying 400-level medical students, public institutions",
+      "decision": "reconcile_generic_MTN;2027_deadline_unconfirmed",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "MTN Foundation Scholarship for Blind Students",
+      "country": "Nigeria",
+      "official_source_url": "https://www.mtn.ng/scholarships/",
+      "cycle": "2026",
+      "deadline": null,
+      "benefit": "NGN 300000/year subject to academic renewal",
+      "eligibility": "Blind Nigerian 200/300-level students in public tertiary institutions",
+      "decision": "reconcile_generic_MTN;2027_deadline_unconfirmed",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "MTN Foundation Top 10 UTME Scholarship",
+      "country": "Nigeria",
+      "official_source_url": "https://www.mtn.ng/scholarships/",
+      "cycle": "2026",
+      "deadline": null,
+      "benefit": "NGN 300000/year until graduation subject to grades",
+      "eligibility": "Top 10 UTME scorers as announced by JAMB; automatic, any Nigerian tertiary institution",
+      "decision": "reconcile_generic_MTN;automatic_not_open_application",
+      "publication_status": "not_published"
+    },
+    {
+      "name": "UNILAG Erasmus+ KA171 Istanbul Kültür University mobility",
+      "country": "Nigeria/Türkiye",
+      "official_source_url": "https://unilag.edu.ng/unilag-announces-erasmus-ka171-student-mobility-opportunity-with-istanbul-kultur-university-iku-turkiye/",
+      "cycle": "Spring 2026/27",
+      "deadline": "2026-10-30",
+      "benefit": "EUR 800/month for four months and EUR 1188 travel",
+      "eligibility": "Current UNILAG undergraduates in listed disciplines, CGPA >=2.50/4, >=30 ECTS remaining",
+      "decision": "out_of_degree_scholarship_scope;separate_mobility_catalog_review",
+      "publication_status": "not_published"
+    }
+  ],
+  "existing_private_drafts": [
+    {
+      "id": "719cccf5-54e5-4680-a5c0-8e930a8a839c",
+      "name": "Mick Hitchcock PhD Scholarship in Microbiology",
+      "deadline": "2026-10-31",
+      "source": "https://scholarships.unimelb.edu.au/awards/mick-hitchcock-phd-scholarship-in-microbiology",
+      "verified_from_official_source": {
+        "stipend": "AUD 39500/year at 2026 full-time rate, up to 3.5 years",
+        "eligibility": "Future PhD in Medicine Dentistry and Health Sciences researching Microbiology; domestic/international; preference for specified domestic graduates",
+        "application": "Automatic consideration upon eligible admission application"
+      },
+      "staging": {
+        "provenance_rows": 0,
+        "reviewer_attributed_rows": 0,
+        "last_successful_check_at": "2026-10-05T05:11:16Z",
+        "audit_failure_count": 0
+      },
+      "action": "Requires authenticated provenance, updated audit, readiness; do not publish yet."
+    },
+    {
+      "id": "d8ec0b3a-c82c-4592-bb7e-20d468118dc0",
+      "name": "EPFL MX Master Fellowship (Materials Science Research)",
+      "deadline": "2026-11-01",
+      "source": "https://sti.epfl.ch/fr/smx/mx-fellowship-fr/",
+      "verified_from_official_source": {
+        "stipend": "CHF 1800/month for up to six months",
+        "travel": "up to CHF 1200",
+        "eligibility": "Existing Master's students conducting home-university-accredited research project at EPFL Materials labs",
+        "application": "Next deadline 2026-11-01; portal opens October"
+      },
+      "staging": {
+        "provenance_rows": 2,
+        "reviewer_attributed_rows": 0,
+        "last_successful_check_at": null,
+        "audit_failure_count": 0
+      },
+      "action": "Research-visit funding, not full degree tuition; require catalog-scope and authenticated review."
+    }
+  ],
+  "quality_controls": {
+    "published_records_reviewed": 16,
+    "field_review_proposals": 74,
+    "leads": 16,
+    "private_drafts_reviewed": 2,
+    "staging_mutations": 0,
+    "publications": 0,
+    "archives": 0,
+    "provenance_insertions": 0,
+    "github_research_only": true,
+    "semantic_duplicate_screening": "Targeted four-country staging title/provider search; NOT exhaustive global semantic duplicate check",
+    "source_issues": [
+      "KNUST Mastercard call temporarily returned 502 on re-open; historic search excerpt retained, not discontinued.",
+      "UoN source pages intermittently timed out; search result excerpts from official domain retained; not discontinued.",
+      "UG Sponsorship 2026/27 page body contains a 2025 deadline; do not publish a reconciled deadline.",
+      "UNILAG Erasmus grant is credit mobility, not degree-awarding scholarship.",
+      "Tony Elumelu Entrepreneurship is business seed capital, not academic degree funding.",
+      "MTN 2027 application dates not established.",
+      "IELTS/TOEFL/SAT scores not invented; KCSE/CGPA conditions must not be relabeled as IELTS."
+    ],
+    "authorization": {
+      "auth_uid": null,
+      "is_admin": false,
+      "required": "Authenticated Grantly admin session with student_profiles role and field-level provenance approval; do not spoof JWT/service_role or bypass DB RLS",
+      "next_step": "Use legitimate authenticated admin UI/RPC to correct/approve; run source audits, semantic dedupe, staging checks and CI before production."
+    }
+  }
+}
