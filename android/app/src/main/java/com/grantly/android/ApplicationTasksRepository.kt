@@ -10,6 +10,7 @@ import java.net.URL
 import java.net.URLEncoder
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneOffset
 import java.time.ZoneId
 import java.util.UUID
 
@@ -21,6 +22,26 @@ internal data class ApplicationTaskItem(
     val completed: Boolean,
     val dueDate: LocalDate?
 )
+
+/**
+ * Preserve the calendar day for new checklist dates without changing the backend schema.
+ * Legacy Android records used local noon and must retain their original local-time display.
+ * The 23:59:59 UTC marker is distinguishable from legacy local-noon writes (seconds == 0).
+ */
+internal object ChecklistDueDateCodec {
+    fun encode(date: LocalDate): String =
+        date.atTime(23, 59, 59).toInstant(ZoneOffset.UTC).toString()
+
+    fun decode(timestamp: String, deviceZone: ZoneId = ZoneId.systemDefault()): LocalDate {
+        val instant = Instant.parse(timestamp)
+        val utc = instant.atZone(ZoneOffset.UTC)
+        return if (utc.hour == 23 && utc.minute == 59 && utc.second == 59) {
+            utc.toLocalDate()
+        } else {
+            instant.atZone(deviceZone).toLocalDate()
+        }
+    }
+}
 
 /** Android checklist backed by the existing user-scoped application_tasks RLS table. */
 internal object ApplicationTasksRepository {
@@ -83,7 +104,7 @@ internal object ApplicationTasksRepository {
                     row.optInt("position"), !row.isNull("completed_at"),
                     row.optString("due_at").takeUnless { row.isNull("due_at") || it.isBlank() }
                         ?.let { timestamp ->
-                            runCatching { Instant.parse(timestamp).atZone(ZoneId.systemDefault()).toLocalDate() }
+                            runCatching { ChecklistDueDateCodec.decode(timestamp) }
                                 .getOrNull()
                         }
                 ))
@@ -99,11 +120,11 @@ internal object ApplicationTasksRepository {
             .put("updated_at", Instant.now().toString()))
     }
 
-    /** Persist the selected local calendar day as local noon in the existing timestamptz column. */
+    /** New dates use a UTC marker; existing local-noon dates retain legacy read semantics. */
     suspend fun setDueDate(taskId: String, date: LocalDate?) {
         val session = AuthRepository.activeSession()
         val query = "id=eq." + enc(uuid(taskId)) + "&user_id=eq." + enc(uuid(session.userId))
-        val dueAt = date?.atTime(12, 0)?.atZone(ZoneId.systemDefault())?.toInstant()?.toString()
+        val dueAt = date?.let(ChecklistDueDateCodec::encode)
         request("PATCH", query, JSONObject()
             .put("due_at", dueAt ?: JSONObject.NULL)
             .put("updated_at", Instant.now().toString()))
