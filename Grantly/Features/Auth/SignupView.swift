@@ -156,11 +156,20 @@ struct SignupView: View {
             Button {
                 Task {
                     busy = true
-                    created = await auth.signUp(
+                    let succeeded = await auth.signUp(
                         email: normalizedEmail,
                         password: password
                     )
                     busy = false
+                    if succeeded {
+                        if auth.userId != nil {
+                            // RootView switches to the authenticated app.
+                            dismiss()
+                        } else {
+                            // Confirmation-required projects return no session.
+                            created = true
+                        }
+                    }
                 }
             } label: {
                 HStack(spacing: 8) {
