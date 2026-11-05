@@ -62,11 +62,16 @@ final class AuthStore {
         errorMessage = nil
 
         do {
-            _ = try await supabase.auth.signUp(
+            let response = try await supabase.auth.signUp(
                 email: email,
                 password: password,
                 redirectTo: URL(string: "grantly://login-callback")!
             )
+            // Supabase returns an authenticated session immediately when
+            // email confirmation is disabled. Drive RootView from that session.
+            if let session = response.session {
+                userId = session.user.id
+            }
             return true
         } catch {
             errorMessage = friendlyMessage(for: error)
