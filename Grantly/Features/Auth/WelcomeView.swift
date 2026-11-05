@@ -9,8 +9,8 @@ struct WelcomeView: View {
         title: "Your next chapter\nstarts here",
         body: "Find scholarships and universities that fit your ambitions, not just your search terms.",
         imageURL: URL(
-            string: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=88"
-        ),
+    string: "https://images.unsplash.com/photo-1519452575417-564c1401ecc0?auto=format&fit=crop&w=1200&q=88"
+),
         symbol: "sparkles"
     )
 
