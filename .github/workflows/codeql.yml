@@ -94,7 +94,9 @@ jobs:
       shell: bash
       run: |
         set -o pipefail
-        brew install xcodegen
+        # CodeQL tracing can run the shell under Rosetta on Apple Silicon.
+        # Invoke Homebrew explicitly as ARM64 to match /opt/homebrew.
+        arch -arm64 brew install xcodegen
         xcodegen generate
         xcodebuild -resolvePackageDependencies \
           -project EduT.xcodeproj \
