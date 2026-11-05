@@ -610,7 +610,7 @@ struct CreateUniversityCaseView: View {
                     .font(.subheadline.bold())
                     .foregroundStyle(Theme.ink)
 
-                    Text("EduT will create a starter checklist for passport, transcripts, diploma, language test, essays and recommendation letters. These are not automatically claimed as the university's official requirements. You can add, remove and upload documents inside the case.")
+                    Text("Track your university application's status here. Submit required documents directly to the university's official application portal.")
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
                         .lineSpacing(3)
@@ -761,26 +761,7 @@ struct UniversityCaseDetailView: View {
             } else if let item {
                 VStack(alignment: .leading, spacing: 18) {
                     caseHeader(item)
-                    documentSummary
-                    requirementsSection
-                    extraDocumentsSection
 
-                    if !item.notes
-                        .trimmingCharacters(in: .whitespacesAndNewlines)
-                        .isEmpty {
-                        VStack(alignment: .leading, spacing: 7) {
-                            Text("Notes")
-                                .font(.headline.bold())
-                                .foregroundStyle(Theme.ink)
-
-                            Text(item.notes)
-                                .font(.subheadline)
-                                .foregroundStyle(Theme.muted)
-                        }
-                        .padding(16)
-                        .background(Theme.surface)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                    }
                 }
                 .padding()
                 .padding(.bottom, 24)
@@ -791,19 +772,6 @@ struct UniversityCaseDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task { await load() }
         .refreshable { await load() }
-        .fileImporter(
-            isPresented: $showingImporter,
-            allowedContentTypes: [.pdf, .image],
-            allowsMultipleSelection: false
-        ) { result in
-            switch result {
-            case .success(let urls):
-                guard let url = urls.first else { return }
-                Task { await upload(url: url) }
-            case .failure(let error):
-                errorMessage = error.localizedDescription
-            }
-        }
         .sheet(isPresented: $showingAddRequirement) {
             addRequirementSheet
         }

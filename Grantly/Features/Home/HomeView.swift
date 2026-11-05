@@ -26,7 +26,6 @@ struct HomeView: View {
     private var profileNeedsSetup: Bool {
         guard let profile else { return true }
         let required = [
-            profile.fullName,
             profile.nationality,
             profile.intendedMajor,
             profile.degreeLevel
@@ -318,11 +317,29 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 11) {
             HomeConceptSectionTitle(
                 title: "Picked for your goals",
-                trailing: profileNeedsSetup ? "Complete profile" : "For you",
+                trailing: profileNeedsSetup ? "Try matching" : "For you",
                 action: profileNeedsSetup ? openProfile : openExplore
             )
 
-            if loading && matches.isEmpty {
+            if profileNeedsSetup {
+                VStack(alignment: .leading, spacing: 9) {
+                    Text("Personalized matches are optional. Add your study goals only when you are ready.")
+                        .font(.subheadline)
+                        .foregroundStyle(HomeVisualStyle.ink)
+                    Button("Set up matching", action: openProfile)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(editorialAccent)
+                        .frame(minHeight: 44)
+                        .accessibilityIdentifier("matching.setup")
+                    Button("Keep browsing without a profile", action: openExplore)
+                        .font(.caption)
+                        .foregroundStyle(HomeVisualStyle.muted)
+                        .frame(minHeight: 44)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(16)
+                .background(HomeVisualStyle.sage, in: RoundedRectangle(cornerRadius: 18))
+            } else if loading && matches.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
                         HomeRecommendationSkeleton()

@@ -18,12 +18,10 @@ struct ProfileView: View {
     @State private var gpaScale = "10"
     @State private var ielts = ""
     @State private var intendedMajor = ""
-    @State private var degreeLevel = "Bachelor"
+    @State private var degreeLevel = ""
     @State private var targetRegions = ""
     @State private var targetCountries = ""
-    @State private var familyIncome = ""
-    @State private var bio = ""
-    @State private var visible = true
+    @State private var wantsPersonalizedMatching = false
     @State private var status = ""
     @State private var saving = false
     @State private var showingDeleteAccount = false
@@ -42,7 +40,6 @@ struct ProfileView: View {
 
     private var profileCompletion: Int {
         let fields = [
-            fullName,
             nationality,
             residenceCountry,
             graduationYear,
@@ -205,7 +202,7 @@ struct ProfileView: View {
 
             VStack(alignment: .leading, spacing: 9) {
                 HStack {
-                    Text(L10n.string("Profile completeness"))
+                    Text(L10n.string("Optional matching details"))
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(Theme.premiumInk)
 
@@ -442,86 +439,6 @@ struct ProfileView: View {
         )
     }
 
-    private var communityCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Community profile")
-                    .font(.headline.bold())
-                    .foregroundStyle(Theme.ink)
-
-                Spacer()
-
-                Label(
-                    visible ? "Community visible" : "Community hidden",
-                    systemImage: visible ? "eye.fill" : "eye.slash.fill"
-                )
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(Theme.blueSoft)
-            }
-
-            Text(
-                bio.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    ? L10n.string("Add a short bio so other students know your study interests.")
-                    : bio
-            )
-            .font(.subheadline)
-            .foregroundStyle(Theme.ink)
-            .lineSpacing(3)
-
-            HStack(spacing: 8) {
-                Image(systemName: "lock.fill")
-                    .foregroundStyle(Theme.muted)
-
-                Text("GPA, IELTS, income and residence details are never copied into your public community profile.")
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
-            }
-
-            NavigationLink {
-                CommunityView()
-            } label: {
-                Label(
-                    L10n.string("Open Student Community"),
-                    systemImage: "person.3.fill"
-                )
-                .font(.subheadline.weight(.semibold))
-                .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .background(Theme.surfaceRaised)
-                .foregroundStyle(Theme.ink)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .buttonStyle(.plain)
-            .accessibilityHint(
-                "Browse student profiles, messages, and safety controls"
-            )
-
-            NavigationLink {
-                MessagesView()
-            } label: {
-                Label(
-                    "Messages",
-                    systemImage: "bubble.left.and.bubble.right.fill"
-                )
-                .font(.subheadline.weight(.semibold))
-                .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .background(Theme.surfaceRaised)
-                .foregroundStyle(Theme.ink)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .buttonStyle(.plain)
-            .accessibilityHint("Open your private conversations")
-        }
-        .padding(14)
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-        .overlay(
-            RoundedRectangle(cornerRadius: 15)
-                .stroke(Theme.ink.opacity(0.05))
-        )
-    }
-
     private var settingsSheet: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
@@ -665,8 +582,19 @@ struct ProfileView: View {
     private var editProfileSheet: some View {
         NavigationStack {
             Form {
-                Section("Student profile") {
-                    TextField("Full name", text: $fullName)
+                Section("Basic profile (optional)") {
+                    Text("You can skip this form and explore scholarships without sharing personal or academic details.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                    TextField("Full name (optional)", text: $fullName)
+                }
+
+                Section("Personalized scholarship matching (optional)") {
+                    Toggle("Add academic details for matching", isOn: $wantsPersonalizedMatching)
+                    if wantsPersonalizedMatching {
+                    Text("Only enter details you want to use for scholarship matching. Leave any field blank to skip it.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
                     TextField("Nationality", text: $nationality)
                     TextField("Country of residence", text: $residenceCountry)
 
@@ -687,13 +615,13 @@ struct ProfileView: View {
                     TextField("Intended major", text: $intendedMajor)
 
                     Picker("Degree", selection: $degreeLevel) {
-                        ForEach(["Bachelor", "Master", "PhD"], id: \.self) {
-                            Text($0)
+                        ForEach(["", "Bachelor", "Master", "PhD"], id: \.self) {
+                            Text($0.isEmpty ? "Not selected" : $0)
                         }
                     }
-                }
 
-                Section("Preferences") {
+                    Text("Study destinations (optional)")
+                        .font(.caption.weight(.semibold))
                     TextField(
                         "Target regions, comma separated",
                         text: $targetRegions
@@ -704,14 +632,9 @@ struct ProfileView: View {
                         text: $targetCountries
                     )
 
-                    TextField(
-                        "Family annual income, USD",
-                        text: $familyIncome
-                    )
-                    .keyboardType(.decimalPad)
+                    }
                 }
-
-                Section("Profile photo") {
+                Section("Profile photo (optional)") {
                     HStack(spacing: 14) {
                         ZStack {
                             Circle()
@@ -773,7 +696,7 @@ struct ProfileView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button("Skip for now") {
                         showingEditProfile = false
                     }
                 }
@@ -788,12 +711,7 @@ struct ProfileView: View {
                             }
                         }
                     }
-                    .disabled(
-                        saving ||
-                        fullName
-                            .trimmingCharacters(in: .whitespacesAndNewlines)
-                            .isEmpty
-                    )
+                    .disabled(saving)
                 }
             }
         }
@@ -825,16 +743,17 @@ struct ProfileView: View {
         gpaScale = p.gpaScale.map { String($0) } ?? "10"
         ielts = p.ielts.map { String($0) } ?? ""
         intendedMajor = p.intendedMajor ?? ""
-        degreeLevel = p.degreeLevel ?? "Bachelor"
+        degreeLevel = p.degreeLevel ?? ""
         targetRegions = p.targetRegions?.joined(separator: ", ") ?? ""
         targetCountries = p.targetCountries?.joined(separator: ", ") ?? ""
-        familyIncome = p.familyIncomeUSD.map { String($0) } ?? ""
+        wantsPersonalizedMatching = [
+            p.nationality, p.intendedMajor, p.residenceCountry, p.degreeLevel
+        ].contains { !($0 ?? "").isEmpty } ||
+        p.gpaValue != nil || p.ielts != nil
 
         if let community = try? await DataService.currentCommunityProfile(
             userId: userId
         ) {
-            bio = community.bio ?? ""
-            visible = community.isVisible ?? true
             avatarURL = community.avatarUrl
         }
     }
@@ -890,6 +809,15 @@ struct ProfileView: View {
                 imageData: jpegData
             )
 
+            // Advisor portraits are stored independently from community avatars.
+            // Keep the public advisor listing in sync when approval is active.
+            if profile?.role == "advisor" {
+                try await DataService.updateApprovedAdvisorAvatar(
+                    userId: userId,
+                    imageData: jpegData
+                )
+            }
+
             status = L10n.string("Profile photo updated.")
         } catch {
             status = error.localizedDescription
@@ -937,12 +865,13 @@ struct ProfileView: View {
         status = ""
         defer { saving = false }
 
-        if let value = Double(ielts), !(0...9).contains(value) {
+        if wantsPersonalizedMatching, let value = Double(ielts), !(0...9).contains(value) {
             status = L10n.string("IELTS must be between 0 and 9.")
             return
         }
 
-        if let gpa = Double(gpaValue),
+        if wantsPersonalizedMatching,
+           let gpa = Double(gpaValue),
            let scale = Double(gpaScale),
            (scale <= 0 || gpa < 0 || gpa > scale) {
             status = L10n.string("Please check your GPA and GPA scale.")
@@ -950,34 +879,47 @@ struct ProfileView: View {
         }
 
         do {
+            // Only persist academic information after the student opts into matching.
+            // Turning matching off also clears previously stored academic fields.
             try await DataService.updateProfile(
                 userId: userId,
                 fullName: fullName.trimmingCharacters(in: .whitespacesAndNewlines),
-                nationality: nationality.trimmingCharacters(in: .whitespacesAndNewlines),
-                residenceCountry: residenceCountry.trimmingCharacters(in: .whitespacesAndNewlines),
-                graduationYear: Int(graduationYear),
-                gpaValue: Double(gpaValue),
-                gpaScale: Double(gpaScale),
-                ielts: Double(ielts),
-                intendedMajor: intendedMajor.trimmingCharacters(in: .whitespacesAndNewlines),
-                degreeLevel: degreeLevel,
-                targetRegions: csv(targetRegions),
-                targetCountries: csv(targetCountries),
-                familyIncomeUSD: Double(familyIncome)
+                nationality: wantsPersonalizedMatching ? nationality.trimmingCharacters(in: .whitespacesAndNewlines) : "",
+                residenceCountry: wantsPersonalizedMatching ? residenceCountry.trimmingCharacters(in: .whitespacesAndNewlines) : "",
+                graduationYear: wantsPersonalizedMatching ? Int(graduationYear) : nil,
+                gpaValue: wantsPersonalizedMatching ? Double(gpaValue) : nil,
+                gpaScale: wantsPersonalizedMatching && !gpaValue.isEmpty ? Double(gpaScale) : nil,
+                ielts: wantsPersonalizedMatching ? Double(ielts) : nil,
+                intendedMajor: wantsPersonalizedMatching ? intendedMajor.trimmingCharacters(in: .whitespacesAndNewlines) : "",
+                degreeLevel: wantsPersonalizedMatching ? degreeLevel : "",
+                targetRegions: wantsPersonalizedMatching ? csv(targetRegions) : [],
+                targetCountries: wantsPersonalizedMatching ? csv(targetCountries) : []
             )
 
             try await DataService.updateCommunityProfile(
                 userId: userId,
                 displayName: fullName.trimmingCharacters(in: .whitespacesAndNewlines),
-                nationality: nationality.trimmingCharacters(in: .whitespacesAndNewlines),
-                major: intendedMajor.trimmingCharacters(in: .whitespacesAndNewlines),
-                targetRegions: csv(targetRegions),
-                targetCountries: csv(targetCountries),
+                nationality: wantsPersonalizedMatching ? nationality.trimmingCharacters(in: .whitespacesAndNewlines) : "",
+                major: wantsPersonalizedMatching ? intendedMajor.trimmingCharacters(in: .whitespacesAndNewlines) : "",
+                targetRegions: wantsPersonalizedMatching ? csv(targetRegions) : [],
+                targetCountries: wantsPersonalizedMatching ? csv(targetCountries) : [],
                 bio: "",
                 isVisible: false
             )
 
             profile = try await DataService.currentProfile(userId: userId)
+            if !wantsPersonalizedMatching {
+                nationality = ""
+                residenceCountry = ""
+                graduationYear = ""
+                gpaValue = ""
+                gpaScale = "10"
+                ielts = ""
+                intendedMajor = ""
+                degreeLevel = ""
+                targetRegions = ""
+                targetCountries = ""
+            }
             status = L10n.string("Profile saved.")
         } catch {
             status = error.localizedDescription
@@ -1183,7 +1125,7 @@ private struct PrivacyAndSafetyView: View {
         List {
             Section("Your data") {
                 Label(
-                    "Your academic profile and family income are private to your account.",
+                    "Your optional academic profile is private to your account. EduT does not ask for family income.",
                     systemImage: "lock.shield"
                 )
 
@@ -1212,6 +1154,21 @@ private struct PrivacyAndSafetyView: View {
 
             Section("Scholarship information") {
                 Text("EduT helps you discover and organize opportunities. Always confirm deadlines, eligibility and benefits on the official scholarship website before applying.")
+                    .foregroundStyle(Theme.muted)
+            }
+
+            Section("Privacy and tracking overview") {
+                Text("EduT uses account and academic information for scholarship matching and saved applications. Advisor profiles and messages are shared according to the features you use.")
+                    .foregroundStyle(Theme.muted)
+                Text("The native app may store sign-in sessions and preferences. External scholarship websites may use their own cookies and tracking tools.")
+                    .foregroundStyle(Theme.muted)
+                if let privacyURL = URL(string: "https://edut.timurhasanov.com/privacy-policy") {
+                    Link(destination: privacyURL) {
+                        Label("Read Privacy Policy", systemImage: "doc.text")
+                    }
+                    .accessibilityIdentifier("legal.privacyPolicy")
+                }
+                Text("Privacy inquiries: timur_dev@icloud.com")
                     .foregroundStyle(Theme.muted)
             }
 

@@ -723,3 +723,41 @@
 
 "Verified" = "Подтверждено";
 "Book consultation" = "Записаться на консультацию";
+
+"Explore EduT" = "Исследовать EduT";
+"Browse scholarships and applications" = "Поиск стипендий и заявки";
+"My profile, photo & account settings" = "Мой профиль, фото и настройки аккаунта";
+"Switch to Student Mode" = "Перейти в режим студента";
+"Withdraw from advisor role" = "Отказаться от роли консультанта";
+"Withdraw from advisor role?" = "Отказаться от роли консультанта?";
+"Your EduT account and scholarships remain available. Active students and consultations must be resolved first." = "Ваш аккаунт EduT и стипендии останутся доступны. Сначала завершите работу с активными студентами и консультациями.";
+"Privacy and tracking overview" = "Обзор конфиденциальности и отслеживания";
+"EduT uses account and academic information for scholarship matching and saved applications. Advisor profiles and messages are shared according to the features you use." = "EduT использует данные аккаунта и учебную информацию для подбора стипендий и сохранения заявок. Профили консультантов и сообщения доступны в соответствии с используемыми функциями.";
+"The native app may store sign-in sessions and preferences. External scholarship websites may use their own cookies and tracking tools." = "Приложение может сохранять сеансы входа и настройки. Сторонние сайты стипендий могут использовать свои файлы cookie и инструменты отслеживания.";
+"Privacy Policy, Terms of Service and Cookies Notice are under review. Contact and publication details will be provided before the next App Store release." = "Политика конфиденциальности, условия использования и уведомление о cookie проходят проверку. Контактные и публикационные данные будут добавлены до следующего выпуска в App Store.";
+"Read Privacy Policy" = "Открыть политику конфиденциальности";
+"Privacy inquiries: timur_dev@icloud.com" = "Вопросы конфиденциальности: timur_dev@icloud.com";
+
+/* New release strings; English fallback pending reviewed translations. */
+"Track your university application's status here. Submit required documents directly to the university's official application portal." = "Track your university application's status here. Submit required documents directly to the university's official application portal.";
+"The selected service is used to coordinate your consultation. You do not need to provide notes or a written topic." = "The selected service is used to coordinate your consultation. You do not need to provide notes or a written topic.";
+"Keep browsing without a profile" = "Keep browsing without a profile";
+"Personalized matches are optional. Add your study goals only when you are ready." = "Personalized matches are optional. Add your study goals only when you are ready.";
+"Set up matching" = "Set up matching";
+"Community posts removed" = "Community posts removed";
+"EduT no longer supports creating or uploading community content." = "EduT no longer supports creating or uploading community content.";
+"Comments unavailable" = "Comments unavailable";
+"Community comments are no longer collected." = "Community comments are no longer collected.";
+"Community posting is no longer available." = "Community posting is no longer available.";
+"Scholarship discovery and advisor messaging remain available." = "Scholarship discovery and advisor messaging remain available.";
+"Add academic details for matching" = "Add academic details for matching";
+"Basic profile (optional)" = "Basic profile (optional)";
+"Full name (optional)" = "Full name (optional)";
+"Only enter details you want to use for scholarship matching. Leave any field blank to skip it." = "Only enter details you want to use for scholarship matching. Leave any field blank to skip it.";
+"Personalized scholarship matching (optional)" = "Personalized scholarship matching (optional)";
+"Profile photo (optional)" = "Profile photo (optional)";
+"Skip for now" = "Skip for now";
+"Study destinations (optional)" = "Study destinations (optional)";
+"You can skip this form and explore scholarships without sharing personal or academic details." = "You can skip this form and explore scholarships without sharing personal or academic details.";
+"Your optional academic profile is private to your account. EduT does not ask for family income." = "Your optional academic profile is private to your account. EduT does not ask for family income.";
+"Open the official form inside EduT, keep your checklist, confirmation number and progress together, then return to check the official portal status." = "Open the official form inside EduT, keep your checklist, confirmation number and progress together, then return to check the official portal status.";

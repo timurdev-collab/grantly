@@ -11,7 +11,6 @@ struct ApplicationWorkspaceView: View {
     @State private var documents: [ApplicationDocument] = []
     @State private var status = "Planning"
     @State private var reference = ""
-    @State private var notes = ""
     @State private var personalDeadline = Date()
     @State private var hasPersonalDeadline = false
     @State private var reminderEnabled = true
@@ -23,8 +22,6 @@ struct ApplicationWorkspaceView: View {
     @State private var successMessage: String?
     @State private var showingPortal = false
     @State private var showingFileImporter = false
-    @State private var showingNewTask = false
-    @State private var newTaskTitle = ""
 
     private let statuses = [
         "Planning",
@@ -70,7 +67,6 @@ struct ApplicationWorkspaceView: View {
                     statusCard
                     deadlineCard
                     checklistCard
-                    documentVaultCard
                     applicationDetailsCard
                     officialPortalCard
                 }
@@ -100,35 +96,6 @@ struct ApplicationWorkspaceView: View {
                     InAppBrowser(url: portalURL)
                         .ignoresSafeArea()
                 }
-            }
-            .fileImporter(
-                isPresented: $showingFileImporter,
-                allowedContentTypes: [.pdf, .image],
-                allowsMultipleSelection: false
-            ) { result in
-                switch result {
-                case .success(let urls):
-                    guard let url = urls.first else { return }
-                    Task { await importDocument(from: url) }
-                case .failure(let error):
-                    errorMessage = error.localizedDescription
-                }
-            }
-            .alert(
-                "Add checklist item",
-                isPresented: $showingNewTask
-            ) {
-                TextField("Task", text: $newTaskTitle)
-
-                Button("Add") {
-                    Task { await addCustomTask() }
-                }
-
-                Button("Cancel", role: .cancel) {
-                    newTaskTitle = ""
-                }
-            } message: {
-                Text("Add a requirement or preparation step for this application.")
             }
             .alert(
                 "Application Center",
@@ -382,19 +349,6 @@ struct ApplicationWorkspaceView: View {
 
                 Spacer()
 
-                Button {
-                    showingNewTask = true
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.caption.bold())
-                        .foregroundStyle(Theme.orangeSoft)
-                        .frame(width: 30, height: 30)
-                        .background(Theme.surfaceRaised)
-                        .clipShape(Circle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Add checklist item")
-
                 Toggle("", isOn: $documentsComplete)
                     .labelsHidden()
                     .tint(Theme.green)
@@ -567,22 +521,6 @@ struct ApplicationWorkspaceView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Notes")
-                    .font(.caption)
-                    .foregroundStyle(Theme.muted)
-
-                TextField(
-                    "Add portal notes, document reminders or next steps",
-                    text: $notes,
-                    axis: .vertical
-                )
-                .lineLimit(3...7)
-                .padding(12)
-                .background(Theme.surfaceRaised)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-
             if let submitted = item?.submittedAt {
                 DetailLine(
                     label: "Submitted",
@@ -688,7 +626,6 @@ struct ApplicationWorkspaceView: View {
 
             status = item?.applicationStatus ?? "Planning"
             reference = item?.applicationReference ?? ""
-            notes = item?.notes ?? ""
             reminderEnabled = item?.reminderEnabled ?? true
             documentsComplete = item?.documentsComplete ?? false
 
@@ -722,7 +659,7 @@ struct ApplicationWorkspaceView: View {
             try await DataService.updateApplicationWorkspace(
                 scholarshipId: scholarship.id,
                 reference: reference,
-                notes: notes,
+                notes: "",
                 personalDeadline: hasPersonalDeadline
                     ? databaseDate(personalDeadline)
                     : nil,
@@ -759,35 +696,6 @@ struct ApplicationWorkspaceView: View {
             successMessage = "Status updated to \(newStatus)."
         } catch {
             status = oldStatus
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    @MainActor
-    private func addCustomTask() async {
-        let cleaned = newTaskTitle.trimmingCharacters(
-            in: .whitespacesAndNewlines
-        )
-
-        guard !cleaned.isEmpty else {
-            return
-        }
-
-        do {
-            let nextPosition =
-                (tasks.map(\.position).max() ?? 0) + 10
-
-            try await DataService.addApplicationTask(
-                scholarshipId: scholarship.id,
-                title: cleaned,
-                position: nextPosition
-            )
-
-            newTaskTitle = ""
-            tasks = try await DataService.applicationTasks(
-                scholarshipId: scholarship.id
-            )
-        } catch {
             errorMessage = error.localizedDescription
         }
     }

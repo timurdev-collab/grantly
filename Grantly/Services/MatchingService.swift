@@ -74,13 +74,6 @@ enum MatchingService {
             reasons.append("Matches a target destination")
         }
 
-        if let income = profile.familyIncomeUSD,
-           income <= 15_000,
-           scholarship.fundingType.lowercased().contains("fully") {
-            score += 4
-            reasons.append("Strong funding fit")
-        }
-
         let eligible = blockers.isEmpty
         if !eligible { score = min(score, 54) }
 

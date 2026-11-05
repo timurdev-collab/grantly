@@ -91,10 +91,6 @@ struct MyScholarshipsView: View {
                                             )
                                         }
                                     },
-                                    onNote: {
-                                        editingItem = item
-                                        noteText = item.notes ?? ""
-                                    },
                                     onTasks: {
                                         taskItem = item
                                     },
@@ -115,9 +111,6 @@ struct MyScholarshipsView: View {
         .scrollBounceBehavior(.always, axes: .vertical)
         .refreshable { await load() }
         .task { await load() }
-        .sheet(item: $editingItem) { item in
-            noteSheet(item)
-        }
         .sheet(item: $taskItem) { item in
             ApplicationTasksSheet(item: item)
         }
@@ -486,7 +479,6 @@ private struct ApplicationCard: View {
     let item: SavedScholarshipItem
     let statuses: [String]
     let onStatus: (String) -> Void
-    let onNote: () -> Void
     let onTasks: () -> Void
     let onWorkspace: () -> Void
 
@@ -540,14 +532,6 @@ private struct ApplicationCard: View {
                 .buttonStyle(.plain)
                 .foregroundStyle(Theme.orangeSoft)
                 .accessibilityLabel("Tasks")
-
-                Button(action: onNote) {
-                    Image(systemName: "note.text")
-                        .frame(width: 34, height: 34)
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(Theme.ink.opacity(0.72))
-                .accessibilityLabel("Note")
 
                 Button(action: onWorkspace) {
                     Image(systemName: "rectangle.stack.badge.plus")

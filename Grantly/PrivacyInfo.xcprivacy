@@ -108,7 +108,7 @@
             </array>
         </dict>
 
-        <!-- Notes, bios, uploaded application files and other user-supplied content -->
+        <!-- Advisor-authored professional biographies, introductions and service descriptions -->
         <dict>
             <key>NSPrivacyCollectedDataType</key>
             <string>NSPrivacyCollectedDataTypeOtherUserContent</string>
@@ -118,21 +118,6 @@
             <false/>
             <key>NSPrivacyCollectedDataTypePurposes</key>
             <array>
-                <string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string>
-            </array>
-        </dict>
-
-        <!-- Family-income information used for scholarship matching -->
-        <dict>
-            <key>NSPrivacyCollectedDataType</key>
-            <string>NSPrivacyCollectedDataTypeOtherFinancialInfo</string>
-            <key>NSPrivacyCollectedDataTypeLinked</key>
-            <true/>
-            <key>NSPrivacyCollectedDataTypeTracking</key>
-            <false/>
-            <key>NSPrivacyCollectedDataTypePurposes</key>
-            <array>
-                <string>NSPrivacyCollectedDataTypePurposeProductPersonalization</string>
                 <string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string>
             </array>
         </dict>

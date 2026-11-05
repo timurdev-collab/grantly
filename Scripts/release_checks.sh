@@ -8,7 +8,7 @@ if grep -R --line-number --exclude-dir=.git   "SUPABASE_SERVICE_ROLE_KEY" Grantl
   exit 1
 fi
 
-if ! grep -q "<string>1.0.0</string>" Grantly/Info.plist; then
+if ! grep -q "<string>1.0.1</string>" Grantly/Info.plist; then
   echo "CFBundleShortVersionString is missing or unexpected."
   exit 1
 fi
@@ -28,7 +28,6 @@ required_privacy_types=(
   NSPrivacyCollectedDataTypeEmailsOrTextMessages
   NSPrivacyCollectedDataTypePhotosorVideos
   NSPrivacyCollectedDataTypeOtherUserContent
-  NSPrivacyCollectedDataTypeOtherFinancialInfo
   NSPrivacyCollectedDataTypeOtherDataTypes
 )
 
@@ -44,7 +43,7 @@ if ! grep -A1 -q "<key>NSPrivacyTracking</key>" Grantly/PrivacyInfo.xcprivacy; t
   exit 1
 fi
 
-if ! grep -q "MARKETING_VERSION: 1.0.0" project.yml; then
+if ! grep -q "MARKETING_VERSION: 1.0.1" project.yml; then
   echo "Marketing version is not configured in project.yml."
   exit 1
 fi
