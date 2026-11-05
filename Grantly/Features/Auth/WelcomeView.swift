@@ -2,45 +2,20 @@ import SwiftUI
 
 struct WelcomeView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var showingLogin = false
     @State private var showingSignup = false
-    @State private var page = 0
-
-    private let pages: [WelcomePage] = [
-        WelcomePage(
-            eyebrow: "DISCOVER",
-            title: "Your next chapter\nstarts here",
-            body: "Find scholarships and universities that fit your ambitions, not just your search terms.",
-            imageURL: URL(
-                string:
-                    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=88"
-            ),
-            symbol: "sparkles"
+    private let welcomePage = WelcomePage(
+        eyebrow: "DISCOVER",
+        title: "Your next chapter\nstarts here",
+        body: "Find scholarships and universities that fit your ambitions, not just your search terms.",
+        imageURL: URL(
+            string: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=88"
         ),
-        WelcomePage(
-            eyebrow: "PERSONALIZED",
-            title: "Find opportunities\nthat fit you",
-            body: "Use your goals, study level and background to surface stronger scholarship matches.",
-            imageURL: URL(
-                string:
-                    "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=88"
-            ),
-            symbol: "scope"
-        ),
-        WelcomePage(
-            eyebrow: "GUIDANCE",
-            title: "Get guidance\nfrom experts",
-            body: "Work with verified advisors for applications, essays, documents and your next decision.",
-            imageURL: URL(
-                string:
-                    "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&q=88"
-            ),
-            symbol: "person.2.fill"
-        )
-    ]
+        symbol: "sparkles"
+    )
 
-    private var isLightPage: Bool { page == 1 }
+    private let isLightPage = false
+
     private var foreground: Color {
         isLightPage ? Theme.premiumForest : Theme.premiumIvory
     }
@@ -58,14 +33,7 @@ struct WelcomeView: View {
                         .padding(.bottom, 12)
                         .fixedSize(horizontal: false, vertical: true)
 
-                    TabView(selection: $page) {
-                        ForEach(Array(pages.enumerated()), id: \.offset) { index, item in
-                            WelcomeEditorialPage(item: item, pageIndex: index)
-                                .tag(index)
-                        }
-                    }
-                    .tabViewStyle(.page(indexDisplayMode: .never))
-                    .clipped()
+                    WelcomeEditorialPage(item: welcomePage, pageIndex: 0)
 
                     controls
                         .padding(.horizontal, 22)
@@ -98,47 +66,18 @@ struct WelcomeView: View {
 
             Spacer()
 
-            if page < pages.count - 1 {
-                Button {
-                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.28)) {
-                        page = pages.count - 1
-                    }
-                } label: {
-                    Text(L10n.string("Skip"))
-                        .font(.subheadline.weight(.medium))
-                        .padding(.horizontal, 12)
-                        .frame(minHeight: 44)
-                }
-                .buttonStyle(.plain)
-            }
+
         }
         .foregroundStyle(foreground)
     }
 
     private var controls: some View {
         VStack(spacing: 12) {
-            HStack(spacing: 7) {
-                ForEach(pages.indices, id: \.self) { index in
-                    Capsule()
-                        .fill(foreground.opacity(index == page ? 1 : 0.30))
-                        .frame(width: index == page ? 24 : 6, height: 6)
-                }
-            }
-            .padding(.bottom, 6)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text("Page \(page + 1) of \(pages.count)"))
-
             Button {
-                if page < pages.count - 1 {
-                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.28)) {
-                        page += 1
-                    }
-                } else {
-                    showingSignup = true
-                }
+                showingSignup = true
             } label: {
                 HStack(spacing: 10) {
-                    Text(L10n.string(page < pages.count - 1 ? "Continue" : "Get started"))
+                    Text(L10n.string("Get started"))
                     if !dynamicTypeSize.isAccessibilitySize {
                         Spacer(minLength: 8)
                         Image(systemName: "arrow.right")
