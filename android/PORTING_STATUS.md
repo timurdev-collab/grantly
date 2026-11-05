@@ -1,6 +1,6 @@
 # EduT Android port status
 
-Updated: 2026-11-03. Source branch: `feature/android-compose-foundation`.
+Updated: 2026-11-06. Source branch: `feature/android-compose-foundation`.
 Design and behavior reference (read-only): `design/home-concept-02`.
 
 ## Implemented in Android source
@@ -19,7 +19,7 @@ Design and behavior reference (read-only): `design/home-concept-02`.
 - Signup now uses a complete authenticated session returned by Supabase when email confirmation is disabled; when the signup response contains no tokens, Android shows email-confirmation instructions instead. Partial or mismatched sessions are rejected. This requires live-account/device verification.
 - Authenticated Applications list showing saved scholarships, status and notes (20 records per page with explicit Load more).
 - Authenticated application status and notes editing through existing user-scoped APIs.
-- Application task checklist: read, complete/reopen, add custom tasks, confirm before deleting custom tasks, and set/change/clear task due dates using existing `application_tasks` RLS table (not yet device-tested; first 100 tasks per scholarship). Due dates use the existing `due_at` timestamptz column, store the selected day at local noon and display in the device time zone; travel/time-zone changes may alter the displayed calendar day. No reminder notifications are scheduled.
+- Application task checklist: read, complete/reopen, add custom tasks, confirm before deleting custom tasks, and set/change/clear task due dates using existing `application_tasks` RLS table (not yet device-tested; first 100 tasks per scholarship). Due dates use the existing `due_at` timestamptz column. New dates use a distinguishable UTC marker so the selected calendar day survives device time-zone changes; legacy local-noon timestamps retain their previous device-time-zone interpretation to avoid silently reinterpreting stored records. JVM regression tests cover timezone changes, leap days, year boundaries and legacy compatibility; physical-device/account verification remains pending. No reminder notifications are scheduled.
 - Personal application target dates can now be viewed, selected using the native Android date picker, changed or cleared from saved scholarship cards. Writes are scoped to the signed-in user's `saved_scholarships` row and use the existing `personal_deadline` date column under RLS. This does not change official provider deadlines, does not send Android reminders and remains unverified with a live account/device.
 - Private application document metadata, single-file uploads and confirmed deletion via the existing user-scoped RLS table and private Storage bucket (PDF/JPEG/PNG/HEIC/HEIF, up to 6 MiB). Upload failure attempts storage rollback; all mutations remain unverified on a live account/device.
 - Save/remove scholarship controls on detail screens using existing user-scoped Supabase RLS policies (not yet device-tested).
