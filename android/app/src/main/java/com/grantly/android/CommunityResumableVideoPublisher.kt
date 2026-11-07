@@ -209,6 +209,11 @@ internal object CommunityResumableVideoPublisher {
                             if (acknowledged == null || acknowledged > offset + amount) {
                                 throw IOException("The upload server returned an invalid progress offset.")
                             }
+                            // A 2xx PATCH with no forward progress must not loop forever.
+                            // Reconcile via HEAD and use the existing bounded retry policy.
+                            if (acknowledged == offset) {
+                                throw IOException("The upload server acknowledged no progress.")
+                            }
                             offset = acknowledged
                             onProgress(offset, size)
                             break
