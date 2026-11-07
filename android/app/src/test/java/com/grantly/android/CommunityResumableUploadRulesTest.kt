@@ -129,6 +129,26 @@ class CommunityResumableUploadRulesTest {
         assertFalse(rules.validRecoveryRecord(owner, path, location, endpoint, 100, 100, Long.MAX_VALUE, -1))
     }
 
+    @Test fun recoveryRejectsDifferentSupabaseProject() {
+        val project = "https://project-123.supabase.co"
+        val otherProject = "https://project-456.supabase.co"
+        val endpoint = rules.endpoint(project)!!
+        val owner = "00000000-0000-4000-8000-000000000001"
+        val path = "$owner/00000000-0000-4000-8000-000000000002.mp4"
+        val now = 1_700_000_000_000L
+        val location = "$endpoint/session-token"
+        fun valid(configuredProject: String, recoveryEndpoint: String = endpoint) =
+            rules.validRecoveryRecordForProject(
+                configuredProject, owner, path, location, recoveryEndpoint,
+                100L, 100L, now + 60_000L, now
+            )
+
+        assertTrue(valid(project))
+        assertFalse(valid(otherProject))
+        assertFalse(valid("https://evil.example"))
+        assertFalse(valid(project, rules.endpoint(otherProject)!!))
+    }
+
     @Test fun patchOffsetMustAdvanceWithinFile() {
         assertEquals(6L, rules.acknowledgedOffset(0, "6", 10))
         assertEquals(10L, rules.acknowledgedOffset(6, "10", 10))
