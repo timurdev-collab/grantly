@@ -53,6 +53,8 @@ internal object CommunityResumableVideoPublisher {
                 }
                 throw failure
             }
+            var postRequestStarted = false
+            var postResponseReceived = false
             try {
                 // The last PATCH may complete just as the user cancels. Do not
                 // create a Community post after cancellation; roll back the
@@ -79,8 +81,10 @@ internal object CommunityResumableVideoPublisher {
                     if (kind == "story") {
                         payload.put("expires_at", CommunityStoryRules.expirationForNewStory(Instant.now()))
                     }
+                    postRequestStarted = true
                     post.outputStream.use { it.write(payload.toString().toByteArray(Charsets.UTF_8)) }
                     val status = post.responseCode
+                    postResponseReceived = true
                     if (status !in 200..299) {
                         throw IOException("Video uploaded but Community post creation failed (HTTP $status).")
                     }
@@ -88,6 +92,16 @@ internal object CommunityResumableVideoPublisher {
                     post.disconnect()
                 }
             } catch (failure: Exception) {
+                // A lost HTTP response does not prove that insertion failed. Deleting
+                // the video here could break a post that was committed by the server.
+                // Keep the object for support-side reconciliation rather than retrying
+                // blindly or destroying potentially published media.
+                if (postRequestStarted && !postResponseReceived) {
+                    throw IOException(
+                        "Community post outcome is unknown. Do not retry until the post is checked; uploaded video was preserved.",
+                        failure
+                    )
+                }
                 if (!deletePrivateMedia(base, path, accessToken, key)) {
                     throw IOException(
                         "Post creation failed and the private video could not be cleaned up. Contact support before retrying.",
