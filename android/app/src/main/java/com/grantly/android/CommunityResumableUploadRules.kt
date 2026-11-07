@@ -109,6 +109,22 @@ internal object CommunityResumableUploadRules {
         return trustedEndpoint && trustedUploadLocation(endpoint, uploadLocation) == uploadLocation
     }
 
+    /**
+     * Recovery must be tied to the currently configured Supabase project, not
+     * merely another syntactically valid Supabase Storage hostname.
+     */
+    fun validRecoveryRecordForProject(
+        supabaseUrl: String, userId: String, objectPath: String,
+        uploadLocation: String, endpoint: String, stagedBytes: Long,
+        expectedBytes: Long, expiresAtMillis: Long, nowMillis: Long
+    ): Boolean {
+        val configuredEndpoint = endpoint(supabaseUrl) ?: return false
+        return endpoint == configuredEndpoint && validRecoveryRecord(
+            userId, objectPath, uploadLocation, endpoint, stagedBytes,
+            expectedBytes, expiresAtMillis, nowMillis
+        )
+    }
+
     /** PATCH must acknowledge positive progress without exceeding the file length. */
     /** Never trust a PATCH/HEAD offset beyond bytes sent in the current chunk. */
     fun chunkOffset(previous: Long, header: String?, fileSize: Long, sentBytes: Int): Long? {
