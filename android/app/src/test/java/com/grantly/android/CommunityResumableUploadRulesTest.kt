@@ -98,6 +98,33 @@ class CommunityResumableUploadRulesTest {
         assertNull(rules.chunkOffset(0, "not-an-offset", 20, 6))
     }
 
+
+    @Test fun recoveryRecordIsAccountScopedAndExpires() {
+        val owner = "00000000-0000-4000-8000-000000000001"
+        val other = "00000000-0000-4000-8000-000000000003"
+        val path = "$owner/00000000-0000-4000-8000-000000000002.mp4"
+        val endpoint = rules.endpoint("https://project-123.supabase.co")!!
+        val location = "$endpoint/session-token"
+        val now = 1_700_000_000_000L
+        val expires = now + 60_000L
+        fun valid(
+            account: String = owner, objectPath: String = path,
+            url: String = location, staged: Long = 100L,
+            expected: Long = 100L, expiry: Long = expires
+        ) = rules.validRecoveryRecord(account, objectPath, url, endpoint, staged, expected, expiry, now)
+
+        assertTrue(valid())
+        assertFalse(valid(account = other))
+        assertFalse(valid(objectPath = "../outside.mp4"))
+        assertFalse(valid(objectPath = "$other/00000000-0000-4000-8000-000000000002.mp4"))
+        assertFalse(valid(url = "https://evil.example/storage/v1/upload/resumable/token"))
+        assertFalse(valid(staged = 99L))
+        assertFalse(valid(expected = rules.maxVideoBytes + 1))
+        assertFalse(valid(expiry = now))
+        assertFalse(valid(expiry = now - 1))
+        assertFalse(valid(expiry = now + 24L * 60 * 60 * 1000 + 1))
+    }
+
     @Test fun patchOffsetMustAdvanceWithinFile() {
         assertEquals(6L, rules.acknowledgedOffset(0, "6", 10))
         assertEquals(10L, rules.acknowledgedOffset(6, "10", 10))
