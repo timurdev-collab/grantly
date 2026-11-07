@@ -123,6 +123,8 @@ class CommunityResumableUploadRulesTest {
         assertFalse(valid(expiry = now))
         assertFalse(valid(expiry = now - 1))
         assertFalse(valid(expiry = now + 24L * 60 * 60 * 1000 + 1))
+        assertFalse(valid(expiry = Long.MAX_VALUE))
+        assertFalse(rules.validRecoveryRecord(owner, path, location, endpoint, 100, 100, Long.MAX_VALUE, -1))
     }
 
     @Test fun patchOffsetMustAdvanceWithinFile() {
