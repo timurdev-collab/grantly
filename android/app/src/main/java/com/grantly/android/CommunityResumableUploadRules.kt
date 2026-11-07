@@ -92,7 +92,9 @@ internal object CommunityResumableUploadRules {
         expiresAtMillis: Long, nowMillis: Long
     ): Boolean {
         if (!allowsVideoSize(expectedBytes) || stagedBytes != expectedBytes ||
-            expiresAtMillis <= nowMillis || expiresAtMillis - nowMillis > 24L * 60 * 60 * 1000
+            nowMillis < 0 || expiresAtMillis <= nowMillis ||
+            expiresAtMillis - nowMillis <= 0 ||
+            expiresAtMillis - nowMillis > 24L * 60 * 60 * 1000
         ) return false
         val owner = try { UUID.fromString(userId).toString() } catch (_: Exception) { return false }
         if (owner != userId || !objectPath.startsWith("$owner/")) return false
