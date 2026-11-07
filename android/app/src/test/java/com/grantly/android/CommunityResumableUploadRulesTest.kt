@@ -118,6 +118,8 @@ class CommunityResumableUploadRulesTest {
         assertFalse(valid(objectPath = "../outside.mp4"))
         assertFalse(valid(objectPath = "$other/00000000-0000-4000-8000-000000000002.mp4"))
         assertFalse(valid(url = "https://evil.example/storage/v1/upload/resumable/token"))
+        assertFalse(rules.validRecoveryRecord(owner, path, "https://evil.example/storage/v1/upload/resumable/token", "https://evil.example/storage/v1/upload/resumable", 100, 100, expires, now))
+        assertFalse(rules.validRecoveryRecord(owner, path, "https://project-123.storage.supabase.co/storage/v1/upload/resumable/token", "https://project-123.storage.supabase.co/storage/v1/upload/resumable/other", 100, 100, expires, now))
         assertFalse(valid(staged = 99L))
         assertFalse(valid(expected = rules.maxVideoBytes + 1))
         assertFalse(valid(expiry = now))
