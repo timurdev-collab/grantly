@@ -80,6 +80,26 @@ internal object CommunityResumableUploadRules {
         ).joinToString(",")
     }
 
+
+    /**
+     * Fail-closed checks for a future persisted upload recovery record.
+     * No bearer token belongs in recovery metadata. This validates identity,
+     * private object ownership, trusted TUS location, and bounded file lifetime.
+     */
+    fun validRecoveryRecord(
+        userId: String, objectPath: String, uploadLocation: String,
+        endpoint: String, stagedBytes: Long, expectedBytes: Long,
+        expiresAtMillis: Long, nowMillis: Long
+    ): Boolean {
+        if (!allowsVideoSize(expectedBytes) || stagedBytes != expectedBytes ||
+            expiresAtMillis <= nowMillis || expiresAtMillis - nowMillis > 24L * 60 * 60 * 1000
+        ) return false
+        val owner = try { UUID.fromString(userId).toString() } catch (_: Exception) { return false }
+        if (owner != userId || !objectPath.startsWith("$owner/")) return false
+        try { metadata(objectPath) } catch (_: Exception) { return false }
+        return trustedUploadLocation(endpoint, uploadLocation) == uploadLocation
+    }
+
     /** PATCH must acknowledge positive progress without exceeding the file length. */
     /** Never trust a PATCH/HEAD offset beyond bytes sent in the current chunk. */
     fun chunkOffset(previous: Long, header: String?, fileSize: Long, sentBytes: Int): Long? {
