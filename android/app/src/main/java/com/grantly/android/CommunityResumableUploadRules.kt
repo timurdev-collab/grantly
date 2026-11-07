@@ -99,7 +99,14 @@ internal object CommunityResumableUploadRules {
         val owner = try { UUID.fromString(userId).toString() } catch (_: Exception) { return false }
         if (owner != userId || !objectPath.startsWith("$owner/")) return false
         try { metadata(objectPath) } catch (_: Exception) { return false }
-        return trustedUploadLocation(endpoint, uploadLocation) == uploadLocation
+        val trustedEndpoint = try {
+            val uri = URI(endpoint)
+            uri.scheme == "https" && uri.userInfo == null && uri.port == -1 &&
+                uri.rawQuery == null && uri.rawFragment == null &&
+                uri.path == "/storage/v1/upload/resumable" &&
+                uri.host?.matches(Regex("[a-z0-9-]+\\.storage\\.supabase\\.co")) == true
+        } catch (_: Exception) { false }
+        return trustedEndpoint && trustedUploadLocation(endpoint, uploadLocation) == uploadLocation
     }
 
     /** PATCH must acknowledge positive progress without exceeding the file length. */
