@@ -733,7 +733,6 @@ private struct AdvisorPortalView: View {
     @State private var loading = true
     @State private var errorMessage: String?
     @State private var chatDestination: AdvisorChatDestination?
-    @State private var callSession: AdvisorCallSession?
 
     private var pending: [AdvisorStudent] {
         students.filter { $0.status == "requested" }
@@ -841,8 +840,7 @@ private struct AdvisorPortalView: View {
                                         )
                                     }
                                 },
-                                messageAction: nil,
-                                videoAction: nil
+                                messageAction: nil
                             )
                         }
                     }
@@ -880,11 +878,6 @@ private struct AdvisorPortalView: View {
                                 messageAction: {
                                     Task {
                                         await openConversation(student)
-                                    }
-                                },
-                                videoAction: {
-                                    Task {
-                                        await prepareVideoCall(student)
                                     }
                                 }
                             )
@@ -935,9 +928,6 @@ private struct AdvisorPortalView: View {
                     )
                 }
             }
-            .sheet(item: $callSession) { session in
-                AdvisorCallPreparationView(session: session)
-            }
         }
     }
 
@@ -974,20 +964,6 @@ private struct AdvisorPortalView: View {
                 otherUserId: student.studentId,
                 title: student.fullName ?? "Student"
             )
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    @MainActor
-    private func prepareVideoCall(
-        _ student: AdvisorStudent
-    ) async {
-        do {
-            callSession =
-                try await DataService.createAdvisorCallSession(
-                    assignmentId: student.assignmentId
-                )
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -1230,7 +1206,6 @@ private struct AdvisorStudentRow: View {
     let secondaryTitle: String?
     let secondaryAction: (() -> Void)?
     let messageAction: (() -> Void)?
-    let videoAction: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -1270,19 +1245,11 @@ private struct AdvisorStudentRow: View {
                 .foregroundStyle(.secondary)
             }
 
-            if let messageAction,
-               let videoAction {
-                HStack(spacing: 8) {
-                    Button(action: messageAction) {
-                        Label("Message", systemImage: "bubble.left.fill")
-                    }
-                    .buttonStyle(.borderedProminent)
-
-                    Button(action: videoAction) {
-                        Label("Video", systemImage: "video.fill")
-                    }
-                    .buttonStyle(.bordered)
+            if let messageAction {
+                Button(action: messageAction) {
+                    Label("Message", systemImage: "bubble.left.fill")
                 }
+                .buttonStyle(.borderedProminent)
             }
 
             HStack {
