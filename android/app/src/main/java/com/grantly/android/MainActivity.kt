@@ -340,6 +340,10 @@ private fun EduTApp() {
                                 onOpenMessages = {
                                     // Advisor Portal messages use the existing, role-gated tab.
                                     tab = Tab.Messages
+                                },
+                                onShowStudentView = {
+                                    // A local navigation switch, never a backend role update.
+                                    tab = Tab.Home
                                 }
                             )
                             else -> PlaceholderContent(tab)
