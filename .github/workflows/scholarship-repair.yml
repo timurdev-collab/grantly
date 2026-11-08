@@ -1,0 +1,43 @@
+name: Scholarship repair evidence and safe URL corrections
+
+on:
+  schedule:
+    - cron: '13 2 * * *'
+  workflow_dispatch:
+    inputs:
+      apply_safe:
+        description: 'Apply strictly safe, exact-path URL canonicalization'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scholarship-repair-production
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate source evidence and optionally normalize exact-path URLs
+        env:
+          PRODUCTION_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY }}
+          APPLY_SAFE_CANONICAL_URL_FIXES: ${{ github.event_name == 'schedule' || inputs.apply_safe }}
+        run: python scripts/scholarship_repair_queue.py
+      - name: Save actionable review queue
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scholarship-repair-report
+          path: scholarship-repair-report.json
+          if-no-files-found: warn
+          retention-days: 30
