@@ -80,10 +80,23 @@ class GuestCommunitySmokeTest {
         assertNotNull("Home should expose Community navigation", community)
         community!!.click()
 
-        assertNotNull("Community should explain guest access",
-            device.wait(Until.findObject(By.text(
-                "Sign in from the Profile tab to view community posts."
-            )), 15_000))
+        // The guest gate follows the Community heading and preview description.
+        // On smaller emulator viewports it can be below the fold; UiAutomator
+        // only finds currently visible nodes, so scroll before asserting.
+        assertNotNull("Community screen should open",
+            device.wait(Until.findObject(By.text("Community")), 15_000))
+        val guestMessage = "Sign in from the Profile tab to view community posts."
+        var guestGate = device.wait(Until.findObject(By.text(guestMessage)), 2_000)
+        repeat(6) {
+            if (guestGate == null) {
+                device.swipe(
+                    device.displayWidth / 2, device.displayHeight * 3 / 4,
+                    device.displayWidth / 2, device.displayHeight / 4, 30
+                )
+                guestGate = device.wait(Until.findObject(By.text(guestMessage)), 1_000)
+            }
+        }
+        assertNotNull("Community should explain guest access", guestGate)
         assertFalse("Guest users must not see the Community post composer",
             device.hasObject(By.text("Create post")))
 
