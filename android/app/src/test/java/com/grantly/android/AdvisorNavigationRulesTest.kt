@@ -5,6 +5,21 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AdvisorNavigationRulesTest {
+    @Test fun approvedAdvisorCanReturnToPortalFromStudentView() {
+        assertTrue(AdvisorNavigationRules.canReturnToAdvisorPortal(
+            approvedAdvisor = true, signedIn = true
+        ))
+    }
+
+    @Test fun guestsAndUnapprovedAdvisorsCannotReturnToPortal() {
+        assertFalse(AdvisorNavigationRules.canReturnToAdvisorPortal(
+            approvedAdvisor = true, signedIn = false
+        ))
+        assertFalse(AdvisorNavigationRules.canReturnToAdvisorPortal(
+            approvedAdvisor = false, signedIn = true
+        ))
+    }
+
     @Test fun restoredSessionOnHomeStillChecksAdvisorRole() {
         assertTrue(AdvisorNavigationRules.shouldVerifyRole(
             isProfileVisible = false,
