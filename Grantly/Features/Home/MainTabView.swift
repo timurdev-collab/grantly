@@ -542,11 +542,6 @@ private struct AdminAdvisorExperienceView: View {
                 }
 
                 Section("Advisor tools") {
-                    Button(action: onShowStudentView) {
-                        Label("Switch to Student View", systemImage: "graduationcap.fill")
-                    }
-                    .foregroundStyle(Theme.accent)
-
                     NavigationLink {
                         MessagesView()
                     } label: {
@@ -776,6 +771,14 @@ private struct AdvisorPortalView: View {
                         LanguageFlagMenu()
                     }
                     .padding(.vertical, 8)
+
+                    Button(action: onShowStudentView) {
+                        Label("Switch to Student View", systemImage: "graduationcap.fill")
+                            .font(.subheadline.weight(.semibold))
+                            .frame(maxWidth: .infinity, minHeight: 44)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Theme.accent)
                 }
                 .listRowBackground(Theme.pageBackground)
 
