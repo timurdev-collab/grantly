@@ -1,6 +1,11 @@
 name: Scholarship repair evidence and safe URL corrections
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/scholarship-repair.yml'
+      - 'scripts/scholarship_repair_queue.py'
   schedule:
     - cron: '13 2 * * *'
   workflow_dispatch:
