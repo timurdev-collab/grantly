@@ -51,3 +51,5 @@ where s.status='published'
     or coalesce(p.pending_change_count,0)>0);
 
 revoke all on public.scholarship_repair_queue from public, anon, authenticated;
+
+grant select on public.scholarship_repair_queue to service_role;
