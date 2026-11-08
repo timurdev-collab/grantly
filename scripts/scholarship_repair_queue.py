@@ -124,7 +124,7 @@ def replacement_leads(record):
         parsed = urllib.parse.urlsplit(url)
         if (parsed.scheme != "https" or not original_host
                 or parsed.hostname != original_host
-                or candidate.get("relevance_score", 0) < 70):
+                or float(candidate.get("relevance_score") or 0) < 70):
             continue
         leads.append(candidate)
     return leads[:3]
