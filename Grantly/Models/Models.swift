@@ -395,17 +395,6 @@ struct AdvisorStudent: Codable, Identifiable {
 
 
 
-struct LiveKitCallCredentials: Codable {
-    let url: String
-    let token: String
-    let roomName: String
-
-    enum CodingKeys: String, CodingKey {
-        case url, token
-        case roomName = "room_name"
-    }
-}
-
 struct AdvisorCallSession: Codable, Identifiable {
     let id: UUID
     let assignmentId: UUID
