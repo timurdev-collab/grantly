@@ -32,6 +32,7 @@ struct MainTabView: View {
     @State private var loadingProfile = true
     @State private var profileLoadError: String?
     @State private var adminExperience: AdminExperience = .admin
+    @State private var advisorStudentPreview = false
 
     var body: some View {
         Group {
@@ -68,7 +69,23 @@ struct MainTabView: View {
                         )
                     }
                 case "advisor":
-                    AdvisorPortalView(profile: $profile)
+                    if advisorStudentPreview {
+                        StudentMainTabs(
+                            profile: $profile,
+                            adminReturnAction: {
+                                advisorStudentPreview = false
+                            },
+                            returnTitle: "Advisor",
+                            returnIcon: "person.crop.circle.badge.checkmark"
+                        )
+                    } else {
+                        AdvisorPortalView(
+                            profile: $profile,
+                            onShowStudentView: {
+                                advisorStudentPreview = true
+                            }
+                        )
+                    }
                 default:
                     StudentMainTabs(profile: $profile)
                 }
@@ -132,6 +149,8 @@ private struct StudentMainTabs: View {
     @Environment(\.colorScheme) private var colorScheme
     @Binding var profile: StudentProfile?
     var adminReturnAction: (() -> Void)? = nil
+    var returnTitle = "Admin"
+    var returnIcon = "shield.fill"
 
     @State private var selection: MainTab = .home
     @State private var networkMonitor = NetworkMonitor()
@@ -229,7 +248,7 @@ private struct StudentMainTabs: View {
         .overlay(alignment: .topLeading) {
             if let adminReturnAction {
                 Button(action: adminReturnAction) {
-                    Label("Admin", systemImage: "shield.fill")
+                    Label(returnTitle, systemImage: returnIcon)
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 11)
                         .frame(height: 34)
@@ -523,6 +542,11 @@ private struct AdminAdvisorExperienceView: View {
                 }
 
                 Section("Advisor tools") {
+                    Button(action: onShowStudentView) {
+                        Label("Switch to Student View", systemImage: "graduationcap.fill")
+                    }
+                    .foregroundStyle(Theme.accent)
+
                     NavigationLink {
                         MessagesView()
                     } label: {
@@ -707,6 +731,7 @@ private struct AdminConsultationPaymentsView: View {
 
 private struct AdvisorPortalView: View {
     @Binding var profile: StudentProfile?
+    let onShowStudentView: () -> Void
     @State private var students: [AdvisorStudent] = []
     @State private var consultationRequests:
         [AdvisorIncomingConsultationRequest] = []
