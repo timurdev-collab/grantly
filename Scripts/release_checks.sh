@@ -28,7 +28,6 @@ required_privacy_types=(
   NSPrivacyCollectedDataTypeEmailsOrTextMessages
   NSPrivacyCollectedDataTypePhotosorVideos
   NSPrivacyCollectedDataTypeOtherUserContent
-  NSPrivacyCollectedDataTypeOtherFinancialInfo
   NSPrivacyCollectedDataTypeOtherDataTypes
 )
 
