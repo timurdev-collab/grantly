@@ -102,6 +102,33 @@ def canonical_update(record, result):
     return True
 
 
+
+def replacement_leads(record):
+    """Suggest existing discovery candidates for human confirmation only."""
+    if record["link_status"] != "dead":
+        return []
+    title = record["title"]
+    encoded = urllib.parse.quote(title, safe="")
+    try:
+        possible = api(
+            "scholarship_source_candidates?select=candidate_url,candidate_title,"
+            "relevance_score,status&candidate_title=ilike."
+            + encoded + "&order=relevance_score.desc&limit=8"
+        )
+    except (urllib.error.HTTPError, urllib.error.URLError, ValueError):
+        return []
+    original_host = urllib.parse.urlsplit(record.get("official_url") or "").hostname
+    leads = []
+    for candidate in possible:
+        url = candidate.get("candidate_url") or ""
+        parsed = urllib.parse.urlsplit(url)
+        if (parsed.scheme != "https" or not original_host
+                or parsed.hostname != original_host
+                or candidate.get("relevance_score", 0) < 70):
+            continue
+        leads.append(candidate)
+    return leads[:3]
+
 def main():
     rows = api("scholarship_repair_queue?select=*&order=priority.asc,pending_change_count.desc,title.asc&limit=" + str(MAX_RECORDS))
     evidence = []
@@ -117,7 +144,8 @@ def main():
             "priority": r["priority"], "reason": r["priority_reason"],
             "official_url": r["official_url"], "observed_final_url": candidate,
             "link_status": r["link_status"], "pending_changes": r["pending_change_count"],
-            "candidate_probe": probe, "safe_canonical_candidate": safe,
+            "candidate_probe": probe, "replacement_leads_for_review": replacement_leads(r),
+            "safe_canonical_candidate": safe,
             "requires_human_review": not safe or not APPLY_SAFE
         }
         if safe and APPLY_SAFE:
