@@ -22,7 +22,11 @@ private val authForest = Color(0xFF123E30)
 private val authInk = Color(0xFF19372B)
 
 @Composable
-internal fun AuthContent(onNavigate: () -> Unit = {}, onOpenMessages: () -> Unit = {}) {
+internal fun AuthContent(
+    onNavigate: () -> Unit = {},
+    onOpenMessages: () -> Unit = {},
+    onShowStudentView: () -> Unit = {}
+) {
     val session = AuthRepository.session
     val scope = rememberCoroutineScope()
     if (AuthRepository.isRestoring) {
@@ -45,7 +49,11 @@ internal fun AuthContent(onNavigate: () -> Unit = {}, onOpenMessages: () -> Unit
     }
 
     if (session != null) {
-        StudentProfileContent(userId = session.userId, onOpenMessages = onOpenMessages)
+        StudentProfileContent(
+            userId = session.userId,
+            onOpenMessages = onOpenMessages,
+            onShowStudentView = onShowStudentView
+        )
         Spacer(Modifier.height(18.dp))
         Text("Signed in as ${session.email}", color = authInk, fontSize = 12.sp)
         Spacer(Modifier.height(10.dp))
