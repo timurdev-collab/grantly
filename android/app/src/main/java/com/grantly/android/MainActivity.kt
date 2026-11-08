@@ -266,6 +266,20 @@ private fun EduTApp() {
                                 onBack = { selectedScholarship = null }
                             )
                             tab == Tab.Home -> {
+                                // Approved advisors can return to their portal from Student View
+                                // without altering their persisted advisor account role.
+                                if (AdvisorNavigationRules.canReturnToAdvisorPortal(
+                                        approvedAdvisor = advisorTabVerified,
+                                        signedIn = session != null
+                                    )) {
+                                    Button(
+                                        onClick = { tab = Tab.Advisor },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text("Return to Advisor Portal")
+                                    }
+                                    Spacer(Modifier.height(12.dp))
+                                }
                                 HomeContent(
                                 selectedLanguage = selectedLanguage,
                                 onLanguageSelected = { option ->
@@ -308,7 +322,15 @@ private fun EduTApp() {
                                 AdvisorPortalContent(
                                     userId = session.userId,
                                     onBack = { tab = Tab.Profile },
-                                    onOpenMessages = { tab = Tab.Messages }
+                                    onOpenMessages = { tab = Tab.Messages },
+                                    onShowStudentView = {
+                                        // Navigation mode only: never update the account's role.
+                                        selectedScholarship = null
+                                        showingAdvisors = false
+                                        showingCommunity = false
+                                        showingNotifications = false
+                                        tab = Tab.Home
+                                    }
                                 )
                             tab == Tab.Profile -> AuthContent(
                                 onNavigate = {
