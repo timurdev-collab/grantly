@@ -124,7 +124,7 @@ def main():
             try:
                 if canonical_update(r, probe or {}):
                     item["automatic_result"] = "canonical_url_updated"
-                    item["requires_human_review"] = False
+                    item["requires_human_review"] = r["pending_change_count"] > 1 or r["verification_status"] == "needs_review"
                     applied.append(r["id"])
                 else:
                     item["automatic_result"] = "not_eligible_or_not_confirmed"
