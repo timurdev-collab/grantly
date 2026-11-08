@@ -26,6 +26,8 @@ targets:
     info:
       path: Grantly/Info.plist
       properties:
+        CFBundleShortVersionString: "1.0.2"
+        CFBundleVersion: "20"
         CFBundleDisplayName: EduT
         CFBundleURLTypes:
           - CFBundleURLName: com.grantly.app
