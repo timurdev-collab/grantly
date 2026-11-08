@@ -6,6 +6,10 @@ package com.grantly.android
  * while the same account navigates among other destinations.
  */
 internal object AdvisorNavigationRules {
+    /** Return control is never exposed to guests or unverified advisors. */
+    fun canReturnToAdvisorPortal(approvedAdvisor: Boolean, signedIn: Boolean): Boolean =
+        approvedAdvisor && signedIn
+
     fun shouldVerifyRole(isProfileVisible: Boolean, roleCheckedForSession: Boolean): Boolean =
         isProfileVisible || !roleCheckedForSession
 
