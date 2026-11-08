@@ -14,6 +14,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,7 +51,12 @@ internal data class AdvisorPortalCounts(
 }
 
 @Composable
-internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMessages: () -> Unit) {
+internal fun AdvisorPortalContent(
+    userId: String,
+    onBack: () -> Unit,
+    onOpenMessages: () -> Unit,
+    onShowStudentView: () -> Unit
+) {
     var section by remember(userId) { mutableStateOf("overview") }
     var counts by remember(userId) { mutableStateOf<AdvisorPortalCounts?>(null) }
     var loading by remember(userId) { mutableStateOf(true) }
@@ -130,6 +136,11 @@ internal fun AdvisorPortalContent(userId: String, onBack: () -> Unit, onOpenMess
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         OutlinedButton(onClick = onBack) { Text("Back to profile") }
         Text("Advisor Portal", style = MaterialTheme.typography.headlineMedium)
+        // Only visible after a fresh advisor role-and-approval verification.
+        // Switching views does not change the stored advisor role.
+        Button(onClick = onShowStudentView, modifier = Modifier.fillMaxWidth()) {
+            Text("Switch to Student View")
+        }
         Text(
             "Manage student registrations and consultation requests.",
             style = MaterialTheme.typography.bodyMedium
