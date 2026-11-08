@@ -301,21 +301,6 @@ enum DataService {
             .value
     }
 
-    static func liveKitCallCredentials(
-        callId: UUID
-    ) async throws -> LiveKitCallCredentials {
-        struct Body: Encodable {
-            let call_id: UUID
-        }
-
-        return try await supabase.functions.invoke(
-            "livekit-token",
-            options: FunctionInvokeOptions(
-                body: Body(call_id: callId)
-            )
-        )
-    }
-
     static func createAdvisorCallSession(
         assignmentId: UUID,
         recordingRequested: Bool = false
