@@ -13,6 +13,16 @@ if ! grep -q "<string>1.0.2</string>" Grantly/Info.plist; then
   exit 1
 fi
 
+if ! grep -A1 -q "<key>CFBundleVersion</key>" Grantly/Info.plist || ! grep -q "<string>20</string>" Grantly/Info.plist; then
+  echo "CFBundleVersion is missing or unexpected."
+  exit 1
+fi
+
+if ! grep -q 'CFBundleShortVersionString: "1.0.2"' project.yml || ! grep -q 'CFBundleVersion: "20"' project.yml; then
+  echo "XcodeGen Info.plist version values are missing."
+  exit 1
+fi
+
 if ! test -f Grantly/PrivacyInfo.xcprivacy; then
   echo "PrivacyInfo.xcprivacy is required for release builds."
   exit 1
