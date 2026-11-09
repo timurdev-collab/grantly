@@ -25,15 +25,17 @@ require(catalogPublicKey.startsWith("sb_publishable_")) {
 }
 
 android {
+    // Kotlin source namespace remains unchanged; Google Play identity is applicationId.
     namespace = "com.grantly.android"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.grantly.android"
+        // Permanent Google Play package name. Never change after the first Play upload.
+        applicationId = "com.edut.scholarship"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "0.2.0"
+        versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "SUPABASE_URL", "\"$catalogUrl\"")
         buildConfigField("String", "SUPABASE_PUBLISHABLE_KEY", "\"$catalogPublicKey\"")
