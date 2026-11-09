@@ -3,6 +3,10 @@
 Updated: 2026-11-06. Source branch: `feature/android-compose-foundation`.
 Design and behavior reference (read-only): `design/home-concept-02`.
 
+## Google Play release identity (2026-11-09)
+- Configured app display name **EduT Scholarship**, permanent Google Play application ID **`com.edut.scholarship`**, first release version **`1.0.0`** (`versionCode` **`1`**). The internal Kotlin namespace remains `com.grantly.android`; the launcher uses its full class name. The existing password-recovery URI remains `grantly://login-callback` to preserve the allowlisted Supabase auth redirect.
+- GitHub debug APK checks now enforce package ID and version fields. This is release **configuration only**: release signing, an `.aab`, Play App Signing, authenticated role/permission flows, and physical-device tests remain pending.
+
 ## Implemented in Android source
 - **Release privacy parity (2026-11-09):** Removed the annual family income input, draft property, response parsing and update payload from Android academic profiles. This does not delete any previously stored server-side values or change the database schema. Android no longer collects or submits that field during profile edits; verify on a disposable signed-in account before release. Approved-advisor Student View ↔ Advisor Portal navigation is implemented in source, with role-preserving callbacks and unit gating, but end-to-end approved-account/device verification remains pending.
 - **Calling discontinued:** LiveKit video/audio calling, call rooms, call-session UI, token requests, and camera/microphone permissions have been removed from the Android app. Text messaging, advisor biographies, and advisor YouTube introduction links remain in scope. No real-device or authenticated end-to-end verification is implied.
