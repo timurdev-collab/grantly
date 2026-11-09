@@ -13,6 +13,29 @@ Development branch: `feature/android-compose-foundation`. Read-only iOS referenc
 - The existing `grantly://login-callback` password recovery URI is retained for compatibility with the currently allowlisted Supabase redirect; changing the Play package name does **not** automatically update authentication redirects.
 - This configuration does **not** produce a release-signed Android App Bundle; signing and release validation remain separate steps.
 
+## Create a locally signed Google Play App Bundle (release Step 3)
+
+The private upload key must remain in `~/EduT-Android-Signing/edut-upload-key.p12` (or a path supplied using `EDUT_UPLOAD_KEYSTORE`). The key's alias is `edut-upload` and its store type is PKCS12. Never commit the key, passwords, or a local credential file. The Gradle release build refuses to proceed without a local upload key and password.
+
+On a Mac with JDK 17, Android SDK command-line tools / SDK Platform 35, and Gradle 8.10.2 installed, run this locally (do not paste the password into chat or GitHub):
+
+```sh
+cd ~/grantly
+git fetch origin
+git switch feature/android-compose-foundation
+git pull --ff-only origin feature/android-compose-foundation
+cd android
+# The following silent prompt keeps the password out of command history.
+read -rs 'EDUT_UPLOAD_STORE_PASSWORD?EduT upload-key password: '
+echo
+export EDUT_UPLOAD_STORE_PASSWORD
+# PKCS12 uses the same key password unless EDUT_UPLOAD_KEY_PASSWORD is provided.
+gradle :app:bundleRelease --stacktrace
+unset EDUT_UPLOAD_STORE_PASSWORD EDUT_UPLOAD_KEY_PASSWORD
+```
+
+Expected artifact: `android/app/build/outputs/bundle/release/app-release.aab`. Verify the bundle signature and package metadata locally before Play upload. GitHub Actions builds only the unsigned-for-distribution debug APK and guest emulator checks; **the signed AAB must be produced locally**. Do not upload or share the keystore. Some systems require Gradle/Android SDK setup first; see Play signing documentation for validation and store the private upload key backup securely.
+
 ## Build and test
 
 Open `android/` in Android Studio with JDK 17, or use Gradle 8.10.2:
