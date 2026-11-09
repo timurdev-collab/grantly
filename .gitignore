@@ -19,3 +19,13 @@ build/
 .env
 .env.*
 !.env.example
+
+# Android signing credentials and local SDK settings (never commit)
+*.jks
+*.keystore
+*.p12
+*.pfx
+**/key.properties
+**/local.properties
+android/.gradle/
+android/.idea/
