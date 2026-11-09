@@ -27,7 +27,6 @@ internal data class StudentProfileDraft(
     val degreeLevel: String = "Bachelor",
     val targetRegions: String = "",
     val targetCountries: String = "",
-    val familyIncome: String = "",
     val role: String = "student"
 ) {
     val completion: Int get() {
@@ -108,8 +107,6 @@ internal object StudentProfileRepository {
         }
         val ielts = numberOrNull(draft.ielts, "IELTS score")
         require(ielts == null || ielts in 0.0..9.0) { "IELTS must be between 0 and 9." }
-        val income = numberOrNull(draft.familyIncome, "annual family income")
-        require(income == null || income >= 0) { "Family income cannot be negative." }
         val year = yearOrNull(draft.graduationYear)
         val fields = listOf(draft.nationality, draft.residenceCountry, draft.intendedMajor,
             draft.targetRegions, draft.targetCountries)
@@ -127,7 +124,6 @@ internal object StudentProfileRepository {
             put("degree_level", draft.degreeLevel)
             put("target_regions", csv(draft.targetRegions))
             put("target_countries", csv(draft.targetCountries))
-            put("family_income_usd", income ?: JSONObject.NULL)
         }
     }
 
@@ -150,7 +146,6 @@ internal object StudentProfileRepository {
             degreeLevel = jsonText(row, "degree_level").ifBlank { "Bachelor" },
             targetRegions = arrayText("target_regions"),
             targetCountries = arrayText("target_countries"),
-            familyIncome = jsonText(row, "family_income_usd"),
             role = jsonText(row, "role").ifBlank { "student" }
         )
     }
