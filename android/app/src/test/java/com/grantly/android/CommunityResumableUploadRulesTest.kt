@@ -149,6 +149,30 @@ class CommunityResumableUploadRulesTest {
         assertFalse(valid(project, rules.endpoint(otherProject)!!))
     }
 
+
+    @Test fun recoveryLifetimeBoundaryAndMalformedSessionUrls() {
+        val project = "https://project-123.supabase.co"
+        val endpoint = rules.endpoint(project)!!
+        val owner = "00000000-0000-4000-8000-000000000001"
+        val path = "$owner/00000000-0000-4000-8000-000000000002.mp4"
+        val now = 1_700_000_000_000L
+        val day = 24L * 60 * 60 * 1000
+        fun valid(location: String, expiry: Long) =
+            rules.validRecoveryRecordForProject(
+                project, owner, path, location, endpoint, 100L, 100L, expiry, now
+            )
+
+        assertTrue(valid("$endpoint/session-token", now + day))
+        assertFalse(valid("$endpoint/session-token", now + day + 1))
+        for (location in listOf(
+            "$endpoint/session-token?access_token=leak",
+            "$endpoint/session-token#fragment",
+            "$endpoint/%2e%2e/private",
+            "https://project-456.storage.supabase.co/storage/v1/upload/resumable/token",
+            "$endpoint"
+        )) assertFalse(location, valid(location, now + 60_000L))
+    }
+
     @Test fun patchOffsetMustAdvanceWithinFile() {
         assertEquals(6L, rules.acknowledgedOffset(0, "6", 10))
         assertEquals(10L, rules.acknowledgedOffset(6, "10", 10))
