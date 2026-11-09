@@ -24,6 +24,18 @@ require(catalogPublicKey.startsWith("sb_publishable_")) {
     "Missing Android publishable key (edutSupabasePublishableKey); never use a secret/service-role key"
 }
 
+// The upload key stays on the developer's machine. No passwords or private keys
+// are stored in the repository or sent to GitHub Actions.
+val uploadKeyFile = file(
+    providers.environmentVariable("EDUT_UPLOAD_KEYSTORE").orNull
+        ?: "${System.getProperty("user.home")}/EduT-Android-Signing/edut-upload-key.p12"
+)
+val uploadStorePassword = providers.environmentVariable("EDUT_UPLOAD_STORE_PASSWORD").orNull
+val uploadKeyPassword = providers.environmentVariable("EDUT_UPLOAD_KEY_PASSWORD").orNull
+    ?: uploadStorePassword
+val uploadSigningReady = uploadKeyFile.isFile && !uploadStorePassword.isNullOrBlank() &&
+    !uploadKeyPassword.isNullOrBlank()
+
 android {
     // Kotlin source namespace remains unchanged; Google Play identity is applicationId.
     namespace = "com.grantly.android"
@@ -40,8 +52,22 @@ android {
         buildConfigField("String", "SUPABASE_URL", "\"$catalogUrl\"")
         buildConfigField("String", "SUPABASE_PUBLISHABLE_KEY", "\"$catalogPublicKey\"")
     }
+    signingConfigs {
+        if (uploadSigningReady) {
+            create("edutUpload") {
+                storeFile = uploadKeyFile
+                storePassword = uploadStorePassword
+                keyAlias = "edut-upload"
+                keyPassword = uploadKeyPassword
+                storeType = "pkcs12"
+            }
+        }
+    }
     buildTypes {
-        release { isMinifyEnabled = false }
+        release {
+            isMinifyEnabled = false
+            if (uploadSigningReady) signingConfig = signingConfigs.getByName("edutUpload")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -50,6 +76,19 @@ android {
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true; buildConfig = true }
 }
+
+// Fail closed: never generate an unsigned artifact that could be mistaken for
+// the Google Play upload bundle when local signing credentials are absent.
+val verifyEduTUploadSigning = tasks.register("verifyEduTUploadSigning") {
+    doLast {
+        check(uploadSigningReady) {
+            "Release signing unavailable. Set EDUT_UPLOAD_STORE_PASSWORD and ensure the local " +
+                "EduT-Android-Signing/edut-upload-key.p12 file exists. Never commit credentials."
+        }
+    }
+}
+tasks.matching { it.name == "bundleRelease" || it.name == "assembleRelease" }
+    .configureEach { dependsOn(verifyEduTUploadSigning) }
 
 dependencies {
     implementation(platform("androidx.compose:compose-bom:2024.12.01"))
