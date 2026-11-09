@@ -245,11 +245,8 @@ internal fun StudentProfileContent(
     ProfileField("Target countries (comma separated)", draft.targetCountries) {
         draft = draft.copy(targetCountries = it)
     }
-    ProfileField("Annual family income (USD)", draft.familyIncome, KeyboardType.Decimal) {
-        draft = draft.copy(familyIncome = it)
-    }
     Spacer(Modifier.height(6.dp))
-    Text("Your GPA, IELTS, income and residence details are not published to the community.",
+    Text("Your academic profile details are private and are not published to the community.",
         fontSize = 12.sp, color = profileInk.copy(alpha = .7f))
     Spacer(Modifier.height(14.dp))
     Button(
