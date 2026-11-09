@@ -3,10 +3,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:allowBackup="false"
-        android:label="EduT"
+        android:label="EduT Scholarship"
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:supportsRtl="true">
-        <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop">
+        <!-- Explicit class name preserves startup while the public applicationId differs from the Kotlin namespace. -->
+        <activity android:name="com.grantly.android.MainActivity" android:exported="true" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
