@@ -4,6 +4,15 @@ Development branch: `feature/android-compose-foundation`. Read-only iOS referenc
 
 **This is not a production-ready Android release or an iOS-equivalent replica.** The current source includes scholarship discovery, sign-in and account management, saved applications, a student profile, Community features, advisor workflows, partial admin tools, and text messaging. LiveKit video/audio calling has been permanently discontinued and removed from the Android app. Many features have not been exercised with authenticated test accounts or on a physical Android device. See [PORTING_STATUS.md](PORTING_STATUS.md) for the detailed implemented/unverified inventory.
 
+## Permanent Google Play identity (release Step 2)
+
+- Display name: **EduT Scholarship**.
+- Permanent Android `applicationId`: **`com.edut.scholarship`**. Confirm this exact package name is available before the first Play Console upload; do not change it afterward.
+- First release `versionName`: **`1.0.0`** and `versionCode`: **`1`**. Increment `versionCode` on every subsequent Play upload.
+- Kotlin source namespace remains **`com.grantly.android`** to preserve the current package structure and generated `BuildConfig`. Manifest launcher activity explicitly uses **`com.grantly.android.MainActivity`**.
+- The existing `grantly://login-callback` password recovery URI is retained for compatibility with the currently allowlisted Supabase redirect; changing the Play package name does **not** automatically update authentication redirects.
+- This configuration does **not** produce a release-signed Android App Bundle; signing and release validation remain separate steps.
+
 ## Build and test
 
 Open `android/` in Android Studio with JDK 17, or use Gradle 8.10.2:
