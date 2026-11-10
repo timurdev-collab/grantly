@@ -461,13 +461,16 @@ internal fun CommunityFeedContent(onBack: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         TextButton(onClick = onBack) { Text("← Back to Home") }
         Text("Community", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+        // Keep the guest access explanation above the long feature preview so it
+        // remains visible on compact screens without requiring a scrollable feed.
+        if (session == null) {
+            Text("Sign in from the Profile tab to view community posts.")
+        }
         Text(
             "Preview of visible posts, Shorts and 24-hour stories. You can comment, like, report, and publish text, JPEG/PNG photos (up to 6 MiB) or MP4 videos (up to 200 MiB). Video uploads and story playback still need device verification; video compression and restart recovery are not yet at iOS parity.",
             style = MaterialTheme.typography.bodySmall
         )
-        if (session == null) {
-            Text("Sign in from the Profile tab to view community posts.")
-        } else {
+        if (session != null) {
             CommunityStoriesRail(refresh = refresh, onOpen = { selectedStory = it })
             OutlinedButton(onClick = { composing = true }, enabled = !loading && canPublish == true) {
                 Text("Create post")
