@@ -55,4 +55,34 @@ class CommunityUploadRecoveryGuardTest {
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
             decide(storedAccountId = "student-b", serverSessionMissing = true))
     }
+    @Test fun accountOwnershipIsCaseSensitiveAndNotSubstringBased() {
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(expectedAccountId = "student-a", storedAccountId = "Student-a"))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(expectedAccountId = "student-a", storedAccountId = "student-a-other"))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(expectedAccountId = "student-a", storedAccountId = " student-a"))
+    }
+
+    @Test fun expiredSessionCanRestartWithoutKnownOffsetButNeverWithoutValidFile() {
+        assertEquals(CommunityUploadRecoveryGuard.Decision.RESTART_WITH_NEW_OBJECT,
+            decide(sessionExpired = true, serverOffset = null))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.RESTART_WITH_NEW_OBJECT,
+            decide(serverSessionMissing = true, serverOffset = -1L))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(sessionExpired = true, stagedFileSize = 0L, serverOffset = null))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(serverSessionMissing = true, expectedAccountId = "", serverOffset = null))
+    }
+
+    @Test fun offsetMustMatchExactFileLengthBeforeCompletion() {
+        val size = 200L * 1024 * 1024
+        assertEquals(CommunityUploadRecoveryGuard.Decision.RESUME_FROM_SERVER_OFFSET,
+            decide(stagedFileSize = size, serverOffset = size - 1L))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.COMPLETE_UPLOAD,
+            decide(stagedFileSize = size, serverOffset = size))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(stagedFileSize = size, serverOffset = size + 1L))
+    }
+
 }
