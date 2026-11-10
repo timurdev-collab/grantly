@@ -85,4 +85,15 @@ class CommunityUploadRecoveryGuardTest {
             decide(stagedFileSize = size, serverOffset = size + 1L))
     }
 
+    @Test fun rejectsWhitespaceOnlyAccountIdsAndExtremeOffsets() {
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(expectedAccountId = "   "))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(storedAccountId = "\t\n"))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(serverOffset = Long.MAX_VALUE))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(serverOffset = Long.MIN_VALUE))
+    }
+
 }
