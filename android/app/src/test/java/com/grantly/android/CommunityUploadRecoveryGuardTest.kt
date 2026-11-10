@@ -96,4 +96,16 @@ class CommunityUploadRecoveryGuardTest {
             decide(serverOffset = Long.MIN_VALUE))
     }
 
+
+    @Test fun rejectsMatchingButWhitespacePaddedAccountIdentifiers() {
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(expectedAccountId = " student-a", storedAccountId = " student-a"))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(expectedAccountId = "student-a ", storedAccountId = "student-a "))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(expectedAccountId = "\tstudent-a", storedAccountId = "\tstudent-a"))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.RESUME_FROM_SERVER_OFFSET,
+            decide(expectedAccountId = "student-a", storedAccountId = "student-a"))
+    }
+
 }
