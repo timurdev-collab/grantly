@@ -29,7 +29,9 @@ internal object CommunityUploadRecoveryGuard {
         serverSessionMissing: Boolean
     ): Decision {
         if (expectedAccountId.isBlank() || storedAccountId.isBlank() ||
-            expectedAccountId != storedAccountId || !stagedFileExists ||
+            expectedAccountId != storedAccountId ||
+            expectedAccountId != expectedAccountId.trim() ||
+            storedAccountId != storedAccountId.trim() || !stagedFileExists ||
             stagedFileSize <= 0L || stagedFileSize > 200L * 1024 * 1024
         ) return Decision.REJECT
 
