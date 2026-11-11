@@ -31,7 +31,9 @@ internal object CommunityUploadRecoveryGuard {
         if (expectedAccountId.isBlank() || storedAccountId.isBlank() ||
             expectedAccountId != storedAccountId ||
             expectedAccountId != expectedAccountId.trim() ||
-            storedAccountId != storedAccountId.trim() || !stagedFileExists ||
+            storedAccountId != storedAccountId.trim() ||
+            expectedAccountId.any { it.isISOControl() } ||
+            storedAccountId.any { it.isISOControl() } || !stagedFileExists ||
             stagedFileSize <= 0L || stagedFileSize > 200L * 1024 * 1024
         ) return Decision.REJECT
 
