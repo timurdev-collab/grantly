@@ -108,4 +108,13 @@ class CommunityUploadRecoveryGuardTest {
             decide(expectedAccountId = "student-a", storedAccountId = "student-a"))
     }
 
+    @Test fun rejectsEmbeddedControlCharactersEvenWhenBothAccountIdsMatch() {
+        for (invalidId in listOf("student\\na", "student\\ta", "student\\u0000a", "student\\u007fa")) {
+            assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+                decide(expectedAccountId = invalidId, storedAccountId = invalidId))
+        }
+        assertEquals(CommunityUploadRecoveryGuard.Decision.RESUME_FROM_SERVER_OFFSET,
+            decide(expectedAccountId = "student-a", storedAccountId = "student-a"))
+    }
+
 }
