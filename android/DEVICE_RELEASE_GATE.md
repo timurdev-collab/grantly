@@ -1,6 +1,6 @@
 # Android release gate: authenticated device verification
 
-Status: **not executed**. This is a test protocol, not a claim of feature parity.
+Status: **not executed**. This is a test protocol, not a claim of feature parity. Android source includes administrator draft review/publishing and advisor-application moderation entry points in Profile, but no authenticated device verification has been recorded.
 Branch: `feature/android-compose-foundation`. Never test destructive flows on production accounts.
 
 ## Setup
@@ -25,7 +25,7 @@ Branch: `feature/android-compose-foundation`. Never test destructive flows on pr
 | COM-03 | student | Interrupt MP4 upload with network loss | In-session HEAD offset reconciliation succeeds without duplicates |
 | COM-04 | student | Force-stop during MP4 upload and relaunch | **Expected to fail until durable upload recovery is implemented** |
 | COM-05 | student | Hide Community profile and attempt publish | Client denies action and server rejects bypass |
-| ADM-01 | admin | Publishing and moderation queue parity | **Not implemented/verified**; block release |
+| ADM-01 | admin | Review scholarship drafts, duplicate checks, publication and advisor application moderation | **Implemented in Android source, not authenticated/device-verified**; block release until tested |
 | DEL-01 | disposable account | Confirm account deletion, relaunch | Server confirms deletion before local credentials are cleared |
 | SAFE-01 | all | Inspect permissions, dependencies and navigation | No LiveKit SDK, camera/microphone permissions, calls, tokens or call UI |
 | SAFE-02 | advisor | Open biography and YouTube introduction | Both remain available without calling features |
