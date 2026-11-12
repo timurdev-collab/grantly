@@ -30,7 +30,8 @@ internal object CommunityPublicationRecoveryRules {
         if (matchingPublishedPostCount == null || matchingPublishedPostCount < 0) {
             return Decision.REQUIRE_MANUAL_RECONCILIATION
         }
-        if (matchingPublishedPostCount > 0) return Decision.ALREADY_PUBLISHED
+        if (matchingPublishedPostCount > 1) return Decision.REQUIRE_MANUAL_RECONCILIATION
+        if (matchingPublishedPostCount == 1) return Decision.ALREADY_PUBLISHED
         return if (insertPreviouslyAttempted) {
             Decision.REQUIRE_MANUAL_RECONCILIATION
         } else {
