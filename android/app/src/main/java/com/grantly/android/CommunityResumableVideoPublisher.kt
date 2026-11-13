@@ -55,6 +55,7 @@ internal object CommunityResumableVideoPublisher {
             }
             var postRequestStarted = false
             var postResponseReceived = false
+            var postResponseAmbiguous = false
             try {
                 // The last PATCH may complete just as the user cancels. Do not
                 // create a Community post after cancellation; roll back the
@@ -86,6 +87,10 @@ internal object CommunityResumableVideoPublisher {
                     val status = post.responseCode
                     postResponseReceived = true
                     if (status !in 200..299) {
+                        // A timeout, rate-limit or server error may follow a committed
+                        // insert. Preserve the private object until the post can be
+                        // reconciled rather than risking a broken published post.
+                        postResponseAmbiguous = status == 408 || status == 429 || status >= 500
                         throw IOException("Video uploaded but Community post creation failed (HTTP $status).")
                     }
                 } finally {
@@ -96,7 +101,7 @@ internal object CommunityResumableVideoPublisher {
                 // the video here could break a post that was committed by the server.
                 // Keep the object for support-side reconciliation rather than retrying
                 // blindly or destroying potentially published media.
-                if (postRequestStarted && !postResponseReceived) {
+                if (postRequestStarted && (!postResponseReceived || postResponseAmbiguous)) {
                     throw IOException(
                         "Community post outcome is unknown. Do not retry until the post is checked; uploaded video was preserved.",
                         failure
