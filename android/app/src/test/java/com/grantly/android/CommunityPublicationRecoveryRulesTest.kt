@@ -37,7 +37,9 @@ class CommunityPublicationRecoveryRulesTest {
             assertEquals(CommunityPublicationRecoveryRules.Decision.REQUIRE_MANUAL_RECONCILIATION,
                 decide(matchingPublishedPostCount = count))
         }
-        assertEquals(CommunityPublicationRecoveryRules.Decision.ALREADY_PUBLISHED,
+        assertEquals(CommunityPublicationRecoveryRules.Decision.REQUIRE_MANUAL_RECONCILIATION,
             decide(matchingPublishedPostCount = 2))
+        assertEquals(CommunityPublicationRecoveryRules.Decision.REQUIRE_MANUAL_RECONCILIATION,
+            decide(matchingPublishedPostCount = Int.MAX_VALUE))
     }
 }
