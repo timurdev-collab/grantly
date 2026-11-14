@@ -17,7 +17,7 @@ class CommunityUploadStagePathsTest {
     }
 
     @Test fun invalidIdentifiersCannotSelectPaths() {
-        for (invalid in listOf("", "../outside", "UPPERCASE", "00000000-0000-4000-8000-000000000001/../", "  $account", "$account/")) {
+        for (invalid in listOf("", "../outside", "UPPERCASE", "00000000-0000-4000-8000-000000000001/../", "  $account", "$account/", "0-0-0-0-1", "00000000-0000-4000-8000-000000000001\n")) {
             assertNull(CommunityUploadStagePaths.stageFile(root, invalid, operation))
             assertNull(CommunityUploadStagePaths.stageFile(root, account, invalid))
         }
