@@ -25,7 +25,12 @@ internal object CommunityUploadStagePaths {
      */
     fun matches(root: File, candidate: File, accountId: String, operationId: String): Boolean {
         val expected = stageFile(root, accountId, operationId) ?: return false
-        return try { expected.canonicalFile == candidate.canonicalFile }
+        return try {
+            // Reject alternate lexical paths (including aliases through ..) before
+            // resolving symlinks. A recovery record must name the exact staged file.
+            expected.absoluteFile == candidate.absoluteFile &&
+                expected.canonicalFile == candidate.canonicalFile
+        }
         catch (_: java.io.IOException) { false }
     }
 }
