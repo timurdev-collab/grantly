@@ -28,4 +28,10 @@ class CommunityUploadStagePathsTest {
         assertFalse(CommunityUploadStagePaths.matches(root, selected, account, "00000000-0000-4000-8000-000000000004"))
         assertFalse(CommunityUploadStagePaths.matches(root, File("other-root/$account/$operation.mp4"), account, operation))
     }
+    @Test fun aliasedPathsCannotImpersonateStagedFile() {
+        val selected = CommunityUploadStagePaths.stageFile(root, account, operation)!!
+        val aliased = File(File(root, account), "../$account/$operation.mp4")
+        assertEquals(selected.canonicalFile, aliased.canonicalFile)
+        assertFalse(CommunityUploadStagePaths.matches(root, aliased, account, operation))
+    }
 }
