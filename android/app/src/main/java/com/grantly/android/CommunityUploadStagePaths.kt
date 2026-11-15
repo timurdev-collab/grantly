@@ -29,7 +29,9 @@ internal object CommunityUploadStagePaths {
             // Reject alternate lexical paths (including aliases through ..) before
             // resolving symlinks. A recovery record must name the exact staged file.
             expected.absoluteFile == candidate.absoluteFile &&
-                expected.canonicalFile == candidate.canonicalFile
+                expected.canonicalFile == candidate.canonicalFile &&
+                // Reject symlinks in the staged file or any ancestor directory.
+                expected.canonicalFile == expected.absoluteFile
         }
         catch (_: java.io.IOException) { false }
     }
