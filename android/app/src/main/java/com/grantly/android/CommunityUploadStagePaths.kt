@@ -35,4 +35,32 @@ internal object CommunityUploadStagePaths {
         }
         catch (_: java.io.IOException) { false }
     }
+    /**
+     * Validate a recovered MP4 before it can be read for upload.
+     * The caller must supply an app-private root and authenticate accountId.
+     * A zero-byte file is not a valid staged video; never follow symlinks.
+     */
+    fun isSafeStagedMp4(
+        root: File,
+        candidate: File,
+        accountId: String,
+        operationId: String,
+        maxBytes: Long
+    ): Boolean {
+        if (maxBytes <= 0 || !matches(root, candidate, accountId, operationId)) return false
+        return try {
+            val path = candidate.toPath()
+            val attrs = java.nio.file.Files.readAttributes(
+                path,
+                java.nio.file.attribute.BasicFileAttributes::class.java,
+                java.nio.file.LinkOption.NOFOLLOW_LINKS
+            )
+            attrs.isRegularFile && attrs.size() in 1..maxBytes
+        } catch (_: java.io.IOException) {
+            false
+        } catch (_: SecurityException) {
+            false
+        }
+    }
+
 }
