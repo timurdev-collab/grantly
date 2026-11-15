@@ -97,4 +97,27 @@ class CommunityUploadStagePathsTest {
         }
     }
 
+    @Test fun recoveredMp4MustBeRegularNonemptyAndWithinLimit() {
+        val temp = java.nio.file.Files.createTempDirectory("community-stage-content-test")
+        try {
+            val accountDir = java.nio.file.Files.createDirectories(temp.resolve(account))
+            val candidate = accountDir.resolve("$operation.mp4").toFile()
+            val rootDir = temp.toFile()
+            assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 10))
+            candidate.writeBytes(byteArrayOf())
+            assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 10))
+            candidate.writeBytes(byteArrayOf(1, 2, 3))
+            assertTrue(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 3))
+            assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 2))
+            assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 0))
+            assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account,
+                "00000000-0000-4000-8000-000000000003", 10))
+            candidate.delete()
+            candidate.mkdir()
+            assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 10))
+        } finally {
+            temp.toFile().deleteRecursively()
+        }
+    }
+
 }
