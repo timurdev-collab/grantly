@@ -61,7 +61,7 @@ internal object CommunityUploadStagePaths {
                 // The MP4 family uses an ISO BMFF 'ftyp' box at byte offset 4.
                 java.io.FileInputStream(candidate).use { input ->
                     val header = ByteArray(12)
-                    input.read(header) == header.size &&
+                    run { java.io.DataInputStream(input).readFully(header); true } &&
                         header[4] == 'f'.code.toByte() &&
                         header[5] == 't'.code.toByte() &&
                         header[6] == 'y'.code.toByte() &&
