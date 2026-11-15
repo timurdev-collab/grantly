@@ -34,4 +34,25 @@ class CommunityUploadStagePathsTest {
         assertEquals(selected.canonicalFile, aliased.canonicalFile)
         assertFalse(CommunityUploadStagePaths.matches(root, aliased, account, operation))
     }
+    @Test fun symlinkedStagingFileIsRejected() {
+        val temp = java.nio.file.Files.createTempDirectory("community-stage-test")
+        try {
+            val accountDir = java.nio.file.Files.createDirectories(temp.resolve(account))
+            val outside = java.nio.file.Files.createTempFile(temp, "outside-", ".mp4")
+            val link = accountDir.resolve("$operation.mp4")
+            try {
+                java.nio.file.Files.createSymbolicLink(link, outside)
+            } catch (e: UnsupportedOperationException) {
+                org.junit.Assume.assumeNoException(e)
+            } catch (e: java.nio.file.FileSystemException) {
+                org.junit.Assume.assumeNoException(e)
+            } catch (e: SecurityException) {
+                org.junit.Assume.assumeNoException(e)
+            }
+            assertFalse(CommunityUploadStagePaths.matches(temp.toFile(), link.toFile(), account, operation))
+        } finally {
+            temp.toFile().deleteRecursively()
+        }
+    }
+
 }
