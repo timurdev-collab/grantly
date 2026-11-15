@@ -56,7 +56,17 @@ internal object CommunityUploadStagePaths {
                 java.nio.file.attribute.BasicFileAttributes::class.java,
                 java.nio.file.LinkOption.NOFOLLOW_LINKS
             )
-            attrs.isRegularFile && attrs.size() in 1..maxBytes
+            attrs.isRegularFile && attrs.size() in 12..maxBytes &&
+                // Reject mislabeled content before resuming a recovered upload.
+                // The MP4 family uses an ISO BMFF 'ftyp' box at byte offset 4.
+                java.io.FileInputStream(candidate).use { input ->
+                    val header = ByteArray(12)
+                    input.read(header) == header.size &&
+                        header[4] == 'f'.code.toByte() &&
+                        header[5] == 't'.code.toByte() &&
+                        header[6] == 'y'.code.toByte() &&
+                        header[7] == 'p'.code.toByte()
+                }
         } catch (_: java.io.IOException) {
             false
         } catch (_: SecurityException) {
