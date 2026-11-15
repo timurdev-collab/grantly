@@ -76,4 +76,25 @@ class CommunityUploadStagePathsTest {
         }
     }
 
+    @Test fun symlinkedStagingRootIsRejected() {
+        val temp = java.nio.file.Files.createTempDirectory("community-stage-root-test")
+        try {
+            val actualRoot = java.nio.file.Files.createDirectories(temp.resolve("actual-root"))
+            val aliasRoot = temp.resolve("alias-root")
+            try {
+                java.nio.file.Files.createSymbolicLink(aliasRoot, actualRoot)
+            } catch (e: UnsupportedOperationException) {
+                org.junit.Assume.assumeNoException(e)
+            } catch (e: java.nio.file.FileSystemException) {
+                org.junit.Assume.assumeNoException(e)
+            } catch (e: SecurityException) {
+                org.junit.Assume.assumeNoException(e)
+            }
+            val candidate = aliasRoot.resolve(account).resolve("$operation.mp4")
+            assertFalse(CommunityUploadStagePaths.matches(aliasRoot.toFile(), candidate.toFile(), account, operation))
+        } finally {
+            temp.toFile().deleteRecursively()
+        }
+    }
+
 }
