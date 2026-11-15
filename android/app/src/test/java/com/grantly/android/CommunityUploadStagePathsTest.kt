@@ -55,4 +55,25 @@ class CommunityUploadStagePathsTest {
         }
     }
 
+    @Test fun symlinkedAccountDirectoryIsRejected() {
+        val temp = java.nio.file.Files.createTempDirectory("community-stage-parent-test")
+        try {
+            val outside = java.nio.file.Files.createDirectories(temp.resolve("outside"))
+            val link = temp.resolve(account)
+            try {
+                java.nio.file.Files.createSymbolicLink(link, outside)
+            } catch (e: UnsupportedOperationException) {
+                org.junit.Assume.assumeNoException(e)
+            } catch (e: java.nio.file.FileSystemException) {
+                org.junit.Assume.assumeNoException(e)
+            } catch (e: SecurityException) {
+                org.junit.Assume.assumeNoException(e)
+            }
+            val candidate = link.resolve("$operation.mp4")
+            assertFalse(CommunityUploadStagePaths.matches(temp.toFile(), candidate.toFile(), account, operation))
+        } finally {
+            temp.toFile().deleteRecursively()
+        }
+    }
+
 }
