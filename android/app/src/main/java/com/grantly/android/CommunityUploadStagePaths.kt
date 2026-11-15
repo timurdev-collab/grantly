@@ -34,6 +34,7 @@ internal object CommunityUploadStagePaths {
                 expected.canonicalFile == expected.absoluteFile
         }
         catch (_: java.io.IOException) { false }
+        catch (_: SecurityException) { false }
     }
     /**
      * Validate a recovered MP4 before it can be read for upload.
