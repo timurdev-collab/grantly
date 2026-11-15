@@ -36,6 +36,12 @@ internal object CommunityUploadStagePaths {
         catch (_: java.io.IOException) { false }
         catch (_: SecurityException) { false }
     }
+    private fun valBoxSize(header: ByteArray): Long =
+        ((header[0].toLong() and 0xff) shl 24) or
+            ((header[1].toLong() and 0xff) shl 16) or
+            ((header[2].toLong() and 0xff) shl 8) or
+            (header[3].toLong() and 0xff)
+
     /**
      * Validate a recovered MP4 before it can be read for upload.
      * The caller must supply an app-private root and authenticate accountId.
@@ -56,12 +62,15 @@ internal object CommunityUploadStagePaths {
                 java.nio.file.attribute.BasicFileAttributes::class.java,
                 java.nio.file.LinkOption.NOFOLLOW_LINKS
             )
-            attrs.isRegularFile && attrs.size() in 12..maxBytes &&
+            attrs.isRegularFile && attrs.size() in 16..maxBytes &&
                 // Reject mislabeled content before resuming a recovered upload.
                 // The MP4 family uses an ISO BMFF 'ftyp' box at byte offset 4.
                 java.io.FileInputStream(candidate).use { input ->
-                    val header = ByteArray(12)
+                    val header = ByteArray(16)
                     run { java.io.DataInputStream(input).readFully(header); true } &&
+                        // ISO BMFF ftyp requires a 16-byte minimum box; reject
+                        // truncated or impossible box sizes before upload.
+                        valBoxSize(header) in 16..attrs.size() &&
                         header[4] == 'f'.code.toByte() &&
                         header[5] == 't'.code.toByte() &&
                         header[6] == 'y'.code.toByte() &&
