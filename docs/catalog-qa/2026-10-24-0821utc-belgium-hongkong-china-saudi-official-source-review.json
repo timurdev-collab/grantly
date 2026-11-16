@@ -1,0 +1,660 @@
+{
+  "package_type": "official_programme_specific_staging_review_no_authorized_database_writes",
+  "date_utc": "2026-10-24",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "source_of_truth": "Official funder/university programme pages accessed 2026-10-24; all proposed values are unaccepted evidence pending authenticated reviewer workflow.",
+  "baseline_staging_readback_utc": "2026-10-24T08:21:10Z",
+  "baseline": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_action_logs": 8
+  },
+  "published_records_investigated": [
+    {
+      "id": "f6c9b73a-7e62-4a7e-86dd-448b79de4f42",
+      "title": "VLIR-UOS Training Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "degree_levels",
+          "suggested": [],
+          "evidence_url": "https://www.vliruos.be/sites/default/files/2024-10/Framework%20for%20scholarships%20in%20Belgium_2022.pdf",
+          "reason": "ITP short-term training awards may not lead to an academic degree; do not classify generically as Master's."
+        },
+        {
+          "field": "eligible_nationalities",
+          "suggested": "restricted; verify current ITP call rather than ALL",
+          "evidence_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "reason": "Current ICP list is not automatically valid for all historical ITP calls."
+        },
+        {
+          "field": "official_url",
+          "suggested": "programme-specific ITP call required",
+          "evidence_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "reason": "Homepage does not establish a current individual training award."
+        }
+      ],
+      "decision": "HOLD_FOR_PROGRAMME_IDENTITY_AND_ACADEMIC_SCOPE_REVIEW",
+      "official_sources": [
+        "https://www.vliruos.be/sites/default/files/2024-10/Framework%20for%20scholarships%20in%20Belgium_2022.pdf"
+      ]
+    },
+    {
+      "id": "d6b96d66-202c-4b0f-b717-93fc15fca977",
+      "title": "VLIRUOS ICP Connect Study Scholarships",
+      "proposed_field_changes": [
+        {
+          "field": "application_cycle",
+          "suggested": "2027-2028",
+          "evidence_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "reason": "Official 2027-28 call is open."
+        },
+        {
+          "field": "deadline",
+          "suggested": null,
+          "evidence_url": "https://www.vliruos.be/get-funded/study-scholarships",
+          "reason": "Each participating degree programme sets its own deadline; 28 Feb 2027 umbrella call date must not be applied universally."
+        },
+        {
+          "field": "eligible_nationalities",
+          "suggested": "25-country nationality AND residence restriction",
+          "evidence_url": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+          "reason": "Published official list contains 25 countries; a separate page mentions Mali but official country list has not been reconciled."
+        }
+      ],
+      "decision": "REVIEW_UMBRELLA_VS_PROGRAMME_SPECIFIC_ROUTES",
+      "official_sources": [
+        "https://www.vliruos.be/get-funded/study-scholarships",
+        "https://www.vliruos.be/get-funded/calls/icp-connect-2027-2028",
+        "https://www.vliruos.be/icp-connect-scholarship-country-list"
+      ]
+    },
+    {
+      "id": "fc207f98-c855-4abb-8d71-838e21b15d63",
+      "title": "Peking University International Student Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "official_url",
+          "suggested": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "evidence_url": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "reason": "Canonical named scholarship page."
+        },
+        {
+          "field": "tuition_coverage",
+          "suggested": "tuition, living stipend and medical insurance; accommodation not stated",
+          "evidence_url": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "reason": "Existing full accommodation guarantee unsupported."
+        },
+        {
+          "field": "eligible_nationalities",
+          "suggested": "qualifying international students, subject to admission and no other scholarship",
+          "evidence_url": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "reason": "Not unrestricted ALL."
+        },
+        {
+          "field": "deadline",
+          "suggested": null,
+          "evidence_url": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "reason": "Generally January-March; exact 2027 date not announced."
+        },
+        {
+          "field": "application_cycle",
+          "suggested": "2027 intake not yet confirmed",
+          "evidence_url": "https://www.isd.pku.edu.cn/en/news.php",
+          "reason": "Current notices refer to 2026."
+        }
+      ],
+      "decision": "KEEP_CANONICAL_AFTER_REVIEW",
+      "official_sources": [
+        "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+        "https://www.isd.pku.edu.cn/en/news.php"
+      ]
+    },
+    {
+      "id": "ca72da49-c14a-497a-b4a6-8ddb5a64b6d1",
+      "title": "Peking University Masters Excellence Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "official_url",
+          "suggested": null,
+          "evidence_url": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "reason": "University homepage is not programme-specific."
+        },
+        {
+          "field": "funding_type",
+          "suggested": "unconfirmed named programme",
+          "evidence_url": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "reason": "Cannot establish a separate Masters Excellence award."
+        },
+        {
+          "field": "verification_status",
+          "suggested": "needs_review; do not mark verified",
+          "evidence_url": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "reason": "Possible overlap with named PKU Scholarship for International Students."
+        }
+      ],
+      "decision": "HOLD_DUPLICATE_IDENTITY_REVIEW",
+      "official_sources": [
+        "https://www.isd.pku.edu.cn/en/detail.php?id=525"
+      ]
+    },
+    {
+      "id": "8c563d87-7f96-4f58-aa80-fdb870cd1211",
+      "title": "Peking University Undergraduate International Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "official_url",
+          "suggested": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "evidence_url": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "reason": "Likely same umbrella PKU scholarship, which covers Bachelor's."
+        },
+        {
+          "field": "tuition_coverage",
+          "suggested": "tuition, living stipend and medical insurance; no universal accommodation",
+          "evidence_url": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "reason": "Existing accommodation claim unsupported."
+        },
+        {
+          "field": "application_cycle",
+          "suggested": "undergraduate automatic scholarship consideration; 2027 deadline not established",
+          "evidence_url": "https://www.isd.pku.edu.cn/en/detail.php?id=525",
+          "reason": "Undergraduate new applicants need no separate scholarship application."
+        }
+      ],
+      "decision": "HOLD_CANONICAL_DUPLICATE_REVIEW",
+      "official_sources": [
+        "https://www.isd.pku.edu.cn/en/detail.php?id=525"
+      ]
+    },
+    {
+      "id": "7630a734-ac8d-4f05-b13d-6de3d7c26e99",
+      "title": "King Fahd University of Petroleum and Minerals Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "official_url",
+          "suggested": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "evidence_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "reason": "Official named graduate scholarship page."
+        },
+        {
+          "field": "degree_levels",
+          "suggested": [
+            "Master",
+            "PhD"
+          ],
+          "evidence_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "reason": "Full scholarship explicitly for eligible full-time MS and PhD, not universal Bachelor."
+        },
+        {
+          "field": "deadline",
+          "suggested": null,
+          "evidence_url": "https://cgis.kfupm.edu.sa/apply",
+          "reason": "No independent scholarship deadline; 2027-01-20 is a graduate admissions deadline only."
+        },
+        {
+          "field": "deadline_notes",
+          "suggested": "2027 MS (thesis) / PhD admissions: Nov 23 2026-Jan 20 2027. Scholarship selection conditional.",
+          "evidence_url": "https://cgis.kfupm.edu.sa/apply",
+          "reason": "Do not present admissions cutoff as scholarship-only deadline."
+        },
+        {
+          "field": "application_cycle",
+          "suggested": "MS thesis-based/PhD applications Nov 23 2026-Jan 20 2027",
+          "evidence_url": "https://cgis.kfupm.edu.sa/apply",
+          "reason": "Admission cycle, scholarship conditional."
+        },
+        {
+          "field": "min_ielts",
+          "suggested": "6.0 for thesis-based MS; 6.5 for PhD and direct PhD",
+          "evidence_url": "https://cgis.kfupm.edu.sa/admission/admissionrequirement",
+          "reason": "Do not encode a single programme-wide minimum."
+        },
+        {
+          "field": "sat_required",
+          "suggested": false,
+          "evidence_url": "https://cgis.kfupm.edu.sa/admission/admissionrequirement",
+          "reason": "SAT is a separate undergraduate admissions track, not graduate scholarship eligibility."
+        }
+      ],
+      "decision": "RECONCILE_WITH_SECOND_KFUPM_RECORD",
+      "official_sources": [
+        "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+        "https://cgis.kfupm.edu.sa/admission/admissionrequirement",
+        "https://cgis.kfupm.edu.sa/apply"
+      ]
+    },
+    {
+      "id": "5b89eb0d-7139-4186-bba3-e146e058f21b",
+      "title": "King Fahd University Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "degree_levels",
+          "suggested": [
+            "Master",
+            "PhD"
+          ],
+          "evidence_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "reason": "Graduate scholarships cannot be generalized to undergraduate awards."
+        },
+        {
+          "field": "tuition_coverage",
+          "suggested": "full tuition only for selected scholarship recipients; not all admitted students",
+          "evidence_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "reason": "Self-sponsored MS/PhD tuition and fees exist."
+        },
+        {
+          "field": "eligible_nationalities",
+          "suggested": "qualified domestic and international graduate applicants; academic/English restrictions",
+          "evidence_url": "https://cgis.kfupm.edu.sa/admission/admissionrequirement",
+          "reason": "Not unrestricted."
+        },
+        {
+          "field": "official_url",
+          "suggested": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "evidence_url": "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+          "reason": "Programme-specific source."
+        }
+      ],
+      "decision": "HOLD_DUPLICATE_REVIEW_WITH_7630A734",
+      "official_sources": [
+        "https://cgis.kfupm.edu.sa/admission/kfupm-scholarship",
+        "https://cgis.kfupm.edu.sa/admission/admissionrequirement"
+      ]
+    },
+    {
+      "id": "a37ee4b2-25e1-41f8-b6cb-31ac2a614592",
+      "title": "Hong Kong University Masters Excellence Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "funding_type",
+          "suggested": "unconfirmed generic named Master's award",
+          "evidence_url": "https://jobs.fbe.hku.hk/phd/admissions/admission-application-and-tuition-fee",
+          "reason": "HKU PhD PGS does not establish Master's Excellence Scholarship."
+        },
+        {
+          "field": "stipend",
+          "suggested": null,
+          "evidence_url": "https://jobs.fbe.hku.hk/phd/admissions/admission-application-and-tuition-fee",
+          "reason": "HK$19,135 monthly PGS belongs to eligible MPhil/PhD, not taught Master's universally."
+        },
+        {
+          "field": "official_url",
+          "suggested": "programme-specific Master's award required",
+          "evidence_url": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+          "reason": "University homepage insufficient."
+        }
+      ],
+      "decision": "HOLD_IDENTITY_REVIEW",
+      "official_sources": [
+        "https://jobs.fbe.hku.hk/phd/admissions/admission-application-and-tuition-fee",
+        "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme"
+      ]
+    },
+    {
+      "id": "251f09e2-58c9-4622-8675-143a90cf4a31",
+      "title": "Hong Kong University Phd Excellence Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "official_url",
+          "suggested": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+          "evidence_url": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+          "reason": "Official HKU Presidential PhD Scholar programme is separately named."
+        },
+        {
+          "field": "stipend",
+          "suggested": "HK$28,700 monthly for selected HKU Presidential PhD Scholars in 2027/28",
+          "evidence_url": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+          "reason": "Do not apply to all HKU doctoral students."
+        },
+        {
+          "field": "tuition_coverage",
+          "suggested": "2027/28 HKU Presidential PhD Scholars: composition fee waiver HK$49,500 annually",
+          "evidence_url": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+          "reason": "Selected award; PGS alone is different."
+        },
+        {
+          "field": "application_cycle",
+          "suggested": "2027/28 PhD admissions; main round ends Dec 1 2026 23:59 HKT",
+          "evidence_url": "https://gradsch.hku.hk/prospective_students/application/application_period",
+          "reason": "Admissions deadline, automatic consideration for HKU-PS."
+        }
+      ],
+      "decision": "RECONCILE_WITH_NAMED_HKU_PRESIDENTIAL_ROUTE",
+      "official_sources": [
+        "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+        "https://gradsch.hku.hk/prospective_students/application/application_period",
+        "https://jobs.fbe.hku.hk/phd/admissions/admission-application-and-tuition-fee"
+      ]
+    },
+    {
+      "id": "3748883b-ac7b-4440-a347-2c98440e6a14",
+      "title": "Hong Kong University Undergraduate International Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "funding_type",
+          "suggested": "unverified generic full funding claim",
+          "evidence_url": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+          "reason": "Graduate HKU-PS and PGS are PhD awards and cannot substantiate undergraduate stipend."
+        },
+        {
+          "field": "stipend",
+          "suggested": null,
+          "evidence_url": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+          "reason": "HK$20,000/month not substantiated for undergraduate award."
+        },
+        {
+          "field": "official_url",
+          "suggested": "named HKU undergraduate scholarship source required",
+          "evidence_url": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+          "reason": "University homepage insufficient."
+        }
+      ],
+      "decision": "HOLD_IDENTITY_REVIEW",
+      "official_sources": [
+        "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme"
+      ]
+    },
+    {
+      "id": "2ecfcf65-f828-4a54-8927-8bdeaa1045f0",
+      "title": "Chinese University of Hong Kong Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "official_url",
+          "suggested": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/admission-scholarships-for-undergraduates-only/",
+          "evidence_url": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/admission-scholarships-for-undergraduates-only/",
+          "reason": "Official admission scholarship programme."
+        },
+        {
+          "field": "tuition_coverage",
+          "suggested": "HK$5,000 to full tuition; selected awards also living allowance up to HK$66,000 annually",
+          "evidence_url": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/admission-scholarships-for-undergraduates-only/",
+          "reason": "Not universally full tuition and living."
+        },
+        {
+          "field": "application_cycle",
+          "suggested": "2027 undergraduate entry; automatic consideration",
+          "evidence_url": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/admission-scholarships-for-undergraduates-only/",
+          "reason": "No separate scholarship application for CUHK admission scholarships."
+        },
+        {
+          "field": "deadline",
+          "suggested": null,
+          "evidence_url": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/admission-scholarships-for-undergraduates-only/",
+          "reason": "No independent scholarship deadline; follow applicant admission track."
+        }
+      ],
+      "decision": "RECONCILE_WITH_CUHK_ADMISSION_SCHOLARSHIP",
+      "official_sources": [
+        "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/admission-scholarships-for-undergraduates-only/"
+      ]
+    },
+    {
+      "id": "9cd403ac-3e72-4412-8469-183e6122aaf3",
+      "title": "HKUST Scholarship",
+      "proposed_field_changes": [
+        {
+          "field": "tuition_coverage",
+          "suggested": "award-dependent: one-time through full tuition plus living allowance",
+          "evidence_url": "https://publication.join.ust.hk/view/14363550/10-11/",
+          "reason": "Current full tuition plus HK$60,000 annual living is not universal."
+        },
+        {
+          "field": "degree_levels",
+          "suggested": [
+            "Bachelor"
+          ],
+          "evidence_url": "https://publication.join.ust.hk/view/14363550/10-11/",
+          "reason": "The cited 2027 admissions scheme concerns undergraduate admissions only; graduate awards require distinct source."
+        },
+        {
+          "field": "sat_required",
+          "suggested": false,
+          "evidence_url": "https://publication.join.ust.hk/view/14363550/10-11/",
+          "reason": "SAT/ACT can be qualification-route admission criteria, not a universal scholarship requirement."
+        },
+        {
+          "field": "official_url",
+          "suggested": "https://publication.join.ust.hk/view/14363550/10-11/",
+          "evidence_url": "https://publication.join.ust.hk/view/14363550/10-11/",
+          "reason": "2027 undergraduate admissions scholarship source."
+        }
+      ],
+      "decision": "HOLD_UNTIL_NAMED_ROUTE_RECONCILIATION",
+      "official_sources": [
+        "https://publication.join.ust.hk/view/14363550/10-11/"
+      ]
+    }
+  ],
+  "programme_specific_leads": [
+    {
+      "name": "VLIRUOS ICP Connect - Bachelor of Hotel Management",
+      "organizer": "VIVES Noord",
+      "degree": "Bachelor",
+      "application_deadline": "2027-01-31",
+      "applications_open": "2026-11-10",
+      "official_url": "https://www.vliruos.be/get-funded/bachelor-hotel-management",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "ready_for_dedup_review",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Bachelor of Applied Computer Science",
+      "organizer": "Thomas More campus Geel",
+      "degree": "Bachelor",
+      "application_deadline": "2027-01-15",
+      "applications_open": "2026-10-30",
+      "official_url": "https://www.vliruos.be/get-funded/bachelor-applied-computer-science",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "hold_organizer_programme_duration_page_shows_2027_to_2029_check_actual_bachelor_duration",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Master of Aquaculture (IMAQUA)",
+      "organizer": "Ghent University",
+      "degree": "Master",
+      "application_deadline": "2027-02-28",
+      "applications_open": "2026-10-01",
+      "official_url": "https://www.vliruos.be/get-funded/master-aquaculture-imaqua",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "hold_duration_conflict_page_says_2027_2028_but_text_says_two_years",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Master of Science in Food Technology",
+      "organizer": "KU Leuven & Ghent University",
+      "degree": "Master",
+      "application_deadline": "2027-02-01",
+      "applications_open": "2026-10-12",
+      "official_url": "https://www.vliruos.be/get-funded/master-science-food-technology",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "ready_for_dedup_review",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Master of Science in Marine and Lacustrine Science and Management",
+      "organizer": "VUB, Ghent & Antwerp",
+      "degree": "Master",
+      "application_deadline": "2027-02-01",
+      "applications_open": "2026-11-01",
+      "official_url": "https://www.vliruos.be/get-funded/master-science-marine-and-lacustrine-science-and-management",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "ready_for_dedup_review",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Master of Transportation Sciences - Road Safety",
+      "organizer": "Hasselt University",
+      "degree": "Master",
+      "application_deadline": "2027-02-01",
+      "applications_open": "2026-10-15",
+      "official_url": "https://www.vliruos.be/get-funded/master-transportation-sciences-road-safety",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "ready_for_dedup_review",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Master of Science in Nutrition and Food Systems",
+      "organizer": "Ghent University",
+      "degree": "Master",
+      "application_deadline": "2027-02-28",
+      "applications_open": "2026-10-01",
+      "official_url": "https://www.vliruos.be/get-funded/master-science-nutrition-and-food-systems",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "ready_for_dedup_review",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Master of Science in Sustainable Land Management",
+      "organizer": "Ghent University & VUB",
+      "degree": "Master",
+      "application_deadline": "2027-02-28",
+      "applications_open": "2026-11-01",
+      "official_url": "https://www.vliruos.be/get-funded/master-science-sustainable-land-management",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "ready_for_dedup_review",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Master of Science in Tropical Biodiversity and Ecosystems (Mundus tropicalis)",
+      "organizer": "VUB",
+      "degree": "Master",
+      "application_deadline": "2026-11-30",
+      "applications_open": "2026-09-01",
+      "official_url": "https://www.vliruos.be/get-funded/master-science-tropical-biodiversity-and-ecosystems-mundus-tropicalis-co-tropimundo",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "ready_for_dedup_review",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Master of Development Evaluation and Management",
+      "organizer": "University of Antwerp",
+      "degree": "Master",
+      "application_deadline": null,
+      "applications_open": null,
+      "official_url": "https://www.vliruos.be/get-funded/master-development-evaluation-and-management",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "hold_2027_application_dates_unannounced",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Master of Globalisation and Development",
+      "organizer": "University of Antwerp",
+      "degree": "Master",
+      "application_deadline": null,
+      "applications_open": null,
+      "official_url": "https://www.vliruos.be/get-funded/master-globalisation-and-development",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "hold_2027_application_dates_unannounced",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "VLIRUOS ICP Connect - Master of Governance and Development",
+      "organizer": "University of Antwerp",
+      "degree": "Master",
+      "application_deadline": null,
+      "applications_open": null,
+      "official_url": "https://www.vliruos.be/get-funded/master-governance-and-development",
+      "funding": "Full tuition, travel, insurance and living expenses for full degree duration; scholarship eligibility restricted to 25-country nationality and residence list",
+      "nationality_and_residence_source": "https://www.vliruos.be/icp-connect-scholarship-country-list",
+      "status": "hold_2027_application_dates_unannounced",
+      "duplicate_note": "Existing published VLIRUOS ICP Connect umbrella record d6b96d66-202c-4b0f-b717-93fc15fca977; count as separate only after semantic programme-identity review."
+    },
+    {
+      "name": "HKU Presidential PhD Scholar Programme 2027/28",
+      "degree": "PhD",
+      "country": "Hong Kong",
+      "official_url": "https://gradsch.hku.hk/prospective_students/fees_scholarships_and_financial_support/hku_presidential_phd_scholar_programme",
+      "funding": "HK$28,700 monthly postgraduate scholarship plus HK$40,000 first-year cash, HK$20,000 subsequent years, composition fee waiver HK$49,500/year and HK$14,400 travel allowance",
+      "deadline": "2026-12-01",
+      "deadline_type": "2027/28 main PhD admissions round 23:59 HKT; automatic consideration; clearing rounds possible",
+      "status": "hold_published_HKU_PhD_generic_overlap"
+    },
+    {
+      "name": "Asian Future Leaders Scholarship Program at CUHK 2027",
+      "degree": "Bachelor (existing CUHK year 2/3)",
+      "country": "Hong Kong",
+      "official_url": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/aflsp/",
+      "funding": "Up to US$25,000 per year for up to 2 years; up to 10 recipients",
+      "deadline": "2027-01-18",
+      "eligibility": "Non-local Asian nationality, full-time CUHK year 2 or 3 undergraduate, GPA >=3.0, nominated by faculty",
+      "status": "ready_for_semantic_dedup_review",
+      "deadline_source": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/open-for-applications/"
+    },
+    {
+      "name": "CUHK Admission Scholarships for Undergraduates 2027",
+      "degree": "Bachelor",
+      "country": "Hong Kong",
+      "official_url": "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/admission-scholarships-for-undergraduates-only/",
+      "funding": "HK$5,000 to full tuition; some awards include up to HK$66,000 yearly allowance",
+      "deadline": null,
+      "application": "Automatic admission consideration; admissions track deadlines differ",
+      "status": "hold_published_CUHK_generic_overlap"
+    }
+  ],
+  "existing_private_drafts_rechecked": [
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "name": "Gordon and Isabel Humphrey Scholarship",
+      "source": "https://scholarships.unimelb.edu.au/awards/gordon-and-isabel-humphrey-scholarship",
+      "deadline": "2026-10-25",
+      "confirmed": "2027 Engineering PhD offer required; AUD 41,100/year up to 3.5 years; relocation and health cover; no tuition waiver stated",
+      "readiness": "not assessed: Admin access required",
+      "provenance_count": 2,
+      "reviewer_attributed": 0
+    },
+    {
+      "id": "27968090-2edf-464d-9236-76f5186b741b",
+      "name": "EPFL-WISH Foundation Fellowship for Master's Projects Abroad",
+      "source": "https://wish-foundation.epfl.ch/masters-projects-abroad/",
+      "deadline": "2026-10-25",
+      "next_call": "2027-04-11",
+      "confirmed": "Women enrolled in EPFL Master programme with overseas thesis project; complementary grant generally up to CHF 5,000; not tuition funding",
+      "readiness": "not assessed: Admin access required",
+      "provenance_count": 3,
+      "reviewer_attributed": 0
+    },
+    {
+      "id": "719cccf5-54e5-4680-a5c0-8e930a8a839c",
+      "name": "Mick Hitchcock PhD Scholarship in Microbiology",
+      "source": "https://scholarships.unimelb.edu.au/awards/mick-hitchcock-phd-scholarship-in-microbiology",
+      "deadline": "2026-10-31",
+      "confirmed": "Automatic consideration with eligible PhD admission; AUD 39,500/year 2026 rate; up to 3.5 years",
+      "provenance_count": 0,
+      "reviewer_attributed": 0
+    }
+  ],
+  "negative_screening": {
+    "exact_named_vlir_routes_found_in_scholarships": 0,
+    "vlir_existing_umbrella_records": 1,
+    "vlir_existing_generic_training_records": 1,
+    "matching_candidate_urls_found_in_source_candidates": 0,
+    "hong_kong_phd_fellowship_already_published_verified": true,
+    "do_not_duplicate_hkpfs": true
+  },
+  "blocking_authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "readiness_rpc": "Admin access required",
+    "edge_function_import": "Requires Authorization bearer JWT and calls admin-protected stage_scholarship_import",
+    "write_action": "not attempted: no authorized identity",
+    "production_changed": false
+  },
+  "safety": "No archival, verification-status promotion, direct SQL bypass, or publication permitted without audited authenticated approval. 2027 application deadline must be programme-specific; never use funder umbrella 2027-02-28 as every course deadline. Do not treat a scholarship framework for ITP training as an academic degree scholarship. Programme routes overlap published umbrella and must pass semantic duplicate review. Some bachelor pages have programme duration anomalies; verify against host institution before publication."
+}

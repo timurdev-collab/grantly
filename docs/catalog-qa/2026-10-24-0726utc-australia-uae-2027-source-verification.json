@@ -1,0 +1,698 @@
+{
+  "package_type": "staging_only_official_source_verification",
+  "generated_utc": "2026-10-24T07:26:00Z",
+  "project": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "database_snapshot_before": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_value_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_action_logs": 8,
+    "read_at_utc": "2026-10-24T07:27:10Z"
+  },
+  "authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "staging_edits_succeeded": 0,
+    "publications_succeeded": 0,
+    "reason": "No authenticated admin context. Do not bypass RLS or use direct management SQL as substitute for audited workflow."
+  },
+  "published_record_reviews": [
+    {
+      "id": "96d13afb-23f2-4b74-83e9-7920d09c192d",
+      "title": "Australian National University Masters International Scholarship",
+      "proposed_action": "reconcile_generic_record",
+      "official_evidence": [
+        "https://study.anu.edu.au/scholarships/find-scholarship/anu-university-research-scholarships",
+        "https://study.anu.edu.au/scholarships/find-scholarship/anu-chancellors-international-scholarship",
+        "https://study.anu.edu.au/scholarships/find-scholarship/anu-international-achievement-award"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "programme_identity",
+          "proposed": "Do not treat generic masters award as a separately identifiable scholarship; compare named ANU International Achievement and ANU research scholarships."
+        },
+        {
+          "field": "funding_type",
+          "proposed": "Remove unsubstantiated blanket fully funded classification until named programme identity is established."
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed": "Do not claim full tuition plus AUD 30,000 stipend for all masters."
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "Distinguish coursework masters from research masters."
+        },
+        {
+          "field": "official_url",
+          "proposed": "Replace homepage with canonical named programme URL after identity reconciliation."
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "a3e51324-acae-43ce-b711-01b5c299e900",
+      "title": "Australian National University Phd International Scholarship",
+      "proposed_action": "reconcile_generic_record",
+      "official_evidence": [
+        "https://study.anu.edu.au/scholarships/find-scholarship/anu-phd-scholarship",
+        "https://research.anu.edu.au/postgraduate-research-candidates/research-degree-scholarships",
+        "https://study.anu.edu.au/scholarships/find-scholarship/anu-university-research-scholarships"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "programme_identity",
+          "proposed": "Reconcile with existing ANU University Research Scholarship private draft; do not duplicate."
+        },
+        {
+          "field": "stipend",
+          "proposed": "ANU PhD and University Research scholarship official 2027 base stipend is AUD 40,475 annually, conditional on named award."
+        },
+        {
+          "field": "deadline_notes",
+          "proposed": "Central HDR scholarship round 1 international closes August 31 each year; round 2 closes April 15; deadlines are scholarship-round specific."
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed": "Do not promise universal tuition remission based solely on stipend information."
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://study.anu.edu.au/scholarships/find-scholarship/anu-phd-scholarship"
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "7385caff-9493-4889-b1c0-70858627227c",
+      "title": "Melbourne Research Scholarship",
+      "proposed_action": "correct_existing_named_programme",
+      "official_evidence": [
+        "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "funding_type",
+          "proposed": "Distinguish fee-offset-only from competitive stipend-plus-fee-offset award categories."
+        },
+        {
+          "field": "stipend",
+          "proposed": "AUD 39,500 per annum is explicitly the 2026 full-time rate; 2027 amount not confirmed on this page."
+        },
+        {
+          "field": "deadline_notes",
+          "proposed": "No universal standalone scholarship deadline; automatically considered when applying for graduate research admission by course deadline."
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "Research Masters and doctoral only, not taught Masters."
+        },
+        {
+          "field": "source_url",
+          "proposed": "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship"
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "ae0d01ab-163f-41cd-9f58-969e6cd9ed68",
+      "title": "Swinburne University International Excellence Scholarship",
+      "proposed_action": "reconcile_name_and_cycle",
+      "official_evidence": [
+        "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "programme_identity",
+          "proposed": "Existing 10–75% historic International Excellence award must not be conflated with 2027 George Swinburne International Excellence Scholarship."
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed": "2027 George Swinburne International Excellence is 30% tuition discount, not 75%; separate 2027 Swinburne International Scholarship is 20%."
+        },
+        {
+          "field": "application_cycle",
+          "proposed": "2027 entry; automatically assessed on eligible course admission application."
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "Eligible undergraduate and postgraduate coursework at Hawthorn; exclusions apply."
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/"
+        },
+        {
+          "field": "link_status",
+          "proposed": "Recheck historical link; avoid classifying programme discontinued from broken old URL."
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "7666f8a6-c053-429e-b16f-b5bcd57197f6",
+      "title": "University of Melbourne Masters Excellence Scholarship",
+      "proposed_action": "reconcile_generic_record",
+      "official_evidence": [
+        "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship",
+        "https://scholarships.unimelb.edu.au/awards/research-training-program-scholarship"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "programme_identity",
+          "proposed": "No independent named Masters Excellence award established; reconcile with Melbourne Research Scholarship/RTP without duplicating."
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "Research Masters support must not be applied to taught Masters."
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed": "Remove unsupported AUD 28,000/year plus full tuition claim."
+        },
+        {
+          "field": "official_url",
+          "proposed": "Use programme-specific URL after identity resolution."
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "2c56e7a9-12cc-4161-bf31-65ff0979a5cf",
+      "title": "University of Melbourne Phd International Scholarship",
+      "proposed_action": "reconcile_generic_record",
+      "official_evidence": [
+        "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship",
+        "https://scholarships.unimelb.edu.au/awards/research-training-program-scholarship"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "programme_identity",
+          "proposed": "Reconcile with published Melbourne Research Scholarship; RTP is a distinct funding stream."
+        },
+        {
+          "field": "stipend",
+          "proposed": "Existing AUD 28,000 figure unsupported by current named programme; 2026 Melbourne Research Scholarship rate AUD 39,500, 2027 RTP rate AUD 41,100."
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed": "Full fee offset only for qualifying research recipients, not automatic all applicants."
+        },
+        {
+          "field": "official_url",
+          "proposed": "Replace university homepage after programme identity resolved."
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "adcebe7b-1c81-4b36-8407-10ad306b0726",
+      "title": "University of Queensland Scholarship",
+      "proposed_action": "reconcile_generic_record",
+      "official_evidence": [
+        "https://scholarships.uq.edu.au/scholarship/graduate-school-scholarships-uqgss-%E2%80%93-includes-rtp"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "programme_identity",
+          "proposed": "Reconcile with UQ Graduate Research School Scholarships (UQGRSS) including RTP."
+        },
+        {
+          "field": "stipend",
+          "proposed": "UQGRSS living stipend AUD 39,220 per annum is 2026 rate, indexed annually; no confirmed 2027 amount."
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "Higher-degree research: PhD, MPhil and research-focused professional doctorate, not all Masters."
+        },
+        {
+          "field": "funding_type",
+          "proposed": "Competitive award; not automatically fully funded for all enrolled students."
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://scholarships.uq.edu.au/scholarship/graduate-school-scholarships-uqgss-%E2%80%93-includes-rtp"
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "994bc38a-5d7e-4e81-9e6a-b4e852f1b743",
+      "title": "University of Sydney Masters Excellence Scholarship",
+      "proposed_action": "reconcile_generic_record",
+      "official_evidence": [
+        "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "programme_identity",
+          "proposed": "No independent generic Masters Excellence programme established; distinguish international RTP research Masters and USYDIS."
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "Research Masters only for RTP, not coursework Masters."
+        },
+        {
+          "field": "stipend",
+          "proposed": "Sydney international RTP/USYDIS stipend AUD 44,293 annually (2027 rate), competitively awarded."
+        },
+        {
+          "field": "deadline_notes",
+          "proposed": "Research periods 3/4 2027 international submission deadline 2026-12-18; separate other research periods."
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html"
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "f49ddcfe-93fb-42e5-ac78-be2970e5d9fb",
+      "title": "University of Sydney Phd International Scholarship",
+      "proposed_action": "reconcile_generic_record",
+      "official_evidence": [
+        "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "programme_identity",
+          "proposed": "Reconcile with official international RTP and University of Sydney International Stipend Scholarship; do not count both as generic plus named."
+        },
+        {
+          "field": "stipend",
+          "proposed": "2027 RTP/USYDIS annual stipend AUD 44,293, competitive."
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed": "RTP fee-offset and University tuition-fee scholarship apply under award-specific conditions."
+        },
+        {
+          "field": "deadline_notes",
+          "proposed": "2026-12-18 submission for research periods 3/4 2027; 2026-09-11 for research periods 1/2 2027 already closed."
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html"
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "5f17a4c3-1dcc-40d8-9577-000a723f894f",
+      "title": "University of Western Australia Global Excellence Scholarship",
+      "proposed_action": "correct_existing_named_programme",
+      "official_evidence": [
+        "https://www.uwa.edu.au/study/scholarships-and-fees/scholarships/international-scholarships/global-excellence-scholarship",
+        "https://www.uwa.edu.au/study/scholarship-listing/uwa-global-excellence-scholarship-f1917561"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "tuition_coverage",
+          "proposed": "2027: 10% or 20% tuition fee discount by ATAR/WAM for eligible courses; existing field appears substantively correct."
+        },
+        {
+          "field": "deadline",
+          "proposed": "2026-12-22",
+          "qualifier": "Official UWA scholarship listing shows this closing date; distinguish from course admission deadline."
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://www.uwa.edu.au/study/scholarships-and-fees/scholarships/international-scholarships/global-excellence-scholarship"
+        },
+        {
+          "field": "deadline_notes",
+          "proposed": "Scholarship discount assessed from course offer/final transcripts; no living stipend."
+        },
+        {
+          "field": "link_status",
+          "proposed": "Official programme page currently accessible; do not preserve stale dead classification."
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "73541d09-6e8e-40e3-b8ce-9e97d2332428",
+      "title": "UNSW Scientia Scholarship",
+      "proposed_action": "correct_2027_programme",
+      "official_evidence": [
+        "https://www.unsw.edu.au/research/hdr/find-a-project",
+        "https://www.unsw.edu.au/news/2026/10/unsw-scientia-phd-opportunity-available"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "stipend",
+          "proposed": "UNSW 2027 Scientia PhD scheme: AUD 39,991 per annum for 3.5 years; one-off AUD 25,000 Global Mobility Grant, not old AUD 50,000 annual plus AUD 10,000 development."
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "2027 Scientia PhD projects specify domestic applicants only; do not retain ALL."
+        },
+        {
+          "field": "degree_levels",
+          "proposed": "PhD only, linked to approved supervisor-defined project."
+        },
+        {
+          "field": "application_cycle",
+          "proposed": "2027 commencement; project nomination and competitive selection."
+        },
+        {
+          "field": "deadline_notes",
+          "proposed": "One advertised project requests expression of interest by 2026-11-08; this is project-specific, not universal Scientia deadline."
+        },
+        {
+          "field": "official_url",
+          "proposed": "https://www.unsw.edu.au/research/hdr/find-a-project"
+        },
+        {
+          "field": "funding_type",
+          "proposed": "Competitive funded doctoral award; do not guarantee scholarship to all applicants."
+        }
+      ],
+      "risks": []
+    },
+    {
+      "id": "9fa27a6b-f142-44d7-ae3c-41bfd6ca32c0",
+      "title": "MBZUAI Undergraduate Scholarship",
+      "proposed_action": "correct_english_requirements",
+      "official_evidence": [
+        "https://mbzuai.ac.ae/admissions/undergraduate-admissions"
+      ],
+      "proposed_field_changes": [
+        {
+          "field": "min_ielts",
+          "proposed": 6.5,
+          "qualifier": "Admission threshold for non-exempt applicants, not separate scholarship-only threshold."
+        },
+        {
+          "field": "min_toefl",
+          "proposed": "TOEFL iBT 90/4.5 per official current scoring display; record schema lacks dedicated TOEFL column; use provenance/description."
+        },
+        {
+          "field": "sat_required",
+          "proposed": false,
+          "qualifier": "SAT/ACT optional; scores can exempt the separate screening exam only if specific thresholds met."
+        },
+        {
+          "field": "deadline_notes",
+          "proposed": "Early Action 2026-11-01 17:00 GST; Regular Decision 2027-02-01 17:00 GST; these are admissions deadlines."
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed": "Up to 100% tuition and cost of attendance by merit/need; stipend not guaranteed."
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed": "No nationality restriction established on cited admissions page; do not infer restrictions."
+        }
+      ],
+      "risks": []
+    }
+  ],
+  "private_draft_reviews": [
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "title": "Gordon and Isabel Humphrey Scholarship",
+      "official_source": "https://scholarships.unimelb.edu.au/awards/gordon-and-isabel-humphrey-scholarship",
+      "deadline": "2026-10-25",
+      "verified_facts": [
+        "2027 Engineering PhD course offer required",
+        "AUD 41,100 annual stipend 2027 rate up to 3.5 years",
+        "relocation AUD 2,000 domestic interstate or AUD 3,000 international",
+        "OSHC single membership for eligible international students",
+        "separate scholarship application with personal statement"
+      ],
+      "provenance_count": 2,
+      "reviewer_attributed": 0,
+      "successful_source_audit": false,
+      "publication": "blocked_by_authenticated_review"
+    },
+    {
+      "id": "cc95c817-5e5c-4800-b76c-935cdb81a6ab",
+      "title": "China Scholarship Council - University of Melbourne PhD Scholarship",
+      "official_source": "https://scholarships.unimelb.edu.au/awards/china-scholarship-council-university-of-melbourne-phd-scholarship",
+      "deadline": "2027-01-31",
+      "verified_facts": [
+        "Open 2026-07-01 to 2027-01-31",
+        "PRC citizenship required",
+        "Full PhD tuition up to four years",
+        "University supplementary living allowance approximately AUD 18,300 per year (2027 rate)",
+        "CSC living allowance approximately AUD 22,800 per year including OSHC (2027 rate)"
+      ],
+      "publication": "existing_draft_do_not_duplicate"
+    },
+    {
+      "id": "44de9aef-2a2e-479e-9ab9-181e8ce50561",
+      "title": "ANU University Research Scholarship (2027 stipend)",
+      "official_source": "https://study.anu.edu.au/scholarships/find-scholarship/anu-university-research-scholarships",
+      "verified_facts": [
+        "AUD 40,475 2027 base stipend",
+        "no standalone scholarship application",
+        "research degree scholarship round deadlines must be interpreted by applicant category"
+      ],
+      "publication": "existing_draft_do_not_duplicate"
+    },
+    {
+      "id": "67669846-79ee-4e02-a62e-1234c15d2861",
+      "title": "ANU Chancellor's International Scholarship",
+      "official_source": "https://study.anu.edu.au/scholarships/find-scholarship/anu-chancellors-international-scholarship",
+      "verified_facts": [
+        "Old official page says scholarship currently unavailable and directs applicants to 2026",
+        "25% or 50% tuition reduction historical terms",
+        "do not assert 2027 reopening"
+      ],
+      "publication": "hold_unavailable_cycle"
+    }
+  ],
+  "named_programme_leads": [
+    {
+      "name": "UWA International Student Award",
+      "provider": "University of Western Australia",
+      "country": "Australia",
+      "official_url": "https://www.uwa.edu.au/study/scholarship-listing/uwa-international-student-award-f221201",
+      "funding": "10% tuition fee reduction (2027 marketing); award terms are course-specific",
+      "cycle_or_deadline": "2026-08-31 to 2026-12-22 in official listing",
+      "eligibility": "Citizenship limited to specified 30 countries; eligible full-time undergraduate or postgraduate coursework; international student visa",
+      "notes": "Do not conflate with Global Excellence Scholarship.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "UWA ASEAN Scholarship",
+      "provider": "University of Western Australia",
+      "country": "Australia",
+      "official_url": "https://www.uwa.edu.au/study/scholarships-and-fees/scholarships/international-scholarships/asean-scholarship",
+      "funding": "15% tuition discount for course duration",
+      "cycle_or_deadline": "2027 intake; separate scholarship deadline not established",
+      "eligibility": "Citizens of Brunei, Cambodia, Indonesia, Laos, Malaysia, Myanmar, Philippines, Singapore, Thailand, Vietnam or Timor-Leste; international student visa",
+      "notes": "",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "UWA Vice-Chancellor's Scholarships",
+      "provider": "University of Western Australia",
+      "country": "Australia",
+      "official_url": "https://www.uwa.edu.au/study/scholarships-and-fees/scholarships/international-scholarships/Vice-Chancellors-Scholarships",
+      "funding": "50% or 100% tuition discount",
+      "cycle_or_deadline": "2027 intake; scholarship deadline not confirmed",
+      "eligibility": "Specific countries China, Indonesia, Malaysia, Vietnam or international WACE graduates; eligible selected courses",
+      "notes": "Multiple national allocations within one named programme; do not split into duplicate scholarships.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "UWA Singapore Polytechnic Scholarship",
+      "provider": "University of Western Australia",
+      "country": "Australia",
+      "official_url": "https://www.uwa.edu.au/study/scholarships-and-fees/scholarships/international-scholarships",
+      "funding": "25% tuition discount on selected undergraduate courses",
+      "cycle_or_deadline": "2027 entry; precise closing date not confirmed",
+      "eligibility": "Completed diploma at a Singapore Polytechnic; additional terms need checking",
+      "notes": "Programme-specific canonical page and complete terms need verification.",
+      "review_status": "hold_source_detail",
+      "db_inserted": false
+    },
+    {
+      "name": "Western Australian Premier's University Scholarship (UWA)",
+      "provider": "University of Western Australia / Government of Western Australia",
+      "country": "Australia",
+      "official_url": "https://www.uwa.edu.au/study/scholarship-listing/westernaustralianpremiersuniversityscholarshipf234681",
+      "funding": "AUD 50,000 scholarship; one award listed",
+      "cycle_or_deadline": "2026-11-16 to 2027-03-19 15:00 AWST",
+      "eligibility": "International onshore postgraduate student with offer for full-time minimum two-year course; additional country conditions require checking",
+      "notes": "University-specific implementation; reconcile with any multi-university WA Premier programme.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "UWA Global Alumni Pathway Scholarship",
+      "provider": "University of Western Australia",
+      "country": "Australia",
+      "official_url": "https://www.uwa.edu.au/study/scholarships-and-fees/scholarships/international-scholarships",
+      "funding": "10% tuition fee discount",
+      "cycle_or_deadline": "2027 intake; exact deadline not confirmed",
+      "eligibility": "Eligible UWA alumni and former study abroad/exchange students returning for postgraduate coursework",
+      "notes": "Need programme-specific full terms.",
+      "review_status": "hold_source_detail",
+      "db_inserted": false
+    },
+    {
+      "name": "ANU International Achievement Award",
+      "provider": "Australian National University",
+      "country": "Australia",
+      "official_url": "https://study.anu.edu.au/scholarships/find-scholarship/anu-international-achievement-award",
+      "funding": "20%, 25%, or 50% tuition reduction, up to four years",
+      "cycle_or_deadline": "Currently open; automatically considered with course admission; no standalone scholarship deadline",
+      "eligibility": "International applicants; residence-based exclusions apply; academic merit",
+      "notes": "Distinct from older unavailable ANU Chancellor's International Scholarship; avoid duplicate.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "ANU Vice-Chancellor's International Achievement Award",
+      "provider": "Australian National University",
+      "country": "Australia",
+      "official_url": "https://study.anu.edu.au/scholarships/find-scholarship/anu-vice-chancellors-international-achievement-award",
+      "funding": "20% of first-year tuition fees",
+      "cycle_or_deadline": "Currently open; automatic consideration with course admission",
+      "eligibility": "Eligibility restricted by region and admission criteria; confirm detailed regional list",
+      "notes": "Do not confuse with ANU Chancellor's or ANU International Achievement Award.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "Melbourne Research Training Program Scholarship",
+      "provider": "University of Melbourne / Australian Government",
+      "country": "Australia",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/research-training-program-scholarship",
+      "funding": "Research fee offset; competitive stipend-and-fee-offset tier at AUD 41,100 per year (2027 full-time rate)",
+      "cycle_or_deadline": "Automatic consideration with eligible research-degree admission; course-specific deadlines",
+      "eligibility": "Domestic and international research students; competitively ranked",
+      "notes": "Distinct government funding route from Melbourne Research Scholarship; confirm programme-level deduplication.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "University of Melbourne Human Rights Scholarship",
+      "provider": "University of Melbourne",
+      "country": "Australia",
+      "official_url": "https://scholarships.unimelb.edu.au/awards/human-rights-scholarship",
+      "funding": "Full research fee offset and AUD 44,500 per year stipend (2026 full-time rate) plus allowances",
+      "cycle_or_deadline": "2026-04-01 to 2026-10-31",
+      "eligibility": "Domestic/international graduate researchers entering human-rights research",
+      "notes": "Do not call 2026 stipend amount 2027 rate.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "University of Sydney International RTP Scholarship",
+      "provider": "University of Sydney / Australian Government",
+      "country": "Australia",
+      "official_url": "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html",
+      "funding": "AUD 44,293 annual stipend (2027 rate), competitive; linked full tuition fee offset for successful recipients",
+      "cycle_or_deadline": "2026-12-18 deadline for research periods 3/4 2027",
+      "eligibility": "International research Masters/PhD applicants; must apply for admission and scholarship",
+      "notes": "RTP stipend and fee offset are linked components; avoid double counting.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "University of Sydney International Stipend Scholarship (USYDIS)",
+      "provider": "University of Sydney",
+      "country": "Australia",
+      "official_url": "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html",
+      "funding": "AUD 44,293 annual stipend (2027 rate); accompanying university tuition fee scholarship",
+      "cycle_or_deadline": "2026-12-18 deadline for research periods 3/4 2027",
+      "eligibility": "International higher-degree research applicants",
+      "notes": "Different funding route from RTP; confirm identity and nonduplication.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "Swinburne International Scholarship",
+      "provider": "Swinburne University of Technology",
+      "country": "Australia",
+      "official_url": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+      "funding": "20% tuition discount for standard course duration",
+      "cycle_or_deadline": "2027 commencing intake; automatic course-offer assessment",
+      "eligibility": "Eligible international first-time Hawthorn campus undergraduate, postgraduate coursework or pathway students; exclusions",
+      "notes": "",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "George Swinburne International Excellence Scholarship",
+      "provider": "Swinburne University of Technology",
+      "country": "Australia",
+      "official_url": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+      "funding": "30% tuition discount for standard course duration",
+      "cycle_or_deadline": "2027 commencing intake; automatic course-offer assessment",
+      "eligibility": "Eligible international first-time Hawthorn campus undergraduate or postgraduate coursework; exclusions",
+      "notes": "Potential identity overlap with existing historic International Excellence published record; resolve before draft.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "Swinburne Welcome Scholarship 2027",
+      "provider": "Swinburne University of Technology",
+      "country": "Australia",
+      "official_url": "https://www.swinburne.edu.au/courses/scholarships/swinburne-welcome-scholarship/",
+      "funding": "Full fee waiver",
+      "cycle_or_deadline": "2026-11-30 closing",
+      "eligibility": "Qualifying temporary protection, bridging and humanitarian visa holders; undergraduate or VE eligible courses",
+      "notes": "Not general international citizenship scholarship.",
+      "review_status": "private_draft_candidate",
+      "db_inserted": false
+    },
+    {
+      "name": "UNSW Scientia PhD 2027 supervisor-defined projects",
+      "provider": "UNSW Sydney",
+      "country": "Australia",
+      "official_url": "https://www.unsw.edu.au/research/hdr/find-a-project",
+      "funding": "AUD 39,991/year for 3.5 years and AUD 25,000 mobility grant",
+      "cycle_or_deadline": "2027 commencement; project-specific expressions of interest (example 2026-11-08)",
+      "eligibility": "Domestic applicants only for 2027 Scientia project scheme",
+      "notes": "Same umbrella programme as published Scientia record; not additional unique scholarship.",
+      "review_status": "do_not_duplicate",
+      "db_inserted": false
+    }
+  ],
+  "provenance_rule": "Every proposed accepted field needs programme-specific official URL and reviewer attribution. This JSON is research evidence only, not an accepted provenance row.",
+  "no_unsupported_defaults": "Do not invent unannounced scholarship deadlines, universal IELTS/TOEFL/SAT requirements, nationality eligibility or fully-funded benefits. Admissions dates are not scholarship deadlines unless official scheme explicitly equates them.",
+  "deduplication": "Targeted staging title and URL checks completed; full semantic identity reconciliation and authorization still required before insert/publication.",
+  "publication_gate": "Requires authenticated application admin approval, successful source audit, reviewer-attributed field provenance and staging/CI validation before any production change.",
+  "archive_policy": "No archive performed. Do not archive on transient HTTP errors; confirm discontinuation and execute authorized audited workflow.",
+  "source_urls": {
+    "anu_hdr": "https://research.anu.edu.au/postgraduate-research-candidates/research-degree-scholarships",
+    "anu_phd": "https://study.anu.edu.au/scholarships/find-scholarship/anu-phd-scholarship",
+    "anu_urs": "https://study.anu.edu.au/scholarships/find-scholarship/anu-university-research-scholarships",
+    "anu_chancellor": "https://study.anu.edu.au/scholarships/find-scholarship/anu-chancellors-international-scholarship",
+    "anu_achievement": "https://study.anu.edu.au/scholarships/find-scholarship/anu-international-achievement-award",
+    "melbourne": "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship",
+    "melbourne_rtp": "https://scholarships.unimelb.edu.au/awards/research-training-program-scholarship",
+    "melbourne_human": "https://scholarships.unimelb.edu.au/awards/human-rights-scholarship",
+    "melbourne_humphrey": "https://scholarships.unimelb.edu.au/awards/gordon-and-isabel-humphrey-scholarship",
+    "melbourne_csc": "https://scholarships.unimelb.edu.au/awards/china-scholarship-council-university-of-melbourne-phd-scholarship",
+    "uq": "https://scholarships.uq.edu.au/scholarship/graduate-school-scholarships-uqgss-%E2%80%93-includes-rtp",
+    "sydney": "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html",
+    "swinburne": "https://www.swinburne.edu.au/courses/scholarships/international-scholarships/",
+    "unsw": "https://www.unsw.edu.au/research/hdr/find-a-project",
+    "unsw_2027": "https://www.unsw.edu.au/news/2026/10/unsw-scientia-phd-opportunity-available",
+    "unsw_timeline": "https://www.unsw.edu.au/research/hdr/application",
+    "uwa_global": "https://www.uwa.edu.au/study/scholarships-and-fees/scholarships/international-scholarships/global-excellence-scholarship",
+    "uwa_listing": "https://www.uwa.edu.au/study/scholarship-listing/uwa-global-excellence-scholarship-f1917561",
+    "uwa_index": "https://www.uwa.edu.au/study/scholarships-and-fees/scholarships/international-scholarships",
+    "uwa_asean": "https://www.uwa.edu.au/study/scholarships-and-fees/scholarships/international-scholarships/asean-scholarship",
+    "uwa_student": "https://www.uwa.edu.au/study/scholarship-listing/uwa-international-student-award-f221201",
+    "uwa_vc": "https://www.uwa.edu.au/study/scholarships-and-fees/scholarships/international-scholarships/Vice-Chancellors-Scholarships",
+    "uwa_premier": "https://www.uwa.edu.au/study/scholarship-listing/westernaustralianpremiersuniversityscholarshipf234681",
+    "mbzuai": "https://mbzuai.ac.ae/admissions/undergraduate-admissions"
+  }
+}

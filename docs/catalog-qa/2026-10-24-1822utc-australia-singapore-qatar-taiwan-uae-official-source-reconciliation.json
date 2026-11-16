@@ -1,0 +1,1208 @@
+{
+  "run_utc": "2026-10-24T18:23:43Z",
+  "project": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "environment": "staging_only",
+  "readback": {
+    "before_utc": "2026-10-24T18:22:25Z",
+    "after_utc": "2026-10-24T18:23:43Z",
+    "before": {
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_provenance": 0,
+      "source_candidates": 636,
+      "admin_logs": 8
+    },
+    "after": {
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "accepted_provenance": 207,
+      "reviewer_provenance": 0,
+      "source_candidates": 636,
+      "admin_logs": 8
+    },
+    "source": "two independent Supabase SQL SELECT readbacks; no database writes"
+  },
+  "summary": {
+    "published_records_investigated": 26,
+    "field_review_proposals": 103,
+    "named_opportunities_documented": 12,
+    "existing_private_drafts_assessed": 3,
+    "successful_staging_edits": 0,
+    "new_publications": 0,
+    "new_drafts": 0,
+    "new_provenance": 0,
+    "archived": 0,
+    "remaining_to_1000": 603
+  },
+  "published_record_reviews": [
+    {
+      "id": "96d13afb-23f2-4b74-83e9-7920d09c192d",
+      "title": "Australian National University Masters International Scholarship",
+      "country": "Australia",
+      "official_programme_source": "https://study.anu.edu.au/scholarships/find-scholarship/anu-university-research-scholarships",
+      "disposition": "identity_reconciliation_required",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "generic Masters International Scholarship",
+          "proposed": "ANU University Research Scholarship or ANU MPhil Scholarship only if canonical identity confirmed",
+          "evidence": "ANU offers named HDR awards, not a universally named Masters International Scholarship",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + A$30,000/year",
+          "proposed": "Do not assume one scholarship universally covers both components; verify applicable stipend and fee offset award",
+          "evidence": "ANU central stipend scholarships can include fee scholarship, but individual schemes differ",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": null,
+          "proposed": "2027 ANU University Research Scholarship stipend A$40,475/year if matched",
+          "evidence": "Official ANU 2027 full-time base rate",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "current": "Master",
+          "proposed": "Master by research / MPhil, not all taught Masters",
+          "evidence": "HDR scholarship eligibility",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Round 2 2027-04-15; Round 1 international 2026-08-31 (closed), only after scheme identity confirmed",
+          "evidence": "ANU HDR central round calendar",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "Existing private ANU University Research Scholarship draft 44de9aef-2a2e-479e-9ab9-181e8ce50561; no additional publication until reconciled."
+    },
+    {
+      "id": "a3e51324-acae-43ce-b711-01b5c299e900",
+      "title": "Australian National University Phd International Scholarship",
+      "country": "Australia",
+      "official_programme_source": "https://study.anu.edu.au/scholarships/find-scholarship/anu-phd-scholarship",
+      "disposition": "identity_reconciliation_required",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "generic Phd International Scholarship",
+          "proposed": "ANU PhD Scholarship only after confirming identity",
+          "evidence": "Named ANU PhD Scholarship is a competitive stipend award",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": null,
+          "proposed": "A$40,475/year (2027 base rate)",
+          "evidence": "Official ANU PhD Scholarship page",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + A$30,000/year",
+          "proposed": "Stipend award alone does not guarantee tuition remission; check companion fee offset",
+          "evidence": "ANU HDR fee policy distinguishes stipend and fee support",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Scholarship rounds vary; no universal scholarship-specific deadline assigned",
+          "evidence": "ANU PhD award is automatically considered through complete admission application",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "7385caff-9493-4889-b1c0-70858627227c",
+      "title": "Melbourne Research Scholarship",
+      "country": "Australia",
+      "official_programme_source": "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship",
+      "disposition": "retain_and_review",
+      "field_reviews": [
+        {
+          "field": "funding_type",
+          "current": "Varies",
+          "proposed": "Distinguish fee-offset-only, stipend-only and combined scholarship components",
+          "evidence": "University lists separate award benefit categories",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Automatic consideration via graduate research application deadline; no universal scholarship deadline",
+          "evidence": "Official application process",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "application_cycle",
+          "current": "Open for automatic consideration",
+          "proposed": "Open for automatic consideration; course-specific closing date",
+          "evidence": "Official programme page",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "Existing stipend A$39,500 is explicitly the 2026 rate, not 2027."
+    },
+    {
+      "id": "7666f8a6-c053-429e-b16f-b5bcd57197f6",
+      "title": "University of Melbourne Masters Excellence Scholarship",
+      "country": "Australia",
+      "official_programme_source": "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship",
+      "disposition": "identity_reconciliation_required",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "University of Melbourne Masters Excellence Scholarship",
+          "proposed": "Do not relabel as Melbourne Research Scholarship without duplicate/identity review",
+          "evidence": "Official site describes named Melbourne Research Scholarship and RTP awards",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + A$28,000/year",
+          "proposed": "Stipend and fee offset are award-dependent, not guaranteed to all students",
+          "evidence": "Official scheme lists fee offset and stipend award types",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": null,
+          "proposed": "A$39,500/year 2026 rate if stipend award is actually matched; 2027 not assumed",
+          "evidence": "Official Melbourne Research Scholarship",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "No universal deadline; linked to relevant research course admission",
+          "evidence": "Automatic consideration for applicants",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "2c56e7a9-12cc-4161-bf31-65ff0979a5cf",
+      "title": "University of Melbourne Phd International Scholarship",
+      "country": "Australia",
+      "official_programme_source": "https://scholarships.unimelb.edu.au/awards/melbourne-research-scholarship",
+      "disposition": "identity_reconciliation_required",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "University of Melbourne Phd International Scholarship",
+          "proposed": "Do not relabel as Melbourne Research Scholarship without duplicate/identity review",
+          "evidence": "Official site describes named Melbourne Research Scholarship and RTP awards",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + A$28,000/year",
+          "proposed": "Stipend and fee offset are award-dependent, not guaranteed to all students",
+          "evidence": "Official scheme lists fee offset and stipend award types",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": null,
+          "proposed": "A$39,500/year 2026 rate if stipend award is actually matched; 2027 not assumed",
+          "evidence": "Official Melbourne Research Scholarship",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "No universal deadline; linked to relevant research course admission",
+          "evidence": "Automatic consideration for applicants",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "73541d09-6e8e-40e3-b8ce-9e97d2332428",
+      "title": "UNSW Scientia Scholarship",
+      "country": "Australia",
+      "official_programme_source": "https://www.unsw.edu.au/research/hdr/find-a-project/scientia-phd-projects",
+      "disposition": "urgent_reclassification",
+      "field_reviews": [
+        {
+          "field": "eligible_nationalities",
+          "current": "ALL",
+          "proposed": "Domestic applicants only for 2027 Scientia PhD Scheme",
+          "evidence": "Official 2027 Scientia project page states domestic-only",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": "Full tuition + $50,000/year stipend + $10,000 career development",
+          "proposed": "2027 scheme example: A$39,991/year stipend and A$25,000 one-off Global Mobility Grant; verify scheme-wide before applying",
+          "evidence": "UNSW October 2026 named project announcement",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "application_cycle",
+          "current": null,
+          "proposed": "2027 commencement; 20 competitive awards across supervisor-defined projects",
+          "evidence": "Official Scientia PhD projects page",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Project-specific expression-of-interest deadlines; e.g. 2026-11-08 for one vision/AI project; not a universal deadline",
+          "evidence": "UNSW official October 2026 project announcement",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "2027 programme continues; do NOT archive as discontinued. Do not confuse with separate UNSW undergraduate Scientia Scholarship."
+    },
+    {
+      "id": "994bc38a-5d7e-4e81-9e6a-b4e852f1b743",
+      "title": "University of Sydney Masters Excellence Scholarship",
+      "country": "Australia",
+      "official_programme_source": "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html",
+      "disposition": "identity_reconciliation_required",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "University of Sydney Masters Excellence Scholarship",
+          "proposed": "Reconcile with RTP Stipend, RTP Fee Offset, USYDIS and University of Sydney Tuition Fee Scholarship",
+          "evidence": "University lists distinct named competitive awards",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": "Full tuition + living allowance",
+          "proposed": "2027 RTP or USYDIS stipend A$44,293/year if matched",
+          "evidence": "Official 2027 rate on Sydney scholarship page",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + living allowance",
+          "proposed": "100% tuition via separately named fee-offset/tuition scholarship; do not imply universal award",
+          "evidence": "Official funding components",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Research admissions and scholarship round-specific; do not invent universal date",
+          "evidence": "Programme-specific application schedule required",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "f49ddcfe-93fb-42e5-ac78-be2970e5d9fb",
+      "title": "University of Sydney Phd International Scholarship",
+      "country": "Australia",
+      "official_programme_source": "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html",
+      "disposition": "identity_reconciliation_required",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "University of Sydney Phd International Scholarship",
+          "proposed": "Reconcile with RTP Stipend, RTP Fee Offset, USYDIS and University of Sydney Tuition Fee Scholarship",
+          "evidence": "University lists distinct named competitive awards",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": "Full tuition + living allowance",
+          "proposed": "2027 RTP or USYDIS stipend A$44,293/year if matched",
+          "evidence": "Official 2027 rate on Sydney scholarship page",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + living allowance",
+          "proposed": "100% tuition via separately named fee-offset/tuition scholarship; do not imply universal award",
+          "evidence": "Official funding components",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Research admissions and scholarship round-specific; do not invent universal date",
+          "evidence": "Programme-specific application schedule required",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "891681ad-b022-431d-85f3-e9acc21525e9",
+      "title": "Hamad Bin Khalifa University Engineering Masters Award",
+      "country": "Qatar",
+      "official_programme_source": "https://www.hbku.edu.qa/en/scholarship",
+      "disposition": "canonical_overlap_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "Hamad Bin Khalifa University Engineering Masters Award",
+          "proposed": "Reconcile with HBKU graduate scholarship guidelines; no evidence these generic 'Excellence'/'International' names are separate scholarship programmes",
+          "evidence": "Official HBKU names its graduate funding by programme and award, not these generic catalogue labels",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Existing discipline-based waiver",
+          "proposed": "Up to 75% STEM tuition waiver; selected RA/TA international stipend QAR 7,000/month, not guaranteed",
+          "evidence": "Official HBKU graduate waiver table and stipend conditions",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "current": "Partial",
+          "proposed": "Competitive conditional award; never advertise as guaranteed fully funded",
+          "evidence": "Merit/need, funds availability, RA/TA responsibilities",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Admission-cycle deadline only; no separate universal scholarship deadline",
+          "evidence": "HBKU states consideration occurs during admissions",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "HBKU does not provide separate housing as a guaranteed benefit; stipends support living expenses. Group likely duplicates by level and programme."
+    },
+    {
+      "id": "e618915f-c5e8-46f8-a240-ec2bb721f1da",
+      "title": "Hamad Bin Khalifa University Engineering Phd Award",
+      "country": "Qatar",
+      "official_programme_source": "https://www.hbku.edu.qa/en/scholarship",
+      "disposition": "canonical_overlap_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "Hamad Bin Khalifa University Engineering Phd Award",
+          "proposed": "Reconcile with HBKU graduate scholarship guidelines; no evidence these generic 'Excellence'/'International' names are separate scholarship programmes",
+          "evidence": "Official HBKU names its graduate funding by programme and award, not these generic catalogue labels",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Existing discipline-based waiver",
+          "proposed": "Up to 100% STEM PhD tuition waiver; selected international RA/TA stipend QAR 9,000/month, not guaranteed",
+          "evidence": "Official HBKU graduate waiver table and stipend conditions",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "current": "Fully funded",
+          "proposed": "Competitive conditional award; never advertise as guaranteed fully funded",
+          "evidence": "Merit/need, funds availability, RA/TA responsibilities",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Admission-cycle deadline only; no separate universal scholarship deadline",
+          "evidence": "HBKU states consideration occurs during admissions",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "HBKU does not provide separate housing as a guaranteed benefit; stipends support living expenses. Group likely duplicates by level and programme."
+    },
+    {
+      "id": "04e3ba48-f760-4160-b0e1-dee3fa966f39",
+      "title": "Hamad Bin Khalifa University Masters Excellence Scholarship",
+      "country": "Qatar",
+      "official_programme_source": "https://www.hbku.edu.qa/en/scholarship",
+      "disposition": "canonical_overlap_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "Hamad Bin Khalifa University Masters Excellence Scholarship",
+          "proposed": "Reconcile with HBKU graduate scholarship guidelines; no evidence these generic 'Excellence'/'International' names are separate scholarship programmes",
+          "evidence": "Official HBKU names its graduate funding by programme and award, not these generic catalogue labels",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + stipend + housing",
+          "proposed": "STEM MS 75% tuition waiver; SHAPE MS/MA 60%; other programmes 0%; selected stipend QAR 7,000/month",
+          "evidence": "Official HBKU graduate waiver table and stipend conditions",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "current": "Fully funded",
+          "proposed": "Competitive conditional award; never advertise as guaranteed fully funded",
+          "evidence": "Merit/need, funds availability, RA/TA responsibilities",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Admission-cycle deadline only; no separate universal scholarship deadline",
+          "evidence": "HBKU states consideration occurs during admissions",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "HBKU does not provide separate housing as a guaranteed benefit; stipends support living expenses. Group likely duplicates by level and programme."
+    },
+    {
+      "id": "06e74eed-5282-456d-8e97-8b235be85ba7",
+      "title": "Hamad Bin Khalifa University Masters International Scholarship",
+      "country": "Qatar",
+      "official_programme_source": "https://www.hbku.edu.qa/en/scholarship",
+      "disposition": "canonical_overlap_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "Hamad Bin Khalifa University Masters International Scholarship",
+          "proposed": "Reconcile with HBKU graduate scholarship guidelines; no evidence these generic 'Excellence'/'International' names are separate scholarship programmes",
+          "evidence": "Official HBKU names its graduate funding by programme and award, not these generic catalogue labels",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + stipend + housing",
+          "proposed": "STEM MS 75% tuition waiver; SHAPE MS/MA 60%; other programmes 0%; selected stipend QAR 7,000/month",
+          "evidence": "Official HBKU graduate waiver table and stipend conditions",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "current": "Fully funded",
+          "proposed": "Competitive conditional award; never advertise as guaranteed fully funded",
+          "evidence": "Merit/need, funds availability, RA/TA responsibilities",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Admission-cycle deadline only; no separate universal scholarship deadline",
+          "evidence": "HBKU states consideration occurs during admissions",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "HBKU does not provide separate housing as a guaranteed benefit; stipends support living expenses. Group likely duplicates by level and programme."
+    },
+    {
+      "id": "cf8c0a33-3ea6-4e23-8132-7dc313d27576",
+      "title": "Hamad Bin Khalifa University Phd Excellence Scholarship",
+      "country": "Qatar",
+      "official_programme_source": "https://www.hbku.edu.qa/en/scholarship",
+      "disposition": "canonical_overlap_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "Hamad Bin Khalifa University Phd Excellence Scholarship",
+          "proposed": "Reconcile with HBKU graduate scholarship guidelines; no evidence these generic 'Excellence'/'International' names are separate scholarship programmes",
+          "evidence": "Official HBKU names its graduate funding by programme and award, not these generic catalogue labels",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + stipend + housing",
+          "proposed": "Selected PhD waivers up to 100%; selected international stipend QAR 9,000/month",
+          "evidence": "Official HBKU graduate waiver table and stipend conditions",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "current": "Fully funded",
+          "proposed": "Competitive conditional award; never advertise as guaranteed fully funded",
+          "evidence": "Merit/need, funds availability, RA/TA responsibilities",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Admission-cycle deadline only; no separate universal scholarship deadline",
+          "evidence": "HBKU states consideration occurs during admissions",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "HBKU does not provide separate housing as a guaranteed benefit; stipends support living expenses. Group likely duplicates by level and programme."
+    },
+    {
+      "id": "9465904e-4c22-4198-871f-c83e1e2d22ea",
+      "title": "Hamad Bin Khalifa University Phd International Scholarship",
+      "country": "Qatar",
+      "official_programme_source": "https://www.hbku.edu.qa/en/scholarship",
+      "disposition": "canonical_overlap_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "Hamad Bin Khalifa University Phd International Scholarship",
+          "proposed": "Reconcile with HBKU graduate scholarship guidelines; no evidence these generic 'Excellence'/'International' names are separate scholarship programmes",
+          "evidence": "Official HBKU names its graduate funding by programme and award, not these generic catalogue labels",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + stipend + housing",
+          "proposed": "Selected PhD waivers up to 100%; selected international stipend QAR 9,000/month",
+          "evidence": "Official HBKU graduate waiver table and stipend conditions",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "current": "Fully funded",
+          "proposed": "Competitive conditional award; never advertise as guaranteed fully funded",
+          "evidence": "Merit/need, funds availability, RA/TA responsibilities",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Admission-cycle deadline only; no separate universal scholarship deadline",
+          "evidence": "HBKU states consideration occurs during admissions",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "HBKU does not provide separate housing as a guaranteed benefit; stipends support living expenses. Group likely duplicates by level and programme."
+    },
+    {
+      "id": "364de614-8f2d-4de1-aab8-b45e55ab6058",
+      "title": "Qatar University Scholarship",
+      "country": "Qatar",
+      "official_programme_source": "https://www.qu.edu.qa/en-us/students/admission/scholarships/types",
+      "disposition": "duplicate_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "Qatar University Scholarship",
+          "proposed": "Reconcile with already published Qatar University International Student Scholarship 6a6e7434-c794-46bb-93d7-be0ae481569f",
+          "evidence": "Official QU distinguishes International Students Scholarship and other named awards",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "current": "Bachelor, Master",
+          "proposed": "International Students Scholarship is Bachelor only; do not infer Master's eligibility",
+          "evidence": "Official programme-specific eligibility",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "current": "ALL",
+          "proposed": "International students for named international scholarship; other schemes have separate restrictions",
+          "evidence": "Official scholarship types",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": "Full tuition + stipend",
+          "proposed": "For International Students Scholarship: QAR 500/month plus tuition, textbooks, housing and transport",
+          "evidence": "Official benefits",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Use exact intake and applicant-category timetable; do not substitute resident Spring 2027 deadline for overseas applicants",
+          "evidence": "Official scholarship timeline",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "a6d504d3-6f90-4686-87f3-591febd226b5",
+      "title": "NTU Singapore Scholarship",
+      "country": "Singapore",
+      "official_programme_source": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/college-scholarship",
+      "disposition": "identity_reconciliation_required",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "NTU Singapore Scholarship",
+          "proposed": "Match to a named scheme such as Nanyang Merit, Nanyang Global or NTU President Award before updating",
+          "evidence": "NTU has multiple separately named schemes",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + living allowance",
+          "proposed": "Nanyang Merit: subsidised tuition after MOE Tuition Grant, not necessarily unsubsidised full tuition",
+          "evidence": "NTU official Nanyang Merit terms",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": "Full tuition + living allowance",
+          "proposed": "Nanyang Merit: S$5,000/year living and S$4,000 one-time travel if matched",
+          "evidence": "NTU official Nanyang Merit page",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Qualification-specific undergraduate admissions timeline; no universal date",
+          "evidence": "NTU scholarship application follows admissions",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "current": "ALL",
+          "proposed": "Nanyang Merit open all nationalities but Tuition Grant bond applies to eligible PR/international recipients",
+          "evidence": "NTU official terms",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "0f12ae03-b115-46a7-b9a0-27e878bb25ed",
+      "title": "National University of Singapore Masters Excellence Scholarship",
+      "country": "Singapore",
+      "official_programme_source": "https://nusgs.nus.edu.sg/scholarships/nus-research-scholarship",
+      "disposition": "canonical_overlap_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "National University of Singapore Masters Excellence Scholarship",
+          "proposed": "Do not assume separate named Excellence/International award; reconcile with NUS Research Scholarship",
+          "evidence": "Official programme named NUS Research Scholarship",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": "Full tuition + stipend",
+          "proposed": "International Master (Research) SGD 2,900/month; not all taught Masters",
+          "evidence": "Official rates effective January 2026",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "current": "Master",
+          "proposed": "Master by Research only if matched",
+          "evidence": "NUS Research Scholarship eligibility",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Faculty-specific graduate admissions cycle",
+          "evidence": "Official programme page",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "44ae81c3-5bf1-477b-ab85-30880609b1cf",
+      "title": "National University of Singapore Phd International Scholarship",
+      "country": "Singapore",
+      "official_programme_source": "https://nusgs.nus.edu.sg/scholarships/nus-research-scholarship",
+      "disposition": "canonical_overlap_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "National University of Singapore Phd International Scholarship",
+          "proposed": "Do not assume separate named Excellence/International award; reconcile with NUS Research Scholarship",
+          "evidence": "Official programme named NUS Research Scholarship",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "stipend",
+          "current": "Full tuition + stipend",
+          "proposed": "International PhD SGD 3,000/month, potential SGD 500 post-QE",
+          "evidence": "Official rates effective January 2026",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "current": "PhD",
+          "proposed": "PhD research",
+          "evidence": "NUS Research Scholarship eligibility",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Faculty-specific graduate admissions cycle",
+          "evidence": "Official programme page",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "eee04496-2e70-4418-9909-51c7c23a7576",
+      "title": "National University of Singapore Undergraduate Excellence Scholarship",
+      "country": "Singapore",
+      "official_programme_source": "https://nus.edu.sg/oam/scholarships/scholarships-for-freshmen-international-students/asean-undergraduate-scholarship",
+      "disposition": "identity_reconciliation_required",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "generic Undergraduate Excellence Scholarship",
+          "proposed": "Reconcile with specific NUS undergraduate scholarship; not automatically ASEAN Undergraduate",
+          "evidence": "NUS has multiple named awards",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "current": "ALL",
+          "proposed": "Scheme-specific; ASEAN award excludes Singapore citizens and requires ASEAN citizenship",
+          "evidence": "Official ASEAN Undergraduate eligibility",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + stipend",
+          "proposed": "For ASEAN scheme only: subsidised tuition after MOE Tuition Grant and S$5,800 living allowance",
+          "evidence": "Official ASEAN award benefits",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "91d0f9ae-3739-4882-afb2-f9c1cb4a6351",
+      "title": "NUS ASEAN Undergraduate Scholarship",
+      "country": "Singapore",
+      "official_programme_source": "https://nus.edu.sg/oam/scholarships/scholarships-for-freshmen-international-students/asean-undergraduate-scholarship",
+      "disposition": "retain_and_review",
+      "field_reviews": [
+        {
+          "field": "tuition_coverage",
+          "current": "100% subsidised undergraduate tuition after MOE Tuition Grant",
+          "proposed": "Retain; add explicit MOE Tuition Grant conditions and applicable service obligation",
+          "evidence": "Official terms require Tuition Grant",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "current": "Brunei,Cambodia,Indonesia,Laos,Malaysia,Myanmar,Philippines,Thailand,Timor-Leste,Vietnam",
+          "proposed": "Retain; exclude Singapore",
+          "evidence": "Official eligible ASEAN citizenship",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "No separate application; automatic consideration via NUS undergraduate admissions",
+          "evidence": "Official How to Apply",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "Existing amounts match official; no need to change already correct values."
+    },
+    {
+      "id": "94f29107-9957-4ac2-ba80-4d307613a1d0",
+      "title": "NUS Research Scholarship",
+      "country": "Singapore",
+      "official_programme_source": "https://nusgs.nus.edu.sg/scholarships/nus-research-scholarship",
+      "disposition": "retain_and_review",
+      "field_reviews": [
+        {
+          "field": "stipend",
+          "current": "International PhD SGD 3,000/month; Master Research SGD 2,900/month",
+          "proposed": "Retain 2026 rates; no unsupported 2027 increase",
+          "evidence": "Official rates effective 2026-01-01",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "application_cycle",
+          "current": "Faculty/programme-specific",
+          "proposed": "Retain; no single universal deadline",
+          "evidence": "Official faculty-specific graduate admission",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "current": "Fully funded",
+          "proposed": "Disclose Graduate Assistantship Programme duties for international awardees; no separate service bond",
+          "evidence": "Official service commitment terms",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "65d89dc3-1b09-41f9-ac1f-00889956e1c9",
+      "title": "Yale-NUS Scholarship",
+      "country": "Singapore",
+      "official_programme_source": "https://www.yale-nus.edu.sg/about-yale-nus/",
+      "disposition": "confirmed_closed_archive_review",
+      "field_reviews": [
+        {
+          "field": "application_cycle",
+          "current": null,
+          "proposed": "Closed for new applicants; final Yale-NUS intake was class of 2025; college closed 2025-06-30",
+          "evidence": "Official Yale-NUS closure announcement",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "title",
+          "current": "Yale-NUS Scholarship",
+          "proposed": "Historical scholarship only; do not advertise as an active admissions opportunity",
+          "evidence": "No new Yale-NUS admissions after 2021 intake",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "Confirmed institution closure; archive only through authenticated audited workflow, never a direct SQL status update."
+    },
+    {
+      "id": "17bec752-6686-44d8-9183-a90a783f7850",
+      "title": "Taiwan ICDF Scholarship",
+      "country": "Taiwan",
+      "official_programme_source": "https://www.icdf.org.tw/wSite/ct?ctNode=31572&mp=2&xItem=12505",
+      "disposition": "duplicate_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "Taiwan ICDF Scholarship",
+          "proposed": "Canonical programme: TaiwanICDF International Higher Education Scholarship Program; reconcile two published records",
+          "evidence": "Official named programme",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "2027-03-15; application window starts 2026-12-01",
+          "evidence": "Official 2027 call",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "application_cycle",
+          "current": null,
+          "proposed": "2027 intake, applications 2026-12-01 to 2027-03-15",
+          "evidence": "Official call",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "current": "ALL",
+          "proposed": "Eligible partner countries only; exact current partner-country list must be matched to 2027 call",
+          "evidence": "Official restricts scholarships to partner countries",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "current": "Bachelor,Master",
+          "proposed": "Programme-specific degrees at participating universities; verify 2027 programme list before changing",
+          "evidence": "Official TaiwanICDF guidebook and partner university list",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "Do not confuse TaiwanICDF with separate Taiwan MOE Scholarship. Avoid counting both generic records as independent programmes."
+    },
+    {
+      "id": "2b1dee1e-1acb-44c9-87de-fffcd2f225f0",
+      "title": "Taiwan Scholarship (ICDF)",
+      "country": "Taiwan",
+      "official_programme_source": "https://www.icdf.org.tw/wSite/ct?ctNode=31572&mp=2&xItem=12505",
+      "disposition": "duplicate_review",
+      "field_reviews": [
+        {
+          "field": "title",
+          "current": "Taiwan Scholarship (ICDF)",
+          "proposed": "Canonical programme: TaiwanICDF International Higher Education Scholarship Program; reconcile two published records",
+          "evidence": "Official named programme",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "2027-03-15; application window starts 2026-12-01",
+          "evidence": "Official 2027 call",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "application_cycle",
+          "current": null,
+          "proposed": "2027 intake, applications 2026-12-01 to 2027-03-15",
+          "evidence": "Official call",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "eligible_nationalities",
+          "current": "ALL",
+          "proposed": "Eligible partner countries only; exact current partner-country list must be matched to 2027 call",
+          "evidence": "Official restricts scholarships to partner countries",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "degree_levels",
+          "current": "Bachelor,Master,PhD",
+          "proposed": "Programme-specific degrees at participating universities; verify 2027 programme list before changing",
+          "evidence": "Official TaiwanICDF guidebook and partner university list",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "Do not confuse TaiwanICDF with separate Taiwan MOE Scholarship. Avoid counting both generic records as independent programmes."
+    },
+    {
+      "id": "ebf98ae2-f142-44fc-86bc-a2737a52b8bd",
+      "title": "Khalifa University Scholarship",
+      "country": "United Arab Emirates",
+      "official_programme_source": "https://www.ku.ac.ae/scholarships-postgraduate",
+      "disposition": "identity_reconciliation_required",
+      "field_reviews": [
+        {
+          "field": "degree_levels",
+          "current": "Bachelor,Master,PhD",
+          "proposed": "Separate undergraduate and graduate schemes; graduate scheme supports Masters and PhD",
+          "evidence": "Official Khalifa graduate scholarship page",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "funding_type",
+          "current": "Fully funded",
+          "proposed": "Competitive full or partial tuition coverage, benefits depend on scholarship tier",
+          "evidence": "Official tier-dependent funding",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "Full tuition + stipend + accommodation",
+          "proposed": "Full/partial tuition, accommodation and stipend depend on tier and study path; not guaranteed",
+          "evidence": "Official benefits",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "Admissions-dependent; no universal scholarship deadline established",
+          "evidence": "Official scholarship page",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": "Research-path PhD tiers can impose work commitments. Verify current terms before categorizing."
+    },
+    {
+      "id": "2649d957-9d5e-4650-aff1-2d6800d7c85c",
+      "title": "EPFL Excellence Fellowship",
+      "country": "Switzerland",
+      "official_programme_source": "https://www.epfl.ch/education/master/master-excellence-fellowships/",
+      "disposition": "retain_update_deadlines",
+      "field_reviews": [
+        {
+          "field": "deadline",
+          "current": null,
+          "proposed": "2026-12-15 for external 2027 Master applicants; 2027-01-31 for eligible EPFL consecutive Master applicants",
+          "evidence": "Official 2027 programme-specific deadlines",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "application_cycle",
+          "current": null,
+          "proposed": "2027 intake; apply in first Masters application window, checkbox in admission form",
+          "evidence": "Official instructions",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "tuition_coverage",
+          "current": "CHF 10,000/semester; no tuition waiver",
+          "proposed": "Retain; CHF 10,000 per semester max 4, tuition and rent paid by recipient",
+          "evidence": "Official programme conditions",
+          "decision": "proposed_only_not_applied"
+        },
+        {
+          "field": "accommodation",
+          "current": false,
+          "proposed": "Room reservation for external recipients, NOT free accommodation",
+          "evidence": "Official fellowship conditions",
+          "decision": "proposed_only_not_applied"
+        }
+      ],
+      "notes": ""
+    }
+  ],
+  "opportunities": [
+    {
+      "programme": "Taiwan–Australian National University PhD Scholarship",
+      "country": "Australia",
+      "source": "https://study.anu.edu.au/scholarships/find-scholarship/taiwan-australian-national-university-scholarship",
+      "cycle": "2027",
+      "deadline": "2026-11-30 ANU application; Taiwan MOE window 2026-11-09 to 2026-11-25 noon",
+      "funding": "A$39,069/year listed current-year value plus full tuition; confirm 2027 amount",
+      "eligibility": "Taiwanese citizens; PhD; Taiwan MOE application also required",
+      "duplicate_screen": "No exact-title scholarship match in targeted staging query; broad screening still required",
+      "next_action": "prepare_private_draft_after_authenticated_review"
+    },
+    {
+      "programme": "Nanyang Merit Scholarship",
+      "country": "Singapore",
+      "source": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/college-scholarship",
+      "cycle": "Undergraduate admission-based",
+      "deadline": null,
+      "funding": "100% subsidised tuition after Tuition Grant, S$5,000/year living, S$4,000 one-off travel",
+      "eligibility": "All nationalities; Tuition Grant bond applies to relevant PR/international students",
+      "duplicate_screen": "Generic published NTU Singapore Scholarship must be reconciled",
+      "next_action": "hold_for_canonical_reconciliation"
+    },
+    {
+      "programme": "NTU President Award",
+      "country": "Singapore",
+      "source": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/ntu-president-award",
+      "cycle": "Admission-based",
+      "deadline": null,
+      "funding": "S$10,000 one-time study allowance, 4-year hostel subsidy; extra aid conditional, not automatic tuition grant",
+      "eligibility": "Undergraduate, all nationalities, competitive leadership/academic criteria",
+      "duplicate_screen": "Existing source candidate 1919c17b-08ce-4c23-a9cc-abd58db2f2cd",
+      "next_action": "review_existing_candidate"
+    },
+    {
+      "programme": "NUS ASEAN Research Scholarship",
+      "country": "Singapore",
+      "source": "https://nusgs.nus.edu.sg/scholarships/nus-asean-research-scholarship",
+      "cycle": "Faculty-specific",
+      "deadline": null,
+      "funding": "Full tuition waiver and SGD 3,000/month PhD (2026 rates), potential post-QE increase",
+      "eligibility": "ASEAN international PhD applicants; graduate assistantship duties",
+      "duplicate_screen": "Existing private draft eb44c3a4-066d-46bc-a9f2-6e94a3664e38",
+      "next_action": "review_existing_draft_no_duplicate"
+    },
+    {
+      "programme": "ABS–Goh Keng Swee Scholarship (NUS)",
+      "country": "Singapore",
+      "source": "https://nus.edu.sg/oam/scholarships/scholarships-for-freshmen-international-students/the-association-of-banks-in-singapore---goh-keng-swee-scholarship",
+      "cycle": "Undergraduate admission-based",
+      "deadline": null,
+      "funding": "Subsidised tuition plus living/accommodation/travel allowances",
+      "eligibility": "15 listed Asia-Pacific economies, exclusions for Medicine/Dentistry/Music",
+      "duplicate_screen": "Existing private draft 1cfa6edf-f558-4ff5-834d-ff99fe983323",
+      "next_action": "review_existing_draft_no_duplicate"
+    },
+    {
+      "programme": "ANU University Research Scholarship",
+      "country": "Australia",
+      "source": "https://study.anu.edu.au/scholarships/find-scholarship/anu-university-research-scholarships",
+      "cycle": "2027",
+      "deadline": "2027-04-15 Round 2; international Round 1 2026-08-31 closed",
+      "funding": "A$40,475/year 2027 stipend; fee offset eligibility separate award terms",
+      "eligibility": "HDR research students, competitive",
+      "duplicate_screen": "Existing private draft 44de9aef-2a2e-479e-9ab9-181e8ce50561",
+      "next_action": "review_existing_draft_no_duplicate"
+    },
+    {
+      "programme": "Khalifa University–China Scholarship Council Joint PhD Scholarship",
+      "country": "United Arab Emirates",
+      "source": "https://www.ku.ac.ae/scholarships-postgraduate",
+      "cycle": "Current page; 2027 deadline unconfirmed",
+      "deadline": null,
+      "funding": "AED 9,200/month Khalifa stipend plus CSC component, full tuition and accommodation or allowance",
+      "eligibility": "Chinese nationals admitted full-time PhD in Engineering/Science",
+      "duplicate_screen": "Targeted scholarship title match not found; broader duplicate review needed",
+      "next_action": "prepare_private_draft_after_authenticated_review"
+    },
+    {
+      "programme": "Qatar University International Students Scholarship",
+      "country": "Qatar",
+      "source": "https://www.qu.edu.qa/en-us/students/admission/scholarships/types",
+      "cycle": "Undergraduate intake-specific",
+      "deadline": null,
+      "funding": "Full tuition and textbook fees, QAR 500/month, shared housing and campus transport",
+      "eligibility": "International first Bachelor applicants, competitive; SAT/IELTS/TOEFL may be considered but no universal scholarship cutoff",
+      "duplicate_screen": "Already published curated ID 6a6e7434-c794-46bb-93d7-be0ae481569f",
+      "next_action": "correct_generic_overlap_not_new_draft"
+    },
+    {
+      "programme": "University of Melbourne Human Rights Scholarship",
+      "country": "Australia",
+      "source": "https://scholarships.unimelb.edu.au/awards/human-rights-scholarship",
+      "cycle": "2026 applications",
+      "deadline": "2026-10-31",
+      "funding": "A$44,500/year 2026 stipend plus full fee offset and relocation/health benefits",
+      "eligibility": "Domestic and international research Masters/PhD in human rights",
+      "duplicate_screen": "Broad title/source duplicate screening required",
+      "next_action": "private_draft_candidate_if_unique"
+    },
+    {
+      "programme": "UNSW Scientia Scholarship — Undergraduate 2027",
+      "country": "Australia",
+      "source": "https://www.scholarships.unsw.edu.au/scholarships/id/1986/7243",
+      "cycle": "Term 1 2027",
+      "deadline": "2026-12-19 UAC preference round (not scholarship application)",
+      "funding": "At least A$15,000 over programme duration per official listing",
+      "eligibility": "Raw ATAR >=99.90 or IB 45; domestic and certain in-Australia international school students; automatic consideration",
+      "duplicate_screen": "Do not confuse with published PhD Scientia Scholarship",
+      "next_action": "private_draft_candidate_if_unique"
+    },
+    {
+      "programme": "University of Sydney RTP International Stipend Scholarship",
+      "country": "Australia",
+      "source": "https://www.sydney.edu.au/scholarships/australian-government-research-training-program/rtp-international.html",
+      "cycle": "2027",
+      "deadline": null,
+      "funding": "A$44,293/year 2027 stipend; fee offset via companion RTP Fee Offset award",
+      "eligibility": "Competitive international research Masters/PhD",
+      "duplicate_screen": "Generic Sydney published records must be reconciled",
+      "next_action": "hold_for_canonical_reconciliation"
+    },
+    {
+      "programme": "ANU HDR Fee Merit Scholarship",
+      "country": "Australia",
+      "source": "https://study.anu.edu.au/scholarships/find-scholarship/anu-hdr-fee-merit-scholarship",
+      "cycle": "HDR rounds",
+      "deadline": null,
+      "funding": "International HDR tuition fee remission; no independent living stipend",
+      "eligibility": "International HDR students concurrently holding ANU University Research Scholarship",
+      "duplicate_screen": "Overlap with existing ANU research draft and generic published records",
+      "next_action": "hold_for_duplicate_and_benefit_reconciliation"
+    }
+  ],
+  "private_draft_reviews": [
+    {
+      "id": "1cfa6edf-f558-4ff5-834d-ff99fe983323",
+      "title": "ABS–Goh Keng Swee Scholarship (NUS)",
+      "provenance": 1,
+      "reviewer_attributed": 0,
+      "last_successful_check": null,
+      "action": "authenticated source audit, provenance and approval before publication"
+    },
+    {
+      "id": "44de9aef-2a2e-479e-9ab9-181e8ce50561",
+      "title": "ANU University Research Scholarship (2027 stipend)",
+      "provenance": 4,
+      "reviewer_attributed": 0,
+      "last_successful_check": null,
+      "action": "reconcile generic published ANU records; authenticated source audit and provenance"
+    },
+    {
+      "id": "eb44c3a4-066d-46bc-a9f2-6e94a3664e38",
+      "title": "NUS ASEAN Research Scholarship",
+      "provenance": 1,
+      "reviewer_attributed": 0,
+      "last_successful_check": null,
+      "action": "authenticate and verify degree and nationality, provenance and publication gates"
+    }
+  ],
+  "authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "publication_blocked": true,
+    "legitimate_functions": [
+      "publish_scholarship_draft",
+      "promote_source_candidate_to_draft",
+      "record_scholarship_field_provenance"
+    ],
+    "no_bypass": true
+  },
+  "safeguards": [
+    "All field proposals are review suggestions, not accepted provenance or staging edits.",
+    "Only official programme-specific sources used for proposed factual changes.",
+    "2026 and 2027 rates are not interchangeable.",
+    "No loan classified as grant; MOE Tuition Grant bond must be disclosed.",
+    "No general admissions deadline substituted for scholarship-specific deadline.",
+    "Closed Yale-NUS record is only an archive recommendation; no unaudited direct update.",
+    "No production changes or CI-untested merge."
+  ]
+}

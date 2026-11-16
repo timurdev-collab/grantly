@@ -1,0 +1,313 @@
+{
+  "schema": "grantly.catalog_qa.official_source_reconciliation.v1",
+  "prepared_date": "2026-10-25",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "environment": "staging only",
+  "state": "PROPOSED SOURCE-LINKED REVIEW, NOT ACCEPTED/VERIFIED/APPROVED",
+  "readbacks": {
+    "before": {
+      "readback_utc": "2026-10-25 01:23:55.383134 UTC",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "provenance_accepted": 207,
+      "reviewer_provenance": 0,
+      "source_candidates": 636,
+      "admin_actions": 8,
+      "auth_uid": null,
+      "is_admin": false
+    },
+    "after": {
+      "readback_utc": "2026-10-25 01:25:42.578149 UTC",
+      "published": 397,
+      "published_needs_review": 309,
+      "drafts": 83,
+      "archived": 75,
+      "provenance": 557,
+      "provenance_accepted": 207,
+      "reviewer_provenance": 0,
+      "source_candidates": 636,
+      "admin_actions": 8,
+      "auth_uid": null,
+      "is_admin": false
+    },
+    "independent_queries": true
+  },
+  "summary": {
+    "published_records_investigated": 12,
+    "field_level_review_proposals": 68,
+    "private_drafts_assessed": 1,
+    "named_scholarship_leads": 2,
+    "staging_edits": 0,
+    "publications": 0,
+    "archived": 0,
+    "provenance_written": 0,
+    "remaining_to_1000": 603
+  },
+  "published_record_reviews": [
+    {
+      "id": "66d2b9f6-7869-469d-9db8-f0c2687b7450",
+      "title": "AfDB Japan Africa Dream Scholarship (JADS)",
+      "field_review_proposals": {
+        "eligible_nationalities": "Correct ALL: African Development Bank regional member-country citizens",
+        "degree_levels": "Master's only at approved partner programmes",
+        "fields": "Energy/agriculture/health/environment/engineering or related",
+        "deadline": "Partner-specific; no single verified 2027 deadline",
+        "description": "Age generally <=35, relevant professional experience, partner admission",
+        "funding_type": "Tuition, stipend, airfare and health insurance subject to terms"
+      },
+      "official_sources": [
+        "https://www.afdb.org/en/about-us/careers/japan-africa-dream-scholarship-jads-program/who-is-eligible-to-apply",
+        "https://www.afdb.org/pt/news-and-events/japan-africa-dream-scholarship-program-unique-opportunity-prospective-students-46406"
+      ],
+      "review_note": "Existing private draft e39872db-a749-498a-976f-87c853223516 overlaps published JADS; do not duplicate."
+    },
+    {
+      "id": "94e1ae57-38c4-4b16-abe6-c7db92a716d5",
+      "title": "Monbukagakusho Research Scholarship",
+      "field_review_proposals": {
+        "official_url": "Replace generic MEXT homepage with official programme page",
+        "stipend": "2026 Master's ¥144,000; PhD ¥145,000 monthly; 2027 not confirmed",
+        "eligible_nationalities": "Not unrestricted ALL; MEXT route-specific rules",
+        "deadline": "Do not invent one universal deadline",
+        "description": "Reconcile overlap with published MEXT Scholarship 59f73f24-e5bd-4a5f-8f88-cd0befcc331c"
+      },
+      "official_sources": [
+        "https://www.studyinjapan.go.jp/en/about/support-program.html",
+        "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html"
+      ],
+      "review_note": "Research students and degree students have different monthly rates."
+    },
+    {
+      "id": "2e3209b3-57a5-47ee-91f0-011ed5c65a31",
+      "title": "University of Tokyo MEXT Scholarship",
+      "field_review_proposals": {
+        "official_url": "Use 2027 UTokyo Graduate School of Science official call",
+        "application_cycle": "October 2027 entry; university recommendation conditional",
+        "deadline": "2026-10-30 JST for Graduate School of Science call only",
+        "eligible_nationalities": "Countries with Japanese diplomatic relations, excluding most Japanese nationals",
+        "min_ielts": "5.5 is one optional B2 English evidence route; TOEFL iBT 72 or Japanese N2/medium-of-instruction alternatives",
+        "stipend": "2026 reference Master's ¥144k/month; PhD ¥145k/month; 2027 amount pending",
+        "accommodation": "Paid university lodge room first year, NOT free housing",
+        "description": "General Category 2027 continuation uncertain; do not mark discontinued"
+      },
+      "official_sources": [
+        "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+        "https://www.k.u-tokyo.ac.jp/en/exam/master/foreign_research_students/mext_scholarship_univ/"
+      ],
+      "review_note": "Separate MEXT umbrella and institution-specific application route; duplicate screening required."
+    },
+    {
+      "id": "b7f5d9c0-22df-43ff-aa72-1439c251aa52",
+      "title": "University of Tokyo Masters Excellence Scholarship",
+      "field_review_proposals": {
+        "description": "Programme identity unverified; don't equate generic title with MEXT",
+        "tuition_coverage": "Unsupported universal full-tuition claim; require named programme source",
+        "stipend": "Generic ¥143k/month is not verified for Master's/PhD degree awards",
+        "official_url": "University homepage insufficient; obtain programme-specific page"
+      },
+      "official_sources": [
+        "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+        "https://www.studyinjapan.go.jp/en/about/support-program.html"
+      ],
+      "review_note": "Identity hold; not independently verified, no archival action."
+    },
+    {
+      "id": "28bd9aef-96c0-4364-adae-a0ce09c74805",
+      "title": "University of Tokyo Masters International Scholarship",
+      "field_review_proposals": {
+        "description": "Programme identity unverified; don't equate generic title with MEXT",
+        "tuition_coverage": "Unsupported universal full-tuition claim; require named programme source",
+        "stipend": "Generic ¥143k/month is not verified for Master's/PhD degree awards",
+        "official_url": "University homepage insufficient; obtain programme-specific page"
+      },
+      "official_sources": [
+        "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+        "https://www.studyinjapan.go.jp/en/about/support-program.html"
+      ],
+      "review_note": "Identity hold; not independently verified, no archival action."
+    },
+    {
+      "id": "34c1df67-2bf1-4639-8a00-3fb3b54d47b8",
+      "title": "University of Tokyo Phd Excellence Scholarship",
+      "field_review_proposals": {
+        "description": "Programme identity unverified; don't equate generic title with MEXT",
+        "tuition_coverage": "Unsupported universal full-tuition claim; require named programme source",
+        "stipend": "Generic ¥143k/month is not verified for Master's/PhD degree awards",
+        "official_url": "University homepage insufficient; obtain programme-specific page"
+      },
+      "official_sources": [
+        "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+        "https://www.studyinjapan.go.jp/en/about/support-program.html"
+      ],
+      "review_note": "Identity hold; not independently verified, no archival action."
+    },
+    {
+      "id": "67934aa0-375f-42be-9937-33b16f505f8d",
+      "title": "University of Tokyo Phd International Scholarship",
+      "field_review_proposals": {
+        "description": "Programme identity unverified; don't equate generic title with MEXT",
+        "tuition_coverage": "Unsupported universal full-tuition claim; require named programme source",
+        "stipend": "Generic ¥143k/month is not verified for Master's/PhD degree awards",
+        "official_url": "University homepage insufficient; obtain programme-specific page"
+      },
+      "official_sources": [
+        "https://www.s.u-tokyo.ac.jp/en/admission/scholarship.html",
+        "https://www.studyinjapan.go.jp/en/about/support-program.html"
+      ],
+      "review_note": "Identity hold; not independently verified, no archival action."
+    },
+    {
+      "id": "b9b20deb-9312-4a0f-a70d-feb75d2abdb1",
+      "title": "KAIST International Student Scholarship",
+      "field_review_proposals": {
+        "deadline": "Regular 2027 admission 2027-01-14 18:00 KST; early 2026-10-22 passed; no separate scholarship deadline",
+        "application_cycle": "2027 early closed, regular opens 2026-11-10",
+        "tuition_coverage": "Full tuition for eight semesters",
+        "stipend": "KRW 350k/month plus national health insurance; living costs may exceed stipend",
+        "eligible_nationalities": "Foreign citizenship subject to KAIST international admissions; Korean dual citizenship ineligible",
+        "min_ielts": "6.5 is a recommended score; do not set universal mandatory scholarship minimum",
+        "description": "Likely duplicate undergraduate KAIST scholarship; canonical reconciliation required"
+      },
+      "official_sources": [
+        "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+        "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "https://admission.kaist.ac.kr/intl-undergraduate/before/sub02"
+      ],
+      "review_note": "One named scholarship, two published listings."
+    },
+    {
+      "id": "efd87e68-3a6e-4736-bb8a-5916575b55d7",
+      "title": "KAIST Scholarship for International Undergraduate Students",
+      "field_review_proposals": {
+        "deadline": "Regular 2027 admission 2027-01-14 18:00 KST; early 2026-10-22 passed; no separate scholarship deadline",
+        "application_cycle": "2027 early closed, regular opens 2026-11-10",
+        "tuition_coverage": "Full tuition for eight semesters",
+        "stipend": "KRW 350k/month plus national health insurance; living costs may exceed stipend",
+        "eligible_nationalities": "Foreign citizenship subject to KAIST international admissions; Korean dual citizenship ineligible",
+        "min_ielts": "6.5 is a recommended score; do not set universal mandatory scholarship minimum",
+        "description": "Likely duplicate undergraduate KAIST scholarship; canonical reconciliation required"
+      },
+      "official_sources": [
+        "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+        "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "https://admission.kaist.ac.kr/intl-undergraduate/before/sub02"
+      ],
+      "review_note": "One named scholarship, two published listings."
+    },
+    {
+      "id": "65815cac-512b-4017-ba95-ba4039c47654",
+      "title": "KAIST Scholarship for International Graduate Students",
+      "field_review_proposals": {
+        "stipend": "Base stipend varies; separate KGPS KRW 1m/month for four semesters; KPS KRW 300k/month for eight semesters",
+        "degree_levels": "Master's, integrated and PhD tracks differ",
+        "deadline": "Spring 2027 closed Sep 1 2026; Fall 2027 admission dates TBA",
+        "application_cycle": "Do not apply GKS dates to KAIST internal awards",
+        "description": "KGPS and KPS are separately named competitive scholarships; no guaranteed stipend for all applicants",
+        "official_url": "KAIST programme-specific funding page"
+      },
+      "official_sources": [
+        "https://admission.kaist.ac.kr/intl-graduate/FinancialSupport/Scholarship/KAISTScholarship/",
+        "https://admission.kaist.ac.kr/intl-graduate/Admission/YearlyTimelines"
+      ],
+      "review_note": "Existing source candidates include generic KAIST; full duplicate screening required."
+    },
+    {
+      "id": "21866729-2e48-4281-a4fa-5b5df578e03a",
+      "title": "Global Korea Scholarship",
+      "field_review_proposals": {
+        "eligible_nationalities": "Applicant and both parents non-Korean citizens; eligible-country and track restrictions",
+        "degree_levels": "2027 undergraduate call announced; graduate 2027 cycle not yet confirmed",
+        "application_cycle": "2027 undergraduate announcements Sep 9 and university track Sep 23 2026",
+        "deadline": "Embassy and university deadlines differ; no universal date",
+        "official_url": "Official 2027 GKS notices",
+        "description": "Separate embassy/university routes not automatically separate programmes"
+      },
+      "official_sources": [
+        "https://www.studyinkorea.go.kr/ko/plan/scholarship.do?tab=gks-tab1",
+        "https://www.studyinkorea.go.kr/ko/notice/scholarshipsList.do"
+      ],
+      "review_note": "Already published GKS; do not create route duplicates."
+    },
+    {
+      "id": "995a730b-1a00-424c-837c-a53113c0c245",
+      "title": "Sabanci University Full Scholarship",
+      "field_review_proposals": {
+        "funding_type": "Correct unsupported fully-funded claim; 2026/27 international undergraduate 25%,40%,50%,60%,75% tuition waivers",
+        "tuition_coverage": "Partial tuition waivers as per official fee page",
+        "stipend": "No universal living stipend",
+        "accommodation": "Separate dormitory scholarship only if awarded",
+        "degree_levels": "Cited evidence is undergraduate, not general graduate",
+        "deadline": "2026 admission closed Aug 28; 2027 deadline unconfirmed",
+        "description": "Reconcile with published curated Sabanci University International Scholarship 9df9cc84-e39d-4ad9-bd80-e32f71795ece"
+      },
+      "official_sources": [
+        "https://iro.sabanciuniv.edu/en/tuition-fee",
+        "https://iro.sabanciuniv.edu/en/degree-students/frequently-asked-questions/tuition-fees-and-scholarships",
+        "https://iro.sabanciuniv.edu/en/how-to-apply"
+      ],
+      "review_note": "Do not relabel partial tuition discounts as full ride."
+    }
+  ],
+  "private_draft_assessments": [
+    {
+      "id": "e39872db-a749-498a-976f-87c853223516",
+      "title": "Japan Africa Dream Scholarship (JADS)",
+      "last_successful_check_at": "2026-10-01 11:04:55 UTC",
+      "audit_failure_count": 3,
+      "provenance_count": 0,
+      "reviewer_provenance_count": 0,
+      "duplicate_published_id": "66d2b9f6-7869-469d-9db8-f0c2687b7450",
+      "next_step": "Reconcile duplicate, re-audit; do not treat failed fetch as discontinuation"
+    }
+  ],
+  "named_leads": [
+    {
+      "title": "KAIST Global Presidential Scholarship (KGPS)",
+      "degree": "Master's / integrated",
+      "funding": "Full tuition + KRW 1,000,000/month for four semesters",
+      "source": "https://admission.kaist.ac.kr/intl-graduate/FinancialSupport/Scholarship/KAISTScholarship/",
+      "status": "Evidence candidate; duplicate screen and authorized draft creation needed"
+    },
+    {
+      "title": "KAIST Prestige Scholarship for International Ph.D. Students (KPS)",
+      "degree": "PhD / integrated PhD phase",
+      "funding": "Full tuition + KRW 300,000/month for eight semesters",
+      "source": "https://admission.kaist.ac.kr/intl-graduate/FinancialSupport/Scholarship/KAISTScholarship/",
+      "status": "Evidence candidate; duplicate screen and authorized draft creation needed"
+    }
+  ],
+  "source_candidate_overlap": [
+    {
+      "id": "a6e1c60b-f9d7-4df7-949f-0922aa8f7ea1",
+      "title": "KAIST Scholarship",
+      "status": "pending"
+    },
+    {
+      "id": "e3c8d31f-9ae0-474f-bbff-57ff17bf1748",
+      "title": "KAIST Scholarship",
+      "status": "pending"
+    },
+    {
+      "id": "9abc124d-b00b-42b9-af98-295491a6655c",
+      "title": "KAIST Collaborative",
+      "status": "pending"
+    },
+    {
+      "id": "d2ad07d9-bb64-432b-b0ef-34018fdf56aa",
+      "title": "GKS",
+      "status": "pending"
+    }
+  ],
+  "blocker": "auth.uid() NULL, is_admin() FALSE; publication/provenance functions require authenticated admin; source promotion requires admin or real service_role and accepted candidate. No permissions bypassed.",
+  "safety_notes": [
+    "University of Tokyo MEXT 2027 university recommendation continuation is explicitly uncertain; not confirmed discontinued.",
+    "MEXT 2027 stipend not set; do not copy 2026 rate as 2027.",
+    "KAIST undergraduate IELTS 6.5 recommended; not established as mandatory scholarship minimum.",
+    "Source promotion seeds potentially inaccurate default nationality ALL; every field must be reviewed before publication.",
+    "Transient source errors are not evidence of programme closure.",
+    "No database or production changes."
+  ]
+}

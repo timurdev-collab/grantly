@@ -1,0 +1,585 @@
+{
+  "report_type": "staging-only-official-source-scholarship-catalog-qa",
+  "created_for": "Grantly catalog QA 2026-10-24",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "repo": "timurdev-collab/grantly",
+  "branch": "catalog-qa/2026-10-23-official-sources",
+  "baseline_staging_readback_utc": "2026-10-24T04:20:20.523817Z",
+  "baseline_counts": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "field_provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_action_logs": 8
+  },
+  "authorization": {
+    "auth_uid": null,
+    "is_admin": false,
+    "reason": "Connected SQL management session is not an authenticated application administrator. No staging mutations performed.",
+    "do_not_bypass": true
+  },
+  "scope": {
+    "published_records_reviewed": 9,
+    "field_level_proposals": 33,
+    "named_programme_leads": 10,
+    "ready_for_private_draft_review": 7,
+    "held_leads": 3,
+    "excluded_repayable_products": 5
+  },
+  "published_records": [
+    {
+      "id": "e3e76b8c-4456-41ec-af3b-ee33dab3fc8f",
+      "title": "Mexican Government Scholarship",
+      "status": "published",
+      "verification_status": "needs_review",
+      "decision": "canonical_identity_review",
+      "official_sources": [
+        "https://www.gob.mx/amexcid/acciones-y-programas/becas-para-extranjeros-29785",
+        "https://embamex.sre.gob.mx/alemania/index.php/es/avisos/823-convocatoria-de-becas-para-extranjeros-2026"
+      ],
+      "changes": [
+        {
+          "field": "official_url",
+          "proposal": "https://www.gob.mx/amexcid/acciones-y-programas/becas-para-extranjeros-29785",
+          "source_url": "https://www.gob.mx/amexcid/acciones-y-programas/becas-para-extranjeros-29785",
+          "reason": "Replace generic agency homepage with exact AMEXCID programme."
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "2026 call closed; 2027 call not established",
+          "source_url": "https://embamex.sre.gob.mx/alemania/index.php/es/avisos/823-convocatoria-de-becas-para-extranjeros-2026",
+          "reason": "2026 submissions ran 22 May–22 June 2026; do not reuse for 2027."
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Only countries listed by relevant official AMEXCID call/annexes",
+          "source_url": "https://www.gob.mx/amexcid/acciones-y-programas/becas-para-extranjeros-29785",
+          "reason": "ALL is unsupported."
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Depends on official scheme and annex; do not assert all Bachelor/Master/PhD",
+          "source_url": "https://www.gob.mx/amexcid/acciones-y-programas/becas-para-extranjeros-29785",
+          "reason": "Umbrella claim lacks programme-level evidence."
+        }
+      ],
+      "duplicate_risk": "Same programme as curated published record 5ded3ae0-0b55-4f6c-83dd-e82487895ad4; keep curated canonical unless reviewed."
+    },
+    {
+      "id": "5ded3ae0-0b55-4f6c-83dd-e82487895ad4",
+      "title": "Mexican Government AMEXCID Scholarship",
+      "status": "published",
+      "verification_status": "curated",
+      "decision": "preserve_canonical_review_country_claim",
+      "official_sources": [
+        "https://www.gob.mx/amexcid/acciones-y-programas/becas-para-extranjeros-29785"
+      ],
+      "changes": [
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Official AMEXCID participating-country list/annex, not ALL",
+          "source_url": "https://www.gob.mx/amexcid/acciones-y-programas/becas-para-extranjeros-29785",
+          "reason": "Curated description already restricts eligibility, array still ALL."
+        },
+        {
+          "field": "deadline",
+          "proposal": null,
+          "source_url": "https://www.gob.mx/amexcid/acciones-y-programas/becas-para-extranjeros-29785",
+          "reason": "No verified 2027 deadline; preserve null."
+        }
+      ],
+      "duplicate_risk": "Likely canonical record; do not archive without audited duplicate reconciliation."
+    },
+    {
+      "id": "17bec752-6686-44d8-9183-a90a783f7850",
+      "title": "Taiwan ICDF Scholarship",
+      "status": "published",
+      "verification_status": "needs_review",
+      "decision": "duplicate_reconciliation_and_2027_cycle",
+      "official_sources": [
+        "https://www.icdf.org.tw/wSite/ct?ctNode=31572&mp=2&xItem=12505",
+        "https://www.icdf.org.tw/wSite/ct?ctNode=31563&mp=2&xItem=69337"
+      ],
+      "changes": [
+        {
+          "field": "application_cycle",
+          "proposal": "2027 TaiwanICDF International Higher Education Scholarship; opens 2026-12-01",
+          "source_url": "https://www.icdf.org.tw/wSite/ct?ctNode=31572&mp=2&xItem=12505",
+          "reason": "Exact next cycle posted."
+        },
+        {
+          "field": "deadline",
+          "proposal": "2027-03-15",
+          "source_url": "https://www.icdf.org.tw/wSite/ct?ctNode=31563&mp=2&xItem=69337",
+          "reason": "Programme's posted 2027 closing date."
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Partner-country restrictions; exact 2027 list pending",
+          "source_url": "https://www.icdf.org.tw/wSite/ct?ctNode=31572&mp=2&xItem=12505",
+          "reason": "ALL unsupported."
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "2027 programme list not yet confirmed; verify by partner university",
+          "source_url": "https://www.icdf.org.tw/wSite/ct?ctNode=31572&mp=2&xItem=12505",
+          "reason": "2026 programme PDF must not be treated as 2027 degree list."
+        }
+      ],
+      "duplicate_risk": "Likely same TaiwanICDF programme as record 2b1dee1e-1acb-44c9-87de-fffcd2f225f0."
+    },
+    {
+      "id": "2b1dee1e-1acb-44c9-87de-fffcd2f225f0",
+      "title": "Taiwan Scholarship (ICDF)",
+      "status": "published",
+      "verification_status": "needs_review",
+      "decision": "duplicate_reconciliation_and_2027_cycle",
+      "official_sources": [
+        "https://www.icdf.org.tw/wSite/ct?ctNode=31572&mp=2&xItem=12505",
+        "https://www.icdf.org.tw/wSite/ct?ctNode=31563&mp=2&xItem=69337"
+      ],
+      "changes": [
+        {
+          "field": "official_url",
+          "proposal": "https://www.icdf.org.tw/wSite/ct?ctNode=31572&mp=2&xItem=12505",
+          "source_url": "https://www.icdf.org.tw/wSite/ct?ctNode=31572&mp=2&xItem=12505",
+          "reason": "Legacy /np.asp page is not a programme-specific current URL."
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "2027 TaiwanICDF call; 2026-12-01 opening",
+          "source_url": "https://www.icdf.org.tw/wSite/ct?ctNode=31563&mp=2&xItem=69337",
+          "reason": "Official 2027 announcement."
+        },
+        {
+          "field": "deadline",
+          "proposal": "2027-03-15",
+          "source_url": "https://www.icdf.org.tw/wSite/ct?ctNode=31563&mp=2&xItem=69337",
+          "reason": "Official 2027 close."
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Partner countries only; 2027 list requires guide",
+          "source_url": "https://www.icdf.org.tw/wSite/ct?ctNode=31572&mp=2&xItem=12505",
+          "reason": "ALL unsupported."
+        }
+      ],
+      "duplicate_risk": "Reconcile with 17bec752-6686-44d8-9183-a90a783f7850 before editing or archiving."
+    },
+    {
+      "id": "0f63ea3c-823f-42f2-acdc-3382dce1a8ea",
+      "title": "Tecnológico de Monterrey Scholarship",
+      "status": "published",
+      "verification_status": "needs_review",
+      "decision": "replace_umbrella_claim_with_named_awards",
+      "official_sources": [
+        "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+        "https://tec.mx/es/profesional/becas"
+      ],
+      "changes": [
+        {
+          "field": "degree_levels",
+          "proposal": "Bachelor only for Líderes del Mañana; other schemes separately defined",
+          "source_url": "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+          "reason": "Current generic Bachelor/Master full-tuition claim unsupported."
+        },
+        {
+          "field": "funding_type",
+          "proposal": "Varies by named scheme; socioeconomic package combines grant and repayable loan",
+          "source_url": "https://tec.mx/es/profesional/becas",
+          "reason": "Do not count loan component as grant."
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Líderes del Mañana national: Mexican; LATAM: eight listed countries",
+          "source_url": "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+          "reason": "ALL not valid for this named route."
+        },
+        {
+          "field": "sat_required",
+          "proposal": false,
+          "source_url": "https://tec.mx/es/profesional/becas",
+          "reason": "PAA minimum 1360; SAT/ACT equivalent may be accepted, SAT not universally required."
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "2027 Líderes del Mañana: national track opened 2026-08-17; LATAM deadline requires separate confirmation",
+          "source_url": "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+          "reason": "Separate national/LATAM tracks."
+        }
+      ],
+      "duplicate_risk": "No exact named Líderes del Mañana title found in staging; semantic umbrella overlap with this generic record."
+    },
+    {
+      "id": "1d95ebc8-2a57-4698-9e21-29b1f6a58df9",
+      "title": "Universidad de los Andes Scholarship",
+      "status": "published",
+      "verification_status": "needs_review",
+      "decision": "split_or_replace_generic_with_distinct_official_schemes",
+      "official_sources": [
+        "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+        "https://apoyofinanciero.uniandes.edu.co/beca-avanza",
+        "https://apoyofinanciero.uniandes.edu.co/beca-vamos-palante",
+        "https://apoyofinanciero.uniandes.edu.co/component/content/article/quiero-estudiar?catid=2"
+      ],
+      "changes": [
+        {
+          "field": "funding_type",
+          "proposal": "Varies; distinguish grants from income-share repayable and conditional support",
+          "source_url": "https://apoyofinanciero.uniandes.edu.co/component/content/article/quiero-estudiar?catid=2",
+          "reason": "Quiero Estudiar requires 20% of postgraduation income for twice support duration."
+        },
+        {
+          "field": "degree_levels",
+          "proposal": "Programme-specific: e.g. Preferente Bachelor, Avanza research Master",
+          "source_url": "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+          "reason": "No universal award spanning all degree levels."
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposal": "Programme-specific; do not infer ALL from university homepage",
+          "source_url": "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+          "reason": "Each award has independent admissions/eligibility conditions."
+        },
+        {
+          "field": "official_url",
+          "proposal": "Named programme-specific official pages required",
+          "source_url": "https://apoyofinanciero.uniandes.edu.co/beca-avanza",
+          "reason": "Generic university homepage does not support funding claim."
+        }
+      ],
+      "duplicate_risk": "New Uniandes named awards must be reconciled against this generic published record before drafting."
+    },
+    {
+      "id": "8bd752c7-41b8-4907-b285-000d06de74a8",
+      "title": "University of São Paulo (USP) Graduate Scholarship",
+      "status": "published",
+      "verification_status": "needs_review",
+      "decision": "reconcile_capes_cnpq_fapesp_funding",
+      "official_sources": [
+        "https://sites.usp.br/ppgarqmae/bolsas/",
+        "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/"
+      ],
+      "changes": [
+        {
+          "field": "funding_type",
+          "proposal": "Competitive programme-specific CAPES/CNPq research stipend; not guaranteed",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "reason": "Programme has allocations; not all available to new entrants."
+        },
+        {
+          "field": "deadline",
+          "proposal": null,
+          "source_url": "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/",
+          "reason": "Internal allocation dates vary by programme; no universal deadline."
+        },
+        {
+          "field": "application_cycle",
+          "proposal": "Programme-level 2026 calls; future 2027 calls not universally established",
+          "source_url": "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/",
+          "reason": "Current 2026 examples are not universal 2027 opportunities."
+        },
+        {
+          "field": "tuition_coverage",
+          "proposal": "Do not conflate public-university tuition policy with a scholarship waiver",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "reason": "Existing wording 'tuition waiver' lacks named-award evidence."
+        }
+      ],
+      "duplicate_risk": "Overlaps with generic USP Master and PhD international records."
+    },
+    {
+      "id": "ed89e879-9bb8-461b-b1e8-70f2c58c01a3",
+      "title": "University of São Paulo Masters International Scholarship",
+      "status": "published",
+      "verification_status": "needs_review",
+      "decision": "identity_not_established",
+      "official_sources": [
+        "https://sites.usp.br/ppgarqmae/bolsas/",
+        "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/"
+      ],
+      "changes": [
+        {
+          "field": "funding_type",
+          "proposal": "No independent named international Master's award established; programme-specific CAPES/CNPq selection",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "reason": "Do not assert FAPESP stipend automatically."
+        },
+        {
+          "field": "deadline",
+          "proposal": null,
+          "source_url": "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/",
+          "reason": "Programme-specific selection only."
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/",
+          "source_url": "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/",
+          "reason": "General university homepage is insufficient."
+        }
+      ],
+      "duplicate_risk": "Likely generic overlap with 8bd752c7-41b8-4907-b285-000d06de74a8."
+    },
+    {
+      "id": "a56fe345-2e59-4fd8-bbe1-a53e7a8c108d",
+      "title": "University of São Paulo Phd International Scholarship",
+      "status": "published",
+      "verification_status": "needs_review",
+      "decision": "identity_not_established",
+      "official_sources": [
+        "https://sites.usp.br/ppgarqmae/bolsas/",
+        "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/"
+      ],
+      "changes": [
+        {
+          "field": "funding_type",
+          "proposal": "No independent named international PhD award established; programme-specific CAPES/CNPq selection",
+          "source_url": "https://sites.usp.br/ppgarqmae/bolsas/",
+          "reason": "FAPESP support is not automatic."
+        },
+        {
+          "field": "deadline",
+          "proposal": null,
+          "source_url": "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/",
+          "reason": "No universal PhD scholarship deadline."
+        },
+        {
+          "field": "official_url",
+          "proposal": "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/",
+          "source_url": "https://www.fau.usp.br/ensino/pos-graduacao/secretaria/bolsas-e-auxilios/",
+          "reason": "Programme source needed."
+        }
+      ],
+      "duplicate_risk": "Likely generic overlap with 8bd752c7-41b8-4907-b285-000d06de74a8."
+    }
+  ],
+  "programme_leads": [
+    {
+      "title": "Líderes del Mañana — Tecnológico de Monterrey",
+      "country": "Mexico",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "deadline": null,
+      "application_cycle": "2027-10 intake / 2026 application window unless otherwise specified",
+      "funding": "100% tuition, major medical insurance, semester materials/books support",
+      "eligibility": "National Mexican applicants; LATAM route for Belize, Costa Rica, El Salvador, Guatemala, Honduras, Nicaragua, Panama, Dominican Republic; age <=22, high school GPA >=90/100, documented community leadership and full financial need",
+      "official_url": "https://conecta.tec.mx/es/noticias/nacional/educacion/aplica-para-una-beca-del-100-para-estudiar-en-el-tec-de-monterrey",
+      "status": "private_draft_candidate_after_semantic_reconciliation",
+      "notes": "National deadlines: 2027-02-12 for health programmes; 2027-02-26 for others. LATAM deadline not confirmed. PAA 1360; SAT/ACT equivalent may be used, not mandatory.",
+      "ielts_toefl_sat": "No scholarship-specific IELTS/TOEFL/SAT minimum established from cited programme page; do not infer",
+      "staging_screen": "No exact title or official URL match found in targeted scholarship/source-candidate search; generic institutional umbrella overlap may exist.",
+      "cycle": "2027; national opened 2026-08-17",
+      "deadlines_by_track": {
+        "national_health": "2027-02-12",
+        "national_other": "2027-02-26",
+        "latam": null
+      },
+      "sat_required": false
+    },
+    {
+      "title": "Beca Preferente — Universidad de los Andes",
+      "country": "Colombia",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "deadline": "2026-12-15",
+      "application_cycle": "2027-10 intake / 2026 application window unless otherwise specified",
+      "funding": "5%–50% tuition reduction based on merit/need",
+      "eligibility": "Newly admitted students in listed undergraduate programmes; Saber 11 >=320 or equivalent; funding until exhausted",
+      "official_url": "https://apoyofinanciero.uniandes.edu.co/beca-preferente",
+      "status": "private_draft_candidate_after_semantic_reconciliation",
+      "notes": "Applications opened 2026-08-14; not available for all majors.",
+      "ielts_toefl_sat": "No scholarship-specific IELTS/TOEFL/SAT minimum established from cited programme page; do not infer",
+      "staging_screen": "No exact title or official URL match found in targeted scholarship/source-candidate search; generic institutional umbrella overlap may exist."
+    },
+    {
+      "title": "Beca Avanza — Universidad de los Andes",
+      "country": "Colombia",
+      "degree_levels": [
+        "Master"
+      ],
+      "deadline": null,
+      "application_cycle": "2027-10 intake / 2026 application window unless otherwise specified",
+      "funding": "Up to 100% tuition for up to 8 credits per term, plus payment for research monitor duties",
+      "eligibility": "Admitted to specified in-person engineering research Master's; research experience and need",
+      "official_url": "https://apoyofinanciero.uniandes.edu.co/beca-avanza",
+      "status": "hold_conflicting_official_deadline",
+      "notes": "Programme page shows 2026-10-05 to 2026-11-26; another official page shows 2026-10-06 to 2026-11-27. Verify deadline before publishing.",
+      "ielts_toefl_sat": "No scholarship-specific IELTS/TOEFL/SAT minimum established from cited programme page; do not infer",
+      "staging_screen": "No exact title or official URL match found in targeted scholarship/source-candidate search; generic institutional umbrella overlap may exist.",
+      "deadline_conflict": [
+        "2026-11-26",
+        "2026-11-27"
+      ]
+    },
+    {
+      "title": "Beca Vamos Pa'lante — Universidad de los Andes",
+      "country": "Colombia",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "deadline": "2026-11-13",
+      "application_cycle": "2027-10 intake / 2026 application window unless otherwise specified",
+      "funding": "70%–95% tuition and/or up to COP 2,000,000 living support per semester",
+      "eligibility": "Current undergraduate students with <=60 credits remaining, GPA >3.25, documented financial need",
+      "official_url": "https://apoyofinanciero.uniandes.edu.co/beca-vamos-palante",
+      "status": "private_draft_candidate_after_semantic_reconciliation",
+      "notes": "Award is semester-based; reapply; maximum three semesters. Opens 2026-10-19.",
+      "ielts_toefl_sat": "No scholarship-specific IELTS/TOEFL/SAT minimum established from cited programme page; do not infer",
+      "staging_screen": "No exact title or official URL match found in targeted scholarship/source-candidate search; generic institutional umbrella overlap may exist."
+    },
+    {
+      "title": "Beca Ciro Angarita — Universidad de los Andes",
+      "country": "Colombia",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "deadline": "2026-11-13",
+      "application_cycle": "2027-10 intake / 2026 application window unless otherwise specified",
+      "funding": "Partial tuition; amount determined by scholarship committee",
+      "eligibility": "Current undergraduate law students with demonstrated financial need",
+      "official_url": "https://apoyofinanciero.uniandes.edu.co/beca-ciro-angarita",
+      "status": "private_draft_candidate_after_semantic_reconciliation",
+      "notes": "One-semester award, opened 2026-10-19.",
+      "ielts_toefl_sat": "No scholarship-specific IELTS/TOEFL/SAT minimum established from cited programme page; do not infer",
+      "staging_screen": "No exact title or official URL match found in targeted scholarship/source-candidate search; generic institutional umbrella overlap may exist."
+    },
+    {
+      "title": "Beca Henry Yerly — Universidad de los Andes",
+      "country": "Colombia",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "deadline": "2026-11-13",
+      "application_cycle": "2027-10 intake / 2026 application window unless otherwise specified",
+      "funding": "Partial tuition; exact percentage unspecified",
+      "eligibility": "New or existing Mathematics undergraduate students with strong academics and financial need",
+      "official_url": "https://apoyofinanciero.uniandes.edu.co/beca-henry-yerly",
+      "status": "private_draft_candidate_after_semantic_reconciliation",
+      "notes": "One semester; opened 2026-10-19; two recommendation letters required.",
+      "ielts_toefl_sat": "No scholarship-specific IELTS/TOEFL/SAT minimum established from cited programme page; do not infer",
+      "staging_screen": "No exact title or official URL match found in targeted scholarship/source-candidate search; generic institutional umbrella overlap may exist."
+    },
+    {
+      "title": "Becas de Excelencia Eduardo Álvarez Correa — Universidad de los Andes",
+      "country": "Colombia",
+      "degree_levels": [
+        "Master",
+        "PhD"
+      ],
+      "deadline": "2026-12-27",
+      "application_cycle": "2027-10 intake / 2026 application window unless otherwise specified",
+      "funding": "Up to 100% tuition, budget-dependent",
+      "eligibility": "New or continuing postgraduate Law students with academic excellence and need",
+      "official_url": "https://apoyofinanciero.uniandes.edu.co/?id=2&start=60&view=category",
+      "status": "private_draft_candidate_after_semantic_reconciliation",
+      "notes": "Applications 2026-12-09 to 2026-12-27; award is semester-based and requires new renewal application.",
+      "ielts_toefl_sat": "No scholarship-specific IELTS/TOEFL/SAT minimum established from cited programme page; do not infer",
+      "staging_screen": "No exact title or official URL match found in targeted scholarship/source-candidate search; generic institutional umbrella overlap may exist."
+    },
+    {
+      "title": "Beca Fundación Gloria Zea — Universidad de los Andes",
+      "country": "Colombia",
+      "degree_levels": [
+        "Master"
+      ],
+      "deadline": "2026-12-02",
+      "application_cycle": "2027-10 intake / 2026 application window unless otherwise specified",
+      "funding": "Up to 100% tuition for 12 credits per term for up to three semesters",
+      "eligibility": "Preselected Art History Master's students researching Fernando Botero",
+      "official_url": "https://apoyofinanciero.uniandes.edu.co/beca-maestria-historia-del-arte",
+      "status": "hold_transient_official_url",
+      "notes": "Search-indexed official page contains details but direct fetch returned 404; do not infer discontinuation. Reconfirm via live programme URL before publication.",
+      "ielts_toefl_sat": "No scholarship-specific IELTS/TOEFL/SAT minimum established from cited programme page; do not infer",
+      "staging_screen": "No exact title or official URL match found in targeted scholarship/source-candidate search; generic institutional umbrella overlap may exist."
+    },
+    {
+      "title": "Beca Fundación Mazda Uniandes",
+      "country": "Colombia",
+      "degree_levels": [
+        "Bachelor"
+      ],
+      "deadline": "2026-12-15",
+      "application_cycle": "2027-10 intake / 2026 application window unless otherwise specified",
+      "funding": "Advertised 95% tuition for eligible listed programmes",
+      "eligibility": "Newly admitted to named administration/engineering/math programmes; two pathways with different family/employment conditions",
+      "official_url": "https://apoyofinanciero.uniandes.edu.co/beca-mazda",
+      "status": "hold_financing_terms",
+      "notes": "Two subroutes: Quiero Estudiar Fundación Mazda and Beca Empresarial Fundación Mazda. Investigate repayment/income-share obligations before categorizing as nonrepayable scholarship.",
+      "ielts_toefl_sat": "No scholarship-specific IELTS/TOEFL/SAT minimum established from cited programme page; do not infer",
+      "staging_screen": "No exact title or official URL match found in targeted scholarship/source-candidate search; generic institutional umbrella overlap may exist."
+    },
+    {
+      "title": "PEC-PG 2027 — Programa de Estudantes-Convênio de Pós-Graduação",
+      "country": "Brazil",
+      "degree_levels": [
+        "Master",
+        "PhD"
+      ],
+      "deadline": null,
+      "application_cycle": "2027-10 intake / 2026 application window unless otherwise specified",
+      "funding": "R$2,100 monthly for Master's (24 months); R$3,100 monthly for PhD (48 months) under official 2027 guidance",
+      "eligibility": "Foreign candidates eligible under PEC-PG and selected Brazilian institutions; institution-specific programme criteria",
+      "official_url": "https://www.gov.br/mre/pt-br/assuntos/cultura-e-educacao/temas-educacionais/programas-de-estudo-para-estrangeiros/programme-bresilien-detudiants-convention-pec-francais/pec-pg-master-et-doctorat/processus-de-selection-pec-pg",
+      "status": "private_draft_candidate_after_semantic_reconciliation",
+      "notes": "Institutions selected through December 2026; individual university selections from December 2026; no universal applicant deadline. Institutional implementation March 2027–March 2028.",
+      "ielts_toefl_sat": "No scholarship-specific IELTS/TOEFL/SAT minimum established from cited programme page; do not infer",
+      "staging_screen": "No exact title or official URL match found in targeted scholarship/source-candidate search; generic institutional umbrella overlap may exist.",
+      "cycle": "2027 selection; institution-dependent applicant deadlines",
+      "additional_official_source": "https://www.gov.br/cnpq/pt-br/assuntos/defeso-eleitoral/programa-vai-investir-r-22-19-milhoes-em-bolsas-de-mestrado-e-doutorado-inscricoes-vao-ate-13-de-agosto"
+    }
+  ],
+  "excluded_repayable_products": [
+    {
+      "title": "Quiero Estudiar — Universidad de los Andes",
+      "source_url": "https://apoyofinanciero.uniandes.edu.co/component/content/article/quiero-estudiar?catid=2",
+      "reason": "Income-share repayment: 20% of graduate income for twice support duration; not a nonrepayable grant.",
+      "classification": "income_share_repayable_support"
+    },
+    {
+      "title": "Fondo Dora Röthlisberger",
+      "source_url": "https://apoyofinanciero.uniandes.edu.co/fondo-dora-rothlisberger",
+      "reason": "Recipient commits to return 20% of postgraduation income for twice award duration.",
+      "classification": "income_share_repayable_support"
+    },
+    {
+      "title": "Fondo Cecilia",
+      "source_url": "https://apoyofinanciero.uniandes.edu.co/fondo-cecilia",
+      "reason": "Explicit loan; only partial conditional forgiveness, otherwise capital plus interest repayment.",
+      "classification": "loan"
+    },
+    {
+      "title": "Fondo Guillermo Wiedemann",
+      "source_url": "https://apoyofinanciero.uniandes.edu.co/fondo-guillermo-wiedemann",
+      "reason": "Loan may be forgiven on academic performance; otherwise principal plus interest repayable.",
+      "classification": "conditional_loan"
+    },
+    {
+      "title": "Beca Geociencias Uniandes",
+      "source_url": "https://apoyofinanciero.uniandes.edu.co/beca-geociencias-uniandes",
+      "reason": "Official programme page labels it PRÉSTAMO REEMBOLSABLE; do not count as grant.",
+      "classification": "repayable_loan"
+    }
+  ],
+  "safeguards": [
+    "All field changes are PROPOSALS, not accepted provenance or verified scholarship facts in staging.",
+    "Require full semantic duplicate review including generic umbrella programmes, not only exact title/URL checks.",
+    "Require official programme-specific source audit and reviewer-attributed field provenance before verification.",
+    "2027 degree/country lists must not be copied from 2026 guides without a current official 2027 document.",
+    "Do not mark a programme discontinued based on a 404, CAPTCHA, or other transient HTTP failure.",
+    "Archive only through authenticated audited workflow; preserve canonical records.",
+    "No production writes, merge, or deployment without staging validation and CI.",
+    "No scholarship status, publication, provenance, source-candidate or archive database writes were performed."
+  ],
+  "staging_mutations_succeeded": 0,
+  "new_publications": 0,
+  "new_drafts": 0,
+  "new_provenance": 0,
+  "new_archives": 0,
+  "production_changes": 0
+}

@@ -1,0 +1,476 @@
+{
+  "package_version": 1,
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "repository": "timurdev-collab/grantly",
+  "research_date": "2026-10-24",
+  "baseline_readback_utc": "2026-10-24T01:26:39.814123Z",
+  "baseline_counts": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_values": 207,
+    "reviewer_attributed": 0,
+    "source_candidates": 636,
+    "admin_logs": 8
+  },
+  "status": "Historical evidence package committed to GitHub after earlier local-only preparation; no staging writes or publications were made in its original investigation",
+  "safeguards": [
+    "Do not mark verified or accepted without authenticated review",
+    "Do not archive except audited authorized workflow",
+    "Do not confuse admission deadline with scholarship deadline",
+    "Do not classify loans or paid RA/TA roles as unconditional grants",
+    "Do not duplicate programmes across generic and named entries",
+    "Treat conflicting official pages as unresolved"
+  ],
+  "published_records_investigated": [
+    {
+      "scholarship_id": "e3e7f0f4-7c4a-4032-a0d3-d7591d1684f7",
+      "title": "Jardine Scholarship",
+      "priority": "critical",
+      "findings": [
+        "Jardine Foundation confirms no further Oxford/Cambridge UNDERGRADUATE awards for 2027 onwards; 2026 entrants were final cohort.",
+        "Separate Jardine Oxford/Cambridge POSTGRADUATE scheme continues, so do not mark the entire Jardine Foundation discontinued."
+      ],
+      "proposed_fields": {
+        "cycle_status": "discontinued for Oxbridge undergraduate route effective 2027",
+        "application_cycle": "Last Oxford/Cambridge undergraduate entry autumn 2026",
+        "eligible_nationalities": "ALL is unsupported; regional restrictions apply",
+        "official_url": "https://www.jardine-foundation.org/scholarship-schemes"
+      },
+      "official_sources": [
+        "https://www.jardine-foundation.org/scholarship-schemes",
+        "https://www.cambridgetrust.org/scholarship/jardine-cambridge-graduate-scholarship/"
+      ],
+      "recommended_action": "authenticated_archive_review_undergraduate_only",
+      "duplicate_risk": "Postgraduate Jardine awards remain active; do not archive these.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "32bdbc52-bdfa-4b27-a16a-59a2d8e71d46",
+      "title": "KAAD Scholarship",
+      "priority": "high",
+      "findings": [
+        "Official KAAD Programme 1 is restricted to qualified applicants from partner/focus countries in Africa, Asia, Middle East and Latin America.",
+        "German B1 (A2 for English-taught degrees) is specified; no universal IELTS/TOEFL/SAT numeric score.",
+        "The official programme states awards become loans if study/research is not directed toward reintegration in home region.",
+        "The record’s EUR 861/month plus tuition claim was not established on the programme page."
+      ],
+      "proposed_fields": {
+        "official_url": "https://www.kaad.de/en/stipendien/stipendienprogramm-1",
+        "eligible_nationalities": "restricted focus/partner countries, not ALL",
+        "funding_type": "conditional scholarship; may become loan under stated reintegration condition",
+        "min_ielts": null,
+        "deadline": null
+      },
+      "official_sources": [
+        "https://www.kaad.de/en/stipendien/stipendienprogramm-1"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "KAAD Eastern Europe and KAAD Programme 2 are distinct.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "891681ad-b022-431d-85f3-e9acc21525e9",
+      "title": "Hamad Bin Khalifa University Engineering Masters Award",
+      "priority": "high",
+      "findings": [
+        "HBKU offers funding contingent on admission, merit/need, availability and research/teaching assistant commitments; not guaranteed.",
+        "International Master stipend guideline QAR 7,000/month; international PhD QAR 9,000/month for selected funded students.",
+        "Graduate 2027 international admission deadline February 1; Qatari/resident applicants seeking funding March 15. These are admissions deadlines, not separately published scholarship deadlines.",
+        "HBKU explicitly states students pay their own housing; generic full tuition + stipend + housing claims are false.",
+        "Master tuition waiver varies by degree: STEM 75%, SHAPE 60%, certain programmes 0%; PhD generally 100% for selected awards."
+      ],
+      "proposed_fields": {
+        "official_url": "https://www.hbku.edu.qa/en/scholarship",
+        "application_cycle": "Fall 2027 graduate admission",
+        "deadline_notes": "International graduate admission 2027-02-01; Qatari/resident funding-related admission 2027-03-15; no separate scholarship application",
+        "accommodation": false,
+        "tuition_coverage": "programme-dependent and conditional; never universal full tuition plus housing",
+        "stipend": "selected international MS QAR 7,000/month; selected international PhD QAR 9,000/month, conditional on RA/TA and funds"
+      },
+      "official_sources": [
+        "https://www.hbku.edu.qa/en/scholarship",
+        "https://www.hbku.edu.qa/en/graduate-admissions"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "Six generic records appear to represent overlapping HBKU graduate scholarship policy; reconcile identity before edits or archiving.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "e618915f-c5e8-46f8-a240-ec2bb721f1da",
+      "title": "Hamad Bin Khalifa University Engineering Phd Award",
+      "priority": "high",
+      "findings": [
+        "HBKU offers funding contingent on admission, merit/need, availability and research/teaching assistant commitments; not guaranteed.",
+        "International Master stipend guideline QAR 7,000/month; international PhD QAR 9,000/month for selected funded students.",
+        "Graduate 2027 international admission deadline February 1; Qatari/resident applicants seeking funding March 15. These are admissions deadlines, not separately published scholarship deadlines.",
+        "HBKU explicitly states students pay their own housing; generic full tuition + stipend + housing claims are false.",
+        "Master tuition waiver varies by degree: STEM 75%, SHAPE 60%, certain programmes 0%; PhD generally 100% for selected awards."
+      ],
+      "proposed_fields": {
+        "official_url": "https://www.hbku.edu.qa/en/scholarship",
+        "application_cycle": "Fall 2027 graduate admission",
+        "deadline_notes": "International graduate admission 2027-02-01; Qatari/resident funding-related admission 2027-03-15; no separate scholarship application",
+        "accommodation": false,
+        "tuition_coverage": "programme-dependent and conditional; never universal full tuition plus housing",
+        "stipend": "selected international MS QAR 7,000/month; selected international PhD QAR 9,000/month, conditional on RA/TA and funds"
+      },
+      "official_sources": [
+        "https://www.hbku.edu.qa/en/scholarship",
+        "https://www.hbku.edu.qa/en/graduate-admissions"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "Six generic records appear to represent overlapping HBKU graduate scholarship policy; reconcile identity before edits or archiving.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "04e3ba48-f760-4160-b0e1-dee3fa966f39",
+      "title": "Hamad Bin Khalifa University Masters Excellence Scholarship",
+      "priority": "high",
+      "findings": [
+        "HBKU offers funding contingent on admission, merit/need, availability and research/teaching assistant commitments; not guaranteed.",
+        "International Master stipend guideline QAR 7,000/month; international PhD QAR 9,000/month for selected funded students.",
+        "Graduate 2027 international admission deadline February 1; Qatari/resident applicants seeking funding March 15. These are admissions deadlines, not separately published scholarship deadlines.",
+        "HBKU explicitly states students pay their own housing; generic full tuition + stipend + housing claims are false.",
+        "Master tuition waiver varies by degree: STEM 75%, SHAPE 60%, certain programmes 0%; PhD generally 100% for selected awards."
+      ],
+      "proposed_fields": {
+        "official_url": "https://www.hbku.edu.qa/en/scholarship",
+        "application_cycle": "Fall 2027 graduate admission",
+        "deadline_notes": "International graduate admission 2027-02-01; Qatari/resident funding-related admission 2027-03-15; no separate scholarship application",
+        "accommodation": false,
+        "tuition_coverage": "programme-dependent and conditional; never universal full tuition plus housing",
+        "stipend": "selected international MS QAR 7,000/month; selected international PhD QAR 9,000/month, conditional on RA/TA and funds"
+      },
+      "official_sources": [
+        "https://www.hbku.edu.qa/en/scholarship",
+        "https://www.hbku.edu.qa/en/graduate-admissions"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "Six generic records appear to represent overlapping HBKU graduate scholarship policy; reconcile identity before edits or archiving.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "06e74eed-5282-456d-8e97-8b235be85ba7",
+      "title": "Hamad Bin Khalifa University Masters International Scholarship",
+      "priority": "high",
+      "findings": [
+        "HBKU offers funding contingent on admission, merit/need, availability and research/teaching assistant commitments; not guaranteed.",
+        "International Master stipend guideline QAR 7,000/month; international PhD QAR 9,000/month for selected funded students.",
+        "Graduate 2027 international admission deadline February 1; Qatari/resident applicants seeking funding March 15. These are admissions deadlines, not separately published scholarship deadlines.",
+        "HBKU explicitly states students pay their own housing; generic full tuition + stipend + housing claims are false.",
+        "Master tuition waiver varies by degree: STEM 75%, SHAPE 60%, certain programmes 0%; PhD generally 100% for selected awards."
+      ],
+      "proposed_fields": {
+        "official_url": "https://www.hbku.edu.qa/en/scholarship",
+        "application_cycle": "Fall 2027 graduate admission",
+        "deadline_notes": "International graduate admission 2027-02-01; Qatari/resident funding-related admission 2027-03-15; no separate scholarship application",
+        "accommodation": false,
+        "tuition_coverage": "programme-dependent and conditional; never universal full tuition plus housing",
+        "stipend": "selected international MS QAR 7,000/month; selected international PhD QAR 9,000/month, conditional on RA/TA and funds"
+      },
+      "official_sources": [
+        "https://www.hbku.edu.qa/en/scholarship",
+        "https://www.hbku.edu.qa/en/graduate-admissions"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "Six generic records appear to represent overlapping HBKU graduate scholarship policy; reconcile identity before edits or archiving.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "cf8c0a33-3ea6-4e23-8132-7dc313d27576",
+      "title": "Hamad Bin Khalifa University Phd Excellence Scholarship",
+      "priority": "high",
+      "findings": [
+        "HBKU offers funding contingent on admission, merit/need, availability and research/teaching assistant commitments; not guaranteed.",
+        "International Master stipend guideline QAR 7,000/month; international PhD QAR 9,000/month for selected funded students.",
+        "Graduate 2027 international admission deadline February 1; Qatari/resident applicants seeking funding March 15. These are admissions deadlines, not separately published scholarship deadlines.",
+        "HBKU explicitly states students pay their own housing; generic full tuition + stipend + housing claims are false.",
+        "Master tuition waiver varies by degree: STEM 75%, SHAPE 60%, certain programmes 0%; PhD generally 100% for selected awards."
+      ],
+      "proposed_fields": {
+        "official_url": "https://www.hbku.edu.qa/en/scholarship",
+        "application_cycle": "Fall 2027 graduate admission",
+        "deadline_notes": "International graduate admission 2027-02-01; Qatari/resident funding-related admission 2027-03-15; no separate scholarship application",
+        "accommodation": false,
+        "tuition_coverage": "programme-dependent and conditional; never universal full tuition plus housing",
+        "stipend": "selected international MS QAR 7,000/month; selected international PhD QAR 9,000/month, conditional on RA/TA and funds"
+      },
+      "official_sources": [
+        "https://www.hbku.edu.qa/en/scholarship",
+        "https://www.hbku.edu.qa/en/graduate-admissions"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "Six generic records appear to represent overlapping HBKU graduate scholarship policy; reconcile identity before edits or archiving.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "9465904e-4c22-4198-871f-c83e1e2d22ea",
+      "title": "Hamad Bin Khalifa University Phd International Scholarship",
+      "priority": "high",
+      "findings": [
+        "HBKU offers funding contingent on admission, merit/need, availability and research/teaching assistant commitments; not guaranteed.",
+        "International Master stipend guideline QAR 7,000/month; international PhD QAR 9,000/month for selected funded students.",
+        "Graduate 2027 international admission deadline February 1; Qatari/resident applicants seeking funding March 15. These are admissions deadlines, not separately published scholarship deadlines.",
+        "HBKU explicitly states students pay their own housing; generic full tuition + stipend + housing claims are false.",
+        "Master tuition waiver varies by degree: STEM 75%, SHAPE 60%, certain programmes 0%; PhD generally 100% for selected awards."
+      ],
+      "proposed_fields": {
+        "official_url": "https://www.hbku.edu.qa/en/scholarship",
+        "application_cycle": "Fall 2027 graduate admission",
+        "deadline_notes": "International graduate admission 2027-02-01; Qatari/resident funding-related admission 2027-03-15; no separate scholarship application",
+        "accommodation": false,
+        "tuition_coverage": "programme-dependent and conditional; never universal full tuition plus housing",
+        "stipend": "selected international MS QAR 7,000/month; selected international PhD QAR 9,000/month, conditional on RA/TA and funds"
+      },
+      "official_sources": [
+        "https://www.hbku.edu.qa/en/scholarship",
+        "https://www.hbku.edu.qa/en/graduate-admissions"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "Six generic records appear to represent overlapping HBKU graduate scholarship policy; reconcile identity before edits or archiving.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "cb3521b5-fe44-485f-92c0-48c1f8b1929d",
+      "title": "Makerere University Masters International Scholarship",
+      "priority": "high",
+      "findings": [
+        "Official Makerere Mastercard Foundation Scholars Program 2026/27 has 245 undergraduate and 13 Masters awards and deadline 2026-06-05 23:59 EAT.",
+        "Applicants must meet specific African educational background, need, admission, and programme criteria; nationality ALL is unsupported.",
+        "Next 2027/28 application deadline is not confirmed.",
+        "The generic record must not be renamed as Mastercard Foundation scholarship without first establishing programme identity and deduplicating other named records."
+      ],
+      "proposed_fields": {
+        "eligible_nationalities": "restricted to eligible African applicants/circumstances; not ALL",
+        "deadline": null,
+        "application_cycle": "2026/27 programme call closed 2026-06-05; next cycle unconfirmed",
+        "official_url": "https://apply.mastercardfoundation.mak.ac.ug/announcements/30"
+      },
+      "official_sources": [
+        "https://apply.mastercardfoundation.mak.ac.ug/announcements/30"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "One umbrella Mastercard programme has undergraduate and graduate routes; also distinct Africa Climate Collaborative scheme.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "e84bdd54-6c3d-4629-914c-63f5a6e79513",
+      "title": "Makerere University Scholarship",
+      "priority": "high",
+      "findings": [
+        "Official Makerere Mastercard Foundation Scholars Program 2026/27 has 245 undergraduate and 13 Masters awards and deadline 2026-06-05 23:59 EAT.",
+        "Applicants must meet specific African educational background, need, admission, and programme criteria; nationality ALL is unsupported.",
+        "Next 2027/28 application deadline is not confirmed.",
+        "The generic record must not be renamed as Mastercard Foundation scholarship without first establishing programme identity and deduplicating other named records."
+      ],
+      "proposed_fields": {
+        "eligible_nationalities": "restricted to eligible African applicants/circumstances; not ALL",
+        "deadline": null,
+        "application_cycle": "2026/27 programme call closed 2026-06-05; next cycle unconfirmed",
+        "official_url": "https://apply.mastercardfoundation.mak.ac.ug/announcements/28"
+      },
+      "official_sources": [
+        "https://apply.mastercardfoundation.mak.ac.ug/announcements/28"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "One umbrella Mastercard programme has undergraduate and graduate routes; also distinct Africa Climate Collaborative scheme.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "fb9f76b0-c283-4822-a99c-7016583c852f",
+      "title": "Makerere University Undergraduate Excellence Scholarship",
+      "priority": "high",
+      "findings": [
+        "Official Makerere Mastercard Foundation Scholars Program 2026/27 has 245 undergraduate and 13 Masters awards and deadline 2026-06-05 23:59 EAT.",
+        "Applicants must meet specific African educational background, need, admission, and programme criteria; nationality ALL is unsupported.",
+        "Next 2027/28 application deadline is not confirmed.",
+        "The generic record must not be renamed as Mastercard Foundation scholarship without first establishing programme identity and deduplicating other named records."
+      ],
+      "proposed_fields": {
+        "eligible_nationalities": "restricted to eligible African applicants/circumstances; not ALL",
+        "deadline": null,
+        "application_cycle": "2026/27 programme call closed 2026-06-05; next cycle unconfirmed",
+        "official_url": "https://apply.mastercardfoundation.mak.ac.ug/announcements/28"
+      },
+      "official_sources": [
+        "https://apply.mastercardfoundation.mak.ac.ug/announcements/28"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "One umbrella Mastercard programme has undergraduate and graduate routes; also distinct Africa Climate Collaborative scheme.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "ae2afa94-5abf-45aa-8e6c-ded19cb45fef",
+      "title": "Minerva University Scholarship",
+      "priority": "high",
+      "findings": [
+        "Minerva explicitly states no full-ride financial aid packages.",
+        "Need-based packages may combine nonrepayable scholarships, low-interest student loans, and work-study; these must not all be classified as scholarship grants.",
+        "Financial aid application must occur during the admissions cycle, before decision; no universal award amount or date on the programme page."
+      ],
+      "proposed_fields": {
+        "funding_type": "need-based scholarship component only, not loan/work-study",
+        "tuition_coverage": "variable need-based award, not guaranteed full tuition",
+        "official_url": "https://www.minerva.edu/undergraduate/financial-aid/",
+        "deadline": null
+      },
+      "official_sources": [
+        "https://www.minerva.edu/undergraduate/financial-aid/"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": null,
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "847ba3a6-ded4-4123-bbcb-813b53d20c65",
+      "title": "Strathmore University Scholarship",
+      "priority": "high",
+      "findings": [
+        "Strathmore official aid office lists distinct SU merit/need, sports, bursaries, work-study and LOAN categories.",
+        "Not every student gets full tuition; university intake deadline guidance is by course/intake, not one universal date.",
+        "The published generic record requires identity reconciliation with named merit/need award and an existing EAC Scholarship draft."
+      ],
+      "proposed_fields": {
+        "official_url": "https://strathmore.edu/financial-aid/",
+        "funding_type": "varies by named grant; loans excluded",
+        "tuition_coverage": "partial or full only for selected eligible awards",
+        "deadline": null
+      },
+      "official_sources": [
+        "https://strathmore.edu/financial-aid/"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "Existing private EAC Scholarship Programme Cohort 4 is separate; do not duplicate.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    },
+    {
+      "scholarship_id": "fa1dd137-4f98-451f-a014-9d11429c9672",
+      "title": "Zayed University Scholarship",
+      "priority": "high",
+      "findings": [
+        "Current published record conflates UAE national government-funded tuition with limited merit scholarships for international students.",
+        "An official English scholarship page describes President 100%, Academic Merit 50%/25% and SAT Math thresholds 650/590; a separate official Arabic page says up to 50% with IELTS 6.0 (minimum section 5.5) or TOEFL iBT 80.",
+        "These official pages conflict; do not apply any one tier/test threshold universally without university confirmation.",
+        "Staging already contains archived and private draft records titled Zayed University Undergraduate Merit Scholarship."
+      ],
+      "proposed_fields": {
+        "official_url": "https://www.zu.ac.ae/main/en/undergraduate-programs/_images/tuition-scholarship",
+        "funding_type": "institution-specific limited merit scholarships; do not equate with universal full tuition",
+        "eligible_nationalities": "international self-funding undergraduates for merit awards; national funding separate",
+        "deadline": null,
+        "min_ielts": null,
+        "sat_required": null
+      },
+      "official_sources": [
+        "https://www.zu.ac.ae/main/en/undergraduate-programs/_images/tuition-scholarship",
+        "https://www.zu.ac.ae/main/ar/admission/undergraduate-programs/admission-requirement/_international-students/scholarships",
+        "https://www.zu.ac.ae/main/en/undergraduate-programs/tuition-scholarship"
+      ],
+      "recommended_action": "manual_review",
+      "duplicate_risk": "Exact-name archived and private draft Zayed merit records already exist; resolve before publication.",
+      "verified_in_staging": false,
+      "edits_applied": false
+    }
+  ],
+  "programme_leads": [
+    {
+      "title": "Jardine Cambridge Graduate Scholarship",
+      "country": "United Kingdom",
+      "degrees": [
+        "Master",
+        "PhD"
+      ],
+      "official_url": "https://www.cambridgetrust.org/scholarship/jardine-cambridge-graduate-scholarship/",
+      "eligibility": "11 specified Asian countries/territories, citizen or resident, college requirements",
+      "funding": "tuition, maintenance, visa, IHS, travel; additional PhD support",
+      "deadline": "Cambridge course-specific funding deadline, not one universal date",
+      "status": "research_only_semantic_duplicate_check"
+    },
+    {
+      "title": "KAAD Central, Southeastern and Eastern Europe Programme",
+      "country": "Germany",
+      "degrees": [
+        "Master",
+        "PhD",
+        "research stay"
+      ],
+      "official_url": "https://www.kaad.de/en/stipendien/osteuropaprogramm/",
+      "eligibility": "Central/Eastern/Southeastern Europe, Central Asia and Caucasus, religion and German-language requirements",
+      "funding": "conditional support; possible loan if reintegration condition not met",
+      "deadline": "second-stage January 15 and June 30 annually; first stage earlier",
+      "status": "research_only_semantic_duplicate_check"
+    },
+    {
+      "title": "Makerere Mastercard Foundation Scholars Program 2026/27",
+      "country": "Uganda",
+      "degrees": [
+        "Bachelor",
+        "Master"
+      ],
+      "official_url": "https://apply.mastercardfoundation.mak.ac.ug/announcements/28",
+      "eligibility": "eligible African applicants with financial need and admission; other restrictions",
+      "funding": "scholarships; precise benefits require separate programme guide",
+      "deadline": "2026-06-05 closed; 2027/28 not confirmed",
+      "status": "research_only_closed_cycle"
+    },
+    {
+      "title": "Makerere Africa Climate Collaborative Scholarships 2026/27",
+      "country": "Uganda",
+      "degrees": [
+        "Master",
+        "PhD"
+      ],
+      "official_url": "https://climatecollaborative.mak.ac.ug/scholarships",
+      "eligibility": "eligible African applicants with financial need and admission",
+      "funding": "50 Master and 12 PhD opportunities under 2026/27 call",
+      "deadline": "2026-06-05 closed; 2027/28 not confirmed",
+      "status": "research_only_closed_cycle"
+    }
+  ],
+  "blocked_actions": {
+    "supabase_auth_uid": null,
+    "supabase_is_admin": false,
+    "github_connector_error": "link_id must identify an eligible linked account"
+  },
+  "staging_edits_succeeded": 0,
+  "publications_succeeded": 0,
+  "final_readback_utc": "2026-10-24T01:28:25.433900Z",
+  "final_counts": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_values": 207,
+    "reviewer_attributed": 0,
+    "source_candidates": 636,
+    "admin_logs": 8
+  },
+  "readback_delta": {
+    "published": 0,
+    "published_needs_review": 0,
+    "drafts": 0,
+    "archived": 0,
+    "provenance": 0,
+    "accepted_values": 0,
+    "reviewer_attributed": 0,
+    "source_candidates": 0,
+    "admin_logs": 0
+  }
+}

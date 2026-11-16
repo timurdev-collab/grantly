@@ -1,0 +1,529 @@
+{
+  "run_date_utc": "2026-10-24",
+  "readback_start_utc": "2026-10-24T09:21:05Z",
+  "project_id": "cbzriyarlvpmtfbjgede",
+  "repo": "timurdev-collab/grantly",
+  "safety": {
+    "mode": "official-source review proposals only",
+    "database_mutations": 0,
+    "reviewer_accepted_provenance": 0,
+    "published": 0,
+    "archive": 0,
+    "production_mutations": 0,
+    "source_access_note": "Transient errors are not discontinuation evidence",
+    "language_tests": "No universal IELTS/TOEFL/SAT score imputed; programme admission tests require separate programme-specific verification",
+    "deadline_rule": "Distinguish scholarship-specific deadlines from admissions deadlines and historical cycles",
+    "permission": "Admin auth.uid() null and is_admin() false; no bypass"
+  },
+  "staging_baseline": {
+    "published": 397,
+    "published_needs_review": 309,
+    "drafts": 83,
+    "archived": 75,
+    "provenance": 557,
+    "accepted_provenance": 207,
+    "reviewer_attributed_provenance": 0,
+    "source_candidates": 636,
+    "admin_logs": 8
+  },
+  "published_record_investigations": [
+    {
+      "id": "ec0262a7-6b7c-48a9-95bf-b7f69af09a60",
+      "title": "Leiden University Excellence Scholarship",
+      "country": "Netherlands",
+      "identity": "Named LExS, official page verified",
+      "fields": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.universiteitleiden.nl/en/scholarships/sea/leiden-university-excellence-scholarship-lexs",
+          "source_url": "https://www.universiteitleiden.nl/en/scholarships/sea/leiden-university-excellence-scholarship-lexs",
+          "evidence_summary": "Canonical programme-specific page",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2026-12-01",
+          "source_url": "https://www.universiteitleiden.nl/en/scholarships/sea/leiden-university-excellence-scholarship-lexs",
+          "evidence_summary": "Official scholarship deadline, September 2027 Master's intake",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "September 2027 entry; scholarship closes 1 December 2026",
+          "source_url": "https://www.universiteitleiden.nl/en/scholarships/sea/leiden-university-excellence-scholarship-lexs",
+          "evidence_summary": "Scholarship excludes February starts",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "€10,000, €15,000, €17,500, €18,500, or €19,000 tuition contribution; not full funding",
+          "source_url": "https://www.universiteitleiden.nl/en/scholarships/sea/leiden-university-excellence-scholarship-lexs",
+          "evidence_summary": "Five published award tiers; living costs not covered",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Non-EEA/non-EFTA passport, except eligible Advanced LLM and MSc International Relations and Diplomacy applicants of all nationalities",
+          "source_url": "https://www.universiteitleiden.nl/en/scholarships/sea/leiden-university-excellence-scholarship-lexs",
+          "evidence_summary": "Not ALL nationalities for most programmes",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "description",
+          "proposed_value": "Merit-based award for eligible full-time Leiden Master's applicants, normally with excellent prior results; selected Leiden Law School programmes excluded",
+          "source_url": "https://www.universiteitleiden.nl/en/scholarships/sea/leiden-university-excellence-scholarship-lexs",
+          "evidence_summary": "Top 10% indication; 500-word motivation letter",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        }
+      ]
+    },
+    {
+      "id": "38dcbee8-8772-477d-9f60-c64394c924df",
+      "title": "Lund University Global Scholarship",
+      "country": "Sweden",
+      "identity": "Named scholarship verified",
+      "fields": [
+        {
+          "field": "official_url",
+          "proposed_value": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship",
+          "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship",
+          "evidence_summary": "Canonical programme-specific page",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "funding_type",
+          "proposed_value": "Partial or full TUITION waiver only, not fully funded living costs",
+          "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship",
+          "evidence_summary": "Living expenses explicitly excluded",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Part or all of tuition fees; proportion varies by faculty/programme",
+          "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship",
+          "evidence_summary": "No guaranteed percentage",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Non-EU/EEA/Swiss citizens liable for tuition fees",
+          "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship",
+          "evidence_summary": "Not ALL",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "degree_levels",
+          "proposed_value": [
+            "Master",
+            "Bachelor (selected programmes only)"
+          ],
+          "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship",
+          "evidence_summary": "Bachelor exceptions: Development Studies, Mathematics, Physics, Physical Geography",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship",
+          "evidence_summary": "2027 scholarship deadline not announced; last closed 16 Feb 2026",
+          "action": "hold_unconfirmed",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "Next scholarship round expected around February 2027; exact dates unannounced",
+          "source_url": "https://www.lunduniversity.lu.se/study/admission-degree-studies/scholarships-and-awards/lund-university-global-scholarship",
+          "evidence_summary": "Official page says usually opens in February; do not invent closing date",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        }
+      ]
+    },
+    {
+      "id": "100c8969-e315-4430-ad40-a52d6873dc53",
+      "title": "KTH Royal Institute of Technology Computer Science Masters Award",
+      "country": "Sweden",
+      "identity": "Unverified generic record, possible duplicate of published verified KTH Scholarship id 8a0f238c-c74a-435c-b59f-4ea4d40a94e2",
+      "fields": [
+        {
+          "field": "identity_review",
+          "proposed_value": "Potential duplicate/unsupported subject-specific scholarship",
+          "source_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827",
+          "evidence_summary": "Official KTH Scholarship is broad, not separately named Computer Science award",
+          "action": "duplicate_reconciliation",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "If referring to KTH Scholarship: full eligible Master's tuition only, no stipend",
+          "source_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827",
+          "evidence_summary": "Current claim of stipend unsupported; do not auto-apply before identity reconciliation",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": null,
+          "source_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827",
+          "evidence_summary": "KTH Scholarship excludes living costs",
+          "action": "identity_dependent",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-01-15",
+          "source_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827",
+          "evidence_summary": "Only if record is confirmed to be KTH Scholarship; do not assign before canonical reconciliation",
+          "action": "identity_dependent",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Fee-paying first-priority applicants meeting programme requirements",
+          "source_url": "https://www.kth.se/en/studies/2.25746/kth-scholarship-1.72827",
+          "evidence_summary": "Not unrestricted ALL",
+          "action": "identity_dependent",
+          "provenance_status": "proposed_not_accepted"
+        }
+      ]
+    },
+    {
+      "id": "f710ef9d-de77-43f4-9876-e2187a5f1500",
+      "title": "University of Copenhagen Masters International Scholarship",
+      "country": "Denmark",
+      "identity": "Generic record potentially describes UCPH Danish Government Scholarship",
+      "fields": [
+        {
+          "field": "identity_review",
+          "proposed_value": "University of Copenhagen Danish Government Scholarship; confirm canonical mapping",
+          "source_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students",
+          "evidence_summary": "Named institutional programme, not a universal international scholarship",
+          "action": "duplicate_reconciliation",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Eligible non-EU/EEA/Swiss citizens with qualifying residence permit",
+          "source_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students",
+          "evidence_summary": "Not ALL",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "Full/partial tuition waiver and/or living grant; faculty-specific, not guaranteed",
+          "source_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students",
+          "evidence_summary": "Faculty of Science offers tuition and 22 months living to a very limited group",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "Not universally guaranteed; varies by faculty and award",
+          "source_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students",
+          "evidence_summary": "Several faculties provide tuition only",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students",
+          "evidence_summary": "Automatic scholarship consideration with Master's admission; admissions deadlines programme-specific",
+          "action": "hold_unconfirmed",
+          "provenance_status": "proposed_not_accepted"
+        }
+      ]
+    },
+    {
+      "id": "2facb27a-61de-4ba1-8dd6-9333981c18b0",
+      "title": "University of Copenhagen Phd International Scholarship",
+      "country": "Denmark",
+      "identity": "Generic PhD funding claim unsupported as standalone scholarship",
+      "fields": [
+        {
+          "field": "identity_review",
+          "proposed_value": "Review as generic PhD funding/paid employment, not an independently named grant",
+          "source_url": "https://phd.ku.dk/english/enrolment/",
+          "evidence_summary": "PhD funding can be employment, external project funds, or home-country scholarship",
+          "action": "archive_or_correct_after_review",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "PhD tuition generally paid by project funder or employing faculty, not automatically waived",
+          "source_url": "https://phd.ku.dk/english/the-phd-programme/enrolment/phd-tuition-fee-at-the-university-of-copenhagen/",
+          "evidence_summary": "2027 standard fee DKK 85,000/year for three years, not paid personally by candidate",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": "No universal scholarship stipend established; funding is position/project-specific",
+          "source_url": "https://phd.ku.dk/english/enrolment/",
+          "evidence_summary": "Do not conflate salaried employment with grants",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": null,
+          "source_url": "https://phd.ku.dk/english/enrolment/",
+          "evidence_summary": "Each PhD school/position has its own application procedure",
+          "action": "hold_unconfirmed",
+          "provenance_status": "proposed_not_accepted"
+        }
+      ]
+    },
+    {
+      "id": "67821593-89ce-4176-991d-845ec3590c72",
+      "title": "University of Helsinki International Scholarship",
+      "country": "Finland",
+      "identity": "Potential canonical institutional Master's tuition waiver",
+      "fields": [
+        {
+          "field": "identity_review",
+          "proposed_value": "Retain one canonical institutional scholarship after reconciliation",
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "Same 50%/100% tuition-waiver scheme; avoid counting as distinct",
+          "action": "duplicate_reconciliation",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Excellent tuition-fee-liable applicants to eligible Helsinki Master's programmes, generally non-EU/EEA/Swiss without applicable exemption",
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "Not ALL; residence exemptions matter",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "50% or 100% tuition waiver; majority 50%; living expenses excluded",
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "Award usually two years with 55 ECTS renewal requirement",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": null,
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "No living-expense scholarship",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-01-19",
+          "source_url": "https://www.helsinki.fi/en/degree-programmes/computer-science-masters-programme",
+          "evidence_summary": "2027 Master's admission deadline; same application requests tuition waiver",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "Autumn 2027 Master's admission; applications 5–19 January 2027",
+          "source_url": "https://www.helsinki.fi/en/degree-programmes/computer-science-masters-programme",
+          "evidence_summary": "Admission and scholarship application integrated",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        }
+      ]
+    },
+    {
+      "id": "8def200f-88af-4f2a-8665-f7a514737d31",
+      "title": "University of Helsinki Masters Excellence Scholarship",
+      "country": "Finland",
+      "identity": "Generic duplicate candidate of University of Helsinki institutional Master's tuition waiver",
+      "fields": [
+        {
+          "field": "identity_review",
+          "proposed_value": "Reconcile with published id 67821593-89ce-4176-991d-845ec3590c72",
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "Same 50%/100% tuition-waiver scheme; avoid counting as distinct",
+          "action": "duplicate_reconciliation",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Excellent tuition-fee-liable applicants to eligible Helsinki Master's programmes, generally non-EU/EEA/Swiss without applicable exemption",
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "Not ALL; residence exemptions matter",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "50% or 100% tuition waiver; majority 50%; living expenses excluded",
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "Award usually two years with 55 ECTS renewal requirement",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": null,
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "No living-expense scholarship",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-01-19",
+          "source_url": "https://www.helsinki.fi/en/degree-programmes/computer-science-masters-programme",
+          "evidence_summary": "2027 Master's admission deadline; same application requests tuition waiver",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "Autumn 2027 Master's admission; applications 5–19 January 2027",
+          "source_url": "https://www.helsinki.fi/en/degree-programmes/computer-science-masters-programme",
+          "evidence_summary": "Admission and scholarship application integrated",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        }
+      ]
+    },
+    {
+      "id": "b8891f50-acfe-4315-a3d7-ec3d74e7cff2",
+      "title": "University of Helsinki Masters International Scholarship",
+      "country": "Finland",
+      "identity": "Generic duplicate candidate of University of Helsinki institutional Master's tuition waiver",
+      "fields": [
+        {
+          "field": "identity_review",
+          "proposed_value": "Reconcile with published id 67821593-89ce-4176-991d-845ec3590c72",
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "Same 50%/100% tuition-waiver scheme; avoid counting as distinct",
+          "action": "duplicate_reconciliation",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "eligible_nationalities",
+          "proposed_value": "Excellent tuition-fee-liable applicants to eligible Helsinki Master's programmes, generally non-EU/EEA/Swiss without applicable exemption",
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "Not ALL; residence exemptions matter",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "tuition_coverage",
+          "proposed_value": "50% or 100% tuition waiver; majority 50%; living expenses excluded",
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "Award usually two years with 55 ECTS renewal requirement",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "stipend",
+          "proposed_value": null,
+          "source_url": "https://www.helsinki.fi/en/admissions-and-education/apply-bachelors-and-masters-programmes/tuition-fees-and-scholarship-programme",
+          "evidence_summary": "No living-expense scholarship",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "deadline",
+          "proposed_value": "2027-01-19",
+          "source_url": "https://www.helsinki.fi/en/degree-programmes/computer-science-masters-programme",
+          "evidence_summary": "2027 Master's admission deadline; same application requests tuition waiver",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        },
+        {
+          "field": "application_cycle",
+          "proposed_value": "Autumn 2027 Master's admission; applications 5–19 January 2027",
+          "source_url": "https://www.helsinki.fi/en/degree-programmes/computer-science-masters-programme",
+          "evidence_summary": "Admission and scholarship application integrated",
+          "action": "review_and_correct",
+          "provenance_status": "proposed_not_accepted"
+        }
+      ]
+    }
+  ],
+  "named_leads": [
+    {
+      "name": "KTH India Scholarship",
+      "country": "Sweden",
+      "degree": "Master",
+      "source_url": "https://www.kth.se/en/studies/master/electromagnetics-fusion-and-space-engineering/2.25746/kth-india-scholarship-1.422144",
+      "deadline": "2027-01-15",
+      "funding": "Full eligible two-year tuition and monthly living allowance for 10 academic months",
+      "eligibility": "Indian citizens who completed undergraduate studies in India; first-choice KTH Master's; fee-paying",
+      "identity_check": "No exact named published/draft title found; still require semantic and canonical URL duplicate check",
+      "next_action": "authenticated_private_draft"
+    },
+    {
+      "name": "KTH One-Year Scholarship",
+      "country": "Sweden",
+      "degree": "Master (current students)",
+      "source_url": "https://www.kth.se/en/studies/master/vehicle-engineering/2.25746/kth-one-year-scholarship-1.290744",
+      "deadline": null,
+      "last_confirmed_deadline": "2026-04-15",
+      "funding": "Second-year tuition only; no living allowance",
+      "eligibility": "Current fee-paying KTH Master's students with satisfactory first-year results; no joint/EIT",
+      "next_action": "private_draft_after_2027_cycle_recheck"
+    },
+    {
+      "name": "KTH Joint Programme Scholarship",
+      "country": "Sweden",
+      "degree": "Master (selected joint programmes)",
+      "source_url": "https://www.kth.se/en/studies/master/electromagnetics-fusion-and-space-engineering/2.25746/kth-joint-programme-scholarship-1.611327",
+      "deadline": null,
+      "last_confirmed_deadline": "2026-04-15",
+      "funding": "Tuition during KTH study period; no living costs",
+      "eligibility": "Fee-paying students in listed joint programmes; Erasmus Mundus funded students generally excluded",
+      "next_action": "private_draft_after_2027_cycle_recheck"
+    },
+    {
+      "name": "University of Copenhagen Danish Government Scholarship",
+      "country": "Denmark",
+      "degree": "Master",
+      "source_url": "https://www.ku.dk/studies/admission/scholarships-for-full-degree-students",
+      "deadline": null,
+      "funding": "Partial/full tuition and sometimes living grants; varies by faculty",
+      "eligibility": "Eligible non-EU/EEA/Swiss admitted Master's students automatically considered",
+      "next_action": "reconcile_with_existing_generic_published_before_draft"
+    }
+  ],
+  "private_draft_priority": [
+    {
+      "id": "27968090-2edf-464d-9236-76f5186b741b",
+      "deadline": "2026-10-25",
+      "blocker": "missing successful source audit and reviewer-attributed provenance"
+    },
+    {
+      "id": "2e2644ab-186a-4c84-9a63-cbf761e9ead2",
+      "deadline": "2026-10-25",
+      "blocker": "missing successful source audit and reviewer-attributed provenance"
+    },
+    {
+      "id": "719cccf5-54e5-4680-a5c0-8e930a8a839c",
+      "deadline": "2026-10-31",
+      "blocker": "reviewer-attributed provenance absent"
+    }
+  ],
+  "publication_checks": [
+    "Authenticate genuine administrator or service role through approved app workflow",
+    "Validate source and scholarship identity",
+    "Run semantic and URL deduplication against published, drafts and archived",
+    "Check deadline cycle, tuition, nationality and any documented test score",
+    "Capture reviewer-attributed field provenance and source audit",
+    "Publish only through audited function after staging CI checks"
+  ],
+  "field_proposals_count": 45
+}
