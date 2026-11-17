@@ -126,7 +126,12 @@ class GuestSignInShortcutsSmokeTest {
         // UiAutomator can discover the semantics node before the button is
         // fully in view. A tap on a clipped or moving target may be ignored.
         for (attempt in 0 until 12) {
-            val bounds = personalize?.visibleBounds
+            // Compose may replace the semantics node while recommendations load.
+            // Re-query and tolerate a stale UiObject2 rather than failing before
+            // the navigation assertion can run.
+            val bounds = runCatching {
+                device.findObject(shortcutSelector)?.visibleBounds
+            }.getOrNull()
             if (bounds != null &&
                 bounds.centerY() in (device.displayHeight / 3)..(device.displayHeight * 2 / 3)
             ) break
@@ -137,7 +142,16 @@ class GuestSignInShortcutsSmokeTest {
             personalize = device.wait(Until.findObject(shortcutSelector), 2_000)
         }
         assertNotNull("Guest recommendations should link directly to Profile", personalize)
-        personalize!!.click()
+        // Re-query immediately before clicking: the object found during a
+        // scroll may already be detached from the Compose accessibility tree.
+        val clicked = runCatching {
+            device.findObject(shortcutSelector)?.click()
+            true
+        }.getOrDefault(false)
+        if (!clicked) {
+            device.waitForIdle(2_000)
+            device.findObject(shortcutSelector)?.click()
+        }
         val signInSelector = By.text("Sign in with your existing EduT account.")
         var signIn = device.wait(Until.findObject(signInSelector), 5_000)
         // Retry only if the original Home shortcut is still visible. Do not
