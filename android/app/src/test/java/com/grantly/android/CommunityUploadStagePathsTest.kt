@@ -109,6 +109,12 @@ class CommunityUploadStagePathsTest {
             candidate.writeBytes(byteArrayOf(0, 0, 0, 16, 102, 116, 121, 112, 105, 115, 111, 109, 0, 0, 0, 0))
             assertTrue(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 16))
             assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 15))
+            // A 17-byte ftyp box cannot contain complete 4-byte brand entries.
+            candidate.writeBytes(byteArrayOf(0, 0, 0, 17, 102, 116, 121, 112, 105, 115, 111, 109, 0, 0, 0, 0, 0))
+            assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 17))
+            // A 20-byte box may contain one compatible brand.
+            candidate.writeBytes(byteArrayOf(0, 0, 0, 20, 102, 116, 121, 112, 105, 115, 111, 109, 0, 0, 0, 0, 105, 115, 111, 109))
+            assertTrue(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 20))
             candidate.writeBytes(byteArrayOf(0, 0, 0, 12, 102, 116, 121, 112, 105, 115, 111, 109))
             assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(rootDir, candidate, account, operation, 16))
             candidate.writeBytes(byteArrayOf(0, 0, 0, 32, 102, 116, 121, 112, 105, 115, 111, 109, 0, 0, 0, 0))
