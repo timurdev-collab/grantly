@@ -128,4 +128,22 @@ class CommunityUploadStagePathsTest {
         }
     }
 
+    @Test fun recoveredMediaCannotCrossAccountBoundary() {
+        val temp = java.nio.file.Files.createTempDirectory("community-stage-isolation-test")
+        try {
+            val accountDir = java.nio.file.Files.createDirectories(temp.resolve(account))
+            val candidate = accountDir.resolve("$operation.mp4").toFile()
+            candidate.writeBytes(byteArrayOf(0, 0, 0, 16, 102, 116, 121, 112, 105, 115, 111, 109, 0, 0, 0, 0))
+            assertTrue(CommunityUploadStagePaths.isSafeStagedMp4(temp.toFile(), candidate, account, operation, 16))
+            assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(
+                temp.toFile(), candidate, "00000000-0000-4000-8000-000000000003", operation, 16
+            ))
+            assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(
+                temp.toFile(), candidate, account, "00000000-0000-4000-8000-000000000004", 16
+            ))
+        } finally {
+            temp.toFile().deleteRecursively()
+        }
+    }
+
 }
