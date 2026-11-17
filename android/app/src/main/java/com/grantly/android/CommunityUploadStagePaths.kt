@@ -71,6 +71,9 @@ internal object CommunityUploadStagePaths {
                         // ISO BMFF ftyp requires a 16-byte minimum box; reject
                         // truncated or impossible box sizes before upload.
                         valBoxSize(header) in 16..attrs.size() &&
+                        // ftyp contains a 4-byte major brand, 4-byte version and
+                        // zero or more 4-byte compatible brands after its header.
+                        (valBoxSize(header) - 16) % 4 == 0L &&
                         header[4] == 'f'.code.toByte() &&
                         header[5] == 't'.code.toByte() &&
                         header[6] == 'y'.code.toByte() &&
