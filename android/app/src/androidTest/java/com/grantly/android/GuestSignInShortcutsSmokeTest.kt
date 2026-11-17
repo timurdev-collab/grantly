@@ -145,8 +145,7 @@ class GuestSignInShortcutsSmokeTest {
         // Re-query immediately before clicking: the object found during a
         // scroll may already be detached from the Compose accessibility tree.
         val clicked = runCatching {
-            device.findObject(shortcutSelector)?.click()
-            true
+            device.findObject(shortcutSelector)?.let { it.click(); true } ?: false
         }.getOrDefault(false)
         if (!clicked) {
             device.waitForIdle(2_000)
