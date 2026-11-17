@@ -152,4 +152,29 @@ class CommunityUploadStagePathsTest {
         }
     }
 
+
+    @Test fun recoveredMediaRejectsSymlinkEvenWhenTargetHasValidHeader() {
+        val temp = java.nio.file.Files.createTempDirectory("community-stage-media-link-test")
+        try {
+            val accountDir = java.nio.file.Files.createDirectories(temp.resolve(account))
+            val outside = temp.resolve("outside.mp4")
+            java.nio.file.Files.write(outside, byteArrayOf(0, 0, 0, 16, 102, 116, 121, 112, 105, 115, 111, 109, 0, 0, 0, 0))
+            val link = accountDir.resolve("$operation.mp4")
+            try {
+                java.nio.file.Files.createSymbolicLink(link, outside)
+            } catch (e: UnsupportedOperationException) {
+                org.junit.Assume.assumeNoException(e)
+            } catch (e: java.nio.file.FileSystemException) {
+                org.junit.Assume.assumeNoException(e)
+            } catch (e: SecurityException) {
+                org.junit.Assume.assumeNoException(e)
+            }
+            assertFalse(CommunityUploadStagePaths.isSafeStagedMp4(
+                temp.toFile(), link.toFile(), account, operation, 16
+            ))
+        } finally {
+            temp.toFile().deleteRecursively()
+        }
+    }
+
 }
