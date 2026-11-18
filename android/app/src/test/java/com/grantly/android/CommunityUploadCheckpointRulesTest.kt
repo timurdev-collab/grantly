@@ -8,42 +8,42 @@ class CommunityUploadCheckpointRulesTest {
     private val rules = CommunityUploadCheckpointRules
 
     @Test fun uploadMayResumeButCannotSkipToPublication() {
-        assertTrue(rules.canTransition(rules.Phase.STAGED, rules.Phase.SESSION_CREATED))
-        assertTrue(rules.canTransition(rules.Phase.SESSION_CREATED, rules.Phase.UPLOADING))
-        assertTrue(rules.canTransition(rules.Phase.UPLOADING, rules.Phase.UPLOADING))
-        assertTrue(rules.canTransition(rules.Phase.UPLOADING, rules.Phase.SESSION_CREATED))
-        assertTrue(rules.canTransition(rules.Phase.UPLOADING, rules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING))
-        assertFalse(rules.canTransition(rules.Phase.STAGED, rules.Phase.INSERT_ATTEMPTED))
-        assertFalse(rules.canTransition(rules.Phase.UPLOADING, rules.Phase.PUBLISHED))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.STAGED, CommunityUploadCheckpointRules.Phase.SESSION_CREATED))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.SESSION_CREATED, CommunityUploadCheckpointRules.Phase.UPLOADING))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.UPLOADING, CommunityUploadCheckpointRules.Phase.UPLOADING))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.UPLOADING, CommunityUploadCheckpointRules.Phase.SESSION_CREATED))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.UPLOADING, CommunityUploadCheckpointRules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING))
+        assertFalse(rules.canTransition(CommunityUploadCheckpointRules.Phase.STAGED, CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED))
+        assertFalse(rules.canTransition(CommunityUploadCheckpointRules.Phase.UPLOADING, CommunityUploadCheckpointRules.Phase.PUBLISHED))
     }
 
     @Test fun onlyPublishPendingMayIssueInsert() {
-        for (phase in rules.Phase.values()) {
-            if (phase == rules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING) {
+        for (phase in CommunityUploadCheckpointRules.Phase.values()) {
+            if (phase == CommunityUploadCheckpointRules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING) {
                 assertTrue(rules.canIssuePostInsert(phase))
             } else {
                 assertFalse(rules.canIssuePostInsert(phase))
             }
         }
-        assertTrue(rules.canTransition(rules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING, rules.Phase.INSERT_ATTEMPTED))
-        assertFalse(rules.canTransition(rules.Phase.INSERT_ATTEMPTED, rules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING))
-        assertFalse(rules.canTransition(rules.Phase.RECONCILIATION_REQUIRED, rules.Phase.INSERT_ATTEMPTED))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING, CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED))
+        assertFalse(rules.canTransition(CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED, CommunityUploadCheckpointRules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING))
+        assertFalse(rules.canTransition(CommunityUploadCheckpointRules.Phase.RECONCILIATION_REQUIRED, CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED))
     }
 
     @Test fun uncertainInsertMustReconcileAndTerminalPhasesStayTerminal() {
-        assertTrue(rules.canTransition(rules.Phase.INSERT_ATTEMPTED, rules.Phase.RECONCILIATION_REQUIRED))
-        assertTrue(rules.canTransition(rules.Phase.RECONCILIATION_REQUIRED, rules.Phase.PUBLISHED))
-        assertTrue(rules.canTransition(rules.Phase.INSERT_ATTEMPTED, rules.Phase.PUBLISHED))
-        for (phase in rules.Phase.values()) {
-            assertFalse(rules.canTransition(rules.Phase.PUBLISHED, phase))
-            assertFalse(rules.canTransition(rules.Phase.CANCELLED, phase))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED, CommunityUploadCheckpointRules.Phase.RECONCILIATION_REQUIRED))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.RECONCILIATION_REQUIRED, CommunityUploadCheckpointRules.Phase.PUBLISHED))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED, CommunityUploadCheckpointRules.Phase.PUBLISHED))
+        for (phase in CommunityUploadCheckpointRules.Phase.values()) {
+            assertFalse(rules.canTransition(CommunityUploadCheckpointRules.Phase.PUBLISHED, phase))
+            assertFalse(rules.canTransition(CommunityUploadCheckpointRules.Phase.CANCELLED, phase))
         }
     }
 
     @Test fun cancellationCannotEraseUncertainPublication() {
-        assertTrue(rules.canTransition(rules.Phase.STAGED, rules.Phase.CANCELLED))
-        assertTrue(rules.canTransition(rules.Phase.UPLOADING, rules.Phase.CANCELLED))
-        assertFalse(rules.canTransition(rules.Phase.INSERT_ATTEMPTED, rules.Phase.CANCELLED))
-        assertFalse(rules.canTransition(rules.Phase.RECONCILIATION_REQUIRED, rules.Phase.CANCELLED))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.STAGED, CommunityUploadCheckpointRules.Phase.CANCELLED))
+        assertTrue(rules.canTransition(CommunityUploadCheckpointRules.Phase.UPLOADING, CommunityUploadCheckpointRules.Phase.CANCELLED))
+        assertFalse(rules.canTransition(CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED, CommunityUploadCheckpointRules.Phase.CANCELLED))
+        assertFalse(rules.canTransition(CommunityUploadCheckpointRules.Phase.RECONCILIATION_REQUIRED, CommunityUploadCheckpointRules.Phase.CANCELLED))
     }
 }
