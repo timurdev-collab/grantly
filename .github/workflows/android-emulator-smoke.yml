@@ -29,7 +29,7 @@ jobs:
       - name: Enforce discontinued calling feature boundary
         working-directory: android
         run: |
-          if grep -RniE 'io[.]livekit|LiveKit[[:space:]]*\\(|livekit-token|AdvisorCallRoomContent|AdvisorLiveKitRoomSession' app/src/main app/build.gradle.kts; then
+          if grep -RniE 'io[.]livekit|LiveKit[[:space:]]*\(|livekit-token|AdvisorCallRoomContent|AdvisorLiveKitRoomSession' app/src/main app/build.gradle.kts; then
             echo "Discontinued audio/video calling code was reintroduced."
             exit 1
           fi
