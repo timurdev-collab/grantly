@@ -26,6 +26,17 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
+      - name: Enforce discontinued calling feature boundary
+        working-directory: android
+        run: |
+          if grep -RniE 'io[.]livekit|LiveKit[[:space:]]*\\(|livekit-token|AdvisorCallRoomContent|AdvisorLiveKitRoomSession' app/src/main app/build.gradle.kts; then
+            echo "Discontinued audio/video calling code was reintroduced."
+            exit 1
+          fi
+          if grep -Eq 'android[.]permission[.](CAMERA|RECORD_AUDIO|MODIFY_AUDIO_SETTINGS|FOREGROUND_SERVICE_CAMERA|FOREGROUND_SERVICE_MICROPHONE|CAPTURE_AUDIO_OUTPUT|CAPTURE_VIDEO_OUTPUT)' app/src/main/AndroidManifest.xml; then
+            echo "Calling-related media permissions were reintroduced."
+            exit 1
+          fi
       - name: Enable KVM for Android emulator
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
