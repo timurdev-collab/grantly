@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -27,6 +28,13 @@ internal fun AuthContent(
     onOpenMessages: () -> Unit = {},
     onShowStudentView: () -> Unit = {}
 ) {
+    val uriHandler = LocalUriHandler.current
+    TextButton(onClick = {
+        uriHandler.openUri("https://edut.timurhasanov.com/privacy-policy")
+    }) {
+        Text("Privacy Policy")
+    }
+
     val session = AuthRepository.session
     val scope = rememberCoroutineScope()
     if (AuthRepository.isRestoring) {
