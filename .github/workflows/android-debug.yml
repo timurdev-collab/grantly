@@ -32,7 +32,7 @@ jobs:
             echo "Discontinued audio/video calling code was reintroduced."
             exit 1
           fi
-          if grep -Eq 'android[.]permission[.](CAMERA|RECORD_AUDIO|MODIFY_AUDIO_SETTINGS)' app/src/main/AndroidManifest.xml; then
+          if grep -Eq 'android[.]permission[.](CAMERA|RECORD_AUDIO|MODIFY_AUDIO_SETTINGS|FOREGROUND_SERVICE_CAMERA|FOREGROUND_SERVICE_MICROPHONE|CAPTURE_AUDIO_OUTPUT|CAPTURE_VIDEO_OUTPUT)' app/src/main/AndroidManifest.xml; then
             echo "Calling-related media permissions were reintroduced."
             exit 1
           fi
@@ -75,7 +75,7 @@ jobs:
           grep -q "versionName='1.0.0'" /tmp/edut-apk-badging.txt
           grep -q "^sdkVersion:'26'" /tmp/edut-apk-badging.txt
           "$AAPT" dump permissions "$APK" > /tmp/edut-apk-permissions.txt
-          if grep -E 'android[.]permission[.](CAMERA|RECORD_AUDIO|MODIFY_AUDIO_SETTINGS)' /tmp/edut-apk-permissions.txt; then
+          if grep -E 'android[.]permission[.](CAMERA|RECORD_AUDIO|MODIFY_AUDIO_SETTINGS|FOREGROUND_SERVICE_CAMERA|FOREGROUND_SERVICE_MICROPHONE|CAPTURE_AUDIO_OUTPUT|CAPTURE_VIDEO_OUTPUT)' /tmp/edut-apk-permissions.txt; then
             echo "Discontinued calling permissions found in packaged APK."
             exit 1
           fi
