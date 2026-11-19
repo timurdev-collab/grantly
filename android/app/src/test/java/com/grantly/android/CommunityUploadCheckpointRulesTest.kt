@@ -46,4 +46,33 @@ class CommunityUploadCheckpointRulesTest {
         assertFalse(rules.canTransition(CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED, CommunityUploadCheckpointRules.Phase.CANCELLED))
         assertFalse(rules.canTransition(CommunityUploadCheckpointRules.Phase.RECONCILIATION_REQUIRED, CommunityUploadCheckpointRules.Phase.CANCELLED))
     }
+    @Test fun everyCheckpointTransitionMatchesTheExplicitAllowlist() {
+        val phase = CommunityUploadCheckpointRules.Phase
+        val allowed = setOf(
+            phase.STAGED to phase.SESSION_CREATED,
+            phase.STAGED to phase.CANCELLED,
+            phase.SESSION_CREATED to phase.UPLOADING,
+            phase.SESSION_CREATED to phase.UPLOAD_COMPLETE_PUBLISH_PENDING,
+            phase.SESSION_CREATED to phase.CANCELLED,
+            phase.UPLOADING to phase.UPLOADING,
+            phase.UPLOADING to phase.SESSION_CREATED,
+            phase.UPLOADING to phase.UPLOAD_COMPLETE_PUBLISH_PENDING,
+            phase.UPLOADING to phase.CANCELLED,
+            phase.UPLOAD_COMPLETE_PUBLISH_PENDING to phase.INSERT_ATTEMPTED,
+            phase.UPLOAD_COMPLETE_PUBLISH_PENDING to phase.CANCELLED,
+            phase.INSERT_ATTEMPTED to phase.PUBLISHED,
+            phase.INSERT_ATTEMPTED to phase.RECONCILIATION_REQUIRED,
+            phase.RECONCILIATION_REQUIRED to phase.PUBLISHED
+        )
+        for (from in phase.values()) {
+            for (to in phase.values()) {
+                org.junit.Assert.assertEquals(
+                    "Unexpected checkpoint transition: $from -> $to",
+                    (from to to) in allowed,
+                    rules.canTransition(from, to)
+                )
+            }
+        }
+    }
+
 }
