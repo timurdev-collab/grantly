@@ -25,3 +25,17 @@ Status: design only; **not implemented or device-verified**. Scope: Android feat
 ## Implementation boundary
 
 Prefer a small Android-only state store and coordinator around the existing TUS uploader; preserve current 6 MiB chunks and server HEAD reconciliation. Do not modify the iOS reference, website, Supabase production schema, Edge Functions or RLS. Do not claim process-death recovery or exactly-once publishing until the code and tests demonstrate it.
+
+## Crash-boundary recovery decisions (implementation contract)
+
+| Last durable phase | On authenticated relaunch | Publication safety |
+| --- | --- | --- |
+| `STAGED` | Validate account and staged bytes; create a fresh TUS session only if the file is intact | No post insertion has begun |
+| `SESSION_CREATED` / `UPLOADING` | Validate URL, expiry and object key; use authenticated HEAD to obtain the server offset before PATCH | Do not infer completion from the local offset |
+| `UPLOAD_COMPLETE_PUBLISH_PENDING` | Verify the uploaded object exists and belongs to the signed-in account before proceeding | Atomically persist `INSERT_ATTEMPTED` **before** the insert request |
+| `INSERT_ATTEMPTED` | Query the current account's posts for the exact media object key; if inconclusive, enter `RECONCILIATION_REQUIRED` | Never automatically issue a second insert |
+| `RECONCILIATION_REQUIRED` | Show an explicit unresolved state and retain the media/checkpoint for safe reconciliation | No retry or destructive cleanup without evidence |
+| `PUBLISHED` | Verify the post reference before any optional staged-byte cleanup | Never delete referenced remote media |
+| `CANCELLED` | Finish recorded best-effort remote cleanup and remove unreferenced staged bytes | Terminal; never resume |
+
+A checkpoint write must be crash-safe (write a temporary file, flush, atomically replace) and serialized with the corresponding network operation. Do not assume that a successful local write proves a remote mutation succeeded. If the account is unavailable, keep the operation paused without contacting Storage; after confirmed account mismatch, quarantine and safely discard the old account's local data without using the new account's credentials to delete remote objects. These are design requirements, **not implemented behavior**.
