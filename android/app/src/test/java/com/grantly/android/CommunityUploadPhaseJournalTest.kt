@@ -158,4 +158,17 @@ class CommunityUploadPhaseJournalTest {
             assertEquals(CommunityUploadCheckpointRules.Phase.CANCELLED, journal.read(root, account, operation))
         } finally { root.deleteRecursively() }
     }
+
+    @Test fun staleTemporaryFileBlocksFreshCheckpointWithoutDeletingIt() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        try {
+            val accountDir = java.io.File(root, account).apply { mkdirs() }
+            val temporary = java.io.File(accountDir, "$operation.phase.tmp")
+            temporary.writeText("unknown-crash-recovery-state")
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertEquals("unknown-crash-recovery-state", temporary.readText())
+            assertNull(journal.read(root, account, operation))
+        } finally { root.deleteRecursively() }
+    }
+
 }
