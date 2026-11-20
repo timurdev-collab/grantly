@@ -81,11 +81,11 @@ class CommunityUploadPhaseJournalTest {
         val outside = Files.createTempFile("edut-outside-phase", ".txt").toFile()
         try {
             val accountDir = java.io.File(root, account).apply { mkdirs() }
-            outside.writeText("edut-phase-v1\\nSTAGED\\n")
+            outside.writeText("edut-phase-v1\nSTAGED\n")
             Files.createSymbolicLink(java.io.File(accountDir, "$operation.phase").toPath(), outside.toPath())
             assertNull(journal.read(root, account, operation))
             assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
-            assertEquals("edut-phase-v1\\nSTAGED\\n", outside.readText())
+            assertEquals("edut-phase-v1\nSTAGED\n", outside.readText())
         } finally {
             root.deleteRecursively()
             outside.delete()
@@ -96,7 +96,7 @@ class CommunityUploadPhaseJournalTest {
         val root = Files.createTempDirectory("edut-journal").toFile()
         try {
             val accountDir = java.io.File(root, account).apply { mkdirs() }
-            java.io.File(accountDir, "$operation.phase").writeText("edut-phase-v1\\nSTAGED\\nPUBLISHED\\n")
+            java.io.File(accountDir, "$operation.phase").writeText("edut-phase-v1\nSTAGED\nPUBLISHED\n")
             assertNull(journal.read(root, account, operation))
             assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
         } finally { root.deleteRecursively() }
