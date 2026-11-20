@@ -101,4 +101,30 @@ class CommunityUploadPhaseJournalTest {
             assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
         } finally { root.deleteRecursively() }
     }
+    @Test fun oversizedCheckpointFailsClosedWithoutBeingReplaced() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        try {
+            val accountDir = java.io.File(root, account).apply { mkdirs() }
+            val checkpoint = java.io.File(accountDir, "$operation.phase")
+            val malformed = "edut-phase-v1\\nSTAGED\\n" + "x".repeat(100)
+            checkpoint.writeText(malformed)
+            assertNull(journal.read(root, account, operation))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertEquals(malformed, checkpoint.readText())
+        } finally { root.deleteRecursively() }
+    }
+
+    @Test fun unknownPhaseFailsClosedWithoutBeingReplaced() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        try {
+            val accountDir = java.io.File(root, account).apply { mkdirs() }
+            val checkpoint = java.io.File(accountDir, "$operation.phase")
+            val malformed = "edut-phase-v1\\nUNKNOWN_PHASE\\n"
+            checkpoint.writeText(malformed)
+            assertNull(journal.read(root, account, operation))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertEquals(malformed, checkpoint.readText())
+        } finally { root.deleteRecursively() }
+    }
+
 }
