@@ -63,10 +63,10 @@ internal object CommunityUploadPhaseJournal {
         if (!safePath(root, tmp) || tmp.exists()) return false
         return try {
             val bytes = "edut-phase-v1\n${phase.name}\n".toByteArray(Charsets.UTF_8)
-            Files.newOutputStream(tmp.toPath(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE).use { output ->
-                output.write(bytes)
-                output.flush()
-                if (output is java.io.FileOutputStream) output.fd.sync()
+            java.nio.channels.FileChannel.open(tmp.toPath(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE).use { channel ->
+                val buffer = java.nio.ByteBuffer.wrap(bytes)
+                while (buffer.hasRemaining()) channel.write(buffer)
+                channel.force(true)
             }
             Files.move(tmp.toPath(), file.toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
             true
