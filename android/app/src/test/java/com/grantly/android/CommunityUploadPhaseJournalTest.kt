@@ -128,4 +128,34 @@ class CommunityUploadPhaseJournalTest {
         } finally { root.deleteRecursively() }
     }
 
+
+    @Test fun uncertainInsertCannotBeReplayedAfterJournalReload() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        try {
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.SESSION_CREATED))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED))
+            assertEquals(CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED, journal.read(root, account, operation))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.RECONCILIATION_REQUIRED))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED))
+            assertEquals(CommunityUploadCheckpointRules.Phase.RECONCILIATION_REQUIRED, journal.read(root, account, operation))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.PUBLISHED))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.CANCELLED))
+            assertEquals(CommunityUploadCheckpointRules.Phase.PUBLISHED, journal.read(root, account, operation))
+        } finally { root.deleteRecursively() }
+    }
+
+    @Test fun cancellationIsDurablyTerminal() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        try {
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.CANCELLED))
+            assertEquals(CommunityUploadCheckpointRules.Phase.CANCELLED, journal.read(root, account, operation))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.SESSION_CREATED))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertEquals(CommunityUploadCheckpointRules.Phase.CANCELLED, journal.read(root, account, operation))
+        } finally { root.deleteRecursively() }
+    }
 }
