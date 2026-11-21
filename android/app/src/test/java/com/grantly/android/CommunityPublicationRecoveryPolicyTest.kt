@@ -13,6 +13,24 @@ class CommunityPublicationRecoveryPolicyTest {
         }
     }
 
+    @Test fun authenticatedRecoveryActionsAreExhaustivelyFailClosed() {
+        val expected = mapOf(
+            CommunityPublicationRecoveryPolicy.Phase.STAGED to CommunityPublicationRecoveryPolicy.Action.RESUME_UPLOAD,
+            CommunityPublicationRecoveryPolicy.Phase.SESSION_CREATED to CommunityPublicationRecoveryPolicy.Action.RESUME_UPLOAD,
+            CommunityPublicationRecoveryPolicy.Phase.UPLOADING to CommunityPublicationRecoveryPolicy.Action.RESUME_UPLOAD,
+            CommunityPublicationRecoveryPolicy.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING to CommunityPublicationRecoveryPolicy.Action.VERIFY_UPLOADED_OBJECT,
+            CommunityPublicationRecoveryPolicy.Phase.INSERT_ATTEMPTED to CommunityPublicationRecoveryPolicy.Action.RECONCILE_EXISTING_POST,
+            CommunityPublicationRecoveryPolicy.Phase.RECONCILIATION_REQUIRED to CommunityPublicationRecoveryPolicy.Action.REQUIRE_MANUAL_RECONCILIATION,
+            CommunityPublicationRecoveryPolicy.Phase.PUBLISHED to CommunityPublicationRecoveryPolicy.Action.VERIFY_PUBLISHED_POST,
+            CommunityPublicationRecoveryPolicy.Phase.CANCELLED to CommunityPublicationRecoveryPolicy.Action.NO_ACTION
+        )
+        assertEquals(CommunityPublicationRecoveryPolicy.Phase.values().toSet(), expected.keys)
+        for ((phase, action) in expected) {
+            assertEquals("Unexpected recovery action for $phase", action,
+                policy.nextAction(phase, authenticatedAccountMatches = true))
+        }
+    }
+
     @Test fun ambiguousInsertNeverSchedulesAutomaticInsertRetry() {
         assertEquals(CommunityPublicationRecoveryPolicy.Action.RECONCILE_EXISTING_POST,
             policy.nextAction(CommunityPublicationRecoveryPolicy.Phase.INSERT_ATTEMPTED, true))
