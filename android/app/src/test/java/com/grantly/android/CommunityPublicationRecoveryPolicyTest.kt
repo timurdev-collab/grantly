@@ -37,14 +37,24 @@ class CommunityPublicationRecoveryPolicyTest {
         assertEquals(CommunityPublicationRecoveryPolicy.Action.REQUIRE_MANUAL_RECONCILIATION,
             policy.nextAction(CommunityPublicationRecoveryPolicy.Phase.RECONCILIATION_REQUIRED, true))
         assertEquals(CommunityPublicationRecoveryPolicy.Phase.RECONCILIATION_REQUIRED,
-            policy.reconcileInsertAttempt(true, exactMediaKeyMatchFound = false))
+            policy.reconcileInsertAttempt(true, "user/post.mp4", null))
     }
 
-    @Test fun onlyExactAuthenticatedMediaMatchCanConfirmPublication() {
+    @Test fun onlyExactAuthenticatedMediaKeyCanConfirmPublication() {
+        val key = "user-123/unique-video.mp4"
         assertEquals(CommunityPublicationRecoveryPolicy.Phase.PUBLISHED,
-            policy.reconcileInsertAttempt(true, exactMediaKeyMatchFound = true))
+            policy.reconcileInsertAttempt(true, key, key))
+        for (observed in listOf(null, "", "unique-video.mp4", "other/$key", "$key.bak", "USER-123/unique-video.mp4")) {
+            assertEquals("Unexpected match for $observed",
+                CommunityPublicationRecoveryPolicy.Phase.RECONCILIATION_REQUIRED,
+                policy.reconcileInsertAttempt(true, key, observed))
+        }
         assertEquals(CommunityPublicationRecoveryPolicy.Phase.RECONCILIATION_REQUIRED,
-            policy.reconcileInsertAttempt(false, exactMediaKeyMatchFound = true))
+            policy.reconcileInsertAttempt(false, key, key))
+        assertEquals(CommunityPublicationRecoveryPolicy.Phase.RECONCILIATION_REQUIRED,
+            policy.reconcileInsertAttempt(true, "", ""))
+        assertEquals(CommunityPublicationRecoveryPolicy.Phase.RECONCILIATION_REQUIRED,
+            policy.reconcileInsertAttempt(true, "   ", "   "))
     }
 
     @Test fun uploadedMediaMustBeVerifiedBeforeInsertAndTerminalStatesDoNotResume() {
