@@ -4,9 +4,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class CommunityUploadRecoveryGuardTest {
+    private val account = "123e4567-e89b-42d3-a456-426614174000"
+    private val otherAccount = "123e4567-e89b-42d3-a456-426614174001"
     private fun decide(
-        expectedAccountId: String = "student-a",
-        storedAccountId: String = "student-a",
+        expectedAccountId: String = account,
+        storedAccountId: String = account,
         stagedFileSize: Long = 1024L,
         stagedFileExists: Boolean = true,
         sessionExpired: Boolean = false,
@@ -23,10 +25,19 @@ class CommunityUploadRecoveryGuardTest {
         assertEquals(CommunityUploadRecoveryGuard.Decision.COMPLETE_UPLOAD, decide(serverOffset = 1024L))
     }
 
+    @Test fun rejectsNonCanonicalAccountIdentifiers() {
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(expectedAccountId = "not-a-uuid", storedAccountId = "not-a-uuid"))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
+            decide(expectedAccountId = account.uppercase(), storedAccountId = account.uppercase()))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.RESUME_FROM_SERVER_OFFSET,
+            decide(expectedAccountId = account, storedAccountId = account))
+    }
+
     @Test fun rejectsMissingOrMismatchedAccount() {
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT, decide(expectedAccountId = ""))
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT, decide(storedAccountId = ""))
-        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT, decide(storedAccountId = "student-b"))
+        assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT, decide(storedAccountId = otherAccount))
     }
 
     @Test fun rejectsMissingEmptyOrOversizedStagedFile() {
@@ -53,15 +64,15 @@ class CommunityUploadRecoveryGuardTest {
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
             decide(stagedFileExists = false, sessionExpired = true))
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
-            decide(storedAccountId = "student-b", serverSessionMissing = true))
+            decide(storedAccountId = otherAccount, serverSessionMissing = true))
     }
     @Test fun accountOwnershipIsCaseSensitiveAndNotSubstringBased() {
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
-            decide(expectedAccountId = "student-a", storedAccountId = "Student-a"))
+            decide(expectedAccountId = account, storedAccountId = account.uppercase()))
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
-            decide(expectedAccountId = "student-a", storedAccountId = "student-a-other"))
+            decide(expectedAccountId = account, storedAccountId = account + "-other"))
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
-            decide(expectedAccountId = "student-a", storedAccountId = " student-a"))
+            decide(expectedAccountId = account, storedAccountId = " " + account))
     }
 
     @Test fun expiredSessionCanRestartWithoutKnownOffsetButNeverWithoutValidFile() {
@@ -99,13 +110,13 @@ class CommunityUploadRecoveryGuardTest {
 
     @Test fun rejectsMatchingButWhitespacePaddedAccountIdentifiers() {
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
-            decide(expectedAccountId = " student-a", storedAccountId = " student-a"))
+            decide(expectedAccountId = " " + account, storedAccountId = " " + account))
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
-            decide(expectedAccountId = "student-a ", storedAccountId = "student-a "))
+            decide(expectedAccountId = account + " ", storedAccountId = account + " "))
         assertEquals(CommunityUploadRecoveryGuard.Decision.REJECT,
-            decide(expectedAccountId = "\tstudent-a", storedAccountId = "\tstudent-a"))
+            decide(expectedAccountId = "\t" + account, storedAccountId = "\t" + account))
         assertEquals(CommunityUploadRecoveryGuard.Decision.RESUME_FROM_SERVER_OFFSET,
-            decide(expectedAccountId = "student-a", storedAccountId = "student-a"))
+            decide(expectedAccountId = account, storedAccountId = account))
     }
 
     @Test fun rejectsEmbeddedControlCharactersEvenWhenBothAccountIdsMatch() {
@@ -114,7 +125,7 @@ class CommunityUploadRecoveryGuardTest {
                 decide(expectedAccountId = invalidId, storedAccountId = invalidId))
         }
         assertEquals(CommunityUploadRecoveryGuard.Decision.RESUME_FROM_SERVER_OFFSET,
-            decide(expectedAccountId = "student-a", storedAccountId = "student-a"))
+            decide(expectedAccountId = account, storedAccountId = account))
     }
 
 }
