@@ -8,6 +8,12 @@ package com.grantly.android
  * publication idempotency are implemented and tested.
  */
 internal object CommunityUploadRecoveryGuard {
+    private fun canonicalAccountId(value: String): Boolean = try {
+        java.util.UUID.fromString(value).toString() == value
+    } catch (_: IllegalArgumentException) {
+        false
+    }
+
     enum class Decision {
         RESUME_FROM_SERVER_OFFSET,
         COMPLETE_UPLOAD,
@@ -28,7 +34,7 @@ internal object CommunityUploadRecoveryGuard {
         serverOffset: Long?,
         serverSessionMissing: Boolean
     ): Decision {
-        if (expectedAccountId.isBlank() || storedAccountId.isBlank() ||
+        if (!canonicalAccountId(expectedAccountId) || !canonicalAccountId(storedAccountId) ||
             expectedAccountId != storedAccountId ||
             expectedAccountId != expectedAccountId.trim() ||
             storedAccountId != storedAccountId.trim() ||
