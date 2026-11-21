@@ -29,6 +29,11 @@ internal object CommunityResumableVideoPublisher {
         onProgress: suspend (Long, Long) -> Unit = { _, _ -> }
     ) = withContext(Dispatchers.IO) {
         require(kind in setOf("post", "story", "short"))
+        // The authenticated owner ID is also used as a private Storage path segment.
+        // Reject malformed IDs before creating a remote TUS session or object key.
+        require(runCatching { UUID.fromString(userId).toString() == userId }.getOrDefault(false)) {
+            "A valid authenticated account ID is required for video uploads."
+        }
         val endpoint = CommunityResumableUploadRules.endpoint(base)
             ?: throw IOException("A trusted Community upload endpoint is not configured.")
         val staged = File.createTempFile("edut-community-", ".mp4", context.cacheDir)
