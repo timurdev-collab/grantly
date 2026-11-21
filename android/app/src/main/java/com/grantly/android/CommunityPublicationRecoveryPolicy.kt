@@ -29,11 +29,20 @@ internal object CommunityPublicationRecoveryPolicy {
         }
     }
 
-    /** Only exact, authenticated object-key matches are evidence of publication. */
+    /**
+     * A post is confirmed only by an exact nonblank object-key match from the
+     * authenticated user's own post query. Never accept a caller-supplied
+     * 'match found' flag, substring match, or a key from another account.
+     */
     fun reconcileInsertAttempt(
         authenticatedAccountMatches: Boolean,
-        exactMediaKeyMatchFound: Boolean
-    ): Phase = if (authenticatedAccountMatches && exactMediaKeyMatchFound) {
+        expectedMediaObjectKey: String,
+        observedMediaObjectKey: String?
+    ): Phase = if (
+        authenticatedAccountMatches &&
+        expectedMediaObjectKey.isNotBlank() &&
+        expectedMediaObjectKey == observedMediaObjectKey
+    ) {
         Phase.PUBLISHED
     } else {
         Phase.RECONCILIATION_REQUIRED
