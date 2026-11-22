@@ -53,7 +53,12 @@ internal object CommunityUploadPhaseJournal {
         val file = journal(root, accountId, operationId) ?: return false
         if (!safePath(root, file)) return false
         val parent = file.parentFile
-        if (!parent.isDirectory && !parent.mkdirs()) return false
+        val parentReady = try {
+            parent.isDirectory || parent.mkdirs()
+        } catch (_: SecurityException) {
+            false
+        }
+        if (!parentReady) return false
         if (!safePath(root, file)) return false
         val previous = read(root, accountId, operationId)
         if (file.exists() && previous == null) return false
