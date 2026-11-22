@@ -26,7 +26,7 @@ internal object CommunityUploadPhaseJournal {
         root.canonicalFile == root.absoluteFile &&
             file.canonicalFile == file.absoluteFile &&
             file.parentFile.canonicalFile == file.parentFile.absoluteFile
-    } catch (_: java.io.IOException) { false }
+    } catch (_: java.io.IOException) { false } catch (_: SecurityException) { false }
 
     fun read(root: File, accountId: String, operationId: String): CommunityUploadCheckpointRules.Phase? {
         val file = journal(root, accountId, operationId) ?: return null
