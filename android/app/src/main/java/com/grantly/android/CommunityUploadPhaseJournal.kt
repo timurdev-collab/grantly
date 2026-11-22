@@ -61,7 +61,12 @@ internal object CommunityUploadPhaseJournal {
         if (!parentReady) return false
         if (!safePath(root, file)) return false
         val previous = read(root, accountId, operationId)
-        if (file.exists() && previous == null) return false
+        val checkpointExists = try {
+            file.exists()
+        } catch (_: SecurityException) {
+            return false
+        }
+        if (checkpointExists && previous == null) return false
         if (previous == null && phase != CommunityUploadCheckpointRules.Phase.STAGED) return false
         if (previous != null && !CommunityUploadCheckpointRules.canTransition(previous, phase)) return false
         val tmp = File(parent, "$operationId.phase.tmp")
