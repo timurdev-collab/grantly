@@ -76,9 +76,11 @@ internal object CommunityUploadPhaseJournal {
             false
         }
         if (!tempAvailable) return false
+        var ownsTemporaryFile = false
         return try {
             val bytes = "edut-phase-v1\n${phase.name}\n".toByteArray(Charsets.UTF_8)
             java.nio.channels.FileChannel.open(tmp.toPath(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE).use { channel ->
+                ownsTemporaryFile = true
                 val buffer = java.nio.ByteBuffer.wrap(bytes)
                 while (buffer.hasRemaining()) channel.write(buffer)
                 channel.force(true)
@@ -93,7 +95,7 @@ internal object CommunityUploadPhaseJournal {
             // Cleanup is best-effort: denied temp-file access must not
             // turn an otherwise handled checkpoint failure into a crash.
             try {
-                if (tmp.exists()) tmp.delete()
+                if (ownsTemporaryFile && tmp.exists()) tmp.delete()
             } catch (_: SecurityException) {
                 // The next write will reject a leftover temp file.
             }
