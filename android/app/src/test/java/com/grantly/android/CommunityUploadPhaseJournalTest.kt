@@ -55,6 +55,16 @@ class CommunityUploadPhaseJournalTest {
         } finally { root.deleteRecursively() }
     }
 
+    @Test fun journalRootFileCollisionFailsClosedWithoutChangingTheFile() {
+        val root = Files.createTempFile("edut-journal-root-collision", ".txt").toFile()
+        try {
+            root.writeText("preserve-root-file")
+            assertNull(journal.read(root, account, operation))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertEquals("preserve-root-file", root.readText())
+        } finally { root.delete() }
+    }
+
     @Test fun accountDirectoryCollisionFailsClosedWithoutTouchingExistingFile() {
         val root = Files.createTempDirectory("edut-journal").toFile()
         try {
