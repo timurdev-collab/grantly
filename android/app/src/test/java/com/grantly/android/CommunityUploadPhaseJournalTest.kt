@@ -171,4 +171,23 @@ class CommunityUploadPhaseJournalTest {
         } finally { root.deleteRecursively() }
     }
 
+
+    @Test fun symlinkedTemporaryCheckpointCannotReplaceOrDeleteOutsideFile() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        val outside = Files.createTempFile("edut-outside-temp", ".txt").toFile()
+        try {
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            val temporary = java.io.File(java.io.File(root, account), "$operation.phase.tmp")
+            outside.writeText("keep-this-outside-file")
+            Files.createSymbolicLink(temporary.toPath(), outside.toPath())
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.SESSION_CREATED))
+            assertEquals("keep-this-outside-file", outside.readText())
+            assertTrue(Files.isSymbolicLink(temporary.toPath()))
+            assertEquals(CommunityUploadCheckpointRules.Phase.STAGED, journal.read(root, account, operation))
+        } finally {
+            root.deleteRecursively()
+            outside.delete()
+        }
+    }
+
 }
