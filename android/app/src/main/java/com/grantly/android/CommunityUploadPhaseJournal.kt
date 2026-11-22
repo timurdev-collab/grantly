@@ -65,7 +65,12 @@ internal object CommunityUploadPhaseJournal {
         if (previous == null && phase != CommunityUploadCheckpointRules.Phase.STAGED) return false
         if (previous != null && !CommunityUploadCheckpointRules.canTransition(previous, phase)) return false
         val tmp = File(parent, "$operationId.phase.tmp")
-        if (!safePath(root, tmp) || tmp.exists()) return false
+        val tempAvailable = try {
+            safePath(root, tmp) && !tmp.exists()
+        } catch (_: SecurityException) {
+            false
+        }
+        if (!tempAvailable) return false
         return try {
             val bytes = "edut-phase-v1\n${phase.name}\n".toByteArray(Charsets.UTF_8)
             java.nio.channels.FileChannel.open(tmp.toPath(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE).use { channel ->
