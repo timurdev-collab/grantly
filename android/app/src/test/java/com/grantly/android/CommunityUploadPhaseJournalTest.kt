@@ -40,6 +40,18 @@ class CommunityUploadPhaseJournalTest {
         } finally { root.deleteRecursively() }
     }
 
+    @Test fun accountDirectoryCollisionFailsClosedWithoutTouchingExistingFile() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        try {
+            val collision = java.io.File(root, account)
+            collision.writeText("keep-account-collision")
+            assertNull(journal.read(root, account, operation))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertEquals("keep-account-collision", collision.readText())
+            assertFalse(java.io.File(collision, "$operation.phase").exists())
+        } finally { root.deleteRecursively() }
+    }
+
     @Test fun malformedCheckpointCannotBeOverwritten() {
         val root = Files.createTempDirectory("edut-journal").toFile()
         try {
