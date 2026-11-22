@@ -190,4 +190,20 @@ class CommunityUploadPhaseJournalTest {
         }
     }
 
+
+    @Test fun symlinkedJournalRootCannotWriteOutsidePrivateStorage() {
+        val outside = Files.createTempDirectory("edut-outside-root").toFile()
+        val linkParent = Files.createTempDirectory("edut-root-link").toFile()
+        try {
+            val linkedRoot = java.io.File(linkParent, "journal")
+            Files.createSymbolicLink(linkedRoot.toPath(), outside.toPath())
+            assertFalse(journal.write(linkedRoot, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertNull(journal.read(linkedRoot, account, operation))
+            assertFalse(java.io.File(outside, account).exists())
+        } finally {
+            linkParent.deleteRecursively()
+            outside.deleteRecursively()
+        }
+    }
+
 }
