@@ -30,8 +30,8 @@ internal object CommunityUploadPhaseJournal {
 
     fun read(root: File, accountId: String, operationId: String): CommunityUploadCheckpointRules.Phase? {
         val file = journal(root, accountId, operationId) ?: return null
-        if (!safePath(root, file) || !file.isFile || file.length() > 80) return null
         return try {
+            if (!safePath(root, file) || !file.isFile || file.length() > 80) return null
             val lines = file.readLines(Charsets.UTF_8)
             if (lines.size != 2 || lines[0] != "edut-phase-v1") null
             else CommunityUploadCheckpointRules.Phase.values().firstOrNull { it.name == lines[1] }
