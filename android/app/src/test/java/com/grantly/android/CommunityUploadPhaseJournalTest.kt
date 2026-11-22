@@ -77,6 +77,19 @@ class CommunityUploadPhaseJournalTest {
         } finally { root.deleteRecursively() }
     }
 
+    @Test fun checkpointDirectoryCollisionFailsClosedWithoutDeletingContents() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        try {
+            val accountDir = java.io.File(root, account).apply { mkdirs() }
+            val collision = java.io.File(accountDir, "$operation.phase").apply { mkdirs() }
+            val sentinel = java.io.File(collision, "keep.txt").apply { writeText("preserve") }
+            assertNull(journal.read(root, account, operation))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertTrue(collision.isDirectory)
+            assertEquals("preserve", sentinel.readText())
+        } finally { root.deleteRecursively() }
+    }
+
     @Test fun malformedCheckpointCannotBeOverwritten() {
         val root = Files.createTempDirectory("edut-journal").toFile()
         try {
