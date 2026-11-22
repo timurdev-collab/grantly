@@ -224,17 +224,16 @@ class CommunityUploadPhaseJournalTest {
     @Test fun interruptedUploadMayResumeButCannotReturnToStaging() {
         val root = Files.createTempDirectory("edut-journal").toFile()
         try {
-            val phase = CommunityUploadCheckpointRules.Phase
-            assertTrue(journal.write(root, account, operation, phase.STAGED))
-            assertFalse(journal.write(root, account, operation, phase.STAGED))
-            assertTrue(journal.write(root, account, operation, phase.SESSION_CREATED))
-            assertTrue(journal.write(root, account, operation, phase.UPLOADING))
-            assertTrue(journal.write(root, account, operation, phase.UPLOADING))
-            assertTrue(journal.write(root, account, operation, phase.SESSION_CREATED))
-            assertFalse(journal.write(root, account, operation, phase.STAGED))
-            assertTrue(journal.write(root, account, operation, phase.UPLOAD_COMPLETE_PUBLISH_PENDING))
-            assertFalse(journal.write(root, account, operation, phase.UPLOADING))
-            assertEquals(phase.UPLOAD_COMPLETE_PUBLISH_PENDING, journal.read(root, account, operation))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.SESSION_CREATED))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.UPLOADING))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.UPLOADING))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.SESSION_CREATED))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING))
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.UPLOADING))
+            assertEquals(CommunityUploadCheckpointRules.Phase.UPLOAD_COMPLETE_PUBLISH_PENDING, journal.read(root, account, operation))
         } finally { root.deleteRecursively() }
     }
 
