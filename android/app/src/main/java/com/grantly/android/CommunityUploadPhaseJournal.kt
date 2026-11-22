@@ -80,7 +80,13 @@ internal object CommunityUploadPhaseJournal {
         } catch (_: SecurityException) {
             false
         } finally {
-            if (tmp.exists()) tmp.delete()
+            // Cleanup is best-effort: denied temp-file access must not
+            // turn an otherwise handled checkpoint failure into a crash.
+            try {
+                if (tmp.exists()) tmp.delete()
+            } catch (_: SecurityException) {
+                // The next write will reject a leftover temp file.
+            }
         }
     }
 }
