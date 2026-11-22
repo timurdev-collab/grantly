@@ -112,6 +112,19 @@ class CommunityUploadPhaseJournalTest {
         } finally { root.deleteRecursively() }
     }
 
+    @Test fun temporaryDirectoryCollisionPreservesExistingContentsAndCheckpoint() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        try {
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            val temporary = java.io.File(java.io.File(root, account), "$operation.phase.tmp").apply { mkdirs() }
+            val sentinel = java.io.File(temporary, "keep.txt").apply { writeText("do-not-delete") }
+            assertFalse(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.SESSION_CREATED))
+            assertTrue(temporary.isDirectory)
+            assertEquals("do-not-delete", sentinel.readText())
+            assertEquals(CommunityUploadCheckpointRules.Phase.STAGED, journal.read(root, account, operation))
+        } finally { root.deleteRecursively() }
+    }
+
     @Test fun symlinkedAccountDirectoryCannotEscapePrivateRoot() {
         val root = Files.createTempDirectory("edut-journal").toFile()
         val outside = Files.createTempDirectory("edut-outside").toFile()
