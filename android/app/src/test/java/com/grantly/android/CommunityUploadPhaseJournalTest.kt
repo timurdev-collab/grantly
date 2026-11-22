@@ -40,6 +40,21 @@ class CommunityUploadPhaseJournalTest {
         } finally { root.deleteRecursively() }
     }
 
+    @Test fun sameOperationIdInDifferentAccountsHasIndependentPhaseHistory() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        val otherAccount = UUID.randomUUID().toString()
+        try {
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.SESSION_CREATED))
+            assertTrue(journal.write(root, otherAccount, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertEquals(CommunityUploadCheckpointRules.Phase.SESSION_CREATED, journal.read(root, account, operation))
+            assertEquals(CommunityUploadCheckpointRules.Phase.STAGED, journal.read(root, otherAccount, operation))
+            assertFalse(journal.write(root, otherAccount, operation, CommunityUploadCheckpointRules.Phase.INSERT_ATTEMPTED))
+            assertEquals(CommunityUploadCheckpointRules.Phase.SESSION_CREATED, journal.read(root, account, operation))
+            assertEquals(CommunityUploadCheckpointRules.Phase.STAGED, journal.read(root, otherAccount, operation))
+        } finally { root.deleteRecursively() }
+    }
+
     @Test fun accountDirectoryCollisionFailsClosedWithoutTouchingExistingFile() {
         val root = Files.createTempDirectory("edut-journal").toFile()
         try {
