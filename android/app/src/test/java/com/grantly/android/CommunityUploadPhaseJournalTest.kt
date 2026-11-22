@@ -206,4 +206,19 @@ class CommunityUploadPhaseJournalTest {
         }
     }
 
+
+    @Test fun noncanonicalUuidAliasesCannotAccessExistingCheckpoint() {
+        val root = Files.createTempDirectory("edut-journal").toFile()
+        try {
+            assertTrue(journal.write(root, account, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            val uppercaseAccount = account.uppercase(java.util.Locale.ROOT)
+            val uppercaseOperation = operation.uppercase(java.util.Locale.ROOT)
+            assertFalse(journal.write(root, uppercaseAccount, operation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertFalse(journal.write(root, account, uppercaseOperation, CommunityUploadCheckpointRules.Phase.STAGED))
+            assertNull(journal.read(root, uppercaseAccount, operation))
+            assertNull(journal.read(root, account, uppercaseOperation))
+            assertEquals(CommunityUploadCheckpointRules.Phase.STAGED, journal.read(root, account, operation))
+        } finally { root.deleteRecursively() }
+    }
+
 }
