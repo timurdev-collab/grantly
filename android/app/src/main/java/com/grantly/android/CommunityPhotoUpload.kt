@@ -141,6 +141,9 @@ internal object CommunityPhotoPublisher {
             storage.disconnect()
         }
 
+        var postRequestStarted = false
+        var postResponseReceived = false
+        var postResponseAmbiguous = false
         try {
             val post = URL(base + "/rest/v1/social_posts")
                 .openConnection() as HttpURLConnection
@@ -164,9 +167,13 @@ internal object CommunityPhotoPublisher {
                 if (kind == "story") {
                     payload.put("expires_at", CommunityStoryRules.expirationForNewStory(Instant.now()))
                 }
+                postRequestStarted = true
                 post.outputStream.use { it.write(payload.toString().toByteArray(Charsets.UTF_8)) }
                 val status = post.responseCode
+                postResponseReceived = true
                 if (status !in 200..299) {
+                    // A timeout, rate limit or server error can follow a committed insert.
+                    postResponseAmbiguous = status == 408 || status == 429 || status >= 500
                     throw IOException(when (status) {
                         401, 403 -> "Posting is not permitted. Check Community profile visibility."
                         else -> "Media uploaded but the post could not be created (HTTP " + status + ")."
@@ -176,7 +183,15 @@ internal object CommunityPhotoPublisher {
                 post.disconnect()
             }
         } catch (failure: Exception) {
-            // Match iOS storage rollback when inserting the post fails.
+            // Never delete an object that a committed post may reference. Without
+            // backend idempotency, an uncertain insert must be reconciled manually.
+            if (postRequestStarted && (!postResponseReceived || postResponseAmbiguous)) {
+                throw IOException(
+                    "Community post outcome is unknown. Do not retry until the post is checked; uploaded photo was preserved.",
+                    failure
+                )
+            }
+            // Roll back only when the post was definitely rejected before commit.
             // Report failed cleanup rather than silently leaving a private orphan.
             val cleaned = try {
                 val cleanup = URL(base + "/storage/v1/object/social-media")
