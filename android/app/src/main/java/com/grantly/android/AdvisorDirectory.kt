@@ -21,7 +21,7 @@ import java.io.Reader
 import java.net.HttpURLConnection
 import java.net.URL
 
-/** Publicly listed, approved advisors only. Consultations and messaging are not yet supported. */
+/** Publicly listed, approved advisors with authenticated text messaging. */
 internal data class AdvisorDirectoryItem(
     val id: String,
     val name: String,
@@ -233,7 +233,6 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
         AdvisorLine("Languages", advisor.languages.joinToString(", "))
         Spacer(Modifier.height(18.dp))
         AdvisorServicesContent(advisor.id)
-        Button(onClick = { showingBooking = true }) { Text("Book a consultation") }
         Spacer(Modifier.height(8.dp))
         OutlinedButton(onClick = {
             openingChat = true
@@ -248,9 +247,9 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
                     openingChat = false
                 }
             }
-        }, enabled = !openingChat) { Text(if (openingChat) "Opening conversation…" else "Message advisor") }
+        }, enabled = !openingChat) { Text(if (openingChat) "Opening conversation…" else "Send a message") }
         if (chatError != null) Text(chatError.orEmpty(), color = MaterialTheme.colorScheme.error)
-        Text("Booking requests require separate payment confirmation. Advisor messages are restricted by server access rules.",
+        Text("Contact your advisor by message to discuss consultations.",
             style = MaterialTheme.typography.bodySmall)
         return
     }
