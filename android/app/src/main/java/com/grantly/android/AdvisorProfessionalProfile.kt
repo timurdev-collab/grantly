@@ -15,11 +15,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
 import java.io.IOException
+import java.net.URI
 
 /**
  * Read-only view of the current advisor's existing profile. The role and
@@ -29,10 +31,22 @@ import java.io.IOException
 internal object AdvisorProfessionalProfileRules {
     fun canView(role: String, approvalStatus: String?): Boolean =
         role == "advisor" && approvalStatus == "approved"
+
+    fun youtubeIntroduction(raw: String): String? {
+        val uri = runCatching { URI(raw.trim()) }.getOrNull() ?: return null
+        val host = uri.host?.lowercase() ?: return null
+        return uri.toASCIIString().takeIf {
+            uri.scheme.equals("https", ignoreCase = true) && uri.rawUserInfo == null &&
+                (uri.port == -1 || uri.port == 443) &&
+                host in setOf("youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be")
+        }
+    }
 }
 
 @Composable
 internal fun AdvisorProfessionalProfileContent(userId: String) {
+    val uriHandler = LocalUriHandler.current
+    var linkError by remember(userId) { mutableStateOf(false) }
     var profile by remember(userId) { mutableStateOf<AdvisorApplicationDraft?>(null) }
     var loading by remember(userId) { mutableStateOf(true) }
     var error by remember(userId) { mutableStateOf<String?>(null) }
@@ -101,6 +115,14 @@ internal fun AdvisorProfessionalProfileContent(userId: String) {
                 Text(label, fontWeight = FontWeight.SemiBold)
                 Text(value, style = MaterialTheme.typography.bodyMedium)
                 Spacer(Modifier.height(8.dp))
+            }
+            AdvisorProfessionalProfileRules.youtubeIntroduction(current.introVideoUrl)?.let { url ->
+                OutlinedButton(onClick = {
+                    linkError = runCatching { uriHandler.openUri(url) }.isFailure
+                }, modifier = Modifier.fillMaxWidth()) {
+                    Text("Watch YouTube introduction")
+                }
+                if (linkError) Text("Unable to open introduction.", color = MaterialTheme.colorScheme.error)
             }
             if (current.avatarStoragePath != null || current.avatarUrl != null) {
                 Text("Professional photo on file.", style = MaterialTheme.typography.bodySmall)
