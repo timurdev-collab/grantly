@@ -145,7 +145,6 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
     var query by remember { mutableStateOf("") }
     var selected by remember(userId) { mutableStateOf<AdvisorDirectoryItem?>(null) }
     var showingRequests by remember(userId) { mutableStateOf(false) }
-    var showingBooking by remember(userId) { mutableStateOf(false) }
     var chatId by remember(userId) { mutableStateOf<String?>(null) }
     var openingChat by remember(userId) { mutableStateOf(false) }
     var chatError by remember(userId) { mutableStateOf<String?>(null) }
@@ -176,19 +175,18 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
         when {
             showingRequests -> showingRequests = false
             chatId != null -> chatId = null
-            showingBooking -> showingBooking = false
             selected != null -> selected = null
             else -> onBack()
         }
     }
-    BackHandler(enabled = showingRequests || chatId != null || showingBooking || selected != null) {
+    BackHandler(enabled = showingRequests || chatId != null || selected != null) {
         navigateBack()
     }
     TextButton(onClick = navigateBack) {
-        Text(if (selected == null && !showingRequests) "← Home" else if (showingBooking || chatId != null) "← Advisor profile" else "← All advisors")
+        Text(if (selected == null && !showingRequests) "← Home" else if (chatId != null) "← Advisor profile" else "← All advisors")
     }
     Spacer(Modifier.height(8.dp))
-    Text(if (showingRequests) "My consultations" else if (chatId != null) "Advisor messages" else if (showingBooking) "Advisor booking" else if (selected == null) "Find an advisor" else selected!!.name,
+    Text(if (showingRequests) "My consultations" else if (chatId != null) "Advisor messages" else if (selected == null) "Find an advisor" else selected!!.name,
         style = MaterialTheme.typography.headlineMedium, color = forest)
     Spacer(Modifier.height(8.dp))
     Text("Verified educational advisors · directory preview",
@@ -216,13 +214,6 @@ internal fun AdvisorDirectoryContent(onBack: () -> Unit) {
         val advisor = selected!!
         if (chatId != null) {
             AdvisorMessageThreadContent(chatId!!, advisor.name, advisor.id)
-            return
-        }
-        if (showingBooking) {
-            AdvisorBookingContent(advisor, onViewRequests = {
-                showingBooking = false
-                showingRequests = true
-            })
             return
         }
         AdvisorLine("Title", advisor.title)
